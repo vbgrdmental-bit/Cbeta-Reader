@@ -1941,5 +1941,75 @@ body.theme-ebony .dialog-btn-danger:hover {
   background-color: #d34848;
 }
 
+/* 接續閱讀快捷卡片 */
+.resume-reading-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--theme-accent-light, rgba(242, 163, 27, 0.06));
+  border: 1px solid var(--theme-accent-border, rgba(242, 163, 27, 0.15));
+  padding: 0.45rem 0.9rem;
+  border-radius: 20px;
+  margin-top: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.resume-reading-box:hover {
+  background: var(--theme-accent);
+  border-color: var(--theme-accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.resume-reading-box:hover span {
+  color: #ffffff !important;
+}
+
+body.theme-ebony .resume-reading-box:hover span {
+  color: #000000 !important;
+}
+
+.resume-tag {
+  font-size: 0.72rem;
+  font-weight: bold;
+  background: var(--theme-accent);
+  color: #ffffff;
+  padding: 0.15rem 0.45rem;
+  border-radius: 12px;
+}
+
+body.theme-ebony .resume-tag {
+  color: #000000;
+}
+
+.resume-reading-box:hover .resume-tag {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.resume-title {
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.resume-juan {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.resume-arrow {
+  font-size: 0.85rem;
+  color: var(--theme-accent);
+  transition: transform 0.2s ease;
+}
+
+.resume-reading-box:hover .resume-arrow {
+  transform: translateX(3px);
+}
+
+
 
 

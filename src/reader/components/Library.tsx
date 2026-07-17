@@ -41,6 +41,40 @@ export function Library({
   const [activeTab, setActiveTab] = useState<'shelf' | 'search'>(initialSearchQuery ? 'search' : 'shelf');
   const [draggingWorkId, setDraggingWorkId] = useState<string | null>(null);
   const [loadingDots, setLoadingDots] = useState('...');
+  const [lastReadBookInfo, setLastReadBookInfo] = useState<{ workId: string; title: string; juan: number } | null>(null);
+
+  // 💡 自動讀取最後一次閱讀的歷史佛經
+  useEffect(() => {
+    const lastWorkId = localStorage.getItem('last_read_work_id');
+    if (lastWorkId) {
+      const matchedBook = downloadedBooks.find(b => b.workId === lastWorkId);
+      if (matchedBook) {
+        const progressStr = localStorage.getItem(`reader_progress_${lastWorkId}`);
+        if (progressStr) {
+          try {
+            const progress = JSON.parse(progressStr);
+            setLastReadBookInfo({
+              workId: lastWorkId,
+              title: matchedBook.title,
+              juan: progress.juan || 1
+            });
+          } catch {
+            setLastReadBookInfo(null);
+          }
+        } else {
+          setLastReadBookInfo({
+            workId: lastWorkId,
+            title: matchedBook.title,
+            juan: 1
+          });
+        }
+      } else {
+        setLastReadBookInfo(null);
+      }
+    } else {
+      setLastReadBookInfo(null);
+    }
+  }, [downloadedBooks]);
 
   useEffect(() => {
     let interval: number;
@@ -502,6 +536,16 @@ export function Library({
             <div className="library-title-area">
               <h1>淨 心 閱 讀</h1>
               <p>以CBETA為主的電子大藏經閱讀器</p>
+              {lastReadBookInfo && (
+                <div>
+                  <div className="resume-reading-box" onClick={() => onSelectBook(lastReadBookInfo.workId)} title="點擊繼續閱讀">
+                    <span className="resume-tag">接續閱讀</span>
+                    <span className="resume-title">{lastReadBookInfo.title}</span>
+                    <span className="resume-juan">第 {lastReadBookInfo.juan} 卷</span>
+                    <span className="resume-arrow">➔</span>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

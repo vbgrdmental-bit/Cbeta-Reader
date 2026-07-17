@@ -167,7 +167,17 @@ export function ReaderView({
       pendingScrollSegmentIdRef.current = null;
     }
   }, [currentJuanNum]);
-
+  // 💡 自動儲存點選段落與卷次進度
+  useEffect(() => {
+    if (book) {
+      const progress = {
+        juan: currentJuanNum,
+        segmentId: activeSegmentId || ''
+      };
+      localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));
+      localStorage.setItem('last_read_work_id', workId);
+    }
+  }, [currentJuanNum, activeSegmentId, book, workId]);
   const {
     isPlaying,
     currentSegmentId: ttsSegmentId,
@@ -272,7 +282,28 @@ export function ReaderView({
               setActiveSegmentId(initialSegmentId);
             }, 300);
           } else {
-            setCurrentJuanNum(1);
+            // 💡 嘗試從 localStorage 載入此書的歷史閱讀進度
+            const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
+            if (savedProgressStr) {
+              try {
+                const progress = JSON.parse(savedProgressStr);
+                if (progress.juan) {
+                  setCurrentJuanNum(progress.juan);
+                }
+                if (progress.segmentId) {
+                  // 延遲跳轉以確保該卷 DOM 已經渲染完成
+                  setTimeout(() => {
+                    scrollToSegment(progress.segmentId);
+                    setActiveSegmentId(progress.segmentId);
+                  }, 300);
+                }
+              } catch (err) {
+                console.warn('Failed to parse saved progress, fallback to juan 1:', err);
+                setCurrentJuanNum(1);
+              }
+            } else {
+              setCurrentJuanNum(1);
+            }
           }
         }
       } catch (e) {
@@ -440,6 +471,33 @@ export function ReaderView({
     }
     const pct = Math.round((el.scrollTop / totalHeight) * 100);
     setScrollPercent(pct);
+
+    // 💡 滾動時靜默自動記錄當前最頂端可見的段落進度
+    if (book) {
+      const juanData = book.content.juans.find(j => j.juan === currentJuanNum);
+      if (juanData) {
+        const containerRect = el.getBoundingClientRect();
+        let visibleSegId = '';
+        for (const seg of juanData.segments) {
+          const segEl = segmentsMapRef.current[seg.id];
+          if (segEl) {
+            const rect = segEl.getBoundingClientRect();
+            // 段落底部大於容器頂部加上緩衝，代表此段落已露出於視窗頂部
+            if (rect.bottom > containerRect.top + 20) {
+              visibleSegId = seg.id;
+              break;
+            }
+          }
+        }
+        if (visibleSegId) {
+          const progress = {
+            juan: currentJuanNum,
+            segmentId: visibleSegId
+          };
+          localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));
+        }
+      }
+    }
   };
 
   // 點選經文段落（一般或學術模式）
