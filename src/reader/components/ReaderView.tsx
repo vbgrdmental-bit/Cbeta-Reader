@@ -569,13 +569,14 @@ export function ReaderView({
       const juanData = book.content.juans.find(j => j.juan === currentJuanNum);
       if (juanData) {
         const containerRect = el.getBoundingClientRect();
+        // 💡 視線焦點基準線設定為螢幕上方 35% 處，當下一章節滾動越過此線時，進度條會立即切換品名，極度符合直覺
+        const triggerLine = containerRect.top + containerRect.height * 0.35;
         let visibleSegId = '';
         for (const seg of juanData.segments) {
           const segEl = segmentsMapRef.current[seg.id];
           if (segEl) {
             const rect = segEl.getBoundingClientRect();
-            // 段落底部大於容器頂部加上緩衝，代表此段落已露出於視窗頂部
-            if (rect.bottom > containerRect.top + 20) {
+            if (rect.bottom > triggerLine) {
               visibleSegId = seg.id;
               break;
             }
