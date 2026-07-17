@@ -201,7 +201,29 @@ export class ReaderBuilder {
       }
       return false;
     };
-
+    const isAtStartOfContainer = (container: HTMLElement, target: HTMLElement): boolean => {
+      const childNodes = Array.from(container.childNodes);
+      const targetIdx = childNodes.findIndex(node => node === target || node.contains(target));
+      if (targetIdx <= 0) return true;
+      
+      for (let i = 0; i < targetIdx; i++) {
+        const node = childNodes[i];
+        if (node.nodeType === Node.TEXT_NODE) {
+          if (node.textContent?.trim() !== '') {
+            return false;
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const htmlEl = node as HTMLElement;
+          if (htmlEl.classList.contains('noteAnchor') || htmlEl.classList.contains('note') || htmlEl.tagName === 'A') {
+            continue;
+          }
+          if (htmlEl.textContent?.trim() !== '') {
+            return false;
+          }
+        }
+      }
+      return true;
+    };
     const segments: TextSegment[] = [];
     let segmentIndex = 0;
 
@@ -278,10 +300,10 @@ export class ReaderBuilder {
         
         // 即使 textContent 為空，但若有待綁定的 TOC 項目，我們也生成一個空的段落來做為它的起點
         if (textContent || unlinkedTocs.length > 0) {
-          // 優先提取段落內部的 lb。如果沒有，使用當前最新的外部 activeLb
+          // 優先提取段落內部的 lb。只有當它位於段落起點時才採用，防範跨行段落的後半行行號誤覆蓋起點行號
           let lb = activeLb;
-          const lbEl = el.querySelector('[id*="p"], [class*="lb"]');
-          if (lbEl) {
+          const lbEl = el.querySelector('[id*="p"], [class*="lb"]') as HTMLElement | null;
+          if (lbEl && isAtStartOfContainer(el, lbEl)) {
             lb = lbEl.id || lbEl.getAttribute('data-lb') || lb;
           }
 
