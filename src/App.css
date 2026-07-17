@@ -1,0 +1,28 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #eae6db; /* 柔和溫馨的米灰色，襯托手機 App 的晨光木框 */
+  overflow: hidden;
+  font-family: var(--font-sans);
+  transition: background-color var(--transition-normal);
+}
+
+/* 外層 Body 主題背景連動 (精簡為三大主題) */
+body.theme-parchment { background-color: #e2d2ad; }
+body.theme-comfort { background-color: #cbded0; }
+body.theme-ebony { background-color: #0c0e11; }
+
+#root {
+  max-width: 480px;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* 手機 App 框陰影 */
+  background-color: var(--reader-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}

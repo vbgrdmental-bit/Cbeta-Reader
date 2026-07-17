@@ -1,0 +1,1945 @@
+/* Theme Accent Color System */
+body, body.theme-parchment {
+  --theme-accent: #8c4b27;
+  --theme-accent-hover: #5d3c26;
+  --theme-accent-light: rgba(140, 75, 39, 0.04);
+  --theme-accent-border: rgba(140, 75, 39, 0.12);
+}
+
+body.theme-ivory {
+  --theme-accent: #7a5c3a;
+  --theme-accent-hover: #5a4228;
+  --theme-accent-light: rgba(122, 92, 58, 0.04);
+  --theme-accent-border: rgba(122, 92, 58, 0.10);
+}
+
+body.theme-comfort {
+  --theme-accent: #2b422b;
+  --theme-accent-hover: #3e5c3e;
+  --theme-accent-light: rgba(43, 66, 43, 0.04);
+  --theme-accent-border: rgba(43, 66, 43, 0.12);
+}
+
+body.theme-ebony {
+  --theme-accent: #f2a31b;
+  --theme-accent-hover: #ffb732;
+  --theme-accent-light: rgba(242, 163, 27, 0.08);
+  --theme-accent-border: rgba(242, 163, 27, 0.2);
+}
+
+/* Library Screen */
+.library-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-library);
+  overflow-y: auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Header & Search Bar (一列式首頁控制列) */
+.library-header {
+  width: 100%;
+  margin: 0 auto 1.5rem auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.4rem;
+  border-bottom: 1.2px solid rgba(140, 75, 39, 0.08);
+  padding-bottom: 0.6rem;
+  box-sizing: border-box;
+}
+
+body.theme-ebony .library-header {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.control-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(140, 75, 39, 0.15);
+  margin: 0 0.2rem;
+  flex-shrink: 0;
+}
+
+body.theme-ebony .control-divider {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.header-theme-circles {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.header-theme-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.header-theme-circle.bg-ivory {
+  background: #faf7f0;
+}
+
+.header-theme-circle.bg-parchment {
+  background: #f1e5c9;
+}
+
+.header-theme-circle.bg-comfort {
+  background: #e3ebd9;
+}
+
+.header-theme-circle.bg-ebony {
+  background: #12161a;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-theme-circle:hover {
+  transform: scale(1.1);
+}
+
+.header-theme-circle.active {
+  transform: scale(1.15);
+  border-color: var(--color-wood-700);
+  box-shadow: 0 0 5px rgba(140, 75, 39, 0.4);
+}
+
+body.theme-ebony .header-theme-circle.active {
+  border-color: var(--color-gold-400);
+  box-shadow: 0 0 5px rgba(188, 147, 76, 0.4);
+}
+
+.library-title-area {
+  width: 100%;
+  text-align: center;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.library-title-area h1 {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+}
+
+.library-title-area p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  letter-spacing: 0.04em;
+}
+
+.library-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0 1rem;
+}
+
+.library-header-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: transparent;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.library-header-btn:hover {
+  background: rgba(140, 75, 39, 0.06);
+  color: var(--text-primary);
+}
+
+body.theme-ebony .library-header-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.library-header-btn.active {
+  background: rgba(140, 75, 39, 0.12);
+  color: var(--text-primary) !important;
+}
+
+body.theme-ebony .library-header-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-gold-400) !important;
+}
+
+/* Bookshelf Layout */
+.bookshelf-section {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.shelf-row {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.shelf-books {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  padding: 0 1.5rem;
+  min-height: 220px;
+  align-items: flex-end;
+  position: relative;
+  z-index: 10;
+}
+
+.shelf-wood {
+  width: 100%;
+  height: 24px;
+  background: var(--bg-shelf);
+  border-radius: 4px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.1);
+  position: relative;
+  margin-top: -8px;
+  z-index: 5;
+}
+.shelf-wood::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+}
+
+/* Book Cover (Thread-bound style) */
+.book-cover-card {
+  width: 140px;
+  height: 200px;
+  background-color: #2b4c7e; /* 傳統藏青色 */
+  border-left: 6px solid #1a3254;
+  border-radius: 2px 6px 6px 2px;
+  box-shadow: 6px 12px 18px rgba(0,0,0,0.5), inset -2px -2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: var(--transition-slow);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  color: #fff;
+  transform-origin: bottom center;
+}
+
+.book-cover-card:hover {
+  transform: translateY(-15px) scale(1.05) rotate(-2deg);
+  box-shadow: 12px 24px 28px rgba(0,0,0,0.6);
+}
+
+/* Thread binding lines mock */
+.book-cover-card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 8px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 110px 0 0 rgba(255,255,255,0.05);
+}
+
+.book-tag {
+  background: #fbf8f3;
+  color: #222;
+  font-family: var(--font-serif);
+  writing-mode: vertical-rl;
+  padding: 0.6rem 0.3rem;
+  border: 1px solid #dcd3be;
+  border-radius: 1px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  max-height: 140px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+}
+
+.book-creator-tag {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-serif);
+  writing-mode: vertical-rl;
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+}
+
+.book-delete-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #bd3a3a;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  opacity: 0.7;
+  transition: var(--transition-fast);
+  z-index: 20;
+}
+.book-cover-card:hover .book-delete-btn {
+  opacity: 1;
+}
+.book-delete-btn:hover {
+  background: #e15555;
+  transform: scale(1.1);
+}
+
+/* Online Search Dialog / Panel */
+.search-dialog-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn var(--transition-fast) forwards;
+}
+
+.search-dialog-card {
+  width: 90%;
+  max-width: 650px;
+  background: var(--reader-bg);
+  border: 1px solid var(--reader-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  animation: slideUp var(--transition-normal) forwards;
+  overflow: hidden;
+}
+
+.dialog-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--reader-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-header h3 {
+  font-family: 'Yuanti TC', 'Yuanti', '圓體', 'Microsoft JhengHei', sans-serif;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  color: var(--text-muted);
+  transition: var(--transition-fast);
+}
+.close-btn:hover {
+  color: var(--text-primary);
+}
+
+.dialog-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dialog-search-bar {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.dialog-search-bar input {
+  flex-grow: 1;
+  background: rgba(140, 75, 39, 0.05);
+  border: 1px solid rgba(140, 75, 39, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 1rem;
+  color: var(--text-primary);
+}
+
+body.theme-ebony .dialog-search-bar input {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.10);
+  color: var(--text-primary);
+}
+
+.dialog-search-bar input:focus {
+  border-color: var(--color-wood-700);
+  outline: none;
+}
+
+body.theme-ebony .dialog-search-bar input:focus {
+  border-color: var(--color-gold-500);
+}
+
+.dialog-search-bar button {
+  background: transparent !important;
+  border: 1px solid rgba(140, 75, 39, 0.25);
+  color: var(--color-wood-700) !important;
+  padding: 0 1rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+body.theme-ebony .dialog-search-bar button {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--color-gold-400) !important;
+}
+
+.dialog-search-bar button:hover {
+  background: rgba(140, 75, 39, 0.06) !important;
+  transform: scale(1.05);
+}
+
+body.theme-ebony .dialog-search-bar button:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--color-gold-300) !important;
+}
+
+/* Online Search Results List */
+.search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.search-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(140, 75, 39, 0.03);
+  border: 1px solid rgba(140, 75, 39, 0.08);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+body.theme-ebony .search-result-item {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.search-result-item:hover {
+  background: rgba(140, 75, 39, 0.06);
+  border-color: rgba(140, 75, 39, 0.2);
+}
+
+body.theme-ebony .search-result-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-gold-500);
+}
+
+.result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.result-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.result-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.download-btn-square,
+.download-status-square {
+  width: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  height: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0;
+  /* 淺色底色 */
+  background: rgba(0, 0, 0, 0.06);
+  /* 深色符號：與主題文字同色 */
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.download-btn-square {
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.download-btn-square:hover {
+  background: rgba(0, 0, 0, 0.12);
+  transform: scale(1.05);
+}
+
+/* 已下載：稍微偏綠提示，但維持淺色底 */
+.download-status-square {
+  background: rgba(50, 120, 50, 0.08);
+  color: var(--text-primary);
+  border-color: rgba(50, 120, 50, 0.15);
+}
+
+/* 烏木暗色主題適配 */
+body.theme-ebony .download-btn-square,
+body.theme-ebony .download-status-square {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.theme-ebony .download-btn-square:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+body.theme-ebony .download-status-square {
+  background: rgba(100, 200, 100, 0.1);
+  border-color: rgba(100, 200, 100, 0.2);
+}
+
+
+/* Builder Progress Animation Modal */
+.builder-progress-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--reader-bg);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn var(--transition-fast) forwards;
+}
+
+.builder-animation-box {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.builder-outer-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px dashed var(--color-gold-500);
+  position: absolute;
+}
+
+.builder-mandala {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-wood-900) 0%, rgba(0,0,0,0.8) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-wood-600);
+  box-shadow: 0 0 25px rgba(242, 163, 27, 0.2);
+}
+
+.builder-mandala svg {
+  color: var(--color-gold-400);
+  width: 60px;
+  height: 60px;
+}
+
+.builder-details-card {
+  width: 90%;
+  max-width: 500px;
+  background: rgba(140, 75, 39, 0.04);
+  border: 1px solid var(--reader-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+body.theme-ebony .builder-details-card {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.builder-title {
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.builder-progress-bar-wrapper {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.builder-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-gold-600) 0%, var(--color-gold-400) 100%);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px var(--color-gold-500);
+}
+
+.builder-step-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.builder-step-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+}
+.builder-step-item.active {
+  color: var(--color-gold-400);
+  font-weight: 500;
+}
+.builder-step-item.completed {
+  color: var(--color-wood-300);
+}
+
+.builder-step-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.builder-message {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--color-wood-200);
+  min-height: 24px;
+}
+
+/* 亮色主題下的 Builder 對話框配色加深，以確保文字清晰可讀 */
+.theme-parchment .builder-step-item {
+  color: #8c7355;
+}
+.theme-comfort .builder-step-item {
+  color: #6e8c61;
+}
+
+.theme-parchment .builder-step-item.completed {
+  color: #4a3319;
+}
+.theme-comfort .builder-step-item.completed {
+  color: #23381c;
+}
+
+.theme-parchment .builder-step-item.active {
+  color: #b56c00;
+  font-weight: 700;
+}
+.theme-comfort .builder-step-item.active {
+  color: #945b00;
+  font-weight: 700;
+}
+
+.theme-parchment .builder-message {
+  color: #5c4028 !important;
+  font-weight: 600;
+}
+.theme-comfort .builder-message {
+  color: #334d2a !important;
+  font-weight: 600;
+}
+
+.theme-parchment .builder-step-item.completed .builder-step-icon {
+  color: #4a3319;
+}
+.theme-comfort .builder-step-item.completed .builder-step-icon {
+  color: #23381c;
+}
+
+/* 視圖分頁切換組 (Tab Group) */
+.library-tab-group {
+  display: flex;
+  background: rgba(140, 75, 39, 0.08);
+  border: 1px solid rgba(140, 75, 39, 0.12);
+  border-radius: var(--radius-xl);
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+body.theme-dark .library-tab-group,
+body.theme-ebony .library-tab-group {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.library-tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-wood-800);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+body.theme-dark .library-tab-btn,
+body.theme-ebony .library-tab-btn {
+  color: var(--text-muted);
+}
+
+.library-tab-btn.active {
+  background: var(--color-wood-700);
+  color: #ffffff !important;
+  box-shadow: var(--shadow-sm);
+}
+
+body.theme-dark .library-tab-btn.active,
+body.theme-ebony .library-tab-btn.active {
+  background: var(--color-gold-600);
+  color: var(--color-gold-950) !important;
+}
+
+/* 視圖切換按鈕 (View Mode Toggle) */
+.view-mode-toggle {
+  display: flex;
+  background: rgba(140, 75, 39, 0.05);
+  border: 1px solid rgba(140, 75, 39, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 2px;
+}
+
+body.theme-dark .view-mode-toggle,
+body.theme-ebony .view-mode-toggle {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.view-mode-btn {
+  border: none;
+  background: transparent;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.view-mode-btn:hover {
+  color: var(--color-wood-800);
+}
+
+body.theme-dark .view-mode-btn:hover,
+body.theme-ebony .view-mode-btn:hover {
+  color: #fff;
+}
+
+.view-mode-btn.active {
+  background: #ffffff;
+  color: var(--color-wood-700);
+  box-shadow: var(--shadow-sm);
+}
+
+body.theme-dark .view-mode-btn.active,
+body.theme-ebony .view-mode-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-gold-300);
+}
+
+
+/* 2. 緊湊網格模式 (Grid View) */
+.shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  padding: 1.5rem 0.5rem;
+}
+
+.grid-book-card {
+  aspect-ratio: 3/4;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 0.8rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  background: #4a5b4e;
+  border-left: 5px solid rgba(255, 255, 255, 0.3);
+}
+
+.grid-book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+}
+
+.grid-book-card.add-card {
+  background: rgba(140, 75, 39, 0.04);
+  border: 2px dashed rgba(140, 75, 39, 0.25);
+  border-left: 2px dashed rgba(140, 75, 39, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+.grid-book-card.add-card:hover {
+  background: rgba(140, 75, 39, 0.08);
+  border-color: var(--color-wood-500);
+  color: var(--color-wood-800);
+}
+
+body.theme-dark .grid-book-card.add-card,
+body.theme-ebony .grid-book-card.add-card {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+}
+
+.grid-add-label {
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.grid-book-title {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 1.4;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  margin: 0 auto;
+  max-height: 70%;
+  letter-spacing: 0.1em;
+}
+
+.grid-book-meta {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.grid-delete-btn {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  opacity: 0.7;
+}
+
+.grid-delete-btn:hover {
+  background: #bd3a3a;
+  opacity: 1;
+}
+
+
+/* 3. 緊湊清單模式 (List View) */
+.shelf-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1rem 0.2rem;
+}
+
+.list-book-item {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: #ffffff;
+  border: 1px solid rgba(140, 75, 39, 0.08);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.list-book-item:hover {
+  transform: translateX(4px);
+  border-color: var(--color-wood-400);
+  background: #faf8f5;
+}
+
+body.theme-dark .list-book-item,
+body.theme-ebony .list-book-item {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+body.theme-dark .list-book-item:hover,
+body.theme-ebony .list-book-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-gold-500);
+}
+
+.list-book-item.add-item {
+  background: rgba(140, 75, 39, 0.03);
+  border: 1.5px dashed rgba(140, 75, 39, 0.2);
+  justify-content: center;
+  gap: 0.6rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: none;
+}
+.list-book-item.add-item:hover {
+  background: rgba(140, 75, 39, 0.06);
+  border-color: var(--color-wood-500);
+  color: var(--color-wood-800);
+}
+
+.list-book-cover {
+  width: 32px;
+  height: 42px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.list-book-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex-grow: 1;
+}
+
+.list-book-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: var(--color-wood-950);
+}
+
+body.theme-dark .list-book-title,
+body.theme-ebony .list-book-title {
+  color: #e0dcd3;
+}
+
+.list-book-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.list-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.list-delete-btn:hover {
+  background: rgba(189, 58, 58, 0.1);
+  color: #bd3a3a;
+}
+
+/* 書架與主題設定 Drawer (Drawer Overlay & Container) */
+.shelf-settings-drawer-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.shelf-settings-drawer {
+  width: 100%;
+  max-height: 85%;
+  background: var(--reader-bg);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  border-top: 1px solid var(--reader-border);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.drawer-header h3 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* 背景主題 (Theme Selection Grid in Drawer) */
+.theme-selector-grid {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  width: 100%;
+}
+
+.theme-circle-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.theme-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+
+.theme-circle.bg-parchment {
+  background: #f1e5c9;
+}
+
+.theme-circle.bg-comfort {
+  background: #e3ebd9;
+}
+
+.theme-circle.bg-ebony {
+  background: #12161a;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.theme-circle-wrapper:hover .theme-circle {
+  transform: scale(1.08);
+}
+
+.theme-circle-wrapper.active .theme-circle {
+  transform: scale(1.1);
+  border-color: var(--color-wood-700);
+  box-shadow: 0 0 10px rgba(140, 75, 39, 0.4);
+}
+
+body.theme-ebony .theme-circle-wrapper.active .theme-circle {
+  border-color: var(--color-gold-400);
+  box-shadow: 0 0 10px rgba(188, 147, 76, 0.4);
+}
+
+.theme-circle-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 書架陳列方式選單 (Shelf view buttons inside Drawer) */
+.shelf-view-options {
+  display: flex;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.shelf-view-opt-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  border-radius: 10px;
+  background: rgba(140, 75, 39, 0.05);
+  border: 1px solid rgba(140, 75, 39, 0.1);
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-size: 0.88rem;
+}
+
+.shelf-view-opt-btn:hover {
+  background: rgba(140, 75, 39, 0.1);
+}
+
+body.theme-ebony .shelf-view-opt-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.theme-ebony .shelf-view-opt-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.shelf-view-opt-btn.active {
+  background: var(--color-wood-700);
+  color: #ffffff !important;
+  border-color: var(--color-wood-700);
+  box-shadow: var(--shadow-sm);
+}
+
+body.theme-ebony .shelf-view-opt-btn.active {
+  background: var(--color-gold-600);
+  color: var(--color-gold-950) !important;
+  border-color: var(--color-gold-600);
+}
+
+/* Drag and Drop Reordering */
+.list-book-item.dragging, .grid-book-card.dragging {
+  opacity: 0.45;
+  border: 2px dashed var(--color-wood-700) !important;
+  transform: scale(0.98);
+}
+body.theme-ebony .list-book-item.dragging, body.theme-ebony .grid-book-card.dragging {
+  border-color: var(--color-gold-500) !important;
+}
+
+/* Builder Mandala Finished Glow Animation */
+.builder-mandala.is-completed {
+  box-shadow: 0 0 45px var(--color-gold-500) !important;
+  border-color: var(--color-gold-400) !important;
+  animation: glowPulse 0.8s ease-in-out infinite alternate !important;
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 20px rgba(242, 163, 27, 0.4); }
+  100% { box-shadow: 0 0 50px rgba(242, 163, 27, 0.95); }
+}
+
+/* ==========================================================================
+   iOS Files 風格資料夾與拖曳系統樣式追加
+   ========================================================================== */
+
+/* 資料夾內部頂部導航條包裹器 */
+.folder-nav-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: -0.5rem; /* 往控制列靠近，騰出更多下方空間 */
+  margin-bottom: 1.8rem;
+  width: 100%;
+}
+
+.folder-navigation-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0.8rem 1.2rem;
+  background: var(--theme-accent-light);
+  border: 1px solid var(--theme-accent-border);
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.folder-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.folder-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--theme-accent);
+  background: transparent;
+  color: var(--theme-accent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.folder-back-btn:hover {
+  background: var(--theme-accent);
+  color: #fff;
+}
+body.theme-ebony .folder-back-btn:hover {
+  color: var(--bg-library) !important;
+}
+
+/* 新增資料夾按鈕 (文字小字/灰色/無底色，位在返回上一層之下) */
+.folder-sub-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 0.2rem;
+}
+
+.folder-add-sub-btn-flat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.folder-add-sub-btn-flat:hover {
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.03);
+}
+body.theme-ebony .folder-add-sub-btn-flat:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.folder-nav-middle {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 1rem;
+}
+
+.folder-path-display {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  opacity: 0.9;
+  letter-spacing: 0.03em;
+}
+
+.folder-nav-right {
+  display: flex;
+  align-items: center;
+}
+
+/* 淺色正方形底圖數字徽章 */
+.folder-book-count-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.5rem;
+  border-radius: 6px;
+  background: var(--theme-accent-light);
+  border: 1px solid var(--theme-accent-border);
+  color: var(--theme-accent);
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+/* === 1. 3D 書架資料夾卡片追加 === */
+.folder-card-3d {
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--theme-accent) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.folder-card-3d:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+}
+
+.folder-icon-3d {
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: float 2.5s ease-in-out infinite alternate;
+}
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
+
+.theme-folder-icon {
+  color: #ffffff !important;
+  opacity: 0.95;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.folder-actions-3d {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.folder-card-3d:hover .folder-actions-3d {
+  opacity: 1;
+}
+
+.folder-rename-btn-3d, .folder-delete-btn-3d {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justifyContent: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.folder-rename-btn-3d:hover { background: var(--color-gold-500); color: #000; }
+.folder-delete-btn-3d:hover { background: #bd3a3a; }
+
+.book-card-actions-3d {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 0.3rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+.book-cover-card:hover .book-card-actions-3d {
+  opacity: 1;
+}
+
+.book-move-out-btn-3d {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 4px;
+  background: var(--theme-accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+}
+.book-move-out-btn-3d:hover {
+  background: var(--theme-accent-hover);
+  color: #fff;
+}
+body.theme-ebony .book-move-out-btn-3d {
+  color: #000;
+}
+body.theme-ebony .book-move-out-btn-3d:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* === 2. 緊湊網格資料夾追加 === */
+.grid-folder-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-left: 6px solid var(--theme-accent) !important;
+  border-radius: 12px;
+  padding: 1.2rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 125px;
+}
+.grid-folder-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  background: var(--theme-accent-light) !important;
+  border-color: var(--theme-accent-border) !important;
+}
+
+.theme-folder-icon {
+  color: var(--theme-accent) !important;
+}
+
+.folder-grid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.folder-grid-actions {
+  display: flex;
+  gap: 0.4rem;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+.grid-folder-card:hover .folder-grid-actions {
+  opacity: 1;
+}
+
+.folder-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 4px;
+}
+.folder-action-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+.folder-action-btn.text-danger:hover {
+  color: #bd3a3a;
+  background: rgba(189, 58, 58, 0.1);
+}
+body.theme-ebony .folder-action-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.grid-folder-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 0.6rem;
+}
+
+.grid-folder-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.grid-book-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.grid-book-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.book-grid-out-btn {
+  background: var(--theme-accent-light);
+  border: 1px solid var(--theme-accent-border);
+  color: var(--theme-accent);
+  font-size: 0.7rem;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.book-grid-out-btn:hover {
+  background: var(--theme-accent);
+  color: #fff;
+}
+body.theme-ebony .book-grid-out-btn:hover {
+  color: #000 !important;
+}
+
+/* === 3. 緊湊清單資料夾與移出按鈕追加 === */
+.list-folder-item {
+  display: flex;
+  align-items: center;
+  padding: 0.9rem 1.2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  gap: 1.2rem;
+}
+.list-folder-item:hover {
+  background: var(--theme-accent-light) !important;
+  border-color: var(--theme-accent-border) !important;
+}
+
+.list-folder-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  background-color: var(--theme-accent) !important;
+  color: #fff !important;
+}
+
+.theme-folder-icon {
+  color: #fff !important;
+}
+
+.list-folder-info {
+  flex-grow: 1;
+}
+
+.list-folder-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.list-folder-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.list-folder-actions {
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.list-folder-item:hover .list-folder-actions {
+  opacity: 0.7;
+}
+.list-folder-actions:hover {
+  opacity: 1 !important;
+}
+
+.list-folder-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 4px;
+}
+.list-folder-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+.list-folder-btn.text-danger:hover {
+  color: #bd3a3a;
+}
+body.theme-ebony .list-folder-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.list-book-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+
+.list-book-move-out {
+  background: transparent;
+  border: 1px solid var(--theme-accent);
+  color: var(--theme-accent);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.list-book-move-out:hover {
+  background: var(--theme-accent);
+  color: #fff;
+}
+body.theme-ebony .list-book-move-out:hover {
+  color: var(--bg-library) !important;
+}
+
+/* 拖曳目的地高亮效果 */
+.grid-folder-card.drag-over, .list-folder-item.drag-over {
+  border: 2px dashed var(--color-wood-700) !important;
+  background: rgba(140, 75, 39, 0.05) !important;
+  transform: scale(1.02);
+}
+body.theme-ebony .grid-folder-card.drag-over, body.theme-ebony .list-folder-item.drag-over {
+  border-color: var(--color-gold-500) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 新增按鈕在列表與網格下的特殊間距 */
+.add-folder-card {
+  border: 1px dashed var(--border-color);
+  background: transparent;
+  color: var(--text-muted);
+}
+.add-folder-item {
+  border: 1px dashed var(--border-color);
+  background: transparent;
+  color: var(--text-muted);
+}
+.card-label-3d {
+  font-family: var(--font-serif);
+  color: var(--color-wood-200);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* ==========================================================================
+   手機與窄螢幕 (Responsive Mobile View) 極致美化覆蓋
+   ========================================================================== */
+@media (max-width: 600px) {
+  /* 1. 3D 擬真書架模式手機端優化 - 確保一列可以排 3 本書 */
+  .shelf-books {
+    gap: 0.8rem !important;
+    padding: 0 0.4rem !important;
+    min-height: 150px !important;
+  }
+  
+  .book-cover-card {
+    width: 90px !important;
+    height: 128px !important;
+    padding: 0.5rem !important;
+    border-left-width: 4px !important;
+  }
+  
+  .folder-icon-3d {
+    font-size: 1.7rem !important;
+    margin-top: 0.4rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  
+  .book-tag {
+    font-size: 0.72rem !important;
+    padding: 0.2rem 0.1rem !important;
+    top: 6px !important;
+    right: 6px !important;
+    max-height: 85px !important;
+  }
+  
+  .book-creator-tag {
+    font-size: 0.58rem !important;
+    bottom: 6px !important;
+    left: 6px !important;
+  }
+  
+  .book-delete-btn {
+    width: 18px !important;
+    height: 18px !important;
+    top: -5px !important;
+    right: -5px !important;
+    font-size: 8px !important;
+  }
+  .book-delete-btn svg {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .folder-actions-3d {
+    top: 4px !important;
+    right: 4px !important;
+    gap: 0.2rem !important;
+  }
+  .folder-rename-btn-3d, .folder-delete-btn-3d {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .folder-rename-btn-3d svg, .folder-delete-btn-3d svg {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .add-card-3d svg, .add-folder-card-3d svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  .card-label-3d {
+    font-size: 0.62rem !important;
+  }
+
+  /* 2. 緊湊網格模式手機端優化 - 縮小卡片，使其在手機端顯得精緻且一列排三張 */
+  .shelf-grid {
+    grid-template-columns: repeat(3, 1fr) !important; /* 強制一列三張 */
+    gap: 0.6rem !important;
+    padding: 0.8rem 0.2rem !important;
+  }
+
+  .grid-book-card, .grid-folder-card {
+    aspect-ratio: 3/4 !important;
+    padding: 0.5rem !important;
+    min-height: 95px !important;
+    border-radius: 5px !important;
+  }
+  
+  .grid-book-title {
+    font-size: 0.72rem !important;
+    max-height: 70% !important;
+    letter-spacing: 0.05em !important;
+  }
+  
+  .grid-book-meta {
+    font-size: 0.55rem !important;
+    transform: scale(0.85);
+    transform-origin: bottom center;
+  }
+
+  .grid-folder-title {
+    font-size: 0.75rem !important;
+    margin-top: 0.3rem !important;
+  }
+
+  .grid-folder-meta {
+    font-size: 0.55rem !important;
+    transform: scale(0.85);
+    transform-origin: bottom left;
+  }
+
+  .folder-grid-header svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .grid-delete-btn {
+    width: 16px !important;
+    height: 16px !important;
+    top: 0.15rem !important;
+    right: 0.15rem !important;
+  }
+  .grid-delete-btn svg {
+    width: 8px !important;
+    height: 8px !important;
+  }
+}
+
+/* 對話框按鈕列與配色調整 */
+.dialog-actions-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  width: 100%;
+}
+
+.dialog-btn-confirm {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.92rem;
+  /* 預設為 Parchment 淺色模式：淺色底、深色文字 */
+  background-color: rgba(140, 75, 39, 0.10);
+  color: #8c4b27;
+  border: 1px solid rgba(140, 75, 39, 0.22);
+  transition: all 0.15s ease;
+}
+.dialog-btn-confirm:hover {
+  background-color: rgba(140, 75, 39, 0.16);
+  transform: scale(1.02);
+}
+
+/* Comfort 舒適主題 */
+body.theme-comfort .dialog-btn-confirm {
+  background-color: rgba(43, 66, 43, 0.10);
+  color: #2b422b;
+  border-color: rgba(43, 66, 43, 0.22);
+}
+body.theme-comfort .dialog-btn-confirm:hover {
+  background-color: rgba(43, 66, 43, 0.16);
+}
+
+/* Ivory 象牙白主題 */
+body.theme-ivory .dialog-btn-confirm {
+  background-color: rgba(122, 92, 58, 0.10);
+  color: #7a5c3a;
+  border-color: rgba(122, 92, 58, 0.22);
+}
+body.theme-ivory .dialog-btn-confirm:hover {
+  background-color: rgba(122, 92, 58, 0.16);
+}
+
+/* Ebony 玄木主題 (深色模式) */
+body.theme-ebony .dialog-btn-confirm {
+  background-color: #f2a31b;
+  color: #000000 !important;
+  border: none;
+}
+body.theme-ebony .dialog-btn-confirm:hover {
+  background-color: #ffb732;
+  opacity: 0.95;
+}
+
+.dialog-btn-cancel {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.92rem;
+  background: transparent;
+  /* 預設為 Parchment 淺色模式：深褐色文字 */
+  border: 1px solid rgba(140, 75, 39, 0.16);
+  color: rgba(60, 42, 26, 0.75);
+  transition: all 0.15s ease;
+}
+.dialog-btn-cancel:hover {
+  background-color: rgba(140, 75, 39, 0.05);
+  color: #8c4b27;
+  border-color: #8c4b27;
+}
+
+/* Comfort 舒適主題 */
+body.theme-comfort .dialog-btn-cancel {
+  border-color: rgba(43, 66, 43, 0.16);
+  color: rgba(43, 66, 43, 0.75);
+}
+body.theme-comfort .dialog-btn-cancel:hover {
+  background-color: rgba(43, 66, 43, 0.05);
+  color: #2b422b;
+  border-color: #2b422b;
+}
+
+/* Ivory 象牙白主題 */
+body.theme-ivory .dialog-btn-cancel {
+  border-color: rgba(122, 92, 58, 0.16);
+  color: rgba(122, 92, 58, 0.75);
+}
+body.theme-ivory .dialog-btn-cancel:hover {
+  background-color: rgba(122, 92, 58, 0.05);
+  color: #7a5c3a;
+  border-color: #7a5c3a;
+}
+
+/* Ebony 玄木主題 */
+body.theme-ebony .dialog-btn-cancel {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+body.theme-ebony .dialog-btn-cancel:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* Danger 紅色警告按鈕（用於確認刪除） */
+.dialog-btn-danger {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.92rem;
+  /* 預設為淺色底、深紅文字 */
+  background-color: rgba(189, 58, 58, 0.10);
+  color: #bd3a3a;
+  border: 1px solid rgba(189, 58, 58, 0.22);
+  transition: all 0.15s ease;
+}
+.dialog-btn-danger:hover {
+  background-color: rgba(189, 58, 58, 0.16);
+  transform: scale(1.02);
+}
+
+body.theme-ebony .dialog-btn-danger {
+  background-color: #bd3a3a;
+  color: #ffffff !important;
+  border: none;
+}
+body.theme-ebony .dialog-btn-danger:hover {
+  background-color: #d34848;
+}
+
+
+

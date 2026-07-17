@@ -1,0 +1,235 @@
+:root {
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: 'Noto Serif TC', "PingFang TC", "Songti TC", "Noto Sans CJK TC", "Microsoft JhengHei", serif;
+
+  /* Theme: Wood & Ivory (Default Library Theme) */
+  --color-wood-50: #fbf8f3;
+  --color-wood-100: #f5eedc;
+  --color-wood-200: #eddcb8;
+  --color-wood-300: #dec18c;
+  --color-wood-400: #cf9f60;
+  --color-wood-500: #bf7e3d;
+  --color-wood-600: #a76230;
+  --color-wood-700: #8c4b27;
+  --color-wood-800: #713c23;
+  --color-wood-900: #5d3220;
+  --color-wood-950: #341910;
+
+  /* Accent Gold */
+  --color-gold-50: #fffdf5;
+  --color-gold-100: #fef8db;
+  --color-gold-200: #fdedad;
+  --color-gold-300: #fbdb74;
+  --color-gold-400: #f8c140;
+  --color-gold-500: #f2a31b;
+  --color-gold-600: #d67f10;
+  --color-gold-700: #b25d0f;
+  --color-gold-800: #914a12;
+  --color-gold-950: #2b1301;
+
+  /* Text colors */
+  --text-primary: var(--color-wood-950);
+  --text-secondary: #5c4b37;
+  --text-muted: #8d775f;
+  --text-light: #fefefe;
+
+  /* Layout & Misc */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Default background (Library Shelf Background - Parchment Theme style) */
+  --bg-library: radial-gradient(circle at center, #fdfcf9 0%, #f5eee0 100%);
+  --bg-shelf: linear-gradient(180deg, #eddcb8 0%, #dec18c 100%);
+
+  /* Reading Background Options */
+  --bg-paper-ivory: #faf7f0;      /* 象牙白 */
+  --bg-paper-parchment: #f1e5c9;  /* 羊皮紙 */
+  --bg-paper-comfort: #e3ebd9;    /* 舒服綠 */
+  --bg-paper-ebony: #12161a;      /* 烏木 */
+
+  /* Default Active Reading Variables (Parchment is now default) */
+  --reader-bg: var(--bg-paper-parchment);
+  --reader-text: #3c2a1a;
+  --reader-text-muted: #7a6652;
+  --reader-border: #e2ccaa;
+}
+
+/* 0. 象牙白主題全域變量 */
+.theme-ivory {
+  --reader-bg: var(--bg-paper-ivory);
+  --reader-text: #2c2016;
+  --reader-text-muted: #6a5a48;
+  --reader-border: #e0d8c8;
+  --bg-library: radial-gradient(circle at center, #fefcf8 0%, #f8f3ea 100%);
+  --bg-shelf: linear-gradient(180deg, #ede8dd 0%, #dfd8cb 100%);
+  --text-primary: #2c2016;
+  --text-muted: #6a5a48;
+}
+
+/* 1. 羊皮紙主題全域變量與書架同步 */
+.theme-parchment {
+  --reader-bg: var(--bg-paper-parchment);
+  --reader-text: #3c2a1a;
+  --reader-text-muted: #7a6652;
+  --reader-border: #e2ccaa;
+  --bg-library: radial-gradient(circle at center, #fdfcf9 0%, #f5eee0 100%);
+  --bg-shelf: linear-gradient(180deg, #eddcb8 0%, #dec18c 100%);
+  --text-primary: #3c2a1a;
+  --text-muted: #7a6652;
+}
+
+/* 2. 舒服護眼主題全域變量與書架同步 */
+.theme-comfort {
+  --reader-bg: var(--bg-paper-comfort);
+  --reader-text: #23351d;
+  --reader-text-muted: #596b52;
+  --reader-border: #cad4c0;
+  --bg-library: radial-gradient(circle at center, #f6faf0 0%, #ecf3e2 100%);
+  --bg-shelf: linear-gradient(180deg, #d3e1c2 0%, #bdcda7 100%);
+  --text-primary: #23351d;
+  --text-muted: #596b52;
+}
+
+/* 3. 烏木暗色主題全域變量與書架同步 */
+.theme-ebony {
+  --reader-bg: var(--bg-paper-ebony);
+  --reader-text: #d8dec9;
+  --reader-text-muted: #727c69;
+  --reader-border: #22292f;
+  --bg-library: radial-gradient(circle at center, #1b2229 0%, #0d1114 100%);
+  --bg-shelf: linear-gradient(180deg, #25333f 0%, #141c22 100%);
+  --text-primary: #d8dec9;
+  --text-muted: #727c69;
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background-color: #150906;
+  color: var(--text-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input, button, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Hide Scrollbars but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar for elegant elements */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(242, 163, 27, 0.4); }
+  50% { box-shadow: 0 0 15px 4px rgba(242, 163, 27, 0.6); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in { animation: fadeIn var(--transition-normal) forwards; }
+.animate-slide-up { animation: slideUp var(--transition-slow) forwards; }
+.animate-slide-down { animation: slideDown var(--transition-normal) forwards; }
+.animate-spin-slow { animation: spin-slow 10s linear infinite; }
+
+/* Elegant Typography for Buddhist Texts */
+.buddhist-text {
+  font-family: var(--font-serif);
+  line-height: 2;
+  letter-spacing: 0.06em;
+  font-size: 1.25rem;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(15, 10, 8, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-light {
+  background: rgba(250, 246, 235, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(140, 75, 39, 0.15);
+}

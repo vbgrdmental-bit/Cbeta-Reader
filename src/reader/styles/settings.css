@@ -1,0 +1,430 @@
+/* Settings Overlay Panel (slide from bottom/side or overlay card) */
+.settings-panel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+  animation: fadeIn var(--transition-fast) forwards;
+}
+
+.settings-card {
+  width: 92%;
+  max-width: 500px;
+  background: var(--reader-bg);
+  border: 1px solid var(--reader-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  animation: slideUp var(--transition-normal) forwards;
+  overflow: hidden;
+  color: var(--text-primary);
+}
+
+.settings-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--reader-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-header h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.settings-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Sections */
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.settings-section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  font-weight: 700;
+  border-left: 3px solid var(--color-wood-700);
+  padding-left: 8px;
+}
+
+body.theme-ebony .settings-section-title {
+  border-left-color: var(--color-gold-500);
+}
+
+/* Reading Profile Cards (Beginner / Standard / Scholar) */
+.profile-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.profile-card {
+  padding: 1.2rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  transition: var(--transition-normal);
+}
+
+.profile-card:hover {
+  border-color: var(--color-wood-400);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.profile-card.active {
+  border-color: var(--color-gold-500);
+  background: rgba(242, 163, 27, 0.08);
+  box-shadow: inset 0 0 10px rgba(242, 163, 27, 0.1);
+}
+
+.profile-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-wood-100);
+}
+.profile-card.active .profile-card-title {
+  color: var(--color-gold-400);
+}
+
+.profile-card-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Font Size & Line Height Row */
+.settings-control-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.control-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-label {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  opacity: 0.85;
+}
+
+.fontsize-adjuster {
+  display: flex;
+  align-items: center;
+  background: rgba(140, 75, 39, 0.05);
+  border: 1px solid rgba(140, 75, 39, 0.1);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  width: 100%;
+}
+
+body.theme-ebony .fontsize-adjuster {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.fontsize-btn {
+  flex: 1;
+  padding: 0.6rem;
+  text-align: center;
+  background: none;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+.fontsize-btn:hover {
+  background: rgba(140, 75, 39, 0.1);
+}
+
+body.theme-ebony .fontsize-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fontsize-value {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  border-left: 1px solid rgba(140, 75, 39, 0.1);
+  border-right: 1px solid rgba(140, 75, 39, 0.1);
+}
+
+body.theme-ebony .fontsize-value {
+  border-left-color: rgba(255, 255, 255, 0.08);
+  border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Select & Sliders */
+.settings-select {
+  width: 100%;
+  background: rgba(140, 75, 39, 0.05);
+  border: 1px solid rgba(140, 75, 39, 0.1);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1rem;
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+}
+
+body.theme-ebony .settings-select {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.settings-select:focus {
+  border-color: var(--color-wood-700);
+}
+
+body.theme-ebony .settings-select:focus {
+  border-color: var(--color-gold-500);
+}
+
+/* Theme circles selection */
+.theme-selector-grid {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.theme-circle-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.theme-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+.theme-circle-wrapper:hover .theme-circle {
+  transform: scale(1.1);
+}
+.theme-circle-wrapper.active .theme-circle {
+  border-color: var(--color-gold-500);
+  box-shadow: 0 0 10px var(--color-gold-500);
+}
+
+.theme-circle.bg-ivory { background-color: var(--bg-paper-ivory); }
+.theme-circle.bg-parchment { background-color: var(--bg-paper-parchment); }
+.theme-circle.bg-bamboo { background-color: var(--bg-paper-bamboo); }
+.theme-circle.bg-comfort { background-color: var(--bg-paper-comfort); }
+.theme-circle.bg-dark { background-color: var(--bg-paper-dark); }
+.theme-circle.bg-ebony { background-color: var(--bg-paper-ebony); }
+
+.theme-circle-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.theme-circle-wrapper.active .theme-circle-label {
+  color: var(--color-gold-400);
+}
+
+/* Custom toggles checkboxes list */
+.custom-elements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.9rem;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-gold-500);
+  cursor: pointer;
+}
+
+/* Visual Option Cards for Padding & Speed */
+.visual-options-row {
+  display: flex;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.visual-option-card {
+  flex: 1;
+  border: 1px solid var(--reader-border);
+  background: rgba(140, 75, 39, 0.02);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+body.theme-ebony .visual-option-card {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.visual-option-card:hover {
+  border-color: var(--color-wood-400);
+  background: rgba(140, 75, 39, 0.05);
+  transform: translateY(-2px);
+}
+
+body.theme-ebony .visual-option-card:hover {
+  border-color: var(--color-gold-500);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.visual-option-card.active {
+  border-color: var(--color-wood-700);
+  background: rgba(140, 75, 39, 0.08);
+  box-shadow: 0 4px 12px rgba(140, 75, 39, 0.1);
+}
+
+body.theme-comfort .visual-option-card.active {
+  border-color: var(--color-bamboo-600);
+  background: rgba(43, 66, 43, 0.08);
+}
+
+body.theme-ivory .visual-option-card.active {
+  border-color: #7a5c3a;
+  background: rgba(122, 92, 58, 0.08);
+}
+
+body.theme-ebony .visual-option-card.active {
+  border-color: var(--color-gold-500);
+  background: rgba(242, 163, 27, 0.08);
+  box-shadow: 0 4px 12px rgba(242, 163, 27, 0.15);
+}
+
+.visual-option-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* SVG Styles */
+.padding-svg, .speed-svg {
+  width: 32px;
+  height: 32px;
+  color: var(--text-primary);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.visual-option-card.active .padding-svg,
+.visual-option-card.active .speed-svg {
+  opacity: 1;
+}
+
+/* Padding SVG elements */
+.padding-svg .svg-border {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  stroke-opacity: 0.3;
+}
+.visual-option-card.active .padding-svg .svg-border {
+  stroke: var(--theme-accent, var(--color-wood-700));
+  stroke-opacity: 0.8;
+}
+
+.padding-svg line {
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.visual-option-card.active .padding-svg line {
+  stroke: var(--theme-accent, var(--color-wood-700));
+}
+
+/* Speedometer SVG elements */
+.speed-svg .svg-arc {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-opacity: 0.3;
+}
+.visual-option-card.active .speed-svg .svg-arc {
+  stroke: var(--theme-accent, var(--color-wood-700));
+  stroke-opacity: 0.6;
+}
+
+.speed-svg line {
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-opacity: 0.5;
+}
+.visual-option-card.active .speed-svg line {
+  stroke: var(--theme-accent, var(--color-wood-700));
+  stroke-opacity: 0.8;
+}
+
+.speed-svg .svg-center {
+  fill: var(--text-primary);
+}
+.visual-option-card.active .speed-svg .svg-center {
+  fill: var(--theme-accent, var(--color-wood-700));
+}
+
+.speed-svg .svg-needle {
+  stroke: var(--text-primary);
+  stroke-width: 2;
+  stroke-opacity: 0.8;
+  transition: transform 0.3s ease;
+}
+.visual-option-card.active .speed-svg .svg-needle {
+  stroke: var(--theme-accent, var(--color-wood-700));
+  stroke-opacity: 1;
+}
