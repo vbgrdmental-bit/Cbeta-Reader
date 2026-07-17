@@ -561,8 +561,6 @@ export function ReaderView({
       setScrollPercent(0);
       return;
     }
-    const pct = Math.round((el.scrollTop / totalHeight) * 100);
-    setScrollPercent(pct);
 
     // 💡 滾動時靜默自動記錄當前最頂端可見的段落進度
     if (book) {
@@ -572,21 +570,80 @@ export function ReaderView({
         // 💡 視線焦點基準線設定為螢幕上方 35% 處，當下一章節滾動越過此線時，進度條會立即切換品名，極度符合直覺
         const triggerLine = containerRect.top + containerRect.height * 0.35;
         let visibleSegId = '';
-        for (const seg of juanData.segments) {
+        let visibleSegIdx = -1;
+
+        for (let i = 0; i < juanData.segments.length; i++) {
+          const seg = juanData.segments[i];
           const segEl = segmentsMapRef.current[seg.id];
           if (segEl) {
             const rect = segEl.getBoundingClientRect();
             if (rect.bottom > triggerLine) {
               visibleSegId = seg.id;
+              visibleSegIdx = i;
               break;
             }
           }
         }
-        if (visibleSegId) {
+
+        if (visibleSegId && visibleSegIdx !== -1) {
+          // 💡 計算該段落在當前品/目次內部的精確百分比進度
+          let calculatedPercent = 0;
+          
+          if (!book.toc || !book.toc.items || book.toc.items.length === 0) {
+            // 無目次：fallback 使用整卷物理百分比
+            calculatedPercent = Math.round((visibleSegIdx / (juanData.segments.length - 1)) * 100);
+          } else {
+            const juanTocs = book.toc.items
+              .filter((item: any) => item.juan === currentJuanNum)
+              .map((item: any) => {
+                const startIdx = juanData.segments.findIndex(s => s.id === item.startSegmentId);
+                return {
+                  title: item.title,
+                  startIdx: startIdx !== -1 ? startIdx : 0
+                };
+              })
+              .sort((a: any, b: any) => a.startIdx - b.startIdx);
+
+            if (juanTocs.length === 0) {
+              // 本卷無目錄項目，fallback 使用整卷物理百分比
+              calculatedPercent = Math.round((visibleSegIdx / (juanData.segments.length - 1)) * 100);
+            } else {
+              // 尋找當前段落所屬的 TOC 目錄項
+              let matchedTocIdx = -1;
+              for (let i = 0; i < juanTocs.length; i++) {
+                if (visibleSegIdx >= juanTocs[i].startIdx) {
+                  matchedTocIdx = i;
+                } else {
+                  break;
+                }
+              }
+
+              if (matchedTocIdx === -1) {
+                calculatedPercent = Math.round((visibleSegIdx / (juanData.segments.length - 1)) * 100);
+              } else {
+                const startIdx = juanTocs[matchedTocIdx].startIdx;
+                const endIdx = (matchedTocIdx + 1 < juanTocs.length)
+                  ? juanTocs[matchedTocIdx + 1].startIdx - 1
+                  : juanData.segments.length - 1;
+
+                const totalSegs = endIdx - startIdx + 1;
+                const relativeIdx = visibleSegIdx - startIdx;
+
+                calculatedPercent = totalSegs <= 1 
+                  ? 100 
+                  : Math.round((relativeIdx / (totalSegs - 1)) * 100);
+              }
+            }
+          }
+
+          // 限制百分比在 0 ~ 100
+          calculatedPercent = Math.max(0, Math.min(100, calculatedPercent));
+          setScrollPercent(calculatedPercent);
+
           const progress = {
             juan: currentJuanNum,
             segmentId: visibleSegId,
-            percent: pct, // 💡 儲存百分比
+            percent: calculatedPercent, // 💡 儲存品內百分比
             timestamp: Date.now()
           };
           localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));
