@@ -19,6 +19,45 @@ interface ReaderViewProps {
   searchQuery?: string;
 }
 
+// 💡 取得某個段落對應的 TOC 品名，若無 TOC 則退化為「第 X 卷」
+const getMuluTitleForSegment = (book: any, juanNum: number, segmentId: string): string => {
+  if (!book || !book.toc || !book.toc.items || book.toc.items.length === 0) {
+    return `第 ${juanNum} 卷`;
+  }
+
+  const activeJuan = book.content.juans.find((j: any) => j.juan === juanNum);
+  if (!activeJuan) return `第 ${juanNum} 卷`;
+
+  const currentSegIdx = activeJuan.segments.findIndex((s: any) => s.id === segmentId);
+  if (currentSegIdx === -1) return `第 ${juanNum} 卷`;
+
+  const juanTocs = book.toc.items
+    .filter((item: any) => item.juan === juanNum)
+    .map((item: any) => {
+      const startIdx = activeJuan.segments.findIndex((s: any) => s.id === item.startSegmentId);
+      return {
+        title: item.title,
+        startIdx: startIdx !== -1 ? startIdx : 0
+      };
+    })
+    .sort((a: any, b: any) => a.startIdx - b.startIdx);
+
+  if (juanTocs.length === 0) {
+    return `第 ${juanNum} 卷`;
+  }
+
+  let matchedTitle = `第 ${juanNum} 卷`;
+  for (let i = 0; i < juanTocs.length; i++) {
+    if (currentSegIdx >= juanTocs[i].startIdx) {
+      matchedTitle = juanTocs[i].title;
+    } else {
+      break;
+    }
+  }
+
+  return matchedTitle.replace(/-\d+$/, '');
+};
+
 export function ReaderView({ 
   workId, 
   initialSegmentId, 
@@ -78,7 +117,7 @@ export function ReaderView({
 
   // 💡 歷史進度接續閱讀 Dialog 狀態
   const [showResumeDialog, setShowResumeDialog] = useState(false);
-  const [pendingProgress, setPendingProgress] = useState<{ juan: number; segmentId: string } | null>(null);
+  const [pendingProgress, setPendingProgress] = useState<{ juan: number; segmentId: string; displayTitle: string; percent: number } | null>(null);
 
   const handleConfirmResume = () => {
     if (pendingProgress) {
@@ -172,9 +211,7 @@ export function ReaderView({
 
   // 💡 計算當前閱讀位置所屬的目次品名，若無目次則 fallback 顯示為卷次
   const currentMuluTitle = React.useMemo(() => {
-    if (!book || !book.toc || !book.toc.items || book.toc.items.length === 0) {
-      return book ? `${book.metadata.title} 卷 ${currentJuanNum}` : `卷 ${currentJuanNum}`;
-    }
+    if (!book) return `卷 ${currentJuanNum}`;
 
     const activeJuan = book.content.juans.find(j => j.juan === currentJuanNum);
     if (!activeJuan) return `卷 ${currentJuanNum}`;
@@ -193,36 +230,7 @@ export function ReaderView({
       currentSegId = activeSegmentId || (activeJuan.segments.length > 0 ? activeJuan.segments[0].id : '');
     }
 
-    if (!currentSegId) return `卷 ${currentJuanNum}`;
-
-    const currentSegIdx = activeJuan.segments.findIndex(s => s.id === currentSegId);
-    if (currentSegIdx === -1) return `卷 ${currentJuanNum}`;
-
-    const juanTocs = book.toc.items
-      .filter(item => item.juan === currentJuanNum)
-      .map(item => {
-        const startIdx = activeJuan.segments.findIndex(s => s.id === item.startSegmentId);
-        return {
-          title: item.title,
-          startIdx: startIdx !== -1 ? startIdx : 0
-        };
-      })
-      .sort((a, b) => a.startIdx - b.startIdx);
-
-    if (juanTocs.length === 0) {
-      return `卷 ${currentJuanNum}`;
-    }
-
-    let matchedTitle = `卷 ${currentJuanNum}`;
-    for (let i = 0; i < juanTocs.length; i++) {
-      if (currentSegIdx >= juanTocs[i].startIdx) {
-        matchedTitle = juanTocs[i].title;
-      } else {
-        break;
-      }
-    }
-
-    return matchedTitle.replace(/-\d+$/, '');
+    return getMuluTitleForSegment(book, currentJuanNum, currentSegId);
   }, [book, currentJuanNum, activeSegmentId, workId, scrollPercent]);
 
   useEffect(() => {
@@ -249,12 +257,14 @@ export function ReaderView({
     if (book) {
       const progress = {
         juan: currentJuanNum,
-        segmentId: activeSegmentId || ''
+        segmentId: activeSegmentId || '',
+        percent: scrollPercent, // 💡 儲存百分比
+        timestamp: Date.now()
       };
       localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));
       localStorage.setItem('last_read_work_id', workId);
     }
-  }, [currentJuanNum, activeSegmentId, book, workId]);
+  }, [currentJuanNum, activeSegmentId, book, workId, scrollPercent]);
   const {
     isPlaying,
     currentSegmentId: ttsSegmentId,
@@ -365,10 +375,15 @@ export function ReaderView({
               try {
                 const progress = JSON.parse(savedProgressStr);
                 if (progress.juan || progress.segmentId) {
+                  // 💡 計算該段落對應的品名
+                  const displayTitle = getMuluTitleForSegment(bookData, progress.juan || 1, progress.segmentId || '');
+                  
                   // 暫存歷史進度，並彈出確認 Dialog 詢問
                   setPendingProgress({
                     juan: progress.juan || 1,
-                    segmentId: progress.segmentId || ''
+                    segmentId: progress.segmentId || '',
+                    displayTitle: displayTitle,
+                    percent: progress.percent !== undefined ? progress.percent : 0
                   });
                   setShowResumeDialog(true);
                 }
@@ -569,7 +584,9 @@ export function ReaderView({
         if (visibleSegId) {
           const progress = {
             juan: currentJuanNum,
-            segmentId: visibleSegId
+            segmentId: visibleSegId,
+            percent: pct, // 💡 儲存百分比
+            timestamp: Date.now()
           };
           localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));
         }
@@ -1046,8 +1063,8 @@ export function ReaderView({
               偵測到歷史閱讀進度
             </div>
             <p style={{ fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2rem', opacity: 0.9 }}>
-              您上次閱讀至<strong>《{book.metadata.title}》</strong><br />
-              第 <strong>{pendingProgress.juan}</strong> 卷，是否要接續閱讀？
+              您上次閱讀至<strong>《{book.metadata.title}》</strong>的<br />
+              <strong>「{pendingProgress.displayTitle} ({pendingProgress.percent}%)」</strong>，是否要接續閱讀？
             </p>
             <div style={{ display: 'flex', gap: '0.8rem' }}>
               <button 
