@@ -183,6 +183,25 @@ export class ReaderBuilder {
       }
     });
 
+    const hasParagraphAncestor = (element: HTMLElement): boolean => {
+      let parent = element.parentElement;
+      while (parent) {
+        const pTagName = parent.tagName.toUpperCase();
+        if (
+          pTagName === 'P' || 
+          parent.classList.contains('p') || 
+          parent.classList.contains('head') || 
+          parent.classList.contains('lg') || 
+          pTagName === 'L' ||
+          parent.classList.contains('l')
+        ) {
+          return true;
+        }
+        parent = parent.parentElement;
+      }
+      return false;
+    };
+
     const segments: TextSegment[] = [];
     let segmentIndex = 0;
 
@@ -245,11 +264,14 @@ export class ReaderBuilder {
         continue;
       }
 
+      const isBareTextSpan = tagName === 'SPAN' && el.classList.contains('t') && !hasParagraphAncestor(el);
+
       if (
         tagName === 'P' ||
         el.classList.contains('p') ||
         el.classList.contains('head') ||
         el.classList.contains('lg') ||
+        isBareTextSpan ||
         isVerseLine
       ) {
         const textContent = el.textContent?.trim() || '';
