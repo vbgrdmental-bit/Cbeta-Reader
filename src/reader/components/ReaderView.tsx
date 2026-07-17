@@ -170,6 +170,61 @@ export function ReaderView({
     navigateToMatch(prevIdx);
   };
 
+  // 💡 計算當前閱讀位置所屬的目次品名，若無目次則 fallback 顯示為卷次
+  const currentMuluTitle = React.useMemo(() => {
+    if (!book || !book.toc || !book.toc.items || book.toc.items.length === 0) {
+      return book ? `${book.metadata.title} 卷 ${currentJuanNum}` : `卷 ${currentJuanNum}`;
+    }
+
+    const activeJuan = book.content.juans.find(j => j.juan === currentJuanNum);
+    if (!activeJuan) return `卷 ${currentJuanNum}`;
+
+    const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
+    let currentSegId = '';
+    if (savedProgressStr) {
+      try {
+        const progress = JSON.parse(savedProgressStr);
+        if (progress.juan === currentJuanNum && progress.segmentId) {
+          currentSegId = progress.segmentId;
+        }
+      } catch {}
+    }
+    if (!currentSegId) {
+      currentSegId = activeSegmentId || (activeJuan.segments.length > 0 ? activeJuan.segments[0].id : '');
+    }
+
+    if (!currentSegId) return `卷 ${currentJuanNum}`;
+
+    const currentSegIdx = activeJuan.segments.findIndex(s => s.id === currentSegId);
+    if (currentSegIdx === -1) return `卷 ${currentJuanNum}`;
+
+    const juanTocs = book.toc.items
+      .filter(item => item.juan === currentJuanNum)
+      .map(item => {
+        const startIdx = activeJuan.segments.findIndex(s => s.id === item.startSegmentId);
+        return {
+          title: item.title,
+          startIdx: startIdx !== -1 ? startIdx : 0
+        };
+      })
+      .sort((a, b) => a.startIdx - b.startIdx);
+
+    if (juanTocs.length === 0) {
+      return `卷 ${currentJuanNum}`;
+    }
+
+    let matchedTitle = `卷 ${currentJuanNum}`;
+    for (let i = 0; i < juanTocs.length; i++) {
+      if (currentSegIdx >= juanTocs[i].startIdx) {
+        matchedTitle = juanTocs[i].title;
+      } else {
+        break;
+      }
+    }
+
+    return matchedTitle.replace(/-\d+$/, '');
+  }, [book, currentJuanNum, activeSegmentId, workId, scrollPercent]);
+
   useEffect(() => {
     setIsCopyrightExpanded(false);
   }, [currentJuanNum, workId]);
@@ -813,7 +868,7 @@ export function ReaderView({
       {/* 底部工具列 */}
       <div className={`reader-overlay-bar reader-bottom-bar ${showToolbar ? 'visible' : 'hidden'}`}>
         <div className="bar-left-controls">
-          <span>{book.metadata.juansCount > 1 ? `卷 ${currentJuanNum} 的` : ''}閱讀進度 ({scrollPercent}%)</span>
+          <span>{currentMuluTitle} 的閱讀進度 ({scrollPercent}%)</span>
         </div>
 
         <div className="bar-right-controls">
