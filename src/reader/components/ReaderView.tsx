@@ -76,6 +76,28 @@ export function ReaderView({
   const [matchedSegments, setMatchedSegments] = useState<Array<{ segmentId: string; juan: number }>>([]);
   const [currentMatchIndex, setCurrentMatchIndex] = useState<number>(-1);
 
+  // 💡 歷史進度接續閱讀 Dialog 狀態
+  const [showResumeDialog, setShowResumeDialog] = useState(false);
+  const [pendingProgress, setPendingProgress] = useState<{ juan: number; segmentId: string } | null>(null);
+
+  const handleConfirmResume = () => {
+    if (pendingProgress) {
+      setCurrentJuanNum(pendingProgress.juan);
+      setTimeout(() => {
+        if (pendingProgress.segmentId) {
+          scrollToSegment(pendingProgress.segmentId);
+          setActiveSegmentId(pendingProgress.segmentId);
+        }
+      }, 300);
+    }
+    setShowResumeDialog(false);
+  };
+
+  const handleDeclineResume = () => {
+    setCurrentJuanNum(1);
+    setShowResumeDialog(false);
+  };
+
   useEffect(() => {
     if (!book || !searchQuery) {
       setMatchedSegments([]);
@@ -287,16 +309,16 @@ export function ReaderView({
             if (savedProgressStr) {
               try {
                 const progress = JSON.parse(savedProgressStr);
-                if (progress.juan) {
-                  setCurrentJuanNum(progress.juan);
+                if (progress.juan || progress.segmentId) {
+                  // 暫存歷史進度，並彈出確認 Dialog 詢問
+                  setPendingProgress({
+                    juan: progress.juan || 1,
+                    segmentId: progress.segmentId || ''
+                  });
+                  setShowResumeDialog(true);
                 }
-                if (progress.segmentId) {
-                  // 延遲跳轉以確保該卷 DOM 已經渲染完成
-                  setTimeout(() => {
-                    scrollToSegment(progress.segmentId);
-                    setActiveSegmentId(progress.segmentId);
-                  }, 300);
-                }
+                // 預設先進入卷 1
+                setCurrentJuanNum(1);
               } catch (err) {
                 console.warn('Failed to parse saved progress, fallback to juan 1:', err);
                 setCurrentJuanNum(1);
@@ -928,6 +950,89 @@ export function ReaderView({
           onSave={onSaveSettings}
           onClose={() => setShowSettingsView(false)}
         />
+      )}
+
+      {/* 💡 歷史進度接續閱讀詢問 Dialog */}
+      {showResumeDialog && pendingProgress && (
+        <div 
+          className="reader-dialog-overlay"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'rgba(0, 0, 0, 0.4)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 3000,
+            animation: 'fadeIn 0.25s ease-out'
+          }}
+        >
+          <div 
+            className="reader-dialog-box"
+            style={{
+              background: 'var(--reader-bg)',
+              color: 'var(--reader-text)',
+              border: '1px solid var(--theme-accent-border, rgba(242, 163, 27, 0.2))',
+              borderRadius: '16px',
+              padding: '2rem',
+              width: '90%',
+              maxWidth: '420px',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.25)',
+              textAlign: 'center',
+              fontFamily: 'var(--font-serif)',
+              animation: 'scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+            }}
+          >
+            <div style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', color: 'var(--theme-accent)' }}>
+              偵測到歷史閱讀進度
+            </div>
+            <p style={{ fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2rem', opacity: 0.9 }}>
+              您上次閱讀至<strong>《{book.metadata.title}》</strong><br />
+              第 <strong>{pendingProgress.juan}</strong> 卷，是否要接續閱讀？
+            </p>
+            <div style={{ display: 'flex', gap: '0.8rem' }}>
+              <button 
+                onClick={handleDeclineResume}
+                style={{
+                  flex: 1,
+                  padding: '0.65rem',
+                  borderRadius: '8px',
+                  border: '1px solid var(--text-muted, #ccc)',
+                  background: 'transparent',
+                  color: 'var(--reader-text)',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s'
+                }}
+                className="resume-dialog-btn-secondary"
+              >
+                從頭開始
+              </button>
+              <button 
+                onClick={handleConfirmResume}
+                style={{
+                  flex: 1,
+                  padding: '0.65rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'var(--theme-accent)',
+                  color: settings.theme === 'ebony' ? '#000' : '#fff',
+                  fontSize: '0.9rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'opacity 0.2s'
+                }}
+                className="resume-dialog-btn-primary"
+              >
+                接續閱讀
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>

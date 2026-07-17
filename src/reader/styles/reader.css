@@ -675,3 +675,25 @@ body.theme-ebony .drawer-item.active {
   text-align: center;
 }
 
+/* 接續閱讀詢問視窗按鈕狀態與動效 */
+.resume-dialog-btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+body.theme-ebony .resume-dialog-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+.resume-dialog-btn-primary:hover {
+  opacity: 0.9;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+

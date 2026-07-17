@@ -41,7 +41,7 @@ export function Library({
   const [activeTab, setActiveTab] = useState<'shelf' | 'search'>(initialSearchQuery ? 'search' : 'shelf');
   const [draggingWorkId, setDraggingWorkId] = useState<string | null>(null);
   const [loadingDots, setLoadingDots] = useState('...');
-  const [lastReadBookInfo, setLastReadBookInfo] = useState<{ workId: string; title: string; juan: number } | null>(null);
+  const [lastReadBookInfo, setLastReadBookInfo] = useState<{ workId: string; title: string; juan: number; segmentId?: string } | null>(null);
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
 
   // 💡 自動讀取最後一次閱讀的歷史佛經
@@ -57,7 +57,8 @@ export function Library({
             setLastReadBookInfo({
               workId: lastWorkId,
               title: matchedBook.title,
-              juan: progress.juan || 1
+              juan: progress.juan || 1,
+              segmentId: progress.segmentId || ''
             });
           } catch {
             setLastReadBookInfo(null);
@@ -597,7 +598,7 @@ export function Library({
               <p>以CBETA為主的電子大藏經閱讀器</p>
               {lastReadBookInfo && (
                 <div>
-                  <div className="resume-reading-box" onClick={() => onSelectBook(lastReadBookInfo.workId)} title="點擊繼續閱讀">
+                  <div className="resume-reading-box" onClick={() => onSelectBook(lastReadBookInfo.workId, lastReadBookInfo.segmentId)} title="點擊繼續閱讀">
                     <span className="resume-tag">接續閱讀</span>
                     <span className="resume-title">{lastReadBookInfo.title}</span>
                     <span className="resume-juan">第 {lastReadBookInfo.juan} 卷</span>
@@ -610,23 +611,6 @@ export function Library({
 
           {/* 清單模式（唯一） */}
           <div className="shelf-list">
-            {/* === A-0. 繼續閱讀虛擬資料夾 (固定在最上方) === */}
-            {!currentFolderId && resumeBooks.length > 0 && (
-              <div 
-                className="list-book-item list-folder-item virtual-resume-folder"
-                onClick={() => setCurrentFolderId('virtual_resume')}
-                style={{ borderLeft: '3px solid var(--theme-accent, #f2a31b)', cursor: 'pointer' }}
-              >
-                <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ background: 'var(--theme-accent-light, rgba(242, 163, 27, 0.08))' }}>
-                  <BookOpen size={16} style={{ color: 'var(--theme-accent, #f2a31b)' }} />
-                </div>
-                <div className="list-folder-info">
-                  <div className="list-folder-title" style={{ fontWeight: 'bold' }}>繼續閱讀</div>
-                  <div className="list-folder-meta">含 {resumeBooks.length} 部閱讀中的經典 · 一鍵接續</div>
-                </div>
-              </div>
-            )}
-
             {/* === A. 渲染資料夾清單 === */}
             {displayFolders.map((folder) => (
               <div 
