@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api-cbeta/:path*",
+      "destination": "https://cbdata.dila.edu.tw/:path*"
+    }
+  ]
+}

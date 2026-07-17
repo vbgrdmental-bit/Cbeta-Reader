@@ -2,10 +2,7 @@ import type { BookMetadata } from '../types/book';
 
 // 輔助函數：處理開發環境與生產環境的 API 請求路由，繞過 CORS 限制
 export const getApiUrl = (path: string): string => {
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.port === '5173')) {
-    return `/api-cbeta${path}`;
-  }
-  return `https://cbdata.dila.edu.tw${path}`;
+  return `/api-cbeta${path}`;
 };
 
 export interface SearchResult {
@@ -24,28 +21,32 @@ export const FEATURED_BOOKS: SearchResult[] = [
     title: '金剛般若波羅蜜經',
     creators: '姚秦 鳩摩羅什譯',
     juansCount: 1,
-    category: '般若部類'
+    category: '般若部類',
+    vol: 'T08'
   },
   {
     workId: 'T0412',
     title: '地藏菩薩本願經',
     creators: '唐 實叉難陀譯',
     juansCount: 3,
-    category: '大集部類'
+    category: '大集部類',
+    vol: 'T13'
   },
   {
     workId: 'T0262',
     title: '妙法蓮華經',
     creators: '姚秦 鳩摩羅什譯',
     juansCount: 7,
-    category: '法華部類'
+    category: '法華部類',
+    vol: 'T09'
   },
   {
     workId: 'Y0040',
     title: '成佛之道（增注本）',
     creators: '釋印順著',
     juansCount: 1,
-    category: '新編部類'
+    category: '新編部類',
+    vol: 'Y01'
   }
 ];
 
