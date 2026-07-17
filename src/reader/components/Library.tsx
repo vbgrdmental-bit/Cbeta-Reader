@@ -42,6 +42,7 @@ export function Library({
   const [draggingWorkId, setDraggingWorkId] = useState<string | null>(null);
   const [loadingDots, setLoadingDots] = useState('...');
   const [lastReadBookInfo, setLastReadBookInfo] = useState<{ workId: string; title: string; juan: number } | null>(null);
+  const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
 
   // 💡 自動讀取最後一次閱讀的歷史佛經
   useEffect(() => {
@@ -401,14 +402,65 @@ export function Library({
   };
 
   // === 篩選渲染資料夾與書籍 ===
+  // 💡 收集並排序所有有閱讀進度的經典
+  const resumeBooks = React.useMemo(() => {
+    const list: Array<{ book: BookMetadata; progress: { juan: number; segmentId: string; timestamp: number } }> = [];
+    
+    downloadedBooks.forEach((book) => {
+      const progressStr = localStorage.getItem(`reader_progress_${book.workId}`);
+      if (progressStr) {
+        try {
+          const progress = JSON.parse(progressStr);
+          if (progress.juan || progress.segmentId) {
+            list.push({
+              book,
+              progress: {
+                juan: progress.juan || 1,
+                segmentId: progress.segmentId || '',
+                timestamp: progress.timestamp || 0
+              }
+            });
+          }
+        } catch {
+          // 容錯
+        }
+      }
+    });
+
+    // 💡 根據 timestamp 降序排列 (最後閱讀的放最上面)
+    list.sort((a, b) => b.progress.timestamp - a.progress.timestamp);
+    return list;
+  }, [downloadedBooks, progressUpdatedTrigger]);
+
+  const handleDeleteProgress = (e: React.MouseEvent, workId: string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    localStorage.removeItem(`reader_progress_${workId}`);
+    
+    const lastWorkId = localStorage.getItem('last_read_work_id');
+    if (lastWorkId === workId) {
+      localStorage.removeItem('last_read_work_id');
+    }
+    
+    setProgressUpdatedTrigger(prev => prev + 1);
+  };
+
   const allInFolderBookIds = folders.flatMap(f => f.bookIds);
-  const displayFolders = folders.filter(f => f.parentId === currentFolderId);
-  const displayBooks = currentFolderId
-    ? downloadedBooks.filter(b => {
-        const f = folders.find(folder => folder.id === currentFolderId);
-        return f ? f.bookIds.includes(b.workId) : false;
-      })
-    : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId));
+  
+  // 如果是虛擬的「繼續閱讀」資料夾，不顯示任何子資料夾
+  const displayFolders = currentFolderId === 'virtual_resume'
+    ? []
+    : folders.filter(f => f.parentId === currentFolderId);
+    
+  // 如果是虛擬的「繼續閱讀」資料夾，顯示有進度的書籍；否則顯示對應資料夾下的書籍
+  const displayBooks = currentFolderId === 'virtual_resume'
+    ? resumeBooks.map(item => item.book)
+    : (currentFolderId
+        ? downloadedBooks.filter(b => {
+            const f = folders.find(folder => folder.id === currentFolderId);
+            return f ? f.bookIds.includes(b.workId) : false;
+          })
+        : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId)));
 
   const currentFolder = folders.find(f => f.id === currentFolderId);
 
@@ -507,16 +559,21 @@ export function Library({
         /* 書架主畫面 */
         <div className="bookshelf-section animate-slide-up">
           {/* 資料夾導航與麵包屑 */}
-          {currentFolderId && currentFolder && (
+          {currentFolderId && (
             <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
                 <div className="folder-nav-left">
-                  <button className="folder-back-btn" onClick={() => setCurrentFolderId(currentFolder.parentId)}>
+                  <button 
+                    className="folder-back-btn" 
+                    onClick={() => setCurrentFolderId(currentFolderId === 'virtual_resume' ? null : (currentFolder?.parentId || null))}
+                  >
                     <ChevronLeft size={16} /> 返回上層
                   </button>
                 </div>
                 <div className="folder-nav-middle">
-                  <span className="folder-path-display">{getFolderPath(currentFolderId)}</span>
+                  <span className="folder-path-display">
+                    {currentFolderId === 'virtual_resume' ? '繼續閱讀' : getFolderPath(currentFolderId)}
+                  </span>
                 </div>
                 <div className="folder-nav-right">
                   <span className="folder-book-count-badge" title="此資料夾內經典數">
@@ -524,11 +581,13 @@ export function Library({
                   </span>
                 </div>
               </div>
-              <div className="folder-sub-actions">
-                <button className="folder-add-sub-btn-flat" onClick={() => setShowNewFolderDialog(true)}>
-                  <Plus size={13} /> 新建子資料夾
-                </button>
-              </div>
+              {currentFolderId !== 'virtual_resume' && (
+                <div className="folder-sub-actions">
+                  <button className="folder-add-sub-btn-flat" onClick={() => setShowNewFolderDialog(true)}>
+                    <Plus size={13} /> 新建子資料夾
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -551,6 +610,23 @@ export function Library({
 
           {/* 清單模式（唯一） */}
           <div className="shelf-list">
+            {/* === A-0. 繼續閱讀虛擬資料夾 (固定在最上方) === */}
+            {!currentFolderId && resumeBooks.length > 0 && (
+              <div 
+                className="list-book-item list-folder-item virtual-resume-folder"
+                onClick={() => setCurrentFolderId('virtual_resume')}
+                style={{ borderLeft: '3px solid var(--theme-accent, #f2a31b)', cursor: 'pointer' }}
+              >
+                <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ background: 'var(--theme-accent-light, rgba(242, 163, 27, 0.08))' }}>
+                  <BookOpen size={16} style={{ color: 'var(--theme-accent, #f2a31b)' }} />
+                </div>
+                <div className="list-folder-info">
+                  <div className="list-folder-title" style={{ fontWeight: 'bold' }}>繼續閱讀</div>
+                  <div className="list-folder-meta">含 {resumeBooks.length} 部閱讀中的經典 · 一鍵接續</div>
+                </div>
+              </div>
+            )}
+
             {/* === A. 渲染資料夾清單 === */}
             {displayFolders.map((folder) => (
               <div 
@@ -587,43 +663,75 @@ export function Library({
             ))}
 
             {/* === B. 渲染經典清單 === */}
-            {displayBooks.map((book) => (
-              <div 
-                key={book.workId}
-                className={`list-book-item ${draggingWorkId === book.workId ? 'dragging' : ''}`}
-                onClick={() => onSelectBook(book.workId)}
-                draggable={true}
-                onDragStart={(e) => handleDragStart(e, book.workId)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, book.workId)}
-              >
-                <div className="list-book-cover" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
-                  {book.workId}
+            {displayBooks.map((book) => {
+              // 💡 取得閱讀進度
+              const progressStr = localStorage.getItem(`reader_progress_${book.workId}`);
+              let savedProgress: { juan: number; segmentId: string } | null = null;
+              if (progressStr) {
+                try {
+                  savedProgress = JSON.parse(progressStr);
+                } catch {}
+              }
+
+              return (
+                <div 
+                  key={book.workId}
+                  className={`list-book-item ${draggingWorkId === book.workId ? 'dragging' : ''}`}
+                  onClick={() => onSelectBook(book.workId)}
+                  draggable={currentFolderId !== 'virtual_resume'}
+                  onDragStart={(e) => handleDragStart(e, book.workId)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, book.workId)}
+                >
+                  <div className="list-book-cover" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
+                    {book.workId}
+                  </div>
+                  <div className="list-book-info">
+                    <div className="list-book-title">{book.title}</div>
+                    <div className="list-book-meta">
+                      {currentFolderId === 'virtual_resume' && savedProgress ? (
+                        <span style={{ color: 'var(--theme-accent)', fontWeight: 600 }}>
+                          上次讀到：第 {savedProgress.juan} 卷
+                        </span>
+                      ) : (
+                        `${book.creators} · 共 ${book.juansCount} 卷`
+                      )}
+                    </div>
+                  </div>
+                  <div className="list-book-actions-right">
+                    {currentFolderId === 'virtual_resume' ? (
+                      <button 
+                        className="list-book-move-out"
+                        onClick={(e) => handleDeleteProgress(e, book.workId)}
+                        title="清除此書的閱讀記錄，不刪除原書"
+                        style={{ color: '#bd3a3a', borderColor: 'rgba(189, 58, 58, 0.3)' }}
+                      >
+                        清除記錄
+                      </button>
+                    ) : (
+                      <>
+                        {currentFolderId && (
+                          <button 
+                            className="list-book-move-out"
+                            onClick={(e) => handleRemoveFromFolder(e, book.workId)}
+                            title="移出資料夾"
+                          >
+                            移出
+                          </button>
+                        )}
+                        <button 
+                          className="list-delete-btn"
+                          onClick={(e) => handleDeleteBook(e, book.workId)}
+                          title="刪除"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div className="list-book-info">
-                  <div className="list-book-title">{book.title}</div>
-                  <div className="list-book-meta">{book.creators} · 共 {book.juansCount} 卷</div>
-                </div>
-                <div className="list-book-actions-right">
-                  {currentFolderId && (
-                    <button 
-                      className="list-book-move-out"
-                      onClick={(e) => handleRemoveFromFolder(e, book.workId)}
-                      title="移出資料夾"
-                    >
-                      移出
-                    </button>
-                  )}
-                  <button 
-                    className="list-delete-btn"
-                    onClick={(e) => handleDeleteBook(e, book.workId)}
-                    title="刪除"
-                  >
-                    <Trash2 size={12} />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ) : (
