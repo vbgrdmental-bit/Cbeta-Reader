@@ -426,12 +426,6 @@ export function Library({
 
   // HTML5 拖曳排序事件處理
   const handleDragStart = (e: React.DragEvent, id: string) => {
-    const target = e.target as HTMLElement;
-    // 💡 只有按住左側 drag-handle 手把時才允許拖曳（防範點選卡片或反白文字誤觸發拖曳）
-    if (!target.closest('.drag-handle')) {
-      e.preventDefault();
-      return;
-    }
     setDraggingWorkId(id);
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', id);
