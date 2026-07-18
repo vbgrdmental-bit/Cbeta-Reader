@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Plus, Trash2, Check, AlertCircle, X, Download, BookOpen,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, GripVertical, FolderUp
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook } from '../../utils/db';
@@ -105,6 +105,35 @@ export function Library({
 
   const [folders, setFolders] = useState<BookFolder[]>([]);
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+
+  // 💡 資料夾瀏覽歷史紀錄，用於支援正方形上一頁（<）與下一頁（>）導航按鈕
+  const [folderHistory, setFolderHistory] = useState<Array<string | null>>([null]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  const navigateToFolder = (folderId: string | null) => {
+    // 當使用者手動點選資料夾時，截斷並寫入新歷史
+    const newHistory = folderHistory.slice(0, historyIndex + 1);
+    newHistory.push(folderId);
+    setFolderHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+    setCurrentFolderId(folderId);
+  };
+
+  const handleGoBack = () => {
+    if (historyIndex > 0) {
+      const prevIdx = historyIndex - 1;
+      setHistoryIndex(prevIdx);
+      setCurrentFolderId(folderHistory[prevIdx]);
+    }
+  };
+
+  const handleGoForward = () => {
+    if (historyIndex < folderHistory.length - 1) {
+      const nextIdx = historyIndex + 1;
+      setHistoryIndex(nextIdx);
+      setCurrentFolderId(folderHistory[nextIdx]);
+    }
+  };
   const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
@@ -210,42 +239,133 @@ export function Library({
   // 拖曳移入資料夾
   const handleDropIntoFolder = (e: React.DragEvent, folderId: string) => {
     e.preventDefault();
-    const bookId = e.dataTransfer.getData('text/plain') || draggingWorkId;
-    if (!bookId || bookId.startsWith('folder-')) return;
-    
-    // 經典只屬於單一資料夾
-    const updated = folders.map(f => {
-      if (f.id === folderId) {
-        const bookIds = f.bookIds.includes(bookId) ? f.bookIds : [...f.bookIds, bookId];
-        return { ...f, bookIds };
+    const dragId = e.dataTransfer.getData('text/plain') || draggingWorkId;
+    if (!dragId || dragId === folderId) return;
+
+    if (dragId.startsWith('folder-')) {
+      // 💡 嵌套資料夾：將資料夾拖入另一個資料夾
+      // 防範循環嵌套 (Descendant Check)
+      const isDescendantOf = (childId: string, parentId: string): boolean => {
+        let current: BookFolder | undefined = folders.find(f => f.id === childId);
+        while (current && current.parentId) {
+          if (current.parentId === parentId) return true;
+          const nextParentId = current.parentId;
+          current = folders.find(f => f.id === nextParentId);
+        }
+        return false;
+      };
+
+      if (isDescendantOf(folderId, dragId)) {
+        console.warn('Cannot drop parent folder into its child folder');
+        return;
       }
-      return { ...f, bookIds: f.bookIds.filter(id => id !== bookId) };
-    });
-    
-    saveFolders(updated);
+
+      const updated = folders.map(f => {
+        if (f.id === dragId) {
+          return { ...f, parentId: folderId };
+        }
+        return f;
+      });
+      saveFolders(updated);
+    } else {
+      // 💡 將經典拖入資料夾
+      const updated = folders.map(f => {
+        if (f.id === folderId) {
+          const bookIds = f.bookIds.includes(dragId) ? f.bookIds : [...f.bookIds, dragId];
+          return { ...f, bookIds };
+        }
+        return { ...f, bookIds: f.bookIds.filter(id => id !== dragId) };
+      });
+      saveFolders(updated);
+    }
     setDraggingWorkId(null);
   };
 
-  // 將經典移出資料夾
+  // 將經典移出資料夾至上一層 (parentId 代表的資料夾)
   const handleRemoveFromFolder = (e: React.MouseEvent, bookId: string) => {
     e.stopPropagation();
+    if (!currentFolderId) return;
+
+    const currentFolder = folders.find(f => f.id === currentFolderId);
+    if (!currentFolder) return;
+
+    const parentId = currentFolder.parentId; // 上一層資料夾 ID (可以是 null 也就是首頁)
+
     const updated = folders.map(f => {
+      // 1. 從當前資料夾移除
       if (f.id === currentFolderId) {
         return { ...f, bookIds: f.bookIds.filter(id => id !== bookId) };
       }
+      // 2. 加入到上一層資料夾中 (如果上一層不是首頁的話)
+      if (parentId && f.id === parentId) {
+        const bookIds = f.bookIds.includes(bookId) ? f.bookIds : [...f.bookIds, bookId];
+        return { ...f, bookIds };
+      }
       return f;
     });
+
     saveFolders(updated);
+  };
+
+  // 資料夾手把間上下排序
+  const handleFolderSort = (e: React.DragEvent, targetFolderId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const sourceFolderId = e.dataTransfer.getData('text/plain') || draggingWorkId;
+    if (!sourceFolderId || !sourceFolderId.startsWith('folder-') || sourceFolderId === targetFolderId) return;
+
+    setFolders((prev) => {
+      const sourceIdx = prev.findIndex(f => f.id === sourceFolderId);
+      const targetIdx = prev.findIndex(f => f.id === targetFolderId);
+      if (sourceIdx === -1 || targetIdx === -1) return prev;
+
+      const newFolders = [...prev];
+      const [removed] = newFolders.splice(sourceIdx, 1);
+      newFolders.splice(targetIdx, 0, removed);
+
+      localStorage.setItem('cbeta_reader_folders', JSON.stringify(newFolders));
+      return newFolders;
+    });
+    setDraggingWorkId(null);
+  };
+
+  // 書籍手把間排序
+  const handleBookSort = (e: React.DragEvent, targetWorkId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const sourceWorkId = e.dataTransfer.getData('text/plain') || draggingWorkId;
+    if (!sourceWorkId || sourceWorkId.startsWith('folder-') || sourceWorkId === targetWorkId) return;
+
+    setDownloadedBooks((prev) => {
+      const sourceIndex = prev.findIndex(b => b.workId === sourceWorkId);
+      const targetIndex = prev.findIndex(b => b.workId === targetWorkId);
+      if (sourceIndex === -1 || targetIndex === -1) return prev;
+
+      const newBooks = [...prev];
+      const [removed] = newBooks.splice(sourceIndex, 1);
+      newBooks.splice(targetIndex, 0, removed);
+
+      const orderList = newBooks.map(b => b.workId);
+      localStorage.setItem('cbeta_reader_shelf_order', JSON.stringify(orderList));
+      return newBooks;
+    });
+    setDraggingWorkId(null);
   };
 
   // 刪除經典暫存 ID
   const [bookToDelete, setBookToDelete] = useState<string | null>(null);
 
   // HTML5 拖曳排序事件處理
-  const handleDragStart = (e: React.DragEvent, workId: string) => {
-    setDraggingWorkId(workId);
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    const target = e.target as HTMLElement;
+    // 💡 只有按住左側 drag-handle 手把時才允許拖曳（防範點選卡片或反白文字誤觸發拖曳）
+    if (!target.closest('.drag-handle')) {
+      e.preventDefault();
+      return;
+    }
+    setDraggingWorkId(id);
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', workId);
+    e.dataTransfer.setData('text/plain', id);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -463,7 +583,6 @@ export function Library({
           })
         : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId)));
 
-  const currentFolder = folders.find(f => f.id === currentFolderId);
 
   // 獲取當前資料夾路徑麵包屑
   const getFolderPath = (folderId: string | null): string => {
@@ -563,12 +682,22 @@ export function Library({
           {currentFolderId && (
             <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
-                <div className="folder-nav-left">
+                <div className="folder-nav-left" style={{ display: 'flex', gap: '0.4rem' }}>
                   <button 
-                    className="folder-back-btn" 
-                    onClick={() => setCurrentFolderId(currentFolderId === 'virtual_resume' ? null : (currentFolder?.parentId || null))}
+                    className="folder-back-btn square-btn" 
+                    onClick={handleGoBack}
+                    disabled={historyIndex === 0}
+                    title="返回"
                   >
-                    <ChevronLeft size={16} /> 返回上層
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button 
+                    className="folder-back-btn square-btn" 
+                    onClick={handleGoForward}
+                    disabled={historyIndex >= folderHistory.length - 1}
+                    title="前進"
+                  >
+                    <ChevronRight size={16} />
                   </button>
                 </div>
                 <div className="folder-nav-middle">
@@ -615,11 +744,24 @@ export function Library({
             {displayFolders.map((folder) => (
               <div 
                 key={folder.id}
-                className="list-book-item list-folder-item"
-                onClick={() => setCurrentFolderId(folder.id)}
+                className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''}`}
+                onClick={() => navigateToFolder(folder.id)}
+                draggable={true}
+                onDragStart={(e) => handleDragStart(e, folder.id)}
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDropIntoFolder(e, folder.id)}
               >
+                {/* 💡 拖曳手把：只允許拖曳此處進行排序或移動 */}
+                <div 
+                  className="drag-handle"
+                  title="按住拖曳手把進行排序或將此資料夾移入其他資料夾"
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleFolderSort(e, folder.id)}
+                  onClick={(e) => e.stopPropagation()} // 阻止冒泡觸發點擊進入資料夾
+                >
+                  <GripVertical size={16} />
+                </div>
+
                 <div className="list-folder-icon-wrapper theme-folder-wrapper">
                   <Folder size={16} className="theme-folder-icon" />
                 </div>
@@ -667,6 +809,19 @@ export function Library({
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, book.workId)}
                 >
+                  {/* 💡 拖曳手把：只允許按住此處進行同級排序 */}
+                  {currentFolderId !== 'virtual_resume' && (
+                    <div 
+                      className="drag-handle"
+                      title="按住拖曳手把進行排序"
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleBookSort(e, book.workId)}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <GripVertical size={16} />
+                    </div>
+                  )}
+
                   <div className="list-book-cover" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
                     {book.workId}
                   </div>
@@ -696,11 +851,11 @@ export function Library({
                       <>
                         {currentFolderId && (
                           <button 
-                            className="list-book-move-out"
+                            className="list-book-move-out square-btn"
                             onClick={(e) => handleRemoveFromFolder(e, book.workId)}
-                            title="移出資料夾"
+                            title="移出至上層資料夾"
                           >
-                            移出
+                            <FolderUp size={14} />
                           </button>
                         )}
                         <button 
