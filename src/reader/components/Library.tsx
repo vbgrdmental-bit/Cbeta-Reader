@@ -138,7 +138,8 @@ export function Library({
 
   // 💡 整理編輯模式狀態（長按卡片進入，空白點選退出，手把與垃圾桶平常隱藏，模式下才顯現）
   const [isEditMode, setIsEditMode] = useState(false);
-  const [dragOverTargetId, setDragOverTargetId] = useState<string | null>(null);
+  const [dragOverSortTargetId, setDragOverSortTargetId] = useState<string | null>(null);
+  const [dragOverFolderTargetId, setDragOverFolderTargetId] = useState<string | null>(null);
   const longPressTimerRef = useRef<number | null>(null);
 
   const startLongPress = (e: React.MouseEvent | React.TouchEvent) => {
@@ -184,13 +185,12 @@ export function Library({
     }
   };
 
-  // 💡 計算拖曳懸停時是應該渲染「上方」還是「下方」提示線
+  // 💡 計算拖曳懸停時是應該渲染「上方」還是「下方」提示線（排序用）
   const getDragOverLineClass = (targetId: string) => {
-    if (!draggingWorkId || dragOverTargetId !== targetId || draggingWorkId === targetId) return '';
+    if (!draggingWorkId || dragOverSortTargetId !== targetId || draggingWorkId === targetId) return '';
     
     // 如果是資料夾拖曳，或者是在對比資料夾與經典，預設放上面
     if (draggingWorkId.startsWith('folder-') || targetId.startsWith('folder-')) {
-      // 在 folders 與 displayFolders 裡尋找
       const sourceIdx = folders.findIndex(f => f.id === draggingWorkId);
       const targetIdx = folders.findIndex(f => f.id === targetId);
       if (sourceIdx === -1 || targetIdx === -1) return 'drag-over-top';
@@ -369,6 +369,26 @@ export function Library({
       if (parentId && f.id === parentId) {
         const bookIds = f.bookIds.includes(bookId) ? f.bookIds : [...f.bookIds, bookId];
         return { ...f, bookIds };
+      }
+      return f;
+    });
+
+    saveFolders(updated);
+  };
+
+  // 💡 將子資料夾移出至上一層 (parentId 代表的上一層資料夾，若是首頁則為 null)
+  const handleRemoveFolderFromFolder = (e: React.MouseEvent, folderId: string) => {
+    e.stopPropagation();
+    const folder = folders.find(f => f.id === folderId);
+    if (!folder || !folder.parentId) return;
+
+    // 尋找父資料夾以取得其 parentId（即上上層 ID，可以是 null）
+    const parentFolder = folders.find(f => f.id === folder.parentId);
+    const grandParentId = parentFolder ? parentFolder.parentId : null;
+
+    const updated = folders.map(f => {
+      if (f.id === folderId) {
+        return { ...f, parentId: grandParentId };
       }
       return f;
     });
@@ -812,14 +832,25 @@ export function Library({
             {displayFolders.map((folder) => (
               <div 
                 key={folder.id}
-                className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(folder.id)}`}
+                className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(folder.id)} ${dragOverFolderTargetId === folder.id ? 'drag-folder-hover' : ''}`}
                 onClick={() => { if (!isEditMode) navigateToFolder(folder.id); }}
                 draggable={currentFolderId !== 'virtual_resume'}
                 onDragStart={(e) => handleDragStart(e, folder.id)}
-                onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(folder.id); }}
-                onDragLeave={() => setDragOverTargetId(null)}
-                onDragEnd={() => setDragOverTargetId(null)}
-                onDrop={(e) => { handleDropIntoFolder(e, folder.id); setDragOverTargetId(null); }}
+                onDragOver={(e) => { 
+                  handleDragOver(e); 
+                  if (draggingWorkId && draggingWorkId !== folder.id) {
+                    setDragOverFolderTargetId(folder.id); 
+                  }
+                }}
+                onDragLeave={() => setDragOverFolderTargetId(null)}
+                onDragEnd={() => {
+                  setDragOverFolderTargetId(null);
+                  setDragOverSortTargetId(null);
+                }}
+                onDrop={(e) => { 
+                  handleDropIntoFolder(e, folder.id); 
+                  setDragOverFolderTargetId(null); 
+                }}
                 onMouseDown={startLongPress}
                 onMouseUp={cancelLongPress}
                 onMouseLeave={cancelLongPress}
@@ -827,13 +858,27 @@ export function Library({
                 onTouchMove={cancelLongPress}
                 onTouchEnd={cancelLongPress}
               >
-                {/* 💡 拖曳手把：只在編輯模式下顯現，只允許拖曳此處進行排序或移動 */}
+                {/* 💡 拖曳手把：只在編輯模式下顯現，只允許拖曳此處進行同級排序（阻斷冒泡以防觸發移入） */}
                 <div 
                   className="drag-handle"
                   title="按住拖曳手把進行排序或將此資料夾移入其他資料夾"
-                  onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(folder.id); }}
-                  onDrop={(e) => handleFolderSort(e, folder.id)}
-                  onClick={(e) => e.stopPropagation()} // 阻止冒泡觸發點擊進入資料夾
+                  onDragOver={(e) => { 
+                    handleDragOver(e); 
+                    e.stopPropagation(); 
+                    if (draggingWorkId && draggingWorkId !== folder.id) {
+                      setDragOverSortTargetId(folder.id); 
+                      setDragOverFolderTargetId(null); 
+                    }
+                  }}
+                  onDragLeave={(e) => {
+                    e.stopPropagation();
+                    setDragOverSortTargetId(null);
+                  }}
+                  onDrop={(e) => {
+                    handleFolderSort(e, folder.id);
+                    setDragOverSortTargetId(null);
+                  }}
+                  onClick={(e) => e.stopPropagation()} 
                 >
                   <GripVertical size={16} />
                 </div>
@@ -846,6 +891,15 @@ export function Library({
                   <div className="list-folder-meta">含 {folder.bookIds.length} 部經典</div>
                 </div>
                 <div className="list-folder-actions">
+                  {currentFolderId && (
+                    <button 
+                      className="list-folder-btn square-btn"
+                      onClick={(e) => handleRemoveFolderFromFolder(e, folder.id)}
+                      title="移出至上一層資料夾"
+                    >
+                      <FolderUp size={12} />
+                    </button>
+                  )}
                   <button 
                     className="list-folder-btn"
                     onClick={(e) => startRenameFolder(folder, e)}
@@ -882,10 +936,13 @@ export function Library({
                   onClick={() => { if (!isEditMode) onSelectBook(book.workId); }}
                   draggable={currentFolderId !== 'virtual_resume'}
                   onDragStart={(e) => handleDragStart(e, book.workId)}
-                  onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(book.workId); }}
-                  onDragLeave={() => setDragOverTargetId(null)}
-                  onDragEnd={() => setDragOverTargetId(null)}
-                  onDrop={(e) => { handleDrop(e, book.workId); setDragOverTargetId(null); }}
+                  onDragOver={handleDragOver}
+                  onDragLeave={() => {}}
+                  onDragEnd={() => {
+                    setDragOverSortTargetId(null);
+                    setDragOverFolderTargetId(null);
+                  }}
+                  onDrop={(e) => { handleDrop(e, book.workId); setDragOverSortTargetId(null); }}
                   onMouseDown={startLongPress}
                   onMouseUp={cancelLongPress}
                   onMouseLeave={cancelLongPress}
@@ -893,13 +950,26 @@ export function Library({
                   onTouchMove={cancelLongPress}
                   onTouchEnd={cancelLongPress}
                 >
-                  {/* 💡 拖曳手把：只在編輯模式下顯現，只允許按住此處進行同級排序 */}
+                  {/* 💡 拖曳手把：只在編輯模式下顯現，只允許按住此處進行同級排序（阻斷冒泡） */}
                   {currentFolderId !== 'virtual_resume' && (
                     <div 
                       className="drag-handle"
                       title="按住拖曳手把進行排序"
-                      onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(book.workId); }}
-                      onDrop={(e) => handleBookSort(e, book.workId)}
+                      onDragOver={(e) => { 
+                        handleDragOver(e); 
+                        e.stopPropagation(); 
+                        if (draggingWorkId && draggingWorkId !== book.workId) {
+                          setDragOverSortTargetId(book.workId); 
+                        }
+                      }}
+                      onDragLeave={(e) => {
+                        e.stopPropagation();
+                        setDragOverSortTargetId(null);
+                      }}
+                      onDrop={(e) => {
+                        handleBookSort(e, book.workId);
+                        setDragOverSortTargetId(null);
+                      }}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <GripVertical size={16} />
