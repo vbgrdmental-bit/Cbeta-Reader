@@ -426,6 +426,11 @@ export function Library({
 
   // HTML5 拖曳排序事件處理
   const handleDragStart = (e: React.DragEvent, id: string) => {
+    // 💡 只有在編輯模式下才放行拖曳，平常日常點閱時進行攔截阻斷，防範干擾正常點選
+    if (!isEditMode) {
+      e.preventDefault();
+      return;
+    }
     setDraggingWorkId(id);
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', id);
@@ -809,7 +814,7 @@ export function Library({
                 key={folder.id}
                 className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(folder.id)}`}
                 onClick={() => { if (!isEditMode) navigateToFolder(folder.id); }}
-                draggable={isEditMode}
+                draggable={currentFolderId !== 'virtual_resume'}
                 onDragStart={(e) => handleDragStart(e, folder.id)}
                 onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(folder.id); }}
                 onDragLeave={() => setDragOverTargetId(null)}
@@ -875,7 +880,7 @@ export function Library({
                   key={book.workId}
                   className={`list-book-item ${draggingWorkId === book.workId ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(book.workId)}`}
                   onClick={() => { if (!isEditMode) onSelectBook(book.workId); }}
-                  draggable={isEditMode && currentFolderId !== 'virtual_resume'}
+                  draggable={currentFolderId !== 'virtual_resume'}
                   onDragStart={(e) => handleDragStart(e, book.workId)}
                   onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(book.workId); }}
                   onDragLeave={() => setDragOverTargetId(null)}
