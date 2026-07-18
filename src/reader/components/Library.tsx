@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Trash2, Check, AlertCircle, X, Download, BookOpen,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, GripVertical, FolderUp
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, GripVertical, ArrowLeft
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook } from '../../utils/db';
@@ -890,29 +890,36 @@ export function Library({
                   <div className="list-folder-title">{folder.name}</div>
                   <div className="list-folder-meta">含 {folder.bookIds.length} 部經典</div>
                 </div>
-                <div className="list-folder-actions">
-                  {currentFolderId && (
+                <div className="item-actions-panel">
+                  {/* 槽位 1：返回（移出）按鈕（第 2 層以上才渲染，否則為空預留） */}
+                  {currentFolderId ? (
                     <button 
-                      className="list-folder-btn square-btn"
+                      className="edit-action-btn edit-move-out-btn"
                       onClick={(e) => handleRemoveFolderFromFolder(e, folder.id)}
                       title="移出至上一層資料夾"
                     >
-                      <FolderUp size={12} />
+                      <ArrowLeft size={16} />
                     </button>
+                  ) : (
+                    <div className="edit-btn-placeholder" />
                   )}
+
+                  {/* 槽位 2：編輯（重新命名）按鈕 */}
                   <button 
-                    className="list-folder-btn"
+                    className="edit-action-btn edit-rename-btn"
                     onClick={(e) => startRenameFolder(folder, e)}
                     title="重新命名"
                   >
-                    <Edit3 size={12} />
+                    <Edit3 size={14} />
                   </button>
+
+                  {/* 槽位 3：垃圾桶（刪除）按鈕 */}
                   <button 
-                    className="list-folder-btn text-danger"
+                    className="edit-action-btn edit-delete-btn"
                     onClick={(e) => handleDeleteFolder(folder.id, e)}
                     title="刪除資料夾"
                   >
-                    <Trash2 size={12} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
@@ -991,7 +998,7 @@ export function Library({
                       )}
                     </div>
                   </div>
-                  <div className="list-book-actions-right">
+                  <div className="item-actions-panel">
                     {currentFolderId === 'virtual_resume' ? (
                       <button 
                         className="list-book-move-out"
@@ -1003,21 +1010,29 @@ export function Library({
                       </button>
                     ) : (
                       <>
-                        {currentFolderId && (
+                        {/* 槽位 1：返回（移出）按鈕（在資料夾內才渲染，否則為空預留） */}
+                        {currentFolderId ? (
                           <button 
-                            className="list-book-move-out square-btn"
+                            className="edit-action-btn edit-move-out-btn"
                             onClick={(e) => handleRemoveFromFolder(e, book.workId)}
-                            title="移出至上層資料夾"
+                            title="移出至上一層資料夾"
                           >
-                            <FolderUp size={14} />
+                            <ArrowLeft size={16} />
                           </button>
+                        ) : (
+                          <div className="edit-btn-placeholder" />
                         )}
+
+                        {/* 槽位 2：經典不可命名，為空預留槽位以對齊資料夾 */}
+                        <div className="edit-btn-placeholder" />
+
+                        {/* 槽位 3：垃圾桶（刪除）按鈕 */}
                         <button 
-                          className="list-delete-btn"
+                          className="edit-action-btn edit-delete-btn"
                           onClick={(e) => handleDeleteBook(e, book.workId)}
                           title="刪除"
                         >
-                          <Trash2 size={12} />
+                          <Trash2 size={14} />
                         </button>
                       </>
                     )}
