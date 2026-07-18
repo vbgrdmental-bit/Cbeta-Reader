@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Trash2, Check, AlertCircle, X, Download, BookOpen,
   Home, Search,
@@ -135,6 +135,75 @@ export function Library({
     }
   };
   const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
+
+  // 💡 整理編輯模式狀態（長按卡片進入，空白點選退出，手把與垃圾桶平常隱藏，模式下才顯現）
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [dragOverTargetId, setDragOverTargetId] = useState<string | null>(null);
+  const longPressTimerRef = useRef<number | null>(null);
+
+  const startLongPress = (e: React.MouseEvent | React.TouchEvent) => {
+    if (isEditMode) return;
+    
+    const target = e.target as HTMLElement;
+    // 點擊 actions 按鈕或 input 等控制項不觸發長按
+    if (
+      target.closest('button') || 
+      target.closest('.list-folder-actions') || 
+      target.closest('input')
+    ) {
+      return;
+    }
+
+    if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+    
+    longPressTimerRef.current = window.setTimeout(() => {
+      setIsEditMode(true);
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }, 700); // 700 毫秒長按判定
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  };
+
+  const handleShelfBackgroundClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    // 若點擊的不是卡片、不是任何正方形按鈕與頂層按鈕，則退出編輯模式
+    if (
+      !target.closest('.list-book-item') && 
+      !target.closest('.square-btn') && 
+      !target.closest('.library-header-btn') &&
+      !target.closest('.folder-add-sub-btn-flat')
+    ) {
+      setIsEditMode(false);
+    }
+  };
+
+  // 💡 計算拖曳懸停時是應該渲染「上方」還是「下方」提示線
+  const getDragOverLineClass = (targetId: string) => {
+    if (!draggingWorkId || dragOverTargetId !== targetId || draggingWorkId === targetId) return '';
+    
+    // 如果是資料夾拖曳，或者是在對比資料夾與經典，預設放上面
+    if (draggingWorkId.startsWith('folder-') || targetId.startsWith('folder-')) {
+      // 在 folders 與 displayFolders 裡尋找
+      const sourceIdx = folders.findIndex(f => f.id === draggingWorkId);
+      const targetIdx = folders.findIndex(f => f.id === targetId);
+      if (sourceIdx === -1 || targetIdx === -1) return 'drag-over-top';
+      return sourceIdx < targetIdx ? 'drag-over-bottom' : 'drag-over-top';
+    }
+
+    // 經典拖曳
+    const sourceIdx = downloadedBooks.findIndex(b => b.workId === draggingWorkId);
+    const targetIdx = downloadedBooks.findIndex(b => b.workId === targetId);
+    if (sourceIdx === -1 || targetIdx === -1) return 'drag-over-top';
+
+    return sourceIdx < targetIdx ? 'drag-over-bottom' : 'drag-over-top';
+  };
   const [newFolderName, setNewFolderName] = useState('');
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
   const [editingFolderName, setEditingFolderName] = useState('');
@@ -677,7 +746,7 @@ export function Library({
 
       {activeTab === 'shelf' ? (
         /* 書架主畫面 */
-        <div className="bookshelf-section animate-slide-up">
+        <div className="bookshelf-section animate-slide-up" onClick={handleShelfBackgroundClick}>
           {/* 資料夾導航與麵包屑 */}
           {currentFolderId && (
             <div className="folder-nav-wrapper">
@@ -744,18 +813,26 @@ export function Library({
             {displayFolders.map((folder) => (
               <div 
                 key={folder.id}
-                className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''}`}
-                onClick={() => navigateToFolder(folder.id)}
-                draggable={true}
+                className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(folder.id)}`}
+                onClick={() => { if (!isEditMode) navigateToFolder(folder.id); }}
+                draggable={isEditMode}
                 onDragStart={(e) => handleDragStart(e, folder.id)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDropIntoFolder(e, folder.id)}
+                onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(folder.id); }}
+                onDragLeave={() => setDragOverTargetId(null)}
+                onDragEnd={() => setDragOverTargetId(null)}
+                onDrop={(e) => { handleDropIntoFolder(e, folder.id); setDragOverTargetId(null); }}
+                onMouseDown={startLongPress}
+                onMouseUp={cancelLongPress}
+                onMouseLeave={cancelLongPress}
+                onTouchStart={startLongPress}
+                onTouchMove={cancelLongPress}
+                onTouchEnd={cancelLongPress}
               >
-                {/* 💡 拖曳手把：只允許拖曳此處進行排序或移動 */}
+                {/* 💡 拖曳手把：只在編輯模式下顯現，只允許拖曳此處進行排序或移動 */}
                 <div 
                   className="drag-handle"
                   title="按住拖曳手把進行排序或將此資料夾移入其他資料夾"
-                  onDragOver={handleDragOver}
+                  onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(folder.id); }}
                   onDrop={(e) => handleFolderSort(e, folder.id)}
                   onClick={(e) => e.stopPropagation()} // 阻止冒泡觸發點擊進入資料夾
                 >
@@ -767,7 +844,7 @@ export function Library({
                 </div>
                 <div className="list-folder-info">
                   <div className="list-folder-title">{folder.name}</div>
-                  <div className="list-folder-meta">含 {folder.bookIds.length} 部經典 · 拖曳以歸檔</div>
+                  <div className="list-folder-meta">含 {folder.bookIds.length} 部經典</div>
                 </div>
                 <div className="list-folder-actions">
                   <button 
@@ -802,19 +879,27 @@ export function Library({
               return (
                 <div 
                   key={book.workId}
-                  className={`list-book-item ${draggingWorkId === book.workId ? 'dragging' : ''}`}
-                  onClick={() => onSelectBook(book.workId)}
-                  draggable={currentFolderId !== 'virtual_resume'}
+                  className={`list-book-item ${draggingWorkId === book.workId ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(book.workId)}`}
+                  onClick={() => { if (!isEditMode) onSelectBook(book.workId); }}
+                  draggable={isEditMode && currentFolderId !== 'virtual_resume'}
                   onDragStart={(e) => handleDragStart(e, book.workId)}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, book.workId)}
+                  onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(book.workId); }}
+                  onDragLeave={() => setDragOverTargetId(null)}
+                  onDragEnd={() => setDragOverTargetId(null)}
+                  onDrop={(e) => { handleDrop(e, book.workId); setDragOverTargetId(null); }}
+                  onMouseDown={startLongPress}
+                  onMouseUp={cancelLongPress}
+                  onMouseLeave={cancelLongPress}
+                  onTouchStart={startLongPress}
+                  onTouchMove={cancelLongPress}
+                  onTouchEnd={cancelLongPress}
                 >
-                  {/* 💡 拖曳手把：只允許按住此處進行同級排序 */}
+                  {/* 💡 拖曳手把：只在編輯模式下顯現，只允許按住此處進行同級排序 */}
                   {currentFolderId !== 'virtual_resume' && (
                     <div 
                       className="drag-handle"
                       title="按住拖曳手把進行排序"
-                      onDragOver={handleDragOver}
+                      onDragOver={(e) => { handleDragOver(e); setDragOverTargetId(book.workId); }}
                       onDrop={(e) => handleBookSort(e, book.workId)}
                       onClick={(e) => e.stopPropagation()}
                     >

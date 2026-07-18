@@ -2015,28 +2015,79 @@ body.theme-ebony .resume-tag {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 4px;
+  width: 0;
+  opacity: 0;
+  margin-right: 0;
+  overflow: hidden;
   cursor: grab;
   color: var(--text-muted, #888);
-  opacity: 0.5;
-  transition: opacity 0.2s, color 0.2s, transform 0.1s;
-  margin-right: 4px;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.25s ease, color 0.2s;
   user-select: none;
+  flex-shrink: 0;
 }
 
-.drag-handle:hover {
+.list-book-item.edit-mode .drag-handle {
+  width: 18px; /* 限縮寬度，讓 bar 更精緻窄小 */
+  opacity: 0.5;
+  margin-right: 6px;
+}
+
+.list-book-item.edit-mode .drag-handle:hover {
   opacity: 1;
   color: var(--theme-accent);
 }
 
-.drag-handle:active {
+.list-book-item.edit-mode .drag-handle:active {
   cursor: grabbing;
-  transform: scale(0.95);
+}
+
+/* 編輯模式下控制項平滑滑出樣式 */
+.list-delete-btn, 
+.list-book-move-out, 
+.list-folder-actions {
+  width: 0 !important;
+  opacity: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.25s ease, padding 0.25s ease !important;
+  flex-shrink: 0;
+}
+
+.list-book-item.edit-mode .list-delete-btn,
+.list-book-item.edit-mode .list-book-move-out {
+  width: 28px !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.list-book-item.edit-mode .list-delete-btn {
+  margin-left: 4px !important;
+}
+
+.list-book-item.edit-mode .list-book-move-out {
+  margin-left: 4px !important;
+}
+
+/* 資料夾操作按鈕包含二個圖示，在編輯模式下稍寬 */
+.list-book-item.edit-mode .list-folder-actions {
+  width: 52px !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  display: flex !important;
+  gap: 4px !important;
+}
+
+.list-book-item.edit-mode .list-folder-actions button {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
 }
 
 /* 確保 dragging 時的樣式更為醒目 */
 .list-book-item.dragging {
-  opacity: 0.4;
+  opacity: 0.3;
   border: 1px dashed var(--theme-accent);
   background: var(--theme-accent-light) !important;
 }
@@ -2079,7 +2130,50 @@ body.theme-ebony .resume-tag {
   width: 28px !important;
   height: 28px !important;
   border-radius: 6px !important;
-  margin-right: 4px;
+}
+
+/* Drag Over Line Indicator (拖曳中間發亮提示線) */
+.list-book-item {
+  position: relative;
+}
+
+.list-book-item.drag-over-top::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--theme-accent);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--theme-accent);
+  z-index: 50;
+  animation: pulseGlow 0.8s infinite alternate;
+}
+
+.list-book-item.drag-over-bottom::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--theme-accent);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--theme-accent);
+  z-index: 50;
+  animation: pulseGlow 0.8s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from {
+    opacity: 0.6;
+    box-shadow: 0 0 3px var(--theme-accent);
+  }
+  to {
+    opacity: 1;
+    box-shadow: 0 0 8px var(--theme-accent);
+  }
 }
 
 
