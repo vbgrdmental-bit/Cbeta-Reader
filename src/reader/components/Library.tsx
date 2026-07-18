@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Trash2, Check, AlertCircle, X, Download, BookOpen,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, GripVertical, ArrowLeft
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, GripVertical, ArrowUp
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook } from '../../utils/db';
@@ -171,6 +171,62 @@ export function Library({
       longPressTimerRef.current = null;
     }
   };
+
+  // 💡 遞迴計算某一層（包括該層所有的子資料夾中）的經典總數
+  const getFolderTotalBookCount = (folderId: string | null): number => {
+    let count = 0;
+    
+    if (!folderId) {
+      // 1. 首頁直接持有的書籍（不在任何資料夾內的書籍）
+      const allInFolderBookIds = folders.flatMap(f => f.bookIds);
+      count = downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId)).length;
+    } else {
+      // 2. 當前資料夾直接持有的書籍
+      const folder = folders.find(f => f.id === folderId);
+      if (folder) {
+        count = folder.bookIds.length;
+      }
+    }
+
+    // 3. 累加所有屬於當前層級下的子資料夾內部的書籍
+    const subFolders = folders.filter(f => f.parentId === folderId);
+    for (const sub of subFolders) {
+      count += getFolderTotalBookCount(sub.id);
+    }
+
+    return count;
+  };
+
+  // 💡 全域空白處點擊監聽：當處於編輯模式時，點擊任何經書卡片、手把與編輯按鈕以外的任意全域空白處，立刻退出編輯模式
+  useEffect(() => {
+    if (!isEditMode) return;
+
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        !target.closest('.list-book-item') &&
+        !target.closest('.square-btn') &&
+        !target.closest('.library-header-btn') &&
+        !target.closest('.folder-add-sub-btn-flat') &&
+        !target.closest('.edit-action-btn') &&
+        !target.closest('.item-actions-panel')
+      ) {
+        setIsEditMode(false);
+      }
+    };
+
+    // 延遲綁定以防當下長按觸發時的 MouseUp 立即觸發退出
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleGlobalClick);
+      document.addEventListener('touchstart', handleGlobalClick as any);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', handleGlobalClick);
+      document.removeEventListener('touchstart', handleGlobalClick as any);
+    };
+  }, [isEditMode]);
 
   const handleShelfBackgroundClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -794,8 +850,8 @@ export function Library({
                   </span>
                 </div>
                 <div className="folder-nav-right">
-                  <span className="folder-book-count-badge" title="此資料夾內經典數">
-                    {displayBooks.length}
+                  <span className="folder-book-count-badge" title="當前層級經典總數 (含子資料夾)">
+                    {currentFolderId === 'virtual_resume' ? displayBooks.length : getFolderTotalBookCount(currentFolderId)}
                   </span>
                 </div>
               </div>
@@ -833,23 +889,39 @@ export function Library({
               <div 
                 key={folder.id}
                 className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(folder.id)} ${dragOverFolderTargetId === folder.id ? 'drag-folder-hover' : ''}`}
-                onClick={() => { if (!isEditMode) navigateToFolder(folder.id); }}
+                onClick={() => navigateToFolder(folder.id)}
                 draggable={currentFolderId !== 'virtual_resume'}
                 onDragStart={(e) => handleDragStart(e, folder.id)}
                 onDragOver={(e) => { 
                   handleDragOver(e); 
-                  if (draggingWorkId && draggingWorkId !== folder.id) {
-                    setDragOverFolderTargetId(folder.id); 
+                  if (!draggingWorkId || draggingWorkId === folder.id) return;
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const relativeY = (e.clientY - rect.top) / rect.height;
+                  // 💡 Y 軸上下 25% 邊緣判定為同級排序，中央 50% 判定為移入資料夾
+                  if (relativeY < 0.25 || relativeY > 0.75) {
+                    setDragOverSortTargetId(folder.id);
+                    setDragOverFolderTargetId(null);
+                  } else {
+                    setDragOverFolderTargetId(folder.id);
+                    setDragOverSortTargetId(null);
                   }
                 }}
-                onDragLeave={() => setDragOverFolderTargetId(null)}
+                onDragLeave={() => {
+                  setDragOverFolderTargetId(null);
+                  setDragOverSortTargetId(null);
+                }}
                 onDragEnd={() => {
                   setDragOverFolderTargetId(null);
                   setDragOverSortTargetId(null);
                 }}
                 onDrop={(e) => { 
-                  handleDropIntoFolder(e, folder.id); 
-                  setDragOverFolderTargetId(null); 
+                  if (dragOverSortTargetId) {
+                    handleFolderSort(e, folder.id);
+                  } else {
+                    handleDropIntoFolder(e, folder.id);
+                  }
+                  setDragOverFolderTargetId(null);
+                  setDragOverSortTargetId(null);
                 }}
                 onMouseDown={startLongPress}
                 onMouseUp={cancelLongPress}
@@ -891,17 +963,15 @@ export function Library({
                   <div className="list-folder-meta">含 {folder.bookIds.length} 部經典</div>
                 </div>
                 <div className="item-actions-panel">
-                  {/* 槽位 1：返回（移出）按鈕（第 2 層以上才渲染，否則為空預留） */}
-                  {currentFolderId ? (
+                  {/* 槽位 1：返回（移出）按鈕（第 2 層以上才渲染） */}
+                  {currentFolderId && (
                     <button 
                       className="edit-action-btn edit-move-out-btn"
                       onClick={(e) => handleRemoveFolderFromFolder(e, folder.id)}
                       title="移出至上一層資料夾"
                     >
-                      <ArrowLeft size={16} />
+                      <ArrowUp size={16} />
                     </button>
-                  ) : (
-                    <div className="edit-btn-placeholder" />
                   )}
 
                   {/* 槽位 2：編輯（重新命名）按鈕 */}
@@ -943,8 +1013,15 @@ export function Library({
                   onClick={() => { if (!isEditMode) onSelectBook(book.workId); }}
                   draggable={currentFolderId !== 'virtual_resume'}
                   onDragStart={(e) => handleDragStart(e, book.workId)}
-                  onDragOver={handleDragOver}
-                  onDragLeave={() => {}}
+                  onDragOver={(e) => {
+                    handleDragOver(e);
+                    if (draggingWorkId && draggingWorkId !== book.workId) {
+                      setDragOverSortTargetId(book.workId);
+                    }
+                  }}
+                  onDragLeave={() => {
+                    setDragOverSortTargetId(null);
+                  }}
                   onDragEnd={() => {
                     setDragOverSortTargetId(null);
                     setDragOverFolderTargetId(null);
@@ -1010,21 +1087,16 @@ export function Library({
                       </button>
                     ) : (
                       <>
-                        {/* 槽位 1：返回（移出）按鈕（在資料夾內才渲染，否則為空預留） */}
-                        {currentFolderId ? (
+                        {/* 槽位 1：返回（移出）按鈕（在資料夾內才渲染） */}
+                        {currentFolderId && (
                           <button 
                             className="edit-action-btn edit-move-out-btn"
                             onClick={(e) => handleRemoveFromFolder(e, book.workId)}
                             title="移出至上一層資料夾"
                           >
-                            <ArrowLeft size={16} />
+                            <ArrowUp size={16} />
                           </button>
-                        ) : (
-                          <div className="edit-btn-placeholder" />
                         )}
-
-                        {/* 槽位 2：經典不可命名，為空預留槽位以對齊資料夾 */}
-                        <div className="edit-btn-placeholder" />
 
                         {/* 槽位 3：垃圾桶（刪除）按鈕 */}
                         <button 
