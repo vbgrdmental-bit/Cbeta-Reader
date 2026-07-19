@@ -35,14 +35,23 @@ body.theme-ebony {
   flex-direction: column;
   background: var(--bg-library);
   overflow-y: auto;
-  padding: 2rem;
+  padding: 0;
   box-sizing: border-box;
+}
+
+/* 書架主區塊（在 Header 下方） */
+.bookshelf-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 2rem;
+  box-sizing: border-box;
+  flex: 1;
 }
 
 /* Header & Search Bar (一列式首頁控制列) */
 .library-header {
   width: 100%;
-  margin: 0 auto 1.5rem auto;
+  margin: 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -51,6 +60,7 @@ body.theme-ebony {
   height: 52px; /* 統一高度為 52px */
   padding: 0 0.8rem; /* 統一左右內邊距 */
   box-sizing: border-box;
+  background: var(--bg-card);
 }
 
 body.theme-ebony .library-header {
@@ -1953,10 +1963,55 @@ body.theme-ebony .dialog-btn-danger:hover {
   border: 1px solid var(--theme-accent-border, rgba(242, 163, 27, 0.15));
   padding: 0.45rem 0.9rem;
   border-radius: 20px;
-  margin-top: 0.8rem;
+  margin-top: 0;
   cursor: pointer;
   transition: all 0.2s ease;
   animation: fadeIn 0.4s ease-out;
+}
+
+/* 💡 第一次進入空書架時的導引長條 */
+.empty-download-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  height: 64px;
+  background: var(--theme-accent-light, rgba(242, 163, 27, 0.04));
+  border: 1.5px dashed var(--theme-accent-border, rgba(242, 163, 27, 0.2));
+  border-radius: 12px;
+  color: var(--theme-accent);
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.empty-download-bar:hover {
+  background: var(--theme-accent-light, rgba(242, 163, 27, 0.08));
+  border-color: var(--theme-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(140, 75, 39, 0.08);
+}
+
+.empty-download-bar span {
+  font-family: var(--font-serif);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .resume-reading-box:hover {

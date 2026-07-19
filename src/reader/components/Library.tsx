@@ -894,7 +894,7 @@ export function Library({
               <h1>淨 心 閱 讀</h1>
               <p>以CBETA為主的電子大藏經閱讀器</p>
               {lastReadBookInfo && (
-                <div>
+                <div style={{ textAlign: 'left', width: '100%', maxWidth: '800px', margin: '0.8rem auto 0 auto' }}>
                   <div className="resume-reading-box" onClick={() => onSelectBook(lastReadBookInfo.workId, lastReadBookInfo.segmentId)} title="點擊繼續閱讀">
                     <span className="resume-tag">接續閱讀</span>
                     <span className="resume-title">{lastReadBookInfo.title}</span>
@@ -908,6 +908,22 @@ export function Library({
 
           {/* 清單模式（唯一） */}
           <div className="shelf-list">
+            {/* 💡 第一次進入且無經典時，顯示「+ 點此下載佛典」長 Bar 導引 */}
+            {!currentFolderId && downloadedBooks.length === 0 && (
+              <div 
+                className="empty-download-bar animate-pulse"
+                onClick={async () => {
+                  const defaultFeatured = await IndexBuilder.searchTitle('');
+                  setOnlineResults(defaultFeatured);
+                  setShowSearchDialog(true);
+                }}
+                title="檢索 CBETA 並匯入經典"
+              >
+                <Plus size={18} style={{ marginRight: '6px' }} />
+                <span>點此下載佛典 (檢索 CBETA 並匯入經典)</span>
+              </div>
+            )}
+
             {/* === A. 渲染資料夾清單 === */}
             {displayFolders.map((folder) => (
               <div 

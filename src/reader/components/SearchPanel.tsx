@@ -197,6 +197,11 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery }: Searc
         </button>
       </form>
 
+      {/* 💡 搜尋輸入框下方加註小小淺字說明 */}
+      <div className="search-info-tip" style={{ textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted, #999)', marginTop: '0.5rem', opacity: 0.8, letterSpacing: '0.04em' }}>
+        站內已下載書籍檢索
+      </div>
+
       {searched && (
         <div className="search-stats">
           <span>
