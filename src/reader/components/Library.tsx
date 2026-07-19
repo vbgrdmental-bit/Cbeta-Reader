@@ -999,8 +999,11 @@ export function Library({
                 </div>
                 <div className="list-folder-info">
                   <div className="list-folder-title">{folder.name}</div>
-                  <div className="list-folder-meta">含 {getFolderTotalBookCount(folder.id)} 部經典</div>
                 </div>
+
+                <span className="folder-book-count-badge" style={{ marginLeft: 'auto', marginRight: '0.8rem', flexShrink: 0 }} title="資料夾所含經典總數 (含子資料夾)">
+                  {getFolderTotalBookCount(folder.id)}
+                </span>
                 <div className="item-actions-panel">
                   {/* 槽位 1：返回（移出）按鈕（第 2 層以上才渲染） */}
                   {currentFolderId && (
