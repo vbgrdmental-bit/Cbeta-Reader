@@ -777,28 +777,63 @@ export function Library({
           <Home size={20} />
         </button>
 
-        {/* 只有在書架分頁 (shelf) 時才顯示下載佛經與新建資料夾 */}
+        {/* 只有在書架分頁 (shelf) 時才渲染後續按鈕 */}
         {activeTab === 'shelf' && (
           <>
             <div className="control-divider" />
-            <button
-              className="library-header-btn"
-              onClick={async () => {
-                const defaultFeatured = await IndexBuilder.searchTitle('');
-                setOnlineResults(defaultFeatured);
-                setShowSearchDialog(true);
-              }}
-              title="下載新佛典"
-            >
-              <Plus size={20} />
-            </button>
-            <button
-              className="library-header-btn"
-              onClick={() => setShowNewFolderDialog(true)}
-              title="新建資料夾"
-            >
-              <FolderPlus size={18} />
-            </button>
+            
+            {currentFolderId === null ? (
+              // 💡 1. 處於最外層首頁：顯示「下載新佛典（+）」與「新建資料夾」
+              <>
+                <button
+                  className="library-header-btn"
+                  onClick={async () => {
+                    const defaultFeatured = await IndexBuilder.searchTitle('');
+                    setOnlineResults(defaultFeatured);
+                    setShowSearchDialog(true);
+                  }}
+                  title="下載新佛典"
+                >
+                  <Plus size={20} />
+                </button>
+                <button
+                  className="library-header-btn"
+                  onClick={() => setShowNewFolderDialog(true)}
+                  title="新建資料夾"
+                >
+                  <FolderPlus size={18} />
+                </button>
+              </>
+            ) : (
+              // 💡 2. 處於第 2 層以上的資料夾內：將「<」和「>」整合到最上方控制列，並移去「+」下載按鈕
+              <>
+                <button
+                  className="library-header-btn"
+                  onClick={handleGoBack}
+                  disabled={historyIndex === 0}
+                  title="返回上一頁"
+                  style={{ opacity: historyIndex === 0 ? 0.3 : 1 }}
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button
+                  className="library-header-btn"
+                  onClick={handleGoForward}
+                  disabled={historyIndex >= folderHistory.length - 1}
+                  title="前進下一頁"
+                  style={{ opacity: historyIndex >= folderHistory.length - 1 ? 0.3 : 1 }}
+                >
+                  <ChevronRight size={20} />
+                </button>
+                <button
+                  className="library-header-btn"
+                  onClick={() => setShowNewFolderDialog(true)}
+                  title="新建資料夾"
+                >
+                  <FolderPlus size={18} />
+                </button>
+              </>
+            )}
           </>
         )}
 
@@ -832,24 +867,7 @@ export function Library({
           {currentFolderId && (
             <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
-                <div className="folder-nav-left" style={{ display: 'flex', gap: '0.4rem' }}>
-                  <button 
-                    className="folder-back-btn square-btn" 
-                    onClick={handleGoBack}
-                    disabled={historyIndex === 0}
-                    title="返回"
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button 
-                    className="folder-back-btn square-btn" 
-                    onClick={handleGoForward}
-                    disabled={historyIndex >= folderHistory.length - 1}
-                    title="前進"
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
+
                 <div className="folder-nav-middle">
                   <span className="folder-path-display">
                     {currentFolderId === 'virtual_resume' ? '繼續閱讀' : getFolderPath(currentFolderId)}
@@ -966,7 +984,7 @@ export function Library({
                 </div>
                 <div className="list-folder-info">
                   <div className="list-folder-title">{folder.name}</div>
-                  <div className="list-folder-meta">含 {folder.bookIds.length} 部經典</div>
+                  <div className="list-folder-meta">含 {getFolderTotalBookCount(folder.id)} 部經典</div>
                 </div>
                 <div className="item-actions-panel">
                   {/* 槽位 1：返回（移出）按鈕（第 2 層以上才渲染） */}

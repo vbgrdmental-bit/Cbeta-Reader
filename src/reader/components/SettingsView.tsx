@@ -106,9 +106,9 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           <div className="settings-section">
             <div className="settings-section-title">行高與行距</div>
             <div className="visual-options-row">
-              {[1.4, 1.7, 2.0, 2.3].map((lh) => {
+              {[1.6, 1.8, 2.0, 2.2].map((lh) => {
                 // 根據不同行高計算 line 的上下間距偏移
-                const spacing = lh === 1.4 ? 5 : lh === 1.7 ? 7 : lh === 2.0 ? 9 : 11;
+                const spacing = lh === 1.6 ? 6 : lh === 1.8 ? 8 : lh === 2.0 ? 10 : 12;
                 return (
                   <div
                     key={`lineHeight-${lh}`}
