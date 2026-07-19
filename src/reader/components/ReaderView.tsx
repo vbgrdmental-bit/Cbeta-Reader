@@ -428,13 +428,7 @@ export function ReaderView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.customVisibleElements?.showReaderControls]);
 
-  const handleCycleLineHeight = () => {
-    const heights = [1.6, 1.8, 2.0, 2.2];
-    const currentIndex = heights.indexOf(settings.lineHeight);
-    // 如果不在列表中，預設到下一個
-    const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % heights.length;
-    onSaveSettings({ ...settings, lineHeight: heights[nextIndex] });
-  };
+
 
   // 監聽鍵盤與手勢，隱藏工具列
   const resetToolbarTimeout = () => {
@@ -757,13 +751,7 @@ export function ReaderView({
         >
           A+
         </button>
-        <button 
-          className="reader-text-btn lh-btn" 
-          onClick={handleCycleLineHeight}
-          title="循環切換行高"
-        >
-          <span>↕️ {settings.lineHeight.toFixed(1)}</span>
-        </button>
+
 
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem' }}>
           <button className="icon-button" onClick={() => setShowNavDrawer(prev => !prev)} title="目次">

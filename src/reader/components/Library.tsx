@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Trash2, Check, AlertCircle, X, Download, BookOpen,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, GripVertical, ArrowUp
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, GripVertical, ArrowUp, Settings
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook } from '../../utils/db';
@@ -18,18 +18,18 @@ interface LibraryProps {
   onSelectBook: (workId: string, segmentId?: string, searchQuery?: string) => void;
   booksUpdatedTrigger: number;
   settings: AppSettings;
-  onSaveSettings: (settings: AppSettings) => void;
   initialSearchQuery?: string;
   resetFolderTrigger?: number;
+  onOpenSettings?: () => void;
 }
 
 export function Library({ 
   onSelectBook, 
   booksUpdatedTrigger,
   settings,
-  onSaveSettings,
   initialSearchQuery,
-  resetFolderTrigger
+  resetFolderTrigger,
+  onOpenSettings
 }: LibraryProps) {
   const [downloadedBooks, setDownloadedBooks] = useState<BookMetadata[]>([]);
   const [downloadedPackages, setDownloadedPackages] = useState<ReaderPackage[]>([]);
@@ -769,12 +769,15 @@ export function Library({
           onClick={() => {
             setActiveTab('shelf');
             setCurrentFolderId(null);
+            setFolderHistory([null]);
+            setHistoryIndex(0);
           }}
           title="書架首頁"
         >
           <Home size={20} />
         </button>
 
+        {/* 只有在書架分頁 (shelf) 時才顯示下載佛經與新建資料夾 */}
         {activeTab === 'shelf' && (
           <>
             <div className="control-divider" />
@@ -799,36 +802,27 @@ export function Library({
           </>
         )}
 
-        <div className="header-theme-circles" style={{ marginLeft: 'auto' }}>
-          <div 
-            className={`header-theme-circle bg-ivory ${settings.theme === 'ivory' ? 'active' : ''}`}
-            onClick={() => onSaveSettings({ ...settings, theme: 'ivory' })}
-            title="象牙白"
-          />
-          <div 
-            className={`header-theme-circle bg-parchment ${settings.theme === 'parchment' ? 'active' : ''}`}
-            onClick={() => onSaveSettings({ ...settings, theme: 'parchment' })}
-            title="羊皮紙"
-          />
-          <div 
-            className={`header-theme-circle bg-comfort ${settings.theme === 'comfort' ? 'active' : ''}`}
-            onClick={() => onSaveSettings({ ...settings, theme: 'comfort' })}
-            title="舒適"
-          />
-          <div 
-            className={`header-theme-circle bg-ebony ${settings.theme === 'ebony' ? 'active' : ''}`}
-            onClick={() => onSaveSettings({ ...settings, theme: 'ebony' })}
-            title="玄木"
-          />
-        </div>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          {/* 只有在書架分頁時才顯示放大鏡，點擊切換至搜尋分頁 */}
+          {activeTab === 'shelf' && (
+            <button 
+              className="library-header-btn"
+              onClick={() => setActiveTab('search')}
+              title="本地經典檢索"
+            >
+              <Search size={20} />
+            </button>
+          )}
 
-        <button 
-          className={`library-header-btn ${activeTab === 'search' ? 'active' : ''}`}
-          onClick={() => setActiveTab('search')}
-          title="本地經典檢索"
-        >
-          <Search size={20} />
-        </button>
+          {/* 齒輪設定按鈕（一律在最右端顯示，點擊開啟與閱讀頁相同的設定彈窗） */}
+          <button 
+            className="library-header-btn"
+            onClick={onOpenSettings}
+            title="閱讀設定"
+          >
+            <Settings size={20} />
+          </button>
+        </div>
       </div>
 
       {activeTab === 'shelf' ? (

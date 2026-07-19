@@ -29,7 +29,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
     <div className="settings-panel-overlay" onClick={onClose}>
       <div className="settings-card animate-slide-up" onClick={e => e.stopPropagation()}>
         <div className="settings-header">
-          <h3>閱讀頁設定</h3>
+          <h3>閱讀設定</h3>
           <button className="icon-button close-btn" onClick={onClose}>
             <X size={20} />
           </button>
@@ -90,12 +90,38 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   >
                     <svg className="padding-svg" viewBox="0 0 36 36">
                       <rect x="3" y="3" width="30" height="30" rx="4" className="svg-border" />
-                      <line x1={offset} y1="9" x2={36 - offset} y2="9" />
-                      <line x1={offset} y1="15" x2={36 - offset} y2="15" />
-                      <line x1={offset} y1="21" x2={36 - offset} y2="21" />
-                      <line x1={offset} y1="27" x2={p === 5 ? 20 : p === 10 ? 18 : 18} y2="27" />
+                      <line x1={offset} y1="9" x2={36 - offset} y2="9" stroke="currentColor" strokeWidth="1.5" />
+                      <line x1={offset} y1="15" x2={36 - offset} y2="15" stroke="currentColor" strokeWidth="1.5" />
+                      <line x1={offset} y1="21" x2={36 - offset} y2="21" stroke="currentColor" strokeWidth="1.5" />
+                      <line x1={offset} y1="27" x2={p === 5 ? 20 : p === 10 ? 18 : 18} y2="27" stroke="currentColor" strokeWidth="1.5" />
                     </svg>
                     <span className="visual-option-label">{p}%</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 💡 2.5 行高與行距 (新增，比照排版與邊距的圖像化 4 格按鈕) */}
+          <div className="settings-section">
+            <div className="settings-section-title">行高與行距</div>
+            <div className="visual-options-row">
+              {[1.4, 1.7, 2.0, 2.3].map((lh) => {
+                // 根據不同行高計算 line 的上下間距偏移
+                const spacing = lh === 1.4 ? 5 : lh === 1.7 ? 7 : lh === 2.0 ? 9 : 11;
+                return (
+                  <div
+                    key={`lineHeight-${lh}`}
+                    className={`visual-option-card ${settings.lineHeight === lh ? 'active' : ''}`}
+                    onClick={() => onSave({ ...settings, lineHeight: lh })}
+                  >
+                    <svg className="padding-svg" viewBox="0 0 36 36">
+                      <rect x="3" y="3" width="30" height="30" rx="4" className="svg-border" stroke="currentColor" strokeWidth="1.5" />
+                      <line x1="8" y1={18 - spacing} x2="28" y2={18 - spacing} stroke="currentColor" strokeWidth="1.5" />
+                      <line x1="8" y1="18" x2="28" y2="18" stroke="currentColor" strokeWidth="1.5" />
+                      <line x1="8" y1={18 + spacing} x2="28" y2={18 + spacing} stroke="currentColor" strokeWidth="1.5" />
+                    </svg>
+                    <span className="visual-option-label">{lh.toFixed(1)}</span>
                   </div>
                 );
               })}

@@ -48,7 +48,8 @@ body.theme-ebony {
   align-items: center;
   gap: 0.4rem;
   border-bottom: 1.2px solid rgba(140, 75, 39, 0.08);
-  padding-bottom: 0.6rem;
+  height: 52px; /* 統一高度為 52px */
+  padding: 0 0.8rem; /* 統一左右內邊距 */
   box-sizing: border-box;
 }
 

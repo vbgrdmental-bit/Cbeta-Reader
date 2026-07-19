@@ -90,9 +90,10 @@ export function App() {
           onSelectBook={handleSelectBook} 
           booksUpdatedTrigger={booksUpdatedTrigger}
           settings={settings}
-          onSaveSettings={handleSaveSettings}
+
           initialSearchQuery={lastSearchQuery}
           resetFolderTrigger={resetFolderTrigger}
+          onOpenSettings={() => setShowSettings(true)}
         />
       </div>
 
