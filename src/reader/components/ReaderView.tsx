@@ -14,7 +14,7 @@ interface ReaderViewProps {
   workId: string;
   initialSegmentId?: string; // 外部傳入要跳轉的段落 ID
   settings: AppSettings;
-  onBackToLibrary: () => void;
+  onBackToLibrary: (resetToRoot?: boolean) => void;
   onSaveSettings: (settings: AppSettings) => void;
   searchQuery?: string;
 }
@@ -695,8 +695,19 @@ export function ReaderView({
       
       {/* 頂部工具列 */}
       <div className={`reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-        <button className="icon-button" onClick={onBackToLibrary} title="首頁">
+        <button className="icon-button" onClick={() => onBackToLibrary(true)} title="首頁">
           <Home size={20} />
+        </button>
+
+        <div className="control-divider" />
+
+        <button 
+          className="reader-text-btn" 
+          onClick={() => onBackToLibrary(false)} 
+          title="返回前一頁"
+          style={{ fontStyle: 'normal', fontWeight: 'bold', fontSize: '1.2rem', padding: '0 0.4rem', fontFamily: 'monospace' }}
+        >
+          &lt;
         </button>
 
         {searchQuery && (
@@ -704,7 +715,7 @@ export function ReaderView({
             <div className="control-divider" />
             <button 
               className="icon-button" 
-              onClick={onBackToLibrary} 
+              onClick={() => onBackToLibrary(false)} 
               title="返回搜尋結果" 
               style={{ 
                 display: 'flex', 

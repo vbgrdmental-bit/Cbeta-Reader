@@ -20,6 +20,7 @@ interface LibraryProps {
   settings: AppSettings;
   onSaveSettings: (settings: AppSettings) => void;
   initialSearchQuery?: string;
+  resetFolderTrigger?: number;
 }
 
 export function Library({ 
@@ -27,7 +28,8 @@ export function Library({
   booksUpdatedTrigger,
   settings,
   onSaveSettings,
-  initialSearchQuery
+  initialSearchQuery,
+  resetFolderTrigger
 }: LibraryProps) {
   const [downloadedBooks, setDownloadedBooks] = useState<BookMetadata[]>([]);
   const [downloadedPackages, setDownloadedPackages] = useState<ReaderPackage[]>([]);
@@ -134,6 +136,16 @@ export function Library({
       setCurrentFolderId(folderHistory[nextIdx]);
     }
   };
+
+  // 💡 當接收到首頁重設信號時，重置當前所在的資料夾路徑與瀏覽歷史
+  useEffect(() => {
+    if (resetFolderTrigger && resetFolderTrigger > 0) {
+      setCurrentFolderId(null);
+      setFolderHistory([null]);
+      setHistoryIndex(0);
+    }
+  }, [resetFolderTrigger]);
+
   const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
 
   // 💡 整理編輯模式狀態（長按卡片進入，空白點選退出，手把與垃圾桶平常隱藏，模式下才顯現）

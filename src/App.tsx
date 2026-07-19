@@ -54,6 +54,8 @@ export function App() {
     }
   };
 
+  const [resetFolderTrigger, setResetFolderTrigger] = useState(0);
+
   const handleSelectBook = (workId: string, segmentId?: string, searchQuery?: string) => {
     setActiveBookId(workId);
     setActiveSegmentId(segmentId);
@@ -61,12 +63,15 @@ export function App() {
     setView('reader');
   };
 
-  const handleBackToLibrary = () => {
+  const handleBackToLibrary = (resetToRoot = false) => {
     setView('library');
     setActiveBookId(null);
     setActiveSegmentId(undefined);
     // 觸發書庫重新整理（以防在閱讀器中做了一些變動）
     setBooksUpdatedTrigger(prev => prev + 1);
+    if (resetToRoot) {
+      setResetFolderTrigger(prev => prev + 1);
+    }
   };
 
   if (!settings) {
@@ -79,25 +84,27 @@ export function App() {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      {view === 'library' ? (
+      {/* 💡 使用 CSS display 來控制 Library 顯示/隱藏，避免組件銷毀丟失當前資料夾路徑狀態 */}
+      <div style={{ display: view === 'library' ? 'block' : 'none', width: '100%', height: '100%' }}>
         <Library 
           onSelectBook={handleSelectBook} 
           booksUpdatedTrigger={booksUpdatedTrigger}
           settings={settings}
           onSaveSettings={handleSaveSettings}
           initialSearchQuery={lastSearchQuery}
+          resetFolderTrigger={resetFolderTrigger}
         />
-      ) : (
-        activeBookId && (
-          <ReaderView 
-            workId={activeBookId}
-            initialSegmentId={activeSegmentId}
-            settings={settings}
-            onBackToLibrary={handleBackToLibrary}
-            onSaveSettings={handleSaveSettings}
-            searchQuery={lastSearchQuery}
-          />
-        )
+      </div>
+
+      {view === 'reader' && activeBookId && (
+        <ReaderView 
+          workId={activeBookId}
+          initialSegmentId={activeSegmentId}
+          settings={settings}
+          onBackToLibrary={handleBackToLibrary}
+          onSaveSettings={handleSaveSettings}
+          searchQuery={lastSearchQuery}
+        />
       )}
 
       {/* 全域設定對話框 */}
