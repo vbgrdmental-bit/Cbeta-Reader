@@ -137,13 +137,16 @@
 
 .reader-top-bar {
   top: 0;
-  height: 52px;
+  /* 💡 採用與首頁控制列 100% 一致的手機端 Safe Area 填充與 56px 身高，達成完全等高與按鈕像素級重合 */
+  padding-top: env(safe-area-inset-top, 0px);
+  height: calc(56px + env(safe-area-inset-top, 0px));
   border-bottom: 1.2px solid;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 0.4rem;
-  padding: 0 0.8rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
   box-sizing: border-box;
 }
 
