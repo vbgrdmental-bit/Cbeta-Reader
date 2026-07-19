@@ -919,8 +919,7 @@ export function Library({
                 }}
                 title="檢索 CBETA 並匯入經典"
               >
-                <Plus size={18} style={{ marginRight: '6px' }} />
-                <span>點此下載佛典 (檢索 CBETA 並匯入經典)</span>
+                <span>+點此下載佛典</span>
               </div>
             )}
 

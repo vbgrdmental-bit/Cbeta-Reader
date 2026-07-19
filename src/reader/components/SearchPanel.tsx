@@ -185,21 +185,23 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery }: Searc
   return (
     <div className={`search-panel-container ${!searched ? 'is-centered' : ''}`}>
 
-      <form onSubmit={handleSearch} className="search-panel-bar">
-        <input
-          type="text"
-          placeholder="輸入多個關鍵字，例如：地藏 菩薩 功德"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button type="submit" className="search-panel-btn" title="搜尋">
-          <Search size={18} />
-        </button>
-      </form>
+      <div className="search-bar-wrapper">
+        <form onSubmit={handleSearch} className="search-panel-bar">
+          <input
+            type="text"
+            placeholder="輸入多個關鍵字，例如：地藏 菩薩 功德"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <button type="submit" className="search-panel-btn" title="搜尋">
+            <Search size={18} />
+          </button>
+        </form>
 
-      {/* 💡 搜尋輸入框下方加註小小淺字說明 */}
-      <div className="search-info-tip" style={{ textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted, #999)', marginTop: '0.5rem', opacity: 0.8, letterSpacing: '0.04em' }}>
-        站內已下載書籍檢索
+        {/* 💡 放在中間的搜尋 bar 虛線下緣，置左 */}
+        <div className="search-info-tip">
+          站內已下載書籍檢索
+        </div>
       </div>
 
       {searched && (

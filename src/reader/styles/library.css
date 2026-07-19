@@ -2304,6 +2304,86 @@ body.theme-ebony .resume-tag {
   }
 }
 
+/* 💡 第一次進入空書架時的導引長條 (幼圓體) */
+.empty-download-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  height: 64px;
+  background: var(--theme-accent-light, rgba(242, 163, 27, 0.04));
+  border: 1.5px dashed var(--theme-accent-border, rgba(242, 163, 27, 0.2));
+  border-radius: 12px;
+  color: var(--theme-accent);
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  box-sizing: border-box;
+  /* 💡 指定圓體字體 */
+  font-family: "STYuanti-TC-Regular", "STYuanti-TC", "STXihei", "Microsoft JhengHei", sans-serif;
+}
+
+.empty-download-bar:hover {
+  background: var(--theme-accent-light, rgba(242, 163, 27, 0.08));
+  border-color: var(--theme-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(140, 75, 39, 0.08);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 💡 搜尋頁輸入框與說明提示之大一統佈局 */
+.search-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-info-tip {
+  width: 100%;
+  max-width: 440px;
+  text-align: left;
+  font-size: 0.78rem;
+  color: var(--text-muted, rgba(140, 75, 39, 0.6));
+  margin-top: 0.5rem;
+  opacity: 0.8;
+  letter-spacing: 0.04em;
+  padding-left: 0.5rem;
+  box-sizing: border-box;
+}
+
+body.theme-ebony .search-info-tip {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 💡 手機版自適應：搜尋 bar 與左右邊緣保持 10% 空間 (左右各 5% padding) */
+@media (max-width: 600px) {
+  .search-bar-wrapper {
+    padding: 0 5% !important;
+  }
+  .search-panel-bar {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  .search-info-tip {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
 
 
 

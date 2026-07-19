@@ -98,7 +98,7 @@ export interface AppSettings {
 
 const DEFAULT_SETTINGS: AppSettings = {
   id: 'current',
-  theme: 'parchment',
+  theme: 'ivory',
   fontSize: 22,
   lineHeight: 2.0,
   padding: 10,
