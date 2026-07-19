@@ -894,11 +894,10 @@ export function Library({
               <h1>淨 心 閱 讀</h1>
               <p>以CBETA為主的電子大藏經閱讀器</p>
               {lastReadBookInfo && (
-                <div style={{ textAlign: 'left', width: '100%', maxWidth: '800px', margin: '0.8rem auto 0 auto' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.8rem auto 0 auto' }}>
                   <div className="resume-reading-box" onClick={() => onSelectBook(lastReadBookInfo.workId, lastReadBookInfo.segmentId)} title="點擊繼續閱讀">
                     <span className="resume-tag">接續閱讀</span>
-                    <span className="resume-title">{lastReadBookInfo.title}</span>
-                    <span className="resume-juan">第 {lastReadBookInfo.juan} 卷</span>
+                    <span className="resume-title" style={{ textAlign: 'left' }}>{lastReadBookInfo.title}</span>
                     <span className="resume-arrow">➔</span>
                   </div>
                 </div>
@@ -919,7 +918,8 @@ export function Library({
                 }}
                 title="檢索 CBETA 並匯入經典"
               >
-                <span>+點此下載佛典</span>
+                <Plus size={20} style={{ marginRight: '6px' }} />
+                <span>點此下載佛典</span>
               </div>
             )}
 
