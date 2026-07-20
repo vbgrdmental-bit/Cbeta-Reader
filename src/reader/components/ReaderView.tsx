@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, Search, ChevronLeft, ChevronRight
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, Search, ChevronLeft, ChevronRight, ArrowLeft
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment } from '../../types/book';
 import { getBook, saveBook } from '../../utils/db';
@@ -696,12 +696,12 @@ export function ReaderView({
         <div className="control-divider" />
 
         <button 
-          className="reader-text-btn" 
+          className="icon-button" 
           onClick={() => onBackToLibrary(false)} 
           title="返回前一頁"
-          style={{ fontStyle: 'normal', fontWeight: 'bold', fontSize: '1.2rem', padding: '0 0.4rem', fontFamily: 'monospace' }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          &lt;
+          <ArrowLeft size={20} />
         </button>
 
         {searchQuery && (
@@ -732,24 +732,48 @@ export function ReaderView({
         <div className="control-divider" />
 
         <button 
-          className="reader-text-btn" 
+          className="reader-text-btn font-size-btn" 
           onClick={() => {
             const newSize = Math.max(16, settings.fontSize - 2);
             onSaveSettings({ ...settings, fontSize: newSize });
           }}
           title="縮小字型"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 0.2rem' }}
         >
-          A-
+          <span style={{ 
+            fontSize: '0.72rem', 
+            fontWeight: 'bold', 
+            border: '1.2px solid currentColor', 
+            borderRadius: '4px', 
+            width: '18px', 
+            height: '18px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            lineHeight: 1
+          }}>A</span>
         </button>
         <button 
-          className="reader-text-btn" 
+          className="reader-text-btn font-size-btn" 
           onClick={() => {
             const newSize = Math.min(40, settings.fontSize + 2);
             onSaveSettings({ ...settings, fontSize: newSize });
           }}
           title="放大字型"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 0.2rem' }}
         >
-          A+
+          <span style={{ 
+            fontSize: '1.05rem', 
+            fontWeight: 'bold', 
+            border: '1.2px solid currentColor', 
+            borderRadius: '4px', 
+            width: '23px', 
+            height: '23px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            lineHeight: 1
+          }}>A</span>
         </button>
 
 

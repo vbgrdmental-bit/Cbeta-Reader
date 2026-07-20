@@ -63,7 +63,11 @@ body.theme-ebony {
   padding-left: 0.8rem;
   padding-right: 0.8rem;
   box-sizing: border-box;
-  background: var(--bg-card);
+  /* 💡 設為黏性定位固定於最上方，不隨滾動而滑走 */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-library) !important;
 }
 
 body.theme-ebony .library-header {
