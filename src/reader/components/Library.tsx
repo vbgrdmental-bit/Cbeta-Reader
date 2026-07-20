@@ -758,7 +758,7 @@ export function Library({
   };
 
   return (
-    <div className="library-container custom-scrollbar">
+    <div className="library-container">
       
       {/* 首頁一致控制列 */}
       <div className="library-header animate-fade-in">
@@ -858,7 +858,8 @@ export function Library({
         </div>
       </div>
 
-      {activeTab === 'shelf' ? (
+      <div className="library-content-area custom-scrollbar">
+        {activeTab === 'shelf' ? (
         /* 書架主畫面 */
         <div className="bookshelf-section animate-slide-up" onClick={handleShelfBackgroundClick}>
           {/* 資料夾導航與麵包屑 */}
@@ -1164,6 +1165,7 @@ export function Library({
           />
         </div>
       )}
+      </div>
 
       {/* 線上搜尋並下載對話框 */}
       {showSearchDialog && (

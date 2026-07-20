@@ -34,9 +34,18 @@ body.theme-ebony {
   display: flex;
   flex-direction: column;
   background: var(--bg-library);
-  overflow-y: auto;
+  overflow: hidden;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* 內容捲動區（與閱讀器結構一致，控制列不隨內容滾動） */
+.library-content-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 書架主區塊（在 Header 下方） */
@@ -63,9 +72,9 @@ body.theme-ebony {
   padding-left: 0.8rem;
   padding-right: 0.8rem;
   box-sizing: border-box;
-  /* 💡 設為黏性定位固定於最上方，不隨滾動而滑走 */
-  position: sticky;
-  top: 0;
+  /* 💡 改為相對定位，避免捲動時位移，並防止 Flexbox 壓縮 */
+  position: relative;
+  flex-shrink: 0;
   z-index: 100;
   background: var(--bg-library) !important;
 }
