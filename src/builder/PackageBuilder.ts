@@ -7,6 +7,8 @@ import { ReferenceBuilder } from './ReferenceBuilder';
 import { SearchIndexBuilder } from './SearchIndexBuilder';
 import { AIIndexBuilder } from './AIIndexBuilder';
 import { saveBook } from '../utils/db';
+import { BUILDER_VERSION } from './version';
+export { BUILDER_VERSION };
 
 export type BuildStep = 
   | 'idle'

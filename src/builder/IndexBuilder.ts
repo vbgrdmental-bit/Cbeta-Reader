@@ -1,4 +1,5 @@
 import type { BookMetadata } from '../types/book';
+import { BUILDER_VERSION } from './version';
 
 // 輔助函數：處理開發環境與生產環境的 API 請求路由，繞過 CORS 限制
 export const getApiUrl = (path: string): string => {
@@ -177,7 +178,7 @@ export class IndexBuilder {
       creators: searchResult.creators,
       juansCount: searchResult.juansCount,
       packagedAt: new Date().toISOString(),
-      version: '1.0'
+      version: BUILDER_VERSION
     };
   }
 }
