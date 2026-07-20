@@ -607,8 +607,6 @@ export function Library({
 
   // 下載並匯入經典
   const handleDownloadBook = async (searchResult: SearchResult) => {
-    setShowSearchDialog(false);
-    
     try {
       await PackageBuilder.downloadAndPackage(searchResult, (progress) => {
         setBuildProgress(progress);

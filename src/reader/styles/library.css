@@ -366,11 +366,13 @@ body.theme-ebony .library-header-btn.active {
 }
 
 .dialog-header {
-  padding: 1.5rem;
+  height: 56px;
+  padding: 0 1.5rem;
   border-bottom: 1px solid var(--reader-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .dialog-header h3 {
