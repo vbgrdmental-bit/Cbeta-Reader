@@ -7,6 +7,7 @@
   flex-direction: column;
   gap: 1.5rem;
   box-sizing: border-box;
+  padding: 1.5rem 5%; /* 💡 左右各留出 5% 的空間，合計 10% 的完美呼吸空間 */
 }
 
 /* 垂直置中模式 */

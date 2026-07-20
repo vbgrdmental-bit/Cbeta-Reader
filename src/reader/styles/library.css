@@ -2376,7 +2376,7 @@ body.theme-ebony .search-info-tip {
 /* 💡 手機版自適應：搜尋 bar 與左右邊緣保持 10% 空間 (左右各 5% padding) */
 @media (max-width: 600px) {
   .search-bar-wrapper {
-    padding: 0 5% !important;
+    padding: 0 !important;
   }
   .search-panel-bar {
     width: 100% !important;
