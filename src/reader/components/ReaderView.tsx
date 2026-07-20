@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, Search, ChevronLeft, ChevronRight, ArrowLeft
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment } from '../../types/book';
 import { getBook, saveBook } from '../../utils/db';
@@ -704,32 +704,7 @@ export function ReaderView({
           <ArrowLeft size={20} />
         </button>
 
-        {searchQuery && (
-          <>
-            <div className="control-divider" />
-            <button 
-              className="icon-button" 
-              onClick={() => onBackToLibrary(false)} 
-              title="返回搜尋結果" 
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.4rem', 
-                padding: '0.2rem 0.6rem', 
-                borderRadius: '6px', 
-                background: 'var(--theme-accent-light, rgba(242, 163, 27, 0.08))', 
-                border: '1px solid var(--theme-accent-border, rgba(242, 163, 27, 0.2))', 
-                color: 'var(--theme-accent)',
-                cursor: 'pointer'
-              }}
-            >
-              <Search size={16} />
-              <span style={{ fontSize: '0.82rem', fontWeight: 600 }}>返回搜尋</span>
-            </button>
-          </>
-        )}
 
-        <div className="control-divider" />
 
         <button 
           className="reader-text-btn font-size-btn" 
