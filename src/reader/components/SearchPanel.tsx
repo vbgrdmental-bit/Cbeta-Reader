@@ -8,9 +8,10 @@ interface SearchPanelProps {
   books: ReaderPackage[];
   onSelectResult: (workId: string, juan: number, segmentId: string, query: string) => void;
   initialSearchQuery?: string;
+  onTriggerOnlineSearch?: (query: string) => void;
 }
 
-export function SearchPanel({ books, onSelectResult, initialSearchQuery }: SearchPanelProps) {
+export function SearchPanel({ books, onSelectResult, initialSearchQuery, onTriggerOnlineSearch }: SearchPanelProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [searched, setSearched] = useState(false);
@@ -262,8 +263,28 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery }: Searc
           <div className="search-no-results">
             <Compass size={60} strokeWidth={1} />
             <div>
-              <p style={{ fontWeight: 600, color: 'var(--color-wood-200)', marginBottom: '0.5rem' }}>未找到匹配經文</p>
-              <p style={{ fontSize: '0.85rem' }}>請嘗試調整關鍵字，或確認您是否已下載該本經典。</p>
+              <p style={{ fontWeight: 600, color: 'var(--color-wood-200)', marginBottom: '0.5rem' }}>未找到本地匹配經文</p>
+              <p style={{ fontSize: '0.85rem', marginBottom: '1rem' }}>請確認您是否已下載該本經典。</p>
+              {onTriggerOnlineSearch && query.trim() && (
+                <button
+                  onClick={() => onTriggerOnlineSearch(query.trim())}
+                  className="online-search-trigger-btn"
+                  style={{
+                    backgroundColor: 'var(--theme-accent)',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '4px',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-serif)',
+                    fontWeight: 600,
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  }}
+                >
+                  🔍 在線上 CBETA 檢索並下載「{query.trim()}」
+                </button>
+              )}
             </div>
           </div>
         )}

@@ -1162,6 +1162,20 @@ export function Library({
             books={downloadedPackages} 
             onSelectResult={handleSelectSearchResult} 
             initialSearchQuery={initialSearchQuery}
+            onTriggerOnlineSearch={async (q) => {
+              setActiveTab('shelf'); // 切換回書架分頁
+              setOnlineSearchQuery(q);
+              setIsSearchingOnline(true);
+              setShowSearchDialog(true);
+              try {
+                const results = await IndexBuilder.searchTitle(q);
+                setOnlineResults(results);
+              } catch (e) {
+                console.error('Online search failed:', e);
+              } finally {
+                setIsSearchingOnline(false);
+              }
+            }}
           />
         </div>
       )}
