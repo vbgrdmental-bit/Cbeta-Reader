@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { X } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
+import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import '../styles/settings.css';
 
 interface SettingsViewProps {
@@ -9,6 +11,7 @@ interface SettingsViewProps {
 }
 
 export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
+  const [showChangelog, setShowChangelog] = useState(false);
   
   const handleCheckboxChange = (key: keyof AppSettings['customVisibleElements']) => {
     const customElements = {
@@ -180,8 +183,44 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               </label>
             </div>
           </div>
+
+          {/* 5. 版本資訊與說明 */}
+          <div className="settings-version-row">
+            <div className="settings-version-info">
+              <span>App: v{APP_VERSION}</span>
+              <span className="version-divider">|</span>
+              <span>Builder: v{BUILDER_VERSION}</span>
+            </div>
+            <button 
+              type="button"
+              className="changelog-trigger-btn"
+              onClick={() => setShowChangelog(true)}
+            >
+              說明
+            </button>
+          </div>
         </div>
       </div>
+
+      {showChangelog && (
+        <div className="changelog-dialog-overlay" onClick={() => setShowChangelog(false)}>
+          <div className="changelog-dialog-card animate-slide-up" onClick={e => e.stopPropagation()}>
+            <div className="changelog-dialog-header">
+              <h4>版本更新說明</h4>
+              <button className="changelog-dialog-close-btn" onClick={() => setShowChangelog(false)}>
+                <X size={16} />
+              </button>
+            </div>
+            <div className="changelog-dialog-body">
+              <ul className="changelog-list">
+                <li>1. 優化Y系列經目次二層簡化與無卷書籍去卷化。</li>
+                <li>2. 修復經文列表（LI）層級縮排與置左偈頌排版。</li>
+                <li>3. 串接本地檢索無結果時一鍵線上檢索 CBETA。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
