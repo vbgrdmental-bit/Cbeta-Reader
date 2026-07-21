@@ -35,50 +35,53 @@ export class ReaderBuilder {
         
         // 💡 官方 API 級別的高精細 TOC 提取 (遞迴扁平化與自適應去重)
         if (data && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0 && allRawTocs.length === 0) {
-          const flattenMulus = (muluList: any[], parentTitle = '', depth = 0): any[] => {
+          // 💡 限制最大目錄層級為 2 層的優雅剪枝與合併算法，適合印順導師等高邏輯多層目次經典
+          const getPrunedTocs = (muluList: any[]): any[] => {
             const result: any[] = [];
-            for (const m of muluList) {
-              const currentTitle = parentTitle ? `${parentTitle}-${m.title}` : m.title;
-              
-              // 判定是否為虛擬資料夾 (如 "附文")
-              const isFolder = m.isFolder || m.type === '附文' || m.title === '附文';
-              const hasChildren = m.children && Array.isArray(m.children) && m.children.length > 0;
-              
-              if (isFolder && hasChildren) {
-                // 資料夾本身點點無效，將其名稱作為 prefix 與子項目以 "-" 連接，且自己不單獨推入
-                result.push(...flattenMulus(m.children, m.title, depth + 1));
-              } else {
-                result.push({
-                  title: currentTitle || '',
-                  juan: m.juan || 1,
-                  lb: m.lb || '',
-                  depth
-                });
-                if (hasChildren) {
-                  result.push(...flattenMulus(m.children, '', depth + 1));
+            
+            // 遞迴解析「附文」等純虛擬資料夾，找出真正具有實質內容的頂層節點
+            const getRealTopNodes = (nodes: any[]): any[] => {
+              const list: any[] = [];
+              for (const n of nodes) {
+                const isVirtualFolder = n.type === '附文' || n.title === '附文';
+                const hasChildren = n.children && Array.isArray(n.children) && n.children.length > 0;
+                if (isVirtualFolder && hasChildren) {
+                  list.push(...getRealTopNodes(n.children));
+                } else {
+                  list.push(n);
                 }
+              }
+              return list;
+            };
+
+            const realTopNodes = getRealTopNodes(muluList);
+
+            for (const m of realTopNodes) {
+              const hasChildren = m.children && Array.isArray(m.children) && m.children.length > 0;
+              if (hasChildren) {
+                // 有第二層子節點：與第一層標題用 "-" 連接，且不再向下遞迴第三層
+                for (const sub of m.children) {
+                  result.push({
+                    title: `${m.title}-${sub.title}`,
+                    juan: sub.juan || 1,
+                    lb: sub.lb || ''
+                  });
+                }
+              } else {
+                // 無子節點：直接作為第一層
+                result.push({
+                  title: m.title || '',
+                  juan: m.juan || 1,
+                  lb: m.lb || ''
+                });
               }
             }
             return result;
           };
+
+          allRawTocs = getPrunedTocs(data.toc.mulu);
           
-          const flatList = flattenMulus(data.toc.mulu);
-          // 找出所有最外層 (depth === 0) 的標題集
-          const outerTitles = new Set(flatList.filter(item => item.depth === 0).map(item => item.title));
-          
-          // 過濾重複：只有當子項 (depth > 0) 的標題不在外層中重複時，才予以保留
-          allRawTocs = flatList.filter(item => {
-            if (item.depth > 0 && outerTitles.has(item.title)) {
-              return false; // 重複了，過濾掉這個多餘的子章節
-            }
-            return true;
-          }).map(item => ({
-            title: item.title,
-            juan: item.juan,
-            lb: item.lb
-          }));
-          
-          console.log(`[ReaderBuilder] Successfully extracted ${allRawTocs.length} TOC items (with folder merging & deduplication) for ${workId}`);
+          console.log(`[ReaderBuilder] Successfully extracted ${allRawTocs.length} TOC items (with 2-level pruning) for ${workId}`);
         }
         
         if (data && Array.isArray(data.results) && data.results.length > 0) {
@@ -201,6 +204,26 @@ export class ReaderBuilder {
       }
       return false;
     };
+
+    // 💡 取得當前元素前面兄弟節點中的縮排尺寸
+    const getPrecedingLineSpaceSize = (node: HTMLElement): number => {
+      let current: HTMLElement | null = node;
+      while (current && current.tagName !== 'P' && current.tagName !== 'BODY') {
+        let sibling = current.previousSibling;
+        while (sibling) {
+          if (sibling.nodeType === Node.ELEMENT_NODE) {
+            const sibEl = sibling as HTMLElement;
+            if (sibEl.classList.contains('line_space')) {
+              const sizeAttr = sibEl.getAttribute('data-size');
+              return sizeAttr ? parseInt(sizeAttr, 10) : 0;
+            }
+          }
+          sibling = sibling.previousSibling;
+        }
+        current = current.parentElement;
+      }
+      return 0;
+    };
     const isAtStartOfContainer = (container: HTMLElement, target: HTMLElement): boolean => {
       const childNodes = Array.from(container.childNodes);
       const targetIdx = childNodes.findIndex(node => node === target || node.contains(target));
@@ -277,8 +300,8 @@ export class ReaderBuilder {
       //   - <lg> 無 <l> 子行 → 維持原本整塊處理（向下相容）
       //   - <l> 元素 → 各自建立 isVerse 段落
       const isVerseContainer = el.classList.contains('lg');
-      const hasVerseLineChildren = isVerseContainer && !!el.querySelector('l, .l');
-      const isVerseLine = tagName === 'L' || (el.classList.contains('l') && !el.classList.contains('lb') && !el.classList.contains('lb-line'));
+      const hasVerseLineChildren = isVerseContainer && (!!el.querySelector('l, .l') || !!el.querySelector('.lg-row'));
+      const isVerseLine = tagName === 'L' || (el.classList.contains('l') && !el.classList.contains('lb') && !el.classList.contains('lb-line')) || el.classList.contains('lg-row');
 
       // 若為有 <l> 子行的 <lg> 容器，直接跳過（不要把全部 <l> 合成一段）
       if (hasVerseLineChildren) {
@@ -329,8 +352,69 @@ export class ReaderBuilder {
 
           // 3. Reader Model (乾淨的純文字)
           const cleanClone = el.cloneNode(true) as HTMLElement;
-          cleanClone.querySelectorAll('a, .lb, .note, [class*="note"], [class*="lb"]').forEach(child => child.remove());
-          const cleanContent = cleanClone.textContent?.trim() || textContent;
+
+          // 💡 解析縮排標籤：將 <span class='line_space' data-size='X'> 替換成對應數量的全形空格，以保留印順導師著作中的層級縮排
+          cleanClone.querySelectorAll('.line_space, [class*="line_space"]').forEach(spaceEl => {
+            const sizeAttr = spaceEl.getAttribute('data-size');
+            const size = sizeAttr ? parseInt(sizeAttr, 10) : 0;
+            if (size > 0) {
+              const spaces = '　'.repeat(size);
+              const textNode = doc.createTextNode(spaces);
+              spaceEl.parentNode?.replaceChild(textNode, spaceEl);
+            } else {
+              spaceEl.remove();
+            }
+          });
+          
+          // 💡 線上小註/雙行小註轉換：將其文字內容加上全形括號，防止被後續 footnote 清除，並便於 Reader 渲染與搜尋
+          cleanClone.querySelectorAll('small, .inline-note, [class*="inline-note"]').forEach(noteEl => {
+            // 先清除小註內部可能夾帶的行號（.lb）與錨點（a），防範行號文字（例如 T19n0945_p0106b04）混入小註內容中
+            noteEl.querySelectorAll('a, .lb, [class*="lb"]').forEach(child => child.remove());
+            
+            const noteText = noteEl.textContent?.trim() || '';
+            if (noteText) {
+              const textNode = doc.createTextNode(`（${noteText}）`);
+              noteEl.parentNode?.replaceChild(textNode, noteEl);
+            } else {
+              noteEl.remove();
+            }
+          });
+
+          // 💡 將非腳註的連結 (a) 替換成其純文字內容，防範版權宣告等連結的文字被整塊刪除
+          cleanClone.querySelectorAll('a').forEach(anchorEl => {
+            const isFootnoteAnchor = anchorEl.classList.contains('noteAnchor') || 
+                                     anchorEl.getAttribute('href')?.startsWith('#') || 
+                                     anchorEl.classList.contains('anchor') ||
+                                     anchorEl.getAttribute('class')?.includes('anchor');
+            if (isFootnoteAnchor) {
+              anchorEl.remove();
+            } else {
+              const text = anchorEl.textContent || '';
+              const textNode = doc.createTextNode(text);
+              anchorEl.parentNode?.replaceChild(textNode, anchorEl);
+            }
+          });
+
+          cleanClone.querySelectorAll('.lb, .note, [class*="note"], [class*="lb"]').forEach(child => child.remove());
+          
+          let cleanContent = '';
+          if (el.classList.contains('lg-row')) {
+            const cells = Array.from(cleanClone.querySelectorAll('.lg-cell'));
+            if (cells.length > 0) {
+              const cellTexts = cells.map(cell => cell.textContent?.trim() || '');
+              cleanContent = cellTexts.filter(Boolean).join('　'); // 使用全形空格，更具古典美感與排版對齊
+            } else {
+              cleanContent = cleanClone.textContent?.trim() || textContent;
+            }
+          } else {
+            cleanContent = cleanClone.textContent?.trim() || textContent;
+          }
+
+          // 💡 取得當前元素前面兄弟節點中的縮排尺寸，並補上全形空格
+          const precedingIndentSize = getPrecedingLineSpaceSize(el);
+          if (precedingIndentSize > 0) {
+            cleanContent = '　'.repeat(precedingIndentSize) + cleanContent;
+          }
 
           const isHead = el.tagName.toUpperCase() === 'HEAD' || el.classList.contains('head') || el.hasAttribute('data-head-level');
           const isVerse = el.classList.contains('lg') || isVerseLine;

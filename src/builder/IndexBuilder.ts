@@ -75,14 +75,30 @@ export class IndexBuilder {
       const titleUrl = getApiUrl(`/stable/search/title?q=${encodeURIComponent(trimmedQuery)}`);
       const creatorUrl = getApiUrl(`/stable/works?creator=${encodeURIComponent(trimmedQuery)}`);
       
-      const [titleRes, creatorRes] = await Promise.all([
+      const promises: Promise<any>[] = [
         fetch(titleUrl, { headers: { 'Accept': 'application/json' } })
           .then(r => r.ok ? r.json() : null)
           .catch(() => null),
         fetch(creatorUrl, { headers: { 'Accept': 'application/json' } })
           .then(r => r.ok ? r.json() : null)
           .catch(() => null)
-      ]);
+      ];
+
+      // 💡 如果查詢字串符合經典編號格式 (例如 T0945)，額外向 works?work= 獲取精確經號結果
+      const isWorkId = /^[a-zA-Z]\d+/.test(trimmedQuery);
+      if (isWorkId) {
+        const workUrl = getApiUrl(`/stable/works?work=${trimmedQuery.toUpperCase()}`);
+        promises.push(
+          fetch(workUrl, { headers: { 'Accept': 'application/json' } })
+            .then(r => r.ok ? r.json() : null)
+            .catch(() => null)
+        );
+      }
+
+      const results = await Promise.all(promises);
+      const titleRes = results[0];
+      const creatorRes = results[1];
+      const workRes = results[2]; // 可能為 undefined
 
       const apiResults: SearchResult[] = [];
 
@@ -102,6 +118,19 @@ export class IndexBuilder {
       // 2. 解析以譯作者為主的 API 結果
       if (creatorRes && Array.isArray(creatorRes.results)) {
         creatorRes.results.forEach((item: any) => {
+          apiResults.push({
+            workId: item.work || item.file || '',
+            title: item.title || '未命名經典',
+            creators: item.byline || item.creators || '未知譯者',
+            juansCount: item.juan || 1,
+            category: item.category || '未分類'
+          });
+        });
+      }
+
+      // 3. 解析以經號為主的 API 結果 (works?work=)
+      if (workRes && Array.isArray(workRes.results)) {
+        workRes.results.forEach((item: any) => {
           apiResults.push({
             workId: item.work || item.file || '',
             title: item.title || '未命名經典',

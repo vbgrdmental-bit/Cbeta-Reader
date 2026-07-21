@@ -107,6 +107,26 @@ export function ReaderView({
     );
   };
 
+  // 💡 渲染經文段落，將括號內的小註（如：（一名中印度...））渲染為小字灰色
+  const renderParagraphContent = (text: string) => {
+    const parts = text.split(/(（[^）]*）)/g);
+    return (
+      <>
+        {parts.map((part, idx) => {
+          if (part.startsWith('（') && part.endsWith('）')) {
+            const noteText = part.slice(1, -1);
+            return (
+              <small key={idx} className="reader-inline-note">
+                （{renderHighlightedContent(noteText)}）
+              </small>
+            );
+          }
+          return <span key={idx}>{renderHighlightedContent(part)}</span>;
+        })}
+      </>
+    );
+  };
+
   // 校勘側邊欄狀態
   const [selectedNotes, setSelectedNotes] = useState<TextSegment['notes']>(undefined);
   const [selectedNotesTitle, setSelectedNotesTitle] = useState<string>('');
@@ -526,7 +546,7 @@ export function ReaderView({
 
     const ttsPlaylist = juanData.segments.map(seg => ({
       id: seg.id,
-      text: seg.content
+      text: seg.content.replace(/（[^）]*）/g, '')
     }));
 
     // 尋找開始的段落
@@ -799,7 +819,7 @@ export function ReaderView({
 
           {book.metadata.juansCount > 1 && (
             <div style={{ textAlign: 'center', marginBottom: '2rem', fontFamily: 'var(--font-serif)', color: 'var(--reader-text-muted)', fontSize: '1.1rem' }}>
-              —— 第 {currentJuanNum} 卷 ——
+              —— {book.metadata.workId.startsWith('Y') ? `第 ${currentJuanNum} 部分` : `第 ${currentJuanNum} 卷`} ——
             </div>
           )}
 
@@ -851,7 +871,7 @@ export function ReaderView({
                         )}
 
                         {/* 經文主體文字 */}
-                        {renderHighlightedContent(seg.content)}
+                        {renderParagraphContent(seg.content)}
 
                         {/* 學術模式：顯示校勘標記 (暫時停用，留待日後開啟) */}
                         {/* eslint-disable-next-line no-constant-binary-expression */}
@@ -921,17 +941,17 @@ export function ReaderView({
                 onClick={() => currentJuanNum > 1 && handleSelectJuan(currentJuanNum - 1)}
                 disabled={currentJuanNum <= 1}
               >
-                ◀ 上一卷
+                {book.metadata.workId.startsWith('Y') ? '◀ 上一部分' : '◀ 上一卷'}
               </button>
               <span style={{ fontSize: '0.85rem', color: 'var(--reader-text-muted)' }}>
-                卷 {currentJuanNum} / {book.metadata.juansCount}
+                {book.metadata.workId.startsWith('Y') ? `部分 ${currentJuanNum}` : `卷 ${currentJuanNum}`} / {book.metadata.juansCount}
               </span>
               <button 
                 style={{ fontFamily: 'var(--font-serif)', color: currentJuanNum < book.metadata.juansCount ? 'var(--reader-text)' : 'var(--reader-text-muted)', cursor: currentJuanNum < book.metadata.juansCount ? 'pointer' : 'default' }}
                 onClick={() => currentJuanNum < book.metadata.juansCount && handleSelectJuan(currentJuanNum + 1)}
                 disabled={currentJuanNum >= book.metadata.juansCount}
               >
-                下一卷 ▶
+                {book.metadata.workId.startsWith('Y') ? '下一部分 ▶' : '下一卷 ▶'}
               </button>
             </div>
           )}
@@ -996,7 +1016,7 @@ export function ReaderView({
                   onClick={() => handleSelectTOC(item)}
                 >
                   <span>{item.title}</span>
-                  {book.metadata.juansCount > 1 && (
+                  {book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y') && (
                     <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>卷 {item.juan}</span>
                   )}
                 </div>

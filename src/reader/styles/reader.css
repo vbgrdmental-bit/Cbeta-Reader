@@ -61,6 +61,10 @@
 .reader-paragraph.verse {
   font-weight: bold;
   font-family: 'DFYuan-Medium', 'DFYuan', 'YuanTi', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  text-align: left; /* 💡 將偈頌改為置左對齊，便於換行閱讀 */
+  padding-left: 2em; /* 💡 左側縮排 2 字符，維持詩歌體排版質感 */
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
 }
 
 /* 羊皮紙與舒服模式下，偈頌文字改為質感灰色 (烏木模式不變色) */
@@ -698,5 +702,14 @@ body.theme-ebony .resume-dialog-btn-secondary:hover {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+/* 經文中穿插的雙行小註/小字註解 */
+.reader-inline-note {
+  font-size: 0.82em;
+  color: var(--reader-text-muted);
+  opacity: 0.85;
+  display: inline;
+  margin: 0 0.1rem;
 }
 
