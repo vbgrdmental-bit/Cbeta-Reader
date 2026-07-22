@@ -594,12 +594,12 @@ export function ReaderView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workId, currentJuanNum]);
 
-  // 💡 當筆刷模式開啟時，監聽放開手指/滑鼠動作 (mouseup/touchend)，完成選取後自動劃記重點！
+  // 💡 當筆刷模式開啟時，監聽放開手指/滑鼠/觸控板動作 (pointerup/mouseup/touchend)，完成選取後自動劃記重點！
   useEffect(() => {
     if (!isBrushModeActive) return;
 
     const handlePointerUp = () => {
-      // 延遲 50ms 確保 selection 範圍計算完畢
+      // 延遲 100ms 確保行動裝置手勢與 selection 範圍計算完成
       setTimeout(async () => {
         const selection = window.getSelection();
         if (!selection || selection.isCollapsed) return;
@@ -651,12 +651,14 @@ export function ReaderView({
             }
           }
         }
-      }, 50);
+      }, 100);
     };
 
+    document.addEventListener('pointerup', handlePointerUp);
     document.addEventListener('mouseup', handlePointerUp);
     document.addEventListener('touchend', handlePointerUp);
     return () => {
+      document.removeEventListener('pointerup', handlePointerUp);
       document.removeEventListener('mouseup', handlePointerUp);
       document.removeEventListener('touchend', handlePointerUp);
     };
@@ -1194,6 +1196,7 @@ export function ReaderView({
                       className={`reader-paragraph-wrapper`}
                     >
                       <p 
+                        data-segment-id={seg.id}
                         className={`reader-paragraph ${seg.isHead ? 'paragraph-head' : ''} ${seg.isVerse ? 'verse' : ''} ${isTtsActive ? 'tts-active' : ''} ${isClicked ? 'clicked' : ''}`}
                         onClick={() => handleSegmentClick(seg)}
                         style={{ cursor: 'pointer' }}
