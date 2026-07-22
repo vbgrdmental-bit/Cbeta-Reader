@@ -146,7 +146,7 @@
   border-bottom: none !important;
 }
 .reader-text-highlight.hl-style-border {
-  border: 1.5px dashed var(--hl-active-color) !important;
+  border: 2.5px solid var(--hl-active-color) !important;
   border-radius: 4px;
   padding: 0 2px;
   background-color: transparent !important;

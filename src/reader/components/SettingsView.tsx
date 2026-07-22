@@ -39,42 +39,47 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
         </div>
 
         <div className="settings-body custom-scrollbar">
-          {/* 1. 閱讀主題色彩 (置於最上方) */}
+          {/* 1. 閱讀主題色彩 (置於最上方，比照筆刷顏色等排版) */}
           <div className="settings-section">
             <div className="settings-section-title">閱讀主題色彩</div>
-            <div className="theme-selector-grid">
-              {/* 象牙白 */}
-              <div
-                className={`theme-circle-wrapper ${settings.theme === 'ivory' ? 'active' : ''}`}
-                onClick={() => onSave({ ...settings, theme: 'ivory' })}
-              >
-                <div className="theme-circle bg-ivory" />
-                <span className="theme-circle-label">象牙白</span>
-              </div>
-              {/* 羊皮紙 */}
-              <div
-                className={`theme-circle-wrapper ${settings.theme === 'parchment' ? 'active' : ''}`}
-                onClick={() => onSave({ ...settings, theme: 'parchment' })}
-              >
-                <div className="theme-circle bg-parchment" />
-                <span className="theme-circle-label">羊皮紙</span>
-              </div>
-              {/* 舒服 */}
-              <div
-                className={`theme-circle-wrapper ${settings.theme === 'comfort' ? 'active' : ''}`}
-                onClick={() => onSave({ ...settings, theme: 'comfort' })}
-              >
-                <div className="theme-circle bg-comfort" />
-                <span className="theme-circle-label">舒服</span>
-              </div>
-              {/* 烏木 */}
-              <div
-                className={`theme-circle-wrapper ${settings.theme === 'ebony' ? 'active' : ''}`}
-                onClick={() => onSave({ ...settings, theme: 'ebony' })}
-              >
-                <div className="theme-circle bg-ebony" />
-                <span className="theme-circle-label">烏木</span>
-              </div>
+            <div className="visual-options-row">
+              {[
+                { id: 'ivory', label: '象牙白', bg: 'var(--bg-paper-ivory, #fdfbf7)' },
+                { id: 'parchment', label: '羊皮紙', bg: 'var(--bg-paper-parchment, #f4ecd8)' },
+                { id: 'comfort', label: '舒服', bg: 'var(--bg-paper-comfort, #c7edcc)' },
+                { id: 'ebony', label: '烏木', bg: 'var(--bg-paper-ebony, #1a1a1a)' }
+              ].map((t) => {
+                const isActive = settings.theme === t.id;
+                return (
+                  <div
+                    key={`theme-${t.id}`}
+                    className={`visual-option-card ${isActive ? 'active' : ''}`}
+                    onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
+                  >
+                    <div
+                      className="color-circle"
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        backgroundColor: t.bg,
+                        border: isActive ? '2px solid var(--text-primary)' : '1px solid var(--reader-border)',
+                        boxShadow: isActive ? '0 0 6px rgba(0,0,0,0.15)' : 'none',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: t.id === 'ebony' ? '#fff' : '#000'
+                      }}
+                    >
+                      {isActive && <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>✓</span>}
+                    </div>
+                    <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
+                      {t.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -234,7 +239,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     case 'full':
                       return { backgroundColor: previewColor };
                     case 'border':
-                      return { border: '1.5px dashed #fbbf24', borderRadius: '3px', padding: '0 1px' };
+                      return { border: '2.5px solid #fbbf24', borderRadius: '3px', padding: '0 1px' };
                   }
                 };
 
