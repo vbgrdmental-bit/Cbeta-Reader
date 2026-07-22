@@ -160,6 +160,133 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             </div>
           </div>
 
+          {/* 💡 畫重點設定 */}
+          <div className="settings-section">
+            <div className="settings-section-title">畫重點設定</div>
+            
+            {/* 筆刷顏色選擇 */}
+            <div className="settings-subsection-title" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>筆刷顏色</div>
+            <div className="highlight-color-options" style={{ display: 'flex', gap: '1rem', marginBottom: '1.2rem' }}>
+              {(['yellow', 'red', 'gray', 'blue'] as const).map((color) => {
+                const colorMap = {
+                  yellow: '#fbbf24',
+                  red: '#f87171',
+                  gray: '#9ca3af',
+                  blue: '#60a5fa'
+                };
+                const labelMap = {
+                  yellow: '淺黃',
+                  red: '淺紅',
+                  gray: '淺灰',
+                  blue: '淺藍'
+                };
+                const isActive = settings.highlightColor === color;
+                return (
+                  <div
+                    key={`hl-color-${color}`}
+                    className={`color-option-wrapper ${isActive ? 'active' : ''}`}
+                    onClick={() => onSave({ ...settings, highlightColor: color })}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      gap: '4px'
+                    }}
+                  >
+                    <div
+                      className="color-circle"
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        backgroundColor: colorMap[color],
+                        border: isActive ? '2px solid var(--text-primary)' : '1px solid var(--reader-border)',
+                        boxShadow: isActive ? '0 0 6px rgba(0,0,0,0.15)' : 'none',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: settings.theme === 'ebony' ? '#000' : '#fff'
+                      }}
+                    >
+                      {isActive && <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>✓</span>}
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: isActive ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                      {labelMap[color]}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* 粗細模式選擇 */}
+            <div className="settings-subsection-title" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>粗細模式</div>
+            <div className="highlight-style-options" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.8rem' }}>
+              {(['underline', 'bottom-half', 'full', 'border'] as const).map((style) => {
+                const labelMap = {
+                  underline: '文字下面1條線',
+                  'bottom-half': '文字下半段塗色',
+                  full: '文字全部塗滿',
+                  border: '文字方框線條'
+                };
+                
+                const getPreviewStyle = () => {
+                  const previewColor = 'rgba(250, 204, 21, 0.6)';
+                  switch (style) {
+                    case 'underline':
+                      return { borderBottom: '2.5px solid #fbbf24', background: 'transparent' };
+                    case 'bottom-half':
+                      return { background: `linear-gradient(180deg, transparent 55%, ${previewColor} 55%)` };
+                    case 'full':
+                      return { backgroundColor: previewColor };
+                    case 'border':
+                      return { border: '1.5px solid #fbbf24', borderRadius: '4px', padding: '0 2px' };
+                  }
+                };
+
+                const isActive = settings.highlightStyle === style;
+                return (
+                  <div
+                    key={`hl-style-${style}`}
+                    className={`style-option-card ${isActive ? 'active' : ''}`}
+                    onClick={() => onSave({ ...settings, highlightStyle: style })}
+                    style={{
+                      border: isActive ? '2px solid var(--theme-accent, var(--color-wood-700))' : '1px solid var(--reader-border)',
+                      borderRadius: '8px',
+                      padding: '0.6rem 0.4rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      gap: '8px',
+                      background: isActive ? 'rgba(140, 75, 39, 0.03)' : 'transparent',
+                      transition: 'all 0.2s',
+                      minHeight: '65px'
+                    }}
+                  >
+                    <div 
+                      className="style-preview-text" 
+                      style={{ 
+                        fontSize: '0.9rem', 
+                        fontFamily: 'var(--font-serif)',
+                        color: 'var(--text-primary)',
+                        padding: '2px 6px',
+                        ...getPreviewStyle()
+                      }}
+                    >
+                      大般若經
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: isActive ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                      {labelMap[style]}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* 4. 其他設定 (預設打勾，整併兩個選項) */}
           <div className="settings-section">
             <div className="settings-section-title">其他設定</div>

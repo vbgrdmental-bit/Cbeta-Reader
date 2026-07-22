@@ -99,6 +99,8 @@ export interface AppSettings {
   ttsSpeed: number; // 播放速度 0.5 ~ 2
   ttsPitch: number; // 音調高低 0.5 ~ 2
   ttsMode: 'normal' | 'natural'; // 朗讀口吻
+  highlightColor: 'yellow' | 'red' | 'gray' | 'blue';
+  highlightStyle: 'underline' | 'bottom-half' | 'full' | 'border';
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -118,7 +120,9 @@ const DEFAULT_SETTINGS: AppSettings = {
   ttsVoice: '',
   ttsSpeed: 1.0,
   ttsPitch: 1.0,
-  ttsMode: 'normal'
+  ttsMode: 'normal',
+  highlightColor: 'yellow',
+  highlightStyle: 'bottom-half'
 };
 
 export async function saveSettings(settings: AppSettings): Promise<void> {
@@ -175,6 +179,8 @@ export interface BookHighlight {
   endOffset: number;
   text: string;
   createdAt: number;
+  color?: 'yellow' | 'red' | 'gray' | 'blue';
+  style?: 'underline' | 'bottom-half' | 'full' | 'border';
 }
 
 export async function saveHighlight(highlight: BookHighlight): Promise<void> {

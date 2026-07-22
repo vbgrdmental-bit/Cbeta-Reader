@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft, Paintbrush
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
@@ -91,9 +91,9 @@ export function ReaderView({
     endOffset: number;
     text: string;
   } | null>(null);
-  const [highlightMenuPosition, setHighlightMenuPosition] = useState<{ top: number; left: number } | null>(null);
   const [activeHighlightForDelete, setActiveHighlightForDelete] = useState<BookHighlight | null>(null);
   const [deleteMenuPosition, setDeleteMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const [isBrushModeActive, setIsBrushModeActive] = useState(false);
 
   // 💡 全文檢索跳轉高亮支援
   const renderHighlightedContent = (text: string) => {
@@ -191,10 +191,12 @@ export function ReaderView({
           }
 
           if (run.highlight) {
+            const colorClass = `hl-color-${run.highlight.color || 'yellow'}`;
+            const styleClass = `hl-style-${run.highlight.style || 'bottom-half'}`;
             element = (
               <mark 
                 key={idx}
-                className="reader-text-highlight"
+                className={`reader-text-highlight ${colorClass} ${styleClass}`}
                 data-highlight-id={run.highlight.id}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -536,13 +538,12 @@ export function ReaderView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workId]);
 
-  // 監聽全局選取事件，即時顯示/隱藏選取高亮選單
+  // 監聽全局選取事件，即時自動高亮（筆刷模式）或暫存選取區間（非筆刷模式）
   useEffect(() => {
     const handleSelectionChange = () => {
       const selection = window.getSelection();
       if (!selection || selection.isCollapsed) {
         setPendingHighlight(null);
-        setHighlightMenuPosition(null);
         return;
       }
 
@@ -550,7 +551,6 @@ export function ReaderView({
       const selectedText = selection.toString().trim();
       if (!selectedText) {
         setPendingHighlight(null);
-        setHighlightMenuPosition(null);
         return;
       }
 
@@ -575,21 +575,42 @@ export function ReaderView({
           const startOffset = preSelectionRange.toString().length;
           const endOffset = startOffset + range.toString().length;
 
-          setPendingHighlight({
+          const pending = {
             workId,
             juan: currentJuanNum,
             segmentId,
             startOffset,
             endOffset,
             text: range.toString()
-          });
+          };
 
-          // 定位選單位置，顯示在選取文字上方
-          const rect = range.getBoundingClientRect();
-          setHighlightMenuPosition({
-            top: rect.top + window.scrollY - 45,
-            left: rect.left + window.scrollX + rect.width / 2
-          });
+          if (isBrushModeActive) {
+            // 💡 若筆刷模式已開啟，直接劃記並儲存，不用再點選懸浮按鈕！
+            const id = `${workId}_${currentJuanNum}_${segmentId}_${startOffset}_${endOffset}`;
+            const newHl: BookHighlight = {
+              id,
+              workId,
+              juan: currentJuanNum,
+              segmentId,
+              startOffset,
+              endOffset,
+              text: range.toString(),
+              createdAt: Date.now(),
+              color: settings.highlightColor,
+              style: settings.highlightStyle
+            };
+            
+            saveHighlight(newHl).then(() => {
+              window.getSelection()?.removeAllRanges();
+              setPendingHighlight(null);
+              loadBookHighlights();
+            }).catch(err => {
+              console.error('Failed to auto create highlight in brush mode:', err);
+            });
+          } else {
+            // 💡 若筆刷模式未開啟，僅暫存選取範圍，不顯示懸浮「+畫重點」按鈕
+            setPendingHighlight(pending);
+          }
         }
       }
     };
@@ -599,7 +620,7 @@ export function ReaderView({
       document.removeEventListener('selectionchange', handleSelectionChange);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workId, currentJuanNum]);
+  }, [workId, currentJuanNum, isBrushModeActive, settings.highlightColor, settings.highlightStyle]);
 
   // 監聽全局點擊事件，點擊空白處時隱藏刪除重點選單
   useEffect(() => {
@@ -622,31 +643,39 @@ export function ReaderView({
     });
   };
 
-  const handleCreateHighlight = async () => {
-    if (!pendingHighlight) return;
-    const { workId: wId, juan, segmentId, startOffset, endOffset, text } = pendingHighlight;
-    const id = `${wId}_${juan}_${segmentId}_${startOffset}_${endOffset}`;
-    const newHl: BookHighlight = {
-      id,
-      workId: wId,
-      juan,
-      segmentId,
-      startOffset,
-      endOffset,
-      text,
-      createdAt: Date.now()
-    };
+  const handleBrushButtonClick = async () => {
+    if (pendingHighlight) {
+      // 💡 如果當前有選取內容，直接對選取內容畫重點！
+      const { workId: wId, juan, segmentId, startOffset, endOffset, text } = pendingHighlight;
+      const id = `${wId}_${juan}_${segmentId}_${startOffset}_${endOffset}`;
+      const newHl: BookHighlight = {
+        id,
+        workId: wId,
+        juan,
+        segmentId,
+        startOffset,
+        endOffset,
+        text,
+        createdAt: Date.now(),
+        color: settings.highlightColor,
+        style: settings.highlightStyle
+      };
 
-    try {
-      await saveHighlight(newHl);
-      window.getSelection()?.removeAllRanges();
-      setPendingHighlight(null);
-      setHighlightMenuPosition(null);
-      await loadBookHighlights();
-    } catch (err) {
-      console.error('Failed to create highlight:', err);
+      try {
+        await saveHighlight(newHl);
+        window.getSelection()?.removeAllRanges();
+        setPendingHighlight(null);
+        await loadBookHighlights();
+      } catch (err) {
+        console.error('Failed to create highlight from brush button:', err);
+      }
+    } else {
+      // 💡 如果當前沒有選取內容，則切換筆刷模式的開啟/關閉狀態
+      setIsBrushModeActive(prev => !prev);
     }
   };
+
+
 
   const handleDeleteHighlight = async () => {
     if (!activeHighlightForDelete) return;
@@ -995,6 +1024,46 @@ export function ReaderView({
             justifyContent: 'center',
             lineHeight: 1
           }}>A</span>
+        </button>
+
+        {/* 💡 筆刷按鈕 */}
+        <button 
+          className={`reader-text-btn brush-btn ${isBrushModeActive ? 'active' : ''}`} 
+          onClick={handleBrushButtonClick}
+          title={isBrushModeActive ? '劃記重點模式 (開啟中)' : '劃記重點模式'}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0 0.4rem',
+            position: 'relative',
+            transition: 'all 0.2s',
+            borderRadius: '6px',
+            border: isBrushModeActive ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
+            background: isBrushModeActive ? 'rgba(250, 204, 21, 0.08)' : 'transparent'
+          }}
+        >
+          <Paintbrush 
+            size={20} 
+            style={{
+              color: isBrushModeActive ? 'var(--theme-accent, var(--color-wood-700))' : 'currentColor'
+            }}
+          />
+          {/* 顯示目前選定的顏色指示器 */}
+          <div 
+            className="brush-color-indicator"
+            style={{
+              position: 'absolute',
+              bottom: '2px',
+              width: '14px',
+              height: '3px',
+              borderRadius: '1.5px',
+              backgroundColor: 
+                settings.highlightColor === 'yellow' ? '#fbbf24' :
+                settings.highlightColor === 'red' ? '#f87171' :
+                settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa'
+            }}
+          />
         </button>
 
 
@@ -1409,41 +1478,7 @@ export function ReaderView({
         </div>
       )}
 
-      {/* 💡 畫重點懸浮選單 */}
-      {pendingHighlight && highlightMenuPosition && (
-        <div 
-          className="highlight-action-menu"
-          style={{
-            position: 'absolute',
-            top: highlightMenuPosition.top,
-            left: highlightMenuPosition.left,
-            transform: 'translateX(-50%)',
-            zIndex: 1000,
-            display: 'flex',
-            gap: '8px',
-            background: 'var(--reader-bg)',
-            border: '1px solid var(--reader-border)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            borderRadius: '20px',
-            padding: '4px 12px',
-            alignItems: 'center',
-            cursor: 'pointer',
-            fontSize: '0.85rem',
-            fontFamily: 'var(--font-serif)',
-            color: 'var(--reader-text)',
-            animation: 'fadeIn 0.15s ease-out'
-          }}
-          onMouseDown={(e) => {
-            // 避免點擊選單時導致選取範圍消失
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          onClick={handleCreateHighlight}
-        >
-          <span style={{ color: 'var(--theme-accent, #f2a31b)', fontWeight: 'bold' }}>+</span>
-          <span>畫重點</span>
-        </div>
-      )}
+
 
       {/* 💡 刪除重點懸浮選單 */}
       {activeHighlightForDelete && deleteMenuPosition && (
