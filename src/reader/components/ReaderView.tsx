@@ -3,8 +3,8 @@ import {
   Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment } from '../../types/book';
-import { getBook, saveBook } from '../../utils/db';
-import type { AppSettings } from '../../utils/db';
+import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
+import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
@@ -81,6 +81,20 @@ export function ReaderView({
   const [scrollPercent, setScrollPercent] = useState(0);
   const [showSettingsView, setShowSettingsView] = useState(false);
 
+  // 💡 畫重點相關狀態
+  const [highlights, setHighlights] = useState<BookHighlight[]>([]);
+  const [pendingHighlight, setPendingHighlight] = useState<{
+    workId: string;
+    juan: number;
+    segmentId: string;
+    startOffset: number;
+    endOffset: number;
+    text: string;
+  } | null>(null);
+  const [highlightMenuPosition, setHighlightMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const [activeHighlightForDelete, setActiveHighlightForDelete] = useState<BookHighlight | null>(null);
+  const [deleteMenuPosition, setDeleteMenuPosition] = useState<{ top: number; left: number } | null>(null);
+
   // 💡 全文檢索跳轉高亮支援
   const renderHighlightedContent = (text: string) => {
     if (!searchQuery) return text;
@@ -107,21 +121,94 @@ export function ReaderView({
     );
   };
 
-  // 💡 渲染經文段落，將括號內的小註（如：（一名中印度...））渲染為小字灰色
-  const renderParagraphContent = (text: string) => {
-    const parts = text.split(/(（[^）]*）)/g);
+  // 💡 渲染經文段落，結合括號小註與 DB 畫重點標記，保證 HTML 嵌套安全
+  const renderParagraphContent = (text: string, segmentId: string) => {
+    // 1. 篩選出目前段落的畫重點資料
+    const segHighlights = highlights.filter(
+      h => h.segmentId === segmentId && h.juan === currentJuanNum
+    );
+
+    // 2. 尋找所有括號小註的索引區間
+    const bracketRanges: Array<{ start: number; end: number }> = [];
+    const bracketRegex = /（[^）]*）/g;
+    let match;
+    while ((match = bracketRegex.exec(text)) !== null) {
+      bracketRanges.push({ start: match.index, end: bracketRegex.lastIndex });
+    }
+
+    // 3. 建立字元狀態陣列，標記每個字元是否為小註、是否被畫重點
+    const charStates = Array.from({ length: text.length }, (_, i) => {
+      const isNote = bracketRanges.some(r => i >= r.start && i < r.end);
+      const hl = segHighlights.find(h => i >= h.startOffset && i < h.endOffset);
+      return {
+        isNote,
+        highlightId: hl ? hl.id : null,
+        highlight: hl || null
+      };
+    });
+
+    // 4. 將相同狀態的連續字元分組為 Runs
+    const runs: Array<{ start: number; end: number; isNote: boolean; highlight: BookHighlight | null }> = [];
+    if (text.length > 0) {
+      let runStart = 0;
+      let currentState = charStates[0];
+      for (let i = 1; i < text.length; i++) {
+        const state = charStates[i];
+        if (state.isNote !== currentState.isNote || state.highlightId !== currentState.highlightId) {
+          runs.push({
+            start: runStart,
+            end: i,
+            isNote: currentState.isNote,
+            highlight: currentState.highlight
+          });
+          runStart = i;
+          currentState = state;
+        }
+      }
+      runs.push({
+        start: runStart,
+        end: text.length,
+        isNote: currentState.isNote,
+        highlight: currentState.highlight
+      });
+    }
+
+    // 5. 渲染成 React Elements
     return (
       <>
-        {parts.map((part, idx) => {
-          if (part.startsWith('（') && part.endsWith('）')) {
-            const noteText = part.slice(1, -1);
-            return (
-              <small key={idx} className="reader-inline-note">
-                （{renderHighlightedContent(noteText)}）
+        {runs.map((run, idx) => {
+          const runText = text.substring(run.start, run.end);
+          
+          // 全文檢索高亮
+          let element: React.ReactNode = renderHighlightedContent(runText);
+          
+          if (run.isNote) {
+            element = (
+              <small className="reader-inline-note">
+                {element}
               </small>
             );
           }
-          return <span key={idx}>{renderHighlightedContent(part)}</span>;
+
+          if (run.highlight) {
+            element = (
+              <mark 
+                key={idx}
+                className="reader-text-highlight"
+                data-highlight-id={run.highlight.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleHighlightClick(run.highlight!, e);
+                }}
+              >
+                {element}
+              </mark>
+            );
+          } else {
+            element = <React.Fragment key={idx}>{element}</React.Fragment>;
+          }
+
+          return element;
         })}
       </>
     );
@@ -433,6 +520,145 @@ export function ReaderView({
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workId, initialSegmentId]);
+
+  // 💡 載入此書的所有畫重點記錄
+  const loadBookHighlights = async () => {
+    try {
+      const list = await listHighlights(workId);
+      setHighlights(list);
+    } catch (e) {
+      console.error('Failed to load highlights:', e);
+    }
+  };
+
+  useEffect(() => {
+    loadBookHighlights();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workId]);
+
+  // 監聽全局選取事件，即時顯示/隱藏選取高亮選單
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed) {
+        setPendingHighlight(null);
+        setHighlightMenuPosition(null);
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+      const selectedText = selection.toString().trim();
+      if (!selectedText) {
+        setPendingHighlight(null);
+        setHighlightMenuPosition(null);
+        return;
+      }
+
+      // 檢查選取範圍是否包含於段落內 (.reader-paragraph)
+      let node: Node | null = range.startContainer;
+      let segmentEl: HTMLElement | null = null;
+      while (node) {
+        if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('reader-paragraph')) {
+          segmentEl = node as HTMLElement;
+          break;
+        }
+        node = node.parentNode;
+      }
+
+      if (segmentEl) {
+        const segmentId = segmentEl.getAttribute('data-segment-id');
+        if (segmentId) {
+          // 計算相對於段落 textContent 的 startOffset 和 endOffset
+          const preSelectionRange = range.cloneRange();
+          preSelectionRange.selectNodeContents(segmentEl);
+          preSelectionRange.setEnd(range.startContainer, range.startOffset);
+          const startOffset = preSelectionRange.toString().length;
+          const endOffset = startOffset + range.toString().length;
+
+          setPendingHighlight({
+            workId,
+            juan: currentJuanNum,
+            segmentId,
+            startOffset,
+            endOffset,
+            text: range.toString()
+          });
+
+          // 定位選單位置，顯示在選取文字上方
+          const rect = range.getBoundingClientRect();
+          setHighlightMenuPosition({
+            top: rect.top + window.scrollY - 45,
+            left: rect.left + window.scrollX + rect.width / 2
+          });
+        }
+      }
+    };
+
+    document.addEventListener('selectionchange', handleSelectionChange);
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workId, currentJuanNum]);
+
+  // 監聽全局點擊事件，點擊空白處時隱藏刪除重點選單
+  useEffect(() => {
+    const handleGlobalClick = () => {
+      setActiveHighlightForDelete(null);
+      setDeleteMenuPosition(null);
+    };
+    document.addEventListener('click', handleGlobalClick);
+    return () => {
+      document.removeEventListener('click', handleGlobalClick);
+    };
+  }, []);
+
+  const handleHighlightClick = (hl: BookHighlight, e: React.MouseEvent) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setActiveHighlightForDelete(hl);
+    setDeleteMenuPosition({
+      top: rect.top + window.scrollY - 45,
+      left: rect.left + window.scrollX + rect.width / 2
+    });
+  };
+
+  const handleCreateHighlight = async () => {
+    if (!pendingHighlight) return;
+    const { workId: wId, juan, segmentId, startOffset, endOffset, text } = pendingHighlight;
+    const id = `${wId}_${juan}_${segmentId}_${startOffset}_${endOffset}`;
+    const newHl: BookHighlight = {
+      id,
+      workId: wId,
+      juan,
+      segmentId,
+      startOffset,
+      endOffset,
+      text,
+      createdAt: Date.now()
+    };
+
+    try {
+      await saveHighlight(newHl);
+      window.getSelection()?.removeAllRanges();
+      setPendingHighlight(null);
+      setHighlightMenuPosition(null);
+      await loadBookHighlights();
+    } catch (err) {
+      console.error('Failed to create highlight:', err);
+    }
+  };
+
+  const handleDeleteHighlight = async () => {
+    if (!activeHighlightForDelete) return;
+    try {
+      await deleteHighlight(activeHighlightForDelete.id);
+      setActiveHighlightForDelete(null);
+      setDeleteMenuPosition(null);
+      await loadBookHighlights();
+    } catch (err) {
+      console.error('Failed to delete highlight:', err);
+    }
+  };
 
   // 當「顯示閱讀頁上下控制列」設定變更時，即時同步工具列狀態
   useEffect(() => {
@@ -871,7 +1097,7 @@ export function ReaderView({
                         )}
 
                         {/* 經文主體文字 */}
-                        {renderParagraphContent(seg.content)}
+                        {renderParagraphContent(seg.content, seg.id)}
 
                         {/* 學術模式：顯示校勘標記 (暫時停用，留待日後開啟) */}
                         {/* eslint-disable-next-line no-constant-binary-expression */}
@@ -1180,6 +1406,80 @@ export function ReaderView({
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* 💡 畫重點懸浮選單 */}
+      {pendingHighlight && highlightMenuPosition && (
+        <div 
+          className="highlight-action-menu"
+          style={{
+            position: 'absolute',
+            top: highlightMenuPosition.top,
+            left: highlightMenuPosition.left,
+            transform: 'translateX(-50%)',
+            zIndex: 1000,
+            display: 'flex',
+            gap: '8px',
+            background: 'var(--reader-bg)',
+            border: '1px solid var(--reader-border)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            borderRadius: '20px',
+            padding: '4px 12px',
+            alignItems: 'center',
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            fontFamily: 'var(--font-serif)',
+            color: 'var(--reader-text)',
+            animation: 'fadeIn 0.15s ease-out'
+          }}
+          onMouseDown={(e) => {
+            // 避免點擊選單時導致選取範圍消失
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={handleCreateHighlight}
+        >
+          <span style={{ color: 'var(--theme-accent, #f2a31b)', fontWeight: 'bold' }}>+</span>
+          <span>畫重點</span>
+        </div>
+      )}
+
+      {/* 💡 刪除重點懸浮選單 */}
+      {activeHighlightForDelete && deleteMenuPosition && (
+        <div 
+          className="highlight-delete-menu"
+          style={{
+            position: 'absolute',
+            top: deleteMenuPosition.top,
+            left: deleteMenuPosition.left,
+            transform: 'translateX(-50%)',
+            zIndex: 1000,
+            display: 'flex',
+            gap: '6px',
+            background: 'var(--reader-bg)',
+            border: '1px solid var(--reader-border)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            borderRadius: '20px',
+            padding: '4px 12px',
+            alignItems: 'center',
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            fontFamily: 'var(--font-serif)',
+            color: 'var(--color-wood-700)',
+            animation: 'fadeIn 0.15s ease-out'
+          }}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteHighlight();
+          }}
+        >
+          <span style={{ fontSize: '0.9rem' }}>🗑️</span>
+          <span>刪除重點</span>
         </div>
       )}
 

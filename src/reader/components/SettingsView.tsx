@@ -211,12 +211,34 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 <X size={16} />
               </button>
             </div>
-            <div className="changelog-dialog-body">
-              <ul className="changelog-list">
-                <li>1. 優化Y系列經目次二層簡化與無卷書籍去卷化。</li>
-                <li>2. 修復經文列表（LI）層級縮排與置左偈頌排版。</li>
-                <li>3. 串接本地檢索無結果時一鍵線上檢索 CBETA。</li>
-              </ul>
+            <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+              <div className="changelog-version-section">
+                <div className="changelog-version-title">v1.3.0 <span className="changelog-date">(2026-07-21)</span></div>
+                <ul className="changelog-list">
+                  <li>• 優化Y系列經目次二層簡化與無卷書籍去卷化。</li>
+                  <li>• 修復經文列表（LI）層級縮排與置左偈頌排版。</li>
+                  <li>• 串接本地檢索無結果時一鍵線上檢索 CBETA。</li>
+                </ul>
+              </div>
+              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                <div className="changelog-version-title">v1.2.0 <span className="changelog-date">(2026-07-21)</span></div>
+                <ul className="changelog-list">
+                  <li>• 建立開發分支與 Builder v1.2.0 版本控制規範。</li>
+                </ul>
+              </div>
+              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                <div className="changelog-version-title">v1.1.0 <span className="changelog-date">(2026-07-20)</span></div>
+                <ul className="changelog-list">
+                  <li>• 下載後保持線上搜尋對話框開啟以利批次操作。</li>
+                  <li>• 統一閱讀頁面頭部與控制列的高度為 56px。</li>
+                </ul>
+              </div>
+              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                <div className="changelog-version-title">v1.0.0 <span className="changelog-date">(2026-07-15)</span></div>
+                <ul className="changelog-list">
+                  <li>• 釋出初始核心經典解析、導航與檢索功能。</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

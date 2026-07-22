@@ -6,11 +6,10 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 ## 1. Git Branching & Local Testing Workflow
 
-- **Branch**: `dev-builder-optimization` (Active Development)
 - **Rules**:
-  1. All new features, scripture parsing logic modifications, and bug fixes must be developed and tested locally on the `dev-builder-optimization` branch.
-  2. Do not modify or push directly to `main` without thorough local verification.
-  3. Ensure `npm run build` compiles successfully before committing or merging.
+  1. **App 調整（不涉及 Builder）**：可直接在 `main` 分支上進行修改與部署。
+  2. **Scripture 解析與 Builder 調整**：必須在 `dev-builder-optimization` 分支上進行開發與測試，確認編譯與解析完全無誤後，再合併回 `main` 分支。
+  3. 不論在哪個分支修改，皆需確保 `npm run build` 編譯成功。
 
 ---
 

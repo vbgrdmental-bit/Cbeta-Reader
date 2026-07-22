@@ -1,9 +1,10 @@
 import type { ReaderPackage, BookMetadata } from '../types/book';
 
 const DB_NAME = 'cbeta_reader_db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const BOOKS_STORE = 'books';
 const SETTINGS_STORE = 'settings';
+const HIGHLIGHTS_STORE = 'highlights';
 
 export function initDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -19,6 +20,10 @@ export function initDB(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains(SETTINGS_STORE)) {
         db.createObjectStore(SETTINGS_STORE, { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains(HIGHLIGHTS_STORE)) {
+        const highlightsStore = db.createObjectStore(HIGHLIGHTS_STORE, { keyPath: 'id' });
+        highlightsStore.createIndex('workId', 'workId', { unique: false });
       }
     };
   });
@@ -156,6 +161,64 @@ export async function getSettings(): Promise<AppSettings> {
       } else {
         resolve(DEFAULT_SETTINGS);
       }
+    };
+  });
+}
+
+// 經文選取畫重點 (Highlight) 資料結構
+export interface BookHighlight {
+  id: string; // `${workId}_${juan}_${segmentId}_${startOffset}_${endOffset}`
+  workId: string;
+  juan: number;
+  segmentId: string;
+  startOffset: number;
+  endOffset: number;
+  text: string;
+  createdAt: number;
+}
+
+export async function saveHighlight(highlight: BookHighlight): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(HIGHLIGHTS_STORE, 'readwrite');
+    const store = transaction.objectStore(HIGHLIGHTS_STORE);
+    const request = store.put(highlight);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+export async function deleteHighlight(id: string): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(HIGHLIGHTS_STORE, 'readwrite');
+    const store = transaction.objectStore(HIGHLIGHTS_STORE);
+    const request = store.delete(id);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+export async function listHighlights(workId: string): Promise<BookHighlight[]> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(HIGHLIGHTS_STORE, 'readonly');
+    const store = transaction.objectStore(HIGHLIGHTS_STORE);
+    const index = store.index('workId');
+    const request = index.getAll(workId);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const items: BookHighlight[] = request.result || [];
+      // 依據卷次、段落 ID 以及起始偏移量進行排序
+      items.sort((a, b) => {
+        if (a.juan !== b.juan) return a.juan - b.juan;
+        if (a.segmentId !== b.segmentId) return a.segmentId.localeCompare(b.segmentId);
+        return a.startOffset - b.startOffset;
+      });
+      resolve(items);
     };
   });
 }
