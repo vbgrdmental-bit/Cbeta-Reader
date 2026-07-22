@@ -538,7 +538,7 @@ export function ReaderView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workId]);
 
-  // 監聽全局選取事件，即時自動高亮（筆刷模式）或暫存選取區間（非筆刷模式）
+  // 監聽全局選取事件，暫存選取區間
   useEffect(() => {
     const handleSelectionChange = () => {
       const selection = window.getSelection();
@@ -575,17 +575,58 @@ export function ReaderView({
           const startOffset = preSelectionRange.toString().length;
           const endOffset = startOffset + range.toString().length;
 
-          const pending = {
+          setPendingHighlight({
             workId,
             juan: currentJuanNum,
             segmentId,
             startOffset,
             endOffset,
             text: range.toString()
-          };
+          });
+        }
+      }
+    };
 
-          if (isBrushModeActive) {
-            // 💡 若筆刷模式已開啟，直接劃記並儲存，不用再點選懸浮按鈕！
+    document.addEventListener('selectionchange', handleSelectionChange);
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workId, currentJuanNum]);
+
+  // 💡 當筆刷模式開啟時，監聽放開手指/滑鼠動作 (mouseup/touchend)，完成選取後自動劃記重點！
+  useEffect(() => {
+    if (!isBrushModeActive) return;
+
+    const handlePointerUp = () => {
+      // 延遲 50ms 確保 selection 範圍計算完畢
+      setTimeout(async () => {
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed) return;
+
+        const selectedText = selection.toString().trim();
+        if (!selectedText) return;
+
+        const range = selection.getRangeAt(0);
+        let node: Node | null = range.startContainer;
+        let segmentEl: HTMLElement | null = null;
+        while (node) {
+          if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('reader-paragraph')) {
+            segmentEl = node as HTMLElement;
+            break;
+          }
+          node = node.parentNode;
+        }
+
+        if (segmentEl) {
+          const segmentId = segmentEl.getAttribute('data-segment-id');
+          if (segmentId) {
+            const preSelectionRange = range.cloneRange();
+            preSelectionRange.selectNodeContents(segmentEl);
+            preSelectionRange.setEnd(range.startContainer, range.startOffset);
+            const startOffset = preSelectionRange.toString().length;
+            const endOffset = startOffset + range.toString().length;
+
             const id = `${workId}_${currentJuanNum}_${segmentId}_${startOffset}_${endOffset}`;
             const newHl: BookHighlight = {
               id,
@@ -599,28 +640,28 @@ export function ReaderView({
               color: settings.highlightColor,
               style: settings.highlightStyle
             };
-            
-            saveHighlight(newHl).then(() => {
+
+            try {
+              await saveHighlight(newHl);
               window.getSelection()?.removeAllRanges();
               setPendingHighlight(null);
-              loadBookHighlights();
-            }).catch(err => {
-              console.error('Failed to auto create highlight in brush mode:', err);
-            });
-          } else {
-            // 💡 若筆刷模式未開啟，僅暫存選取範圍，不顯示懸浮「+畫重點」按鈕
-            setPendingHighlight(pending);
+              await loadBookHighlights();
+            } catch (err) {
+              console.error('Failed to auto create highlight on gesture end:', err);
+            }
           }
         }
-      }
+      }, 50);
     };
 
-    document.addEventListener('selectionchange', handleSelectionChange);
+    document.addEventListener('mouseup', handlePointerUp);
+    document.addEventListener('touchend', handlePointerUp);
     return () => {
-      document.removeEventListener('selectionchange', handleSelectionChange);
+      document.removeEventListener('mouseup', handlePointerUp);
+      document.removeEventListener('touchend', handlePointerUp);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workId, currentJuanNum, isBrushModeActive, settings.highlightColor, settings.highlightStyle]);
+  }, [isBrushModeActive, workId, currentJuanNum, settings.highlightColor, settings.highlightStyle]);
 
   // 監聽全局點擊事件，點擊空白處時隱藏刪除重點選單
   useEffect(() => {

@@ -164,9 +164,9 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           <div className="settings-section">
             <div className="settings-section-title">畫重點設定</div>
             
-            {/* 筆刷顏色選擇 */}
+            {/* 筆刷顏色選擇 (4個等分項目) */}
             <div className="settings-subsection-title" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>筆刷顏色</div>
-            <div className="highlight-color-options" style={{ display: 'flex', gap: '1rem', marginBottom: '1.2rem' }}>
+            <div className="visual-options-row">
               {(['yellow', 'red', 'gray', 'blue'] as const).map((color) => {
                 const colorMap = {
                   yellow: '#fbbf24',
@@ -184,21 +184,14 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 return (
                   <div
                     key={`hl-color-${color}`}
-                    className={`color-option-wrapper ${isActive ? 'active' : ''}`}
+                    className={`visual-option-card ${isActive ? 'active' : ''}`}
                     onClick={() => onSave({ ...settings, highlightColor: color })}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      cursor: 'pointer',
-                      gap: '4px'
-                    }}
                   >
                     <div
                       className="color-circle"
                       style={{
-                        width: '28px',
-                        height: '28px',
+                        width: '24px',
+                        height: '24px',
                         borderRadius: '50%',
                         backgroundColor: colorMap[color],
                         border: isActive ? '2px solid var(--text-primary)' : '1px solid var(--reader-border)',
@@ -210,9 +203,9 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                         color: settings.theme === 'ebony' ? '#000' : '#fff'
                       }}
                     >
-                      {isActive && <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>✓</span>}
+                      {isActive && <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>✓</span>}
                     </div>
-                    <span style={{ fontSize: '0.75rem', color: isActive ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                    <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
                       {labelMap[color]}
                     </span>
                   </div>
@@ -220,19 +213,19 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               })}
             </div>
 
-            {/* 粗細模式選擇 */}
-            <div className="settings-subsection-title" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>粗細模式</div>
-            <div className="highlight-style-options" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.8rem' }}>
+            {/* 粗細模式選擇 (4個等分項目) */}
+            <div className="settings-subsection-title" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '1rem 0 0.5rem 0' }}>粗細與標註模式</div>
+            <div className="visual-options-row">
               {(['underline', 'bottom-half', 'full', 'border'] as const).map((style) => {
                 const labelMap = {
-                  underline: '文字下面1條線',
-                  'bottom-half': '文字下半段塗色',
-                  full: '文字全部塗滿',
-                  border: '文字方框線條'
+                  underline: '底線',
+                  'bottom-half': '半塗',
+                  full: '全塗',
+                  border: '方框'
                 };
                 
                 const getPreviewStyle = () => {
-                  const previewColor = 'rgba(250, 204, 21, 0.6)';
+                  const previewColor = 'rgba(250, 204, 21, 0.65)';
                   switch (style) {
                     case 'underline':
                       return { borderBottom: '2.5px solid #fbbf24', background: 'transparent' };
@@ -241,7 +234,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     case 'full':
                       return { backgroundColor: previewColor };
                     case 'border':
-                      return { border: '1.5px solid #fbbf24', borderRadius: '4px', padding: '0 2px' };
+                      return { border: '1.5px dashed #fbbf24', borderRadius: '3px', padding: '0 1px' };
                   }
                 };
 
@@ -249,36 +242,22 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 return (
                   <div
                     key={`hl-style-${style}`}
-                    className={`style-option-card ${isActive ? 'active' : ''}`}
+                    className={`visual-option-card ${isActive ? 'active' : ''}`}
                     onClick={() => onSave({ ...settings, highlightStyle: style })}
-                    style={{
-                      border: isActive ? '2px solid var(--theme-accent, var(--color-wood-700))' : '1px solid var(--reader-border)',
-                      borderRadius: '8px',
-                      padding: '0.6rem 0.4rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      gap: '8px',
-                      background: isActive ? 'rgba(140, 75, 39, 0.03)' : 'transparent',
-                      transition: 'all 0.2s',
-                      minHeight: '65px'
-                    }}
                   >
                     <div 
                       className="style-preview-text" 
                       style={{ 
-                        fontSize: '0.9rem', 
+                        fontSize: '0.82rem', 
                         fontFamily: 'var(--font-serif)',
                         color: 'var(--text-primary)',
-                        padding: '2px 6px',
+                        padding: '1px 3px',
                         ...getPreviewStyle()
                       }}
                     >
-                      大般若經
+                      經文
                     </div>
-                    <span style={{ fontSize: '0.75rem', color: isActive ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                    <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
                       {labelMap[style]}
                     </span>
                   </div>
@@ -340,6 +319,14 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             </div>
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
               <div className="changelog-version-section">
+                <div className="changelog-version-title">v1.4.0 (App) <span className="changelog-date">(2026-07-22)</span></div>
+                <ul className="changelog-list">
+                  <li>• 新增閱讀控制列筆刷按鈕與一鍵連續畫重點。</li>
+                  <li>• 支援淺黃、淺紅、淺灰、淺藍 4 種自訂筆刷顏色。</li>
+                  <li>• 支援底線、下半塗色、全塗滿、方框 4 種粗細。</li>
+                </ul>
+              </div>
+              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                 <div className="changelog-version-title">v1.3.0 <span className="changelog-date">(2026-07-21)</span></div>
                 <ul className="changelog-list">
                   <li>• 優化Y系列經目次二層簡化與無卷書籍去卷化。</li>
