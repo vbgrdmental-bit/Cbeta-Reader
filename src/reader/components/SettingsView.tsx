@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Download, Upload } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
+import { exportUserData, importUserData } from '../../utils/backup';
 import '../styles/settings.css';
 
 interface SettingsViewProps {
@@ -13,6 +14,40 @@ interface SettingsViewProps {
 export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   const [showChangelog, setShowChangelog] = useState(false);
   const [showAllHistory, setShowAllHistory] = useState(false);
+  const [backupMsg, setBackupMsg] = useState('');
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+
+  const handleExport = async (includeBooks: boolean) => {
+    try {
+      setIsExporting(true);
+      await exportUserData({ includeBooks });
+      setBackupMsg(includeBooks ? '已成功下載完整備份（含經文、劃線與設定）！' : '已成功下載劃線與偏好設定備份！');
+    } catch (err: any) {
+      setBackupMsg('匯出失敗：' + (err.message || '未知錯誤'));
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setIsImporting(true);
+      const res = await importUserData(file);
+      let msg = '備份還原成功！';
+      if (res.booksCount > 0 || res.highlightsCount > 0) {
+        msg = `已成功還原 ${res.booksCount > 0 ? `${res.booksCount} 本經文、` : ''}${res.highlightsCount} 筆劃線重點與個人設定！`;
+      }
+      setBackupMsg(msg);
+    } catch (err: any) {
+      setBackupMsg('還原失敗：' + (err.message || '請確認備份檔案格式正確。'));
+    } finally {
+      setIsImporting(false);
+      e.target.value = '';
+    }
+  };
   
   const handleCheckboxChange = (key: keyof AppSettings['customVisibleElements']) => {
     const customElements = {
@@ -293,6 +328,56 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 />
                 語音朗讀時高亮顯示當前段落
               </label>
+            </div>
+          </div>
+
+          {/* 4.5 資料備份與還原 */}
+          <div className="settings-section">
+            <div className="settings-section-title">資料備份與還原</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="profile-btn"
+                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', padding: '0.5rem 0.8rem', fontSize: '0.85rem' }}
+                  onClick={() => handleExport(true)}
+                  disabled={isExporting}
+                >
+                  <Download size={15} />
+                  <span>完整備份 (含經文與劃線)</span>
+                </button>
+                <button
+                  type="button"
+                  className="profile-btn"
+                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', padding: '0.5rem 0.8rem', fontSize: '0.85rem' }}
+                  onClick={() => handleExport(false)}
+                  disabled={isExporting}
+                >
+                  <Download size={15} />
+                  <span>輕量備份 (僅劃線與設定)</span>
+                </button>
+              </div>
+
+              <label 
+                className="profile-btn"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', padding: '0.5rem 0.8rem', fontSize: '0.85rem', cursor: 'pointer', textAlign: 'center' }}
+              >
+                <Upload size={15} />
+                <span>{isImporting ? '還原中...' : '還原個人備份 (.json)'}</span>
+                <input 
+                  type="file" 
+                  accept=".json" 
+                  style={{ display: 'none' }} 
+                  onChange={handleImportFile}
+                  disabled={isImporting}
+                />
+              </label>
+
+              {backupMsg && (
+                <div style={{ fontSize: '0.8rem', color: 'var(--accent-color, #2b6cb0)', marginTop: '0.2rem', textAlign: 'center' }}>
+                  {backupMsg}
+                </div>
+              )}
             </div>
           </div>
 
