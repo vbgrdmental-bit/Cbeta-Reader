@@ -324,6 +324,14 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             </div>
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
               <div className="changelog-version-section">
+                <div className="changelog-version-title">v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
+                <ul className="changelog-list">
+                  <li>• 強化原始經文「圓體粗體」跨平台字體與字重排版。</li>
+                  <li>• 暫時隱藏底部控制列的百分比進度顯示。</li>
+                  <li>• 保留 T0262 妙法蓮華經中「附文」資料夾目次層級。</li>
+                </ul>
+              </div>
+              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                 <div className="changelog-version-title">v1.5.0 <span className="changelog-date">(2026-07-23)</span></div>
                 <ul className="changelog-list">
                   <li>• 精確識別論典/講記中的原始經文引用段落。</li>

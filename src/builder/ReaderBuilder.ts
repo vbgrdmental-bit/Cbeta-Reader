@@ -33,24 +33,16 @@ export class ReaderBuilder {
 
         const data = await response.json();
         
-        // 💡 官方 API 級別的高精細 TOC 提取 (保留完整的 CBETA 多層級樹狀結構)
+        // 💡 官方 API 級別的高精細 TOC 提取 (保留完整的 CBETA 多層級樹狀結構，包含附文資料夾)
         if (data && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0 && allRawTocs.length === 0) {
           const cleanMuluTree = (nodes: any[]): any[] => {
-            const result: any[] = [];
-            for (const n of nodes) {
-              const isVirtualFolder = n.type === '附文' || n.title === '附文';
-              const hasChildren = n.children && Array.isArray(n.children) && n.children.length > 0;
-              if (isVirtualFolder && hasChildren) {
-                result.push(...cleanMuluTree(n.children));
-              } else {
-                const nodeCopy = { ...n };
-                if (hasChildren) {
-                  nodeCopy.children = cleanMuluTree(n.children);
-                }
-                result.push(nodeCopy);
+            return nodes.map(n => {
+              const nodeCopy = { ...n };
+              if (n.children && Array.isArray(n.children) && n.children.length > 0) {
+                nodeCopy.children = cleanMuluTree(n.children);
               }
-            }
-            return result;
+              return nodeCopy;
+            });
           };
 
           allRawTocs = cleanMuluTree(data.toc.mulu);

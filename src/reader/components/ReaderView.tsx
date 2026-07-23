@@ -1461,7 +1461,7 @@ export function ReaderView({
       {/* 底部工具列 */}
       <div className={`reader-overlay-bar reader-bottom-bar ${showToolbar ? 'visible' : 'hidden'}`}>
         <div className="bar-left-controls">
-          <span>{currentMuluTitle} 的閱讀進度 ({scrollPercent}%)</span>
+          <span>{currentMuluTitle}</span>
         </div>
 
         <div className="bar-right-controls">
