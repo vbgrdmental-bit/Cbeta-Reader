@@ -47,6 +47,7 @@ export interface TOCItem {
   title: string;       // 比如 "第一品 忉利天宮神通品"
   juan: number;        // 所在卷數
   startSegmentId: string; // 啟始段落 ID
+  children?: TOCItem[]; // 子章節 (多層級樹狀結構)
 }
 
 export interface BookTOC {

@@ -788,3 +788,24 @@ body.theme-ebony .resume-dialog-btn-secondary:hover {
   margin: 0 0.1rem;
 }
 
+/* 💡 樹狀目錄 (TOC Tree) 樣式 */
+.toc-tree-node-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.toc-expand-btn {
+  transition: all var(--transition-fast);
+}
+
+.toc-expand-btn:hover {
+  background: rgba(242, 163, 27, 0.2) !important;
+  border-color: var(--color-gold-500, #f2a31b) !important;
+}
+
+.drawer-item.toc-tree-item {
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  min-height: 34px;
+}
+

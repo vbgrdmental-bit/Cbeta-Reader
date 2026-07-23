@@ -33,55 +33,29 @@ export class ReaderBuilder {
 
         const data = await response.json();
         
-        // 💡 官方 API 級別的高精細 TOC 提取 (遞迴扁平化與自適應去重)
+        // 💡 官方 API 級別的高精細 TOC 提取 (保留完整的 CBETA 多層級樹狀結構)
         if (data && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0 && allRawTocs.length === 0) {
-          // 💡 限制最大目錄層級為 2 層的優雅剪枝與合併算法，適合印順導師等高邏輯多層目次經典
-          const getPrunedTocs = (muluList: any[]): any[] => {
+          const cleanMuluTree = (nodes: any[]): any[] => {
             const result: any[] = [];
-            
-            // 遞迴解析「附文」等純虛擬資料夾，找出真正具有實質內容的頂層節點
-            const getRealTopNodes = (nodes: any[]): any[] => {
-              const list: any[] = [];
-              for (const n of nodes) {
-                const isVirtualFolder = n.type === '附文' || n.title === '附文';
-                const hasChildren = n.children && Array.isArray(n.children) && n.children.length > 0;
-                if (isVirtualFolder && hasChildren) {
-                  list.push(...getRealTopNodes(n.children));
-                } else {
-                  list.push(n);
-                }
-              }
-              return list;
-            };
-
-            const realTopNodes = getRealTopNodes(muluList);
-
-            for (const m of realTopNodes) {
-              const hasChildren = m.children && Array.isArray(m.children) && m.children.length > 0;
-              if (hasChildren) {
-                // 有第二層子節點：與第一層標題用 "-" 連接，且不再向下遞迴第三層
-                for (const sub of m.children) {
-                  result.push({
-                    title: `${m.title}-${sub.title}`,
-                    juan: sub.juan || 1,
-                    lb: sub.lb || ''
-                  });
-                }
+            for (const n of nodes) {
+              const isVirtualFolder = n.type === '附文' || n.title === '附文';
+              const hasChildren = n.children && Array.isArray(n.children) && n.children.length > 0;
+              if (isVirtualFolder && hasChildren) {
+                result.push(...cleanMuluTree(n.children));
               } else {
-                // 無子節點：直接作為第一層
-                result.push({
-                  title: m.title || '',
-                  juan: m.juan || 1,
-                  lb: m.lb || ''
-                });
+                const nodeCopy = { ...n };
+                if (hasChildren) {
+                  nodeCopy.children = cleanMuluTree(n.children);
+                }
+                result.push(nodeCopy);
               }
             }
             return result;
           };
 
-          allRawTocs = getPrunedTocs(data.toc.mulu);
+          allRawTocs = cleanMuluTree(data.toc.mulu);
           
-          console.log(`[ReaderBuilder] Successfully extracted ${allRawTocs.length} TOC items (with 2-level pruning) for ${workId}`);
+          console.log(`[ReaderBuilder] Successfully extracted ${allRawTocs.length} top-level TOC items (with full multi-level tree) for ${workId}`);
         }
         
         if (data && Array.isArray(data.results) && data.results.length > 0) {

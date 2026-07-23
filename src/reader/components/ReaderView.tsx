@@ -6,6 +6,7 @@ import type { ReaderPackage, TextSegment } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
+import { BUILDER_VERSION } from '../../builder/version';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
 import '../styles/reader.css';
@@ -19,6 +20,18 @@ interface ReaderViewProps {
   searchQuery?: string;
 }
 
+// 💡 展平樹狀 TOC items 陣列，方便進行區間匹配與平舖查詢
+const flattenTocItems = (items: any[]): any[] => {
+  const result: any[] = [];
+  for (const item of items) {
+    result.push(item);
+    if (item.children && Array.isArray(item.children) && item.children.length > 0) {
+      result.push(...flattenTocItems(item.children));
+    }
+  }
+  return result;
+};
+
 // 💡 取得某個段落對應的 TOC 品名，若無 TOC 則退化為「第 X 卷」
 const getMuluTitleForSegment = (book: any, juanNum: number, segmentId: string): string => {
   if (!book || !book.toc || !book.toc.items || book.toc.items.length === 0) {
@@ -31,7 +44,8 @@ const getMuluTitleForSegment = (book: any, juanNum: number, segmentId: string): 
   const currentSegIdx = activeJuan.segments.findIndex((s: any) => s.id === segmentId);
   if (currentSegIdx === -1) return `第 ${juanNum} 卷`;
 
-  const juanTocs = book.toc.items
+  const allItems = flattenTocItems(book.toc.items);
+  const juanTocs = allItems
     .filter((item: any) => item.juan === juanNum)
     .map((item: any) => {
       const startIdx = activeJuan.segments.findIndex((s: any) => s.id === item.startSegmentId);
@@ -56,6 +70,135 @@ const getMuluTitleForSegment = (book: any, juanNum: number, segmentId: string): 
   }
 
   return matchedTitle.replace(/-\d+$/, '');
+};
+
+// 💡 樹狀目錄單一節點組件 (支援多層級展開/折疊與自動跳轉)
+interface TocTreeNodeProps {
+  item: any;
+  level?: number;
+  activeSegmentId: string | null;
+  currentJuanNum: number;
+  workId: string;
+  isMultiJuan: boolean;
+  onSelectTOC: (item: any) => void;
+}
+
+const TocTreeNode: React.FC<TocTreeNodeProps> = ({
+  item,
+  level = 0,
+  activeSegmentId,
+  currentJuanNum,
+  workId,
+  isMultiJuan,
+  onSelectTOC
+}) => {
+  const hasChildren = Boolean(item.children && Array.isArray(item.children) && item.children.length > 0);
+
+  // 檢查此節點及其子樹是否包含當前活躍段落
+  const containsActiveSegment = (node: any): boolean => {
+    if (!activeSegmentId) return false;
+    if (node.startSegmentId === activeSegmentId) return true;
+    if (node.children && Array.isArray(node.children)) {
+      return node.children.some((child: any) => containsActiveSegment(child));
+    }
+    return false;
+  };
+
+  const isSubtreeActive = containsActiveSegment(item);
+  const [isExpanded, setIsExpanded] = useState<boolean>(level < 1 || isSubtreeActive);
+
+  useEffect(() => {
+    if (isSubtreeActive) {
+      setIsExpanded(true);
+    }
+  }, [isSubtreeActive]);
+
+  const isSelfActive = activeSegmentId === item.startSegmentId;
+
+  return (
+    <div className="toc-tree-node-wrapper">
+      <div 
+        className={`drawer-item toc-tree-item ${isSelfActive ? 'active' : ''}`}
+        style={{
+          paddingLeft: `${level * 1.0 + 0.8}rem`,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px'
+        }}
+      >
+        {/* [+] / [−] 折疊按鈕 */}
+        {hasChildren ? (
+          <button
+            type="button"
+            className="toc-expand-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(prev => !prev);
+            }}
+            title={isExpanded ? '收折' : '展開'}
+            style={{
+              width: '18px',
+              height: '18px',
+              border: '1px solid var(--reader-border)',
+              borderRadius: '3px',
+              background: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '0.75rem',
+              fontWeight: 'bold',
+              lineHeight: 1,
+              color: 'var(--reader-text)',
+              flexShrink: 0,
+              padding: 0
+            }}
+          >
+            {isExpanded ? '−' : '+'}
+          </button>
+        ) : (
+          <span style={{ width: '18px', flexShrink: 0 }} />
+        )}
+
+        {/* 章節標題 */}
+        <span 
+          style={{ 
+            flexGrow: 1, 
+            cursor: 'pointer', 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            whiteSpace: 'nowrap',
+            fontWeight: level === 0 ? '600' : 'normal'
+          }}
+          onClick={() => onSelectTOC(item)}
+        >
+          {item.title}
+        </span>
+
+        {isMultiJuan && !workId.startsWith('Y') && (
+          <span style={{ fontSize: '0.75rem', opacity: 0.6, flexShrink: 0 }}>卷 {item.juan}</span>
+        )}
+      </div>
+
+      {/* 子章節 */}
+      {hasChildren && isExpanded && (
+        <div className="toc-tree-children">
+          {item.children.map((child: any) => (
+            <TocTreeNode
+              key={child.id}
+              item={child}
+              level={level + 1}
+              activeSegmentId={activeSegmentId}
+              currentJuanNum={currentJuanNum}
+              workId={workId}
+              isMultiJuan={isMultiJuan}
+              onSelectTOC={onSelectTOC}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export function ReaderView({ 
@@ -397,9 +540,10 @@ export function ReaderView({
         let bookData = await getBook(workId);
         if (bookData) {
           // 💡 全自動目次修復與 Mock 同步邏輯
-          // 只有當書籍的目錄結構毀損、遺失（如退化為預設的 "第 X 卷"）時，才在背景修復
+          // 只有當書籍的目錄結構毀損、遺失（如退化為預設的 "第 X 卷"）或 Builder 版本變更時，才在背景升級/修復
           const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
-                              (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷');
+                              (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷') ||
+                              (!bookData.metadata.version || bookData.metadata.version !== BUILDER_VERSION);
 
           if (needsTocFix) {
             try {
@@ -421,6 +565,7 @@ export function ReaderView({
                   );
                   bookData.toc = toc;
                   bookData.navigation = navigation;
+                  bookData.metadata.version = BUILDER_VERSION;
                   await saveBook(bookData);
                 }
               } else {
@@ -435,6 +580,7 @@ export function ReaderView({
                 bookData.toc = toc;
                 bookData.navigation = navigation;
                 bookData.content = content;
+                bookData.metadata.version = BUILDER_VERSION;
                 await saveBook(bookData);
                 console.log(`[TOC AutoFix] TOC repaired successfully for ${workId}`);
               }
@@ -820,17 +966,32 @@ export function ReaderView({
 
   // 跳轉品名 (TOC)
   const handleSelectTOC = (tocItem: any) => {
+    const getTargetSegmentId = (node: any): string => {
+      if (node.startSegmentId) return node.startSegmentId;
+      if (node.children && Array.isArray(node.children) && node.children.length > 0) {
+        for (const child of node.children) {
+          const segId = getTargetSegmentId(child);
+          if (segId) return segId;
+        }
+      }
+      return '';
+    };
+
+    const targetSegId = getTargetSegmentId(tocItem);
+    if (!targetSegId) return;
+
     setShowNavDrawer(false);
-    setActiveSegmentId(tocItem.startSegmentId);
+    setActiveSegmentId(targetSegId);
     resetToolbarTimeout();
     
-    if (tocItem.juan === currentJuanNum) {
+    const targetJuan = tocItem.juan || currentJuanNum;
+    if (targetJuan === currentJuanNum) {
       // 同一卷：直接滾動
-      scrollToSegment(tocItem.startSegmentId);
+      scrollToSegment(targetSegId);
     } else {
       // 跨卷：記錄待跳轉段落 ID，切換卷數，讓 useEffect 處理滾動
-      pendingScrollSegmentIdRef.current = tocItem.startSegmentId;
-      setCurrentJuanNum(tocItem.juan);
+      pendingScrollSegmentIdRef.current = targetSegId;
+      setCurrentJuanNum(targetJuan);
     }
   };
 
@@ -1347,18 +1508,18 @@ export function ReaderView({
                 ))
               )
             ) : (
-              /* 按品目錄 (目次) */
+              /* 按品目錄 (目次 - 支援多層級樹狀 Collapsible Tree) */
               book.toc.items.map((item) => (
-                <div 
-                  key={item.id} 
-                  className={`drawer-item ${activeSegmentId === item.startSegmentId ? 'active' : ''}`}
-                  onClick={() => handleSelectTOC(item)}
-                >
-                  <span>{item.title}</span>
-                  {book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y') && (
-                    <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>卷 {item.juan}</span>
-                  )}
-                </div>
+                <TocTreeNode
+                  key={item.id}
+                  item={item}
+                  level={0}
+                  activeSegmentId={activeSegmentId}
+                  currentJuanNum={currentJuanNum}
+                  workId={book.metadata.workId}
+                  isMultiJuan={book.metadata.juansCount > 1}
+                  onSelectTOC={handleSelectTOC}
+                />
               ))
             )}
           </div>
