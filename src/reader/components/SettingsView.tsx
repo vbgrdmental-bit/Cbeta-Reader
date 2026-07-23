@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Download, Upload } from 'lucide-react';
+import { X, Database, FileText, Upload } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
@@ -334,36 +334,122 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           {/* 4.5 資料備份與還原 */}
           <div className="settings-section">
             <div className="settings-section-title">資料備份與還原</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.5rem' }}>
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <button
-                  type="button"
-                  className="profile-btn"
-                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', padding: '0.5rem 0.8rem', fontSize: '0.85rem' }}
-                  onClick={() => handleExport(true)}
-                  disabled={isExporting}
+            <div className="visual-options-row" style={{ alignItems: 'stretch' }}>
+              {/* 卡片 1: 完整備份 (藍色系) */}
+              <div
+                className="visual-option-card"
+                onClick={() => !isExporting && handleExport(true)}
+                style={{
+                  borderColor: isExporting ? undefined : 'rgba(59, 130, 246, 0.35)',
+                  backgroundColor: 'rgba(59, 130, 246, 0.04)',
+                  opacity: isExporting ? 0.6 : 1,
+                  padding: '0.7rem 0.3rem'
+                }}
+              >
+                <div 
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#3b82f6'
+                  }}
                 >
-                  <Download size={15} />
-                  <span>完整備份 (含經文與劃線)</span>
-                </button>
-                <button
-                  type="button"
-                  className="profile-btn"
-                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', padding: '0.5rem 0.8rem', fontSize: '0.85rem' }}
-                  onClick={() => handleExport(false)}
-                  disabled={isExporting}
-                >
-                  <Download size={15} />
-                  <span>輕量備份 (僅劃線與設定)</span>
-                </button>
+                  <Database size={16} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#2563eb', fontWeight: 700 }}>
+                    完整備份
+                  </span>
+                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                    含經文與劃線
+                  </span>
+                </div>
               </div>
 
-              <label 
-                className="profile-btn"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', padding: '0.5rem 0.8rem', fontSize: '0.85rem', cursor: 'pointer', textAlign: 'center' }}
+              {/* 卡片 2: 輕量備份 (綠色系) */}
+              <div
+                className="visual-option-card"
+                onClick={() => !isExporting && handleExport(false)}
+                style={{
+                  borderColor: isExporting ? undefined : 'rgba(16, 185, 129, 0.35)',
+                  backgroundColor: 'rgba(16, 185, 129, 0.04)',
+                  opacity: isExporting ? 0.6 : 1,
+                  padding: '0.7rem 0.3rem'
+                }}
               >
-                <Upload size={15} />
-                <span>{isImporting ? '還原中...' : '還原個人備份 (.json)'}</span>
+                <div 
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#10b981'
+                  }}
+                >
+                  <FileText size={16} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#059669', fontWeight: 700 }}>
+                    輕量備份
+                  </span>
+                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                    僅劃線與設定
+                  </span>
+                </div>
+              </div>
+
+              {/* 分隔線 | */}
+              <div 
+                style={{ 
+                  width: '1px', 
+                  backgroundColor: 'var(--reader-border, rgba(0,0,0,0.18))', 
+                  height: '36px', 
+                  alignSelf: 'center',
+                  margin: '0 0.15rem',
+                  opacity: 0.5
+                }} 
+              />
+
+              {/* 卡片 3: 還原備份 (琥珀/橙色系) */}
+              <label
+                className="visual-option-card"
+                style={{
+                  borderColor: isImporting ? undefined : 'rgba(245, 158, 11, 0.35)',
+                  backgroundColor: 'rgba(245, 158, 11, 0.04)',
+                  opacity: isImporting ? 0.6 : 1,
+                  cursor: isImporting ? 'default' : 'pointer',
+                  padding: '0.7rem 0.3rem'
+                }}
+              >
+                <div 
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#d97706'
+                  }}
+                >
+                  <Upload size={16} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#d97706', fontWeight: 700 }}>
+                    {isImporting ? '還原中...' : '還原備份'}
+                  </span>
+                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                    匯入 .json 檔
+                  </span>
+                </div>
                 <input 
                   type="file" 
                   accept=".json" 
@@ -372,13 +458,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   disabled={isImporting}
                 />
               </label>
-
-              {backupMsg && (
-                <div style={{ fontSize: '0.8rem', color: 'var(--accent-color, #2b6cb0)', marginTop: '0.2rem', textAlign: 'center' }}>
-                  {backupMsg}
-                </div>
-              )}
             </div>
+
+            {backupMsg && (
+              <div style={{ fontSize: '0.78rem', color: 'var(--accent-color, #2b6cb0)', marginTop: '0.2rem', textAlign: 'center' }}>
+                {backupMsg}
+              </div>
+            )}
           </div>
 
           {/* 5. 版本資訊與說明 */}
@@ -411,12 +497,9 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
               {/* 1. 最新一次的版本修改記錄 */}
               <div className="changelog-version-section">
-                <div className="changelog-version-title">v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
+                <div className="changelog-version-title">App: v1.7.0 <span className="changelog-date">(2026-07-23)</span></div>
                 <ul className="changelog-list">
-                  <li>• 舊經文支援背景無縫修復升級，完全保留劃線與筆記。</li>
-                  <li>• 刪除經文時自動抹除舊快取，確保與 CBETA 即時同步。</li>
-                  <li>• 獨立 APP_VERSION 與 BUILDER_VERSION 版本號追蹤原則。</li>
-                  <li>• 強化原始經文「圓體粗體」跨平台對比與「+ 附文」目次結構。</li>
+                  <li>• 新增完整與輕量資料備份與還原功能（.json 匯出匯入，包含劃線重點、離線經文與個人偏好設定）。</li>
                 </ul>
               </div>
 
@@ -445,6 +528,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               {/* 3. 展開的歷史版本更新紀錄 */}
               {showAllHistory && (
                 <div className="changelog-history-wrapper animate-fade-in">
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 舊經文支援背景無縫修復升級，完全保留劃線與筆記。</li>
+                      <li>• 刪除經文時自動抹除舊快取，確保與 CBETA 即時同步。</li>
+                      <li>• 獨立 APP_VERSION 與 BUILDER_VERSION 版本號追蹤原則。</li>
+                      <li>• 強化原始經文「圓體粗體」跨平台對比與「+ 附文」目次結構。</li>
+                    </ul>
+                  </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v1.5.0 <span className="changelog-date">(2026-07-23)</span></div>
                     <ul className="changelog-list">
