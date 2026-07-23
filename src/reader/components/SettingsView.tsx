@@ -12,6 +12,7 @@ interface SettingsViewProps {
 
 export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   const [showChangelog, setShowChangelog] = useState(false);
+  const [showAllHistory, setShowAllHistory] = useState(false);
   
   const handleCheckboxChange = (key: keyof AppSettings['customVisibleElements']) => {
     const customElements = {
@@ -323,55 +324,100 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               </button>
             </div>
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+              {/* 1. 最新一次的版本修改記錄 */}
               <div className="changelog-version-section">
                 <div className="changelog-version-title">v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
                 <ul className="changelog-list">
-                  <li>• 強化原始經文「圓體粗體」跨平台字體與字重排版。</li>
-                  <li>• 暫時隱藏底部控制列的百分比進度顯示。</li>
-                  <li>• 保留 T0262 妙法蓮華經中「附文」資料夾目次層級。</li>
+                  <li>• 舊經文支援背景無縫修復升級，完全保留劃線與筆記。</li>
+                  <li>• 刪除經文時自動抹除舊快取，確保與 CBETA 即時同步。</li>
+                  <li>• 獨立 APP_VERSION 與 BUILDER_VERSION 版本號追蹤原則。</li>
+                  <li>• 強化原始經文「圓體粗體」跨平台對比與「+ 附文」目次結構。</li>
                 </ul>
               </div>
-              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                <div className="changelog-version-title">v1.5.0 <span className="changelog-date">(2026-07-23)</span></div>
-                <ul className="changelog-list">
-                  <li>• 精確識別論典/講記中的原始經文引用段落。</li>
-                  <li>• 原始經文採用圓體粗體渲染，與解說正文優雅區隔。</li>
-                </ul>
+
+              {/* 2. 小灰字切換按鈕：+ 更多版本修改歷程 */}
+              <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+                <button 
+                  type="button"
+                  onClick={() => setShowAllHistory(prev => !prev)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--reader-text-muted, #888)',
+                    fontSize: '0.82rem',
+                    cursor: 'pointer',
+                    padding: '0.3rem 0.6rem',
+                    opacity: 0.8,
+                    transition: 'opacity 0.2s'
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                  onMouseLeave={e => e.currentTarget.style.opacity = '0.8'}
+                >
+                  {showAllHistory ? '− 收折歷程' : '+ 更多版本修改歷程'}
+                </button>
               </div>
-              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                <div className="changelog-version-title">v1.4.0 <span className="changelog-date">(2026-07-23)</span></div>
-                <ul className="changelog-list">
-                  <li>• 全面升級目次（TOC）樹狀多層級解析算法。</li>
-                  <li>• 側邊欄目錄升級為可展開/折疊（+ / −）多層級選單。</li>
-                  <li>• 新增畫重點筆刷按鈕、自訂顏色與標註模式。</li>
-                </ul>
-              </div>
-              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                <div className="changelog-version-title">v1.3.0 <span className="changelog-date">(2026-07-21)</span></div>
-                <ul className="changelog-list">
-                  <li>• 優化Y系列經目次二層簡化與無卷書籍去卷化。</li>
-                  <li>• 修復經文列表（LI）層級縮排與置左偈頌排版。</li>
-                  <li>• 串接本地檢索無結果時一鍵線上檢索 CBETA。</li>
-                </ul>
-              </div>
-              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                <div className="changelog-version-title">v1.2.0 <span className="changelog-date">(2026-07-21)</span></div>
-                <ul className="changelog-list">
-                  <li>• 建立開發分支與 Builder v1.2.0 版本控制規範。</li>
-                </ul>
-              </div>
-              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                <div className="changelog-version-title">v1.1.0 <span className="changelog-date">(2026-07-20)</span></div>
-                <ul className="changelog-list">
-                  <li>• 下載後保持線上搜尋對話框開啟以利批次操作。</li>
-                  <li>• 統一閱讀頁面頭部與控制列的高度為 56px。</li>
-                </ul>
-              </div>
-              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                <div className="changelog-version-title">v1.0.0 <span className="changelog-date">(2026-07-15)</span></div>
-                <ul className="changelog-list">
-                  <li>• 釋出初始核心經典解析、導航與檢索功能。</li>
-                </ul>
+
+              {/* 3. 展開的歷史版本更新紀錄 */}
+              {showAllHistory && (
+                <div className="changelog-history-wrapper animate-fade-in">
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.5.0 <span className="changelog-date">(2026-07-23)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 精確識別論典/講記中的原始經文引用段落。</li>
+                      <li>• 原始經文採用圓體粗體渲染，與解說正文優雅區隔。</li>
+                    </ul>
+                  </div>
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.4.0 <span className="changelog-date">(2026-07-23)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 全面升級目次（TOC）樹狀多層級解析算法。</li>
+                      <li>• 側邊欄目錄升級為可展開/折疊（+ / −）多層級選單。</li>
+                      <li>• 新增畫重點筆刷按鈕、自訂顏色與標註模式。</li>
+                    </ul>
+                  </div>
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.3.0 <span className="changelog-date">(2026-07-21)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 優化Y系列經目次二層簡化與無卷書籍去卷化。</li>
+                      <li>• 修復經文列表（LI）層級縮排與置左偈頌排版。</li>
+                      <li>• 串接本地檢索無結果時一鍵線上檢索 CBETA。</li>
+                    </ul>
+                  </div>
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.2.0 <span className="changelog-date">(2026-07-21)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 建立開發分支與 Builder v1.2.0 版本控制規範。</li>
+                    </ul>
+                  </div>
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.1.0 <span className="changelog-date">(2026-07-20)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 下載後保持線上搜尋對話框開啟以利批次操作。</li>
+                      <li>• 統一閱讀頁面頭部與控制列的高度為 56px。</li>
+                    </ul>
+                  </div>
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.0.0 <span className="changelog-date">(2026-07-15)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 釋出初始核心經典解析、導航與檢索功能。</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {/* 4. CBETA 與 CBETA Reader 簡介與感言區塊 (隔一條線，小字呈現) */}
+              <div style={{ marginTop: '1.5rem', paddingTop: '1.2rem', borderTop: '1px dashed var(--reader-border, rgba(0,0,0,0.15))' }}>
+                <div style={{ fontSize: '0.8rem', lineHeight: 1.7, color: 'var(--reader-text-muted, #777)', opacity: 0.88, textAlign: 'justify' }}>
+                  <p style={{ marginBottom: '0.8rem' }}>
+                    CBETA（佛教電子佛典基金會）成立於1998年，由佛教界與學術界共同推動，致力於漢文佛典數位化工程。收錄《大正藏》、《卍續藏》等重要佛典，提供全文檢索、線上閱讀與研究資料，目前已成為全球最重要的漢傳佛教數位典藏平台之一。
+                  </p>
+                  <p style={{ marginBottom: '0.8rem' }}>
+                    本網站CBETA Reader，完全以 CBETA 佛典資料為基礎，試圖打造適合手機與平板閱讀的佛典閱讀器。希望透過簡潔介面，協助使用者更容易閱讀大藏經經文。
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    如有任何建議，歡迎不吝指導，來信寄至創作者Email: <a href="mailto:vbgrdmental@gmail.com" style={{ color: 'inherit', textDecoration: 'underline' }}>vbgrdmental@gmail.com</a>，無限感恩，並祝福法喜充滿，福慧雙修。
+                  </p>
+                </div>
               </div>
             </div>
           </div>
