@@ -17,9 +17,18 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v1.6.0`
+- **Current Version**: `v1.6.0` (App: v1.6.0 / Builder: v1.6.0)
 - **Location**: Defined in [version.ts](file:///c:/Users/vbgrd/OneDrive/桌面/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
+- **Independent Versioning Rules (獨立版號原則)**：
+  - 未來若僅更動 Builder 經文解析引擎：僅提升 `BUILDER_VERSION`，`APP_VERSION` 保持不變。
+  - 未來若僅更動 App 介面/閱讀器功能：僅提升 `APP_VERSION`，`BUILDER_VERSION` 保持不變。
+  - 只有兩者皆有調整時，才同時變更兩者版號。
+- **無縫自動背景修復 (Auto-Migration)**：
+  - 當開啟舊有經文時，若其 `BookMetadata.version !== BUILDER_VERSION`，系統會自動在背景以最新 Builder 重新構建 IndexedDB 快取，保留所有讀者劃線與筆記，免去讀者刪除重新下載之不便。
+- **乾淨刪除與 CBETA 即時同步**：
+  - 刪除經文時同步清空 IndexedDB、localStorage 位置紀錄與 CacheStorage/ServiceWorker 的 HTTP 快取。
+  - 向 CBETA 請求新經文時一律帶有 `cache: 'reload'` 與時間戳記，確保必定取得 CBETA 最新校勘版本。
 
 ### Version History / Changelog
 

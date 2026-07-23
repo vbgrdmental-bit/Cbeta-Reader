@@ -55,7 +55,9 @@ export async function getBook(workId: string): Promise<ReaderPackage | null> {
 
 export async function deleteBook(workId: string): Promise<void> {
   const db = await initDB();
-  return new Promise((resolve, reject) => {
+  
+  // 1. 刪除 IndexedDB 中的書籍資料
+  await new Promise<void>((resolve, reject) => {
     const transaction = db.transaction(BOOKS_STORE, 'readwrite');
     const store = transaction.objectStore(BOOKS_STORE);
     const request = store.delete(workId);
@@ -63,6 +65,38 @@ export async function deleteBook(workId: string): Promise<void> {
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve();
   });
+
+  // 2. 徹底清空本地與此經文相關的 localStorage / sessionStorage 瀏覽與位置紀錄
+  try {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.includes(workId) || key.includes('reading_progress') || key.includes('last_read'))) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+  } catch (e) {
+    console.warn('Failed to clear localStorage keys for', workId, e);
+  }
+
+  // 3. 徹底抹除 CacheStorage / Service Worker 中的 HTTP 快取，防止舊版網路快取殘留
+  if (typeof window !== 'undefined' && 'caches' in window) {
+    try {
+      const cacheNames = await caches.keys();
+      for (const cacheName of cacheNames) {
+        const cache = await caches.open(cacheName);
+        const requests = await cache.keys();
+        for (const req of requests) {
+          if (req.url.includes(workId)) {
+            await cache.delete(req);
+          }
+        }
+      }
+    } catch (cacheErr) {
+      console.warn('Failed to clear CacheStorage for', workId, cacheErr);
+    }
+  }
 }
 
 export async function listBooks(): Promise<BookMetadata[]> {

@@ -24,8 +24,8 @@ export class ReaderBuilder {
           onProgress(Math.floor(((j - 1) / juansCount) * 90));
         }
 
-        const url = getApiUrl(`/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1`);
-        const response = await fetch(url);
+        const url = getApiUrl(`/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1&_t=${Date.now()}`);
+        const response = await fetch(url, { cache: 'reload' });
         
         if (!response.ok) {
           throw new Error(`Failed to fetch juan ${j}`);
