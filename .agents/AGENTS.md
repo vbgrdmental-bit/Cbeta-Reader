@@ -17,12 +17,15 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v1.4.0`
+- **Current Version**: `v1.5.0`
 - **Location**: Defined in [version.ts](file:///c:/Users/vbgrd/OneDrive/桌面/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 
 ### Version History / Changelog
 
+- **v1.5.0** (2026-07-23)
+  - 精確解析論典/講記中的原始經文引用（`div-orig`, `p.bold`）並標註 `isOrig`。
+  - 閱讀器採用「圓體粗體」樣式渲染原始經文引文，使原始經文與解說正文形成清晰視覺對比。
 - **v1.4.0** (2026-07-23)
   - 全面升級目次（TOC）樹狀多層級解析算法（支持無限制深度與 `children` 樹狀節點）。
   - 閱讀器側邊欄目錄升級為可展開/折疊（`+`/`-`）的多層級樹狀選單，完美還原 CBETA 官方原版多級章節結構。

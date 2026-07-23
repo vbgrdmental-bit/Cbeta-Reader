@@ -324,11 +324,18 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             </div>
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
               <div className="changelog-version-section">
-                <div className="changelog-version-title">v1.4.0 (App) <span className="changelog-date">(2026-07-22)</span></div>
+                <div className="changelog-version-title">v1.5.0 <span className="changelog-date">(2026-07-23)</span></div>
                 <ul className="changelog-list">
-                  <li>• 新增閱讀控制列筆刷按鈕與一鍵連續畫重點。</li>
-                  <li>• 支援淺黃、淺紅、淺灰、淺藍 4 種自訂筆刷顏色。</li>
-                  <li>• 支援底線、下半塗色、全塗滿、方框 4 種粗細。</li>
+                  <li>• 精確識別論典/講記中的原始經文引用段落。</li>
+                  <li>• 原始經文採用圓體粗體渲染，與解說正文優雅區隔。</li>
+                </ul>
+              </div>
+              <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                <div className="changelog-version-title">v1.4.0 <span className="changelog-date">(2026-07-23)</span></div>
+                <ul className="changelog-list">
+                  <li>• 全面升級目次（TOC）樹狀多層級解析算法。</li>
+                  <li>• 側邊欄目錄升級為可展開/折疊（+ / −）多層級選單。</li>
+                  <li>• 新增畫重點筆刷按鈕、自訂顏色與標註模式。</li>
                 </ul>
               </div>
               <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>

@@ -1358,7 +1358,7 @@ export function ReaderView({
                     >
                       <p 
                         data-segment-id={seg.id}
-                        className={`reader-paragraph ${seg.isHead ? 'paragraph-head' : ''} ${seg.isVerse ? 'verse' : ''} ${isTtsActive ? 'tts-active' : ''} ${isClicked ? 'clicked' : ''}`}
+                        className={`reader-paragraph ${seg.isHead ? 'paragraph-head' : ''} ${seg.isVerse ? 'verse' : ''} ${seg.isOrig ? 'is-orig' : ''} ${isTtsActive ? 'tts-active' : ''} ${isClicked ? 'clicked' : ''}`}
                         onClick={() => handleSegmentClick(seg)}
                         style={{ cursor: 'pointer' }}
                       >

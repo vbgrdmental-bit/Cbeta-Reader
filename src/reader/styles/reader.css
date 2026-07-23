@@ -809,3 +809,11 @@ body.theme-ebony .resume-dialog-btn-secondary:hover {
   min-height: 34px;
 }
 
+/* 💡 經典原始經文引用/粗體經文 (如論典中說明的金剛經原文，採用圓體粗體與解說正文優雅區隔) */
+.reader-paragraph.is-orig {
+  font-weight: 700;
+  font-family: 'Hiragino Maru Gothic ProN', 'HGMaruGothicMPRO', 'Yu Rounded', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  letter-spacing: 0.03em;
+  opacity: 0.95;
+}
+

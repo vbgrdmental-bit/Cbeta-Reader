@@ -21,6 +21,7 @@ export interface TextSegment {
   muluTitles?: string[]; // 起始於此段落的品名列表
   isHead?: boolean;    // 是否為品名/標題段落
   isVerse?: boolean;   // 是否為偈頌 (韻文)
+  isOrig?: boolean;    // 是否為原始經文/經文引文 (粗體圓體)
   content: string;     // 乾淨的閱讀文字（Reader Model）
   originalContent: string; // 帶有完整 XML 標籤或校勘標記的 HTML（Canonical Model）
   notes?: Array<{      // 本段所屬的校勘/註解（Reference Model）

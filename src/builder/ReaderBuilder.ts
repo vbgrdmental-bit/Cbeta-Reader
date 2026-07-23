@@ -392,6 +392,17 @@ export class ReaderBuilder {
 
           const isHead = el.tagName.toUpperCase() === 'HEAD' || el.classList.contains('head') || el.hasAttribute('data-head-level');
           const isVerse = el.classList.contains('lg') || isVerseLine;
+          const isByline = el.classList.contains('byline');
+
+          // 💡 經文引文/粗體經文判斷 (div-orig, p.bold, orig 等標籤，表示為金剛經等論典中所引用的原始經文)
+          const isOrig = !isByline && !isHead && (
+            el.classList.contains('bold') ||
+            el.classList.contains('div-orig') ||
+            el.classList.contains('orig') ||
+            el.classList.contains('sutra') ||
+            el.parentElement?.classList.contains('div-orig') ||
+            Boolean(el.closest?.('.div-orig, .orig'))
+          );
 
           const seg: TextSegment = {
             id: segmentId,
@@ -399,6 +410,7 @@ export class ReaderBuilder {
             juan,
             isHead: isHead ? true : undefined,
             isVerse: isVerse ? true : undefined,
+            isOrig: isOrig ? true : undefined,
             content: cleanContent,
             originalContent,
             notes: notes.length > 0 ? notes : undefined
