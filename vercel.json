@@ -1,8 +1,32 @@
 {
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/api-cbeta/:path*",
       "destination": "https://cbdata.dila.edu.tw/:path*"
+    },
+    {
+      "source": "/((?!assets/|mock/|favicon|.*\\.).*)",
+      "destination": "/index.html"
     }
   ]
 }
