@@ -18,11 +18,12 @@ export class NavigationBuilder {
       const index = idCounter++;
       const tocId = `${workId}_toc_${index}`;
       const title = mulu.title || `目錄 ${index + 1}`;
-      const juan = mulu.juan || 1;
+      let targetJuan = mulu.juan || 1;
 
-      const juanData = content.juans.find(j => j.juan === juan);
+      let juanData = content.juans.find(j => j.juan === targetJuan);
       let startSegmentId = mulu.startSegmentId || '';
 
+      // 1. 優先在目標卷中透過 lb 比對
       if (!startSegmentId && mulu.lb && juanData) {
         const cleanMuluLb = mulu.lb.replace(/[^a-zA-Z0-9]/g, '');
         const segWithLb = juanData.segments.find(seg => {
@@ -34,6 +35,24 @@ export class NavigationBuilder {
         }
       }
 
+      // 2. 如果目標卷沒搜到（或 mulu.juan 號碼標錯），跨所有卷全局比對 lb
+      if (!startSegmentId && mulu.lb) {
+        const cleanMuluLb = mulu.lb.replace(/[^a-zA-Z0-9]/g, '');
+        for (const jData of content.juans) {
+          const segWithLb = jData.segments.find(seg => {
+            const cleanSegLb = seg.lb ? seg.lb.replace(/[^a-zA-Z0-9]/g, '') : '';
+            return cleanSegLb.endsWith(cleanMuluLb) || cleanSegLb.includes(cleanMuluLb);
+          });
+          if (segWithLb) {
+            startSegmentId = segWithLb.id;
+            targetJuan = jData.juan;
+            juanData = jData;
+            break;
+          }
+        }
+      }
+
+      // 3. 嘗試在目標卷中搜尋已標記此 tocId 的段落
       if (!startSegmentId && juanData && juanData.segments.length > 0) {
         const segWithTocId = juanData.segments.find(seg => seg.tocId === tocId);
         if (segWithTocId) {
@@ -41,10 +60,20 @@ export class NavigationBuilder {
         }
       }
 
+      // 4. 極致保險：若仍未找到，預設綁定該卷第一個段落，防止出現不可點擊的空項目
+      if (!startSegmentId) {
+        const validJuanData = juanData || content.juans.find(j => j.juan === targetJuan) || content.juans[0];
+        if (validJuanData && validJuanData.segments.length > 0) {
+          startSegmentId = validJuanData.segments[0].id;
+          targetJuan = validJuanData.juan;
+          juanData = validJuanData;
+        }
+      }
+
       const item: TOCItem = {
         id: tocId,
         title,
-        juan,
+        juan: targetJuan,
         startSegmentId
       };
 
