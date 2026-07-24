@@ -29,7 +29,7 @@ export const FEATURED_BOOKS: SearchResult[] = [
     workId: 'T0412',
     title: '地藏菩薩本願經',
     creators: '唐 實叉難陀譯',
-    juansCount: 3,
+    juansCount: 2,
     category: '大集部類',
     vol: 'T13'
   },
