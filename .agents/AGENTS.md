@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v1.8.0` (App: v1.8.0 / Builder: v1.8.0)
+- **Current Version**: `v1.9.0` (App: v1.9.0 / Builder: v1.9.0)
 - **Location**: Defined in [version.ts](file:///c:/Users/vbgrd/OneDrive/桌面/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -32,6 +32,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **v1.9.0** (2026-07-25)
+  - 全面修正 CBETA 清單與列表標籤（`<ul>`, `<ol>`, `<li>`, `<item>`）的段落分割算法，防止項目內部的文字、小註與單字 `<span>` 被拆散為孤立行。
+  - 完美還原如 `CC0006 佛說大乘無量壽莊嚴清淨平等覺經` 等含目次條目與五種原譯清單的經典排版，自動補齊縮排與 bullet 標籤 (`• `)。
 - **v1.8.0** (2026-07-25)
   - 縮減偈頌體（韻文）段落上下間距與行高，提升長篇詩歌經文的閱讀緊湊感。
   - 閱讀器「經典與版權資訊」新增「冊別」與「字數」欄位，排序為：經名 → 譯者 → 經號 → 部類 → 冊別 → 字數。
