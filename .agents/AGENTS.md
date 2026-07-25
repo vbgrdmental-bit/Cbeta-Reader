@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v2.0.0` (App: v1.9.0 / Builder: v2.0.0)
+- **Current Version**: `v2.1.0` (App: v1.9.0 / Builder: v2.1.0)
 - **Location**: Defined in [version.ts](file:///c:/Users/vbgrd/OneDrive/桌面/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -35,6 +35,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **v2.1.0** (2026-07-26) [Builder Only]
+  - 優先讀取 CBETA 規範作譯者名稱（`workInfo.creators` + `workInfo.time_dynasty`，例如 `西晉 竺法護`），取代原始雜項 `byline`（如 `西晉 燉煌三藏譯`），使經典資訊與 CBETA 官方權威名稱完全對齊。
+  - 徹底解決部分經典缺少「冊別」欄位（如 `T0325` 缺少 `冊別: T12`）的 bug，升級為優先讀取 API `vol` 欄位與 `file` 開頭標籤，確保 100% 經典皆可精確取得對應冊別。
 - **v2.0.0** (2026-07-25)
   - 支援印順導師著作中的附圖、圖表與解說段落標籤（`<div class="div-figure">`, `<div class="figure">`, `<figure>`）。
   - 解決如 `Y0003 勝鬘經講記` 「關於一乘」圖表附圖段落因欠缺段落容器識別而被錯判為孤立 `<span>` 導致多行碎裂單字斷行的 bug。

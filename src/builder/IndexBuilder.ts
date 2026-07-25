@@ -158,11 +158,21 @@ export class IndexBuilder {
                 if (workInfo.category) {
                   res.category = workInfo.category;
                 }
-                if (workInfo.byline) {
+                // 💡 規範譯者姓名 (朝代 + creators，例如：西晉 竺法護)；若無規範名稱則回退至原始 byline
+                if (workInfo.creators) {
+                  const dynasty = workInfo.time_dynasty ? `${workInfo.time_dynasty} ` : '';
+                  const creatorName = workInfo.creators.replace(/\(.*\)/, '').trim();
+                  res.creators = creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`;
+                } else if (workInfo.byline) {
                   res.creators = workInfo.byline;
                 }
-                // 冊別：CBETA works API 的 n 欄位為冊號數字，組合如 T09
-                if (workInfo.n != null) {
+                // 💡 冊別：優先讀取 CBETA API 的 vol 欄位 (例如 T12)，無 vol 時由 file 或 n 欄位解析
+                if (workInfo.vol) {
+                  res.vol = workInfo.vol;
+                } else if (workInfo.file) {
+                  const match = workInfo.file.match(/^([A-Z]\d+)/i);
+                  if (match) res.vol = match[1].toUpperCase();
+                } else if (workInfo.n != null) {
                   const volNum = String(workInfo.n).padStart(2, '0');
                   res.vol = `${res.workId.charAt(0)}${volNum}`;
                 }

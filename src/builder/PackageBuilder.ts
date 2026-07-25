@@ -53,6 +53,30 @@ export class PackageBuilder {
               actualJuansCount = workInfo.juan;
               console.log(`Successfully fetched true juansCount for ${workId}: ${actualJuansCount}`);
             }
+            if (workInfo.category) {
+              searchResult.category = workInfo.category;
+            }
+            // 💡 規範譯者姓名 (朝代 + creators，例如：西晉 竺法護)
+            if (workInfo.creators) {
+              const dynasty = workInfo.time_dynasty ? `${workInfo.time_dynasty} ` : '';
+              const creatorName = workInfo.creators.replace(/\(.*\)/, '').trim();
+              searchResult.creators = creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`;
+            } else if (workInfo.byline) {
+              searchResult.creators = workInfo.byline;
+            }
+            // 💡 冊別：優先讀取 CBETA API 的 vol 欄位 (例如 T12)
+            if (workInfo.vol) {
+              searchResult.vol = workInfo.vol;
+            } else if (workInfo.file) {
+              const match = workInfo.file.match(/^([A-Z]\d+)/i);
+              if (match) searchResult.vol = match[1].toUpperCase();
+            } else if (workInfo.n != null) {
+              const volNum = String(workInfo.n).padStart(2, '0');
+              searchResult.vol = `${searchResult.workId.charAt(0)}${volNum}`;
+            }
+            if (workInfo.cjk_chars != null && typeof workInfo.cjk_chars === 'number') {
+              searchResult.cjkChars = workInfo.cjk_chars;
+            }
           }
         }
       } catch (metaErr) {
