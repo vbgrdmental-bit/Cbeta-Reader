@@ -29,6 +29,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 - **乾淨刪除與 CBETA 即時同步**：
   - 刪除經文時同步清空 IndexedDB、localStorage 位置紀錄與 CacheStorage/ServiceWorker 的 HTTP 快取。
   - 向 CBETA 請求新經文時一律帶有 `cache: 'reload'` 與時間戳記，確保必定取得 CBETA 最新校勘版本。
+- **對外 App 說明對話框原則 (SettingsView.tsx)**：
+  - 對外 UI 的版本更新紀錄一律為**精簡摘要**，每次改版**不超過 3 項**，每項**不超過 50 字**。
+  - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog
 

@@ -499,9 +499,9 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               <div className="changelog-version-section">
                 <div className="changelog-version-title">v1.9.0 <span className="changelog-date">(2026-07-25)</span></div>
                 <ul className="changelog-list">
-                  <li>• 全面修正 CBETA 清單與列表標籤（ul, ol, li, item）的段落分割算法，防止項目內部的文字、小註與單字 span 被拆散為孤立行。</li>
-                  <li>• 徹底解決 CBETA 紙本版面折行與 line_space 遺留在段落中途導致漢字、詞彙與標點符號之間出現多餘空格的問題（如 CC0006「近代流通」、Y0001「當經」、「展轉」、「真實」、「如是」等）。</li>
-                  <li>• 完美還原如 CC0006《佛說大乘無量壽莊嚴清淨平等覺經》等含目次條目與五種原譯清單的經典排版，自動補齊縮排與 bullet 標籤 (•)。</li>
+                  <li>• 修正 CBETA 段落分割算法防止文字被拆散為孤立行。</li>
+                  <li>• 解決出現多餘空格的問題。</li>
+                  <li>• 微調 CC0006 清單排版呈現 (•)。</li>
                 </ul>
               </div>
 
@@ -533,49 +533,47 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v1.8.0 <span className="changelog-date">(2026-07-25)</span></div>
                     <ul className="changelog-list">
-                      <li>• 縮減偈頌體（韻文）段落上下間距與行高，提升長篇詩歌經文的閱讀緊湊感。</li>
-                      <li>• 閱讀器「經典與版權資訊」新增「冊別」與「字數」欄位（排序：經名 → 譯者 → 經號 → 部類 → 冊別 → 字數）。</li>
-                      <li>• 大藏經經號依 A~Z 26 個字母開頭自動分配 26 套典雅經典封面色系。</li>
-                      <li>• 優化手機版首頁編輯模式版面，限制標題單行省略並固定單行卡片高度，刪除按鈕改為 X 置右。</li>
+                      <li>• 縮減偈頌體上下間距與行高。</li>
+                      <li>• 設計大藏經經號 A~Z 26 封面色系。</li>
+                      <li>• 提升手機版首頁編輯模式版面並限制標題單卡片高度。</li>
                     </ul>
                   </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v1.7.0 <span className="changelog-date">(2026-07-24)</span></div>
                     <ul className="changelog-list">
-                      <li>• 新增完整與輕量資料備份與還原功能（.json 匯出匯入，包含劃線重點、離線經文與個人偏好設定）。</li>
-                      <li>• 修復 T0412 地藏菩薩本願經卷數對齊（由 3 卷修正為官方標準 2 卷：卷上、卷下）。</li>
-                      <li>• 全面升級 NavigationBuilder 的跨卷 lb 定位與雙向導航防錯機制。</li>
+                      <li>• 新增書籍(含劃線重點)匯出匯入功能。</li>
+                      <li>• 修復 T0412 卷數。</li>
+                      <li>• 解決已下載書籍同步的問題。</li>
                     </ul>
                   </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
                     <ul className="changelog-list">
                       <li>• 舊經文支援背景無縫修復升級，完全保留劃線與筆記。</li>
-                      <li>• 刪除經文時自動抹除舊快取，確保與 CBETA 即時同步。</li>
-                      <li>• 獨立 APP_VERSION 與 BUILDER_VERSION 版本號追蹤原則。</li>
-                      <li>• 強化原始經文「圓體粗體」跨平台對比與「+ 附文」目次結構。</li>
+                      <li>• 刪除經文時自動抹除舊快取，與 CBETA 即時同步。</li>
+                      <li>• 強化原始經文圓體粗體跨平台對比與附文目次結構。</li>
                     </ul>
                   </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v1.5.0 <span className="changelog-date">(2026-07-23)</span></div>
                     <ul className="changelog-list">
-                      <li>• 精確識別論典/講記中的原始經文引用段落。</li>
+                      <li>• 精確識別論典與講記中的原始經文引用段落。</li>
                       <li>• 原始經文採用圓體粗體渲染，與解說正文優雅區隔。</li>
                     </ul>
                   </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v1.4.0 <span className="changelog-date">(2026-07-23)</span></div>
                     <ul className="changelog-list">
-                      <li>• 全面升級目次（TOC）樹狀多層級解析算法。</li>
-                      <li>• 側邊欄目錄升級為可展開/折疊（+ / −）多層級選單。</li>
-                      <li>• 新增畫重點筆刷按鈕、自訂顏色與標註模式。</li>
+                      <li>• 全面升級目次樹狀多層級解析算法。</li>
+                      <li>• 側邊欄目錄升級為可展開折疊的多層級選單。</li>
+                      <li>• 新增畫重點筆刷按鈕與標註模式。</li>
                     </ul>
                   </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v1.3.0 <span className="changelog-date">(2026-07-21)</span></div>
                     <ul className="changelog-list">
-                      <li>• 優化Y系列經目次二層簡化與無卷書籍去卷化。</li>
-                      <li>• 修復經文列表（LI）層級縮排與置左偈頌排版。</li>
+                      <li>• 優化 Y 系列經目次二層簡化與無卷書籍去卷化。</li>
+                      <li>• 修復經文列表層級縮排與置左偈頌排版。</li>
                       <li>• 串接本地檢索無結果時一鍵線上檢索 CBETA。</li>
                     </ul>
                   </div>
