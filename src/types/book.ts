@@ -3,6 +3,7 @@ export interface BookMetadata {
   title: string;        // 地藏菩薩本願經
   canon: string;        // T
   vol?: string;         // 冊別 T09 (大正藏第 9 冊)
+  cjkChars?: number;    // 字數 (例如 60,222)
   category: string;     // 大乘單譯經 / 部類
   creators: string;     // 唐實叉難陀譯
   juansCount: number;   // 卷數

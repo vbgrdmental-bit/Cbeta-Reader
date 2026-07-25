@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Plus, Trash2, Check, AlertCircle, X, Download, BookOpen,
+  Plus, Check, AlertCircle, X, Download, BookOpen,
   Home, Search,
   Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, GripVertical, ArrowUp, Settings
 } from 'lucide-react';
@@ -667,13 +667,40 @@ export function Library({
     onSelectBook(workId, segmentId, query);
   };
 
-  // 線裝書典雅封面底色配置
+  // 💡 大藏經 A...Z 共 26 個字母開頭之經典色系字典 (典雅東方書籍質感配色)
+  const CANON_LETTER_COLORS: { [key: string]: string } = {
+    A: '#3b5998', // 紺藍
+    B: '#702459', // 紫紅 / 茜色
+    C: '#2b6cb0', // 寶藍
+    D: '#2c5282', // 黛藍
+    E: '#276749', // 苔綠
+    F: '#317873', // 松石青
+    G: '#4a5b4e', // 竹綠
+    H: '#d69e2e', // 琥珀黃
+    I: '#b7791f', // 古銅黃
+    J: '#c05621', // 赭紅
+    K: '#9b2c2c', // 硃砂紅
+    L: '#742a2a', // 栗紅
+    M: '#6b46c1', // 紫藤
+    N: '#5a67d8', // 群青
+    O: '#2b4c7e', // 藏青
+    P: '#805ad5', // 桔梗紫
+    Q: '#d53f8c', // 胭脂紅
+    R: '#e53e3e', // 丹紅
+    S: '#dd6b20', // 柿黃
+    T: '#2b4c7e', // 大正藏 - 紺青
+    U: '#319795', // 孔雀藍
+    V: '#3182ce', // 琉璃藍
+    W: '#805ad5', // 深紫
+    X: '#782d2d', // 卍續藏 - 緋紅
+    Y: '#654321', // 印順導師 - 墨茶
+    Z: '#314e52'  // 墨綠
+  };
+
   const getBookCoverColor = (workId: string) => {
-    const colors: { [key: string]: string } = {
-      T0412: '#2b4c7e', // 紺青 (地藏經)
-      T0262: '#782d2d', // 緋紅 (法華經)
-    };
-    return colors[workId] || '#4a5b4e'; // 竹綠 (其餘)
+    if (!workId) return '#4a5b4e';
+    const letter = workId.charAt(0).toUpperCase();
+    return CANON_LETTER_COLORS[letter] || '#4a5b4e';
   };
 
   // === 篩選渲染資料夾與書籍 ===
@@ -1024,13 +1051,13 @@ export function Library({
                     <Edit3 size={14} />
                   </button>
 
-                  {/* 槽位 3：垃圾桶（刪除）按鈕 */}
+                  {/* 槽位 3：刪除 (X) 按鈕 */}
                   <button 
                     className="edit-action-btn edit-delete-btn"
                     onClick={(e) => handleDeleteFolder(folder.id, e)}
                     title="刪除資料夾"
                   >
-                    <Trash2 size={14} />
+                    <X size={15} />
                   </button>
                 </div>
               </div>
@@ -1139,13 +1166,13 @@ export function Library({
                           </button>
                         )}
 
-                        {/* 槽位 3：垃圾桶（刪除）按鈕 */}
+                        {/* 槽位 3：刪除 (X) 按鈕 */}
                         <button 
                           className="edit-action-btn edit-delete-btn"
                           onClick={(e) => handleDeleteBook(e, book.workId)}
                           title="刪除"
                         >
-                          <Trash2 size={14} />
+                          <X size={15} />
                         </button>
                       </>
                     )}

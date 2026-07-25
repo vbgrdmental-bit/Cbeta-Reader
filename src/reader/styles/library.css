@@ -1021,6 +1021,8 @@ body.theme-ebony .list-book-item:hover {
   flex-direction: column;
   gap: 0.2rem;
   flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .list-book-title {
@@ -1028,6 +1030,10 @@ body.theme-ebony .list-book-item:hover {
   font-size: 1.05rem;
   font-weight: bold;
   color: var(--color-wood-950);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 body.theme-dark .list-book-title,
@@ -1038,6 +1044,10 @@ body.theme-ebony .list-book-title {
 .list-book-meta {
   font-size: 0.75rem;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .list-delete-btn {
@@ -1598,6 +1608,7 @@ body.theme-ebony .book-grid-out-btn:hover {
   box-shadow: var(--shadow-sm);
   background-color: var(--theme-accent) !important;
   color: #fff !important;
+  flex-shrink: 0 !important;
 }
 
 .theme-folder-icon {
@@ -1606,6 +1617,8 @@ body.theme-ebony .book-grid-out-btn:hover {
 
 .list-folder-info {
   flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .list-folder-title {
@@ -1613,12 +1626,25 @@ body.theme-ebony .book-grid-out-btn:hover {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .list-folder-meta {
   font-size: 0.8rem;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
   margin-top: 0.1rem;
+}
+
+/* 💡 編輯模式下，隱藏資料夾與書籍數字 badge 標籤以釋出水平空間 */
+.edit-mode .folder-book-count-badge {
+  display: none !important;
 }
 
 .list-folder-actions {

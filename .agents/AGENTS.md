@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v1.6.0` (App: v1.6.0 / Builder: v1.6.0)
+- **Current Version**: `v1.8.0` (App: v1.8.0 / Builder: v1.8.0)
 - **Location**: Defined in [version.ts](file:///c:/Users/vbgrd/OneDrive/桌面/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -32,6 +32,15 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **v1.8.0** (2026-07-25)
+  - 縮減偈頌體（韻文）段落上下間距與行高，提升長篇詩歌經文的閱讀緊湊感。
+  - 閱讀器「經典與版權資訊」新增「冊別」與「字數」欄位，排序為：經名 → 譯者 → 經號 → 部類 → 冊別 → 字數。
+  - 大藏經經號依 A~Z 26 個字母開頭自動分配 26 套典雅經典封面色系。
+  - 優化手機版首頁編輯模式（Edit Mode）版面，限制標題單行省略 (`...`) 並固定單行卡片高度，刪除按鈕改為 `X` 置右，隱藏數值標籤防跑版。
+- **v1.7.0** (2026-07-24)
+  - 新增完整與輕量資料備份與還原功能（`.json` 匯出匯入，包含劃線重點、離線經文與個人偏好設定）。
+  - 修復 `T0412 地藏菩薩本願經` 卷數對齊（由 3 卷修正為官方標準 2 卷：卷上、卷下）。
+  - 全面升級 `NavigationBuilder` 的跨卷 `lb` 定位與雙向導航防錯機制，解決目次末段項目無法點選跳轉之問題。
 - **v1.6.0** (2026-07-23)
   - 強化原始經文「圓體粗體」跨平台（Windows/Mac/iOS/Android）字體 fallback 與 `font-weight: 800` 強制高對比排版。
   - 隱藏閱讀器底部工具列的百分比進度文字（`的閱讀進度 (12%)`），僅保留目前品名標題。
