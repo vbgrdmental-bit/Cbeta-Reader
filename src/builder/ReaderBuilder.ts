@@ -332,13 +332,19 @@ export class ReaderBuilder {
           const cleanClone = el.cloneNode(true) as HTMLElement;
 
           // 💡 解析縮排標籤：將 <span class='line_space' data-size='X'> 替換成對應數量的全形空格，以保留印順導師著作中的層級縮排
+          // 只有位於段落/容器最前端的 line_space 才是真正的段落縮排；段落中間出現的 line_space 為大藏經紙本折行與版面對齊遺跡，應直接移除，防止文字中途出現惱人空格
           cleanClone.querySelectorAll('.line_space, [class*="line_space"]').forEach(spaceEl => {
-            const sizeAttr = spaceEl.getAttribute('data-size');
-            const size = sizeAttr ? parseInt(sizeAttr, 10) : 0;
-            if (size > 0) {
-              const spaces = '　'.repeat(size);
-              const textNode = doc.createTextNode(spaces);
-              spaceEl.parentNode?.replaceChild(textNode, spaceEl);
+            const isStart = isAtStartOfContainer(cleanClone, spaceEl as HTMLElement);
+            if (isStart) {
+              const sizeAttr = spaceEl.getAttribute('data-size');
+              const size = sizeAttr ? parseInt(sizeAttr, 10) : 0;
+              if (size > 0) {
+                const spaces = '　'.repeat(size);
+                const textNode = doc.createTextNode(spaces);
+                spaceEl.parentNode?.replaceChild(textNode, spaceEl);
+              } else {
+                spaceEl.remove();
+              }
             } else {
               spaceEl.remove();
             }
@@ -387,6 +393,11 @@ export class ReaderBuilder {
           } else {
             cleanContent = cleanClone.textContent?.trim() || textContent;
           }
+
+          // 💡 經文中途多餘空格清理：清除漢字與漢字之間、漢字與標點符號之間的半形/全形多餘空格（CBETA 紙本折行遺跡）
+          cleanContent = cleanContent.replace(/([\u4e00-\u9fa5\u3400-\u4dbf])[\s　]+([\u4e00-\u9fa5\u3400-\u4dbf])/g, '$1$2');
+          cleanContent = cleanContent.replace(/([\u4e00-\u9fa5\u3400-\u4dbf])[\s　]+([，。；：！？」）》〉』】])/g, '$1$2');
+          cleanContent = cleanContent.replace(/([「（《〈『【])[\s　]+([\u4e00-\u9fa5\u3400-\u4dbf])/g, '$1$2');
 
           // 💡 取得當前元素前面兄弟節點中的縮排尺寸，並補上全形空格
           const precedingIndentSize = getPrecedingLineSpaceSize(el);
