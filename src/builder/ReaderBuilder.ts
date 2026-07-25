@@ -162,7 +162,11 @@ export class ReaderBuilder {
           parent.classList.contains('head') || 
           parent.classList.contains('lg') || 
           pTagName === 'L' ||
-          parent.classList.contains('l')
+          parent.classList.contains('l') ||
+          pTagName === 'LI' ||
+          parent.classList.contains('li') ||
+          pTagName === 'ITEM' ||
+          parent.classList.contains('item')
         ) {
           return true;
         }
@@ -260,7 +264,7 @@ export class ReaderBuilder {
         }
       }
 
-      // 3. 遇到經文段落標籤 (p, div.p, 標題 class, 以及偈頌行 l)
+      // 3. 遇到經文段落標籤 (p, div.p, 標題 class, 偈頌行 l, 以及列表項 li)
       // 偈頌處理原則：
       //   - <lg> 若有 <l> 子行 → 跳過容器本身，讓 <l> 各自生成段落（與 CBETA 分行顯示一致）
       //   - <lg> 無 <l> 子行 → 維持原本整塊處理（向下相容）
@@ -269,8 +273,15 @@ export class ReaderBuilder {
       const hasVerseLineChildren = isVerseContainer && (!!el.querySelector('l, .l') || !!el.querySelector('.lg-row'));
       const isVerseLine = tagName === 'L' || (el.classList.contains('l') && !el.classList.contains('lb') && !el.classList.contains('lb-line')) || el.classList.contains('lg-row');
 
-      // 若為有 <l> 子行的 <lg> 容器，直接跳過（不要把全部 <l> 合成一段）
-      if (hasVerseLineChildren) {
+      // 列表 (UL/OL/LI) 處理原則：
+      //   - <ul/ol> 若有 <li> 子行 → 跳過容器本身，讓 <li> 各自生成段落
+      //   - <li> 元素 → 各自建立獨立的清單段落，完整保留內嵌註解與標籤
+      const isListContainer = tagName === 'UL' || tagName === 'OL';
+      const hasListItemChildren = isListContainer && (!!el.querySelector('li, .li') || !!el.querySelector('item, .item'));
+      const isListItem = tagName === 'LI' || el.classList.contains('li') || tagName === 'ITEM' || el.classList.contains('item');
+
+      // 若為有子項目的容器，直接跳過容器本身（讓子項目各自生成段落）
+      if (hasVerseLineChildren || hasListItemChildren) {
         currentNode = iterator.nextNode();
         continue;
       }
@@ -283,7 +294,8 @@ export class ReaderBuilder {
         el.classList.contains('head') ||
         el.classList.contains('lg') ||
         isBareTextSpan ||
-        isVerseLine
+        isVerseLine ||
+        isListItem
       ) {
         const textContent = el.textContent?.trim() || '';
         
@@ -378,8 +390,18 @@ export class ReaderBuilder {
 
           // 💡 取得當前元素前面兄弟節點中的縮排尺寸，並補上全形空格
           const precedingIndentSize = getPrecedingLineSpaceSize(el);
-          if (precedingIndentSize > 0) {
+          if (precedingIndentSize > 0 && !cleanContent.startsWith('　')) {
             cleanContent = '　'.repeat(precedingIndentSize) + cleanContent;
+          }
+
+          // 💡 清單 (LI) 項目縮排與 bullet 標籤樣式優化
+          if (isListItem) {
+            const trimmed = cleanContent.replace(/^[ 　\t]+/, '');
+            if (trimmed && !trimmed.startsWith('•') && !trimmed.startsWith('◦') && !trimmed.startsWith('－') && !trimmed.startsWith('-')) {
+              cleanContent = `　　• ${trimmed}`;
+            } else if (trimmed) {
+              cleanContent = `　　${trimmed}`;
+            }
           }
 
           const isHead = el.tagName.toUpperCase() === 'HEAD' || el.classList.contains('head') || el.hasAttribute('data-head-level');
