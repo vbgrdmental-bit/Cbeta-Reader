@@ -813,7 +813,11 @@ export function ReaderView({
 
   // 監聽全局點擊事件，點擊空白處時隱藏刪除重點選單
   useEffect(() => {
-    const handleGlobalClick = () => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest('.reader-text-highlight') || target?.closest('.highlight-delete-menu')) {
+        return;
+      }
       setActiveHighlightForDelete(null);
       setDeleteMenuPosition(null);
     };
@@ -824,6 +828,8 @@ export function ReaderView({
   }, []);
 
   const handleHighlightClick = (hl: BookHighlight, e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setActiveHighlightForDelete(hl);
     setDeleteMenuPosition({

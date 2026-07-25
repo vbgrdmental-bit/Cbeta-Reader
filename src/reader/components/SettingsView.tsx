@@ -497,9 +497,11 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
               {/* 1. 最新一次的版本修改記錄 */}
               <div className="changelog-version-section">
-                <div className="changelog-version-title">App: v1.7.0 <span className="changelog-date">(2026-07-23)</span></div>
+                <div className="changelog-version-title">v1.9.0 <span className="changelog-date">(2026-07-25)</span></div>
                 <ul className="changelog-list">
-                  <li>• 新增完整與輕量資料備份與還原功能（.json 匯出匯入，包含劃線重點、離線經文與個人偏好設定）。</li>
+                  <li>• 全面修正 CBETA 清單與列表標籤（ul, ol, li, item）的段落分割算法，防止項目內部的文字、小註與單字 span 被拆散為孤立行。</li>
+                  <li>• 徹底解決 CBETA 紙本版面折行與 line_space 遺留在段落中途導致漢字、詞彙與標點符號之間出現多餘空格的問題（如 CC0006「近代流通」、Y0001「當經」、「展轉」、「真實」、「如是」等）。</li>
+                  <li>• 完美還原如 CC0006《佛說大乘無量壽莊嚴清淨平等覺經》等含目次條目與五種原譯清單的經典排版，自動補齊縮排與 bullet 標籤 (•)。</li>
                 </ul>
               </div>
 
@@ -528,6 +530,23 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               {/* 3. 展開的歷史版本更新紀錄 */}
               {showAllHistory && (
                 <div className="changelog-history-wrapper animate-fade-in">
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.8.0 <span className="changelog-date">(2026-07-25)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 縮減偈頌體（韻文）段落上下間距與行高，提升長篇詩歌經文的閱讀緊湊感。</li>
+                      <li>• 閱讀器「經典與版權資訊」新增「冊別」與「字數」欄位（排序：經名 → 譯者 → 經號 → 部類 → 冊別 → 字數）。</li>
+                      <li>• 大藏經經號依 A~Z 26 個字母開頭自動分配 26 套典雅經典封面色系。</li>
+                      <li>• 優化手機版首頁編輯模式版面，限制標題單行省略並固定單行卡片高度，刪除按鈕改為 X 置右。</li>
+                    </ul>
+                  </div>
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">v1.7.0 <span className="changelog-date">(2026-07-24)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 新增完整與輕量資料備份與還原功能（.json 匯出匯入，包含劃線重點、離線經文與個人偏好設定）。</li>
+                      <li>• 修復 T0412 地藏菩薩本願經卷數對齊（由 3 卷修正為官方標準 2 卷：卷上、卷下）。</li>
+                      <li>• 全面升級 NavigationBuilder 的跨卷 lb 定位與雙向導航防錯機制。</li>
+                    </ul>
+                  </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
                     <ul className="changelog-list">
