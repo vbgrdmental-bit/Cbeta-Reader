@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v2.0.0` (App: v2.0.0 / Builder: v2.0.0)
+- **Current Version**: `v2.0.0` (App: v1.9.0 / Builder: v2.0.0)
 - **Location**: Defined in [version.ts](file:///c:/Users/vbgrd/OneDrive/桌面/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：

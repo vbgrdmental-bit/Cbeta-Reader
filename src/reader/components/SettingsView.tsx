@@ -497,7 +497,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
               {/* 1. 最新一次的版本修改記錄 */}
               <div className="changelog-version-section">
-                <div className="changelog-version-title">v2.0.0 <span className="changelog-date">(2026-07-25)</span></div>
+                <div className="changelog-version-title">Builder: v2.0.0 <span className="changelog-date">(2026-07-25)</span></div>
                 <ul className="changelog-list">
                   <li>• 支援印順導師著述附圖與圖表段落(div-figure)解析。</li>
                   <li>• 解決 Y0003 等著作中圖表段落文字碎裂斷行問題。</li>
