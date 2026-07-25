@@ -166,7 +166,13 @@ export class ReaderBuilder {
           pTagName === 'LI' ||
           parent.classList.contains('li') ||
           pTagName === 'ITEM' ||
-          parent.classList.contains('item')
+          parent.classList.contains('item') ||
+          pTagName === 'FIGURE' ||
+          parent.classList.contains('figure') ||
+          parent.classList.contains('div-figure') ||
+          parent.classList.contains('div-other') ||
+          parent.classList.contains('div-byline') ||
+          parent.classList.contains('div-entry')
         ) {
           return true;
         }
@@ -264,7 +270,7 @@ export class ReaderBuilder {
         }
       }
 
-      // 3. 遇到經文段落標籤 (p, div.p, 標題 class, 偈頌行 l, 以及列表項 li)
+      // 3. 遇到經文段落標籤 (p, div.p, 標題 class, 偈頌行 l, 列表項 li, 以及附圖/圖表 div.div-figure)
       // 偈頌處理原則：
       //   - <lg> 若有 <l> 子行 → 跳過容器本身，讓 <l> 各自生成段落（與 CBETA 分行顯示一致）
       //   - <lg> 無 <l> 子行 → 維持原本整塊處理（向下相容）
@@ -280,13 +286,20 @@ export class ReaderBuilder {
       const hasListItemChildren = isListContainer && (!!el.querySelector('li, .li') || !!el.querySelector('item, .item'));
       const isListItem = tagName === 'LI' || el.classList.contains('li') || tagName === 'ITEM' || el.classList.contains('item');
 
+      // 附圖/圖表/雜項 (div-figure, figure, div-other) 處理原則：
+      //   - 若內部有 <p>, <li>, <lg> 等段落子行 → 跳過容器本身，讓子行各自生成段落
+      //   - 若內部無段落子行 → 將 div-figure/div-other 容器本身建立為獨立的經文段落
+      const isFigureContainer = tagName === 'FIGURE' || el.classList.contains('figure') || el.classList.contains('div-figure') || el.classList.contains('div-other');
+      const hasChildParagraphs = isFigureContainer && (!!el.querySelector('p, .p, lg, .lg, l, .l, li, .li, item, .item, figure, .figure, .div-figure'));
+
       // 若為有子項目的容器，直接跳過容器本身（讓子項目各自生成段落）
-      if (hasVerseLineChildren || hasListItemChildren) {
+      if (hasVerseLineChildren || hasListItemChildren || hasChildParagraphs) {
         currentNode = iterator.nextNode();
         continue;
       }
 
       const isBareTextSpan = tagName === 'SPAN' && el.classList.contains('t') && !hasParagraphAncestor(el);
+      const isFigureParagraph = isFigureContainer && !hasChildParagraphs;
 
       if (
         tagName === 'P' ||
@@ -295,7 +308,8 @@ export class ReaderBuilder {
         el.classList.contains('lg') ||
         isBareTextSpan ||
         isVerseLine ||
-        isListItem
+        isListItem ||
+        isFigureParagraph
       ) {
         const textContent = el.textContent?.trim() || '';
         

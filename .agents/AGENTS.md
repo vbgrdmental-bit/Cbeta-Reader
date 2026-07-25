@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v1.9.0` (App: v1.9.0 / Builder: v1.9.0)
+- **Current Version**: `v2.0.0` (App: v2.0.0 / Builder: v2.0.0)
 - **Location**: Defined in [version.ts](file:///c:/Users/vbgrd/OneDrive/桌面/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -35,6 +35,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **v2.0.0** (2026-07-25)
+  - 支援印順導師著作中的附圖、圖表與解說段落標籤（`<div class="div-figure">`, `<div class="figure">`, `<figure>`）。
+  - 解決如 `Y0003 勝鬘經講記` 「關於一乘」圖表附圖段落因欠缺段落容器識別而被錯判為孤立 `<span>` 導致多行碎裂單字斷行的 bug。
 - **v1.9.0** (2026-07-25)
   - 全面修正 CBETA 清單與列表標籤（`<ul>`, `<ol>`, `<li>`, `<item>`）的段落分割算法，防止項目內部的文字、小註與單字 `<span>` 被拆散為孤立行。
   - 徹底解決 CBETA 紙本版面折行與 `<span class="line_space">` 遺留在段落中途導致漢字、詞彙與標點符號之間出現惱人空格的問題（如 `CC0006`「近代流通」、`Y0001`「當經」、「展轉」、「真實」、「如是」等）。
