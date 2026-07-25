@@ -1354,7 +1354,7 @@ export function ReaderView({
                     <div 
                       key={seg.id}
                       ref={el => { segmentsMapRef.current[seg.id] = el; }}
-                      className={`reader-paragraph-wrapper`}
+                      className={`reader-paragraph-wrapper ${seg.isVerse ? 'verse-wrapper' : ''}`}
                     >
                       <p 
                         data-segment-id={seg.id}
@@ -1539,10 +1539,16 @@ export function ReaderView({
                 <div className="info-item"><strong>經名：</strong>{book.metadata.title}</div>
                 <div className="info-item"><strong>譯者：</strong>{book.metadata.creators}</div>
                 <div className="info-item"><strong>經號：</strong>CBETA No. {book.metadata.workId}</div>
+                <div className="info-item"><strong>部類：</strong>{book.metadata.category}</div>
                 {book.metadata.vol && (
                   <div className="info-item"><strong>冊別：</strong>{book.metadata.vol}</div>
                 )}
-                <div className="info-item"><strong>部類：</strong>{book.metadata.category}</div>
+                {(() => {
+                  const chars = book.metadata.cjkChars || book.content.juans.reduce((sum, j) => sum + j.segments.reduce((sSum, seg) => sSum + seg.content.replace(/\s+/g, '').length, 0), 0);
+                  return chars > 0 ? (
+                    <div className="info-item"><strong>字數：</strong>{chars.toLocaleString()}</div>
+                  ) : null;
+                })()}
                 <div className="copyright-text">
                   經典來源：中華電子佛典協會 (CBETA)
                 </div>

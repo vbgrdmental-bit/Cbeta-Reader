@@ -13,6 +13,7 @@ export interface SearchResult {
   juansCount: number;
   category: string;
   vol?: string; // 冊別 e.g. T09
+  cjkChars?: number; // 字數 e.g. 60222
 }
 
 // 內建的重點經典靜態資訊，作為預設或 Fallback
@@ -165,6 +166,9 @@ export class IndexBuilder {
                   const volNum = String(workInfo.n).padStart(2, '0');
                   res.vol = `${res.workId.charAt(0)}${volNum}`;
                 }
+                if (workInfo.cjk_chars != null && typeof workInfo.cjk_chars === 'number') {
+                  res.cjkChars = workInfo.cjk_chars;
+                }
               }
             }
           } catch {
@@ -203,6 +207,7 @@ export class IndexBuilder {
       title: searchResult.title,
       canon: searchResult.workId.charAt(0),
       vol: searchResult.vol,
+      cjkChars: searchResult.cjkChars,
       category: searchResult.category,
       creators: searchResult.creators,
       juansCount: searchResult.juansCount,

@@ -47,6 +47,11 @@
   position: relative;
 }
 
+/* 💡 偈頌行與行之間的上下間距縮小，使詩歌排版緊湊優雅 */
+.reader-paragraph-wrapper.verse-wrapper {
+  margin-bottom: 0.35rem;
+}
+
 .reader-paragraph {
   font-family: var(--font-serif);
   line-height: var(--reader-line-height, 2.0);
@@ -63,8 +68,9 @@
   font-family: 'DFYuan-Medium', 'DFYuan', 'YuanTi', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   text-align: left; /* 💡 將偈頌改為置左對齊，便於換行閱讀 */
   padding-left: 2em; /* 💡 左側縮排 2 字符，維持詩歌體排版質感 */
-  margin-top: 0.4rem;
-  margin-bottom: 0.4rem;
+  margin-top: 0.15rem;
+  margin-bottom: 0.15rem;
+  line-height: calc(var(--reader-line-height, 2.0) * 0.85);
 }
 
 /* 羊皮紙與舒服模式下，偈頌文字改為質感灰色 (烏木模式不變色) */
