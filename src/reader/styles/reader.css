@@ -98,7 +98,13 @@
   font-weight: 600;
 }
 
-/* 💡 畫重點主題與配色變數 */
+/* 💡 畫重點主題與配色變數與瀏覽器 mark 黑字重置 */
+mark.reader-text-highlight,
+mark.search-highlight {
+  color: inherit !important;
+  font-style: normal;
+}
+
 .reader-container {
   --hl-color-yellow: rgba(251, 191, 36, 0.45);
   --hl-color-red: rgba(248, 113, 113, 0.4);
@@ -107,15 +113,16 @@
 }
 
 .reader-container.theme-ebony {
-  --hl-color-yellow: rgba(234, 179, 8, 0.45);
-  --hl-color-red: rgba(239, 68, 68, 0.45);
-  --hl-color-gray: rgba(107, 114, 128, 0.55);
-  --hl-color-blue: rgba(59, 130, 246, 0.45);
+  --hl-color-yellow: rgba(245, 158, 11, 0.55);
+  --hl-color-red: rgba(239, 68, 68, 0.5);
+  --hl-color-gray: rgba(156, 163, 175, 0.5);
+  --hl-color-blue: rgba(59, 130, 246, 0.5);
 }
 
 .reader-text-highlight {
   cursor: pointer;
   padding: 1px 0;
+  color: inherit !important;
   transition: opacity var(--transition-fast), background-color var(--transition-fast);
 }
 
@@ -137,26 +144,44 @@
   --hl-active-color: var(--hl-color-blue);
 }
 
-/* 4種粗細/標註樣式 */
+/* 4種粗細/標註樣式 (底部底線、半塗、全塗、方框) */
 .reader-text-highlight.hl-style-underline {
-  border-bottom: 2.5px solid var(--hl-active-color);
+  border-bottom: 2.5px solid var(--hl-active-color) !important;
   background-color: transparent !important;
   border-radius: 0;
+  color: inherit !important;
 }
+
 .reader-text-highlight.hl-style-bottom-half {
-  background: linear-gradient(180deg, transparent 55%, var(--hl-active-color) 55%) !important;
+  background: linear-gradient(180deg, transparent 52%, var(--hl-active-color) 52%) !important;
   border-bottom: none !important;
+  color: inherit !important;
 }
+
 .reader-text-highlight.hl-style-full {
   background-color: var(--hl-active-color) !important;
   border-bottom: none !important;
+  color: inherit !important;
+  border-radius: 3px;
 }
+
 .reader-text-highlight.hl-style-border {
-  border: 2.5px solid var(--hl-active-color) !important;
+  border: 2px solid var(--hl-active-color) !important;
   border-radius: 4px;
-  padding: 0 2px;
+  padding: 0 3px;
   background-color: transparent !important;
   border-bottom: none !important;
+  color: inherit !important;
+}
+
+/* 💡 烏木 (Ebony) 暗色主題特別適配：防止瀏覽器預設 <mark> 的黑字 (black) 蓋掉文字，強效還原白字高對比 */
+body.theme-ebony .reader-text-highlight,
+body.theme-ebony mark.reader-text-highlight {
+  color: #e0dcd3 !important;
+}
+
+body.theme-ebony .reader-text-highlight.hl-style-full {
+  color: #ffffff !important;
 }
 
 /* 懸浮按鈕/筆刷按鈕微動畫 */
