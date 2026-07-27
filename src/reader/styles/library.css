@@ -2624,6 +2624,38 @@ body.theme-ebony .search-info-tip {
     width: 100% !important;
     max-width: none !important;
   }
+
+  /* 💡 手機端強效防止 iOS Safari 點擊 Input 時字體小於 16px 觸發的自動縮放畫面 */
+  input,
+  select,
+  textarea,
+  .settings-select,
+  .dialog-search-bar input {
+    font-size: 16px !important;
+  }
+
+  /* 💡 手機端 Modal 彈窗與收納對話框極致適應 */
+  .search-dialog-card {
+    width: 94% !important;
+    max-width: 380px !important;
+    max-height: 85vh !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .dialog-header {
+    height: 48px !important;
+    padding: 0 1rem !important;
+  }
+
+  .dialog-header h3 {
+    font-size: 1.05rem !important;
+  }
+
+  .dialog-body {
+    padding: 1rem !important;
+    gap: 0.9rem !important;
+  }
 }
 
 

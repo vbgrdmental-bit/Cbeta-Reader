@@ -635,3 +635,37 @@ body.theme-ebony .changelog-version-title {
   color: var(--text-primary);
   text-align: left;
 }
+
+/* ==========================================================================
+   💡 手機端 (Mobile Safari / iOS) 全域彈窗與 Input 自動放大防跑版專用覆蓋
+   ========================================================================== */
+@media (max-width: 600px) {
+  /* 1. 防範 iOS Safari 點擊 Input 時字體小於 16px 觸發的自動縮放畫面 */
+  input,
+  select,
+  textarea,
+  .settings-select {
+    font-size: 16px !important;
+  }
+
+  /* 2. 手機端彈出視窗對話框 (Modal Cards) 尺寸與內邊距自動限高縮放 */
+  .changelog-dialog-card {
+    width: 92% !important;
+    max-width: 360px !important;
+    max-height: 85vh !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .changelog-dialog-header {
+    padding: 0.75rem 1rem !important;
+  }
+
+  .changelog-dialog-header h4 {
+    font-size: 0.98rem !important;
+  }
+
+  .changelog-dialog-body {
+    padding: 0.9rem 1rem !important;
+  }
+}
