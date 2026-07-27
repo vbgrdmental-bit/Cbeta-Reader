@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v2.0.0` (App: v2.0.0 / Builder: v2.1.0)
+- **Current Version**: `v2.2.0` (App: v2.0.0 / Builder: v2.2.0)
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -35,6 +35,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **v2.2.0** (2026-07-28) [Builder Only]
+  - 全面修正 CBETA 異體字、組字與缺字標籤（`<a class="gaijiAnchor">` / `<span class="gaiji">`，例如 `[言*(狂-王+主)]`、`[圭*頁]`）被錯判為校勘腳註遭整塊抹除的 bug，還原完整的缺字組字表達。
+  - 修正經文中途過度清除 CJK 空格導致印順導師著作（Y系列）與精校版《壇經》中「一　慧能大師」、「二　刺史」等節號與清單項目的全形空格遺失問題。
 - **v2.0.0** (2026-07-27) [App Only]
   - 全面配置 PWA 與 iOS「加入主畫面」蓮花經典圖示 (apple-touch-icon 180x180 & 512x512, manifest.json)。
   - 首頁編輯模式新增經書批量勾選與一鍵「批量移動至資料夾」功能。
