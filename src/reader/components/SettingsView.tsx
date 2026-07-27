@@ -182,28 +182,29 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   id: 'default', 
                   name: '預設', 
                   fontFamily: 'var(--font-serif)',
-                  sample: '經' 
+                  sample: '永' 
                 },
                 { 
                   id: 'kaiti', 
                   name: '標楷體', 
                   fontFamily: '"BiauKai", "Kaiti", "KaiTi_GB2312", "STKaiti", "DFKai-SB", "TW-Kai", "Noto Serif HK", serif',
-                  sample: '經' 
-                },
-                { 
-                  id: 'yuanti', 
-                  name: '圓體', 
-                  fontFamily: '"STYuanti-TC-Regular", "STYuanti", "DFYuan-Medium", "DFYuan", "Yuanti TC", "STXihei", "Microsoft JhengHei", sans-serif',
-                  sample: '經' 
+                  sample: '永' 
                 },
                 { 
                   id: 'jhenghei', 
                   name: '微軟正黑體', 
                   fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Noto Sans TC", sans-serif',
-                  sample: '經' 
+                  sample: '永' 
+                },
+                { 
+                  id: 'iansui', 
+                  name: '芫荽體', 
+                  fontFamily: '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", serif',
+                  sample: '永' 
                 }
               ].map((fontItem) => {
-                const isActive = (settings.fontFamily || 'default') === fontItem.id;
+                const currentFont = settings.fontFamily === 'yuanti' ? 'iansui' : (settings.fontFamily || 'default');
+                const isActive = currentFont === fontItem.id;
                 return (
                   <div
                     key={`fontFamily-${fontItem.id}`}
@@ -595,7 +596,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     App: v2.2.0 <span className="changelog-date">(2026-07-28)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀設定新增「| 內文字體」選擇，提供預設、標楷體、圓體與微軟正黑體 4 種字型。</li>
+                    <li>• 閱讀設定新增「| 內文字體」選擇，提供預設、標楷體、微軟正黑體與芫荽體 4 種字型（例字：永）。</li>
                     <li>• 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。</li>
                     <li>• 修復「烏木」模式劃線高對比字體與 iOS 點擊輸入框自動放大防跑版機制。</li>
                   </ul>

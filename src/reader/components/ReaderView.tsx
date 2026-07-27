@@ -1161,10 +1161,11 @@ export function ReaderView({
     switch (fontFamily) {
       case 'kaiti':
         return '"BiauKai", "Kaiti", "KaiTi_GB2312", "STKaiti", "DFKai-SB", "TW-Kai", "Noto Serif HK", serif';
-      case 'yuanti':
-        return '"STYuanti-TC-Regular", "STYuanti", "DFYuan-Medium", "DFYuan", "Yuanti TC", "STXihei", "Microsoft JhengHei", sans-serif';
       case 'jhenghei':
         return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Noto Sans TC", sans-serif';
+      case 'iansui':
+      case 'yuanti':
+        return '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", serif';
       case 'default':
       default:
         return 'var(--font-serif)';
