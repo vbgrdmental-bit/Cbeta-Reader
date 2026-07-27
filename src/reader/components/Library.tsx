@@ -162,7 +162,8 @@ export function Library({
   // 線上搜尋批量下載與資料夾設定狀態
   const [selectedOnlineWorkIds, setSelectedOnlineWorkIds] = useState<string[]>([]);
   const [showBatchDownloadModal, setShowBatchDownloadModal] = useState(false);
-  const [createBatchFolder, setCreateBatchFolder] = useState(true);
+  const [batchFolderMode, setBatchFolderMode] = useState<'new' | 'existing' | 'none'>('new');
+  const [selectedExistingFolderId, setSelectedExistingFolderId] = useState<string>('');
   const [batchFolderName, setBatchFolderName] = useState('');
   const [batchFolderColor, setBatchFolderColor] = useState('#3d5a45');
 
@@ -718,10 +719,10 @@ export function Library({
     if (selectedOnlineWorkIds.length === 0) return;
     setShowBatchDownloadModal(false);
 
-    let createdFolderId: string | null = null;
+    let targetFolderId: string | null = null;
 
-    // 1. 如果勾選自動新建資料夾
-    if (createBatchFolder && batchFolderName.trim()) {
+    // 1. 處理目標資料夾 ID (新建資料夾 或 放入已有資料夾)
+    if (batchFolderMode === 'new' && batchFolderName.trim()) {
       const newFolder: BookFolder = {
         id: `folder-${Date.now()}`,
         name: batchFolderName.trim(),
@@ -729,9 +730,11 @@ export function Library({
         parentId: currentFolderId,
         color: batchFolderColor
       };
-      createdFolderId = newFolder.id;
+      targetFolderId = newFolder.id;
       const updatedFolders = [...folders, newFolder];
       saveFolders(updatedFolders);
+    } else if (batchFolderMode === 'existing' && selectedExistingFolderId) {
+      targetFolderId = selectedExistingFolderId;
     }
 
     const totalToDownload = selectedOnlineWorkIds.length;
@@ -751,11 +754,11 @@ export function Library({
           });
         });
 
-        // 如果建立了資料夾，將新下載的經書歸類進去
-        if (createdFolderId) {
+        // 如果設定了目標資料夾，將新下載的經書歸類進去
+        if (targetFolderId) {
           setFolders(latestFolders => {
             const updated = latestFolders.map(f => {
-              if (f.id === createdFolderId) {
+              if (f.id === targetFolderId) {
                 const bookIds = f.bookIds.includes(workId) ? f.bookIds : [...f.bookIds, workId];
                 return { ...f, bookIds };
               }
@@ -1477,12 +1480,20 @@ export function Library({
                     disabled={selectedOnlineWorkIds.length === 0}
                     onClick={() => {
                       setBatchFolderName(onlineSearchQuery.trim() || '下載經典');
+                      setBatchFolderMode('new');
+                      if (currentFolderId && folders.some(f => f.id === currentFolderId)) {
+                        setSelectedExistingFolderId(currentFolderId);
+                      } else if (folders.length > 0) {
+                        setSelectedExistingFolderId(folders[0].id);
+                      } else {
+                        setSelectedExistingFolderId('');
+                      }
                       setShowBatchDownloadModal(true);
                     }}
                     style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
                   >
                     <Download size={14} />
-                    批量下載與建資料夾
+                    批量下載與收納
                   </button>
                 </div>
               )}
@@ -1566,52 +1577,112 @@ export function Library({
                 即將開始下載已勾選的 <strong style={{ color: 'var(--theme-accent)' }}>{selectedOnlineWorkIds.length}</strong> 本經典。
               </div>
 
-              {/* 是否建立資料夾選項 */}
-              <label className="checkbox-item" style={{ fontSize: '0.88rem', fontWeight: 600 }}>
-                <input 
-                  type="checkbox" 
-                  checked={createBatchFolder} 
-                  onChange={(e) => setCreateBatchFolder(e.target.checked)}
-                />
-                自動建立新資料夾收納經書
-              </label>
+              {/* 收納方式單選選項 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                  選擇下載收納方式：
+                </span>
 
-              {/* 資料夾名稱輸入框 (預設帶出搜尋關鍵字) */}
-              {createBatchFolder && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>資料夾名稱（自動帶出關鍵字，可修改）：</span>
+                {/* 選項 1: 建立新資料夾 */}
+                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
                   <input 
-                    type="text" 
-                    className="settings-select"
-                    value={batchFolderName}
-                    onChange={(e) => setBatchFolderName(e.target.value)}
-                    placeholder="請輸入資料夾名稱..."
-                    style={{ fontSize: '0.9rem', padding: '0.6rem 0.8rem' }}
+                    type="radio" 
+                    name="batchFolderMode"
+                    checked={batchFolderMode === 'new'} 
+                    onChange={() => setBatchFolderMode('new')}
+                    style={{ accentColor: 'var(--theme-accent)' }}
                   />
+                  建立新資料夾收納經書
+                </label>
 
-                  {/* 顏色選擇點點 */}
-                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.4rem' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>主題色：</span>
-                    {FOLDER_COLOR_OPTIONS.map(opt => (
-                      <div 
-                        key={`batch-color-${opt.value}`}
-                        onClick={() => setBatchFolderColor(opt.value)}
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          borderRadius: '50%',
-                          backgroundColor: opt.value,
-                          cursor: 'pointer',
-                          border: batchFolderColor === opt.value ? '2px solid #ffffff' : '1px solid rgba(0,0,0,0.2)',
-                          boxShadow: batchFolderColor === opt.value ? '0 0 0 2px var(--theme-accent)' : 'none',
-                          transition: 'transform 0.15s'
-                        }}
-                        title={opt.name}
-                      />
-                    ))}
+                {/* 建立新資料夾子項目 */}
+                {batchFolderMode === 'new' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginLeft: '1.6rem' }}>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>資料夾名稱（自動帶出關鍵字，可修改）：</span>
+                    <input 
+                      type="text" 
+                      className="settings-select"
+                      value={batchFolderName}
+                      onChange={(e) => setBatchFolderName(e.target.value)}
+                      placeholder="請輸入資料夾名稱..."
+                      style={{ fontSize: '0.88rem', padding: '0.5rem 0.8rem' }}
+                    />
+
+                    {/* 顏色選擇點點 */}
+                    <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', marginTop: '0.2rem' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>主題色：</span>
+                      {FOLDER_COLOR_OPTIONS.map(opt => (
+                        <div 
+                          key={`batch-color-${opt.value}`}
+                          onClick={() => setBatchFolderColor(opt.value)}
+                          style={{
+                            width: '18px',
+                            height: '18px',
+                            borderRadius: '50%',
+                            backgroundColor: opt.value,
+                            cursor: 'pointer',
+                            border: batchFolderColor === opt.value ? '2px solid #ffffff' : '1px solid rgba(0,0,0,0.2)',
+                            boxShadow: batchFolderColor === opt.value ? '0 0 0 2px var(--theme-accent)' : 'none',
+                            transition: 'transform 0.15s'
+                          }}
+                          title={opt.name}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+
+                {/* 選項 2: 放入已有資料夾 */}
+                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
+                  <input 
+                    type="radio" 
+                    name="batchFolderMode"
+                    checked={batchFolderMode === 'existing'} 
+                    onChange={() => setBatchFolderMode('existing')}
+                    style={{ accentColor: 'var(--theme-accent)' }}
+                  />
+                  放入已有資料夾
+                </label>
+
+                {/* 選擇已有資料夾下拉選單 */}
+                {batchFolderMode === 'existing' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginLeft: '1.6rem' }}>
+                    {folders.length > 0 ? (
+                      <>
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>選擇目標資料夾：</span>
+                        <select 
+                          className="settings-select"
+                          value={selectedExistingFolderId}
+                          onChange={(e) => setSelectedExistingFolderId(e.target.value)}
+                          style={{ fontSize: '0.88rem', padding: '0.55rem 0.8rem' }}
+                        >
+                          {folders.map(f => (
+                            <option key={f.id} value={f.id}>
+                              📁 {f.name} ({f.bookIds.length} 本)
+                            </option>
+                          ))}
+                        </select>
+                      </>
+                    ) : (
+                      <div style={{ fontSize: '0.78rem', color: 'var(--theme-accent)', padding: '0.3rem 0' }}>
+                        （目前書架尚未建立任何資料夾，請選擇「建立新資料夾」）
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 選項 3: 下載至首頁/根目錄 */}
+                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
+                  <input 
+                    type="radio" 
+                    name="batchFolderMode"
+                    checked={batchFolderMode === 'none'} 
+                    onChange={() => setBatchFolderMode('none')}
+                    style={{ accentColor: 'var(--theme-accent)' }}
+                  />
+                  下載至書架根目錄（不放入資料夾）
+                </label>
+              </div>
 
               <div className="dialog-actions-row" style={{ marginTop: '0.5rem' }}>
                 <button 
@@ -1625,7 +1696,7 @@ export function Library({
                   type="button" 
                   className="dialog-btn-confirm"
                   onClick={handleExecuteBatchDownload}
-                  disabled={createBatchFolder && !batchFolderName.trim()}
+                  disabled={(batchFolderMode === 'new' && !batchFolderName.trim()) || (batchFolderMode === 'existing' && !selectedExistingFolderId)}
                 >
                   開始下載
                 </button>
