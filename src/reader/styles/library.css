@@ -2291,6 +2291,24 @@ body.theme-ebony .batch-btn-secondary:hover {
   transform: translateX(3px);
 }
 
+/* 線上搜尋批量下載工具列 */
+.online-batch-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.05));
+  border: 1px solid var(--theme-accent-border, rgba(140, 75, 39, 0.15));
+  border-radius: var(--radius-md, 8px);
+  margin-bottom: 0.8rem;
+  box-sizing: border-box;
+}
+
+.search-result-item.selected-for-batch {
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.06)) !important;
+  border-color: var(--theme-accent) !important;
+}
+
 /* 💡 圓形深底色安全操作按鈕 */
 .edit-action-btn {
   width: 30px !important;

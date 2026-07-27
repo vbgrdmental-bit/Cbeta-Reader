@@ -159,6 +159,13 @@ export function Library({
   const [selectedBookIds, setSelectedBookIds] = useState<string[]>([]);
   const [showBatchMoveDialog, setShowBatchMoveDialog] = useState(false);
 
+  // 線上搜尋批量下載與資料夾設定狀態
+  const [selectedOnlineWorkIds, setSelectedOnlineWorkIds] = useState<string[]>([]);
+  const [showBatchDownloadModal, setShowBatchDownloadModal] = useState(false);
+  const [createBatchFolder, setCreateBatchFolder] = useState(true);
+  const [batchFolderName, setBatchFolderName] = useState('');
+  const [batchFolderColor, setBatchFolderColor] = useState('#3d5a45');
+
   const startLongPress = (e: React.MouseEvent | React.TouchEvent) => {
     if (isEditMode) return;
     
@@ -678,11 +685,98 @@ export function Library({
     try {
       const results = await IndexBuilder.searchTitle(onlineSearchQuery);
       setOnlineResults(results);
+      setSelectedOnlineWorkIds([]); // 重置勾選狀態
     } catch (e) {
       console.error('Online search failed:', e);
     } finally {
       setIsSearchingOnline(false);
     }
+  };
+
+  // 勾選/取消勾選線上搜尋單項
+  const toggleSelectOnlineWork = (workId: string) => {
+    setSelectedOnlineWorkIds(prev => 
+      prev.includes(workId) ? prev.filter(id => id !== workId) : [...prev, workId]
+    );
+  };
+
+  // 全選線上未下載的搜尋結果
+  const handleSelectAllOnlineResults = () => {
+    const downloadableWorkIds = onlineResults
+      .filter(res => !downloadedBooks.some(b => b.workId === res.workId))
+      .map(res => res.workId);
+
+    if (selectedOnlineWorkIds.length === downloadableWorkIds.length && selectedOnlineWorkIds.length > 0) {
+      setSelectedOnlineWorkIds([]);
+    } else {
+      setSelectedOnlineWorkIds(downloadableWorkIds);
+    }
+  };
+
+  // 執行批量下載與自動歸類至資料夾
+  const handleExecuteBatchDownload = async () => {
+    if (selectedOnlineWorkIds.length === 0) return;
+    setShowBatchDownloadModal(false);
+
+    let createdFolderId: string | null = null;
+
+    // 1. 如果勾選自動新建資料夾
+    if (createBatchFolder && batchFolderName.trim()) {
+      const newFolder: BookFolder = {
+        id: `folder-${Date.now()}`,
+        name: batchFolderName.trim(),
+        bookIds: [],
+        parentId: currentFolderId,
+        color: batchFolderColor
+      };
+      createdFolderId = newFolder.id;
+      const updatedFolders = [...folders, newFolder];
+      saveFolders(updatedFolders);
+    }
+
+    const totalToDownload = selectedOnlineWorkIds.length;
+    const workIdsToProcess = [...selectedOnlineWorkIds];
+
+    // 2. 逐一執行下載與建置
+    for (let i = 0; i < workIdsToProcess.length; i++) {
+      const workId = workIdsToProcess[i];
+      const searchRes = onlineResults.find(r => r.workId === workId);
+      if (!searchRes) continue;
+
+      try {
+        await PackageBuilder.downloadAndPackage(searchRes, (progress) => {
+          setBuildProgress({
+            ...progress,
+            message: `[批量下載 ${i + 1} / ${totalToDownload} 本：《${searchRes.title}》] ${progress.message}`
+          });
+        });
+
+        // 如果建立了資料夾，將新下載的經書歸類進去
+        if (createdFolderId) {
+          setFolders(latestFolders => {
+            const updated = latestFolders.map(f => {
+              if (f.id === createdFolderId) {
+                const bookIds = f.bookIds.includes(workId) ? f.bookIds : [...f.bookIds, workId];
+                return { ...f, bookIds };
+              }
+              return f;
+            });
+            localStorage.setItem('cbeta_reader_folders', JSON.stringify(updated));
+            return updated;
+          });
+        }
+      } catch (err) {
+        console.error(`Batch download failed for ${workId}:`, err);
+      }
+    }
+
+    // 3. 載入最新本地經書清單
+    await loadLocalBooks();
+    setSelectedOnlineWorkIds([]);
+
+    setTimeout(() => {
+      setBuildProgress(null);
+    }, 1500);
   };
 
   // 下載並匯入經典
@@ -1349,7 +1443,7 @@ export function Library({
               <form onSubmit={handleOnlineSearch} className="dialog-search-bar">
                 <input 
                   type="text" 
-                  placeholder="輸入經典名稱、cbeta編號..."
+                  placeholder="輸入經典名稱、cbeta編號、關鍵字(如: 印順、玄奘、地藏)..."
                   value={onlineSearchQuery}
                   onChange={(e) => setOnlineSearchQuery(e.target.value)}
                 />
@@ -1358,12 +1452,67 @@ export function Library({
                 </button>
               </form>
 
+              {/* 💡 批量下載工具列 (有搜尋結果時呈現) */}
+              {onlineResults.length > 0 && (
+                <div className="online-batch-toolbar">
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <button 
+                      type="button" 
+                      className="batch-btn batch-btn-secondary" 
+                      onClick={handleSelectAllOnlineResults}
+                      style={{ fontSize: '0.78rem', padding: '0.3rem 0.6rem' }}
+                    >
+                      {selectedOnlineWorkIds.length === onlineResults.filter(r => !downloadedBooks.some(b => b.workId === r.workId)).length && selectedOnlineWorkIds.length > 0
+                        ? '取消全選'
+                        : '全選未下載'}
+                    </button>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                      已勾選 {selectedOnlineWorkIds.length} 本
+                    </span>
+                  </div>
+
+                  <button 
+                    type="button"
+                    className="batch-btn batch-btn-primary"
+                    disabled={selectedOnlineWorkIds.length === 0}
+                    onClick={() => {
+                      setBatchFolderName(onlineSearchQuery.trim() || '下載經典');
+                      setShowBatchDownloadModal(true);
+                    }}
+                    style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <Download size={14} />
+                    批量下載與建資料夾
+                  </button>
+                </div>
+              )}
+
               <div className="search-results-list">
                 {onlineResults.map((res) => {
                   const isDownloaded = downloadedBooks.some(b => b.workId === res.workId);
+                  const isChecked = selectedOnlineWorkIds.includes(res.workId);
+
                   return (
-                    <div key={res.workId} className="search-result-item">
-                      <div className="result-info">
+                    <div 
+                      key={res.workId} 
+                      className={`search-result-item ${isChecked ? 'selected-for-batch' : ''}`}
+                      onClick={() => !isDownloaded && toggleSelectOnlineWork(res.workId)}
+                      style={{ cursor: isDownloaded ? 'default' : 'pointer' }}
+                    >
+                      {!isDownloaded && (
+                        <div 
+                          className={`batch-checkbox ${isChecked ? 'checked' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSelectOnlineWork(res.workId);
+                          }}
+                          style={{ marginRight: '10px' }}
+                        >
+                          {isChecked && <Check size={12} />}
+                        </div>
+                      )}
+
+                      <div className="result-info" style={{ flexGrow: 1 }}>
                         <span className="result-title">{res.title}</span>
                         <span className="result-meta">
                           {res.workId} · {res.juansCount}卷 · {res.creators} · {res.category}
@@ -1375,7 +1524,14 @@ export function Library({
                           <Check size={15} />
                         </div>
                       ) : (
-                        <button className="download-btn-square" onClick={() => handleDownloadBook(res)} title="下載匯入">
+                        <button 
+                          className="download-btn-square" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownloadBook(res);
+                          }} 
+                          title="單本下載匯入"
+                        >
                           <Download size={15} />
                         </button>
                       )}
@@ -1388,6 +1544,91 @@ export function Library({
                     正在搜尋 CBETA 檢索經典...
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 💡 批量下載與自動資料夾收納確認對話框 */}
+      {showBatchDownloadModal && (
+        <div className="search-dialog-overlay" style={{ zIndex: 1250 }} onClick={() => setShowBatchDownloadModal(false)}>
+          <div className="changelog-dialog-card animate-slide-up" style={{ width: '92%', maxWidth: '380px' }} onClick={e => e.stopPropagation()}>
+            <div className="dialog-header">
+              <h3>批量下載經典收納設定</h3>
+              <button className="icon-button close-btn" onClick={() => setShowBatchDownloadModal(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="dialog-body" style={{ padding: '1.2rem', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+              <div style={{ fontSize: '0.88rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>
+                即將開始下載已勾選的 <strong style={{ color: 'var(--theme-accent)' }}>{selectedOnlineWorkIds.length}</strong> 本經典。
+              </div>
+
+              {/* 是否建立資料夾選項 */}
+              <label className="checkbox-item" style={{ fontSize: '0.88rem', fontWeight: 600 }}>
+                <input 
+                  type="checkbox" 
+                  checked={createBatchFolder} 
+                  onChange={(e) => setCreateBatchFolder(e.target.checked)}
+                />
+                自動建立新資料夾收納經書
+              </label>
+
+              {/* 資料夾名稱輸入框 (預設帶出搜尋關鍵字) */}
+              {createBatchFolder && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>資料夾名稱（自動帶出關鍵字，可修改）：</span>
+                  <input 
+                    type="text" 
+                    className="settings-select"
+                    value={batchFolderName}
+                    onChange={(e) => setBatchFolderName(e.target.value)}
+                    placeholder="請輸入資料夾名稱..."
+                    style={{ fontSize: '0.9rem', padding: '0.6rem 0.8rem' }}
+                  />
+
+                  {/* 顏色選擇點點 */}
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.4rem' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>主題色：</span>
+                    {FOLDER_COLOR_OPTIONS.map(opt => (
+                      <div 
+                        key={`batch-color-${opt.value}`}
+                        onClick={() => setBatchFolderColor(opt.value)}
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          backgroundColor: opt.value,
+                          cursor: 'pointer',
+                          border: batchFolderColor === opt.value ? '2px solid #ffffff' : '1px solid rgba(0,0,0,0.2)',
+                          boxShadow: batchFolderColor === opt.value ? '0 0 0 2px var(--theme-accent)' : 'none',
+                          transition: 'transform 0.15s'
+                        }}
+                        title={opt.name}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="dialog-actions-row" style={{ marginTop: '0.5rem' }}>
+                <button 
+                  type="button" 
+                  className="dialog-btn-cancel"
+                  onClick={() => setShowBatchDownloadModal(false)}
+                >
+                  取消
+                </button>
+                <button 
+                  type="button" 
+                  className="dialog-btn-confirm"
+                  onClick={handleExecuteBatchDownload}
+                  disabled={createBatchFolder && !batchFolderName.trim()}
+                >
+                  開始下載
+                </button>
               </div>
             </div>
           </div>
