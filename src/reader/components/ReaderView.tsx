@@ -829,12 +829,12 @@ export function ReaderView({
 
   const handleHighlightClick = (hl: BookHighlight, e: React.MouseEvent) => {
     e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
+    e.preventDefault();
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setActiveHighlightForDelete(hl);
     setDeleteMenuPosition({
-      top: rect.top + window.scrollY - 45,
-      left: rect.left + window.scrollX + rect.width / 2
+      top: Math.max(10, rect.top - 46),
+      left: rect.left + rect.width / 2
     });
   };
 
@@ -870,14 +870,13 @@ export function ReaderView({
     }
   };
 
-
-
   const handleDeleteHighlight = async () => {
     if (!activeHighlightForDelete) return;
+    const targetHl = activeHighlightForDelete;
+    setActiveHighlightForDelete(null);
+    setDeleteMenuPosition(null);
     try {
-      await deleteHighlight(activeHighlightForDelete.id);
-      setActiveHighlightForDelete(null);
-      setDeleteMenuPosition(null);
+      await deleteHighlight(targetHl.id);
       await loadBookHighlights();
     } catch (err) {
       console.error('Failed to delete highlight:', err);
@@ -1718,31 +1717,36 @@ export function ReaderView({
         <div 
           className="highlight-delete-menu"
           style={{
-            position: 'absolute',
-            top: deleteMenuPosition.top,
-            left: deleteMenuPosition.left,
+            position: 'fixed',
+            top: `${deleteMenuPosition.top}px`,
+            left: `${deleteMenuPosition.left}px`,
             transform: 'translateX(-50%)',
-            zIndex: 1000,
+            zIndex: 3000,
             display: 'flex',
+            alignItems: 'center',
             gap: '6px',
             background: 'var(--reader-bg)',
-            border: '1px solid var(--reader-border)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            border: '1px solid var(--theme-accent-border, var(--reader-border))',
+            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.25)',
             borderRadius: '20px',
-            padding: '4px 12px',
-            alignItems: 'center',
+            padding: '6px 14px',
             cursor: 'pointer',
             fontSize: '0.85rem',
+            fontWeight: 'bold',
             fontFamily: 'var(--font-serif)',
-            color: 'var(--color-wood-700)',
-            animation: 'fadeIn 0.15s ease-out'
-          }}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            color: '#bd3a3a',
+            animation: 'fadeIn 0.15s ease-out',
+            userSelect: 'none',
+            WebkitUserSelect: 'none'
           }}
           onClick={(e) => {
             e.stopPropagation();
+            e.preventDefault();
+            handleDeleteHighlight();
+          }}
+          onTouchEnd={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
             handleDeleteHighlight();
           }}
         >
