@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Plus, Check, AlertCircle, X, Download, BookOpen,
+  Plus, Check, AlertCircle, X, Download,
   Home, Search,
   Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings
 } from 'lucide-react';
@@ -831,11 +831,11 @@ export function Library({
     }
 
     if (currentIndex > targetIndex) {
-      return <Check size={14} style={{ color: 'var(--color-wood-300)' }} />;
+      return <Check size={16} style={{ color: '#2e7d32', strokeWidth: 2.5 }} />;
     } else if (currentProgressStep === targetStep) {
       return <div className="builder-step-icon animate-spin-slow">⏳</div>;
     } else {
-      return <span style={{ opacity: 0.3 }}>{itemIndex}</span>;
+      return <span style={{ opacity: 0.65, fontWeight: 'bold' }}>{itemIndex}</span>;
     }
   };
 
@@ -1709,16 +1709,27 @@ export function Library({
       {/* Builder 進度遮罩 (下載與建置時呈現) */}
       {buildProgress && (
         <div className={`builder-progress-overlay theme-${settings.theme}`}>
+          {/* 1. 圓型圖案 (經典蓮花「淨心閱讀」標誌與旋轉外圈) */}
           <div className="builder-animation-box">
             <div 
               className="builder-outer-ring" 
               style={{ transform: `rotate(${buildProgress.percent * 3.6}deg)`, transition: 'transform 0.2s linear' }}
             />
             <div className={`builder-mandala ${buildProgress.percent === 100 ? 'is-completed' : ''}`}>
-              <BookOpen size={44} />
+              <img 
+                src="/apple-touch-icon.png" 
+                alt="CBETA Reader 淨心閱讀"
+                className="builder-logo-img"
+              />
             </div>
           </div>
 
+          {/* 2. 圓型圖案正下方的「批量下載 / 當前下載訊息」 (粗體、深色、醒目) */}
+          <div className="builder-header-message">
+            {buildProgress.message}
+          </div>
+
+          {/* 3. 詳細建置進度卡片 */}
           <div className="builder-details-card animate-slide-up">
             <div className="builder-title">下載中{loadingDots}</div>
             <div className="builder-progress-bar-wrapper">
@@ -1750,10 +1761,6 @@ export function Library({
                 <span>6. AI 輔助閱讀與語意索引(AI Indexer)</span>
                 <span>{renderStepIcon('ai_index', 6, buildProgress.step)}</span>
               </div>
-            </div>
-
-            <div className="builder-message">
-              {buildProgress.message}
             </div>
           </div>
         </div>
