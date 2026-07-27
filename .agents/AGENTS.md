@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v2.1.0` (App: v1.9.0 / Builder: v2.1.0)
+- **Current Version**: `v2.0.0` (App: v2.0.0 / Builder: v2.1.0)
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -35,10 +35,16 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **v2.0.0** (2026-07-27) [App Only]
+  - 全面配置 PWA 與 iOS「加入主畫面」蓮花經典圖示 (apple-touch-icon 180x180 & 512x512, manifest.json)。
+  - 首頁編輯模式新增經書批量勾選與一鍵「批量移動至資料夾」功能。
+  - 修正編輯模式控制按鈕面板動態最大寬度，解鎖經文與資料夾標題約 78px 水平空間，多顯示 4-5 字再截斷。
+  - 縮短長按判定至 380ms 並加入 10px 微震觸控防誤斷機制；拖曳手把替換為極簡灰色豎條 `|`。
+  - 取消資料夾縮排與經書齊平對齊，並新增 6 種典雅東方主題色選單。
 - **v2.1.0** (2026-07-26) [Builder Only]
   - 優先讀取 CBETA 規範作譯者名稱（`workInfo.creators` + `workInfo.time_dynasty`，例如 `西晉 竺法護`），取代原始雜項 `byline`（如 `西晉 燉煌三藏譯`），使經典資訊與 CBETA 官方權威名稱完全對齊。
   - 徹底解決部分經典缺少「冊別」欄位（如 `T0325` 缺少 `冊別: T12`）的 bug，升級為優先讀取 API `vol` 欄位與 `file` 開頭標籤，確保 100% 經典皆可精確取得對應冊別。
-- **v2.0.0** (2026-07-25)
+- **v2.0.0** (2026-07-25) [Builder Only]
   - 支援印順導師著作中的附圖、圖表與解說段落標籤（`<div class="div-figure">`, `<div class="figure">`, `<figure>`）。
   - 解決如 `Y0003 勝鬘經講記` 「關於一乘」圖表附圖段落因欠缺段落容器識別而被錯判為孤立 `<span>` 導致多行碎裂單字斷行的 bug。
 - **v1.9.0** (2026-07-25)
@@ -50,7 +56,6 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
   - 閱讀器「經典與版權資訊」新增「冊別」與「字數」欄位，排序為：經名 → 譯者 → 經號 → 部類 → 冊別 → 字數。
   - 大藏經經號依 A~Z 26 個字母開頭自動分配 26 套典雅經典封面色系。
   - 優化手機版首頁編輯模式（Edit Mode）版面，限制標題單行省略 (`...`) 並固定單行卡片高度，刪除按鈕改為 `X` 置右，隱藏數值標籤防跑版。
->>>>>>> dev-builder-optimization
 - **v1.7.0** (2026-07-24)
   - 新增完整與輕量資料備份與還原功能（`.json` 匯出匯入，包含劃線重點、離線經文與個人偏好設定）。
   - 修復 `T0412 地藏菩薩本願經` 卷數對齊（由 3 卷修正為官方標準 2 卷：卷上、卷下）。

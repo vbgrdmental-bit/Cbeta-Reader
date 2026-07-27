@@ -497,10 +497,11 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
               {/* 1. 最新一次的版本修改記錄 */}
               <div className="changelog-version-section">
-                <div className="changelog-version-title">Builder: v2.1.0 <span className="changelog-date">(2026-07-26)</span></div>
+                <div className="changelog-version-title">v2.0.0 <span className="changelog-date">(2026-07-27)</span></div>
                 <ul className="changelog-list">
-                  <li>• 優先讀取 CBETA 規範作譯者(如: 西晉 竺法護)。</li>
-                  <li>• 修正經典元資料解析，補齊遺漏的冊別欄位(如: T12)。</li>
+                  <li>• 配置 PWA / iOS「加入主畫面」蓮花經典桌面圖示。</li>
+                  <li>• 新增經書「批量選擇與一鍵移動至資料夾」功能。</li>
+                  <li>• 優化編輯模式自適應寬度、灰色豎條手把、長按靈敏度與 6 色資料夾。</li>
                 </ul>
               </div>
 
@@ -529,6 +530,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               {/* 3. 展開的歷史版本更新紀錄 */}
               {showAllHistory && (
                 <div className="changelog-history-wrapper animate-fade-in">
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">Builder: v2.1.0 <span className="changelog-date">(2026-07-26)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 優先讀取 CBETA 規範作譯者(如: 西晉 竺法護)。</li>
+                      <li>• 修正經典元資料解析，補齊遺漏的冊別欄位(如: T12)。</li>
+                    </ul>
+                  </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">Builder: v2.0.0 <span className="changelog-date">(2026-07-25)</span></div>
                     <ul className="changelog-list">

@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    port: 5188,
+    strictPort: false,
+    host: true,
     proxy: {
       '/api-cbeta': {
         target: 'https://cbdata.dila.edu.tw',
