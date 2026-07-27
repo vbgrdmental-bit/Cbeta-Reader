@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Database, FileText, Upload } from 'lucide-react';
+import { X, Database, FileText, Upload, HelpCircle, RotateCw } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
@@ -467,19 +467,34 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             )}
           </div>
 
-          {/* 5. 版本資訊與說明 */}
+          {/* 5. 版本資訊與說明列 */}
           <div className="settings-version-row">
             <div className="settings-version-info">
               <span>App: v{APP_VERSION}</span>
               <span className="version-divider">|</span>
               <span>Builder: v{BUILDER_VERSION}</span>
+              <button 
+                type="button"
+                className="version-circle-btn version-help-btn"
+                onClick={() => setShowChangelog(true)}
+                title="說明與版本紀錄"
+                aria-label="說明與版本紀錄"
+              >
+                <HelpCircle size={16} />
+              </button>
             </div>
             <button 
               type="button"
-              className="changelog-trigger-btn"
-              onClick={() => setShowChangelog(true)}
+              className="version-circle-btn version-reload-btn"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.reload();
+                }
+              }}
+              title="重新整理網頁（同步最新版本）"
+              aria-label="重新整理網頁"
             >
-              說明
+              <RotateCw size={16} />
             </button>
           </div>
         </div>

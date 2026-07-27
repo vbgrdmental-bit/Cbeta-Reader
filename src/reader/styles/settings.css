@@ -474,6 +474,72 @@ body.theme-ebony .changelog-trigger-btn:hover {
   border-color: var(--color-gold-500);
 }
 
+/* 圓形版本列控制按鈕基礎樣式 */
+.version-circle-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.version-circle-btn:hover {
+  transform: scale(1.08);
+}
+
+.version-circle-btn:active {
+  transform: scale(0.92);
+}
+
+/* 1. 說明按鈕：圓形 / 灰色圖示 / 淺灰色背景 (放置於 Builder 版號右邊) */
+.version-help-btn {
+  background: rgba(140, 140, 140, 0.15);
+  color: var(--text-muted, #666);
+  margin-left: 0.2rem;
+}
+
+.version-help-btn:hover {
+  background: rgba(140, 140, 140, 0.28);
+  color: var(--text-primary);
+}
+
+body.theme-ebony .version-help-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #a1a1aa;
+}
+
+body.theme-ebony .version-help-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+/* 2. 重新整理按鈕：圓形 / 藍色圖示 / 淺藍色背景 (放置於最右邊) */
+.version-reload-btn {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+
+.version-reload-btn:hover {
+  background: rgba(59, 130, 246, 0.22);
+  color: #1d4ed8;
+}
+
+body.theme-ebony .version-reload-btn {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+body.theme-ebony .version-reload-btn:hover {
+  background: rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+}
+
 .changelog-version-title {
   font-family: var(--font-serif);
   font-size: 0.9rem;
