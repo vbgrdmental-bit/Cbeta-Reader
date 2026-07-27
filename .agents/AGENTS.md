@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v2.1.0` (App: v2.1.0 / Builder: v2.3.0)
+- **Current Version**: `v2.2.0` (App: v2.2.0 / Builder: v2.3.0)
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -36,6 +36,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **v2.2.0** (2026-07-28) [App Only]
+  - 閱讀設定新增「| 內文字體」選擇，提供預設(宋/明體)、標楷體、圓體與微軟正黑體 4 種開放系統字型。
+  - 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。
+  - 修復「烏木」模式劃線高對比字體與 iOS Safari 點擊輸入框時觸發自動縮放畫面之跑版問題。
 - **v2.1.0** (2026-07-28) [App Only]
   - 支援線上搜尋「整批勾選經典與一鍵批量下載」。
   - 批量下載自動帶出關鍵字作為資料夾名稱，支援讀者自訂修改。

@@ -1156,11 +1156,26 @@ export function ReaderView({
     );
   }
 
-  // 套用 Reading Settings 對內文左右留白
+  // 💡 套用 Reading Settings 對內文左右留白、字體大小、行高與內文字體
+  const getBodyFontFamily = (fontFamily?: string) => {
+    switch (fontFamily) {
+      case 'kaiti':
+        return '"BiauKai", "Kaiti", "KaiTi_GB2312", "STKaiti", "DFKai-SB", "TW-Kai", "Noto Serif HK", serif';
+      case 'yuanti':
+        return '"STYuanti-TC-Regular", "STYuanti", "DFYuan-Medium", "DFYuan", "Yuanti TC", "STXihei", "Microsoft JhengHei", sans-serif';
+      case 'jhenghei':
+        return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Noto Sans TC", sans-serif';
+      case 'default':
+      default:
+        return 'var(--font-serif)';
+    }
+  };
+
   const paddingStyle = {
     '--reader-padding': `${settings.padding}%`,
     '--reader-font-size': `${settings.fontSize}px`,
-    '--reader-line-height': settings.lineHeight
+    '--reader-line-height': settings.lineHeight,
+    '--reader-body-font': getBodyFontFamily(settings.fontFamily)
   } as React.CSSProperties;
 
   const activeJuan = book.content.juans.find(j => j.juan === currentJuanNum);

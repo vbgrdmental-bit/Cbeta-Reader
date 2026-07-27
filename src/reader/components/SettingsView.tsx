@@ -173,6 +173,67 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             </div>
           </div>
 
+          {/* 💡 2.6 內文字體 (新增，放在「行高與行距」之下、「朗讀速度」之上) */}
+          <div className="settings-section">
+            <div className="settings-section-title">內文字體</div>
+            <div className="visual-options-row">
+              {[
+                { 
+                  id: 'default', 
+                  name: '預設', 
+                  fontFamily: 'var(--font-serif)',
+                  sample: '經' 
+                },
+                { 
+                  id: 'kaiti', 
+                  name: '標楷體', 
+                  fontFamily: '"BiauKai", "Kaiti", "KaiTi_GB2312", "STKaiti", "DFKai-SB", "TW-Kai", "Noto Serif HK", serif',
+                  sample: '經' 
+                },
+                { 
+                  id: 'yuanti', 
+                  name: '圓體', 
+                  fontFamily: '"STYuanti-TC-Regular", "STYuanti", "DFYuan-Medium", "DFYuan", "Yuanti TC", "STXihei", "Microsoft JhengHei", sans-serif',
+                  sample: '經' 
+                },
+                { 
+                  id: 'jhenghei', 
+                  name: '微軟正黑體', 
+                  fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Noto Sans TC", sans-serif',
+                  sample: '經' 
+                }
+              ].map((fontItem) => {
+                const isActive = (settings.fontFamily || 'default') === fontItem.id;
+                return (
+                  <div
+                    key={`fontFamily-${fontItem.id}`}
+                    className={`visual-option-card ${isActive ? 'active' : ''}`}
+                    onClick={() => onSave({ ...settings, fontFamily: fontItem.id as any })}
+                  >
+                    <div 
+                      style={{ 
+                        fontFamily: fontItem.fontFamily, 
+                        fontSize: '1.35rem',
+                        fontWeight: fontItem.id === 'default' ? '600' : 'normal',
+                        lineHeight: 1,
+                        height: '28px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'var(--text-primary)'
+                      }}
+                    >
+                      {fontItem.sample}
+                    </div>
+                    <span className="visual-option-label" style={{ fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+                      {fontItem.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* 3. 朗讀速度 (第三項，圖示按鈕) */}
           <div className="settings-section">
             <div className="settings-section-title">朗讀速度</div>
@@ -528,15 +589,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   📱 App 閱讀器介面更新
                 </div>
 
-                {/* 最新 App 版本 (v2.1.0) 直接顯示 */}
+                {/* 最新 App 版本 (v2.2.0) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title">
-                    App: v2.1.0 <span className="changelog-date">(2026-07-28)</span>
+                    App: v2.2.0 <span className="changelog-date">(2026-07-28)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 支援線上搜尋「整批勾選經典與一鍵批量下載」。</li>
-                    <li>• 批量下載自動帶出關鍵字作為資料夾名稱，支援自訂修改。</li>
-                    <li>• 新增「放入已有資料夾」選項，輕鬆收納新經書至指定資料夾。</li>
+                    <li>• 閱讀設定新增「| 內文字體」選擇，提供預設、標楷體、圓體與微軟正黑體 4 種字型。</li>
+                    <li>• 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。</li>
+                    <li>• 修復「烏木」模式劃線高對比字體與 iOS 點擊輸入框自動放大防跑版機制。</li>
                   </ul>
                 </div>
 

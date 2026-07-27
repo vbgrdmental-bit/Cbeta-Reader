@@ -120,6 +120,7 @@ export interface AppSettings {
   id: string;
   theme: 'ivory' | 'parchment' | 'comfort' | 'ebony';
   fontSize: number; // px
+  fontFamily?: 'default' | 'kaiti' | 'yuanti' | 'jhenghei'; // 內文字體選項：預設, 標楷體, 圓體, 微軟正黑體
   lineHeight: number; // 比例，如 1.8, 2.0
   padding: number; // 左右留白 %, 如 5, 10, 15, 20
   autoHideToolbar: boolean;
@@ -142,6 +143,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   id: 'current',
   theme: 'ivory',
   fontSize: 22,
+  fontFamily: 'default',
   lineHeight: 2.0,
   padding: 10,
   autoHideToolbar: true,
