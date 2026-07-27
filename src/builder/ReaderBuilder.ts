@@ -236,10 +236,38 @@ export class ReaderBuilder {
       NodeFilter.SHOW_ELEMENT
     );
 
+    const isFootnoteContainer = (element: HTMLElement): boolean => {
+      let parent: HTMLElement | null = element;
+      while (parent && parent.tagName !== 'BODY') {
+        const id = parent.id || '';
+        const className = typeof parent.className === 'string' ? parent.className : '';
+        
+        if (
+          id === 'back' || 
+          id === 'footnotes' ||
+          id.startsWith('note') || 
+          id.startsWith('cb_note') ||
+          className.includes('footnote') ||
+          className.includes('note-text')
+        ) {
+          return true;
+        }
+        parent = parent.parentElement;
+      }
+      return false;
+    };
+
     let currentNode = iterator.nextNode();
     while (currentNode) {
       const el = currentNode as HTMLElement;
       const tagName = el.tagName.toUpperCase();
+
+      // 💡 跳過頁尾/腳註區塊 (div#back, .footnote, [id^="cb_note"]) 內部的所有 DOM 元素
+      // 防範腳註段落 (例如 <p>參見《印順導師著作總目...》</p>) 被誤判為經文正文段落
+      if (isFootnoteContainer(el)) {
+        currentNode = iterator.nextNode();
+        continue;
+      }
 
       // 1. 遇到行頭標籤，更新當前最鄰近的行號
       if (tagName === 'SPAN' && (el.classList.contains('lb') || el.id.includes('p') || el.id.includes('lb'))) {

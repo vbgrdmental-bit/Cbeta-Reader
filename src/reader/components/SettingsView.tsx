@@ -497,10 +497,10 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
               {/* 1. 最新一次的版本修改記錄 */}
               <div className="changelog-version-section">
-                <div className="changelog-version-title">Builder: v2.2.0 <span className="changelog-date">(2026-07-28)</span></div>
+                <div className="changelog-version-title">Builder: v2.3.0 <span className="changelog-date">(2026-07-28)</span></div>
                 <ul className="changelog-list">
+                  <li>• 徹底過濾頁尾與腳註區塊(div#back)，防止腳註出處文字混入正文尾端。</li>
                   <li>• 支援 CBETA 異體字與組字標籤(如: [言*(狂-王+主)]) 完整解析渲染。</li>
-                  <li>• 修正「一　」、「二　」等節號與項目縮排全形空格遭清除問題。</li>
                 </ul>
               </div>
 
@@ -529,6 +529,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               {/* 3. 展開的歷史版本更新紀錄 */}
               {showAllHistory && (
                 <div className="changelog-history-wrapper animate-fade-in">
+                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
+                    <div className="changelog-version-title">Builder: v2.2.0 <span className="changelog-date">(2026-07-28)</span></div>
+                    <ul className="changelog-list">
+                      <li>• 支援 CBETA 異體字與組字標籤(如: [言*(狂-王+主)]) 完整解析渲染。</li>
+                      <li>• 修正「一　」、「二　」等節號與項目縮排全形空格遭清除問題。</li>
+                    </ul>
+                  </div>
                   <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
                     <div className="changelog-version-title">v2.0.0 <span className="changelog-date">(2026-07-27)</span></div>
                     <ul className="changelog-list">
