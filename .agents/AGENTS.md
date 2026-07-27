@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v2.3.0` (App: v2.0.0 / Builder: v2.3.0)
+- **Current Version**: `v2.1.0` (App: v2.1.0 / Builder: v2.3.0)
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -31,10 +31,15 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
   - 向 CBETA 請求新經文時一律帶有 `cache: 'reload'` 與時間戳記，確保必定取得 CBETA 最新校勘版本。
 - **對外 App 說明對話框原則 (SettingsView.tsx)**：
   - 對外 UI 的版本更新紀錄一律為**精簡摘要**，每次改版**不超過 3 項**，每項**不超過 50 字**。
+  - 說明對話框（點選「？」）採用 **獨立分區（上方 App / 下方 Builder）** 呈現，最新版本直接顯示，其餘歷程依「+ 更多修改歷程」(置左) 收折呈現。
   - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog
 
+- **v2.1.0** (2026-07-28) [App Only]
+  - 支援線上搜尋「整批勾選經典與一鍵批量下載」。
+  - 批量下載自動帶出關鍵字作為資料夾名稱，支援讀者自訂修改。
+  - 新增「放入已有資料夾」選項，輕鬆收納新下載經書至指定資料夾。
 - **v2.3.0** (2026-07-28) [Builder Only]
   - 全面過濾 CBETA 頁尾與腳註備註容器（`<div id="back">` / `<div class="footnotes">` / `[id^="cb_note"]`），防止腳註中的出版資訊與書目備註（如「參見《印順導師著作總目．序》...」）被誤判為正文段落出現在卷末。
 - **v2.2.0** (2026-07-28) [Builder Only]

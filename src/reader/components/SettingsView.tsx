@@ -13,7 +13,8 @@ interface SettingsViewProps {
 
 export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   const [showChangelog, setShowChangelog] = useState(false);
-  const [showAllHistory, setShowAllHistory] = useState(false);
+  const [showAppHistory, setShowAppHistory] = useState(false);
+  const [showBuilderHistory, setShowBuilderHistory] = useState(false);
   const [backupMsg, setBackupMsg] = useState('');
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
@@ -509,146 +510,219 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 <X size={16} />
               </button>
             </div>
-            <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
-              {/* 1. 最新一次的版本修改記錄 */}
-              <div className="changelog-version-section">
-                <div className="changelog-version-title">Builder: v2.3.0 <span className="changelog-date">(2026-07-28)</span></div>
-                <ul className="changelog-list">
-                  <li>• 徹底過濾頁尾與腳註區塊(div#back)，防止腳註出處文字混入正文尾端。</li>
-                  <li>• 支援 CBETA 異體字與組字標籤(如: [言*(狂-王+主)]) 完整解析渲染。</li>
-                </ul>
-              </div>
-
-              {/* 2. 小灰字切換按鈕：+ 更多版本修改歷程 */}
-              <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                <button 
-                  type="button"
-                  onClick={() => setShowAllHistory(prev => !prev)}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--reader-text-muted, #888)',
-                    fontSize: '0.82rem',
-                    cursor: 'pointer',
-                    padding: '0.3rem 0.6rem',
-                    opacity: 0.8,
-                    transition: 'opacity 0.2s'
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={e => e.currentTarget.style.opacity = '0.8'}
-                >
-                  {showAllHistory ? '− 收折歷程' : '+ 更多版本修改歷程'}
-                </button>
-              </div>
-
-              {/* 3. 展開的歷史版本更新紀錄 */}
-              {showAllHistory && (
-                <div className="changelog-history-wrapper animate-fade-in">
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">Builder: v2.2.0 <span className="changelog-date">(2026-07-28)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 支援 CBETA 異體字與組字標籤(如: [言*(狂-王+主)]) 完整解析渲染。</li>
-                      <li>• 修正「一　」、「二　」等節號與項目縮排全形空格遭清除問題。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v2.0.0 <span className="changelog-date">(2026-07-27)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 配置 PWA / iOS「加入主畫面」蓮花經典桌面圖示。</li>
-                      <li>• 新增經書「批量選擇與一鍵移動至資料夾」功能。</li>
-                      <li>• 優化編輯模式自適應寬度、灰色豎條手把、長按靈敏度與 6 色資料夾。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">Builder: v2.1.0 <span className="changelog-date">(2026-07-26)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 優先讀取 CBETA 規範作譯者(如: 西晉 竺法護)。</li>
-                      <li>• 修正經典元資料解析，補齊遺漏的冊別欄位(如: T12)。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">Builder: v2.0.0 <span className="changelog-date">(2026-07-25)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 支援印順導師著述附圖與圖表段落(div-figure)解析。</li>
-                      <li>• 解決 Y0003 等著作中圖表段落文字碎裂斷行問題。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.9.0 <span className="changelog-date">(2026-07-25)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 修正 CBETA 段落分割算法防止文字被拆散為孤立行。</li>
-                      <li>• 解決出現多餘空格的問題。</li>
-                      <li>• 微調 CC0006 清單排版呈現 (•)。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.8.0 <span className="changelog-date">(2026-07-25)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 縮減偈頌體上下間距與行高。</li>
-                      <li>• 設計大藏經經號 A~Z 26 封面色系。</li>
-                      <li>• 提升手機版首頁編輯模式版面並限制標題單卡片高度。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.7.0 <span className="changelog-date">(2026-07-24)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 新增書籍(含劃線重點)匯出匯入功能。</li>
-                      <li>• 修復 T0412 卷數。</li>
-                      <li>• 解決已下載書籍同步的問題。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 舊經文支援背景無縫修復升級，完全保留劃線與筆記。</li>
-                      <li>• 刪除經文時自動抹除舊快取，與 CBETA 即時同步。</li>
-                      <li>• 強化原始經文圓體粗體跨平台對比與附文目次結構。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.5.0 <span className="changelog-date">(2026-07-23)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 精確識別論典與講記中的原始經文引用段落。</li>
-                      <li>• 原始經文採用圓體粗體渲染，與解說正文優雅區隔。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.4.0 <span className="changelog-date">(2026-07-23)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 全面升級目次樹狀多層級解析算法。</li>
-                      <li>• 側邊欄目錄升級為可展開折疊的多層級選單。</li>
-                      <li>• 新增畫重點筆刷按鈕與標註模式。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.3.0 <span className="changelog-date">(2026-07-21)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 優化 Y 系列經目次二層簡化與無卷書籍去卷化。</li>
-                      <li>• 修復經文列表層級縮排與置左偈頌排版。</li>
-                      <li>• 串接本地檢索無結果時一鍵線上檢索 CBETA。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.2.0 <span className="changelog-date">(2026-07-21)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 建立開發分支與 Builder v1.2.0 版本控制規範。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.1.0 <span className="changelog-date">(2026-07-20)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 下載後保持線上搜尋對話框開啟以利批次操作。</li>
-                      <li>• 統一閱讀頁面頭部與控制列的高度為 56px。</li>
-                    </ul>
-                  </div>
-                  <div className="changelog-version-section" style={{ marginTop: '1.2rem' }}>
-                    <div className="changelog-version-title">v1.0.0 <span className="changelog-date">(2026-07-15)</span></div>
-                    <ul className="changelog-list">
-                      <li>• 釋出初始核心經典解析、導航與檢索功能。</li>
-                    </ul>
-                  </div>
+            <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.2rem' }}>
+              {/* 📱 第一部分：App 閱讀器介面更新 */}
+              <div className="changelog-group-section" style={{ marginBottom: '1.8rem' }}>
+                <div style={{
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  color: 'var(--theme-accent, #8c4b27)',
+                  borderBottom: '1.5px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
+                  paddingBottom: '0.4rem',
+                  marginBottom: '0.9rem',
+                  fontFamily: 'var(--font-serif)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}>
+                  📱 App 閱讀器介面更新
                 </div>
-              )}
+
+                {/* 最新 App 版本 (v2.1.0) 直接顯示 */}
+                <div className="changelog-version-section">
+                  <div className="changelog-version-title">
+                    App: v2.1.0 <span className="changelog-date">(2026-07-28)</span>
+                  </div>
+                  <ul className="changelog-list">
+                    <li>• 支援線上搜尋「整批勾選經典與一鍵批量下載」。</li>
+                    <li>• 批量下載自動帶出關鍵字作為資料夾名稱，支援自訂修改。</li>
+                    <li>• 新增「放入已有資料夾」選項，輕鬆收納新經書至指定資料夾。</li>
+                  </ul>
+                </div>
+
+                {/* 置左按鈕：+ 更多 App 修改歷程 */}
+                <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
+                  <button 
+                    type="button"
+                    onClick={() => setShowAppHistory(prev => !prev)}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--reader-text-muted, #777)',
+                      fontSize: '0.82rem',
+                      cursor: 'pointer',
+                      padding: '0.2rem 0',
+                      opacity: 0.85,
+                      fontWeight: 500,
+                      transition: 'opacity 0.2s'
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                    onMouseLeave={e => e.currentTarget.style.opacity = '0.85'}
+                  >
+                    {showAppHistory ? '− 收起 App 歷史紀錄' : '+ 更多 App 修改歷程'}
+                  </button>
+                </div>
+
+                {/* 展開的 App 歷史版本 */}
+                {showAppHistory && (
+                  <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v2.0.0 <span className="changelog-date">(2026-07-27)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 配置 PWA / iOS「加入主畫面」蓮花經典桌面圖示。</li>
+                        <li>• 首頁新增經書批量勾選與一鍵「批量移動至資料夾」功能。</li>
+                        <li>• 優化編輯模式卡片寬度、灰色豎條手把與 6 色主題資料夾。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v1.8.0 <span className="changelog-date">(2026-07-25)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 縮減偈頌體（韻文）段落上下間距與行高，閱讀更緊湊。</li>
+                        <li>• 大藏經經號依 A~Z 自動分配 26 套典雅經典封面色系。</li>
+                        <li>• 優化手機版編輯模式排版，限制標題單行省略。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v1.7.0 <span className="changelog-date">(2026-07-24)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 新增完整與輕量資料備份與還原功能（.json 匯出匯入）。</li>
+                        <li>• 升級雙向導航防錯機制，解決目次跳轉定位問題。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 強化原始經文「圓體粗體」跨平台高對比排版。</li>
+                        <li>• 隱藏閱讀器底部百分比進度，專注目前品名與閱讀狀態。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v1.4.0 <span className="changelog-date">(2026-07-23)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 閱讀器側邊欄目錄升級為可展開/折疊的多層級樹狀選單。</li>
+                        <li>• 新增劃線重點筆刷按鈕與個人劃線標註功能。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v1.1.0 <span className="changelog-date">(2026-07-20)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 下載後保持線上搜尋對話框開啟，便利連續下載操作。</li>
+                        <li>• 統一閱讀頁面頂部控制列高度為 56px 視覺基準。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v1.0.0 <span className="changelog-date">(2026-07-15)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 釋出初始核心經典閱讀、搜尋與劃線標籤功能。</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* ⚙️ 第二部分：Builder 經文解析引擎更新 */}
+              <div className="changelog-group-section" style={{ marginBottom: '1.5rem' }}>
+                <div style={{
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  color: 'var(--theme-accent, #8c4b27)',
+                  borderBottom: '1.5px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
+                  paddingBottom: '0.4rem',
+                  marginBottom: '0.9rem',
+                  fontFamily: 'var(--font-serif)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}>
+                  ⚙️ Builder 經文解析引擎更新
+                </div>
+
+                {/* 最新 Builder 版本 (v2.3.0) 直接顯示 */}
+                <div className="changelog-version-section">
+                  <div className="changelog-version-title">
+                    Builder: v2.3.0 <span className="changelog-date">(2026-07-28)</span>
+                  </div>
+                  <ul className="changelog-list">
+                    <li>• 全面過濾 CBETA 頁尾與腳註容器（div#back / footnotes），防止腳註出版資訊混入正文卷末。</li>
+                  </ul>
+                </div>
+
+                {/* 置左按鈕：+ 更多 Builder 修改歷程 */}
+                <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
+                  <button 
+                    type="button"
+                    onClick={() => setShowBuilderHistory(prev => !prev)}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--reader-text-muted, #777)',
+                      fontSize: '0.82rem',
+                      cursor: 'pointer',
+                      padding: '0.2rem 0',
+                      opacity: 0.85,
+                      fontWeight: 500,
+                      transition: 'opacity 0.2s'
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                    onMouseLeave={e => e.currentTarget.style.opacity = '0.85'}
+                  >
+                    {showBuilderHistory ? '− 收起 Builder 歷史紀錄' : '+ 更多 Builder 修改歷程'}
+                  </button>
+                </div>
+
+                {/* 展開的 Builder 歷史版本 */}
+                {showBuilderHistory && (
+                  <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.2.0 <span className="changelog-date">(2026-07-28)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 完整保留 CBETA 異體字與組字標籤（如: [言*(狂-王+主)]），還原缺字表達。</li>
+                        <li>• 修正 CJK 空格清理算法，保留「一　」、「二　」等節號縮排全形空格。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.1.0 <span className="changelog-date">(2026-07-26)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 優先讀取 CBETA 規範作譯者名稱（如: 西晉 竺法護），對齊官方名稱。</li>
+                        <li>• 升級冊別解析算法，補齊少數經典遺漏的冊別欄位（如: T12）。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.0.0 <span className="changelog-date">(2026-07-25)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 支援印順導師著作附圖與圖表段落（div-figure）解析。</li>
+                        <li>• 解決 Y0003 勝鬘經講記等圖表段落單字碎裂斷行問題。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v1.9.0 <span className="changelog-date">(2026-07-25)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 修正 CBETA 清單與列表標籤（ul/li）段落分割算法，防止文字被拆散。</li>
+                        <li>• 徹底消除紙本折行導致的多餘空格，還原 CC0006 清單縮排與 bullet (•)。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v1.5.0 <span className="changelog-date">(2026-07-23)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 精確解析論典與講記中的原始經文引用（div-orig / p.bold）並標註 isOrig。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v1.3.0 <span className="changelog-date">(2026-07-21)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 印順導師著作（Y系列）目次結構二層優化與無卷書籍去卷化適應。</li>
+                        <li>• 偈頌體置左左縮排排版優化。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v1.2.0 <span className="changelog-date">(2026-07-21)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 建立 Builder 獨立版號與無縫背景升級修復機制（保留劃線與筆記）。</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* 4. CBETA 與 CBETA Reader 簡介與感言區塊 (隔一條線，小字呈現) */}
               <div style={{ marginTop: '1.5rem', paddingTop: '1.2rem', borderTop: '1px dashed var(--reader-border, rgba(0,0,0,0.15))' }}>
