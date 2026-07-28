@@ -133,8 +133,8 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 },
                 { 
                   id: 'kaiti', 
-                  name: '標楷體', 
-                  fontFamily: '"Kaiti TC", "STKaiti", "Kaiti SC", "LXGW WenKai TC", "BiauKai", "DFKai-SB", "KaiTi", "TW-Kai", serif',
+                  name: '全字庫正楷體', 
+                  fontFamily: '"TW-Kai", "TW-Kai-98", "TW-Kai-Plus", "CNS11643 TrueType", "Kaiti TC", "STKaiti", "Kaiti SC", "LXGW WenKai TC", "BiauKai", "DFKai-SB", "KaiTi", serif',
                   sample: '永' 
                 },
                 { 
@@ -593,7 +593,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     App: v2.2.0 <span className="changelog-date">(2026-07-28)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀設定新增「| 內文字體」選擇，提供預設、標楷體、微軟正黑體與芫荽體 4 種字型（例字：永）。</li>
+                    <li>• 閱讀設定新增「| 內文字體」選擇，提供預設(宋/明體)、全字庫正楷體(國發會開放字型)、微軟正黑體與芫荽體 4 種字型（例字：永）。</li>
                     <li>• 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。</li>
                     <li>• 修復「烏木」模式劃線高對比字體與 iOS 點擊輸入框自動放大防跑版機制。</li>
                   </ul>
