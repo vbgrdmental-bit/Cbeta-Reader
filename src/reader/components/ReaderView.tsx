@@ -1159,7 +1159,7 @@ export function ReaderView({
   const getBodyFontFamily = (fontFamily?: string) => {
     switch (fontFamily) {
       case 'kaiti':
-        return '"BiauKai", "Kaiti", "KaiTi_GB2312", "STKaiti", "DFKai-SB", "TW-Kai", "Noto Serif HK", serif';
+        return '"Kaiti TC", "STKaiti", "Kaiti SC", "LXGW WenKai TC", "BiauKai", "DFKai-SB", "KaiTi", "TW-Kai", serif';
       case 'jhenghei':
         return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Noto Sans TC", sans-serif';
       case 'iansui':
