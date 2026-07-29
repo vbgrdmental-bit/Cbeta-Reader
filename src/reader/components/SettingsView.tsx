@@ -132,12 +132,6 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   sample: '永' 
                 },
                 { 
-                  id: 'wenkai', 
-                  name: '霞鶖文楷', 
-                  fontFamily: '"LXGW WenKai TC", "LXGW WenKai", "Klee One", serif',
-                  sample: '永' 
-                },
-                { 
                   id: 'jhenghei', 
                   name: '正黑體', 
                   fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", sans-serif',
@@ -148,10 +142,16 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   name: '芫荽體', 
                   fontFamily: '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", serif',
                   sample: '永' 
+                },
+                { 
+                  id: 'iansui-zy', 
+                  name: '注音芫荽體', 
+                  fontFamily: '"Iansui ZY", "Iansui-ZY", "Bopomofo Iansui", "Iansui", "Klee One", serif',
+                  sample: '永' 
                 }
               ].map((fontItem) => {
                 const rawFont = settings.fontFamily || 'default';
-                const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'kaiti') ? 'wenkai' : rawFont;
+                const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'kaiti' || rawFont === 'wenkai') ? 'iansui' : rawFont;
                 const isActive = currentFont === fontItem.id;
                 return (
                   <div
@@ -600,7 +600,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     App: v2.2.0 <span className="changelog-date">(2026-07-28)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、霞鶖文楷、正黑體與芫荽體 4 種開放字型（例字：永）。</li>
+                    <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與注音芫荽體 4 種開放字型（例字：永）。</li>
                     <li>• 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。</li>
                     <li>• 修復「烏木」模式劃線高對比字體與 iOS 點擊輸入框自動放大防跑版機制。</li>
                   </ul>
