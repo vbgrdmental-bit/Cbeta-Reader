@@ -132,15 +132,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   sample: '永' 
                 },
                 { 
-                  id: 'fangsong', 
-                  name: '仿宋體', 
-                  fontFamily: '"CWTeXFangSong", "CWTeX FangSong", "FangSong", "FangSong_GB2312", "STFangsong", "FangSong TC", "SimFang", "Noto Serif TC", serif',
+                  id: 'yuanti', 
+                  name: '圓體', 
+                  fontFamily: '"STYuanti-TC-Regular", "STYuanti", "Yuanti TC", "DFYuan-Medium", "DFYuan", "STXihei", "PingFang TC", "Microsoft JhengHei", sans-serif',
                   sample: '永' 
                 },
                 { 
                   id: 'jhenghei', 
-                  name: '微軟正黑體', 
-                  fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Noto Sans TC", sans-serif',
+                  name: '黑體', 
+                  fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", sans-serif',
                   sample: '永' 
                 },
                 { 
@@ -151,7 +151,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 }
               ].map((fontItem) => {
                 const rawFont = settings.fontFamily || 'default';
-                const currentFont = rawFont === 'yuanti' ? 'iansui' : rawFont === 'kaiti' ? 'fangsong' : rawFont;
+                const currentFont = (rawFont === 'fangsong' || rawFont === 'kaiti') ? 'yuanti' : rawFont;
                 const isActive = currentFont === fontItem.id;
                 return (
                   <div
@@ -600,7 +600,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     App: v2.2.0 <span className="changelog-date">(2026-07-28)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀設定新增「| 內文字體」選擇，提供預設(宋/明體)、仿宋體(典雅宋體)、微軟正黑體與芫荽體 4 種開放字型（例字：永）。</li>
+                    <li>• 閱讀設定新增「| 內文字體」選擇，提供預設(宋/明體)、圓體(典雅圓體)、黑體與芫荽體 4 種開放字型（例字：永）。</li>
                     <li>• 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。</li>
                     <li>• 修復「烏木」模式劃線高對比字體與 iOS 點擊輸入框自動放大防跑版機制。</li>
                   </ul>
