@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Database, FileText, Upload, HelpCircle, RotateCw } from 'lucide-react';
+import { X, Database, FileText, Upload, HelpCircle, RotateCw, Archive, Trash2, HardDrive, CheckCircle2 } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
 import { getStorageStats, clearHttpCacheStorage, compressAllBooks } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
@@ -548,42 +548,147 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           {/* 8. 儲存空間與全集壓縮管理 */}
           <div className="settings-section">
             <div className="settings-section-title">儲存空間與全集壓縮管理</div>
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary, #666)', marginBottom: '0.6rem', lineHeight: '1.4' }}>
-              {storageStats ? (
-                <div>
-                  目前已用容量：<strong style={{ color: 'var(--text-main, #333)' }}>{storageStats.formattedUsed}</strong> (離線經書 {storageStats.bookCount} 本)
-                  {storageStats.formattedQuota && <span style={{ marginLeft: '0.4rem', opacity: 0.8 }}>(裝置總容量剩餘: {storageStats.formattedQuota})</span>}
+
+            {/* 3個方框卡片 (比照資料備份與還原) */}
+            <div className="visual-options-row">
+              {/* 第1個: 一鍵壓縮 */}
+              <div 
+                className="visual-option-card"
+                onClick={() => !isCompressing && handleCompressAll()}
+                style={{
+                  borderColor: isCompressing ? undefined : 'rgba(59, 130, 246, 0.35)',
+                  backgroundColor: 'rgba(59, 130, 246, 0.04)',
+                  opacity: isCompressing ? 0.6 : 1,
+                  padding: '0.7rem 0.3rem',
+                  cursor: isCompressing ? 'default' : 'pointer'
+                }}
+              >
+                <div 
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#2563eb'
+                  }}
+                >
+                  <Archive size={16} />
                 </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#2563eb', fontWeight: 700 }}>
+                    {isCompressing ? '壓縮中...' : '一鍵壓縮'}
+                  </span>
+                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                    高比例節省容量
+                  </span>
+                </div>
+              </div>
+
+              {/* 第2個: 清理快取 */}
+              <div
+                className="visual-option-card"
+                onClick={handleClearCache}
+                style={{
+                  borderColor: 'rgba(16, 185, 129, 0.35)',
+                  backgroundColor: 'rgba(16, 185, 129, 0.04)',
+                  padding: '0.7rem 0.3rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <div 
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#059669'
+                  }}
+                >
+                  <Trash2 size={16} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#059669', fontWeight: 700 }}>
+                    清理快取
+                  </span>
+                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                    釋放 HTTP 暫存
+                  </span>
+                </div>
+              </div>
+
+              {/* 第3個: 容量統計 */}
+              <div
+                className="visual-option-card"
+                onClick={() => getStorageStats().then(setStorageStats)}
+                style={{
+                  borderColor: 'rgba(245, 158, 11, 0.35)',
+                  backgroundColor: 'rgba(245, 158, 11, 0.04)',
+                  padding: '0.7rem 0.3rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <div 
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#d97706'
+                  }}
+                >
+                  <HardDrive size={16} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#d97706', fontWeight: 700 }}>
+                    容量統計
+                  </span>
+                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                    點擊更新估算
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 一條分隔線 */}
+            <div style={{ height: '1px', backgroundColor: 'var(--reader-border, rgba(0,0,0,0.08))', margin: '0.8rem 0' }} />
+
+            {/* 目前共 X 本書 / 已用容量 Y MB */}
+            <div style={{ textAlign: 'center', fontSize: '0.84rem', color: 'var(--text-main, #333)', fontWeight: 600 }}>
+              {storageStats ? (
+                <span>目前共 {storageStats.bookCount} 本書 / 已用容量 {storageStats.formattedUsed}</span>
               ) : (
-                <div>計算儲存空間中...</div>
+                <span>計算儲存空間中...</span>
               )}
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                className="visual-option-card"
-                style={{ flex: '1 1 140px', padding: '0.5rem 0.7rem', cursor: 'pointer', textAlign: 'center', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}
-                onClick={handleCompressAll}
-                disabled={isCompressing}
-              >
-                <span>📦</span>
-                <span>{isCompressing ? '壓縮優化中...' : '一鍵壓縮輕量化庫存'}</span>
-              </button>
-              <button
-                type="button"
-                className="visual-option-card"
-                style={{ flex: '1 1 140px', padding: '0.5rem 0.7rem', cursor: 'pointer', textAlign: 'center', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}
-                onClick={handleClearCache}
-              >
-                <span>🧹</span>
-                <span>清理 HTTP 網路快取</span>
-              </button>
-            </div>
-
+            {/* 最下面提示訊息：綠色圓圈圈打勾勾(底為淡綠色) */}
             {storageMsg && (
-              <div style={{ fontSize: '0.78rem', color: 'var(--accent-color, #2b6cb0)', marginTop: '0.4rem', textAlign: 'center' }}>
-                {storageMsg}
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  fontSize: '0.8rem', 
+                  color: '#065f46', 
+                  backgroundColor: 'rgba(16, 185, 129, 0.12)', 
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  padding: '0.45rem 0.8rem', 
+                  borderRadius: '20px', 
+                  marginTop: '0.6rem' 
+                }}
+              >
+                <CheckCircle2 size={16} style={{ color: '#10b981', flexShrink: 0 }} />
+                <span>{storageMsg}</span>
               </div>
             )}
           </div>
