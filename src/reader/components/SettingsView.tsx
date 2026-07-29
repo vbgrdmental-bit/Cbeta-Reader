@@ -672,15 +672,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   📱 App 閱讀器介面更新
                 </div>
 
-                {/* 最新 App 版本 (v2.2.0) 直接顯示 */}
+                {/* 最新 App 版本 (v2.3.0) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title">
-                    App: v2.2.0 <span className="changelog-date">(2026-07-28)</span>
+                    App: v2.3.0 <span className="changelog-date">(2026-07-29)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型（例字：永）。</li>
-                    <li>• 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。</li>
-                    <li>• 修復「烏木」模式劃線高對比字體與 iOS 點擊輸入框自動放大防跑版機制。</li>
+                    <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型。</li>
+                    <li>• 新增「儲存空間與全集壓縮管理」，支援高動態 Gzip 壓縮，全集經文節省 80% 本地容量。</li>
+                    <li>• 新增一鍵「清理 HTTP 網路快取」與動態容量儀表板，輕鬆釋放手機暫存空間。</li>
                   </ul>
                 </div>
 
@@ -710,6 +710,21 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v2.2.0 <span className="changelog-date">(2026-07-28)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型。</li>
+                        <li>• 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。</li>
+                        <li>• 修復「烏木」模式劃線高對比字體與 iOS 點擊輸入框自動放大防跑版機制。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v2.1.0 <span className="changelog-date">(2026-07-28)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 支援線上搜尋「整批勾選經典與一鍵批量下載」。</li>
+                        <li>• 批量下載自動帶出關鍵字作為資料夾名稱，支援自訂修改。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v2.0.0 <span className="changelog-date">(2026-07-27)</span></div>
                       <ul className="changelog-list">
