@@ -43,7 +43,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
     try {
       setIsExporting(true);
       await exportUserData({ includeBooks });
-      setBackupMsg(includeBooks ? '已成功下載完整備份（含經文、劃線與設定）！' : '已成功下載劃線與偏好設定備份！');
+      setBackupMsg('');
     } catch (err: any) {
       setBackupMsg('匯出失敗：' + (err.message || '未知錯誤'));
     } finally {
@@ -774,7 +774,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ color: 'var(--text-muted, #666)' }}>預計備份容量：</span>
-                    <strong style={{ color: 'var(--text-main, #222)' }}>共 {storageStats ? storageStats.formattedUsed : '0 MB'} <span style={{ fontSize: '0.72rem', fontWeight: 400, color: '#777' }}>(含劃重點與閱讀設定)</span></strong>
+                    <strong style={{ color: 'var(--text-main, #222)' }}>共 {storageStats ? storageStats.formattedUsed : '0 MB'}</strong>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ color: 'var(--text-muted, #666)' }}>預計備份時間：</span>
