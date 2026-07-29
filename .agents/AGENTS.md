@@ -37,7 +37,7 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 ### Version History / Changelog
 
 - **v2.2.0** (2026-07-28) [App Only]
-  - 閱讀設定新增「| 內文字體」選擇，提供預設(宋/明體)、教育部標準楷書(開放字型)、微軟正黑體與芫荽體 4 種開放字型（例字：永）。
+  - 閱讀設定新增「| 內文字體」選擇，提供預設(宋/明體)、楷體(iOS內建/標楷體)、微軟正黑體與芫荽體 4 種開放字型（例字：永）。
   - 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。
   - 修復「烏木」模式劃線高對比字體與 iOS Safari 點擊輸入框時觸發自動縮放畫面之跑版問題。
 - **v2.1.0** (2026-07-28) [App Only]
