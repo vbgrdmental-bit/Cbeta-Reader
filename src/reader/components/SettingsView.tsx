@@ -134,7 +134,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 { 
                   id: 'kaiti', 
                   name: '楷體', 
-                  fontFamily: '"Kaiti SC", "Kaiti TC", "STKaiti", "Kai", "BiauKai", "DFKai-SB", "KaiTi", "TW-Kai", serif',
+                  fontFamily: '"LXGW WenKai TC", "Kaiti TC", "Kaiti SC", "STKaiti", "BiauKai", "DFKai-SB", "KaiTi", "TW-Kai", serif',
                   sample: '永' 
                 },
                 { 
