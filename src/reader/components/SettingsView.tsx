@@ -14,6 +14,7 @@ interface SettingsViewProps {
 
 export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   const [showChangelog, setShowChangelog] = useState(false);
+  const [showBackupConfirm, setShowBackupConfirm] = useState(false);
   const [showAppHistory, setShowAppHistory] = useState(false);
   const [showBuilderHistory, setShowBuilderHistory] = useState(false);
   const [backupMsg, setBackupMsg] = useState('');
@@ -26,6 +27,17 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   useEffect(() => {
     getStorageStats().then(setStorageStats).catch(console.warn);
   }, []);
+
+  const getEstimatedBackupTime = (usedBytes?: number): string => {
+    if (!usedBytes || usedBytes <= 0) return '< 1 分鐘';
+    const sizeMB = usedBytes / (1024 * 1024);
+    if (sizeMB <= 20) {
+      return '< 1 分鐘';
+    } else {
+      const mins = Math.ceil(sizeMB / 20);
+      return `約 ${mins} 分鐘`;
+    }
+  };
 
   const handleExport = async (includeBooks: boolean) => {
     try {
@@ -416,7 +428,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               {/* 卡片 1: 完整備份 */}
               <div
                 className="visual-option-card"
-                onClick={() => !isExporting && handleExport(true)}
+                onClick={() => !isExporting && setShowBackupConfirm(true)}
                 style={{
                   borderColor: isExporting ? undefined : 'rgba(59, 130, 246, 0.35)',
                   backgroundColor: 'rgba(59, 130, 246, 0.04)',
@@ -545,9 +557,9 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             )}
           </div>
 
-          {/* 8. 儲存空間與全集壓縮管理 */}
+          {/* 8. 書籍儲存空間與壓縮管理 */}
           <div className="settings-section">
-            <div className="settings-section-title">儲存空間與全集壓縮管理</div>
+            <div className="settings-section-title">書籍儲存空間與壓縮管理</div>
 
             {/* 3個無背景色方框卡片 (深色字) */}
             <div className="visual-options-row">
@@ -739,6 +751,78 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           </div>
         </div>
       </div>
+
+      {/* 完整備份確認對話框 */}
+      {showBackupConfirm && (
+        <div className="changelog-dialog-overlay" onClick={() => setShowBackupConfirm(false)}>
+          <div className="changelog-dialog-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '380px', borderRadius: '14px' }}>
+            <div className="changelog-dialog-header" style={{ padding: '1rem 1.2rem', borderBottom: '1px solid var(--reader-border, rgba(0,0,0,0.08))' }}>
+              <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-main, #333)' }}>確認完整備份</h4>
+              <button className="changelog-dialog-close-btn" onClick={() => setShowBackupConfirm(false)}>
+                <X size={16} />
+              </button>
+            </div>
+            <div className="changelog-dialog-body" style={{ padding: '1.2rem 1.4rem' }}>
+              <div style={{ fontSize: '0.86rem', color: 'var(--text-main, #333)', lineHeight: '1.6', marginBottom: '1.2rem' }}>
+                <p style={{ margin: '0 0 0.8rem 0', fontWeight: 500, color: 'var(--text-secondary, #666)' }}>
+                  即將進行完整備份匯出（包含全部經文資料、劃線重點與個人閱讀設定）：
+                </p>
+                <div style={{ backgroundColor: 'rgba(0,0,0,0.03)', borderRadius: '10px', padding: '0.8rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--text-muted, #666)' }}>目前離線經書：</span>
+                    <strong style={{ color: 'var(--text-main, #222)' }}>共 {storageStats ? storageStats.bookCount : 0} 本書</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--text-muted, #666)' }}>預計備份容量：</span>
+                    <strong style={{ color: 'var(--text-main, #222)' }}>共 {storageStats ? storageStats.formattedUsed : '0 MB'} <span style={{ fontSize: '0.72rem', fontWeight: 400, color: '#777' }}>(含劃重點與閱讀設定)</span></strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--text-muted, #666)' }}>預計備份時間：</span>
+                    <strong style={{ color: '#2563eb' }}>{getEstimatedBackupTime(storageStats?.usedBytes)}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.6rem', justifyContent: 'flex-end', marginTop: '1.2rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowBackupConfirm(false)}
+                  style={{
+                    padding: '0.45rem 1.1rem',
+                    fontSize: '0.84rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--reader-border, rgba(0,0,0,0.15))',
+                    backgroundColor: 'transparent',
+                    color: 'var(--text-main, #444)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  取消
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowBackupConfirm(false);
+                    handleExport(true);
+                  }}
+                  style={{
+                    padding: '0.45rem 1.2rem',
+                    fontSize: '0.84rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: 'var(--theme-accent, #8c4b27)',
+                    color: '#ffffff',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  確認備份
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showChangelog && (
         <div className="changelog-dialog-overlay" onClick={() => setShowChangelog(false)}>
