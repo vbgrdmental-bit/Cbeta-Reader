@@ -755,41 +755,48 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
       {/* 完整備份確認對話框 */}
       {showBackupConfirm && (
         <div className="changelog-dialog-overlay" onClick={() => setShowBackupConfirm(false)}>
-          <div className="changelog-dialog-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ width: '80vw', maxWidth: '320px', borderRadius: '14px' }}>
-            <div className="changelog-dialog-header" style={{ padding: '0.9rem 1.1rem', borderBottom: '1px solid var(--reader-border, rgba(0,0,0,0.08))' }}>
-              <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main, #333)' }}>確認完整備份</h4>
+          <div className="changelog-dialog-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ width: '70vw', maxWidth: '280px', borderRadius: '14px' }}>
+            <div className="changelog-dialog-header" style={{ padding: '0.85rem 1rem', borderBottom: '1px solid var(--reader-border, rgba(0,0,0,0.08))' }}>
+              <h4 style={{ margin: 0, fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-main, #333)' }}>確認完整備份</h4>
               <button className="changelog-dialog-close-btn" onClick={() => setShowBackupConfirm(false)}>
                 <X size={16} />
               </button>
             </div>
-            <div className="changelog-dialog-body" style={{ padding: '1rem 1.1rem' }}>
-              <div style={{ fontSize: '0.84rem', color: 'var(--text-main, #333)', lineHeight: '1.5', marginBottom: '1rem' }}>
-                <p style={{ margin: '0 0 0.7rem 0', fontWeight: 500, color: 'var(--text-secondary, #666)' }}>
+            <div className="changelog-dialog-body" style={{ padding: '0.9rem 1rem' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-main, #333)', lineHeight: '1.5', marginBottom: '0.9rem' }}>
+                <p style={{ margin: '0 0 0.65rem 0', fontWeight: 500, color: 'var(--text-secondary, #666)' }}>
                   即將進行完整備份匯出（包含全部經文資料、劃線重點與個人閱讀設定）：
                 </p>
-                <div style={{ backgroundColor: 'rgba(0,0,0,0.03)', borderRadius: '10px', padding: '0.65rem 0.85rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: 'var(--text-muted, #666)' }}>目前離線經書：</span>
-                    <strong style={{ color: 'var(--text-main, #222)' }}>共 {storageStats ? storageStats.bookCount : 0} 本書</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: 'var(--text-muted, #666)' }}>預計備份容量：</span>
-                    <strong style={{ color: 'var(--text-main, #222)' }}>共 {storageStats ? storageStats.formattedUsed : '0 MB'}</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: 'var(--text-muted, #666)' }}>預計備份時間：</span>
-                    <strong style={{ color: '#2563eb' }}>{getEstimatedBackupTime(storageStats?.usedBytes)}</strong>
-                  </div>
+                <div 
+                  style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'auto auto', 
+                    justifyContent: 'center', 
+                    columnGap: '0.6rem', 
+                    rowGap: '0.4rem', 
+                    backgroundColor: 'rgba(0,0,0,0.03)', 
+                    borderRadius: '10px', 
+                    padding: '0.6rem 0.7rem' 
+                  }}
+                >
+                  <span style={{ color: 'var(--text-muted, #666)', textAlign: 'right' }}>目前離線經書：</span>
+                  <strong style={{ color: 'var(--text-main, #222)', textAlign: 'left' }}>共 {storageStats ? storageStats.bookCount : 0} 本書</strong>
+
+                  <span style={{ color: 'var(--text-muted, #666)', textAlign: 'right' }}>預計備份容量：</span>
+                  <strong style={{ color: 'var(--text-main, #222)', textAlign: 'left' }}>共 {storageStats ? storageStats.formattedUsed : '0 MB'}</strong>
+
+                  <span style={{ color: 'var(--text-muted, #666)', textAlign: 'right' }}>預計備份時間：</span>
+                  <strong style={{ color: '#2563eb', textAlign: 'left' }}>{getEstimatedBackupTime(storageStats?.usedBytes)}</strong>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '0.9rem' }}>
                 <button
                   type="button"
                   onClick={() => setShowBackupConfirm(false)}
                   style={{
-                    padding: '0.4rem 1rem',
-                    fontSize: '0.82rem',
+                    padding: '0.38rem 0.9rem',
+                    fontSize: '0.8rem',
                     borderRadius: '8px',
                     border: '1px solid var(--reader-border, rgba(0,0,0,0.15))',
                     backgroundColor: 'transparent',
@@ -806,8 +813,8 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     handleExport(true);
                   }}
                   style={{
-                    padding: '0.4rem 1.1rem',
-                    fontSize: '0.82rem',
+                    padding: '0.38rem 1rem',
+                    fontSize: '0.8rem',
                     borderRadius: '8px',
                     border: 'none',
                     backgroundColor: 'var(--theme-accent, #8c4b27)',
