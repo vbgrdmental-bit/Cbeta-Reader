@@ -1160,7 +1160,7 @@ export function ReaderView({
     switch (fontFamily) {
       case 'fangsong':
       case 'kaiti':
-        return '"FangSong", "FangSong_GB2312", "STFangsong", "FangSong TC", "FangSong HK", "CWTeXFangSong", "SimFang", "Noto Serif TC", serif';
+        return '"CWTeXFangSong", "CWTeX FangSong", "FangSong", "FangSong_GB2312", "STFangsong", "FangSong TC", "SimFang", "Noto Serif TC", serif';
       case 'jhenghei':
         return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Noto Sans TC", sans-serif';
       case 'iansui':

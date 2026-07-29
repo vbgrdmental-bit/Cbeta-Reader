@@ -134,7 +134,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 { 
                   id: 'fangsong', 
                   name: '仿宋體', 
-                  fontFamily: '"FangSong", "FangSong_GB2312", "STFangsong", "FangSong TC", "FangSong HK", "CWTeXFangSong", "SimFang", "Noto Serif TC", serif',
+                  fontFamily: '"CWTeXFangSong", "CWTeX FangSong", "FangSong", "FangSong_GB2312", "STFangsong", "FangSong TC", "SimFang", "Noto Serif TC", serif',
                   sample: '永' 
                 },
                 { 
