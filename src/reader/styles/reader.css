@@ -58,6 +58,8 @@
   font-size: var(--reader-font-size, 22px);
   text-align: justify;
   letter-spacing: 0.08em;
+  font-feature-settings: "calt" 1, "liga" 1;
+  font-variant-ligatures: contextual;
   position: relative;
   transition: font-size var(--transition-fast), line-height var(--transition-fast);
 }

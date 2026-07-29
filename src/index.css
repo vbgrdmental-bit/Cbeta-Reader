@@ -1,4 +1,30 @@
-@import url('https://cdn.jsdelivr.net/npm/@fontsource/iansui-zy@5.0.8/index.css');
+/* 💡 注音芫荽體 (Iansui-ZY / Bopomofo Iansui) 雲端 WebFont */
+@font-face {
+  font-family: 'Iansui-ZY';
+  src: url('https://cdn.jsdelivr.net/gh/but11/iansui@v1.000/Iansui-ZY.ttf') format('truetype'),
+       url('https://cdn.jsdelivr.net/gh/but11/iansui@main/Iansui-ZY.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Iansui ZY';
+  src: url('https://cdn.jsdelivr.net/gh/but11/iansui@v1.000/Iansui-ZY.ttf') format('truetype'),
+       url('https://cdn.jsdelivr.net/gh/but11/iansui@main/Iansui-ZY.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bopomofo Iansui';
+  src: url('https://cdn.jsdelivr.net/gh/but11/iansui@v1.000/Iansui-ZY.ttf') format('truetype'),
+       url('https://cdn.jsdelivr.net/gh/but11/iansui@main/Iansui-ZY.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   /* Fonts */
