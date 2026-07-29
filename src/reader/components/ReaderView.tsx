@@ -1158,8 +1158,9 @@ export function ReaderView({
   // 💡 套用 Reading Settings 對內文左右留白、字體大小、行高與內文字體
   const getBodyFontFamily = (fontFamily?: string) => {
     switch (fontFamily) {
+      case 'fangsong':
       case 'kaiti':
-        return '"LXGW WenKai TC", "Kaiti TC", "Kaiti SC", "STKaiti", "BiauKai", "DFKai-SB", "KaiTi", "TW-Kai", serif';
+        return '"FangSong", "FangSong_GB2312", "STFangsong", "FangSong TC", "FangSong HK", "CWTeXFangSong", "SimFang", "Noto Serif TC", serif';
       case 'jhenghei':
         return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Noto Sans TC", sans-serif';
       case 'iansui':
