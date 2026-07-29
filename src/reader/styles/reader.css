@@ -54,6 +54,7 @@
 
 .reader-paragraph {
   font-family: var(--reader-body-font, var(--font-serif));
+  font-weight: var(--reader-body-weight, normal);
   line-height: var(--reader-line-height, 2.0);
   font-size: var(--reader-font-size, 22px);
   text-align: justify;

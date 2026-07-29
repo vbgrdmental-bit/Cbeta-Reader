@@ -1158,11 +1158,11 @@ export function ReaderView({
   // 💡 套用 Reading Settings 對內文左右留白、字體大小、行高與內文字體
   const getBodyFontFamily = (fontFamily?: string) => {
     switch (fontFamily) {
-      case 'iansui-zy':
-        return '"Iansui ZY", "Iansui-ZY", "Bopomofo Iansui", "Iansui", "Klee One", serif';
       case 'jhenghei':
         return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", sans-serif';
+      case 'iansui-bold':
       case 'iansui':
+      case 'iansui-zy':
       case 'wenkai':
       case 'yuanti':
       case 'fangsong':
@@ -1178,7 +1178,8 @@ export function ReaderView({
     '--reader-padding': `${settings.padding}%`,
     '--reader-font-size': `${settings.fontSize}px`,
     '--reader-line-height': settings.lineHeight,
-    '--reader-body-font': getBodyFontFamily(settings.fontFamily)
+    '--reader-body-font': getBodyFontFamily(settings.fontFamily),
+    '--reader-body-weight': settings.fontFamily === 'iansui-bold' ? '700' : 'normal'
   } as React.CSSProperties;
 
   const activeJuan = book.content.juans.find(j => j.juan === currentJuanNum);
