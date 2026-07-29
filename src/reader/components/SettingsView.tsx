@@ -755,19 +755,19 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
       {/* 完整備份確認對話框 */}
       {showBackupConfirm && (
         <div className="changelog-dialog-overlay" onClick={() => setShowBackupConfirm(false)}>
-          <div className="changelog-dialog-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '380px', borderRadius: '14px' }}>
-            <div className="changelog-dialog-header" style={{ padding: '1rem 1.2rem', borderBottom: '1px solid var(--reader-border, rgba(0,0,0,0.08))' }}>
-              <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-main, #333)' }}>確認完整備份</h4>
+          <div className="changelog-dialog-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ width: '80vw', maxWidth: '320px', borderRadius: '14px' }}>
+            <div className="changelog-dialog-header" style={{ padding: '0.9rem 1.1rem', borderBottom: '1px solid var(--reader-border, rgba(0,0,0,0.08))' }}>
+              <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main, #333)' }}>確認完整備份</h4>
               <button className="changelog-dialog-close-btn" onClick={() => setShowBackupConfirm(false)}>
                 <X size={16} />
               </button>
             </div>
-            <div className="changelog-dialog-body" style={{ padding: '1.2rem 1.4rem' }}>
-              <div style={{ fontSize: '0.86rem', color: 'var(--text-main, #333)', lineHeight: '1.6', marginBottom: '1.2rem' }}>
-                <p style={{ margin: '0 0 0.8rem 0', fontWeight: 500, color: 'var(--text-secondary, #666)' }}>
+            <div className="changelog-dialog-body" style={{ padding: '1rem 1.1rem' }}>
+              <div style={{ fontSize: '0.84rem', color: 'var(--text-main, #333)', lineHeight: '1.5', marginBottom: '1rem' }}>
+                <p style={{ margin: '0 0 0.7rem 0', fontWeight: 500, color: 'var(--text-secondary, #666)' }}>
                   即將進行完整備份匯出（包含全部經文資料、劃線重點與個人閱讀設定）：
                 </p>
-                <div style={{ backgroundColor: 'rgba(0,0,0,0.03)', borderRadius: '10px', padding: '0.8rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                <div style={{ backgroundColor: 'rgba(0,0,0,0.03)', borderRadius: '10px', padding: '0.65rem 0.85rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ color: 'var(--text-muted, #666)' }}>目前離線經書：</span>
                     <strong style={{ color: 'var(--text-main, #222)' }}>共 {storageStats ? storageStats.bookCount : 0} 本書</strong>
@@ -783,13 +783,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.6rem', justifyContent: 'flex-end', marginTop: '1.2rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
                 <button
                   type="button"
                   onClick={() => setShowBackupConfirm(false)}
                   style={{
-                    padding: '0.45rem 1.1rem',
-                    fontSize: '0.84rem',
+                    padding: '0.4rem 1rem',
+                    fontSize: '0.82rem',
                     borderRadius: '8px',
                     border: '1px solid var(--reader-border, rgba(0,0,0,0.15))',
                     backgroundColor: 'transparent',
@@ -806,8 +806,8 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     handleExport(true);
                   }}
                   style={{
-                    padding: '0.45rem 1.2rem',
-                    fontSize: '0.84rem',
+                    padding: '0.4rem 1.1rem',
+                    fontSize: '0.82rem',
                     borderRadius: '8px',
                     border: 'none',
                     backgroundColor: 'var(--theme-accent, #8c4b27)',
