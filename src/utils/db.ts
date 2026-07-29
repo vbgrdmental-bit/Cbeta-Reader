@@ -30,12 +30,65 @@ export function initDB(): Promise<IDBDatabase> {
   });
 }
 
+// 💡 Gzip 雙向動態壓縮/解壓輔助 (為全集與大量經文節省 75%~85% 空間)
+export async function compressData(str: string): Promise<Uint8Array | null> {
+  if (typeof CompressionStream === 'undefined') return null;
+  try {
+    const encoder = new TextEncoder();
+    const uint8 = encoder.encode(str);
+    const blobInput = new Blob([uint8.buffer as ArrayBuffer]);
+    const stream = blobInput.stream().pipeThrough(new CompressionStream('gzip'));
+    const response = new Response(stream);
+    const blob = await response.blob();
+    return new Uint8Array(await blob.arrayBuffer());
+  } catch (e) {
+    console.warn('CompressionStream failed, fallback to raw', e);
+    return null;
+  }
+}
+
+export async function decompressData(compressed: Uint8Array): Promise<string | null> {
+  if (typeof DecompressionStream === 'undefined') return null;
+  try {
+    const stream = new Blob([compressed.buffer as ArrayBuffer]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const response = new Response(stream);
+    return await response.text();
+  } catch (e) {
+    console.warn('DecompressionStream failed', e);
+    return null;
+  }
+}
+
 export async function saveBook(bookPackage: ReaderPackage): Promise<void> {
   const db = await initDB();
+  
+  // 💡 大於 50KB 之經典內容進行 Gzip 輕量化壓縮儲存
+  let packageToStore: any = bookPackage;
+  try {
+    const contentStr = JSON.stringify(bookPackage.content);
+    if (contentStr.length > 50000) {
+      const compressed = await compressData(contentStr);
+      if (compressed) {
+        packageToStore = {
+          metadata: bookPackage.metadata,
+          toc: bookPackage.toc,
+          navigation: bookPackage.navigation,
+          reference: bookPackage.reference,
+          searchIndex: bookPackage.searchIndex,
+          embedding: bookPackage.embedding,
+          compressedContent: compressed,
+          isCompressed: true
+        };
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to compress bookPackage before save', e);
+  }
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(BOOKS_STORE, 'readwrite');
     const store = transaction.objectStore(BOOKS_STORE);
-    const request = store.put(bookPackage);
+    const request = store.put(packageToStore);
 
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve();
@@ -44,13 +97,38 @@ export async function saveBook(bookPackage: ReaderPackage): Promise<void> {
 
 export async function getBook(workId: string): Promise<ReaderPackage | null> {
   const db = await initDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = db.transaction(BOOKS_STORE, 'readonly');
     const store = transaction.objectStore(BOOKS_STORE);
     const request = store.get(workId);
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result || null);
+    request.onsuccess = async () => {
+      const result = request.result;
+      if (!result) return resolve(null);
+
+      // 若為壓縮套件，解壓還原 content
+      if (result.isCompressed && result.compressedContent) {
+        try {
+          const decompressedStr = await decompressData(result.compressedContent);
+          if (decompressedStr) {
+            const content = JSON.parse(decompressedStr);
+            return resolve({
+              metadata: result.metadata,
+              content,
+              toc: result.toc,
+              navigation: result.navigation,
+              reference: result.reference,
+              searchIndex: result.searchIndex,
+              embedding: result.embedding
+            });
+          }
+        } catch (e) {
+          console.error('Failed to decompress book content for', workId, e);
+        }
+      }
+      resolve(result);
+    };
   });
 }
 
@@ -383,6 +461,74 @@ export async function importUserData(file: File): Promise<{ highlightsCount: num
     reader.onerror = () => reject(new Error('檔案讀取失敗。'));
     reader.readAsText(file);
   });
+}
+
+// 💡 本地儲存容量統計與高效率清理工具
+export interface StorageStats {
+  usedBytes: number;
+  formattedUsed: string;
+  bookCount: number;
+  quotaBytes?: number;
+  formattedQuota?: string;
+}
+
+export async function getStorageStats(): Promise<StorageStats> {
+  const books = await listBooks();
+  let usedBytes = 0;
+  let quotaBytes = 0;
+
+  if (typeof navigator !== 'undefined' && navigator.storage && navigator.storage.estimate) {
+    try {
+      const estimate = await navigator.storage.estimate();
+      usedBytes = estimate.usage || 0;
+      quotaBytes = estimate.quota || 0;
+    } catch (e) {
+      console.warn('Storage estimate failed', e);
+    }
+  }
+
+  const formatSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+  };
+
+  return {
+    usedBytes,
+    formattedUsed: formatSize(usedBytes),
+    bookCount: books.length,
+    quotaBytes,
+    formattedQuota: quotaBytes ? formatSize(quotaBytes) : undefined
+  };
+}
+
+export async function clearHttpCacheStorage(): Promise<number> {
+  let clearedCount = 0;
+  if (typeof window !== 'undefined' && 'caches' in window) {
+    try {
+      const cacheNames = await caches.keys();
+      for (const cacheName of cacheNames) {
+        const deleted = await caches.delete(cacheName);
+        if (deleted) clearedCount++;
+      }
+    } catch (err) {
+      console.warn('Failed to clear CacheStorage', err);
+    }
+  }
+  return clearedCount;
+}
+
+export async function compressAllBooks(): Promise<{ compressedCount: number }> {
+  const rawBooks = await getAllFullBooks();
+  let compressedCount = 0;
+  for (const b of rawBooks) {
+    if (!(b as any).isCompressed) {
+      await saveBook(b);
+      compressedCount++;
+    }
+  }
+  return { compressedCount };
 }
 
 

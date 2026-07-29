@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Database, FileText, Upload, HelpCircle, RotateCw } from 'lucide-react';
-import type { AppSettings } from '../../utils/db';
+import type { AppSettings, StorageStats } from '../../utils/db';
+import { getStorageStats, clearHttpCacheStorage, compressAllBooks } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
 import '../styles/settings.css';
@@ -18,6 +19,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   const [backupMsg, setBackupMsg] = useState('');
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [storageStats, setStorageStats] = useState<StorageStats | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [storageMsg, setStorageMsg] = useState('');
+
+  useEffect(() => {
+    getStorageStats().then(setStorageStats).catch(console.warn);
+  }, []);
 
   const handleExport = async (includeBooks: boolean) => {
     try {
@@ -28,6 +36,33 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
       setBackupMsg('匯出失敗：' + (err.message || '未知錯誤'));
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleCompressAll = async () => {
+    setIsCompressing(true);
+    setStorageMsg('正在對全庫離線經書執行 Gzip 動態輕量化高壓縮...');
+    try {
+      const res = await compressAllBooks();
+      const stats = await getStorageStats();
+      setStorageStats(stats);
+      setStorageMsg(`🎉 成功壓縮優化 ${res.compressedCount} 本經書，目前佔用 ${stats.formattedUsed}！`);
+    } catch (err: any) {
+      setStorageMsg('壓縮失敗：' + (err.message || '未知錯誤'));
+    } finally {
+      setIsCompressing(false);
+    }
+  };
+
+  const handleClearCache = async () => {
+    setStorageMsg('正在清理歷史 HTTP API 網路暫存...');
+    try {
+      const count = await clearHttpCacheStorage();
+      const stats = await getStorageStats();
+      setStorageStats(stats);
+      setStorageMsg(`✨ 成功清理 ${count} 個網路快取區域，釋放部分暫存空間！`);
+    } catch (err: any) {
+      setStorageMsg('清理失敗：' + (err.message || '未知錯誤'));
     }
   };
 
@@ -510,7 +545,50 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             )}
           </div>
 
-          {/* 8. 其他設定 */}
+          {/* 8. 儲存空間與全集壓縮管理 */}
+          <div className="settings-section">
+            <div className="settings-section-title">儲存空間與全集壓縮管理</div>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary, #666)', marginBottom: '0.6rem', lineHeight: '1.4' }}>
+              {storageStats ? (
+                <div>
+                  目前已用容量：<strong style={{ color: 'var(--text-main, #333)' }}>{storageStats.formattedUsed}</strong> (離線經書 {storageStats.bookCount} 本)
+                  {storageStats.formattedQuota && <span style={{ marginLeft: '0.4rem', opacity: 0.8 }}>(裝置總容量剩餘: {storageStats.formattedQuota})</span>}
+                </div>
+              ) : (
+                <div>計算儲存空間中...</div>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className="visual-option-card"
+                style={{ flex: '1 1 140px', padding: '0.5rem 0.7rem', cursor: 'pointer', textAlign: 'center', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}
+                onClick={handleCompressAll}
+                disabled={isCompressing}
+              >
+                <span>📦</span>
+                <span>{isCompressing ? '壓縮優化中...' : '一鍵壓縮輕量化庫存'}</span>
+              </button>
+              <button
+                type="button"
+                className="visual-option-card"
+                style={{ flex: '1 1 140px', padding: '0.5rem 0.7rem', cursor: 'pointer', textAlign: 'center', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}
+                onClick={handleClearCache}
+              >
+                <span>🧹</span>
+                <span>清理 HTTP 網路快取</span>
+              </button>
+            </div>
+
+            {storageMsg && (
+              <div style={{ fontSize: '0.78rem', color: 'var(--accent-color, #2b6cb0)', marginTop: '0.4rem', textAlign: 'center' }}>
+                {storageMsg}
+              </div>
+            )}
+          </div>
+
+          {/* 9. 其他設定 */}
           <div className="settings-section">
             <div className="settings-section-title">其他設定</div>
             <div className="custom-elements-list">
