@@ -1155,11 +1155,11 @@ export function ReaderView({
     );
   }
 
-  // 💡 套用 Reading Settings 對內文左右留白、字體大小、行高與內文字體
+  // 💡 套用 Reading Settings 對內文左右留白、字體大小、行高與內文字體 (加入 CBETASupplement 自動補缺字)
   const getBodyFontFamily = (fontFamily?: string) => {
     switch (fontFamily) {
       case 'jhenghei':
-        return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", sans-serif';
+        return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", "CBETASupplement", sans-serif';
       case 'iansui-bold':
       case 'iansui':
       case 'iansui-zy':
@@ -1167,7 +1167,7 @@ export function ReaderView({
       case 'yuanti':
       case 'fangsong':
       case 'kaiti':
-        return '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", serif';
+        return '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", "CBETASupplement", serif';
       case 'default':
       default:
         return 'var(--font-serif)';

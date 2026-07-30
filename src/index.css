@@ -29,10 +29,21 @@
   font-display: swap;
 }
 
+/* 💡 CBETA 補充字型 (CBETA Supplement WebFont) - 涵蓋 13,929+ 佛典罕見字與缺字 */
+@font-face {
+  font-family: 'CBETASupplement';
+  src: url('https://cbeta-org.github.io/cbeta-fonts/CBETASupplement.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/cbeta-org/cbeta-fonts@main/CBETASupplement.woff2') format('woff2'),
+       url('https://raw.githubusercontent.com/cbeta-org/cbeta-fonts/main/CBETASupplement.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Fonts */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: 'Noto Serif TC', "PingFang TC", "Songti TC", "Noto Sans CJK TC", "Microsoft JhengHei", serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, 'CBETASupplement';
+  --font-serif: 'Noto Serif TC', 'CBETASupplement', "PingFang TC", "Songti TC", "Noto Sans CJK TC", "Microsoft JhengHei", serif;
 
   /* Theme: Wood & Ivory (Default Library Theme) */
   --color-wood-50: #fbf8f3;

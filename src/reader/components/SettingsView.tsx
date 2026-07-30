@@ -181,19 +181,19 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 { 
                   id: 'jhenghei', 
                   name: '正黑體', 
-                  fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", sans-serif',
+                  fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", "CBETASupplement", sans-serif',
                   sample: '永' 
                 },
                 { 
                   id: 'iansui', 
                   name: '芫荽體', 
-                  fontFamily: '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", serif',
+                  fontFamily: '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", "CBETASupplement", serif',
                   sample: '永' 
                 },
                 { 
                   id: 'iansui-bold', 
                   name: '芫荽體(粗)', 
-                  fontFamily: '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", serif',
+                  fontFamily: '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", "CBETASupplement", serif',
                   sample: '永' 
                 }
               ].map((fontItem) => {
