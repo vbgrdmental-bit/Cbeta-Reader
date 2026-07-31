@@ -1521,17 +1521,7 @@ export function CbetaCatalogView({
 
             {/* 獨立垂直滾動區：經典與資料夾卡片在這裡進行內部滾動 */}
             <div className="cbeta-items-scroll-area custom-scrollbar">
-              {activeTab === 'favorite' ? (
-                <div style={{ textAlign: 'center', padding: '3.5rem 1rem', color: 'var(--text-muted)', fontFamily: 'var(--font-rounded)' }}>
-                  <Heart size={36} style={{ strokeWidth: 1.5, color: 'var(--theme-accent, #cf9f60)', marginBottom: '0.6rem', opacity: 0.8 }} />
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.3rem' }}>
-                    常用經典收納區
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    目前尚無收納資料夾與經典
-                  </div>
-                </div>
-              ) : isLoadingCatalog ? (
+              {isLoadingCatalog ? (
                 <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)', fontFamily: 'var(--font-rounded)' }}>
                   正在檢索 CBETA 藏經庫數據中...
                 </div>
