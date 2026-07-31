@@ -43,8 +43,12 @@ export class PackageBuilder {
       // 1. Metadata 階段 (加入 3.5 秒超時保護，防範 CBETA API 伺服器掛起)
       onProgress({ step: 'metadata', percent: 3, message: `正在向 CBETA 獲取《${searchResult.title}》最新元資料...` });
       try {
-        const metaUrl = getApiUrl(`/stable/works?work=${workId}`);
-        const response = await fetchWithTimeout(metaUrl, { headers: { 'Accept': 'application/json' } }, 3500);
+        const relativeMetaUrl = getApiUrl(`/stable/works?work=${workId}`);
+        const directMetaUrl = `https://cbdata.dila.edu.tw/stable/works?work=${workId}`;
+        let response = await fetchWithTimeout(relativeMetaUrl, { headers: { 'Accept': 'application/json' } }, 3500);
+        if (!response || !response.ok) {
+          response = await fetchWithTimeout(directMetaUrl, { headers: { 'Accept': 'application/json' } }, 5000);
+        }
         if (response && response.ok) {
           const data = await response.json().catch(() => null);
           if (data && Array.isArray(data.results) && data.results.length > 0) {

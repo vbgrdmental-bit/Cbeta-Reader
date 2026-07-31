@@ -29,6 +29,7 @@ interface CatalogItem {
   subLabel?: string; // e.g. "25 CE ~ 220 CE"
   nodeType?: 'work' | 'category' | null;
   workId?: string;
+  juansCount?: number;
   juanStart?: number;
   creators?: string;
   category?: string;
@@ -470,6 +471,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0779',
     creators: '東漢 安清',
     category: '經集部類',
+    juansCount: 1,
     juanStart: 1
   },
   {
@@ -479,6 +481,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0784',
     creators: '東漢 攝摩騰,竺法蘭',
     category: '經集部類',
+    juansCount: 1,
     juanStart: 1
   },
   {
@@ -488,6 +491,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0801',
     creators: '唐 義淨',
     category: '經集部類',
+    juansCount: 1,
     juanStart: 1
   },
   {
@@ -497,6 +501,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0251',
     creators: '唐 玄奘',
     category: '般若部類',
+    juansCount: 1,
     juanStart: 1
   },
   {
@@ -506,6 +511,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0235',
     creators: '後秦 鳩摩羅什',
     category: '般若部類',
+    juansCount: 1,
     juanStart: 1
   },
   {
@@ -515,6 +521,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0366',
     creators: '姚秦 鳩摩羅什',
     category: '寶積部類,淨土宗部類',
+    juansCount: 1,
     juanStart: 1
   },
   {
@@ -524,6 +531,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0450',
     creators: '唐 玄奘',
     category: '經集部類',
+    juansCount: 1,
     juanStart: 1
   },
   {
@@ -533,6 +541,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0276',
     creators: '蕭齊 曇摩迦陀耶舍',
     category: '法華部類',
+    juansCount: 1,
     juanStart: 1
   },
   {
@@ -542,6 +551,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0262',
     creators: '姚秦 鳩摩羅什',
     category: '法華部類',
+    juansCount: 7,
     juanStart: 7
   },
   {
@@ -551,6 +561,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0412',
     creators: '唐 實叉難陀',
     category: '大集部類',
+    juansCount: 2,
     juanStart: 2
   },
   {
@@ -560,6 +571,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'T0945',
     creators: '唐 般剌蜜帝',
     category: '密教部類',
+    juansCount: 10,
     juanStart: 10
   },
   {
@@ -569,6 +581,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'Y0040',
     creators: '民國 釋印順',
     category: '新編部類',
+    juansCount: 5,
     juanStart: 5
   }
 ];
@@ -968,9 +981,9 @@ export function CbetaCatalogView({
         // 下載單本經典
         handleDownloadSingleWork({
           workId: wId,
-          title: item.label.replace(/^T\d+\s*/, '').replace(/\s*\(\d+卷\)$/, ''),
+          title: item.label.replace(/^[A-Z]\d+\s*/, '').replace(/^[A-Z]\d+n\d+[A-Za-z]?\s*/, '').replace(/\s*\(\d+卷\)$/, ''),
           creators: item.creators || 'CBETA 電子佛典',
-          juansCount: item.juanStart || 1,
+          juansCount: item.juansCount || item.juanStart || 1,
           category: item.category || 'CBETA'
         });
       }

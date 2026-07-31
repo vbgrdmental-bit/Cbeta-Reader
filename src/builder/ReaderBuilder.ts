@@ -39,14 +39,19 @@ export class ReaderBuilder {
           const j = queue.shift();
           if (!j) break;
 
-          const url = getApiUrl(`/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1&_t=${Date.now()}`);
+          const relativeUrl = getApiUrl(`/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1&_t=${Date.now()}`);
+          const directUrl = `https://cbdata.dila.edu.tw/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1&_t=${Date.now()}`;
           
           let success = false;
           // 自動重試最多 3 次
           for (let attempt = 1; attempt <= 3; attempt++) {
             try {
-              const timeoutMs = attempt === 1 ? 6000 : 9000;
-              const response = await fetchWithTimeout(url, { cache: 'reload' }, timeoutMs);
+              const timeoutMs = attempt === 1 ? 6500 : 10000;
+              let response = await fetchWithTimeout(relativeUrl, { cache: 'reload' }, timeoutMs);
+              if (!response || !response.ok) {
+                response = await fetchWithTimeout(directUrl, { cache: 'reload' }, timeoutMs);
+              }
+
               if (response && response.ok) {
                 const data = await response.json().catch(() => null);
                 if (data && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0 && allRawTocs.length === 0) {
