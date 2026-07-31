@@ -1134,7 +1134,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   </p>
                 </div>
 
-                {/* 💡 願文偈頌區塊 (細線之下，置中/粗體/灰黑/小字/上下間距，出處置右斜體) */}
+                {/* 💡 願文偈頌區塊 (細線之下，置中/粗體/圓體/灰黑/小字/上下間距，出處置右斜體再小一級並留底間距) */}
                 <div style={{ marginTop: '1.2rem', paddingTop: '1rem', borderTop: '1px solid var(--reader-border, rgba(0,0,0,0.12))' }}>
                   <div style={{
                     textAlign: 'center',
@@ -1142,7 +1142,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     fontSize: '0.82rem',
                     lineHeight: 1.85,
                     color: 'var(--reader-text-muted, #555)',
-                    fontFamily: 'var(--font-serif)',
+                    fontFamily: 'var(--font-rounded)',
                     margin: '0.5rem 0'
                   }}>
                     <p style={{ margin: '0 0 0.3rem 0' }}>願諸世界常安隱，無邊福智益群生，</p>
@@ -1153,11 +1153,12 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <div style={{
                     textAlign: 'right',
                     fontStyle: 'italic',
-                    fontSize: '0.78rem',
+                    fontSize: '0.72rem',
                     color: 'var(--reader-text-muted, #666)',
-                    fontFamily: 'var(--font-serif)',
+                    fontFamily: 'var(--font-rounded)',
                     marginTop: '0.5rem',
-                    opacity: 0.9
+                    marginBottom: '0.9rem',
+                    opacity: 0.88
                   }}>
                     －－《佛說無常經》T0801
                   </div>
