@@ -140,7 +140,7 @@ export function App() {
         />
       )}
 
-      {/* 💡 全域閱讀時間「1 分鐘溫馨提醒 Modal」 */}
+      {/* 💡 全域閱讀時間「1 分鐘溫馨提醒 Modal (第一個對話框)」 */}
       {timerState.isWarningShown && timerState.remainingSeconds > 0 && (
         <div 
           className="reading-timer-modal-overlay animate-fade-in"
@@ -204,14 +204,14 @@ export function App() {
                     transition: 'all 0.2s'
                   }}
                 >
-                  {mins}分
+                  +{mins}分
                 </button>
               ))}
             </div>
 
             <button
               type="button"
-              onClick={() => readingTimer.dismissWarning()}
+              onClick={() => readingTimer.chooseRestOnTime()}
               style={{
                 width: '100%',
                 padding: '0.65rem 0',
@@ -230,7 +230,7 @@ export function App() {
         </div>
       )}
 
-      {/* 💡 全域閱讀時間「時間到強制黑幕 / 睡眠休息 Modal」 */}
+      {/* 💡 全域閱讀時間「時間到黑幕 Modal (第二個對話框)」 */}
       {timerState.isTimeUpShown && (
         <div 
           className="reading-timer-modal-overlay animate-fade-in"
@@ -293,14 +293,14 @@ export function App() {
                     transition: 'all 0.2s'
                   }}
                 >
-                  {mins}分
+                  +{mins}分
                 </button>
               ))}
             </div>
 
             <button
               type="button"
-              onClick={() => readingTimer.dismissTimeUp()}
+              onClick={() => readingTimer.exitBlackout()}
               style={{
                 width: '100%',
                 padding: '0.75rem 0',
@@ -315,6 +315,38 @@ export function App() {
             >
               關閉並休息
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* 💡 全黑幕純極簡 OLED 睡眠狀態 (已選擇時間到就休息、或第二對話框已 30 秒自動隱藏) */}
+      {timerState.isBlackoutMode && !timerState.isTimeUpShown && (
+        <div 
+          className="reading-timer-modal-overlay animate-fade-in"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: '#000000',
+            color: '#777',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9998,
+            cursor: 'pointer',
+            userSelect: 'none'
+          }}
+          onClick={() => readingTimer.exitBlackout()}
+        >
+          <div style={{ fontSize: '3rem', opacity: 0.25, marginBottom: '1rem' }}>🌙</div>
+          <div style={{ fontSize: '0.85rem', color: '#555', fontFamily: 'var(--font-serif)', letterSpacing: '1px' }}>
+            閱讀時間已結束，休養身心
+          </div>
+          <div style={{ fontSize: '0.75rem', color: '#444', marginTop: '1.2rem', padding: '6px 14px', borderRadius: '20px', border: '1px solid #222' }}>
+            點擊螢幕任意處恢復閱讀
           </div>
         </div>
       )}
