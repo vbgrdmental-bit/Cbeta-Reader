@@ -316,17 +316,26 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   border: '方框'
                 };
                 
+                const currentHex = 
+                  settings.highlightColor === 'yellow' ? '#fbbf24' :
+                  settings.highlightColor === 'red' ? '#f87171' :
+                  settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
+
+                const currentRgba = 
+                  settings.highlightColor === 'yellow' ? 'rgba(250, 204, 21, 0.65)' :
+                  settings.highlightColor === 'red' ? 'rgba(248, 113, 113, 0.65)' :
+                  settings.highlightColor === 'gray' ? 'rgba(156, 163, 175, 0.65)' : 'rgba(96, 165, 250, 0.65)';
+
                 const getPreviewStyle = () => {
-                  const previewColor = 'rgba(250, 204, 21, 0.65)';
                   switch (style) {
                     case 'underline':
-                      return { borderBottom: '2.5px solid #fbbf24', background: 'transparent' };
+                      return { borderBottom: `2.5px solid ${currentHex}`, background: 'transparent' };
                     case 'bottom-half':
-                      return { background: `linear-gradient(180deg, transparent 55%, ${previewColor} 55%)` };
+                      return { background: `linear-gradient(180deg, transparent 55%, ${currentRgba} 55%)` };
                     case 'full':
-                      return { backgroundColor: previewColor };
+                      return { backgroundColor: currentRgba, borderRadius: '3px' };
                     case 'border':
-                      return { border: '2.5px solid #fbbf24', borderRadius: '3px', padding: '0 1px' };
+                      return { border: `2.2px solid ${currentHex}`, borderRadius: '3px', padding: '0 2px' };
                   }
                 };
 
