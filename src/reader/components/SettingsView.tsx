@@ -1120,17 +1120,11 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 )}
               </div>
 
-              {/* 4. CBETA 與 CBETA Reader 簡介與感言區塊 (隔一條線，小字呈現) */}
+              {/* 4. CBETA Reader 簡介與感言區塊 (隔一條線，小字呈現) */}
               <div style={{ marginTop: '1.5rem', paddingTop: '1.2rem', borderTop: '1px dashed var(--reader-border, rgba(0,0,0,0.15))' }}>
                 <div style={{ fontSize: '0.8rem', lineHeight: 1.7, color: 'var(--reader-text-muted, #777)', opacity: 0.88, textAlign: 'justify' }}>
-                  <p style={{ marginBottom: '0.8rem' }}>
-                    CBETA（佛教電子佛典基金會）成立於1998年，由佛教界與學術界共同推動，致力於漢文佛典數位化工程。收錄《大正藏》、《卍續藏》等重要佛典，提供全文檢索、線上閱讀與研究資料，目前已成為全球最重要的漢傳佛教數位典藏平台之一。
-                  </p>
-                  <p style={{ marginBottom: '0.8rem' }}>
-                    本網站CBETA Reader，完全以 CBETA 佛典資料為基礎，試圖打造適合手機與平板閱讀的佛典閱讀器。希望透過簡潔介面，協助使用者更容易閱讀大藏經經文。
-                  </p>
                   <p style={{ margin: 0 }}>
-                    如有任何建議，歡迎不吝指導，來信寄至創作者Email: <a href="mailto:vbgrdmental@gmail.com" style={{ color: 'inherit', textDecoration: 'underline' }}>vbgrdmental@gmail.com</a>，無限感恩，並祝福法喜充滿，福慧雙修。
+                    本網站「CBETA Reader 淨心閱讀」(非官方)，以 CBETA 佛典資料庫為基礎，試著打造一個簡潔的閱讀器，協助使用者更容易的閱讀大藏經。網站內如有任何錯誤、疏漏或更多的建議，也歡迎不吝指導並來信寄至Email: <a href="mailto:vbgrdmental@gmail.com" style={{ color: 'inherit', textDecoration: 'underline' }}>vbgrdmental@gmail.com</a>。祝福法喜充滿，福慧雙修，無限感恩。
                   </p>
                 </div>
 
