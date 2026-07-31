@@ -1133,6 +1133,35 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     如有任何建議，歡迎不吝指導，來信寄至創作者Email: <a href="mailto:vbgrdmental@gmail.com" style={{ color: 'inherit', textDecoration: 'underline' }}>vbgrdmental@gmail.com</a>，無限感恩，並祝福法喜充滿，福慧雙修。
                   </p>
                 </div>
+
+                {/* 💡 願文偈頌區塊 (細線之下，置中/粗體/灰黑/小字/上下間距，出處置右斜體) */}
+                <div style={{ marginTop: '1.2rem', paddingTop: '1rem', borderTop: '1px solid var(--reader-border, rgba(0,0,0,0.12))' }}>
+                  <div style={{
+                    textAlign: 'center',
+                    fontWeight: 700,
+                    fontSize: '0.82rem',
+                    lineHeight: 1.85,
+                    color: 'var(--reader-text-muted, #555)',
+                    fontFamily: 'var(--font-serif)',
+                    margin: '0.5rem 0'
+                  }}>
+                    <p style={{ margin: '0 0 0.3rem 0' }}>願諸世界常安隱，無邊福智益群生，</p>
+                    <p style={{ margin: '0 0 0.3rem 0' }}>所有罪業並消除，遠離眾苦歸圓寂。</p>
+                    <p style={{ margin: '0 0 0.3rem 0' }}>恒用戒香塗瑩體，常持定服以資身，</p>
+                    <p style={{ margin: 0 }}>菩提妙華遍莊嚴，隨所住處常安樂。</p>
+                  </div>
+                  <div style={{
+                    textAlign: 'right',
+                    fontStyle: 'italic',
+                    fontSize: '0.78rem',
+                    color: 'var(--reader-text-muted, #666)',
+                    fontFamily: 'var(--font-serif)',
+                    marginTop: '0.5rem',
+                    opacity: 0.9
+                  }}>
+                    －－《佛說無常經》T0801
+                  </div>
+                </div>
               </div>
             </div>
           </div>
