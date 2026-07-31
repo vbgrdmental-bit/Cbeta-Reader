@@ -1284,45 +1284,106 @@ export function ReaderView({
           }}>A</span>
         </button>
 
-        {/* 💡 筆刷按鈕 */}
-        <button 
-          className={`reader-text-btn brush-btn ${isBrushModeActive ? 'active' : ''}`} 
-          onClick={handleBrushButtonClick}
-          title={isBrushModeActive ? '劃記重點模式 (開啟中)' : '劃記重點模式'}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0 0.4rem',
-            position: 'relative',
-            transition: 'all 0.2s',
-            borderRadius: '6px',
-            border: isBrushModeActive ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
-            background: isBrushModeActive ? 'rgba(250, 204, 21, 0.08)' : 'transparent'
-          }}
-        >
-          <Paintbrush 
-            size={20} 
-            style={{
-              color: isBrushModeActive ? 'var(--theme-accent, var(--color-wood-700))' : 'currentColor'
-            }}
-          />
-          {/* 顯示目前選定的顏色指示器 */}
-          <div 
-            className="brush-color-indicator"
-            style={{
-              position: 'absolute',
-              bottom: '2px',
-              width: '14px',
-              height: '3px',
-              borderRadius: '1.5px',
-              backgroundColor: 
-                settings.highlightColor === 'yellow' ? '#fbbf24' :
-                settings.highlightColor === 'red' ? '#f87171' :
-                settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa'
-            }}
-          />
-        </button>
+        {/* 💡 筆刷按鈕 (動態顯示當前 4 種顏色 x 4 種粗細標註模式) */}
+        {(() => {
+          const colorHex = 
+            settings.highlightColor === 'yellow' ? '#fbbf24' :
+            settings.highlightColor === 'red' ? '#f87171' :
+            settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
+
+          const colorLabel = 
+            settings.highlightColor === 'yellow' ? '淺黃' :
+            settings.highlightColor === 'red' ? '淺紅' :
+            settings.highlightColor === 'gray' ? '淺灰' : '淺藍';
+
+          const styleLabel = 
+            settings.highlightStyle === 'underline' ? '底線' :
+            settings.highlightStyle === 'bottom-half' ? '半塗' :
+            settings.highlightStyle === 'full' ? '全塗' : '方框';
+
+          const modeTitle = `劃記重點模式 (${colorLabel} + ${styleLabel}${isBrushModeActive ? ' - 已開啟' : ''})`;
+
+          const getIndicatorStyle = (): React.CSSProperties => {
+            const currentStyle = settings.highlightStyle || 'bottom-half';
+            switch (currentStyle) {
+              case 'underline':
+                return {
+                  position: 'absolute',
+                  bottom: '2px',
+                  width: '14px',
+                  height: '3px',
+                  borderRadius: '1.5px',
+                  backgroundColor: colorHex,
+                  boxSizing: 'border-box'
+                };
+              case 'bottom-half':
+                return {
+                  position: 'absolute',
+                  bottom: '2px',
+                  width: '16px',
+                  height: '7px',
+                  borderRadius: '2px',
+                  backgroundColor: colorHex,
+                  opacity: 0.85,
+                  boxSizing: 'border-box'
+                };
+              case 'full':
+                return {
+                  position: 'absolute',
+                  bottom: '2px',
+                  width: '18px',
+                  height: '13px',
+                  borderRadius: '3px',
+                  backgroundColor: colorHex,
+                  opacity: 0.7,
+                  boxSizing: 'border-box'
+                };
+              case 'border':
+                return {
+                  position: 'absolute',
+                  bottom: '2px',
+                  width: '18px',
+                  height: '13px',
+                  borderRadius: '3px',
+                  border: `1.8px solid ${colorHex}`,
+                  backgroundColor: 'transparent',
+                  boxSizing: 'border-box'
+                };
+            }
+          };
+
+          return (
+            <button 
+              className={`reader-text-btn brush-btn ${isBrushModeActive ? 'active' : ''}`} 
+              onClick={handleBrushButtonClick}
+              title={modeTitle}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 0.4rem',
+                position: 'relative',
+                transition: 'all 0.2s',
+                borderRadius: '6px',
+                border: isBrushModeActive ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
+                background: isBrushModeActive ? 'rgba(250, 204, 21, 0.08)' : 'transparent'
+              }}
+            >
+              <Paintbrush 
+                size={20} 
+                style={{
+                  color: isBrushModeActive ? 'var(--theme-accent, var(--color-wood-700))' : 'currentColor',
+                  zIndex: 2
+                }}
+              />
+              {/* 顯示目前選定的顏色與粗細標註模式指示器 */}
+              <div 
+                className="brush-color-indicator"
+                style={getIndicatorStyle()}
+              />
+            </button>
+          );
+        })()}
 
 
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
