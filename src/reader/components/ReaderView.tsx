@@ -1330,24 +1330,30 @@ export function ReaderView({
               case 'full':
                 return {
                   position: 'absolute',
-                  bottom: '2px',
-                  width: '18px',
-                  height: '13px',
-                  borderRadius: '3px',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '5px',
                   backgroundColor: colorHex,
-                  opacity: 0.7,
-                  boxSizing: 'border-box'
+                  opacity: 0.45,
+                  boxSizing: 'border-box',
+                  zIndex: 1
                 };
               case 'border':
                 return {
                   position: 'absolute',
-                  bottom: '2px',
-                  width: '18px',
-                  height: '13px',
-                  borderRadius: '3px',
-                  border: `1.8px solid ${colorHex}`,
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '5px',
+                  border: `2.2px solid ${colorHex}`,
                   backgroundColor: 'transparent',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  zIndex: 1
                 };
             }
           };

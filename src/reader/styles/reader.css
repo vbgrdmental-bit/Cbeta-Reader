@@ -169,12 +169,15 @@ mark.search-highlight {
 }
 
 .reader-text-highlight.hl-style-border {
-  border: 2px solid var(--hl-active-color) !important;
+  border: 2.2px solid var(--hl-active-color) !important;
   border-radius: 4px;
-  padding: 0 3px;
+  padding: 1px 4px;
+  margin: 0 1px;
   background-color: transparent !important;
-  border-bottom: none !important;
   color: inherit !important;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  display: inline;
 }
 
 /* 💡 烏木 (Ebony) 暗色主題特別適配：防止瀏覽器預設 <mark> 的黑字 (black) 蓋掉文字，強效還原白字高對比 */
