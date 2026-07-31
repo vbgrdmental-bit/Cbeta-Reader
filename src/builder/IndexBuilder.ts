@@ -136,13 +136,46 @@ export class IndexBuilder {
     );
 
     try {
+      const queriesToSearch = new Set<string>([trimmedQuery]);
+
+      // 雙向詞幹自動衍生 (Bidirectional Stemming):
+      // 1. 若查詢以「經」結尾 (如 勝鬘經)，加入去尾字「勝鬘」
+      if (trimmedQuery.endsWith('經') && trimmedQuery.length > 1) {
+        queriesToSearch.add(trimmedQuery.slice(0, -1));
+      }
+      // 2. 若查詢不以「經」結尾 (如 勝鬘)，自動補「經」 (如 勝鬘經) 並行檢索
+      else if (!trimmedQuery.endsWith('經') && trimmedQuery.length >= 2) {
+        queriesToSearch.add(`${trimmedQuery}經`);
+      }
+
       const promises: Array<{ key: string; promise: Promise<Response | null> }> = [];
 
-      const titleUrl = getApiUrl(`/stable/search/title?q=${encodeURIComponent(trimmedQuery)}`);
-      promises.push({ key: 'title', promise: fetchWithTimeout(titleUrl, { headers: { 'Accept': 'application/json' } }, 4500) });
+      for (const q of queriesToSearch) {
+        const titleUrl = getApiUrl(`/stable/search/title?q=${encodeURIComponent(q)}`);
+        const directTitleUrl = `https://cbdata.dila.edu.tw/stable/search/title?q=${encodeURIComponent(q)}`;
+
+        // 優先嘗試本地代理路由，失敗或逾時則自動降級直連 CBETA 官方伺服器 (6.5秒超時保護)
+        const fetchTitle = async () => {
+          let res = await fetchWithTimeout(titleUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+          if (!res) {
+            res = await fetchWithTimeout(directTitleUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+          }
+          return res;
+        };
+
+        promises.push({ key: `title_${q}`, promise: fetchTitle() });
+      }
 
       const creatorUrl = getApiUrl(`/stable/works?creator=${encodeURIComponent(trimmedQuery)}`);
-      promises.push({ key: 'creator', promise: fetchWithTimeout(creatorUrl, { headers: { 'Accept': 'application/json' } }, 4500) });
+      const directCreatorUrl = `https://cbdata.dila.edu.tw/stable/works?creator=${encodeURIComponent(trimmedQuery)}`;
+      const fetchCreator = async () => {
+        let res = await fetchWithTimeout(creatorUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+        if (!res) {
+          res = await fetchWithTimeout(directCreatorUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+        }
+        return res;
+      };
+      promises.push({ key: 'creator', promise: fetchCreator() });
 
       // 💡 部類關鍵字自動對應與 API 查詢 (例如: 「般若」-> 查詢 /stable/works?category=般若部類)
       let matchedCategoryName = '';
@@ -155,21 +188,30 @@ export class IndexBuilder {
 
       if (matchedCategoryName) {
         const catUrl = getApiUrl(`/stable/works?category=${encodeURIComponent(matchedCategoryName)}`);
-        promises.push({ key: 'category', promise: fetchWithTimeout(catUrl, { headers: { 'Accept': 'application/json' } }, 4500) });
-      }
-
-      // 若查詢字串以「經」結尾 (例如 大般若經)，並行發送去尾字的查詢
-      if (trimmedQuery.endsWith('經') && trimmedQuery.length > 1) {
-        const stem = trimmedQuery.slice(0, -1);
-        const stemUrl = getApiUrl(`/stable/search/title?q=${encodeURIComponent(stem)}`);
-        promises.push({ key: 'stem', promise: fetchWithTimeout(stemUrl, { headers: { 'Accept': 'application/json' } }, 4500) });
+        const directCatUrl = `https://cbdata.dila.edu.tw/stable/works?category=${encodeURIComponent(matchedCategoryName)}`;
+        const fetchCat = async () => {
+          let res = await fetchWithTimeout(catUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+          if (!res) {
+            res = await fetchWithTimeout(directCatUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+          }
+          return res;
+        };
+        promises.push({ key: 'category', promise: fetchCat() });
       }
 
       // 如果查詢字串符合經典編號格式 (例如 T0220)，額外查詢 works?work=
       const isWorkId = /^[a-zA-Z]\d+/.test(trimmedQuery);
       if (isWorkId) {
         const workUrl = getApiUrl(`/stable/works?work=${trimmedQuery.toUpperCase()}`);
-        promises.push({ key: 'work', promise: fetchWithTimeout(workUrl, { headers: { 'Accept': 'application/json' } }, 4500) });
+        const directWorkUrl = `https://cbdata.dila.edu.tw/stable/works?work=${trimmedQuery.toUpperCase()}`;
+        const fetchWork = async () => {
+          let res = await fetchWithTimeout(workUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+          if (!res) {
+            res = await fetchWithTimeout(directWorkUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+          }
+          return res;
+        };
+        promises.push({ key: 'work', promise: fetchWork() });
       }
 
       const resultsList = await Promise.all(
