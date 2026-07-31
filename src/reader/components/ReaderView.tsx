@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft, Paintbrush
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft, Paintbrush, Search
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
@@ -238,10 +238,18 @@ export function ReaderView({
   const [deleteMenuPosition, setDeleteMenuPosition] = useState<{ top: number; left: number } | null>(null);
   const [isBrushModeActive, setIsBrushModeActive] = useState(false);
 
+  // 💡 本書內動態關鍵字檢索
+  const [internalSearchQuery, setInternalSearchQuery] = useState('');
+  const [showInBookSearchModal, setShowInBookSearchModal] = useState(false);
+  const [inBookSearchInput, setInBookSearchInput] = useState('');
+
+  // 最終採用的檢索關鍵字 (優先採用閱讀器內部主動搜尋的關鍵字，否則退回外部帶入的 searchQuery)
+  const activeSearchQuery = internalSearchQuery.trim() || searchQuery?.trim() || '';
+
   // 💡 全文檢索跳轉高亮支援
   const renderHighlightedContent = (text: string) => {
-    if (!searchQuery) return text;
-    const keywords = searchQuery.trim().split(/\s+/).filter(Boolean);
+    if (!activeSearchQuery) return text;
+    const keywords = activeSearchQuery.trim().split(/\s+/).filter(Boolean);
     if (keywords.length === 0) return text;
 
     // 將關鍵字轉義並建立 regex
@@ -390,13 +398,13 @@ export function ReaderView({
   };
 
   useEffect(() => {
-    if (!book || !searchQuery) {
+    if (!book || !activeSearchQuery) {
       setMatchedSegments([]);
       setCurrentMatchIndex(-1);
       return;
     }
 
-    const keywords = searchQuery.trim().split(/\s+/).filter(Boolean);
+    const keywords = activeSearchQuery.trim().split(/\s+/).filter(Boolean);
     if (keywords.length === 0) {
       setMatchedSegments([]);
       setCurrentMatchIndex(-1);
@@ -427,10 +435,21 @@ export function ReaderView({
       setCurrentMatchIndex(idx !== -1 ? idx : 0);
     } else if (matches.length > 0) {
       setCurrentMatchIndex(0);
+      // 自動滾動至第一筆匹配處
+      const firstTarget = matches[0];
+      if (firstTarget) {
+        if (firstTarget.juan !== currentJuanNum) {
+          pendingScrollSegmentIdRef.current = firstTarget.segmentId;
+          setCurrentJuanNum(firstTarget.juan);
+        } else {
+          scrollToSegment(firstTarget.segmentId);
+          setActiveSegmentId(firstTarget.segmentId);
+        }
+      }
     } else {
       setCurrentMatchIndex(-1);
     }
-  }, [book, searchQuery, initialSegmentId]);
+  }, [book, activeSearchQuery, initialSegmentId]);
 
   const navigateToMatch = (index: number) => {
     const target = matchedSegments[index];
@@ -1306,7 +1325,18 @@ export function ReaderView({
         </button>
 
 
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          {/* 💡 頂部列：「三」左邊新增搜尋鍵，樣式 100% 統一 */}
+          <button 
+            className={`icon-button ${activeSearchQuery ? 'active' : ''}`} 
+            onClick={() => {
+              setInBookSearchInput(activeSearchQuery);
+              setShowInBookSearchModal(true);
+            }} 
+            title="搜尋本書關鍵字"
+          >
+            <Search size={20} />
+          </button>
           <button className="icon-button" onClick={() => setShowNavDrawer(prev => !prev)} title="目次">
             <Menu size={20} />
           </button>
@@ -1316,19 +1346,96 @@ export function ReaderView({
         </div>
       </div>
 
-      {/* 搜尋結果同一書內導航懸浮條 */}
-      {searchQuery && matchedSegments.length > 0 && (
+      {/* 💡 本書內關鍵字搜尋對話框 */}
+      {showInBookSearchModal && (
+        <div className="inbook-search-modal-backdrop" onClick={() => setShowInBookSearchModal(false)}>
+          <div className="inbook-search-modal-card" onClick={e => e.stopPropagation()}>
+            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', marginBottom: '0.8rem', color: 'var(--theme-accent, #8c4b27)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Search size={18} />
+              <span>搜尋本書經文關鍵字</span>
+            </div>
+            <div className="inbook-search-input-wrapper">
+              <input 
+                type="text" 
+                className="inbook-search-input"
+                placeholder="請輸入關鍵字，例如：地藏、勝鬘" 
+                value={inBookSearchInput}
+                onChange={e => setInBookSearchInput(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    setInternalSearchQuery(inBookSearchInput.trim());
+                    setShowInBookSearchModal(false);
+                  }
+                }}
+                autoFocus
+              />
+              {inBookSearchInput && (
+                <button 
+                  type="button" 
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }} 
+                  onClick={() => setInBookSearchInput('')}
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.6rem', marginTop: '0.9rem' }}>
+              {activeSearchQuery && (
+                <button 
+                  className="inbook-search-btn-cancel" 
+                  style={{ color: '#ef4444', borderColor: '#fca5a5' }}
+                  onClick={() => {
+                    setInternalSearchQuery('');
+                    setInBookSearchInput('');
+                    setShowInBookSearchModal(false);
+                  }}
+                >
+                  清除搜尋
+                </button>
+              )}
+              <button 
+                className="inbook-search-btn-cancel" 
+                onClick={() => setShowInBookSearchModal(false)}
+              >
+                取消
+              </button>
+              <button 
+                className="inbook-search-btn-submit" 
+                onClick={() => {
+                  setInternalSearchQuery(inBookSearchInput.trim());
+                  setShowInBookSearchModal(false);
+                }}
+              >
+                搜尋經文
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 搜尋結果同一書內導航懸浮條 (Image 2) */}
+      {activeSearchQuery && matchedSegments.length > 0 && (
         <div className={`search-nav-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-          <span className="search-nav-query" title={searchQuery}>檢索: {searchQuery}</span>
+          <span className="search-nav-query" title={activeSearchQuery}>檢索: {activeSearchQuery}</span>
           <div className="search-nav-controls">
             <button className="search-nav-btn" onClick={handlePrevMatch} title="上一個匹配">
               <ChevronLeft size={16} />
             </button>
             <span className="search-nav-stats">
-              {currentMatchIndex !== -1 ? currentMatchIndex + 1 : '?'} / {matchedSegments.length}
+              {currentMatchIndex !== -1 ? currentMatchIndex + 1 : 0} / {matchedSegments.length}
             </span>
             <button className="search-nav-btn" onClick={handleNextMatch} title="下一個匹配">
               <ChevronRight size={16} />
+            </button>
+            <button 
+              className="search-nav-btn" 
+              onClick={() => {
+                setInternalSearchQuery('');
+              }} 
+              title="關閉檢索"
+              style={{ marginLeft: '0.3rem' }}
+            >
+              <X size={15} />
             </button>
           </div>
         </div>

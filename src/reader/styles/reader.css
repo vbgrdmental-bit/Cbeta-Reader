@@ -852,3 +852,88 @@ body.theme-ebony .resume-dialog-btn-secondary:hover {
   opacity: 0.98;
 }
 
+/* 💡 本書內關鍵字搜尋對話框 (In-Book Search Modal) */
+.inbook-search-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: calc(65px + env(safe-area-inset-top, 0px));
+  animation: fadeIn 0.18s ease-out forwards;
+}
+
+.inbook-search-modal-card {
+  width: 90%;
+  max-width: 400px;
+  background-color: var(--reader-bg, #fdfbf7);
+  border: 1.5px solid var(--theme-accent-border, var(--reader-border));
+  border-radius: var(--radius-lg, 12px);
+  padding: 1.1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+  font-family: var(--font-rounded, sans-serif);
+}
+
+.inbook-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.04);
+  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.12));
+}
+
+.theme-ebony .inbook-search-input-wrapper {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.inbook-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  font-family: var(--font-rounded);
+}
+
+.inbook-search-btn-cancel {
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.15));
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  cursor: pointer;
+  font-family: var(--font-rounded);
+  transition: all 0.15s ease;
+}
+
+.inbook-search-btn-cancel:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.inbook-search-btn-submit {
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-rounded);
+  transition: all 0.15s ease;
+}
+
+.inbook-search-btn-submit:hover {
+  opacity: 0.9;
+}
+
