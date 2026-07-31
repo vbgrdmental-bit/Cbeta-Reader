@@ -1094,7 +1094,9 @@ export function Library({
 
           {!currentFolderId && (
             <div className="library-title-area">
-              <h1>CBETA Reader</h1>
+              <h1 style={{ fontFamily: 'var(--font-rounded)', letterSpacing: '0.04em' }}>
+                <span style={{ color: '#1ea98c' }}>CBETA</span> Reader
+              </h1>
               <p>淨心小角落．閱讀大藏經</p>
               {lastReadBookInfo && (
                 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.8rem auto 0 auto' }}>

@@ -38,8 +38,8 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 - **v3.1.0** (2026-08-01) [App Only]
   - 「畫重點設定」直覺設定。
-  - 新增「設定閱讀時間」，時間到了溫馨提醒。
-  - 微調「版本更新說明」欄最下面的版權說明。
+  - 新增「設定閱讀時間 (護眼模式)」，時間到了溫馨提醒。
+  - 主頁更名為「CBETA Reader 淨心小角落．閱讀大藏經」。
 - **⭐ v3.0.0** (2026-07-31) [App Major Release 重大更新]
   - 提升 CBETA Reader 藏經庫搜尋功能，導入 CBETA 原有的四大檢索方式「依部類查詢」、「依冊別查詢」、「依作譯者查詢」、「依朝代查詢」等，並加入「常用經典」，更方便讀者搜尋經典。
 - **⭐ v2.4.0** (2026-07-31) [Builder Major Release 重大更新]

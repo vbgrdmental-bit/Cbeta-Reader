@@ -380,7 +380,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           {/* 💡 設定閱讀時間 (1:1:1:1 4 個按鍵，極簡時鐘繪圖) */}
           <div className="settings-section">
             <div className="settings-section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span>設定閱讀時間</span>
+              <span>設定閱讀時間 <span style={{ fontSize: '0.8rem', opacity: 0.75, fontWeight: 'normal' }}>(護眼模式)</span></span>
               {timerState.duration && timerState.remainingSeconds > 0 && (
                 <span style={{ fontSize: '0.76rem', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold' }}>
                   ⏱ 倒數中: {formatTimerMMSS(timerState.remainingSeconds)}
@@ -1000,8 +1000,8 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   </div>
                   <ul className="changelog-list">
                     <li>• 「畫重點設定」直覺設定。</li>
-                    <li>• 新增「設定閱讀時間」，時間到了溫馨提醒。</li>
-                    <li>• 微調「版本更新說明」欄最下面的版權說明。</li>
+                    <li>• 新增「設定閱讀時間 (護眼模式)」，時間到了溫馨提醒。</li>
+                    <li>• 主頁更名為「CBETA Reader 淨心小角落．閱讀大藏經」。</li>
                   </ul>
                 </div>
 
