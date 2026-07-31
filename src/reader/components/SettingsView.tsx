@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Database, FileText, Upload, HelpCircle, RotateCw, Archive, Trash2, HardDrive, CheckCircle2 } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
-import { getStorageStats, clearHttpCacheStorage, compressAllBooks } from '../../utils/db';
+import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
 import '../styles/settings.css';
@@ -27,6 +27,22 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   useEffect(() => {
     getStorageStats().then(setStorageStats).catch(console.warn);
   }, []);
+
+  const handleClearAllBooks = async () => {
+    if (!window.confirm('確定要刪除本地所有離線經典嗎？此操作將清空離線書庫並還原為乾淨狀態。')) return;
+    setStorageMsg('正在刪除本地所有離線經書與快取...');
+    try {
+      await clearAllBooks();
+      const stats = await getStorageStats();
+      setStorageStats(stats);
+      setStorageMsg('已成功清空本地所有離線經典！頁面即將自動刷新。');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (err: any) {
+      setStorageMsg('清空失敗：' + (err.message || '未知錯誤'));
+    }
+  };
 
   const getEstimatedBackupTime = (usedBytes?: number): string => {
     if (!usedBytes || usedBytes <= 0) return '< 1 分鐘';
@@ -557,11 +573,31 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
             )}
           </div>
 
-          {/* 8. 書籍儲存空間與壓縮管理 */}
+          {/* 8. 書籍與儲存空間 */}
           <div className="settings-section">
-            <div className="settings-section-title">書籍儲存空間與壓縮管理</div>
+            <div className="settings-section-title">書籍與儲存空間</div>
 
-            {/* 3個無背景色方框卡片 (深色字) */}
+            {/* 容量狀態資訊框：小字 / 粗體 / 有方框 / 背景灰色 */}
+            <div 
+              style={{
+                padding: '0.5rem 0.8rem',
+                backgroundColor: 'rgba(0, 0, 0, 0.035)',
+                border: '1px solid var(--reader-border, rgba(0, 0, 0, 0.12))',
+                borderRadius: '8px',
+                marginBottom: '0.75rem',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                color: 'var(--text-main, #333)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem'
+              }}
+            >
+              <HardDrive size={15} style={{ color: 'var(--text-muted)' }} />
+              <span>已下載共 {storageStats ? storageStats.bookCount : 0} 本書，總容量約 {storageStats ? storageStats.formattedUsed : '0 MB'}</span>
+            </div>
+
+            {/* 操作按鈕卡片：一鍵壓縮 | 清理快取 | 直立線 | 清空經典 */}
             <div className="visual-options-row">
               {/* 第1個: 一鍵壓縮 */}
               <div 
@@ -618,7 +654,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     color: 'var(--text-main, #333)'
                   }}
                 >
-                  <Trash2 size={16} />
+                  <RotateCw size={16} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
                   <span className="visual-option-label" style={{ fontSize: '0.8rem', color: 'var(--text-main, #333)', fontWeight: 600 }}>
@@ -630,7 +666,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 </div>
               </div>
 
-              {/* 清理快取與第3個之間的直立分隔線 | */}
+              {/* 清理快取與清空經典之間的直立分隔線 | */}
               <div 
                 style={{ 
                   width: '1px', 
@@ -642,11 +678,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 }} 
               />
 
-              {/* 第3個: 容量狀態（鍵內寫「共 X 本書 / 已用容量 Y MB」分上下二行） */}
+              {/* 第3個: 清空經典 */}
               <div
                 className="visual-option-card"
-                onClick={() => getStorageStats().then(setStorageStats)}
+                onClick={handleClearAllBooks}
                 style={{
+                  borderColor: 'rgba(239, 68, 68, 0.35)',
+                  backgroundColor: 'rgba(239, 68, 68, 0.04)',
                   padding: '0.7rem 0.3rem',
                   cursor: 'pointer'
                 }}
@@ -656,21 +694,21 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     width: '32px',
                     height: '32px',
                     borderRadius: '50%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                    backgroundColor: 'rgba(239, 68, 68, 0.12)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'var(--text-main, #333)'
+                    color: '#dc2626'
                   }}
                 >
-                  <HardDrive size={16} />
+                  <Trash2 size={16} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-                  <span className="visual-option-label" style={{ fontSize: '0.78rem', color: 'var(--text-main, #333)', fontWeight: 600 }}>
-                    共 {storageStats ? storageStats.bookCount : 0} 本書
+                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#dc2626', fontWeight: 700 }}>
+                    清空經典
                   </span>
                   <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    已用容量 {storageStats ? storageStats.formattedUsed : '0 MB'}
+                    一鍵清空離線書庫
                   </span>
                 </div>
               </div>
@@ -841,7 +879,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               </button>
             </div>
             <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.2rem' }}>
-              {/* 📱 第一部分：App 閱讀器介面更新 */}
+              {/* 第一部分：App 閱讀器介面更新 */}
               <div className="changelog-group-section" style={{ marginBottom: '1.8rem' }}>
                 <div style={{
                   fontSize: '0.95rem',
@@ -855,18 +893,19 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   alignItems: 'center',
                   gap: '0.4rem'
                 }}>
-                  📱 App 閱讀器介面更新
+                  <FileText size={16} style={{ strokeWidth: 2.2 }} />
+                  <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v2.3.0) 直接顯示 */}
+                {/* 最新 App 版本 (v3.0.0 重大更新) 直接顯示 */}
                 <div className="changelog-version-section">
-                  <div className="changelog-version-title">
-                    App: v2.3.0 <span className="changelog-date">(2026-07-29)</span>
+                  <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span>App: v3.0.0</span>
+                    <span className="changelog-date">(2026-07-31)</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--theme-accent, #8c4b27)', fontWeight: 700, border: '1px solid var(--theme-accent, #8c4b27)', padding: '1px 5px', borderRadius: '4px', marginLeft: '4px' }}>重大更新</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型。</li>
-                    <li>• 新增「儲存空間與全集壓縮管理」，支援高動態 Gzip 壓縮，全集經文節省 80% 本地容量。</li>
-                    <li>• 新增一鍵「清理 HTTP 網路快取」與動態容量儀表板，輕鬆釋放手機暫存空間。</li>
+                    <li>• 提升 CBETA Reader 藏經庫搜尋功能，導入 CBETA 原有的四大檢索方式「依部類查詢」、「依冊別查詢」、「依作譯者查詢」、「依朝代查詢」等，並加入「常用經典」，更方便讀者搜尋經典。</li>
                   </ul>
                 </div>
 
@@ -896,6 +935,14 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v2.3.0 <span className="changelog-date">(2026-07-29)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型。</li>
+                        <li>• 新增「儲存空間與全集壓縮管理」，支援高動態 Gzip 壓縮，全集經文節省 80% 本地容量。</li>
+                        <li>• 新增一鍵「清理 HTTP 網路快取」與動態容量儀表板，輕鬆釋放手機暫存空間。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v2.2.0 <span className="changelog-date">(2026-07-28)</span></div>
                       <ul className="changelog-list">
@@ -965,7 +1012,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 )}
               </div>
 
-              {/* ⚙️ 第二部分：Builder 經文解析引擎更新 */}
+              {/* 第二部分：Builder 經文解析引擎更新 */}
               <div className="changelog-group-section" style={{ marginBottom: '1.5rem' }}>
                 <div style={{
                   fontSize: '0.95rem',
@@ -979,16 +1026,20 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   alignItems: 'center',
                   gap: '0.4rem'
                 }}>
-                  ⚙️ Builder 經文解析引擎更新
+                  <Database size={16} style={{ strokeWidth: 2.2 }} />
+                  <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.3.0) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.4.0 重大更新) 直接顯示 */}
                 <div className="changelog-version-section">
-                  <div className="changelog-version-title">
-                    Builder: v2.3.0 <span className="changelog-date">(2026-07-28)</span>
+                  <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span>Builder: v2.4.0</span>
+                    <span className="changelog-date">(2026-07-31)</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--theme-accent, #8c4b27)', fontWeight: 700, border: '1px solid var(--theme-accent, #8c4b27)', padding: '1px 5px', borderRadius: '4px', marginLeft: '4px' }}>重大更新</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 全面過濾 CBETA 頁尾與腳註容器（div#back / footnotes），防止腳註出版資訊混入正文卷末。</li>
+                    <li>• 全面升級 6 線程防限流下載串流池與自動修復引擎 (Auto-Healing Engine)，保證正文 100% 完整零丟包。</li>
+                    <li>• 導入部類關鍵字智慧自動關聯 (Category Keyword Auto-Mapping)，解決大範圍檢索伺服器斷線難題。</li>
                   </ul>
                 </div>
 

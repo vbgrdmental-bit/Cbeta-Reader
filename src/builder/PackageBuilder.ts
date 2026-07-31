@@ -1,7 +1,7 @@
 import type { ReaderPackage } from '../types/book';
-import { IndexBuilder, getApiUrl } from './IndexBuilder';
+import { IndexBuilder, getApiUrl, fetchWithTimeout } from './IndexBuilder';
 import type { SearchResult } from './IndexBuilder';
-import { ReaderBuilder } from './ReaderBuilder';
+import { ReaderBuilder, formatTimeRemaining } from './ReaderBuilder';
 import { NavigationBuilder } from './NavigationBuilder';
 import { ReferenceBuilder } from './ReferenceBuilder';
 import { SearchIndexBuilder } from './SearchIndexBuilder';
@@ -40,13 +40,13 @@ export class PackageBuilder {
     let actualJuansCount = searchResult.juansCount;
     
     try {
-      // 1. Metadata 階段
-      onProgress({ step: 'metadata', percent: 2, message: '正在向 CBETA 獲取經典最新元資料...' });
+      // 1. Metadata 階段 (加入 3.5 秒超時保護，防範 CBETA API 伺服器掛起)
+      onProgress({ step: 'metadata', percent: 3, message: `正在向 CBETA 獲取《${searchResult.title}》最新元資料...` });
       try {
         const metaUrl = getApiUrl(`/stable/works?work=${workId}`);
-        const response = await fetch(metaUrl);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await fetchWithTimeout(metaUrl, { headers: { 'Accept': 'application/json' } }, 3500);
+        if (response && response.ok) {
+          const data = await response.json().catch(() => null);
           if (data && Array.isArray(data.results) && data.results.length > 0) {
             const workInfo = data.results[0];
             if (workInfo.juan && typeof workInfo.juan === 'number') {
@@ -88,18 +88,23 @@ export class PackageBuilder {
         ...searchResult,
         juansCount: actualJuansCount
       });
-      await new Promise(resolve => setTimeout(resolve, 400));
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       // 2. Fetch Content 階段 (解析 HTML 卷次)
       onProgress({ step: 'fetch_content', percent: 10, message: '正在從 CBETA 獲取經文內文與標記...' });
       const { content, rawToc } = await ReaderBuilder.buildContent(
         workId, 
         actualJuansCount,
-        (p) => {
+        (p: number, currentJuan?: number, totalJuans?: number, remSec?: number) => {
+          let detail = `（卷次下載進度: ${Math.floor(p)}%）`;
+          if (currentJuan && totalJuans) {
+            const timeStr = remSec != null && remSec > 0 ? `，剩餘約 ${formatTimeRemaining(remSec)}` : '';
+            detail = `（已完成 ${currentJuan} / ${totalJuans} 卷${timeStr}）`;
+          }
           onProgress({ 
             step: 'fetch_content', 
-            percent: 10 + Math.floor(p * 0.6), // 佔比最大 10% - 70%
-            message: `正在載入經文 HTML（卷次下載中: ${Math.floor(p)}%）...` 
+            percent: 10 + Math.floor(p * 0.65), // 佔比 10% - 75%
+            message: `正在下載經典內文與標記 ${detail}` 
           });
         }
       );

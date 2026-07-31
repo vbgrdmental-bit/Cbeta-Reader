@@ -178,6 +178,46 @@ export async function deleteBook(workId: string): Promise<void> {
   }
 }
 
+export async function clearAllBooks(): Promise<void> {
+  const db = await initDB();
+  
+  // 1. 清空 IndexedDB BOOKS_STORE 中的所有書籍
+  await new Promise<void>((resolve, reject) => {
+    const transaction = db.transaction(BOOKS_STORE, 'readwrite');
+    const store = transaction.objectStore(BOOKS_STORE);
+    const request = store.clear();
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+
+  // 2. 清空所有的閱讀進度與資料夾狀態 (保留偏好設定 app_settings)
+  try {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key !== 'app_settings') {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+  } catch (e) {
+    console.warn('Failed to clear localStorage keys', e);
+  }
+
+  // 3. 清空 CacheStorage 中的網路快取
+  if (typeof window !== 'undefined' && 'caches' in window) {
+    try {
+      const cacheNames = await caches.keys();
+      for (const cacheName of cacheNames) {
+        await caches.delete(cacheName);
+      }
+    } catch (cacheErr) {
+      console.warn('Failed to clear CacheStorage', cacheErr);
+    }
+  }
+}
+
 export async function listBooks(): Promise<BookMetadata[]> {
   const db = await initDB();
   return new Promise((resolve, reject) => {

@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Library } from './reader/components/Library';
 import { ReaderView } from './reader/components/ReaderView';
+import { CbetaCatalogView } from './reader/components/CbetaCatalogView';
 import { SettingsView } from './reader/components/SettingsView';
 import { getSettings, saveSettings } from './utils/db';
 import type { AppSettings } from './utils/db';
 import './App.css';
 
 export function App() {
-  const [view, setView] = useState<'library' | 'reader'>('library');
+  const [view, setView] = useState<'library' | 'cbeta' | 'reader'>('library');
   const [activeBookId, setActiveBookId] = useState<string | null>(null);
   const [activeSegmentId, setActiveSegmentId] = useState<string | undefined>(undefined);
   const [lastSearchQuery, setLastSearchQuery] = useState<string | undefined>(undefined);
@@ -90,12 +91,24 @@ export function App() {
           onSelectBook={handleSelectBook} 
           booksUpdatedTrigger={booksUpdatedTrigger}
           settings={settings}
-
           initialSearchQuery={lastSearchQuery}
           resetFolderTrigger={resetFolderTrigger}
           onOpenSettings={() => setShowSettings(true)}
+          onOpenCbetaCatalog={() => setView('cbeta')}
         />
       </div>
+
+      {view === 'cbeta' && (
+        <CbetaCatalogView
+          onBackToLibrary={() => {
+            setView('library');
+            setBooksUpdatedTrigger(prev => prev + 1);
+          }}
+          onOpenSettings={() => setShowSettings(true)}
+          onSelectBook={handleSelectBook}
+          settings={settings}
+        />
+      )}
 
       {view === 'reader' && activeBookId && (
         <ReaderView 

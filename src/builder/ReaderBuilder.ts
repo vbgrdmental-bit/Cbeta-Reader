@@ -1,9 +1,18 @@
 import type { BookContent, JuanData, TextSegment } from '../types/book';
-import { getApiUrl } from './IndexBuilder';
+import { getApiUrl, fetchWithTimeout } from './IndexBuilder';
+
+export function formatTimeRemaining(seconds: number): string {
+  if (seconds <= 0) return '即將完成';
+  if (seconds < 60) return `${seconds} 秒`;
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  if (secs === 0) return `${mins} 分鐘`;
+  return `${mins} 分 ${secs} 秒`;
+}
 
 export class ReaderBuilder {
   /**
-   * 抓取並解析特定經典的所有卷
+   * 抓取並解析特定經典的所有卷 (支援 6 線程併行流下載 + 自動重試 3 次，防止 CBETA 429 限流與預設空白段落)
    * @param workId 經典ID (例如 T0412)
    * @param juansCount 總卷數
    * @param onProgress 進度回報 callback (0 到 100)
@@ -11,68 +20,100 @@ export class ReaderBuilder {
   static async buildContent(
     workId: string, 
     juansCount: number,
-    onProgress?: (progress: number) => void
+    onProgress?: (progress: number, currentJuan?: number, totalJuans?: number, remSec?: number) => void
   ): Promise<{ content: BookContent; rawToc: any[] }> {
     
     const juans: JuanData[] = [];
+    const juansMap = new Map<number, TextSegment[]>();
     let allRawTocs: any[] = [];
+    let completedJuansCount = 0;
+    const startTime = Date.now();
 
     try {
-      // 優先從線上 API 獲取全文
-      for (let j = 1; j <= juansCount; j++) {
-        if (onProgress) {
-          onProgress(Math.floor(((j - 1) / juansCount) * 90));
-        }
+      // 💡 安全高效併行池：保持同時最多 6 個 HTTP 管道流暢發送，完全避免觸發 CBETA 429 限流拒絕
+      const CONCURRENCY = 6;
+      const queue = Array.from({ length: juansCount }, (_, idx) => idx + 1);
 
-        const url = getApiUrl(`/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1&_t=${Date.now()}`);
-        const response = await fetch(url, { cache: 'reload' });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch juan ${j}`);
-        }
+      const worker = async () => {
+        while (queue.length > 0) {
+          const j = queue.shift();
+          if (!j) break;
 
-        const data = await response.json();
-        
-        // 💡 官方 API 級別的高精細 TOC 提取 (保留完整的 CBETA 多層級樹狀結構，包含附文資料夾)
-        if (data && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0 && allRawTocs.length === 0) {
-          const cleanMuluTree = (nodes: any[]): any[] => {
-            return nodes.map(n => {
-              const nodeCopy = { ...n };
-              if (n.children && Array.isArray(n.children) && n.children.length > 0) {
-                nodeCopy.children = cleanMuluTree(n.children);
+          const url = getApiUrl(`/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1&_t=${Date.now()}`);
+          
+          let success = false;
+          // 自動重試最多 3 次
+          for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+              const timeoutMs = attempt === 1 ? 6000 : 9000;
+              const response = await fetchWithTimeout(url, { cache: 'reload' }, timeoutMs);
+              if (response && response.ok) {
+                const data = await response.json().catch(() => null);
+                if (data && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0 && allRawTocs.length === 0) {
+                  const cleanMuluTree = (nodes: any[]): any[] => {
+                    return nodes.map(n => {
+                      const nodeCopy = { ...n };
+                      if (n.children && Array.isArray(n.children) && n.children.length > 0) {
+                        nodeCopy.children = cleanMuluTree(n.children);
+                      }
+                      return nodeCopy;
+                    });
+                  };
+                  allRawTocs = cleanMuluTree(data.toc.mulu);
+                }
+
+                if (data && Array.isArray(data.results) && data.results.length > 0) {
+                  const rawResult = data.results[0];
+                  const html = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
+                  const segments = this.parseHtmlToSegments(
+                    html, 
+                    workId, 
+                    j, 
+                    allRawTocs.length > 0 ? undefined : allRawTocs
+                  );
+                  if (segments && segments.length > 0) {
+                    juansMap.set(j, segments);
+                    success = true;
+                    break;
+                  }
+                }
               }
-              return nodeCopy;
-            });
-          };
+            } catch (e) {
+              console.warn(`[Juan ${j}] Fetch attempt ${attempt} failed:`, e);
+            }
+            // 重試間隔
+            await new Promise(r => setTimeout(r, 250 * attempt));
+          }
 
-          allRawTocs = cleanMuluTree(data.toc.mulu);
-          
-          console.log(`[ReaderBuilder] Successfully extracted ${allRawTocs.length} top-level TOC items (with full multi-level tree) for ${workId}`);
+          if (!success) {
+            console.error(`[Juan ${j}] All 3 attempts failed. Using fallback.`);
+            juansMap.set(j, this.generateFallbackSegments(workId, j));
+          }
+
+          completedJuansCount++;
+          if (onProgress) {
+            const elapsed = (Date.now() - startTime) / 1000;
+            const avgPerJuan = elapsed / completedJuansCount;
+            const remainingSeconds = Math.ceil((juansCount - completedJuansCount) * avgPerJuan);
+            const percent = Math.floor((completedJuansCount / juansCount) * 100);
+            onProgress(percent, completedJuansCount, juansCount, remainingSeconds);
+          }
         }
-        
-        if (data && Array.isArray(data.results) && data.results.length > 0) {
-          const rawResult = data.results[0];
-          // CBETA API results[0] 在真實環境下直接就是 HTML 字串
-          const html = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
-          
-          // 解析 HTML 段落。如果已經有官方高精度 TOC，就不必在 parseHtml 裡收集
-          const segments = this.parseHtmlToSegments(
-            html, 
-            workId, 
-            j, 
-            allRawTocs.length > 0 ? undefined : allRawTocs
-          );
-          juans.push({
-            juan: j,
-            segments
-          });
-        } else {
-          throw new Error(`Empty results from API for juan ${j}`);
-        }
+      };
+
+      // 併行啟動 6 個 worker 管道
+      await Promise.all(Array.from({ length: CONCURRENCY }, () => worker()));
+
+      // 按卷數 1 ~ juansCount 正確順序排列
+      for (let j = 1; j <= juansCount; j++) {
+        juans.push({
+          juan: j,
+          segments: juansMap.get(j) || this.generateFallbackSegments(workId, j)
+        });
       }
 
       if (onProgress) {
-        onProgress(100);
+        onProgress(100, juansCount, juansCount, 0);
       }
 
       return {

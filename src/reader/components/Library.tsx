@@ -21,6 +21,7 @@ interface LibraryProps {
   initialSearchQuery?: string;
   resetFolderTrigger?: number;
   onOpenSettings?: () => void;
+  onOpenCbetaCatalog?: () => void;
 }
 
 export function Library({ 
@@ -29,7 +30,8 @@ export function Library({
   settings,
   initialSearchQuery,
   resetFolderTrigger,
-  onOpenSettings
+  onOpenSettings,
+  onOpenCbetaCatalog
 }: LibraryProps) {
   const [downloadedBooks, setDownloadedBooks] = useState<BookMetadata[]>([]);
   const [downloadedPackages, setDownloadedPackages] = useState<ReaderPackage[]>([]);
@@ -989,12 +991,10 @@ export function Library({
               <>
                 <button
                   className="library-header-btn"
-                  onClick={async () => {
-                    const defaultFeatured = await IndexBuilder.searchTitle('');
-                    setOnlineResults(defaultFeatured);
-                    setShowSearchDialog(true);
+                  onClick={() => {
+                    if (onOpenCbetaCatalog) onOpenCbetaCatalog();
                   }}
-                  title="下載新佛典"
+                  title="進入 CBETA 藏經庫目錄"
                 >
                   <Plus size={20} />
                 </button>
@@ -1141,12 +1141,10 @@ export function Library({
             {!currentFolderId && downloadedBooks.length === 0 && (
               <div 
                 className="empty-download-bar animate-pulse"
-                onClick={async () => {
-                  const defaultFeatured = await IndexBuilder.searchTitle('');
-                  setOnlineResults(defaultFeatured);
-                  setShowSearchDialog(true);
+                onClick={() => {
+                  if (onOpenCbetaCatalog) onOpenCbetaCatalog();
                 }}
-                title="檢索 CBETA 並匯入經典"
+                title="進入 CBETA 藏經庫目錄"
               >
                 <Plus size={20} style={{ marginRight: '6px' }} />
                 <span>點此下載佛典</span>

@@ -539,59 +539,10 @@ export function ReaderView({
       try {
         let bookData = await getBook(workId);
         if (bookData) {
-          // 💡 全自動目次修復與 Mock 同步邏輯
-          // 只有當書籍的目錄結構毀損、遺失（如退化為預設的 "第 X 卷"）或 Builder 版本變更時，才在背景升級/修復
-          const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
-                              (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷') ||
-                              (!bookData.metadata.version || bookData.metadata.version !== BUILDER_VERSION);
-
-          if (needsTocFix) {
-            try {
-              const isOfflineMock = workId === 'T0412' || workId === 'T0262';
-              if (isOfflineMock) {
-                const res = await fetch(`/mock/${workId}.json`);
-                if (res.ok) {
-                  const preBuilt = await res.json();
-                  // 僅修正卷數，不覆蓋使用者已下載的完整經文內容
-                  if (workId === 'T0412') {
-                    bookData.metadata.juansCount = 3;
-                  } else {
-                    bookData.metadata.juansCount = preBuilt.content.juans.length;
-                  }
-                  const { toc, navigation } = NavigationBuilder.buildNavigation(
-                    workId,
-                    bookData.content,
-                    preBuilt.rawToc || []
-                  );
-                  bookData.toc = toc;
-                  bookData.navigation = navigation;
-                  bookData.metadata.version = BUILDER_VERSION;
-                  await saveBook(bookData);
-                }
-              } else {
-                console.log(`[TOC AutoFix] Silently repairing TOC for online work: ${workId}...`);
-                const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
-                const { content, rawToc } = await ReaderBuilder.buildContent(workId, bookData.metadata.juansCount);
-                const { toc, navigation } = NavigationBuilder.buildNavigation(
-                  workId,
-                  content,
-                  rawToc
-                );
-                bookData.toc = toc;
-                bookData.navigation = navigation;
-                bookData.content = content;
-                bookData.metadata.version = BUILDER_VERSION;
-                await saveBook(bookData);
-                console.log(`[TOC AutoFix] TOC repaired successfully for ${workId}`);
-              }
-            } catch (err) {
-              console.warn('[TOC AutoFix] Failed to sync or repair TOC:', err);
-            }
-          }
-          // 💡 已知內建經典 Metadata 自動修正（修正本地儲存的舊錯誤資料）
+          // 💡 已知內建經典 Metadata 自動修正
           const KNOWN_METADATA_FIXES: Record<string, Partial<typeof bookData.metadata>> = {
             'T0412': { category: '大集部類', creators: '唐 實叉難陀譯' },
-            'T0262': { category: '法華部類',   creators: '姚秦 鳩摩羅什譯' }
+            'T0262': { category: '法華部類', creators: '姚秦 鳩摩羅什譯' }
           };
           const fix = KNOWN_METADATA_FIXES[workId];
           if (fix) {
@@ -604,11 +555,70 @@ export function ReaderView({
             }
             if (needsSave) {
               await saveBook(bookData);
-              console.log(`[MetaFix] Auto-corrected metadata for ${workId}`);
             }
           }
 
+          // ⚡⚡⚡ 優先渲染閱讀器介面，達到 0 秒極速開啟體驗！
           setBook(bookData);
+
+          // 💡 全自動背景目次修復與 Mock 同步邏輯 (非阻塞式在背景進行)
+          const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
+                              (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷');
+
+          // 💡 全自動修復：若經文包含預設備用文字（"經文預設段落"），自動在背景向 CBETA 重新獲取真實 HTML 正文並修復！
+          const hasFallbackContent = bookData.content.juans.some(j => 
+            j.segments.some(s => s.content.includes('經文預設段落'))
+          );
+
+          if (hasFallbackContent || needsTocFix) {
+            (async () => {
+              try {
+                const isOfflineMock = workId === 'T0412' || workId === 'T0262';
+                if (isOfflineMock) {
+                  const res = await fetch(`/mock/${workId}.json`);
+                  if (res.ok) {
+                    const preBuilt = await res.json();
+                    if (workId === 'T0412') {
+                      bookData!.metadata.juansCount = 3;
+                    } else {
+                      bookData!.metadata.juansCount = preBuilt.content.juans.length;
+                    }
+                    const { toc, navigation } = NavigationBuilder.buildNavigation(
+                      workId,
+                      bookData!.content,
+                      preBuilt.rawToc || []
+                    );
+                    bookData!.toc = toc;
+                    bookData!.navigation = navigation;
+                    bookData!.metadata.version = BUILDER_VERSION;
+                    await saveBook(bookData!);
+                    setBook({ ...bookData! });
+                  }
+                } else if (hasFallbackContent) {
+                  console.log(`[AutoHeal] Book ${workId} contains fallback text. Auto-healing real text from CBETA...`);
+                  const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+                  const { content, rawToc } = await ReaderBuilder.buildContent(workId, bookData!.metadata.juansCount);
+                  const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
+                  
+                  const healedBook: ReaderPackage = {
+                    ...bookData!,
+                    content,
+                    toc,
+                    navigation,
+                    metadata: {
+                      ...bookData!.metadata,
+                      version: BUILDER_VERSION
+                    }
+                  };
+                  await saveBook(healedBook);
+                  setBook(healedBook);
+                  console.log(`[AutoHeal] Successfully auto-healed real content for ${workId}`);
+                }
+              } catch (err) {
+                console.warn('[AutoHeal] Failed to sync or repair content:', err);
+              }
+            })();
+          }
           
           // 如果有傳入特定跳轉段落
           if (initialSegmentId) {

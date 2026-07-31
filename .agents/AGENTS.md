@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v2.2.0` (App: v2.2.0 / Builder: v2.3.0)
+- **Current Version**: `v3.0.0` (App: v3.0.0 / Builder: v2.4.0) ⭐ Major Release
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -36,6 +36,12 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ v3.0.0** (2026-07-31) [App Major Release 重大更新]
+  - 提升 CBETA Reader 藏經庫搜尋功能，導入 CBETA 原有的四大檢索方式「依部類查詢」、「依冊別查詢」、「依作譯者查詢」、「依朝代查詢」等，並加入「常用經典」，更方便讀者搜尋經典。
+- **⭐ v2.4.0** (2026-07-31) [Builder Major Release 重大更新]
+  - 重構全自動背景無感修復機制 (Auto-Healing Engine)，開啟舊有經文 0 秒瞬開並背景自動向 CBETA 補齊真實完整 HTML 段落正文。
+  - 全面導入 6 線程極速防限流下載串流池 (`CONCURRENCY = 6`) 與 3 次自動重試，消除 Cloudflare 429 丟包問題。
+  - 導入部類關鍵字智慧自動關聯 (Category Keyword Auto-Mapping)，解決大範圍檢索伺服器斷線難題。
 - **v2.3.0** (2026-07-29) [App Only]
   - 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型（例字：永）。
   - 新增「儲存空間與全集壓縮管理」儀表板，支援高動態 Gzip 壓縮引擎，大部頭經典全集（如《大般若經》600卷）節省 80% 本地儲存容量。
