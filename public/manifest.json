@@ -1,7 +1,7 @@
 {
-  "name": "CBETA Reader - 淨心閱讀",
-  "short_name": "淨心閱讀",
-  "description": "淨心閱讀(CBETA Reader) 是一款基於CBETA 電子佛典大藏經的線上閱讀器。透過簡潔介面，協助使用者更容易閱讀大藏經經文。",
+  "name": "CBETA Reader 淨心小角落．閱讀大藏經",
+  "short_name": "CBETA Reader",
+  "description": "本網站「CBETA Reader 淨心小角落．閱讀大藏經」(非官方)，以 CBETA 佛典資料庫為基礎，為讀者打造一個舒適、溫暖又簡潔的淨心小角落，讓閱讀大藏經可以成為日常。",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fbf9f5",
