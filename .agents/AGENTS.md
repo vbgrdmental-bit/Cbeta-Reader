@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v3.0.0` (App: v3.0.0 / Builder: v2.4.0) ⭐ Major Release
+- **Current Version**: `v3.1.0` (App: v3.1.0 / Builder: v2.4.0)
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -36,6 +36,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **v3.1.0** (2026-08-01) [App Only]
+  - 「畫重點設定」直覺設定。
+  - 新增「設定閱讀時間」，時間到了溫馨提醒。
+  - 微調「版本更新說明」欄最下面的版權說明。
 - **⭐ v3.0.0** (2026-07-31) [App Major Release 重大更新]
   - 提升 CBETA Reader 藏經庫搜尋功能，導入 CBETA 原有的四大檢索方式「依部類查詢」、「依冊別查詢」、「依作譯者查詢」、「依朝代查詢」等，並加入「常用經典」，更方便讀者搜尋經典。
 - **⭐ v2.4.0** (2026-07-31) [Builder Major Release 重大更新]

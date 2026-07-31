@@ -992,15 +992,16 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v3.0.0 重大更新) 直接顯示 */}
+                {/* 最新 App 版本 (v3.1.0) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>App: v3.0.0</span>
-                    <span className="changelog-date">(2026-07-31)</span>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--theme-accent, #8c4b27)', fontWeight: 700, border: '1px solid var(--theme-accent, #8c4b27)', padding: '1px 5px', borderRadius: '4px', marginLeft: '4px' }}>重大更新</span>
+                    <span>App: v3.1.0</span>
+                    <span className="changelog-date">(2026-08-01)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 提升 CBETA Reader 藏經庫搜尋功能，導入 CBETA 原有的四大檢索方式「依部類查詢」、「依冊別查詢」、「依作譯者查詢」、「依朝代查詢」等，並加入「常用經典」，更方便讀者搜尋經典。</li>
+                    <li>• 「畫重點設定」直覺設定。</li>
+                    <li>• 新增「設定閱讀時間」，時間到了溫馨提醒。</li>
+                    <li>• 微調「版本更新說明」欄最下面的版權說明。</li>
                   </ul>
                 </div>
 
