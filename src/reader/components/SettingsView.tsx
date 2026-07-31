@@ -4,6 +4,8 @@ import type { AppSettings, StorageStats } from '../../utils/db';
 import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
+import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
+import type { ReadingTimerState } from '../../utils/readingTimer';
 import '../styles/settings.css';
 
 interface SettingsViewProps {
@@ -24,8 +26,16 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   const [isCompressing, setIsCompressing] = useState(false);
   const [storageMsg, setStorageMsg] = useState('');
 
+  // 💡 閱讀時間倒數計時狀態
+  const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
+
   useEffect(() => {
     getStorageStats().then(setStorageStats).catch(console.warn);
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = readingTimer.subscribe(setTimerState);
+    return unsubscribe;
   }, []);
 
   const handleClearAllBooks = async () => {
@@ -360,6 +370,82 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     </div>
                     <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
                       {labelMap[style]}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 💡 設定閱讀時間 (1:1:1:1 4 個按鍵，極簡時鐘繪圖) */}
+          <div className="settings-section">
+            <div className="settings-section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>設定閱讀時間</span>
+              {timerState.duration && timerState.remainingSeconds > 0 && (
+                <span style={{ fontSize: '0.76rem', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold' }}>
+                  ⏱ 倒數中: {formatTimerMMSS(timerState.remainingSeconds)}
+                </span>
+              )}
+            </div>
+            <div className="visual-options-row">
+              {([15, 30, 45, 60] as const).map((mins) => {
+                const isActive = timerState.duration === mins && timerState.remainingSeconds > 0;
+                
+                // 依據 15/30/45/60 繪製專屬扇形與時針 (1/4, 2/4, 3/4, 4/4 灰色區塊與 12點起點指針)
+                const renderClockSvg = () => {
+                  switch (mins) {
+                    case 15:
+                      return (
+                        <svg className="padding-svg" viewBox="0 0 36 36">
+                          <circle cx="18" cy="18" r="13" className="svg-border" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 31 18 Z" fill="currentColor" opacity="0.3" />
+                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <line x1="18" y1="18" x2="26" y2="18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                        </svg>
+                      );
+                    case 30:
+                      return (
+                        <svg className="padding-svg" viewBox="0 0 36 36">
+                          <circle cx="18" cy="18" r="13" className="svg-border" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 18 31 Z" fill="currentColor" opacity="0.3" />
+                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <line x1="18" y1="18" x2="18" y2="28" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                        </svg>
+                      );
+                    case 45:
+                      return (
+                        <svg className="padding-svg" viewBox="0 0 36 36">
+                          <circle cx="18" cy="18" r="13" className="svg-border" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                          <path d="M 18 18 L 18 5 A 13 13 0 1 1 5 18 Z" fill="currentColor" opacity="0.3" />
+                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <line x1="18" y1="18" x2="10" y2="18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                        </svg>
+                      );
+                    case 60:
+                      return (
+                        <svg className="padding-svg" viewBox="0 0 36 36">
+                          <circle cx="18" cy="18" r="13" className="svg-border" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                          <circle cx="18" cy="18" r="13" fill="currentColor" opacity="0.3" />
+                          <line x1="18" y1="18" x2="18" y2="7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                        </svg>
+                      );
+                  }
+                };
+
+                return (
+                  <div
+                    key={`timer-${mins}`}
+                    className={`visual-option-card ${isActive ? 'active' : ''}`}
+                    onClick={() => readingTimer.setTimer(mins)}
+                    title={isActive ? `取消 ${mins} 分鐘閱讀計時` : `設定 ${mins} 分鐘閱讀計時`}
+                  >
+                    {renderClockSvg()}
+                    <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
+                      {mins}分
                     </span>
                   </div>
                 );

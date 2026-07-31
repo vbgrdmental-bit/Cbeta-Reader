@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft, Paintbrush, Search
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft, Paintbrush, Search, Clock
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
@@ -9,6 +9,8 @@ import { NavigationBuilder } from '../../builder/NavigationBuilder';
 import { BUILDER_VERSION } from '../../builder/version';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
+import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
+import type { ReadingTimerState } from '../../utils/readingTimer';
 import '../styles/reader.css';
 
 interface ReaderViewProps {
@@ -213,6 +215,14 @@ export function ReaderView({
   const [currentJuanNum, setCurrentJuanNum] = useState<number>(1);
   const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null);
   
+  // 💡 閱讀時間倒數計時狀態
+  const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
+
+  useEffect(() => {
+    const unsubscribe = readingTimer.subscribe(setTimerState);
+    return unsubscribe;
+  }, []);
+
   // UI 覆蓋層（工具列）狀態
   const [showToolbar, setShowToolbar] = useState(true);
   const toolbarTimeoutRef = useRef<number | null>(null);
@@ -1672,6 +1682,34 @@ export function ReaderView({
         <div className="bar-left-controls">
           <span>{currentMuluTitle}</span>
         </div>
+
+        {/* ⏱️ 閱讀時間倒數計時 (下方控制列中間 / 小字 / 淺灰 / 顯示分和秒倒數) */}
+        {timerState.duration && timerState.remainingSeconds > 0 && (
+          <div 
+            className="bar-center-timer"
+            onClick={() => setShowSettingsView(true)}
+            title="閱讀時間倒數中 (點擊開啟設定)"
+            style={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '0.78rem',
+              color: 'var(--reader-text-muted, #888)',
+              fontFamily: 'var(--font-rounded)',
+              cursor: 'pointer',
+              opacity: 0.9,
+              padding: '2px 8px',
+              borderRadius: '4px',
+              userSelect: 'none'
+            }}
+          >
+            <Clock size={13} style={{ strokeWidth: 2, opacity: 0.85 }} />
+            <span>{formatTimerMMSS(timerState.remainingSeconds)}</span>
+          </div>
+        )}
 
         <div className="bar-right-controls">
           <button className="icon-button" onClick={handleToggleTTS} title={isPlaying ? "停止朗讀" : "語音朗讀"}>
