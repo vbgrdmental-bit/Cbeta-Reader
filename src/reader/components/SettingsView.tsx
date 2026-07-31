@@ -1220,7 +1220,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               <div style={{ marginTop: '1.5rem', paddingTop: '1.2rem', borderTop: '1px dashed var(--reader-border, rgba(0,0,0,0.15))' }}>
                 <div style={{ fontSize: '0.8rem', lineHeight: 1.7, color: 'var(--reader-text-muted, #777)', opacity: 0.88, textAlign: 'justify' }}>
                   <p style={{ margin: 0 }}>
-                    本網站「CBETA Reader 淨心閱讀」(非官方)，以 CBETA 佛典資料庫為基礎，試著打造一個簡潔的閱讀器，協助使用者更容易的閱讀大藏經。網站內如有任何錯誤、疏漏或更多的建議，也歡迎不吝指導並來信寄至Email: <a href="mailto:vbgrdmental@gmail.com" style={{ color: 'inherit', textDecoration: 'underline' }}>vbgrdmental@gmail.com</a>。祝福法喜充滿，福慧雙修，無限感恩。
+                    本網站「CBETA Reader 淨心小角落．閱讀大藏經」(非官方)，以 CBETA 佛典資料庫為基礎，為讀者打造一個舒適、溫暖又簡潔的淨心小角落，讓閱讀大藏經可以成為日常。網站內每一個小角落都有我們的用心，如有任何錯誤、疏漏需要修改或其他的建議，都歡迎不吝指導並來信寄至Email: <a href="mailto:vbgrdmental@gmail.com" style={{ color: 'inherit', textDecoration: 'underline' }}>vbgrdmental@gmail.com</a>。祝福法喜充滿，福慧雙修，無限感恩。
                   </p>
                 </div>
 
