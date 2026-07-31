@@ -136,3 +136,33 @@ When comparing imported book segments with original CBETA documents to fix error
 | Book ID | Book Title | Description of Exception | Code Location | Builder Version | Date |
 | --- | --- | --- | --- | --- | --- |
 | - | - | - | - | - | - |
+
+---
+
+## 5. Reading Timer & Sleep Lock System Specifications (設定閱讀時間與防睡眠鎖系統規範)
+
+- **核心檔案位置**：
+  - 管理器邏輯：[src/utils/readingTimer.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/utils/readingTimer.ts)
+  - UI 選項按鈕：[src/reader/components/SettingsView.tsx](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/reader/components/SettingsView.tsx)
+  - 閱讀頁底部控制列顯示：[src/reader/components/ReaderView.tsx](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/reader/components/ReaderView.tsx)
+  - 全域提醒彈窗與純黑屏休眠：[src/App.tsx](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/App.tsx)
+
+- **功能架構與核心規則**：
+  1. **防睡眠鎖 (Screen Wake Lock API)**：
+     - 當點擊 `15分 / 30分 / 45分 / 60分` 啟動計時器時，系統自動請求 `navigator.wakeLock.request('screen')`，閱讀期間保持螢幕恆亮不自動熄屏。
+  2. **全域與跨頁連貫性**：
+     - 計時器為全域單例 (`readingTimer`)，狀態同步儲存至 `localStorage`，切換書籍、搜尋或重新整理皆保持連貫倒數。
+     - 閱讀器下方工具列正中間即時顯示分秒倒數（例：`⏱ 14:59`），點擊可開啟時間設定。
+  3. **第一對話框（T-1 分鐘 / 60 秒溫馨提醒）**：
+     - 剩餘 60 秒時跳出對話框：*「您的閱讀時間即將到達，要適當休息一下，身體動一動，眼睛眨一眨…」*。
+     - **若按下「時間到就休息」**：標記 `restOnTimeChoice = true` 並關閉第一對話框。當 `00:00` 到達時，**直接進入全黑屏休眠/釋放 WakeLock，絕不跳出第二對話框打擾！**
+     - **若按下「繼續閱讀 +X分」**：重置為延長後的分鐘數並重新倒數，關閉對話框，不跳出第二對話框。
+     - **若 30 秒無視無動作**：對話框在 30 秒後自動淡出隱藏 (`warningAutoDismissed = true`)，避免阻擋閱讀正文。
+  4. **第二對話框（T-0 時間到 / 黑幕休息）**：
+     - **僅在第一對話框未點擊（無視或無回應）且時間歸零時跳出**。
+     - 顯示：*「時間到了，請適當休息。您已完成預定的閱讀時間。請放鬆雙眼，活動身心，常保健康。」*
+     - 提供「關閉並休息」與「繼續閱讀 (+15分 | +30分 | +45分 | +60分)」選項。
+     - **若 30 秒無視無動作**：對話框自動隱藏，畫面上保持 OLED 全純黑屏休眠。
+     - **若出現後 1 分鐘（T+1 min）無動作**：自動呼叫 `releaseWakeLock()` 釋放防睡眠鎖，交由作業系統/手機原生省電機制關閉螢幕。
+  5. **純黑屏休眠 (OLED Blackout Overlay)**：
+     - 時間到進入黑幕休眠時，畫面呈現全純黑 (`#000000`) 樣式，點擊畫面任意處即可隨時恢復閱讀狀態。
