@@ -52,7 +52,7 @@ body.theme-ebony {
 .bookshelf-section {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 2rem;
+  padding: 0.8rem 1rem;
   box-sizing: border-box;
   flex: 1;
 }
@@ -111,12 +111,12 @@ body.theme-ebony .control-divider {
   transition: transform 0.15s, border-color 0.15s;
 }
 
-.header-theme-circle.bg-ivory {
-  background: #faf7f0;
+.header-theme-circle.bg-parchment {
+  background: #f7f4ed;
 }
 
-.header-theme-circle.bg-parchment {
-  background: #f1e5c9;
+.header-theme-circle.bg-ivory {
+  background: #fcfaf2;
 }
 
 .header-theme-circle.bg-comfort {
@@ -146,8 +146,8 @@ body.theme-ebony .header-theme-circle.active {
 .library-title-area {
   width: 100%;
   text-align: center;
-  margin-top: 0.1rem;
-  margin-bottom: 0.15rem;
+  margin: 0;
+  padding: 0;
 }
 
 .library-title-area h1 {
@@ -157,12 +157,14 @@ body.theme-ebony .header-theme-circle.active {
   color: var(--text-primary);
   letter-spacing: 0.08em;
   line-height: 1.25;
+  margin: 0;
 }
 
 .library-title-area p {
   font-size: 0.82rem;
   color: var(--text-muted);
-  margin-top: 0.25rem;
+  margin-top: 0.15rem;
+  margin-bottom: 0;
   letter-spacing: 0.04em;
 }
 
@@ -171,14 +173,14 @@ body.theme-ebony .header-theme-circle.active {
   width: 100%;
   height: 1px;
   background: rgba(140, 75, 39, 0.12);
-  margin: 0.4rem 0 0.3rem 0;
+  margin: 0.35rem 0;
 }
 
 .system-folders-divider-line {
   width: 100%;
   height: 1px;
   background: rgba(140, 75, 39, 0.12);
-  margin: 0.3rem 0 0.4rem 0;
+  margin: 0.35rem 0;
 }
 
 body.theme-dark .title-divider-line,
@@ -203,8 +205,8 @@ body.theme-ebony .system-folders-divider-line {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.6rem;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
+  padding: 0;
   width: 100%;
 }
 
