@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Check, AlertCircle, X, Download,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook } from '../../utils/db';
@@ -43,7 +43,6 @@ export function Library({
   // Builder 進度與動畫
   const [buildProgress, setBuildProgress] = useState<BuildProgress | null>(null);
   const [activeTab, setActiveTab] = useState<'shelf' | 'search'>(initialSearchQuery ? 'search' : 'shelf');
-  const [draggingWorkId, setDraggingWorkId] = useState<string | null>(null);
   const [loadingDots, setLoadingDots] = useState('...');
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
 
@@ -117,10 +116,8 @@ export function Library({
 
   const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
 
-  // 💡 整理編輯模式狀態（長按卡片進入，空白點選退出，手把與垃圾桶平常隱藏，模式下才顯現）
+  // 💡 整理編輯模式狀態（長按卡片進入，空白點選退出，按鈕平常隱藏，模式下才顯現）
   const [isEditMode, setIsEditMode] = useState(false);
-  const [dragOverSortTargetId, setDragOverSortTargetId] = useState<string | null>(null);
-  const [dragOverFolderTargetId, setDragOverFolderTargetId] = useState<string | null>(null);
   const longPressTimerRef = useRef<number | null>(null);
   const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
 
@@ -194,6 +191,13 @@ export function Library({
 
   // 💡 遞迴計算某一層（包括該層所有的子資料夾中）的經典總數
   const getFolderTotalBookCount = (folderId: string | null): number => {
+    if (folderId === 'virtual_recent_reads') {
+      return recentReadsBooks.length;
+    }
+    if (folderId === 'virtual_favorites') {
+      return favoriteBooksList.length;
+    }
+
     let count = 0;
     
     if (!folderId) {
@@ -261,25 +265,6 @@ export function Library({
     }
   };
 
-  // 💡 計算拖曳懸停時是應該渲染「上方」還是「下方」提示線（排序用）
-  const getDragOverLineClass = (targetId: string) => {
-    if (!draggingWorkId || dragOverSortTargetId !== targetId || draggingWorkId === targetId) return '';
-    
-    // 如果是資料夾拖曳，或者是在對比資料夾與經典，預設放上面
-    if (draggingWorkId.startsWith('folder-') || targetId.startsWith('folder-')) {
-      const sourceIdx = folders.findIndex(f => f.id === draggingWorkId);
-      const targetIdx = folders.findIndex(f => f.id === targetId);
-      if (sourceIdx === -1 || targetIdx === -1) return 'drag-over-top';
-      return sourceIdx < targetIdx ? 'drag-over-bottom' : 'drag-over-top';
-    }
-
-    // 經典拖曳
-    const sourceIdx = downloadedBooks.findIndex(b => b.workId === draggingWorkId);
-    const targetIdx = downloadedBooks.findIndex(b => b.workId === targetId);
-    if (sourceIdx === -1 || targetIdx === -1) return 'drag-over-top';
-
-    return sourceIdx < targetIdx ? 'drag-over-bottom' : 'drag-over-top';
-  };
   const FOLDER_COLOR_OPTIONS = [
     { name: '苔松綠', value: '#3d5a45' },
     { name: '琥珀金', value: '#c07d2a' },
@@ -432,50 +417,8 @@ export function Library({
     setEditingFolderId(null);
   };
 
-  // 拖曳移入資料夾
-  const handleDropIntoFolder = (e: React.DragEvent, folderId: string) => {
-    e.preventDefault();
-    const dragId = e.dataTransfer.getData('text/plain') || draggingWorkId;
-    if (!dragId || dragId === folderId) return;
-
-    if (dragId.startsWith('folder-')) {
-      // 💡 嵌套資料夾：將資料夾拖入另一個資料夾
-      // 防範循環嵌套 (Descendant Check)
-      const isDescendantOf = (childId: string, parentId: string): boolean => {
-        let current: BookFolder | undefined = folders.find(f => f.id === childId);
-        while (current && current.parentId) {
-          if (current.parentId === parentId) return true;
-          const nextParentId = current.parentId;
-          current = folders.find(f => f.id === nextParentId);
-        }
-        return false;
-      };
-
-      if (isDescendantOf(folderId, dragId)) {
-        console.warn('Cannot drop parent folder into its child folder');
-        return;
-      }
-
-      const updated = folders.map(f => {
-        if (f.id === dragId) {
-          return { ...f, parentId: folderId };
-        }
-        return f;
-      });
-      saveFolders(updated);
-    } else {
-      // 💡 將經典拖入資料夾
-      const updated = folders.map(f => {
-        if (f.id === folderId) {
-          const bookIds = f.bookIds.includes(dragId) ? f.bookIds : [...f.bookIds, dragId];
-          return { ...f, bookIds };
-        }
-        return { ...f, bookIds: f.bookIds.filter(id => id !== dragId) };
-      });
-      saveFolders(updated);
-    }
-    setDraggingWorkId(null);
-  };
+  // 刪除經典暫存 ID
+  const [bookToDelete, setBookToDelete] = useState<string | null>(null);
 
   // 將經典移出資料夾至上一層 (parentId 代表的資料夾)
   const handleRemoveFromFolder = (e: React.MouseEvent, bookId: string) => {
@@ -485,14 +428,12 @@ export function Library({
     const currentFolder = folders.find(f => f.id === currentFolderId);
     if (!currentFolder) return;
 
-    const parentId = currentFolder.parentId; // 上一層資料夾 ID (可以是 null 也就是首頁)
+    const parentId = currentFolder.parentId;
 
     const updated = folders.map(f => {
-      // 1. 從當前資料夾移除
       if (f.id === currentFolderId) {
         return { ...f, bookIds: f.bookIds.filter(id => id !== bookId) };
       }
-      // 2. 加入到上一層資料夾中 (如果上一層不是首頁的話)
       if (parentId && f.id === parentId) {
         const bookIds = f.bookIds.includes(bookId) ? f.bookIds : [...f.bookIds, bookId];
         return { ...f, bookIds };
@@ -503,13 +444,12 @@ export function Library({
     saveFolders(updated);
   };
 
-  // 💡 將子資料夾移出至上一層 (parentId 代表的上一層資料夾，若是首頁則為 null)
+  // 將子資料夾移出至上一層
   const handleRemoveFolderFromFolder = (e: React.MouseEvent, folderId: string) => {
     e.stopPropagation();
     const folder = folders.find(f => f.id === folderId);
     if (!folder || !folder.parentId) return;
 
-    // 尋找父資料夾以取得其 parentId（即上上層 ID，可以是 null）
     const parentFolder = folders.find(f => f.id === folder.parentId);
     const grandParentId = parentFolder ? parentFolder.parentId : null;
 
@@ -523,91 +463,10 @@ export function Library({
     saveFolders(updated);
   };
 
-  // 資料夾手把間上下排序
-  const handleFolderSort = (e: React.DragEvent, targetFolderId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const sourceFolderId = e.dataTransfer.getData('text/plain') || draggingWorkId;
-    if (!sourceFolderId || !sourceFolderId.startsWith('folder-') || sourceFolderId === targetFolderId) return;
-
-    setFolders((prev) => {
-      const sourceIdx = prev.findIndex(f => f.id === sourceFolderId);
-      const targetIdx = prev.findIndex(f => f.id === targetFolderId);
-      if (sourceIdx === -1 || targetIdx === -1) return prev;
-
-      const newFolders = [...prev];
-      const [removed] = newFolders.splice(sourceIdx, 1);
-      newFolders.splice(targetIdx, 0, removed);
-
-      localStorage.setItem('cbeta_reader_folders', JSON.stringify(newFolders));
-      return newFolders;
-    });
-    setDraggingWorkId(null);
-  };
-
-  // 書籍手把間排序
-  const handleBookSort = (e: React.DragEvent, targetWorkId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const sourceWorkId = e.dataTransfer.getData('text/plain') || draggingWorkId;
-    if (!sourceWorkId || sourceWorkId.startsWith('folder-') || sourceWorkId === targetWorkId) return;
-
-    setDownloadedBooks((prev) => {
-      const sourceIndex = prev.findIndex(b => b.workId === sourceWorkId);
-      const targetIndex = prev.findIndex(b => b.workId === targetWorkId);
-      if (sourceIndex === -1 || targetIndex === -1) return prev;
-
-      const newBooks = [...prev];
-      const [removed] = newBooks.splice(sourceIndex, 1);
-      newBooks.splice(targetIndex, 0, removed);
-
-      const orderList = newBooks.map(b => b.workId);
-      localStorage.setItem('cbeta_reader_shelf_order', JSON.stringify(orderList));
-      return newBooks;
-    });
-    setDraggingWorkId(null);
-  };
-
-  // 刪除經典暫存 ID
-  const [bookToDelete, setBookToDelete] = useState<string | null>(null);
-
-  // HTML5 拖曳排序事件處理
-  const handleDragStart = (e: React.DragEvent, id: string) => {
-    // 💡 只有在編輯模式下才放行拖曳，平常日常點閱時進行攔截阻斷，防範干擾正常點選
-    if (!isEditMode) {
-      e.preventDefault();
-      return;
-    }
-    setDraggingWorkId(id);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', id);
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent, targetWorkId: string) => {
-    e.preventDefault();
-    const sourceWorkId = e.dataTransfer.getData('text/plain') || draggingWorkId;
-    if (!sourceWorkId || sourceWorkId === targetWorkId) return;
-
-    setDownloadedBooks((prev) => {
-      const sourceIndex = prev.findIndex(b => b.workId === sourceWorkId);
-      const targetIndex = prev.findIndex(b => b.workId === targetWorkId);
-      if (sourceIndex === -1 || targetIndex === -1) return prev;
-
-      const newBooks = [...prev];
-      const [removed] = newBooks.splice(sourceIndex, 1);
-      newBooks.splice(targetIndex, 0, removed);
-
-      // 保存書架排序
-      const orderList = newBooks.map(b => b.workId);
-      localStorage.setItem('cbeta_reader_book_order', JSON.stringify(orderList));
-      return newBooks;
-    });
-
-    setDraggingWorkId(null);
+  const openMoveFolderDialog = (folderId: string) => {
+    setSelectedBookIds([]);
+    setEditingFolderId(folderId);
+    setShowBatchMoveDialog(true);
   };
 
   // 讀取本地已下載的經典
@@ -1069,19 +928,23 @@ export function Library({
           {currentFolderId && (
             <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
-
                 <div className="folder-nav-middle">
                   <span className="folder-path-display">
-                    {currentFolderId === 'virtual_resume' ? '繼續閱讀' : getFolderPath(currentFolderId)}
+                    {currentFolderId === 'virtual_resume' ? '繼續閱讀' : 
+                     currentFolderId === 'virtual_recent_reads' ? '近期閱讀' :
+                     currentFolderId === 'virtual_favorites' ? '我的最愛' :
+                     getFolderPath(currentFolderId)}
                   </span>
                 </div>
-                <div className="folder-nav-right">
-                  <span className="folder-book-count-badge" title="當前層級經典總數 (含子資料夾)">
-                    {currentFolderId === 'virtual_resume' ? displayBooks.length : getFolderTotalBookCount(currentFolderId)}
-                  </span>
-                </div>
+                {currentFolderId !== 'virtual_recent_reads' && currentFolderId !== 'virtual_favorites' && (
+                  <div className="folder-nav-right">
+                    <span className="folder-book-count-badge" title="當前層級經典總數 (含子資料夾)">
+                      {currentFolderId === 'virtual_resume' ? displayBooks.length : getFolderTotalBookCount(currentFolderId)}
+                    </span>
+                  </div>
+                )}
               </div>
-              {currentFolderId !== 'virtual_resume' && (
+              {currentFolderId !== 'virtual_resume' && currentFolderId !== 'virtual_recent_reads' && currentFolderId !== 'virtual_favorites' && (
                 <div className="folder-sub-actions">
                   <button className="folder-add-sub-btn-flat" onClick={() => setShowNewFolderDialog(true)}>
                     <Plus size={13} /> 新建子資料夾
@@ -1192,45 +1055,13 @@ export function Library({
                 {displayFolders.map((folder) => (
                   <div 
                     key={folder.id}
-                    className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(folder.id)} ${dragOverFolderTargetId === folder.id ? 'drag-folder-hover' : ''}`}
+                    className={`list-book-item list-folder-item ${isEditMode ? 'edit-mode' : ''}`}
                     onClick={() => {
                       if (isLongPressTriggeredRef.current) {
                         isLongPressTriggeredRef.current = false;
                         return;
                       }
                       navigateToFolder(folder.id);
-                    }}
-                    draggable={isEditMode && currentFolderId !== 'virtual_resume'}
-                    onDragStart={(e) => handleDragStart(e, folder.id)}
-                    onDragOver={(e) => { 
-                      handleDragOver(e); 
-                      if (!draggingWorkId || draggingWorkId === folder.id) return;
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const relativeY = (e.clientY - rect.top) / rect.height;
-                      if (relativeY < 0.25 || relativeY > 0.75) {
-                        setDragOverSortTargetId(folder.id);
-                        setDragOverFolderTargetId(null);
-                      } else {
-                        setDragOverFolderTargetId(folder.id);
-                        setDragOverSortTargetId(null);
-                      }
-                    }}
-                    onDragLeave={() => {
-                      setDragOverFolderTargetId(null);
-                      setDragOverSortTargetId(null);
-                    }}
-                    onDragEnd={() => {
-                      setDragOverFolderTargetId(null);
-                      setDragOverSortTargetId(null);
-                    }}
-                    onDrop={(e) => { 
-                      if (dragOverSortTargetId) {
-                        handleFolderSort(e, folder.id);
-                      } else {
-                        handleDropIntoFolder(e, folder.id);
-                      }
-                      setDragOverFolderTargetId(null);
-                      setDragOverSortTargetId(null);
                     }}
                     onMouseDown={startLongPress}
                     onMouseUp={cancelLongPress}
@@ -1239,31 +1070,6 @@ export function Library({
                     onTouchMove={handleTouchMove}
                     onTouchEnd={cancelLongPress}
                   >
-                    {/* 💡 拖曳手把：改為最左邊淺灰色豎線 「|」 */}
-                    <div 
-                      className="drag-handle"
-                      title="按住拖曳手把進行排序或將此資料夾移入其他資料夾"
-                      onDragOver={(e) => { 
-                        handleDragOver(e); 
-                        e.stopPropagation(); 
-                        if (draggingWorkId && draggingWorkId !== folder.id) {
-                          setDragOverSortTargetId(folder.id); 
-                          setDragOverFolderTargetId(null); 
-                        }
-                      }}
-                      onDragLeave={(e) => {
-                        e.stopPropagation();
-                        setDragOverSortTargetId(null);
-                      }}
-                      onDrop={(e) => {
-                        handleFolderSort(e, folder.id);
-                        setDragOverSortTargetId(null);
-                      }}
-                      onClick={(e) => e.stopPropagation()} 
-                    >
-                      <div className="drag-handle-line" />
-                    </div>
-
                     {/* iOS 檔案風格：上方資料夾圖示 */}
                     <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: folder.color || '#3d5a45' }}>
                       <Folder size={15} className="theme-folder-icon" />
@@ -1279,21 +1085,27 @@ export function Library({
                       </div>
                     </div>
 
+                    {/* 💡 長按或編輯模式：資料夾 3 個選項 (移動、重新命名、刪除) */}
                     <div className="item-actions-panel">
-                      {currentFolderId && (
-                        <button 
-                          className="edit-action-btn edit-move-out-btn"
-                          onClick={(e) => handleRemoveFolderFromFolder(e, folder.id)}
-                          title="移出至上一層資料夾"
-                        >
-                          <ArrowUp size={16} />
-                        </button>
-                      )}
+                      <button 
+                        className="edit-action-btn edit-move-out-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (currentFolderId) {
+                            handleRemoveFolderFromFolder(e, folder.id);
+                          } else {
+                            openMoveFolderDialog(folder.id);
+                          }
+                        }}
+                        title="移動資料夾"
+                      >
+                        <FolderInput size={15} />
+                      </button>
 
                       <button 
                         className="edit-action-btn edit-rename-btn"
                         onClick={(e) => startRenameFolder(folder, e)}
-                        title="編輯資料夾"
+                        title="重新命名資料夾"
                       >
                         <Edit3 size={14} />
                       </button>
@@ -1303,7 +1115,7 @@ export function Library({
                         onClick={(e) => handleDeleteFolder(folder.id, e)}
                         title="刪除資料夾"
                       >
-                        <X size={15} />
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   </div>
@@ -1348,7 +1160,7 @@ export function Library({
               return (
                 <div 
                   key={book.workId}
-                  className={`list-book-item ${draggingWorkId === book.workId ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''} ${getDragOverLineClass(book.workId)}`}
+                  className={`list-book-item ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''}`}
                   onClick={(e) => { 
                     if (isLongPressTriggeredRef.current) {
                       isLongPressTriggeredRef.current = false;
@@ -1360,22 +1172,6 @@ export function Library({
                       onSelectBook(book.workId); 
                     }
                   }}
-                  draggable={isEditMode && currentFolderId !== 'virtual_resume'}
-                  onDragStart={(e) => handleDragStart(e, book.workId)}
-                  onDragOver={(e) => {
-                    handleDragOver(e);
-                    if (draggingWorkId && draggingWorkId !== book.workId) {
-                      setDragOverSortTargetId(book.workId);
-                    }
-                  }}
-                  onDragLeave={() => {
-                    setDragOverSortTargetId(null);
-                  }}
-                  onDragEnd={() => {
-                    setDragOverSortTargetId(null);
-                    setDragOverFolderTargetId(null);
-                  }}
-                  onDrop={(e) => { handleDrop(e, book.workId); setDragOverSortTargetId(null); }}
                   onMouseDown={startLongPress}
                   onMouseUp={cancelLongPress}
                   onMouseLeave={cancelLongPress}
@@ -1383,31 +1179,6 @@ export function Library({
                   onTouchMove={handleTouchMove}
                   onTouchEnd={cancelLongPress}
                 >
-                  {/* 💡 拖曳手把：改為最左邊淺灰色豎線 「|」 */}
-                  {currentFolderId !== 'virtual_resume' && (
-                    <div 
-                      className="drag-handle"
-                      title="按住拖曳手把進行排序"
-                      onDragOver={(e) => { 
-                        handleDragOver(e); 
-                        e.stopPropagation(); 
-                        if (draggingWorkId && draggingWorkId !== book.workId) {
-                          setDragOverSortTargetId(book.workId); 
-                        }
-                      }}
-                      onDragLeave={(e) => {
-                        e.stopPropagation();
-                        setDragOverSortTargetId(null);
-                      }}
-                      onDrop={(e) => {
-                        handleBookSort(e, book.workId);
-                        setDragOverSortTargetId(null);
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <div className="drag-handle-line" />
-                    </div>
-                  )}
 
                   {/* 💡 編輯模式下顯示勾選框 (Checkbox) */}
                   {isEditMode && (
