@@ -146,8 +146,8 @@ body.theme-ebony .header-theme-circle.active {
 .library-title-area {
   width: 100%;
   text-align: center;
-  margin: 0;
-  padding: 0 0 0.35rem 0;
+  margin: 0.6rem 0 0.8rem 0;
+  padding: 0 0 0.75rem 0;
   border-bottom: 1px solid rgba(140, 75, 39, 0.12);
   box-sizing: border-box;
 }
@@ -170,7 +170,7 @@ body.theme-ebony .library-title-area {
 .library-title-area p {
   font-size: 0.82rem;
   color: var(--text-muted);
-  margin-top: 0.15rem;
+  margin-top: 0.25rem;
   margin-bottom: 0;
   letter-spacing: 0.04em;
 }
@@ -187,8 +187,8 @@ body.theme-ebony .library-title-area {
 }
 
 .folders-grid-container.system-grid {
-  margin: 0.35rem 0 0 0;
-  padding: 0 0 0.35rem 0;
+  margin: 0;
+  padding: 0 0 0.75rem 0;
   border-bottom: 1px solid rgba(140, 75, 39, 0.12);
 }
 
@@ -1142,7 +1142,7 @@ body.theme-ebony .grid-book-card.add-card {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-top: 0.35rem;
+  margin-top: 0.8rem;
   padding: 0 0.2rem;
 }
 
