@@ -315,18 +315,24 @@ body.theme-ebony .card-more-btn {
   transform: scale(1.15);
 }
 
-/* 快選選單 Modal 按鈕樣式 */
+/* 快選選單 Modal 與 4 種顏色主題相容 (圖 3 專用相容性適應) */
+.action-menu-card {
+  background: var(--bg-primary, #ffffff) !important;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12)) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+
 .action-menu-card .action-menu-item-btn {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   width: 100%;
-  padding: 0.65rem 0.85rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color, rgba(0,0,0,0.08));
-  background: var(--card-bg, #ffffff);
-  color: var(--text-primary, #333);
-  font-size: 0.9rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, rgba(0,0,0,0.1));
+  background: var(--bg-secondary, rgba(0,0,0,0.03));
+  color: var(--text-primary, #333333);
+  font-size: 0.92rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -345,6 +351,38 @@ body.theme-ebony .card-more-btn {
 .action-menu-card .action-menu-item-btn.delete-action:hover {
   background: rgba(211, 47, 47, 0.08);
   border-color: #d32f2f;
+}
+
+/* 烏木 / 深色主題 (Ebony / Dark Theme - 圖 3 精確相容) */
+body.theme-ebony .action-menu-card,
+body.theme-dark .action-menu-card {
+  background: #181c20 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body.theme-ebony .action-menu-card .action-menu-item-btn,
+body.theme-dark .action-menu-card .action-menu-item-btn {
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.theme-ebony .action-menu-card .action-menu-item-btn:hover,
+body.theme-dark .action-menu-card .action-menu-item-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--theme-accent, #c07d2a);
+  color: #ffffff;
+}
+
+body.theme-ebony .action-menu-card .action-menu-item-btn.delete-action,
+body.theme-dark .action-menu-card .action-menu-item-btn.delete-action {
+  color: #ff6b6b;
+}
+
+body.theme-ebony .action-menu-card .action-menu-item-btn.delete-action:hover,
+body.theme-dark .action-menu-card .action-menu-item-btn.delete-action:hover {
+  background: rgba(255, 107, 107, 0.15);
+  border-color: #ff6b6b;
 }
 
 /* 虛線新建資料夾卡片 (Dashed Add Folder Card - 統一 92px 高度與完全置中) */
