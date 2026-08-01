@@ -189,6 +189,16 @@ body.theme-ebony .header-theme-circle.active {
   border-radius: 10px;
 }
 
+/* 💡 絕對定位拖曳手把，防止干擾資料夾圖示水平居中 (Perfect Horizontal Centering) */
+.folders-grid-container .list-folder-item .drag-handle {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  z-index: 5;
+}
+
 .folders-grid-container .list-folder-icon-wrapper {
   width: 38px;
   height: 26px;
@@ -231,7 +241,7 @@ body.theme-ebony .header-theme-circle.active {
   opacity: 0.85;
 }
 
-/* 虛線新建資料夾卡片 (Dashed Add Folder Card - 66px Ultra Compact) */
+/* 虛線新建資料夾卡片 (Dashed Add Folder Card - 66px Ultra Compact, Icon nicely above text) */
 .list-folder-item.add-folder-dashed-card {
   background: rgba(140, 75, 39, 0.02);
   border: 1.5px dashed rgba(140, 75, 39, 0.35);
@@ -255,6 +265,7 @@ body.theme-ebony .header-theme-circle.active {
   align-items: center;
   justify-content: center;
   color: var(--theme-accent, #8c4b27);
+  margin-top: 0;
   margin-bottom: 0.22rem;
 }
 

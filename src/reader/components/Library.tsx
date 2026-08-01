@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Check, AlertCircle, X, Download,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook } from '../../utils/db';
@@ -920,6 +920,25 @@ export function Library({
     return list;
   }, [downloadedBooks, progressUpdatedTrigger]);
 
+  // 💡 我的最愛經書清單 (localStorage 持久化)
+  const [favoriteWorkIds, setFavoriteWorkIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('favorite_work_ids');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const toggleFavoriteBook = (e: React.MouseEvent, workId: string) => {
+    e.stopPropagation();
+    setFavoriteWorkIds(prev => {
+      const next = prev.includes(workId) ? prev.filter(id => id !== workId) : [...prev, workId];
+      localStorage.setItem('favorite_work_ids', JSON.stringify(next));
+      return next;
+    });
+  };
+
   const handleDeleteProgress = (e: React.MouseEvent, workId: string) => {
     e.stopPropagation();
     e.preventDefault();
@@ -935,25 +954,36 @@ export function Library({
 
   const allInFolderBookIds = folders.flatMap(f => f.bookIds);
   
-  // 如果是虛擬的「繼續閱讀」資料夾，不顯示任何子資料夾
-  const displayFolders = currentFolderId === 'virtual_resume'
+  // 近期閱讀（最多 10 本）與我的最愛經典列表
+  const recentReadsBooks = resumeBooks.slice(0, 10).map(item => item.book);
+  const favoriteBooksList = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
+
+  // 如果是虛擬系統資料夾，不顯示任何一般子資料夾
+  const isSystemFolder = currentFolderId === 'virtual_resume' || currentFolderId === 'virtual_recent_reads' || currentFolderId === 'virtual_favorites';
+  const displayFolders = isSystemFolder
     ? []
     : folders.filter(f => f.parentId === currentFolderId);
     
-  // 如果是虛擬的「繼續閱讀」資料夾，顯示有進度的書籍；否則顯示對應資料夾下的書籍
-  const displayBooks = currentFolderId === 'virtual_resume'
-    ? resumeBooks.map(item => item.book)
-    : (currentFolderId
-        ? downloadedBooks.filter(b => {
-            const f = folders.find(folder => folder.id === currentFolderId);
-            return f ? f.bookIds.includes(b.workId) : false;
-          })
-        : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId)));
+  const displayBooks = currentFolderId === 'virtual_recent_reads'
+    ? recentReadsBooks
+    : (currentFolderId === 'virtual_favorites'
+        ? favoriteBooksList
+        : (currentFolderId === 'virtual_resume'
+            ? resumeBooks.map(item => item.book)
+            : (currentFolderId
+                ? downloadedBooks.filter(b => {
+                    const f = folders.find(folder => folder.id === currentFolderId);
+                    return f ? f.bookIds.includes(b.workId) : false;
+                  })
+                : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId)))));
 
 
   // 獲取當前資料夾路徑麵包屑
   const getFolderPath = (folderId: string | null): string => {
     if (!folderId) return '首頁';
+    if (folderId === 'virtual_recent_reads') return '近期閱讀 (最多10本)';
+    if (folderId === 'virtual_favorites') return '我的最愛';
+    if (folderId === 'virtual_resume') return '繼續閱讀';
     const path: string[] = [];
     let currentId: string | null = folderId;
     let safetyCounter = 0;
@@ -1173,9 +1203,53 @@ export function Library({
               </div>
             )}
 
-            {/* === A. 渲染資料夾清單 (iOS 檔案風格 雙欄 2-Column Grid Layout) === */}
-            {displayFolders.length > 0 && (
+            {/* === A. 渲染資料夾清單 (含系統固定資料夾與自訂資料夾 雙欄 2-Column Layout) === */}
+            {(!currentFolderId || displayFolders.length > 0) && (
               <div className="folders-grid-container">
+                {/* 💡 首頁根目錄固定渲染 2 個系統固定資料夾（無法刪除/無法拖曳） */}
+                {!currentFolderId && (
+                  <>
+                    {/* 1. 近期閱讀系統資料夾 */}
+                    <div 
+                      className="list-book-item list-folder-item system-folder-item"
+                      onClick={() => navigateToFolder('virtual_recent_reads')}
+                      title="點擊查看近期閱讀經典 (最多10本)"
+                    >
+                      <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#1ea98c' }}>
+                        <Clock size={16} color="#ffffff" />
+                      </div>
+                      <div className="list-folder-info">
+                        <div className="list-folder-title" title="近期閱讀">
+                          近期閱讀
+                        </div>
+                        <div className="list-folder-count-text">
+                          {recentReadsBooks.length}本經書
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 2. 我的最愛系統資料夾 */}
+                    <div 
+                      className="list-book-item list-folder-item system-folder-item"
+                      onClick={() => navigateToFolder('virtual_favorites')}
+                      title="點擊查看我的最愛經典"
+                    >
+                      <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#e53e3e' }}>
+                        <Heart size={15} fill="#ffffff" color="#ffffff" />
+                      </div>
+                      <div className="list-folder-info">
+                        <div className="list-folder-title" title="我的最愛">
+                          我的最愛
+                        </div>
+                        <div className="list-folder-count-text">
+                          {favoriteBooksList.length}本經書
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* 3. 使用者自訂資料夾 */}
                 {displayFolders.map((folder) => (
                   <div 
                     key={folder.id}
@@ -1262,7 +1336,7 @@ export function Library({
                         {folder.name}
                       </div>
                       <div className="list-folder-count-text">
-                        {getFolderTotalBookCount(folder.id)}個項目
+                        {getFolderTotalBookCount(folder.id)}本經書
                       </div>
                     </div>
 
@@ -1297,7 +1371,7 @@ export function Library({
                 ))}
 
                 {/* 💡 奇數資料夾補滿：右側虛線新建資料夾卡片 (圖 2 iOS 樣式) */}
-                {displayFolders.length % 2 !== 0 && (
+                {((!currentFolderId ? 2 : 0) + displayFolders.length) % 2 !== 0 && (
                   <div 
                     className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
                     onClick={() => setShowNewFolderDialog(true)}
@@ -1423,6 +1497,19 @@ export function Library({
                     </div>
                   </div>
                   <div className="item-actions-panel">
+                    {/* 愛心我的最愛按鈕 (Favorite Heart Toggle) */}
+                    <button 
+                      className={`edit-action-btn edit-fav-btn ${favoriteWorkIds.includes(book.workId) ? 'is-favorite' : ''}`}
+                      onClick={(e) => toggleFavoriteBook(e, book.workId)}
+                      title={favoriteWorkIds.includes(book.workId) ? "從「我的最愛」移除" : "加入「我的最愛」"}
+                    >
+                      <Heart 
+                        size={15} 
+                        fill={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "none"} 
+                        color={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "currentColor"} 
+                      />
+                    </button>
+
                     {currentFolderId === 'virtual_resume' ? (
                       <button 
                         className="list-book-move-out"
