@@ -202,8 +202,10 @@ body.theme-ebony .folders-grid-container.system-grid {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 0.4rem 0.4rem;
-  min-height: 66px;
+  padding: 0.5rem 0.4rem;
+  height: 84px;
+  min-height: 84px;
+  max-height: 84px;
   box-sizing: border-box;
   text-align: center;
   position: relative;
@@ -227,7 +229,8 @@ body.theme-ebony .folders-grid-container.system-grid {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.22rem;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
 }
@@ -262,19 +265,22 @@ body.theme-ebony .folders-grid-container.system-grid {
   opacity: 0.85;
 }
 
-/* 虛線新建資料夾卡片 (Dashed Add Folder Card - 66px Ultra Compact, Icon nicely above text) */
+/* 虛線新建資料夾卡片 (Dashed Add Folder Card - 統一 84px 高度與完全置中) */
 .list-folder-item.add-folder-dashed-card {
   background: rgba(140, 75, 39, 0.02);
   border: 1.5px dashed rgba(140, 75, 39, 0.35);
   box-shadow: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 66px;
+  height: 84px;
+  min-height: 84px;
+  max-height: 84px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 0.4rem 0.4rem;
+  padding: 0.5rem 0.4rem;
+  box-sizing: border-box;
 }
 
 .list-folder-item.add-folder-dashed-card .dashed-icon-box {
@@ -287,7 +293,8 @@ body.theme-ebony .folders-grid-container.system-grid {
   justify-content: center;
   color: var(--theme-accent, #8c4b27);
   margin-top: 0;
-  margin-bottom: 0.22rem;
+  margin-bottom: 0.25rem;
+  flex-shrink: 0;
 }
 
 .list-folder-item.add-folder-dashed-card:hover {
