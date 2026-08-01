@@ -142,12 +142,14 @@ export function Library({
     
     const target = e.target as HTMLElement;
     // 點擊 actions 按鈕或 input 等控制項不觸發長按
+    // 💡 「近期閱讀」與「我的最愛」為系統虛擬資料夾，長按無任何反應
     if (
       target.closest('button') || 
       target.closest('.list-folder-actions') || 
       target.closest('input') ||
       target.closest('.item-actions-panel') ||
-      target.closest('.batch-checkbox')
+      target.closest('.batch-checkbox') ||
+      target.closest('.system-folder-item')
     ) {
       return;
     }
@@ -1001,11 +1003,11 @@ export function Library({
 
               {/* 💡 首頁根目錄固定渲染 2 個系統固定資料夾（位在第一條細線與第二條細線中間） */}
               <div className="folders-grid-container system-grid">
-                {/* 1. 近期閱讀系統資料夾 - 深咖啡色 (#4a2c11) */}
+                {/* 1. 近期閱讀系統資料夾 - 深咖啡色 (#4a2c11) - 不支援長按 */}
                 <div 
                   className="list-book-item list-folder-item system-folder-item"
                   onClick={() => navigateToFolder('virtual_recent_reads')}
-                  title="點擊查看近期閱讀經典 (最多10本)"
+                  title="點擊查看近期閱讀經典"
                 >
                   <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#4a2c11' }}>
                     <Clock size={16} color="#ffffff" />
@@ -1020,7 +1022,7 @@ export function Library({
                   </div>
                 </div>
 
-                {/* 2. 我的最愛系統資料夾 */}
+                {/* 2. 我的最愛系統資料夾 - 不支援長按 */}
                 <div 
                   className="list-book-item list-folder-item system-folder-item"
                   onClick={() => navigateToFolder('virtual_favorites')}
