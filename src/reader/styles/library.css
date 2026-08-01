@@ -146,8 +146,8 @@ body.theme-ebony .header-theme-circle.active {
 .library-title-area {
   width: 100%;
   text-align: center;
-  margin: 0 0 0.5rem 0;
-  padding: 0 0 0.45rem 0;
+  margin: 0;
+  padding: 0 0 0.35rem 0;
   border-bottom: 1px solid rgba(140, 75, 39, 0.12);
   box-sizing: border-box;
 }
@@ -187,8 +187,8 @@ body.theme-ebony .library-title-area {
 }
 
 .folders-grid-container.system-grid {
-  margin: 0 0 0.5rem 0;
-  padding: 0 0 0.5rem 0;
+  margin: 0.35rem 0 0 0;
+  padding: 0 0 0.35rem 0;
   border-bottom: 1px solid rgba(140, 75, 39, 0.12);
 }
 
@@ -1142,6 +1142,7 @@ body.theme-ebony .grid-book-card.add-card {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-top: 0.35rem;
   padding: 0 0.2rem;
 }
 
