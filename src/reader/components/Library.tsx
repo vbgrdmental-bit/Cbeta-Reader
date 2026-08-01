@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Check, AlertCircle, X, Download,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook } from '../../utils/db';
@@ -124,6 +124,10 @@ export function Library({
   // 批量選擇經書狀態
   const [selectedBookIds, setSelectedBookIds] = useState<string[]>([]);
   const [showBatchMoveDialog, setShowBatchMoveDialog] = useState(false);
+
+  // 「...」選項 Modal 狀態
+  const [menuTargetFolder, setMenuTargetFolder] = useState<BookFolder | null>(null);
+  const [menuTargetBook, setMenuTargetBook] = useState<BookMetadata | null>(null);
 
   // 線上搜尋批量下載與資料夾設定狀態
   const [selectedOnlineWorkIds, setSelectedOnlineWorkIds] = useState<string[]>([]);
@@ -1007,8 +1011,8 @@ export function Library({
           )}
 
           {/* 清單模式（唯一） */}
-          {/* 💡 編輯模式下顯示批量操作工具列 */}
-          {isEditMode && displayBooks.length > 0 && (
+          {/* 💡 編輯模式下顯示常駐批量操作工具列 */}
+          {isEditMode && (
             <div className="batch-action-bar animate-fade-in">
               <div className="batch-action-left">
                 <span className="batch-select-count">
@@ -1029,6 +1033,13 @@ export function Library({
                 >
                   <FolderPlus size={15} style={{ marginRight: 4 }} />
                   批量移動至資料夾
+                </button>
+                <button 
+                  className="batch-btn batch-btn-done"
+                  onClick={() => setIsEditMode(false)}
+                  style={{ marginLeft: '4px', backgroundColor: 'var(--theme-accent)', color: '#fff', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem' }}
+                >
+                  完成
                 </button>
               </div>
             </div>
@@ -1070,7 +1081,19 @@ export function Library({
                     onTouchMove={handleTouchMove}
                     onTouchEnd={cancelLongPress}
                   >
-                    {/* iOS 檔案風格：上方資料夾圖示 */}
+                    {/* 💡 右上角 「...」按鈕 (灰色圓形底) */}
+                    <button 
+                      className="card-more-btn folder-top-right-more"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setMenuTargetFolder(folder);
+                      }}
+                      title="資料夾選項"
+                    >
+                      <MoreVertical size={14} />
+                    </button>
+
+                    {/* iOS 檔案風格：上方資料夾圖示 (100% 精確居中) */}
                     <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: folder.color || '#3d5a45' }}>
                       <Folder size={15} className="theme-folder-icon" />
                     </div>
@@ -1083,40 +1106,6 @@ export function Library({
                       <div className="list-folder-count-text">
                         {getFolderTotalBookCount(folder.id)}本經書
                       </div>
-                    </div>
-
-                    {/* 💡 長按或編輯模式：資料夾 3 個選項 (移動、重新命名、刪除) */}
-                    <div className="item-actions-panel">
-                      <button 
-                        className="edit-action-btn edit-move-out-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (currentFolderId) {
-                            handleRemoveFolderFromFolder(e, folder.id);
-                          } else {
-                            openMoveFolderDialog(folder.id);
-                          }
-                        }}
-                        title="移動資料夾"
-                      >
-                        <FolderInput size={15} />
-                      </button>
-
-                      <button 
-                        className="edit-action-btn edit-rename-btn"
-                        onClick={(e) => startRenameFolder(folder, e)}
-                        title="重新命名資料夾"
-                      >
-                        <Edit3 size={14} />
-                      </button>
-
-                      <button 
-                        className="edit-action-btn edit-delete-btn"
-                        onClick={(e) => handleDeleteFolder(folder.id, e)}
-                        title="刪除資料夾"
-                      >
-                        <Trash2 size={15} />
-                      </button>
                     </div>
                   </div>
                 ))}
@@ -1206,52 +1195,31 @@ export function Library({
                       )}
                     </div>
                   </div>
-                  <div className="item-actions-panel">
-                    {/* 愛心我的最愛按鈕 (Favorite Heart Toggle) */}
+
+                  {/* 💡 經書最右側按鈕群：最右邊愛心 + 「...」選單按鈕 */}
+                  <div className="book-card-right-actions" onClick={(e) => e.stopPropagation()}>
                     <button 
-                      className={`edit-action-btn edit-fav-btn ${favoriteWorkIds.includes(book.workId) ? 'is-favorite' : ''}`}
+                      className={`fav-heart-btn ${favoriteWorkIds.includes(book.workId) ? 'is-favorite' : ''}`}
                       onClick={(e) => toggleFavoriteBook(e, book.workId)}
                       title={favoriteWorkIds.includes(book.workId) ? "從「我的最愛」移除" : "加入「我的最愛」"}
                     >
                       <Heart 
-                        size={15} 
+                        size={18} 
                         fill={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "none"} 
-                        color={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "currentColor"} 
+                        color={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "var(--text-muted, #777)"} 
                       />
                     </button>
 
-                    {currentFolderId === 'virtual_resume' ? (
-                      <button 
-                        className="list-book-move-out"
-                        onClick={(e) => handleDeleteProgress(e, book.workId)}
-                        title="清除此書的閱讀記錄，不刪除原書"
-                        style={{ color: '#bd3a3a', borderColor: 'rgba(189, 58, 58, 0.3)' }}
-                      >
-                        清除記錄
-                      </button>
-                    ) : (
-                      <>
-                        {/* 槽位 1：返回（移出）按鈕（在資料夾內才渲染） */}
-                        {currentFolderId && (
-                          <button 
-                            className="edit-action-btn edit-move-out-btn"
-                            onClick={(e) => handleRemoveFromFolder(e, book.workId)}
-                            title="移出至上一層資料夾"
-                          >
-                            <ArrowUp size={16} />
-                          </button>
-                        )}
-
-                        {/* 槽位 3：刪除 (X) 按鈕 */}
-                        <button 
-                          className="edit-action-btn edit-delete-btn"
-                          onClick={(e) => handleDeleteBook(e, book.workId)}
-                          title="刪除"
-                        >
-                          <X size={15} />
-                        </button>
-                      </>
-                    )}
+                    <button 
+                      className="card-more-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setMenuTargetBook(book);
+                      }}
+                      title="經典選項"
+                    >
+                      <MoreVertical size={14} />
+                    </button>
                   </div>
                 </div>
               );
@@ -1841,6 +1809,128 @@ export function Library({
                   <span>{getFolderPath(f.id)}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 📁 資料夾 「...」選項 Modal */}
+      {menuTargetFolder && (
+        <div className="search-dialog-overlay" onClick={() => setMenuTargetFolder(null)}>
+          <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '320px', borderRadius: '16px', padding: '1.2rem' }}>
+            <div style={{ fontSize: '1.02rem', fontWeight: 'bold', marginBottom: '0.8rem', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+              📁 {menuTargetFolder.name}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              {currentFolderId && (
+                <button 
+                  className="action-menu-item-btn"
+                  onClick={(e) => {
+                    handleRemoveFolderFromFolder(e, menuTargetFolder.id);
+                    setMenuTargetFolder(null);
+                  }}
+                >
+                  <ArrowUp size={16} />
+                  <span>移出至上一層資料夾</span>
+                </button>
+              )}
+              <button 
+                className="action-menu-item-btn"
+                onClick={() => {
+                  const f = menuTargetFolder;
+                  setMenuTargetFolder(null);
+                  openMoveFolderDialog(f.id);
+                }}
+              >
+                <FolderInput size={16} />
+                <span>移動資料夾</span>
+              </button>
+              <button 
+                className="action-menu-item-btn"
+                onClick={(e) => {
+                  const f = menuTargetFolder;
+                  setMenuTargetFolder(null);
+                  startRenameFolder(f, e);
+                }}
+              >
+                <Edit3 size={16} />
+                <span>重新命名資料夾</span>
+              </button>
+              <button 
+                className="action-menu-item-btn delete-action"
+                onClick={(e) => {
+                  const f = menuTargetFolder;
+                  setMenuTargetFolder(null);
+                  handleDeleteFolder(f.id, e);
+                }}
+              >
+                <Trash2 size={16} />
+                <span>刪除資料夾</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 📖 經典 「...」選項 Modal */}
+      {menuTargetBook && (
+        <div className="search-dialog-overlay" onClick={() => setMenuTargetBook(null)}>
+          <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '320px', borderRadius: '16px', padding: '1.2rem' }}>
+            <div style={{ fontSize: '1.02rem', fontWeight: 'bold', marginBottom: '0.8rem', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+              📖 {menuTargetBook.title}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              {currentFolderId === 'virtual_resume' ? (
+                <button 
+                  className="action-menu-item-btn delete-action"
+                  onClick={(e) => {
+                    const b = menuTargetBook;
+                    setMenuTargetBook(null);
+                    handleDeleteProgress(e, b.workId);
+                  }}
+                >
+                  <Trash2 size={16} />
+                  <span>清除此書閱讀記錄</span>
+                </button>
+              ) : (
+                <>
+                  {currentFolderId && (
+                    <button 
+                      className="action-menu-item-btn"
+                      onClick={(e) => {
+                        handleRemoveFromFolder(e, menuTargetBook.workId);
+                        setMenuTargetBook(null);
+                      }}
+                    >
+                      <ArrowUp size={16} />
+                      <span>移出至上一層資料夾</span>
+                    </button>
+                  )}
+                  <button 
+                    className="action-menu-item-btn"
+                    onClick={() => {
+                      const b = menuTargetBook;
+                      setMenuTargetBook(null);
+                      setSelectedBookIds([b.workId]);
+                      setShowBatchMoveDialog(true);
+                    }}
+                  >
+                    <FolderInput size={16} />
+                    <span>移動至資料夾</span>
+                  </button>
+                  <button 
+                    className="action-menu-item-btn delete-action"
+                    onClick={(e) => {
+                      const b = menuTargetBook;
+                      setMenuTargetBook(null);
+                      handleDeleteBook(e, b.workId);
+                    }}
+                  >
+                    <Trash2 size={16} />
+                    <span>刪除經典</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
