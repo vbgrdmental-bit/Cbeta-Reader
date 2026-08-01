@@ -2922,6 +2922,73 @@ body.theme-ebony .search-info-tip {
   }
 }
 
+/* 💡 長按觸發編輯模式：永遠懸浮在螢幕最上方的 Fixed Floating Batch Bar */
+.batch-action-bar.fixed-floating-bar {
+  position: fixed;
+  top: 66px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2rem);
+  max-width: 580px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.85rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+}
+
+.batch-action-bar.fixed-floating-bar .batch-btn-done {
+  margin-left: 6px;
+  background-color: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  border: none;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.82rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.15s ease;
+}
+
+.batch-action-bar.fixed-floating-bar .batch-btn-done:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* 烏木 / 暗色主題 Fixed Floating Bar 相容樣式 */
+body.theme-ebony .batch-action-bar.fixed-floating-bar,
+body.theme-dark .batch-action-bar.fixed-floating-bar {
+  background: rgba(24, 28, 32, 0.94) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.theme-ebony .batch-action-bar.fixed-floating-bar .batch-select-count,
+body.theme-dark .batch-action-bar.fixed-floating-bar .batch-select-count {
+  color: #e2e8f0;
+}
+
+body.theme-ebony .batch-action-bar.fixed-floating-bar .batch-btn-secondary,
+body.theme-dark .batch-action-bar.fixed-floating-bar .batch-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 柔和沙丘 Paper Theme Fixed Floating Bar 相容樣式 */
+body.theme-paper .batch-action-bar.fixed-floating-bar {
+  background: rgba(244, 238, 224, 0.94) !important;
+  border-color: rgba(140, 75, 39, 0.22) !important;
+  box-shadow: 0 10px 28px rgba(140, 75, 39, 0.15) !important;
+}
+
 
 
 

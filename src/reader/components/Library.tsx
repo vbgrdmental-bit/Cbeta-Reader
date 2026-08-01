@@ -924,6 +924,39 @@ export function Library({
         </div>
       </div>
 
+      {/* 💡 長按觸發編輯模式：永遠懸浮在螢幕最上方的 Fixed Floating Batch Bar */}
+      {isEditMode && activeTab === 'shelf' && (
+        <div className="batch-action-bar fixed-floating-bar animate-slide-up">
+          <div className="batch-action-left">
+            <span className="batch-select-count">
+              已選擇 <strong style={{ color: 'var(--theme-accent)' }}>{selectedBookIds.length}</strong> 本經典
+            </span>
+          </div>
+          <div className="batch-action-right">
+            <button 
+              className="batch-btn batch-btn-secondary"
+              onClick={selectedBookIds.length === displayBooks.length ? handleDeselectAllBooks : handleSelectAllBooks}
+            >
+              {selectedBookIds.length === displayBooks.length ? '取消全選' : '全選'}
+            </button>
+            <button 
+              className="batch-btn batch-btn-primary"
+              disabled={selectedBookIds.length === 0}
+              onClick={() => setShowBatchMoveDialog(true)}
+            >
+              <FolderPlus size={15} style={{ marginRight: 4 }} />
+              批量移動至資料夾
+            </button>
+            <button 
+              className="batch-btn batch-btn-done"
+              onClick={() => setIsEditMode(false)}
+            >
+              完成
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="library-content-area custom-scrollbar">
         {activeTab === 'shelf' ? (
         /* 書架主畫面 */
@@ -967,40 +1000,6 @@ export function Library({
                 <p>淨心小角落．閱讀大藏經</p>
               </div>
 
-              {/* 💡 編輯模式下，長按浮在最上方的批量操作工具列 (位在「淨心小角落．閱讀大藏經」正下方) */}
-              {isEditMode && (
-                <div className="batch-action-bar animate-fade-in" style={{ marginBottom: '1.1rem' }}>
-                  <div className="batch-action-left">
-                    <span className="batch-select-count">
-                      已選擇 <strong style={{ color: 'var(--theme-accent)' }}>{selectedBookIds.length}</strong> 本經典
-                    </span>
-                  </div>
-                  <div className="batch-action-right">
-                    <button 
-                      className="batch-btn batch-btn-secondary"
-                      onClick={selectedBookIds.length === displayBooks.length ? handleDeselectAllBooks : handleSelectAllBooks}
-                    >
-                      {selectedBookIds.length === displayBooks.length ? '取消全選' : '全選'}
-                    </button>
-                    <button 
-                      className="batch-btn batch-btn-primary"
-                      disabled={selectedBookIds.length === 0}
-                      onClick={() => setShowBatchMoveDialog(true)}
-                    >
-                      <FolderPlus size={15} style={{ marginRight: 4 }} />
-                      批量移動至資料夾
-                    </button>
-                    <button 
-                      className="batch-btn batch-btn-done"
-                      onClick={() => setIsEditMode(false)}
-                      style={{ marginLeft: '4px', backgroundColor: 'var(--theme-accent)', color: '#fff', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      完成
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {/* 💡 首頁根目錄固定渲染 2 個系統固定資料夾（位在第一條細線與第二條細線中間） */}
               <div className="folders-grid-container system-grid">
                 {/* 1. 近期閱讀系統資料夾 */}
@@ -1042,40 +1041,6 @@ export function Library({
                 </div>
               </div>
             </>
-          )}
-
-          {/* 💡 子資料夾內部的長按常駐工具列 */}
-          {currentFolderId && isEditMode && (
-            <div className="batch-action-bar animate-fade-in" style={{ marginBottom: '1.1rem' }}>
-              <div className="batch-action-left">
-                <span className="batch-select-count">
-                  已選擇 <strong style={{ color: 'var(--theme-accent)' }}>{selectedBookIds.length}</strong> 本經典
-                </span>
-              </div>
-              <div className="batch-action-right">
-                <button 
-                  className="batch-btn batch-btn-secondary"
-                  onClick={selectedBookIds.length === displayBooks.length ? handleDeselectAllBooks : handleSelectAllBooks}
-                >
-                  {selectedBookIds.length === displayBooks.length ? '取消全選' : '全選'}
-                </button>
-                <button 
-                  className="batch-btn batch-btn-primary"
-                  disabled={selectedBookIds.length === 0}
-                  onClick={() => setShowBatchMoveDialog(true)}
-                >
-                  <FolderPlus size={15} style={{ marginRight: 4 }} />
-                  批量移動至資料夾
-                </button>
-                <button 
-                  className="batch-btn batch-btn-done"
-                  onClick={() => setIsEditMode(false)}
-                  style={{ marginLeft: '4px', backgroundColor: 'var(--theme-accent)', color: '#fff', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem' }}
-                >
-                  完成
-                </button>
-              </div>
-            </div>
           )}
 
           <div className="shelf-list">
