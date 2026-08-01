@@ -1106,7 +1106,7 @@ export function Library({
               </h1>
               <p>淨心小角落．閱讀大藏經</p>
               {recentReadBooks.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', width: '100%', margin: '1.4rem auto 0 auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', alignItems: 'center', width: '100%', margin: '0.7rem auto 0 auto' }}>
                   {recentReadBooks.slice(0, 2).map((bInfo, idx) => (
                     <div 
                       key={`resume-${bInfo.workId}`} 
@@ -1253,7 +1253,7 @@ export function Library({
 
                     {/* iOS 檔案風格：上方資料夾圖示 */}
                     <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: folder.color || '#3d5a45' }}>
-                      <Folder size={20} className="theme-folder-icon" />
+                      <Folder size={15} className="theme-folder-icon" />
                     </div>
 
                     {/* iOS 檔案風格：中間標題與下方項目數 */}
@@ -1304,10 +1304,10 @@ export function Library({
                     title="點擊新建資料夾"
                   >
                     <div className="dashed-icon-box">
-                      <FolderPlus size={22} />
+                      <FolderPlus size={16} />
                     </div>
                     <div className="list-folder-info">
-                      <div className="list-folder-title" style={{ fontSize: '0.86rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
+                      <div className="list-folder-title" style={{ fontSize: '0.82rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
                         + 新建資料夾
                       </div>
                       <div className="list-folder-count-text">
