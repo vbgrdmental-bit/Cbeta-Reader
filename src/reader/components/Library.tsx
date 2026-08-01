@@ -1106,7 +1106,7 @@ export function Library({
               </h1>
               <p>淨心小角落．閱讀大藏經</p>
               {recentReadBooks.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', width: '100%', margin: '0.8rem auto 0 auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', width: '100%', margin: '1.4rem auto 0 auto' }}>
                   {recentReadBooks.slice(0, 2).map((bInfo, idx) => (
                     <div 
                       key={`resume-${bInfo.workId}`} 
@@ -1173,7 +1173,7 @@ export function Library({
               </div>
             )}
 
-            {/* === A. 渲染資料夾清單 (雙欄 2-Column Grid Layout) === */}
+            {/* === A. 渲染資料夾清單 (iOS 檔案風格 雙欄 2-Column Grid Layout) === */}
             {displayFolders.length > 0 && (
               <div className="folders-grid-container">
                 {displayFolders.map((folder) => (
@@ -1251,16 +1251,21 @@ export function Library({
                       <div className="drag-handle-line" />
                     </div>
 
+                    {/* iOS 檔案風格：上方資料夾圖示 */}
                     <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: folder.color || '#3d5a45' }}>
-                      <Folder size={16} className="theme-folder-icon" />
-                    </div>
-                    <div className="list-folder-info" style={{ overflow: 'hidden' }}>
-                      <div className="list-folder-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{folder.name}</div>
+                      <Folder size={20} className="theme-folder-icon" />
                     </div>
 
-                    <span className="folder-book-count-badge" style={{ marginLeft: 'auto', marginRight: '0.2rem', flexShrink: 0 }} title="資料夾所含經典總數 (含子資料夾)">
-                      {getFolderTotalBookCount(folder.id)}
-                    </span>
+                    {/* iOS 檔案風格：中間標題與下方項目數 */}
+                    <div className="list-folder-info">
+                      <div className="list-folder-title" title={folder.name}>
+                        {folder.name}
+                      </div>
+                      <div className="list-folder-count-text">
+                        {getFolderTotalBookCount(folder.id)}個項目
+                      </div>
+                    </div>
+
                     <div className="item-actions-panel">
                       {currentFolderId && (
                         <button 
@@ -1291,19 +1296,22 @@ export function Library({
                   </div>
                 ))}
 
-                {/* 💡 奇數資料夾補滿：右側虛線新建資料夾卡片 (圖 2 樣式) */}
+                {/* 💡 奇數資料夾補滿：右側虛線新建資料夾卡片 (圖 2 iOS 樣式) */}
                 {displayFolders.length % 2 !== 0 && (
                   <div 
                     className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
                     onClick={() => setShowNewFolderDialog(true)}
                     title="點擊新建資料夾"
                   >
-                    <div className="list-folder-icon-wrapper" style={{ backgroundColor: 'transparent', color: 'var(--theme-accent, #8c4b27)' }}>
-                      <FolderPlus size={18} />
+                    <div className="dashed-icon-box">
+                      <FolderPlus size={22} />
                     </div>
                     <div className="list-folder-info">
-                      <div className="list-folder-title" style={{ fontSize: '0.82rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
+                      <div className="list-folder-title" style={{ fontSize: '0.86rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
                         + 新建資料夾
+                      </div>
+                      <div className="list-folder-count-text">
+                        按此建立
                       </div>
                     </div>
                   </div>
