@@ -826,7 +826,39 @@ export function Library({
   };
 
   return (
-    <div className="library-container">
+    <div className="library-container" style={{ position: 'relative' }}>
+      {/* 💡 長按觸發編輯模式：純 Absolute Overlay 懸浮工具列（不佔空間，首頁畫面完全不下移） */}
+      {isEditMode && activeTab === 'shelf' && (
+        <div className="batch-action-bar pure-floating-overlay animate-slide-up">
+          <div className="batch-action-left">
+            <span className="batch-select-count">
+              已選擇 <strong style={{ color: 'var(--theme-accent)' }}>{selectedBookIds.length}</strong> 本經典
+            </span>
+          </div>
+          <div className="batch-action-right">
+            <button 
+              className="batch-btn batch-btn-secondary"
+              onClick={selectedBookIds.length === displayBooks.length ? handleDeselectAllBooks : handleSelectAllBooks}
+            >
+              {selectedBookIds.length === displayBooks.length ? '取消全選' : '全選'}
+            </button>
+            <button 
+              className="batch-btn batch-btn-primary"
+              disabled={selectedBookIds.length === 0}
+              onClick={() => setShowBatchMoveDialog(true)}
+            >
+              <FolderPlus size={15} style={{ marginRight: 4 }} />
+              批量移動至資料夾
+            </button>
+            <button 
+              className="batch-btn batch-btn-done"
+              onClick={() => setIsEditMode(false)}
+            >
+              完成
+            </button>
+          </div>
+        </div>
+      )}
       
       {/* 首頁一致控制列 */}
       <div className="library-header animate-fade-in">
@@ -928,38 +960,6 @@ export function Library({
         {activeTab === 'shelf' ? (
         /* 書架主畫面 */
         <div className="bookshelf-section animate-slide-up" onClick={handleShelfBackgroundClick}>
-          {/* 💡 長按觸發編輯模式：貼合 App 容器 100% 寬度且黏性懸浮 (Sticky Floating Bar - 永不溢出螢幕) */}
-          {isEditMode && (
-            <div className="batch-action-bar sticky-floating-bar animate-slide-up">
-              <div className="batch-action-left">
-                <span className="batch-select-count">
-                  已選擇 <strong style={{ color: 'var(--theme-accent)' }}>{selectedBookIds.length}</strong> 本經典
-                </span>
-              </div>
-              <div className="batch-action-right">
-                <button 
-                  className="batch-btn batch-btn-secondary"
-                  onClick={selectedBookIds.length === displayBooks.length ? handleDeselectAllBooks : handleSelectAllBooks}
-                >
-                  {selectedBookIds.length === displayBooks.length ? '取消全選' : '全選'}
-                </button>
-                <button 
-                  className="batch-btn batch-btn-primary"
-                  disabled={selectedBookIds.length === 0}
-                  onClick={() => setShowBatchMoveDialog(true)}
-                >
-                  <FolderPlus size={15} style={{ marginRight: 4 }} />
-                  批量移動至資料夾
-                </button>
-                <button 
-                  className="batch-btn batch-btn-done"
-                  onClick={() => setIsEditMode(false)}
-                >
-                  完成
-                </button>
-              </div>
-            </div>
-          )}
           {/* 資料夾導航與麵包屑 */}
           {currentFolderId && (
             <div className="folder-nav-wrapper">
@@ -1001,13 +1001,13 @@ export function Library({
 
               {/* 💡 首頁根目錄固定渲染 2 個系統固定資料夾（位在第一條細線與第二條細線中間） */}
               <div className="folders-grid-container system-grid">
-                {/* 1. 近期閱讀系統資料夾 */}
+                {/* 1. 近期閱讀系統資料夾 - 深咖啡色 (#4a2c11) */}
                 <div 
                   className="list-book-item list-folder-item system-folder-item"
                   onClick={() => navigateToFolder('virtual_recent_reads')}
                   title="點擊查看近期閱讀經典 (最多10本)"
                 >
-                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#1ea98c' }}>
+                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#4a2c11' }}>
                     <Clock size={16} color="#ffffff" />
                   </div>
                   <div className="list-folder-info">
@@ -1093,7 +1093,7 @@ export function Library({
                     )}
 
                     {/* iOS 檔案風格：上方資料夾圖示 (100% 精確居中) */}
-                    <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: folder.color || '#3d5a45' }}>
+                    <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: '#8b7355' }}>
                       <Folder size={15} className="theme-folder-icon" />
                     </div>
 

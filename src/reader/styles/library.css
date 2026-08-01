@@ -3000,8 +3000,82 @@ body.theme-dark .batch-action-bar.sticky-floating-bar .batch-btn-secondary {
 body.theme-paper .batch-action-bar.sticky-floating-bar {
   background: rgba(244, 238, 224, 0.95) !important;
   border-color: rgba(140, 75, 39, 0.2) !important;
+}/* 💡 長按觸發編輯模式：純 Absolute Overlay 懸浮工具列 (不佔空間，首頁完全不下移) */
+.batch-action-bar.pure-floating-overlay {
+  position: absolute;
+  /* header 高度 = calc(56px + safe-area)，工具列貼在 header 正下方 */
+  top: calc(56px + env(safe-area-inset-top, 0px) + 0.5rem);
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  background: var(--bg-paper, rgba(255, 255, 255, 0.97));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
+.batch-action-bar.pure-floating-overlay .batch-select-count {
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-primary, #333);
+}
 
+.batch-action-bar.pure-floating-overlay .batch-action-right {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
 
+.batch-action-bar.pure-floating-overlay .batch-btn {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
 
+.batch-action-bar.pure-floating-overlay .batch-btn-done {
+  background-color: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.batch-action-bar.pure-floating-overlay .batch-btn-done:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* 烏木 / 深色主題 Pure Floating Overlay 相容樣式 */
+body.theme-ebony .batch-action-bar.pure-floating-overlay,
+body.theme-dark .batch-action-bar.pure-floating-overlay {
+  background: rgba(24, 28, 32, 0.97) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-select-count,
+body.theme-dark .batch-action-bar.pure-floating-overlay .batch-select-count {
+  color: #e2e8f0;
+}
+
+body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-btn-secondary,
+body.theme-dark .batch-action-bar.pure-floating-overlay .batch-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-btn-secondary:hover,
+body.theme-dark .batch-action-bar.pure-floating-overlay .batch-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
