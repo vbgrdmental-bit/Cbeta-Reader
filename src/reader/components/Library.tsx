@@ -45,40 +45,45 @@ export function Library({
   const [activeTab, setActiveTab] = useState<'shelf' | 'search'>(initialSearchQuery ? 'search' : 'shelf');
   const [draggingWorkId, setDraggingWorkId] = useState<string | null>(null);
   const [loadingDots, setLoadingDots] = useState('...');
-  const [lastReadBookInfo, setLastReadBookInfo] = useState<{ workId: string; title: string; juan: number; segmentId?: string } | null>(null);
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
 
-  // 💡 自動讀取最後一次閱讀的歷史佛經
+  // 💡 自動讀取最多 2 本最近閱讀的歷史佛經 (Up to 2 recent reading books)
+  const [recentReadBooks, setRecentReadBooks] = useState<Array<{ workId: string; title: string; juan: number; segmentId?: string }>>([]);
+  const isLongPressTriggeredRef = useRef(false);
+
   useEffect(() => {
-    const lastWorkId = localStorage.getItem('last_read_work_id');
-    if (lastWorkId) {
-      const matchedBook = downloadedBooks.find(b => b.workId === lastWorkId);
-      if (matchedBook) {
-        const progressStr = localStorage.getItem(`reader_progress_${lastWorkId}`);
-        if (progressStr) {
-          try {
-            const progress = JSON.parse(progressStr);
-            setLastReadBookInfo({
-              workId: lastWorkId,
-              title: matchedBook.title,
-              juan: progress.juan || 1,
-              segmentId: progress.segmentId || ''
-            });
-          } catch {
-            setLastReadBookInfo(null);
-          }
-        } else {
-          setLastReadBookInfo({
-            workId: lastWorkId,
-            title: matchedBook.title,
-            juan: 1
-          });
-        }
-      } else {
-        setLastReadBookInfo(null);
+    try {
+      const historyStr = localStorage.getItem('recent_read_work_ids');
+      let workIds: string[] = historyStr ? JSON.parse(historyStr) : [];
+      
+      const lastWorkId = localStorage.getItem('last_read_work_id');
+      if (lastWorkId && !workIds.includes(lastWorkId)) {
+        workIds = [lastWorkId, ...workIds];
       }
-    } else {
-      setLastReadBookInfo(null);
+
+      const list: Array<{ workId: string; title: string; juan: number; segmentId?: string }> = [];
+
+      for (const wid of workIds) {
+        if (list.length >= 2) break; // 最多顯示 2 本
+        const matchedBook = downloadedBooks.find(b => b.workId === wid);
+        if (matchedBook) {
+          const progressStr = localStorage.getItem(`reader_progress_${wid}`);
+          let juan = 1;
+          let segmentId = '';
+          if (progressStr) {
+            try {
+              const p = JSON.parse(progressStr);
+              juan = p.juan || 1;
+              segmentId = p.segmentId || '';
+            } catch {}
+          }
+          list.push({ workId: wid, title: matchedBook.title, juan, segmentId });
+        }
+      }
+
+      setRecentReadBooks(list);
+    } catch {
+      setRecentReadBooks([]);
     }
   }, [downloadedBooks]);
 
@@ -193,9 +198,11 @@ export function Library({
       touchStartPosRef.current = null;
     }
 
+    isLongPressTriggeredRef.current = false;
     if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
     
     longPressTimerRef.current = window.setTimeout(() => {
+      isLongPressTriggeredRef.current = true;
       setIsEditMode(true);
       if (navigator.vibrate) {
         navigator.vibrate(50);
@@ -1098,13 +1105,26 @@ export function Library({
                 <span style={{ color: '#1ea98c' }}>CBETA</span> Reader
               </h1>
               <p>淨心小角落．閱讀大藏經</p>
-              {lastReadBookInfo && (
-                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.8rem auto 0 auto' }}>
-                  <div className="resume-reading-box" onClick={() => onSelectBook(lastReadBookInfo.workId, lastReadBookInfo.segmentId)} title="點擊繼續閱讀">
-                    <span className="resume-tag">接續閱讀</span>
-                    <span className="resume-title" style={{ textAlign: 'left' }}>{lastReadBookInfo.title}</span>
-                    <span className="resume-arrow">➔</span>
-                  </div>
+              {recentReadBooks.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', width: '100%', margin: '0.8rem auto 0 auto' }}>
+                  {recentReadBooks.slice(0, 2).map((bInfo, idx) => (
+                    <div 
+                      key={`resume-${bInfo.workId}`} 
+                      className="resume-reading-box" 
+                      onClick={() => {
+                        if (isLongPressTriggeredRef.current) {
+                          isLongPressTriggeredRef.current = false;
+                          return;
+                        }
+                        onSelectBook(bInfo.workId, bInfo.segmentId);
+                      }} 
+                      title="點擊繼續閱讀"
+                    >
+                      <span className="resume-tag">{idx === 0 ? '接續閱讀' : '近期閱讀'}</span>
+                      <span className="resume-title" style={{ textAlign: 'left' }}>{bInfo.title}</span>
+                      <span className="resume-arrow">➔</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -1153,119 +1173,143 @@ export function Library({
               </div>
             )}
 
-            {/* === A. 渲染資料夾清單 === */}
-            {displayFolders.map((folder) => (
-              <div 
-                key={folder.id}
-                className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(folder.id)} ${dragOverFolderTargetId === folder.id ? 'drag-folder-hover' : ''}`}
-                onClick={() => navigateToFolder(folder.id)}
-                draggable={currentFolderId !== 'virtual_resume'}
-                onDragStart={(e) => handleDragStart(e, folder.id)}
-                onDragOver={(e) => { 
-                  handleDragOver(e); 
-                  if (!draggingWorkId || draggingWorkId === folder.id) return;
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const relativeY = (e.clientY - rect.top) / rect.height;
-                  // 💡 Y 軸上下 25% 邊緣判定為同級排序，中央 50% 判定為移入資料夾
-                  if (relativeY < 0.25 || relativeY > 0.75) {
-                    setDragOverSortTargetId(folder.id);
-                    setDragOverFolderTargetId(null);
-                  } else {
-                    setDragOverFolderTargetId(folder.id);
-                    setDragOverSortTargetId(null);
-                  }
-                }}
-                onDragLeave={() => {
-                  setDragOverFolderTargetId(null);
-                  setDragOverSortTargetId(null);
-                }}
-                onDragEnd={() => {
-                  setDragOverFolderTargetId(null);
-                  setDragOverSortTargetId(null);
-                }}
-                onDrop={(e) => { 
-                  if (dragOverSortTargetId) {
-                    handleFolderSort(e, folder.id);
-                  } else {
-                    handleDropIntoFolder(e, folder.id);
-                  }
-                  setDragOverFolderTargetId(null);
-                  setDragOverSortTargetId(null);
-                }}
-                onMouseDown={startLongPress}
-                onMouseUp={cancelLongPress}
-                onMouseLeave={cancelLongPress}
-                onTouchStart={startLongPress}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={cancelLongPress}
-              >
-                {/* 💡 拖曳手把：改為最左邊淺灰色豎線 「|」 */}
-                <div 
-                  className="drag-handle"
-                  title="按住拖曳手把進行排序或將此資料夾移入其他資料夾"
-                  onDragOver={(e) => { 
-                    handleDragOver(e); 
-                    e.stopPropagation(); 
-                    if (draggingWorkId && draggingWorkId !== folder.id) {
-                      setDragOverSortTargetId(folder.id); 
-                      setDragOverFolderTargetId(null); 
-                    }
-                  }}
-                  onDragLeave={(e) => {
-                    e.stopPropagation();
-                    setDragOverSortTargetId(null);
-                  }}
-                  onDrop={(e) => {
-                    handleFolderSort(e, folder.id);
-                    setDragOverSortTargetId(null);
-                  }}
-                  onClick={(e) => e.stopPropagation()} 
-                >
-                  <div className="drag-handle-line" />
-                </div>
-
-                <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: folder.color || '#3d5a45' }}>
-                  <Folder size={16} className="theme-folder-icon" />
-                </div>
-                <div className="list-folder-info">
-                  <div className="list-folder-title">{folder.name}</div>
-                </div>
-
-                <span className="folder-book-count-badge" style={{ marginLeft: 'auto', marginRight: '0.8rem', flexShrink: 0 }} title="資料夾所含經典總數 (含子資料夾)">
-                  {getFolderTotalBookCount(folder.id)}
-                </span>
-                <div className="item-actions-panel">
-                  {/* 槽位 1：返回（移出）按鈕（第 2 層以上才渲染） */}
-                  {currentFolderId && (
-                    <button 
-                      className="edit-action-btn edit-move-out-btn"
-                      onClick={(e) => handleRemoveFolderFromFolder(e, folder.id)}
-                      title="移出至上一層資料夾"
+            {/* === A. 渲染資料夾清單 (雙欄 2-Column Grid Layout) === */}
+            {displayFolders.length > 0 && (
+              <div className="folders-grid-container">
+                {displayFolders.map((folder) => (
+                  <div 
+                    key={folder.id}
+                    className={`list-book-item list-folder-item ${draggingWorkId === folder.id ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${getDragOverLineClass(folder.id)} ${dragOverFolderTargetId === folder.id ? 'drag-folder-hover' : ''}`}
+                    onClick={() => {
+                      if (isLongPressTriggeredRef.current) {
+                        isLongPressTriggeredRef.current = false;
+                        return;
+                      }
+                      navigateToFolder(folder.id);
+                    }}
+                    draggable={isEditMode && currentFolderId !== 'virtual_resume'}
+                    onDragStart={(e) => handleDragStart(e, folder.id)}
+                    onDragOver={(e) => { 
+                      handleDragOver(e); 
+                      if (!draggingWorkId || draggingWorkId === folder.id) return;
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const relativeY = (e.clientY - rect.top) / rect.height;
+                      if (relativeY < 0.25 || relativeY > 0.75) {
+                        setDragOverSortTargetId(folder.id);
+                        setDragOverFolderTargetId(null);
+                      } else {
+                        setDragOverFolderTargetId(folder.id);
+                        setDragOverSortTargetId(null);
+                      }
+                    }}
+                    onDragLeave={() => {
+                      setDragOverFolderTargetId(null);
+                      setDragOverSortTargetId(null);
+                    }}
+                    onDragEnd={() => {
+                      setDragOverFolderTargetId(null);
+                      setDragOverSortTargetId(null);
+                    }}
+                    onDrop={(e) => { 
+                      if (dragOverSortTargetId) {
+                        handleFolderSort(e, folder.id);
+                      } else {
+                        handleDropIntoFolder(e, folder.id);
+                      }
+                      setDragOverFolderTargetId(null);
+                      setDragOverSortTargetId(null);
+                    }}
+                    onMouseDown={startLongPress}
+                    onMouseUp={cancelLongPress}
+                    onMouseLeave={cancelLongPress}
+                    onTouchStart={startLongPress}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={cancelLongPress}
+                  >
+                    {/* 💡 拖曳手把：改為最左邊淺灰色豎線 「|」 */}
+                    <div 
+                      className="drag-handle"
+                      title="按住拖曳手把進行排序或將此資料夾移入其他資料夾"
+                      onDragOver={(e) => { 
+                        handleDragOver(e); 
+                        e.stopPropagation(); 
+                        if (draggingWorkId && draggingWorkId !== folder.id) {
+                          setDragOverSortTargetId(folder.id); 
+                          setDragOverFolderTargetId(null); 
+                        }
+                      }}
+                      onDragLeave={(e) => {
+                        e.stopPropagation();
+                        setDragOverSortTargetId(null);
+                      }}
+                      onDrop={(e) => {
+                        handleFolderSort(e, folder.id);
+                        setDragOverSortTargetId(null);
+                      }}
+                      onClick={(e) => e.stopPropagation()} 
                     >
-                      <ArrowUp size={16} />
-                    </button>
-                  )}
+                      <div className="drag-handle-line" />
+                    </div>
 
-                  {/* 槽位 2：編輯（修改名稱與顏色）按鈕 */}
-                  <button 
-                    className="edit-action-btn edit-rename-btn"
-                    onClick={(e) => startRenameFolder(folder, e)}
-                    title="編輯資料夾"
-                  >
-                    <Edit3 size={14} />
-                  </button>
+                    <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: folder.color || '#3d5a45' }}>
+                      <Folder size={16} className="theme-folder-icon" />
+                    </div>
+                    <div className="list-folder-info" style={{ overflow: 'hidden' }}>
+                      <div className="list-folder-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{folder.name}</div>
+                    </div>
 
-                  {/* 槽位 3：刪除 (X) 按鈕 */}
-                  <button 
-                    className="edit-action-btn edit-delete-btn"
-                    onClick={(e) => handleDeleteFolder(folder.id, e)}
-                    title="刪除資料夾"
+                    <span className="folder-book-count-badge" style={{ marginLeft: 'auto', marginRight: '0.2rem', flexShrink: 0 }} title="資料夾所含經典總數 (含子資料夾)">
+                      {getFolderTotalBookCount(folder.id)}
+                    </span>
+                    <div className="item-actions-panel">
+                      {currentFolderId && (
+                        <button 
+                          className="edit-action-btn edit-move-out-btn"
+                          onClick={(e) => handleRemoveFolderFromFolder(e, folder.id)}
+                          title="移出至上一層資料夾"
+                        >
+                          <ArrowUp size={16} />
+                        </button>
+                      )}
+
+                      <button 
+                        className="edit-action-btn edit-rename-btn"
+                        onClick={(e) => startRenameFolder(folder, e)}
+                        title="編輯資料夾"
+                      >
+                        <Edit3 size={14} />
+                      </button>
+
+                      <button 
+                        className="edit-action-btn edit-delete-btn"
+                        onClick={(e) => handleDeleteFolder(folder.id, e)}
+                        title="刪除資料夾"
+                      >
+                        <X size={15} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* 💡 奇數資料夾補滿：右側虛線新建資料夾卡片 (圖 2 樣式) */}
+                {displayFolders.length % 2 !== 0 && (
+                  <div 
+                    className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
+                    onClick={() => setShowNewFolderDialog(true)}
+                    title="點擊新建資料夾"
                   >
-                    <X size={15} />
-                  </button>
-                </div>
+                    <div className="list-folder-icon-wrapper" style={{ backgroundColor: 'transparent', color: 'var(--theme-accent, #8c4b27)' }}>
+                      <FolderPlus size={18} />
+                    </div>
+                    <div className="list-folder-info">
+                      <div className="list-folder-title" style={{ fontSize: '0.82rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
+                        + 新建資料夾
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            ))}
+            )}
 
             {/* === B. 渲染經典清單 === */}
             {displayBooks.map((book) => {
@@ -1285,13 +1329,17 @@ export function Library({
                   key={book.workId}
                   className={`list-book-item ${draggingWorkId === book.workId ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''} ${getDragOverLineClass(book.workId)}`}
                   onClick={(e) => { 
+                    if (isLongPressTriggeredRef.current) {
+                      isLongPressTriggeredRef.current = false;
+                      return;
+                    }
                     if (isEditMode) {
                       toggleSelectBook(book.workId, e);
                     } else {
                       onSelectBook(book.workId); 
                     }
                   }}
-                  draggable={currentFolderId !== 'virtual_resume'}
+                  draggable={isEditMode && currentFolderId !== 'virtual_resume'}
                   onDragStart={(e) => handleDragStart(e, book.workId)}
                   onDragOver={(e) => {
                     handleDragOver(e);

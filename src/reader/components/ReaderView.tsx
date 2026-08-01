@@ -544,6 +544,12 @@ export function ReaderView({
       };
       localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));
       localStorage.setItem('last_read_work_id', workId);
+      try {
+        const historyStr = localStorage.getItem('recent_read_work_ids');
+        let history: string[] = historyStr ? JSON.parse(historyStr) : [];
+        history = [workId, ...history.filter(id => id !== workId)].slice(0, 5);
+        localStorage.setItem('recent_read_work_ids', JSON.stringify(history));
+      } catch {}
     }
   }, [currentJuanNum, activeSegmentId, book, workId, scrollPercent]);
   const {

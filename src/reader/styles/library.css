@@ -146,13 +146,13 @@ body.theme-ebony .header-theme-circle.active {
 .library-title-area {
   width: 100%;
   text-align: center;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.8rem;
 }
 
 .library-title-area h1 {
   font-family: var(--font-serif);
-  font-size: 1.8rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: 0.08em;
@@ -160,10 +160,47 @@ body.theme-ebony .header-theme-circle.active {
 }
 
 .library-title-area p {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  margin-top: 0.35rem;
+  margin-top: 0.25rem;
   letter-spacing: 0.04em;
+}
+
+/* 💡 2 欄式資料夾網格容器 (2-Column Folders Grid Layout) */
+.folders-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.folders-grid-container .list-folder-item {
+  padding: 0.65rem 0.75rem;
+  min-height: 52px;
+  box-sizing: border-box;
+}
+
+/* 虛線新建資料夾卡片 (Dashed Add Folder Card - Image 2 Style) */
+.list-folder-item.add-folder-dashed-card {
+  background: rgba(140, 75, 39, 0.02);
+  border: 1.5px dashed rgba(140, 75, 39, 0.35);
+  box-shadow: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  justify-content: flex-start;
+}
+
+.list-folder-item.add-folder-dashed-card:hover {
+  background: rgba(140, 75, 39, 0.06);
+  border-color: var(--theme-accent, #8c4b27);
+  transform: translateY(-2px);
+}
+
+body.theme-dark .list-folder-item.add-folder-dashed-card,
+body.theme-ebony .list-folder-item.add-folder-dashed-card {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .library-action-bar {
