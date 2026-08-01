@@ -1100,9 +1100,6 @@ export function Library({
                 <p>淨心小角落．閱讀大藏經</p>
               </div>
 
-              {/* 細細的線 1：在「淨心小角落．閱讀大藏經」正下方 */}
-              <div className="title-divider-line" />
-
               {/* 💡 首頁根目錄固定渲染 2 個系統固定資料夾（位在第一條細線與第二條細線中間） */}
               <div className="folders-grid-container system-grid">
                 {/* 1. 近期閱讀系統資料夾 */}
@@ -1143,9 +1140,6 @@ export function Library({
                   </div>
                 </div>
               </div>
-
-              {/* 細細的線 2：在「近期閱讀」和「我的最愛」正下方 */}
-              <div className="system-folders-divider-line" />
             </>
           )}
 
