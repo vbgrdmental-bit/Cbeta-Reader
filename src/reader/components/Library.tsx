@@ -47,45 +47,7 @@ export function Library({
   const [loadingDots, setLoadingDots] = useState('...');
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
 
-  // 💡 自動讀取最多 2 本最近閱讀的歷史佛經 (Up to 2 recent reading books)
-  const [recentReadBooks, setRecentReadBooks] = useState<Array<{ workId: string; title: string; juan: number; segmentId?: string }>>([]);
   const isLongPressTriggeredRef = useRef(false);
-
-  useEffect(() => {
-    try {
-      const historyStr = localStorage.getItem('recent_read_work_ids');
-      let workIds: string[] = historyStr ? JSON.parse(historyStr) : [];
-      
-      const lastWorkId = localStorage.getItem('last_read_work_id');
-      if (lastWorkId && !workIds.includes(lastWorkId)) {
-        workIds = [lastWorkId, ...workIds];
-      }
-
-      const list: Array<{ workId: string; title: string; juan: number; segmentId?: string }> = [];
-
-      for (const wid of workIds) {
-        if (list.length >= 2) break; // 最多顯示 2 本
-        const matchedBook = downloadedBooks.find(b => b.workId === wid);
-        if (matchedBook) {
-          const progressStr = localStorage.getItem(`reader_progress_${wid}`);
-          let juan = 1;
-          let segmentId = '';
-          if (progressStr) {
-            try {
-              const p = JSON.parse(progressStr);
-              juan = p.juan || 1;
-              segmentId = p.segmentId || '';
-            } catch {}
-          }
-          list.push({ workId: wid, title: matchedBook.title, juan, segmentId });
-        }
-      }
-
-      setRecentReadBooks(list);
-    } catch {
-      setRecentReadBooks([]);
-    }
-  }, [downloadedBooks]);
 
   useEffect(() => {
     let interval: number;
@@ -1135,28 +1097,55 @@ export function Library({
                 <span style={{ color: '#1ea98c' }}>CBETA</span> Reader
               </h1>
               <p>淨心小角落．閱讀大藏經</p>
-              {recentReadBooks.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', alignItems: 'center', width: '100%', margin: '0.7rem auto 0 auto' }}>
-                  {recentReadBooks.slice(0, 2).map((bInfo, idx) => (
-                    <div 
-                      key={`resume-${bInfo.workId}`} 
-                      className="resume-reading-box" 
-                      onClick={() => {
-                        if (isLongPressTriggeredRef.current) {
-                          isLongPressTriggeredRef.current = false;
-                          return;
-                        }
-                        onSelectBook(bInfo.workId, bInfo.segmentId);
-                      }} 
-                      title="點擊繼續閱讀"
-                    >
-                      <span className="resume-tag">{idx === 0 ? '接續閱讀' : '近期閱讀'}</span>
-                      <span className="resume-title" style={{ textAlign: 'left' }}>{bInfo.title}</span>
-                      <span className="resume-arrow">➔</span>
+              {/* 細細的線 1：在「淨心小角落．閱讀大藏經」下方 */}
+              <div className="title-divider-line" />
+            </div>
+          )}
+
+          {/* 💡 首頁根目錄固定渲染 2 個系統固定資料夾（位在第一條細線與第二條細線中間） */}
+          {!currentFolderId && (
+            <div className="system-fixed-folders-section">
+              <div className="folders-grid-container system-grid">
+                {/* 1. 近期閱讀系統資料夾 */}
+                <div 
+                  className="list-book-item list-folder-item system-folder-item"
+                  onClick={() => navigateToFolder('virtual_recent_reads')}
+                  title="點擊查看近期閱讀經典 (最多10本)"
+                >
+                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#1ea98c' }}>
+                    <Clock size={16} color="#ffffff" />
+                  </div>
+                  <div className="list-folder-info">
+                    <div className="list-folder-title" title="近期閱讀">
+                      近期閱讀
                     </div>
-                  ))}
+                    <div className="list-folder-count-text">
+                      {recentReadsBooks.length}本經書
+                    </div>
+                  </div>
                 </div>
-              )}
+
+                {/* 2. 我的最愛系統資料夾 */}
+                <div 
+                  className="list-book-item list-folder-item system-folder-item"
+                  onClick={() => navigateToFolder('virtual_favorites')}
+                  title="點擊查看我的最愛經典"
+                >
+                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#e53e3e' }}>
+                    <Heart size={15} fill="#ffffff" color="#ffffff" />
+                  </div>
+                  <div className="list-folder-info">
+                    <div className="list-folder-title" title="我的最愛">
+                      我的最愛
+                    </div>
+                    <div className="list-folder-count-text">
+                      {favoriteBooksList.length}本經書
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* 細細的線 2：在「近期閱讀」和「我的最愛」下方 */}
+              <div className="system-folders-divider-line" />
             </div>
           )}
 
@@ -1203,53 +1192,9 @@ export function Library({
               </div>
             )}
 
-            {/* === A. 渲染資料夾清單 (含系統固定資料夾與自訂資料夾 雙欄 2-Column Layout) === */}
-            {(!currentFolderId || displayFolders.length > 0) && (
+            {/* === A. 渲染使用者自訂資料夾清單 (iOS 檔案風格 雙欄 2-Column Layout) === */}
+            {displayFolders.length > 0 && (
               <div className="folders-grid-container">
-                {/* 💡 首頁根目錄固定渲染 2 個系統固定資料夾（無法刪除/無法拖曳） */}
-                {!currentFolderId && (
-                  <>
-                    {/* 1. 近期閱讀系統資料夾 */}
-                    <div 
-                      className="list-book-item list-folder-item system-folder-item"
-                      onClick={() => navigateToFolder('virtual_recent_reads')}
-                      title="點擊查看近期閱讀經典 (最多10本)"
-                    >
-                      <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#1ea98c' }}>
-                        <Clock size={16} color="#ffffff" />
-                      </div>
-                      <div className="list-folder-info">
-                        <div className="list-folder-title" title="近期閱讀">
-                          近期閱讀
-                        </div>
-                        <div className="list-folder-count-text">
-                          {recentReadsBooks.length}本經書
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 2. 我的最愛系統資料夾 */}
-                    <div 
-                      className="list-book-item list-folder-item system-folder-item"
-                      onClick={() => navigateToFolder('virtual_favorites')}
-                      title="點擊查看我的最愛經典"
-                    >
-                      <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#e53e3e' }}>
-                        <Heart size={15} fill="#ffffff" color="#ffffff" />
-                      </div>
-                      <div className="list-folder-info">
-                        <div className="list-folder-title" title="我的最愛">
-                          我的最愛
-                        </div>
-                        <div className="list-folder-count-text">
-                          {favoriteBooksList.length}本經書
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {/* 3. 使用者自訂資料夾 */}
                 {displayFolders.map((folder) => (
                   <div 
                     key={folder.id}
@@ -1371,7 +1316,7 @@ export function Library({
                 ))}
 
                 {/* 💡 奇數資料夾補滿：右側虛線新建資料夾卡片 (圖 2 iOS 樣式) */}
-                {((!currentFolderId ? 2 : 0) + displayFolders.length) % 2 !== 0 && (
+                {displayFolders.length % 2 !== 0 && (
                   <div 
                     className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
                     onClick={() => setShowNewFolderDialog(true)}
