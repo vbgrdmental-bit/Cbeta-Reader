@@ -257,19 +257,19 @@ export interface AppSettings {
   highlightStyle: 'underline' | 'bottom-half' | 'full' | 'border';
 }
 
-const DEFAULT_SETTINGS: AppSettings = {
+export const DEFAULT_SETTINGS: AppSettings = {
   id: 'current',
   theme: 'ivory',
   fontSize: 22,
-  fontFamily: 'default',
+  fontFamily: 'jhenghei',        // 預設字體：正黑體
   lineHeight: 2.0,
   padding: 10,
   autoHideToolbar: true,
   profile: 'standard',
   customVisibleElements: {
-    showReaderControls: true, // 預設改為顯示上下控制列
-    notes: false,
-    pageNumber: false,
+    showReaderControls: true,    // 預設顯示上下控制列
+    notes: true,                 // 預設顯示校勘
+    pageNumber: true,            // 預設顯示頁碼
     ttsHighlight: true
   },
   ttsVoice: '',
@@ -277,7 +277,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   ttsPitch: 1.0,
   ttsMode: 'normal',
   highlightColor: 'yellow',
-  highlightStyle: 'bottom-half'
+  highlightStyle: 'full'         // 預設畫重點樣式：全塗
 };
 
 export async function saveSettings(settings: AppSettings): Promise<void> {

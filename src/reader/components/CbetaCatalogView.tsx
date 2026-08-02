@@ -592,20 +592,20 @@ export function CbetaCatalogView({
   onSelectBook,
   settings
 }: CbetaCatalogViewProps) {
-  // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代)
-  const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('dept');
+  // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代) - 預設開啟「常用經典」
+  const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('favorite');
 
-  // 導航歷史紀錄 (Header 上一頁/下一頁及麵包屑使用)
+  // 導航歷史紀錄 (Header 上一頁/下一頁及麵包屑使用) - 初始對齊「常用經典」頁籤
   const [historyStack, setHistoryStack] = useState<CatalogNode[]>([
-    { id: 'CBETA', label: '依據部類' }
+    { id: 'favorite_root', label: '常用經典' }
   ]);
   const [historyIndex, setHistoryIndex] = useState<number>(0);
 
   // 記憶體快取：紀錄所有已加載或靜態目錄，避免重複出現「正在檢索 CBETA 藏經庫數據中...」轉圈畫面
   const catalogCacheRef = useRef<Map<string, CatalogItem[]>>(new Map());
 
-  // 當前目錄層級內容 (預設使用靜態部類列表，實現 0 延遲渲染)
-  const [catalogItems, setCatalogItems] = useState<CatalogItem[]>(STATIC_DEPT_CATEGORIES);
+  // 當前目錄層級內容 (預設使用常用經典静態列表，實現 0 延遲渲染)
+  const [catalogItems, setCatalogItems] = useState<CatalogItem[]>(STATIC_FAVORITE_WORKS);
   const [isLoadingCatalog, setIsLoadingCatalog] = useState<boolean>(false);
 
   // 關鍵字搜尋狀態 (當有搜尋關鍵字時，自動隱藏 4 個 Tab 區塊)
@@ -1081,7 +1081,7 @@ export function CbetaCatalogView({
         setDownloadedWorkIds(prev => [...prev, res.workId]);
         setTimeout(() => {
           setBuildProgress(null);
-          onSelectBook(res.workId);
+          // 💡 下載完成後留在目錄頁，不跳入閱讀頁
         }, 600);
       }
     } catch (err) {

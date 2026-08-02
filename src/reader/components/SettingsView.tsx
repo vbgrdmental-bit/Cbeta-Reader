@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Database, FileText, Upload, HelpCircle, RotateCw, Archive, Trash2, HardDrive, CheckCircle2 } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
-import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks } from '../../utils/db';
+import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks, saveSettings, DEFAULT_SETTINGS } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
@@ -26,6 +26,36 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   const [isCompressing, setIsCompressing] = useState(false);
   const [storageMsg, setStorageMsg] = useState('');
 
+  // 💡 版本紀錄對話框捲動位置重置 Refs
+  const changelogBodyRef = useRef<HTMLDivElement>(null);
+  const builderSectionRef = useRef<HTMLDivElement>(null);
+
+  // 💡 收起 App 歷程：平滑自動捲動至最頂部 (回到圖 1)
+  const handleCollapseAppHistory = () => {
+    setShowAppHistory(false);
+    if (changelogBodyRef.current) {
+      changelogBodyRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // 💡 捲動至 Builder 區塊標題（精確計算 relative to scroll container）
+  const scrollToBuilderSection = (delay = 50) => {
+    setTimeout(() => {
+      if (changelogBodyRef.current && builderSectionRef.current) {
+        const containerRect = changelogBodyRef.current.getBoundingClientRect();
+        const elemRect = builderSectionRef.current.getBoundingClientRect();
+        const relativeTop = elemRect.top - containerRect.top + changelogBodyRef.current.scrollTop;
+        changelogBodyRef.current.scrollTo({ top: Math.max(0, relativeTop - 8), behavior: 'smooth' });
+      }
+    }, delay);
+  };
+
+  // 💡 收起 Builder 歷程：平滑自動捲動至 Builder 區塊標題 (回到圖 1)
+  const handleCollapseBuilderHistory = () => {
+    setShowBuilderHistory(false);
+    scrollToBuilderSection(80); // 稍長延遲，等 DOM 收合後再捲動
+  };
+
   // 💡 閱讀時間倒數計時狀態
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
 
@@ -39,13 +69,16 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   }, []);
 
   const handleClearAllBooks = async () => {
-    if (!window.confirm('確定要刪除本地所有離線經典嗎？此操作將清空離線書庫並還原為乾淨狀態。')) return;
-    setStorageMsg('正在刪除本地所有離線經書與快取...');
+    if (!window.confirm('確定要清空所有離線經典並恢復初始設定嗎？\n• 所有離線書庫與劃線將被清除\n• 閱讀設定將回到預設值\n\n此操作無法復原。')) return;
+    setStorageMsg('正在清空離線書庫並恢復初始設定...');
     try {
       await clearAllBooks();
+      // 重置設定為初始預設值
+      await saveSettings(DEFAULT_SETTINGS);
+      onSave(DEFAULT_SETTINGS);
       const stats = await getStorageStats();
       setStorageStats(stats);
-      setStorageMsg('已成功清空本地所有離線經典！頁面即將自動刷新。');
+      setStorageMsg('已成功清空並恢復初始設定！頁面即將自動刷新。');
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -803,7 +836,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     清空經典
                   </span>
                   <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    一鍵清空離線書庫
+                    清空並恢復初始設定
                   </span>
                 </div>
               </div>
@@ -973,7 +1006,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 <X size={16} />
               </button>
             </div>
-            <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.2rem' }}>
+            <div ref={changelogBodyRef} className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.2rem' }}>
               {/* 第一部分：App 閱讀器介面更新 */}
               <div className="changelog-group-section" style={{ marginBottom: '1.8rem' }}>
                 <div style={{
@@ -992,45 +1025,45 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v3.1.0) 直接顯示 */}
+                {/* 最新 App 版本 (v3.2.0) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>App: v3.1.0</span>
-                    <span className="changelog-date">(2026-08-01)</span>
+                    <span>App: v3.2.0</span>
+                    <span className="changelog-date">(2026-08-02)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 「畫重點設定」直覺設定。</li>
-                    <li>• 新增「設定閱讀時間 (護眼模式)」，時間到了溫馨提醒。</li>
-                    <li>• 主頁更名為「CBETA Reader 淨心小角落．閱讀大藏經」。</li>
+                    <li>• 調整首頁版面，並新增「近期閱讀」、「我的最愛」。</li>
+                    <li>• 調整書籍、資料夾移動與刪除設定。</li>
                   </ul>
                 </div>
 
-                {/* 置左按鈕：+ 更多 App 修改歷程 */}
-                <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
-                  <button 
-                    type="button"
-                    onClick={() => setShowAppHistory(prev => !prev)}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: 'var(--reader-text-muted, #777)',
-                      fontSize: '0.82rem',
-                      cursor: 'pointer',
-                      padding: '0.2rem 0',
-                      opacity: 0.85,
-                      fontWeight: 500,
-                      transition: 'opacity 0.2s'
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                    onMouseLeave={e => e.currentTarget.style.opacity = '0.85'}
-                  >
-                    {showAppHistory ? '− 收起 App 歷史紀錄' : '+ 更多 App 修改歷程'}
-                  </button>
-                </div>
+                {/* 置左按鈕：+ 更多 App 修改歷程 (未展開時顯示於最新版下方) */}
+                {!showAppHistory && (
+                  <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
+                    <button 
+                      type="button"
+                      className="changelog-history-btn"
+                      onClick={() => {
+                        setShowAppHistory(true);
+                        setShowBuilderHistory(false); // 自動收合 Builder 歷程
+                      }}
+                    >
+                      + 更多 App 修改歷程
+                    </button>
+                  </div>
+                )}
 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v3.1.0 <span className="changelog-date">(2026-08-01)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 「畫重點設定」直覺設定。</li>
+                        <li>• 新增「設定閱讀時間 (護眼模式)」，時間到了溫馨提醒。</li>
+                        <li>• 主頁更名為「CBETA Reader 淨心小角落．閱讀大藏經」。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v2.3.0 <span className="changelog-date">(2026-07-29)</span></div>
                       <ul className="changelog-list">
@@ -1104,12 +1137,23 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                         <li>• 釋出初始核心經典閱讀、搜尋與劃線標籤功能。</li>
                       </ul>
                     </div>
+
+                    {/* 置左按鈕：− 收起 App 歷史紀錄 (收起後自動捲回頂部) */}
+                    <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
+                      <button 
+                        type="button"
+                        className="changelog-history-btn"
+                        onClick={handleCollapseAppHistory}
+                      >
+                        − 收起 App 歷史紀錄
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
 
               {/* 第二部分：Builder 經文解析引擎更新 */}
-              <div className="changelog-group-section" style={{ marginBottom: '1.5rem' }}>
+              <div ref={builderSectionRef} className="changelog-group-section" style={{ marginBottom: '1.5rem' }}>
                 <div style={{
                   fontSize: '0.95rem',
                   fontWeight: 700,
@@ -1139,28 +1183,22 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   </ul>
                 </div>
 
-                {/* 置左按鈕：+ 更多 Builder 修改歷程 */}
-                <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
-                  <button 
-                    type="button"
-                    onClick={() => setShowBuilderHistory(prev => !prev)}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: 'var(--reader-text-muted, #777)',
-                      fontSize: '0.82rem',
-                      cursor: 'pointer',
-                      padding: '0.2rem 0',
-                      opacity: 0.85,
-                      fontWeight: 500,
-                      transition: 'opacity 0.2s'
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                    onMouseLeave={e => e.currentTarget.style.opacity = '0.85'}
-                  >
-                    {showBuilderHistory ? '− 收起 Builder 歷史紀錄' : '+ 更多 Builder 修改歷程'}
-                  </button>
-                </div>
+                {/* 置左按鈕：+ 更多 Builder 修改歷程 (未展開時顯示於最新版下方) */}
+                {!showBuilderHistory && (
+                  <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
+                    <button 
+                      type="button"
+                      className="changelog-history-btn"
+                      onClick={() => {
+                        setShowBuilderHistory(true);
+                        setShowAppHistory(false); // 自動收合 App 歷程
+                        scrollToBuilderSection(80); // 捲動至 Builder 區塊標題
+                      }}
+                    >
+                      + 更多 Builder 修改歷程
+                    </button>
+                  </div>
+                )}
 
                 {/* 展開的 Builder 歷史版本 */}
                 {showBuilderHistory && (
@@ -1212,9 +1250,21 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                         <li>• 建立 Builder 獨立版號與無縫背景升級修復機制（保留劃線與筆記）。</li>
                       </ul>
                     </div>
+
+                    {/* 置左按鈕：− 收起 Builder 歷史紀錄 (收起後自動捲回 Builder 區塊) */}
+                    <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
+                      <button 
+                        type="button"
+                        className="changelog-history-btn"
+                        onClick={handleCollapseBuilderHistory}
+                      >
+                        − 收起 Builder 歷史紀錄
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
+
 
               {/* 4. CBETA Reader 簡介與感言區塊 (隔一條線，小字呈現) */}
               <div style={{ marginTop: '1.5rem', paddingTop: '1.2rem', borderTop: '1px dashed var(--reader-border, rgba(0,0,0,0.15))' }}>

@@ -52,7 +52,7 @@ body.theme-ebony {
 .bookshelf-section {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 2rem;
+  padding: 0.8rem 1rem;
   box-sizing: border-box;
   flex: 1;
 }
@@ -111,12 +111,12 @@ body.theme-ebony .control-divider {
   transition: transform 0.15s, border-color 0.15s;
 }
 
-.header-theme-circle.bg-ivory {
-  background: #faf7f0;
+.header-theme-circle.bg-parchment {
+  background: #f7f4ed;
 }
 
-.header-theme-circle.bg-parchment {
-  background: #f1e5c9;
+.header-theme-circle.bg-ivory {
+  background: #fcfaf2;
 }
 
 .header-theme-circle.bg-comfort {
@@ -146,8 +146,15 @@ body.theme-ebony .header-theme-circle.active {
 .library-title-area {
   width: 100%;
   text-align: center;
-  margin-top: 0.1rem;
-  margin-bottom: 0.15rem;
+  margin: 0.6rem 0 1.2rem 0;
+  padding: 0 0 1.1rem 0;
+  border-bottom: 1px solid rgba(140, 75, 39, 0.12);
+  box-sizing: border-box;
+}
+
+body.theme-dark .library-title-area,
+body.theme-ebony .library-title-area {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
 .library-title-area h1 {
@@ -157,12 +164,14 @@ body.theme-ebony .header-theme-circle.active {
   color: var(--text-primary);
   letter-spacing: 0.08em;
   line-height: 1.25;
+  margin: 0;
 }
 
 .library-title-area p {
   font-size: 0.82rem;
   color: var(--text-muted);
   margin-top: 0.25rem;
+  margin-bottom: 0;
   letter-spacing: 0.04em;
 }
 
@@ -171,9 +180,21 @@ body.theme-ebony .header-theme-circle.active {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.6rem;
-  margin-top: 0.2rem;
-  margin-bottom: 0.6rem;
+  margin: 0;
+  padding: 0;
   width: 100%;
+  box-sizing: border-box;
+}
+
+.folders-grid-container.system-grid {
+  margin: 0;
+  padding: 0 0 0.75rem 0;
+  border-bottom: 1px solid rgba(140, 75, 39, 0.12);
+}
+
+body.theme-dark .folders-grid-container.system-grid,
+body.theme-ebony .folders-grid-container.system-grid {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
 .folders-grid-container .list-folder-item {
@@ -181,12 +202,17 @@ body.theme-ebony .header-theme-circle.active {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 0.4rem 0.4rem;
-  min-height: 66px;
+  padding: 0.5rem 0.4rem;
+  height: 92px;
+  min-height: 92px;
+  max-height: 92px;
   box-sizing: border-box;
   text-align: center;
   position: relative;
   border-radius: 10px;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .folders-grid-container .list-folder-icon-wrapper {
@@ -196,7 +222,7 @@ body.theme-ebony .header-theme-circle.active {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.22rem;
+  margin: 0 auto 0.25rem auto;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
 }
@@ -207,43 +233,180 @@ body.theme-ebony .header-theme-circle.active {
   align-items: center;
   justify-content: center;
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .folders-grid-container .list-folder-title {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-primary);
-  line-height: 1.25;
+  line-height: 1.3;
   text-align: center;
+  width: 100%;
   max-width: 100%;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-all;
-  padding: 0 2px;
+  text-overflow: ellipsis;
+  margin-bottom: 0.1rem;
+  padding: 0 4px;
+  box-sizing: border-box;
 }
 
 .folders-grid-container .list-folder-count-text {
   font-size: 0.7rem;
   color: var(--text-muted, #777);
-  margin-top: 0.1rem;
   opacity: 0.85;
 }
 
-/* 虛線新建資料夾卡片 (Dashed Add Folder Card - 66px Ultra Compact) */
+/* 右上角 「...」按鈕 (灰色圓形圖案) */
+.card-more-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(140, 75, 39, 0.08);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted, #666);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.folder-top-right-more {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 5;
+}
+
+body.theme-dark .card-more-btn,
+body.theme-ebony .card-more-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.card-more-btn:hover {
+  background: rgba(140, 75, 39, 0.18);
+  transform: scale(1.08);
+}
+
+/* 經書最右側按鈕群 */
+.book-card-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.fav-heart-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.fav-heart-btn:hover {
+  transform: scale(1.15);
+}
+
+/* 快選選單 Modal 與 4 種顏色主題相容 (圖 3 專用相容性適應) */
+.action-menu-card {
+  background: var(--bg-primary, #ffffff) !important;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12)) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+
+.action-menu-card .action-menu-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, rgba(0,0,0,0.1));
+  background: var(--bg-secondary, rgba(0,0,0,0.03));
+  color: var(--text-primary, #333333);
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.action-menu-card .action-menu-item-btn:hover {
+  background: rgba(140, 75, 39, 0.08);
+  border-color: var(--theme-accent, #8c4b27);
+}
+
+.action-menu-card .action-menu-item-btn.delete-action {
+  color: #d32f2f;
+}
+
+.action-menu-card .action-menu-item-btn.delete-action:hover {
+  background: rgba(211, 47, 47, 0.08);
+  border-color: #d32f2f;
+}
+
+/* 烏木 / 深色主題 (Ebony / Dark Theme - 圖 3 精確相容) */
+body.theme-ebony .action-menu-card,
+body.theme-dark .action-menu-card {
+  background: #181c20 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body.theme-ebony .action-menu-card .action-menu-item-btn,
+body.theme-dark .action-menu-card .action-menu-item-btn {
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.theme-ebony .action-menu-card .action-menu-item-btn:hover,
+body.theme-dark .action-menu-card .action-menu-item-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--theme-accent, #c07d2a);
+  color: #ffffff;
+}
+
+body.theme-ebony .action-menu-card .action-menu-item-btn.delete-action,
+body.theme-dark .action-menu-card .action-menu-item-btn.delete-action {
+  color: #ff6b6b;
+}
+
+body.theme-ebony .action-menu-card .action-menu-item-btn.delete-action:hover,
+body.theme-dark .action-menu-card .action-menu-item-btn.delete-action:hover {
+  background: rgba(255, 107, 107, 0.15);
+  border-color: #ff6b6b;
+}
+
+/* 虛線新建資料夾卡片 (Dashed Add Folder Card - 統一 92px 高度與完全置中) */
 .list-folder-item.add-folder-dashed-card {
   background: rgba(140, 75, 39, 0.02);
   border: 1.5px dashed rgba(140, 75, 39, 0.35);
   box-shadow: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 66px;
+  height: 92px;
+  min-height: 92px;
+  max-height: 92px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 0.4rem 0.4rem;
+  padding: 0.5rem 0.4rem;
+  box-sizing: border-box;
 }
 
 .list-folder-item.add-folder-dashed-card .dashed-icon-box {
@@ -255,7 +418,9 @@ body.theme-ebony .header-theme-circle.active {
   align-items: center;
   justify-content: center;
   color: var(--theme-accent, #8c4b27);
-  margin-bottom: 0.22rem;
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+  flex-shrink: 0;
 }
 
 .list-folder-item.add-folder-dashed-card:hover {
@@ -319,7 +484,7 @@ body.theme-ebony .library-header-btn.active {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 0;
 }
 
 .shelf-row {
@@ -1109,8 +1274,9 @@ body.theme-ebony .grid-book-card.add-card {
 .shelf-list {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  padding: 1rem 0.2rem;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  padding: 0 0.2rem;
 }
 
 .list-book-item {
@@ -2762,6 +2928,160 @@ body.theme-ebony .search-info-tip {
   }
 }
 
+/* 💡 長按觸發編輯模式：貼合 App 100% 寬度且黏性懸浮 (Sticky Floating Bar - 永不溢出螢幕) */
+.batch-action-bar.sticky-floating-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  margin-bottom: 0.8rem;
+  background: var(--bg-paper, rgba(255, 255, 255, 0.95));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
 
+.batch-action-bar.sticky-floating-bar .batch-select-count {
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
 
+.batch-action-bar.sticky-floating-bar .batch-action-right {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
 
+.batch-action-bar.sticky-floating-bar .batch-btn {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.batch-action-bar.sticky-floating-bar .batch-btn-done {
+  background-color: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: all 0.15s ease;
+}
+
+.batch-action-bar.sticky-floating-bar .batch-btn-done:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* 烏木 / 深色主題 Sticky Floating Bar 相容樣式 */
+body.theme-ebony .batch-action-bar.sticky-floating-bar,
+body.theme-dark .batch-action-bar.sticky-floating-bar {
+  background: rgba(24, 28, 32, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.theme-ebony .batch-action-bar.sticky-floating-bar .batch-select-count,
+body.theme-dark .batch-action-bar.sticky-floating-bar .batch-select-count {
+  color: #e2e8f0;
+}
+
+body.theme-ebony .batch-action-bar.sticky-floating-bar .batch-btn-secondary,
+body.theme-dark .batch-action-bar.sticky-floating-bar .batch-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 柔和沙丘 Paper Theme Sticky Floating Bar 相容樣式 */
+body.theme-paper .batch-action-bar.sticky-floating-bar {
+  background: rgba(244, 238, 224, 0.95) !important;
+  border-color: rgba(140, 75, 39, 0.2) !important;
+}/* 💡 長按觸發編輯模式：純 Absolute Overlay 懸浮工具列 (不佔空間，首頁完全不下移) */
+.batch-action-bar.pure-floating-overlay {
+  position: absolute;
+  /* header 高度 = calc(56px + safe-area)，工具列貼在 header 正下方 */
+  top: calc(56px + env(safe-area-inset-top, 0px) + 0.5rem);
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  background: var(--bg-paper, rgba(255, 255, 255, 0.97));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.batch-action-bar.pure-floating-overlay .batch-select-count {
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-primary, #333);
+}
+
+.batch-action-bar.pure-floating-overlay .batch-action-right {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.batch-action-bar.pure-floating-overlay .batch-btn {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.batch-action-bar.pure-floating-overlay .batch-btn-done {
+  background-color: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.batch-action-bar.pure-floating-overlay .batch-btn-done:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* 烏木 / 深色主題 Pure Floating Overlay 相容樣式 */
+body.theme-ebony .batch-action-bar.pure-floating-overlay,
+body.theme-dark .batch-action-bar.pure-floating-overlay {
+  background: rgba(24, 28, 32, 0.97) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-select-count,
+body.theme-dark .batch-action-bar.pure-floating-overlay .batch-select-count {
+  color: #e2e8f0;
+}
+
+body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-btn-secondary,
+body.theme-dark .batch-action-bar.pure-floating-overlay .batch-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-btn-secondary:hover,
+body.theme-dark .batch-action-bar.pure-floating-overlay .batch-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
