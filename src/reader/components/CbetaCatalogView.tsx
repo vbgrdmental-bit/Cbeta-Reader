@@ -592,8 +592,8 @@ export function CbetaCatalogView({
   onSelectBook,
   settings
 }: CbetaCatalogViewProps) {
-  // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代)
-  const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('dept');
+  // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代) - 預設開啟「常用經典」
+  const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('favorite');
 
   // 導航歷史紀錄 (Header 上一頁/下一頁及麵包屑使用)
   const [historyStack, setHistoryStack] = useState<CatalogNode[]>([

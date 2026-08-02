@@ -124,6 +124,8 @@ export function Library({
   // 批量選擇經書狀態
   const [selectedBookIds, setSelectedBookIds] = useState<string[]>([]);
   const [showBatchMoveDialog, setShowBatchMoveDialog] = useState(false);
+  // 💡 movingFolderId：正在被移動的資料夾 ID（非 null 時，批量移動對話框改為「移動資料夾」模式）
+  const [movingFolderId, setMovingFolderId] = useState<string | null>(null);
 
   // 「...」選項 Modal 狀態
   const [menuTargetFolder, setMenuTargetFolder] = useState<BookFolder | null>(null);
@@ -139,7 +141,9 @@ export function Library({
 
   const startLongPress = (e: React.MouseEvent | React.TouchEvent) => {
     if (isEditMode) return;
-    
+    // 💡 「近期閱讀」與「我的最愛」系統虛擬資料夾內，長按完全無任何反應
+    if (currentFolderId === 'virtual_recent_reads' || currentFolderId === 'virtual_favorites') return;
+
     const target = e.target as HTMLElement;
     // 點擊 actions 按鈕或 input 等控制項不觸發長按
     // 💡 「近期閱讀」與「我的最愛」為系統虛擬資料夾，長按無任何反應
@@ -471,8 +475,29 @@ export function Library({
 
   const openMoveFolderDialog = (folderId: string) => {
     setSelectedBookIds([]);
-    setEditingFolderId(folderId);
+    setMovingFolderId(folderId);
     setShowBatchMoveDialog(true);
+  };
+
+  // 💡 執行資料夾移動：更改 parentId（不能移入自身或其子孫資料夾）
+  const handleMoveFolder = (targetParentId: string | null) => {
+    if (!movingFolderId) return;
+    // 防止循環：檢查目標是否為被移動資料夾的後代
+    const isDescendant = (checkId: string | null): boolean => {
+      if (checkId === null) return false;
+      if (checkId === movingFolderId) return true;
+      const parent = folders.find(f => f.id === checkId);
+      return parent ? isDescendant(parent.parentId) : false;
+    };
+    if (targetParentId === movingFolderId || isDescendant(targetParentId)) return;
+
+    const updated = folders.map(f => {
+      if (f.id === movingFolderId) return { ...f, parentId: targetParentId };
+      return f;
+    });
+    saveFolders(updated);
+    setMovingFolderId(null);
+    setShowBatchMoveDialog(false);
   };
 
   // 讀取本地已下載的經典
@@ -923,13 +948,16 @@ export function Library({
                 >
                   <ChevronRight size={20} />
                 </button>
-                <button
-                  className="library-header-btn"
-                  onClick={() => setShowNewFolderDialog(true)}
-                  title="新建資料夾"
-                >
-                  <FolderPlus size={18} />
-                </button>
+                {/* 💡 「近期閱讀」與「我的最愛」系統資料夾：不允許新增子資料夾，隱藏 FolderPlus 按鈕 */}
+                {currentFolderId !== 'virtual_recent_reads' && currentFolderId !== 'virtual_favorites' && (
+                  <button
+                    className="library-header-btn"
+                    onClick={() => setShowNewFolderDialog(true)}
+                    title="新建資料夾"
+                  >
+                    <FolderPlus size={18} />
+                  </button>
+                )}
               </>
             )}
           </>
@@ -1730,33 +1758,8 @@ export function Library({
                 autoFocus
               />
 
-              {/* 💡 選擇 6 種主題色彩圓點 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%' }}>
-                <label style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                  更換資料夾顏色：
-                </label>
-                <div style={{ display: 'flex', gap: '0.7rem', alignItems: 'center', justifyContent: 'center' }}>
-                  {FOLDER_COLOR_OPTIONS.map((c) => (
-                    <button
-                      key={c.value}
-                      type="button"
-                      onClick={() => setEditingFolderColor(c.value)}
-                      title={c.name}
-                      style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        backgroundColor: c.value,
-                        border: editingFolderColor === c.value ? '2.5px solid var(--text-primary)' : '1px solid rgba(0,0,0,0.15)',
-                        cursor: 'pointer',
-                        transform: editingFolderColor === c.value ? 'scale(1.15)' : 'scale(1)',
-                        boxShadow: editingFolderColor === c.value ? '0 0 8px ' + c.value : 'none',
-                        transition: 'all 0.15s ease'
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
+              {/* 💡 更換資料夾顏色：暫時隱藏 (color picker hidden temporarily) */}
+
 
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', width: '100%' }}>
                 <button 
@@ -1777,15 +1780,18 @@ export function Library({
         </div>
       )}
 
-      {/* 批量移動至資料夾對話框 */}
+      {/* 批量移動至資料夾對話框 (雙模式：移動書籍 / 移動資料夾) */}
       {showBatchMoveDialog && (
-        <div className="search-dialog-overlay" onClick={() => setShowBatchMoveDialog(false)}>
+        <div className="search-dialog-overlay" onClick={() => { setShowBatchMoveDialog(false); setMovingFolderId(null); }}>
           <div className="search-dialog-card animate-slide-up" style={{ maxWidth: '400px' }} onClick={e => e.stopPropagation()}>
             <div className="dialog-header">
               <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
-                批量移動經典 ({selectedBookIds.length}本)
+                {movingFolderId
+                  ? `移動資料夾：${folders.find(f => f.id === movingFolderId)?.name || ''}`
+                  : `批量移動經典 (${selectedBookIds.length}本)`
+                }
               </h3>
-              <button className="icon-button close-btn" onClick={() => setShowBatchMoveDialog(false)}>
+              <button className="icon-button close-btn" onClick={() => { setShowBatchMoveDialog(false); setMovingFolderId(null); }}>
                 <X size={18} />
               </button>
             </div>
@@ -1796,22 +1802,37 @@ export function Library({
               
               <div 
                 className="folder-target-option"
-                onClick={() => handleBatchMoveBooks(null)}
+                onClick={() => movingFolderId ? handleMoveFolder(null) : handleBatchMoveBooks(null)}
               >
                 <Home size={18} style={{ color: 'var(--theme-accent)', flexShrink: 0 }} />
                 <span style={{ fontWeight: 600 }}>首頁 (根目錄)</span>
               </div>
 
-              {folders.map(f => (
-                <div 
-                  key={f.id}
-                  className="folder-target-option"
-                  onClick={() => handleBatchMoveBooks(f.id)}
-                >
-                  <Folder size={18} style={{ color: f.color || '#3d5a45', flexShrink: 0 }} />
-                  <span>{getFolderPath(f.id)}</span>
-                </div>
-              ))}
+              {folders
+                .filter(f => movingFolderId ? f.id !== movingFolderId : true)
+                .map(f => {
+                  // 移動資料夾模式：排除被移動資料夾本身與其子孫
+                  if (movingFolderId) {
+                    const isDescendant = (checkId: string | null): boolean => {
+                      if (checkId === null) return false;
+                      if (checkId === movingFolderId) return true;
+                      const p = folders.find(x => x.id === checkId);
+                      return p ? isDescendant(p.parentId) : false;
+                    };
+                    if (isDescendant(f.id)) return null;
+                  }
+                  return (
+                    <div 
+                      key={f.id}
+                      className="folder-target-option"
+                      onClick={() => movingFolderId ? handleMoveFolder(f.id) : handleBatchMoveBooks(f.id)}
+                    >
+                      <Folder size={18} style={{ color: '#8b7355', flexShrink: 0 }} />
+                      <span>{getFolderPath(f.id)}</span>
+                    </div>
+                  );
+                })
+              }
             </div>
           </div>
         </div>
