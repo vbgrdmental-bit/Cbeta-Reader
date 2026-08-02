@@ -211,6 +211,8 @@ body.theme-ebony .folders-grid-container.system-grid {
   position: relative;
   border-radius: 10px;
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .folders-grid-container .list-folder-icon-wrapper {
@@ -231,6 +233,8 @@ body.theme-ebony .folders-grid-container.system-grid {
   align-items: center;
   justify-content: center;
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .folders-grid-container .list-folder-title {
