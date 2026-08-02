@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Database, FileText, Upload, HelpCircle, RotateCw, Archive, Trash2, HardDrive, CheckCircle2 } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
 import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks, saveSettings, DEFAULT_SETTINGS } from '../../utils/db';
@@ -25,6 +25,29 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   const [storageStats, setStorageStats] = useState<StorageStats | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
   const [storageMsg, setStorageMsg] = useState('');
+
+  // 💡 版本紀錄對話框捲動位置重置 Refs
+  const changelogBodyRef = useRef<HTMLDivElement>(null);
+  const builderSectionRef = useRef<HTMLDivElement>(null);
+
+  // 💡 收起 App 歷程：平滑自動捲動至最頂部 (回到圖 1)
+  const handleCollapseAppHistory = () => {
+    setShowAppHistory(false);
+    if (changelogBodyRef.current) {
+      changelogBodyRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // 💡 收起 Builder 歷程：平滑自動捲動至 Builder 區塊標題 (回到圖 3)
+  const handleCollapseBuilderHistory = () => {
+    setShowBuilderHistory(false);
+    setTimeout(() => {
+      if (changelogBodyRef.current && builderSectionRef.current) {
+        const topPos = builderSectionRef.current.offsetTop;
+        changelogBodyRef.current.scrollTo({ top: Math.max(0, topPos - 12), behavior: 'smooth' });
+      }
+    }, 50);
+  };
 
   // 💡 閱讀時間倒數計時狀態
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
@@ -976,7 +999,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 <X size={16} />
               </button>
             </div>
-            <div className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.2rem' }}>
+            <div ref={changelogBodyRef} className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.2rem' }}>
               {/* 第一部分：App 閱讀器介面更新 */}
               <div className="changelog-group-section" style={{ marginBottom: '1.8rem' }}>
                 <div style={{
@@ -1108,12 +1131,12 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                       </ul>
                     </div>
 
-                    {/* 置左按鈕：− 收起 App 歷史紀錄 (展開時自動跳到最下方) */}
+                    {/* 置左按鈕：− 收起 App 歷史紀錄 (收起後自動捲回頂部) */}
                     <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
                       <button 
                         type="button"
                         className="changelog-history-btn"
-                        onClick={() => setShowAppHistory(false)}
+                        onClick={handleCollapseAppHistory}
                       >
                         − 收起 App 歷史紀錄
                       </button>
@@ -1123,7 +1146,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               </div>
 
               {/* 第二部分：Builder 經文解析引擎更新 */}
-              <div className="changelog-group-section" style={{ marginBottom: '1.5rem' }}>
+              <div ref={builderSectionRef} className="changelog-group-section" style={{ marginBottom: '1.5rem' }}>
                 <div style={{
                   fontSize: '0.95rem',
                   fontWeight: 700,
@@ -1220,12 +1243,12 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                       </ul>
                     </div>
 
-                    {/* 置左按鈕：− 收起 Builder 歷史紀錄 (展開時自動跳到最下方) */}
+                    {/* 置左按鈕：− 收起 Builder 歷史紀錄 (收起後自動捲回 Builder 區塊) */}
                     <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
                       <button 
                         type="button"
                         className="changelog-history-btn"
-                        onClick={() => setShowBuilderHistory(false)}
+                        onClick={handleCollapseBuilderHistory}
                       >
                         − 收起 Builder 歷史紀錄
                       </button>
