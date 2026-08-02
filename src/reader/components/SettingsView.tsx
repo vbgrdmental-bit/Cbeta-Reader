@@ -1007,16 +1007,21 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   </ul>
                 </div>
 
-                {/* 置左按鈕：+ 更多 App 修改歷程 */}
-                <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
-                  <button 
-                    type="button"
-                    className="changelog-history-btn"
-                    onClick={() => setShowAppHistory(prev => !prev)}
-                  >
-                    {showAppHistory ? '− 收起 App 歷史紀錄' : '+ 更多 App 修改歷程'}
-                  </button>
-                </div>
+                {/* 置左按鈕：+ 更多 App 修改歷程 (未展開時顯示於最新版下方) */}
+                {!showAppHistory && (
+                  <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
+                    <button 
+                      type="button"
+                      className="changelog-history-btn"
+                      onClick={() => {
+                        setShowAppHistory(true);
+                        setShowBuilderHistory(false); // 自動收合 Builder 歷程
+                      }}
+                    >
+                      + 更多 App 修改歷程
+                    </button>
+                  </div>
+                )}
 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
@@ -1102,6 +1107,17 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                         <li>• 釋出初始核心經典閱讀、搜尋與劃線標籤功能。</li>
                       </ul>
                     </div>
+
+                    {/* 置左按鈕：− 收起 App 歷史紀錄 (展開時自動跳到最下方) */}
+                    <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
+                      <button 
+                        type="button"
+                        className="changelog-history-btn"
+                        onClick={() => setShowAppHistory(false)}
+                      >
+                        − 收起 App 歷史紀錄
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -1137,16 +1153,21 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   </ul>
                 </div>
 
-                {/* 置左按鈕：+ 更多 Builder 修改歷程 */}
-                <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
-                  <button 
-                    type="button"
-                    className="changelog-history-btn"
-                    onClick={() => setShowBuilderHistory(prev => !prev)}
-                  >
-                    {showBuilderHistory ? '− 收起 Builder 歷史紀錄' : '+ 更多 Builder 修改歷程'}
-                  </button>
-                </div>
+                {/* 置左按鈕：+ 更多 Builder 修改歷程 (未展開時顯示於最新版下方) */}
+                {!showBuilderHistory && (
+                  <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
+                    <button 
+                      type="button"
+                      className="changelog-history-btn"
+                      onClick={() => {
+                        setShowBuilderHistory(true);
+                        setShowAppHistory(false); // 自動收合 App 歷程
+                      }}
+                    >
+                      + 更多 Builder 修改歷程
+                    </button>
+                  </div>
+                )}
 
                 {/* 展開的 Builder 歷史版本 */}
                 {showBuilderHistory && (
@@ -1198,9 +1219,21 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                         <li>• 建立 Builder 獨立版號與無縫背景升級修復機制（保留劃線與筆記）。</li>
                       </ul>
                     </div>
+
+                    {/* 置左按鈕：− 收起 Builder 歷史紀錄 (展開時自動跳到最下方) */}
+                    <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
+                      <button 
+                        type="button"
+                        className="changelog-history-btn"
+                        onClick={() => setShowBuilderHistory(false)}
+                      >
+                        − 收起 Builder 歷史紀錄
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
+
 
               {/* 4. CBETA Reader 簡介與感言區塊 (隔一條線，小字呈現) */}
               <div style={{ marginTop: '1.5rem', paddingTop: '1.2rem', borderTop: '1px dashed var(--reader-border, rgba(0,0,0,0.15))' }}>
