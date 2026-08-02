@@ -1008,23 +1008,11 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 </div>
 
                 {/* 置左按鈕：+ 更多 App 修改歷程 */}
-                <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
+                <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
                   <button 
                     type="button"
+                    className="changelog-history-btn"
                     onClick={() => setShowAppHistory(prev => !prev)}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: 'var(--reader-text-muted, #777)',
-                      fontSize: '0.82rem',
-                      cursor: 'pointer',
-                      padding: '0.2rem 0',
-                      opacity: 0.85,
-                      fontWeight: 500,
-                      transition: 'opacity 0.2s'
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                    onMouseLeave={e => e.currentTarget.style.opacity = '0.85'}
                   >
                     {showAppHistory ? '− 收起 App 歷史紀錄' : '+ 更多 App 修改歷程'}
                   </button>
@@ -1150,23 +1138,11 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 </div>
 
                 {/* 置左按鈕：+ 更多 Builder 修改歷程 */}
-                <div style={{ marginTop: '0.8rem', textAlign: 'left' }}>
+                <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
                   <button 
                     type="button"
+                    className="changelog-history-btn"
                     onClick={() => setShowBuilderHistory(prev => !prev)}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: 'var(--reader-text-muted, #777)',
-                      fontSize: '0.82rem',
-                      cursor: 'pointer',
-                      padding: '0.2rem 0',
-                      opacity: 0.85,
-                      fontWeight: 500,
-                      transition: 'opacity 0.2s'
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                    onMouseLeave={e => e.currentTarget.style.opacity = '0.85'}
                   >
                     {showBuilderHistory ? '− 收起 Builder 歷史紀錄' : '+ 更多 Builder 修改歷程'}
                   </button>
