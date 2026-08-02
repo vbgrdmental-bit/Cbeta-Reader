@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Database, FileText, Upload, HelpCircle, RotateCw, Archive, Trash2, HardDrive, CheckCircle2 } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
-import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks } from '../../utils/db';
+import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks, saveSettings, DEFAULT_SETTINGS } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
@@ -39,13 +39,16 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
   }, []);
 
   const handleClearAllBooks = async () => {
-    if (!window.confirm('確定要刪除本地所有離線經典嗎？此操作將清空離線書庫並還原為乾淨狀態。')) return;
-    setStorageMsg('正在刪除本地所有離線經書與快取...');
+    if (!window.confirm('確定要清空所有離線經典並恢復初始設定嗎？\n• 所有離線書庫與劃線將被清除\n• 閱讀設定將回到預設值\n\n此操作無法復原。')) return;
+    setStorageMsg('正在清空離線書庫並恢復初始設定...');
     try {
       await clearAllBooks();
+      // 重置設定為初始預設值
+      await saveSettings(DEFAULT_SETTINGS);
+      onSave(DEFAULT_SETTINGS);
       const stats = await getStorageStats();
       setStorageStats(stats);
-      setStorageMsg('已成功清空本地所有離線經典！頁面即將自動刷新。');
+      setStorageMsg('已成功清空並恢復初始設定！頁面即將自動刷新。');
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -803,7 +806,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     清空經典
                   </span>
                   <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    一鍵清空離線書庫
+                    清空並恢復初始設定
                   </span>
                 </div>
               </div>
