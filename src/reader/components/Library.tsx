@@ -1681,33 +1681,8 @@ export function Library({
                 autoFocus
               />
 
-              {/* 💡 選擇 6 種主題色彩圓點 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%' }}>
-                <label style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                  選擇資料夾顏色：
-                </label>
-                <div style={{ display: 'flex', gap: '0.7rem', alignItems: 'center', justifyContent: 'center' }}>
-                  {FOLDER_COLOR_OPTIONS.map((c) => (
-                    <button
-                      key={c.value}
-                      type="button"
-                      onClick={() => setNewFolderColor(c.value)}
-                      title={c.name}
-                      style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        backgroundColor: c.value,
-                        border: newFolderColor === c.value ? '2.5px solid var(--text-primary)' : '1px solid rgba(0,0,0,0.15)',
-                        cursor: 'pointer',
-                        transform: newFolderColor === c.value ? 'scale(1.15)' : 'scale(1)',
-                        boxShadow: newFolderColor === c.value ? '0 0 8px ' + c.value : 'none',
-                        transition: 'all 0.15s ease'
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
+              {/* 💡 選擇資料夾顏色：暫時隱藏 (color picker hidden temporarily) */}
+
 
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', width: '100%' }}>
                 <button 
