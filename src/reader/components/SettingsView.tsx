@@ -38,15 +38,22 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
     }
   };
 
-  // 💡 收起 Builder 歷程：平滑自動捲動至 Builder 區塊標題 (回到圖 3)
-  const handleCollapseBuilderHistory = () => {
-    setShowBuilderHistory(false);
+  // 💡 捲動至 Builder 區塊標題（精確計算 relative to scroll container）
+  const scrollToBuilderSection = (delay = 50) => {
     setTimeout(() => {
       if (changelogBodyRef.current && builderSectionRef.current) {
-        const topPos = builderSectionRef.current.offsetTop;
-        changelogBodyRef.current.scrollTo({ top: Math.max(0, topPos - 12), behavior: 'smooth' });
+        const containerRect = changelogBodyRef.current.getBoundingClientRect();
+        const elemRect = builderSectionRef.current.getBoundingClientRect();
+        const relativeTop = elemRect.top - containerRect.top + changelogBodyRef.current.scrollTop;
+        changelogBodyRef.current.scrollTo({ top: Math.max(0, relativeTop - 8), behavior: 'smooth' });
       }
-    }, 50);
+    }, delay);
+  };
+
+  // 💡 收起 Builder 歷程：平滑自動捲動至 Builder 區塊標題 (回到圖 1)
+  const handleCollapseBuilderHistory = () => {
+    setShowBuilderHistory(false);
+    scrollToBuilderSection(80); // 稍長延遲，等 DOM 收合後再捲動
   };
 
   // 💡 閱讀時間倒數計時狀態
@@ -1185,13 +1192,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                       onClick={() => {
                         setShowBuilderHistory(true);
                         setShowAppHistory(false); // 自動收合 App 歷程
-                        // 稍後捲動至 Builder 區塊頂部
-                        setTimeout(() => {
-                          if (changelogBodyRef.current && builderSectionRef.current) {
-                            const topPos = builderSectionRef.current.offsetTop;
-                            changelogBodyRef.current.scrollTo({ top: Math.max(0, topPos - 12), behavior: 'smooth' });
-                          }
-                        }, 50);
+                        scrollToBuilderSection(80); // 捲動至 Builder 區塊標題
                       }}
                     >
                       + 更多 Builder 修改歷程
