@@ -1185,6 +1185,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                       onClick={() => {
                         setShowBuilderHistory(true);
                         setShowAppHistory(false); // 自動收合 App 歷程
+                        // 稍後捲動至 Builder 區塊頂部
+                        setTimeout(() => {
+                          if (changelogBodyRef.current && builderSectionRef.current) {
+                            const topPos = builderSectionRef.current.offsetTop;
+                            changelogBodyRef.current.scrollTo({ top: Math.max(0, topPos - 12), behavior: 'smooth' });
+                          }
+                        }, 50);
                       }}
                     >
                       + 更多 Builder 修改歷程
