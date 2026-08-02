@@ -995,16 +995,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v3.1.0) 直接顯示 */}
+                {/* 最新 App 版本 (v3.2.0) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>App: v3.1.0</span>
-                    <span className="changelog-date">(2026-08-01)</span>
+                    <span>App: v3.2.0</span>
+                    <span className="changelog-date">(2026-08-02)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 「畫重點設定」直覺設定。</li>
-                    <li>• 新增「設定閱讀時間 (護眼模式)」，時間到了溫馨提醒。</li>
-                    <li>• 主頁更名為「CBETA Reader 淨心小角落．閱讀大藏經」。</li>
+                    <li>• 調整首頁版面，並新增「近期閱讀」、「我的最愛」。</li>
+                    <li>• 調整書籍、資料夾移動與刪除設定。</li>
                   </ul>
                 </div>
 
@@ -1034,6 +1033,14 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v3.1.0 <span className="changelog-date">(2026-08-01)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 「畫重點設定」直覺設定。</li>
+                        <li>• 新增「設定閱讀時間 (護眼模式)」，時間到了溫馨提醒。</li>
+                        <li>• 主頁更名為「CBETA Reader 淨心小角落．閱讀大藏經」。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v2.3.0 <span className="changelog-date">(2026-07-29)</span></div>
                       <ul className="changelog-list">
