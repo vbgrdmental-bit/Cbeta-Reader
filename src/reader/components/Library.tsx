@@ -243,7 +243,9 @@ export function Library({
         !target.closest('.library-header-btn') &&
         !target.closest('.folder-add-sub-btn-flat') &&
         !target.closest('.edit-action-btn') &&
-        !target.closest('.item-actions-panel')
+        !target.closest('.item-actions-panel') &&
+        // 💡 懸浮批量工具列的所有按鈕（全選、批量移動、完成）不得觸發退出編輯模式
+        !target.closest('.batch-action-bar')
       ) {
         setIsEditMode(false);
       }
@@ -269,7 +271,9 @@ export function Library({
       !target.closest('.list-book-item') && 
       !target.closest('.square-btn') && 
       !target.closest('.library-header-btn') &&
-      !target.closest('.folder-add-sub-btn-flat')
+      !target.closest('.folder-add-sub-btn-flat') &&
+      // 💡 懸浮批量工具列的所有按鈕不得觸發退出編輯模式
+      !target.closest('.batch-action-bar')
     ) {
       setIsEditMode(false);
     }
