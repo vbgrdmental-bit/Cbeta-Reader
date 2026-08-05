@@ -1244,42 +1244,42 @@ export function CbetaCatalogView({
     <div className={`cbeta-catalog-container theme-${settings.theme}`}>
       {/* 頂部固定控制列 (Header Bar) */}
       <header className="cbeta-catalog-header">
-        <div className="cbeta-header-left">
-          {/* 回首頁 (書架) 圖示 */}
-          <button 
-            className="icon-button" 
-            onClick={onBackToLibrary}
-            title="返回本地書架"
-          >
-            <Home size={20} />
-          </button>
+        {/* 回首頁 (書架) 圖示 */}
+        <button 
+          className="library-header-btn" 
+          onClick={onBackToLibrary}
+          title="返回本地書架"
+        >
+          <Home size={20} />
+        </button>
 
-          <div className="cbeta-header-divider" />
+        <div className="control-divider" />
 
-          {/* 上一層 (<) 與 下一層 (>) 歷史導航按鈕 */}
-          <button 
-            className="nav-hist-btn" 
-            onClick={handleHeaderPrev}
-            disabled={!canGoBack}
-            title="上一頁 / 上一層"
-          >
-            <ChevronLeft size={20} />
-          </button>
+        {/* 上一層 (<) 與 下一層 (>) 歷史導航按鈕 */}
+        <button 
+          className="library-header-btn" 
+          onClick={handleHeaderPrev}
+          disabled={!canGoBack}
+          title="上一頁 / 上一層"
+          style={{ opacity: canGoBack ? 1 : 0.3 }}
+        >
+          <ChevronLeft size={20} />
+        </button>
 
-          <button 
-            className="nav-hist-btn" 
-            onClick={handleHeaderNext}
-            disabled={!canGoForward}
-            title="下一頁 / 下一層"
-          >
-            <ChevronRight size={20} />
-          </button>
-        </div>
+        <button 
+          className="library-header-btn" 
+          onClick={handleHeaderNext}
+          disabled={!canGoForward}
+          title="下一頁 / 下一層"
+          style={{ opacity: canGoForward ? 1 : 0.3 }}
+        >
+          <ChevronRight size={20} />
+        </button>
 
-        <div className="cbeta-header-right">
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
           {/* 右上角齒輪設定圖示 */}
           <button 
-            className="icon-button" 
+            className="library-header-btn" 
             onClick={onOpenSettings}
             title="偏好設定"
           >

@@ -1238,9 +1238,11 @@ export function ReaderView({
       
       {/* 頂部工具列 */}
       <div className={`reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-        <button className="icon-button" onClick={() => onBackToLibrary(true)} title="首頁">
+        <button className="library-header-btn" onClick={() => onBackToLibrary(true)} title="首頁">
           <Home size={20} />
         </button>
+
+        <div className="control-divider" />
 
 
 

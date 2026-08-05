@@ -15,19 +15,26 @@
   overflow: hidden;
 }
 
-/* 頂部固定控制列 (Header Bar) - 56pxBaseHeight 完全對齊 */
+/* 頂部固定控制列 (Header Bar) - 56pxBaseHeight 完全對齊首頁 */
 .cbeta-catalog-header {
-  height: 56px;
-  min-height: 56px;
-  max-height: 56px;
-  flex-shrink: 0;
-  padding: 0 1.2rem;
+  width: 100%;
+  margin: 0;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.4rem;
   border-bottom: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
-  background-color: var(--reader-bg, #fbf8f3);
-  z-index: 10;
+  padding-top: env(safe-area-inset-top, 0px);
+  height: calc(56px + env(safe-area-inset-top, 0px));
+  min-height: calc(56px + env(safe-area-inset-top, 0px));
+  max-height: calc(56px + env(safe-area-inset-top, 0px));
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0;
+  z-index: 100;
+  background-color: var(--reader-bg, #fbf8f3) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
