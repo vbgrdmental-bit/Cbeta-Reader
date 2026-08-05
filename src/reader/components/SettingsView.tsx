@@ -246,18 +246,18 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 { 
                   id: 'iansui', 
                   name: '芫荽體', 
-                  fontFamily: '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", "CBETASupplement", serif',
+                  fontFamily: '"Iansui", "Klee One", "CBETASupplement", serif',
                   sample: '永' 
                 },
                 { 
-                  id: 'iansui-bold', 
-                  name: '芫荽體(粗)', 
-                  fontFamily: '"Iansui", "Klee One", "LXGW WenKai TC", "LXGW WenKai", "DFKai-SB", "CBETASupplement", serif',
+                  id: 'kaiti', 
+                  name: '標楷體', 
+                  fontFamily: '"LXGW WenKai TC", "LXGW WenKai", "TW-Kai", "BiauKai", "DFKai-SB", "標楷體", "CBETASupplement", serif',
                   sample: '永' 
                 }
               ].map((fontItem) => {
                 const rawFont = settings.fontFamily || 'default';
-                const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'kaiti' || rawFont === 'wenkai' || rawFont === 'iansui-zy') ? 'iansui-bold' : rawFont;
+                const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold') ? 'kaiti' : rawFont;
                 const isActive = currentFont === fontItem.id;
                 return (
                   <div
