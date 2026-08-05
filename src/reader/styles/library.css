@@ -69,6 +69,8 @@ body.theme-ebony {
   /* 💡 支援手機端 Safe Area，防止頂部劉海與狀態列壓迫，保持高雅呼吸感 */
   padding-top: env(safe-area-inset-top, 0px);
   height: calc(56px + env(safe-area-inset-top, 0px));
+  min-height: calc(56px + env(safe-area-inset-top, 0px));
+  max-height: calc(56px + env(safe-area-inset-top, 0px));
   padding-left: 0.8rem;
   padding-right: 0.8rem;
   box-sizing: border-box;
@@ -77,6 +79,8 @@ body.theme-ebony {
   flex-shrink: 0;
   z-index: 100;
   background: var(--bg-library) !important;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body.theme-ebony .library-header {

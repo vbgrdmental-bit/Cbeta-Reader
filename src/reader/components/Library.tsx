@@ -820,18 +820,40 @@ export function Library({
     ? []
     : folders.filter(f => f.parentId === currentFolderId);
     
+  // 💡 經文排序：先依英文字 A~Z 排，每個英文字的數字由小到大排
+  const sortBooksByWorkId = (books: BookMetadata[]): BookMetadata[] => {
+    return [...books].sort((a, b) => {
+      const matchA = a.workId.match(/^([A-Za-z]+)(\d*)/);
+      const matchB = b.workId.match(/^([A-Za-z]+)(\d*)/);
+
+      const letterA = matchA ? matchA[1].toUpperCase() : a.workId;
+      const letterB = matchB ? matchB[1].toUpperCase() : b.workId;
+
+      if (letterA !== letterB) {
+        return letterA.localeCompare(letterB);
+      }
+
+      const numA = matchA && matchA[2] ? parseInt(matchA[2], 10) : 0;
+      const numB = matchB && matchB[2] ? parseInt(matchB[2], 10) : 0;
+
+      return numA - numB;
+    });
+  };
+
   const displayBooks = currentFolderId === 'virtual_recent_reads'
     ? recentReadsBooks
     : (currentFolderId === 'virtual_favorites'
         ? favoriteBooksList
         : (currentFolderId === 'virtual_resume'
             ? resumeBooks.map(item => item.book)
-            : (currentFolderId
-                ? downloadedBooks.filter(b => {
-                    const f = folders.find(folder => folder.id === currentFolderId);
-                    return f ? f.bookIds.includes(b.workId) : false;
-                  })
-                : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId)))));
+            : sortBooksByWorkId(
+                currentFolderId
+                  ? downloadedBooks.filter(b => {
+                      const f = folders.find(folder => folder.id === currentFolderId);
+                      return f ? f.bookIds.includes(b.workId) : false;
+                    })
+                  : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId))
+              )));
 
 
   // 獲取當前資料夾路徑麵包屑

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft, Paintbrush, Search, Clock
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Paintbrush, Search, Clock
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
@@ -1240,17 +1240,6 @@ export function ReaderView({
       <div className={`reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
         <button className="icon-button" onClick={() => onBackToLibrary(true)} title="首頁">
           <Home size={20} />
-        </button>
-
-        <div className="control-divider" />
-
-        <button 
-          className="icon-button" 
-          onClick={() => onBackToLibrary(false)} 
-          title="返回前一頁"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        >
-          <ArrowLeft size={20} />
         </button>
 
 

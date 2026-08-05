@@ -256,6 +256,8 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
   /* 💡 採用與首頁控制列 100% 一致的手機端 Safe Area 填充與 56px 身高，達成完全等高與按鈕像素級重合 */
   padding-top: env(safe-area-inset-top, 0px);
   height: calc(56px + env(safe-area-inset-top, 0px));
+  min-height: calc(56px + env(safe-area-inset-top, 0px));
+  max-height: calc(56px + env(safe-area-inset-top, 0px));
   border-bottom: 1.2px solid;
   display: flex;
   align-items: center;
@@ -264,17 +266,25 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
   padding-left: 0.8rem;
   padding-right: 0.8rem;
   box-sizing: border-box;
+  flex-shrink: 0;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .reader-bottom-bar {
   bottom: 0;
   height: 52px;
+  min-height: 52px;
+  max-height: 52px;
   border-top: 1.2px solid;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
   box-sizing: border-box;
+  flex-shrink: 0;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Visibility classes for Kindle Tap zone */

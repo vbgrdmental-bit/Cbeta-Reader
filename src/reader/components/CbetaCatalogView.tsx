@@ -614,6 +614,26 @@ export function CbetaCatalogView({
   const [isSearchingOnline, setIsSearchingOnline] = useState(false);
   const [isTextSearchActive, setIsTextSearchActive] = useState(false);
 
+  // 💡 近期 5 個搜尋關鍵字紀錄
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('cbeta_recent_searches');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const saveRecentSearch = (query: string) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    setRecentSearches(prev => {
+      const updated = [trimmed, ...prev.filter(q => q !== trimmed)].slice(0, 5);
+      localStorage.setItem('cbeta_recent_searches', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   // 已下載書籍紀錄 (Local IndexedDB)
   const [downloadedWorkIds, setDownloadedWorkIds] = useState<string[]>([]);
 
@@ -1032,20 +1052,27 @@ export function CbetaCatalogView({
   };
 
   // 執行線上關鍵字搜尋
-  const handleSearchSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!onlineSearchQuery.trim()) return;
-
+  const executeSearch = async (query: string) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    setOnlineSearchQuery(trimmed);
+    saveRecentSearch(trimmed);
     setIsSearchingOnline(true);
     setIsTextSearchActive(true);
     try {
-      const results = await IndexBuilder.searchTitle(onlineSearchQuery.trim());
+      const results = await IndexBuilder.searchTitle(trimmed);
       setOnlineResults(results);
     } catch (err) {
       console.error('Failed to search online CBETA:', err);
     } finally {
       setIsSearchingOnline(false);
     }
+  };
+
+  const handleSearchSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!onlineSearchQuery.trim()) return;
+    executeSearch(onlineSearchQuery);
   };
 
   // 清除關鍵字搜尋 -> 自動恢復 4 個分頁與目錄瀏覽
@@ -1302,6 +1329,49 @@ export function CbetaCatalogView({
                 </button>
               </div>
             </form>
+
+            {/* 💡 近期 5 個搜尋關鍵字 Chip 標籤列 (單行、灰黑小字) */}
+            {recentSearches.length > 0 && (
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.4rem', 
+                  marginTop: '0.55rem', 
+                  overflowX: 'auto', 
+                  whiteSpace: 'nowrap',
+                  paddingBottom: '0.15rem',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}
+                className="custom-scrollbar"
+              >
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted, #718096)', flexShrink: 0, opacity: 0.85 }}>
+                  近期搜尋：
+                </span>
+                {recentSearches.map((q, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => executeSearch(q)}
+                    style={{
+                      fontSize: '0.76rem',
+                      color: 'var(--text-primary, #4a5568)',
+                      backgroundColor: 'var(--theme-accent-light, rgba(0, 0, 0, 0.04))',
+                      border: '1px solid var(--theme-accent-border, rgba(0, 0, 0, 0.12))',
+                      borderRadius: '12px',
+                      padding: '0.15rem 0.55rem',
+                      cursor: 'pointer',
+                      flexShrink: 0,
+                      transition: 'all 0.15s ease'
+                    }}
+                    title={`點擊立即搜尋：${q}`}
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* 💡 上方加一條細細的分隔線 + 粗體圓體「+依類別查詢」動態開關 */}
             {!isTextSearchActive && (
