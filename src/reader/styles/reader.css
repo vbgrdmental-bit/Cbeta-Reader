@@ -65,10 +65,10 @@
   transition: font-size var(--transition-fast), line-height var(--transition-fast);
 }
 
-/* 偈頌 (韻文) 排版美化 */
+/* 偈頌 (韻文) 排版美化 (固定使用圓體，維持閱讀層次感) */
 .reader-paragraph.verse {
   font-weight: bold;
-  font-family: var(--reader-body-font, var(--font-serif));
+  font-family: "圓體-繁", "華康圓體", "DFYuan-Medium", "DFYuan", "YuanTi", "Yu Gothic", "Hiragino Maru Gothic ProN", "HGMaruGothicMPRO", "PingFang TC", "Microsoft JhengHei", sans-serif !important;
   text-align: left; /* 💡 將偈頌改為置左對齊，便於換行閱讀 */
   padding-left: 2em; /* 💡 左側縮排 2 字符，維持詩歌體排版質感 */
   margin-top: 0.15rem;
