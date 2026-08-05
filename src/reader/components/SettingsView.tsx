@@ -252,7 +252,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 { 
                   id: 'kaiti', 
                   name: '標楷體', 
-                  fontFamily: '"LXGW WenKai TC", "LXGW WenKai", "TW-Kai", "BiauKai", "DFKai-SB", "標楷體", "CBETASupplement", serif',
+                  fontFamily: '"DFKai-SB", "標楷體", "BiauKai", "TW-Kai", "LXGW WenKai TC", "CBETASupplement", serif',
                   sample: '永' 
                 }
               ].map((fontItem) => {

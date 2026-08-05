@@ -68,7 +68,7 @@
 /* 偈頌 (韻文) 排版美化 */
 .reader-paragraph.verse {
   font-weight: bold;
-  font-family: 'DFYuan-Medium', 'DFYuan', 'YuanTi', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--reader-body-font, var(--font-serif));
   text-align: left; /* 💡 將偈頌改為置左對齊，便於換行閱讀 */
   padding-left: 2em; /* 💡 左側縮排 2 字符，維持詩歌體排版質感 */
   margin-top: 0.15rem;

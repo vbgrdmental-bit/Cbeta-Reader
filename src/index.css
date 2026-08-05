@@ -40,6 +40,16 @@
   font-display: swap;
 }
 
+/* 💡 全字庫標準正楷體 / 標楷體 (TW-Kai / Standard Kai WebFont) */
+@font-face {
+  font-family: 'TW-Kai';
+  src: url('https://cdn.jsdelivr.net/gh/justfont/open-fonts/TW-Kai/TW-Kai.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/cbeta-org/cbeta-fonts@main/TW-Kai.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Fonts */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, 'CBETASupplement';
