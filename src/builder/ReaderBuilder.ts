@@ -510,11 +510,9 @@ export class ReaderBuilder {
             cleanContent = cleanClone.textContent?.trim() || textContent;
           }
 
-          // 💡 經文中途多餘空格清理：僅清除漢字與漢字之間、漢字與標點符號之間的半形 ASCII 空格（CBETA 紙本折行遺跡）
+          // 💡 經文中途多餘空格清理：清除半形 ASCII 空格、換行與多餘空格（CBETA 紙本折行與腳註移除遺跡）
           // 保持全形空格 '　' 不被清除，以保留印順導師著作與 CBETA 中的「一　慧能大師」、「二　刺史」等節號與清單縮排空格
-          cleanContent = cleanContent.replace(/([\u4e00-\u9fa5\u3400-\u4dbf])[ \t\r\n]+([\u4e00-\u9fa5\u3400-\u4dbf])/g, '$1$2');
-          cleanContent = cleanContent.replace(/([\u4e00-\u9fa5\u3400-\u4dbf])[ \t\r\n]+([，。；：！？」）》〉』】])/g, '$1$2');
-          cleanContent = cleanContent.replace(/([「（《〈『【])[ \t\r\n]+([\u4e00-\u9fa5\u3400-\u4dbf])/g, '$1$2');
+          cleanContent = cleanContent.replace(/[ \t\r\n]+/g, '');
 
           // 💡 取得當前元素前面兄弟節點中的縮排尺寸，並補上全形空格
           const precedingIndentSize = getPrecedingLineSpaceSize(el);
