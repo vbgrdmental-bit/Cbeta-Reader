@@ -1200,6 +1200,17 @@ export function Library({
                 >
                   <ChevronRight size={20} />
                 </button>
+
+                {/* 💡 在「我的資料夾」或自訂子資料夾內，頂部控制列放回原「新建資料夾 (+)」圖示按鈕 */}
+                {(currentFolderId === 'virtual_my_folders' || (currentFolderId && !currentFolderId.startsWith('virtual_'))) && (
+                  <button
+                    className="library-header-btn"
+                    onClick={() => setShowNewFolderDialog(true)}
+                    title="新建資料夾"
+                  >
+                    <FolderPlus size={20} />
+                  </button>
+                )}
               </>
             )}
           </>
@@ -1619,24 +1630,26 @@ export function Library({
                   </div>
                 ))}
 
-                {/* 💡 右側虛線新建資料夾卡片 (僅在「我的資料夾」或自訂子資料夾內顯示) */}
-                <div 
-                  className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
-                  onClick={() => setShowNewFolderDialog(true)}
-                  title="點擊新建資料夾"
-                >
-                  <div className="dashed-icon-box">
-                    <FolderPlus size={16} />
-                  </div>
-                  <div className="list-folder-info">
-                    <div className="list-folder-title" style={{ fontSize: '0.82rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
-                      + 新建資料夾
+                {/* 💡 虛線新建資料夾卡片：僅在資料夾內是「空的」（無任何子資料夾且無任何書籍）時才顯示 (圖2) */}
+                {displayFolders.length === 0 && displayBooks.length === 0 && (
+                  <div 
+                    className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
+                    onClick={() => setShowNewFolderDialog(true)}
+                    title="點擊新建資料夾"
+                  >
+                    <div className="dashed-icon-box">
+                      <FolderPlus size={16} />
                     </div>
-                    <div className="list-folder-count-text">
-                      按此建立
+                    <div className="list-folder-info">
+                      <div className="list-folder-title" style={{ fontSize: '0.82rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
+                        + 新建資料夾
+                      </div>
+                      <div className="list-folder-count-text">
+                        按此建立
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
 
