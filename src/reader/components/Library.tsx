@@ -1171,7 +1171,7 @@ export function Library({
               // 💡 1. 處於最外層首頁：顯示「下載新佛典（+）」與「新建資料夾」
               <>
                 <button
-                  className="library-header-btn"
+                  className="library-header-btn cbeta-c-btn"
                   onClick={handleOpenCbetaCatalogWithAnimation}
                   title="進入 CBETA 藏經庫目錄下載佛典"
                 >

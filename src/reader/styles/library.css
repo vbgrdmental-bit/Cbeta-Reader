@@ -3117,7 +3117,25 @@ body.theme-dark .batch-action-bar.pure-floating-overlay .batch-btn-secondary:hov
   background: rgba(255, 255, 255, 0.18);
 }
 
-/* 💡 首頁頂部控制列 CBETA 綠色圓體粗體「C」字按鈕 */
+/* 💡 首頁頂部控制列 CBETA 綠色圓體粗體「C」字按鈕：與「家」擁有完全相同的圓形底座背景 */
+.library-header-btn.cbeta-c-btn {
+  background: rgba(140, 75, 39, 0.12);
+}
+
+.library-header-btn.cbeta-c-btn:hover {
+  background: rgba(140, 75, 39, 0.18);
+}
+
+body.theme-ebony .library-header-btn.cbeta-c-btn,
+body.theme-dark .library-header-btn.cbeta-c-btn {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+body.theme-ebony .library-header-btn.cbeta-c-btn:hover,
+body.theme-dark .library-header-btn.cbeta-c-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
 .cbeta-header-c-text {
   display: inline-flex;
   align-items: center;
@@ -3125,14 +3143,14 @@ body.theme-dark .batch-action-bar.pure-floating-overlay .batch-btn-secondary:hov
   color: #059669;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-weight: 800;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   line-height: 1;
   user-select: none;
   transition: transform 0.18s ease, color 0.18s ease;
 }
 
 .library-header-btn:hover .cbeta-header-c-text {
-  transform: scale(1.1);
+  transform: scale(1.08);
   color: #047857;
 }
 
