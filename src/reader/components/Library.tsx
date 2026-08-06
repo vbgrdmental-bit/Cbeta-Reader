@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
-  Plus, Check, AlertCircle, X, Download, FileDown,
+  Plus, Check, AlertCircle, X, Download,
   Home, Search,
   Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, FileText, Play
 } from 'lucide-react';
@@ -1175,7 +1175,7 @@ export function Library({
                   onClick={handleOpenCbetaCatalogWithAnimation}
                   title="進入 CBETA 藏經庫目錄下載佛典"
                 >
-                  <FileDown size={20} />
+                  <span className="cbeta-header-c-badge">C</span>
                 </button>
                 {/* 💡 首頁頂部控制列：保留原「+」進入 CBETA 藏經庫目錄 */}
               </>
