@@ -1175,7 +1175,7 @@ export function Library({
                   onClick={handleOpenCbetaCatalogWithAnimation}
                   title="進入 CBETA 藏經庫目錄下載佛典"
                 >
-                  <span className="cbeta-header-c-badge">C</span>
+                  <span className="cbeta-header-c-text">C</span>
                 </button>
                 {/* 💡 首頁頂部控制列：保留原「+」進入 CBETA 藏經庫目錄 */}
               </>
