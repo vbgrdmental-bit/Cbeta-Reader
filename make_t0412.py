@@ -1,4 +1,6 @@
-{
+import json
+
+t0412_data = {
   "content": {
     "workId": "T0412",
     "juans": [
@@ -225,65 +227,23 @@
     ]
   },
   "rawToc": [
-    {
-      "title": "卷上",
-      "juan": 1
-    },
-    {
-      "title": "忉利天宮神通品第一",
-      "juan": 1
-    },
-    {
-      "title": "分身集會品第二",
-      "juan": 1
-    },
-    {
-      "title": "觀眾生業緣品第三",
-      "juan": 1
-    },
-    {
-      "title": "閻浮眾生業感品第四",
-      "juan": 1
-    },
-    {
-      "title": "地獄名號品第五",
-      "juan": 1
-    },
-    {
-      "title": "如來讚歎品第六",
-      "juan": 1
-    },
-    {
-      "title": "卷下",
-      "juan": 2
-    },
-    {
-      "title": "利益存亡品第七",
-      "juan": 2
-    },
-    {
-      "title": "閻羅王眾讚歎品第八",
-      "juan": 2
-    },
-    {
-      "title": "稱佛名號品第九",
-      "juan": 2
-    },
-    {
-      "title": "校量布施功德緣品第十",
-      "juan": 2
-    },
-    {
-      "title": "地神護法品第十一",
-      "juan": 2
-    },
-    {
-      "title": "見聞利益品第十二",
-      "juan": 2
-    },
-    {
-      "title": "囑累人天品第十三",
-      "juan": 2
-    }
+    { "title": "卷上", "juan": 1 },
+    { "title": "忉利天宮神通品第一", "juan": 1 },
+    { "title": "分身集會品第二", "juan": 1 },
+    { "title": "觀眾生業緣品第三", "juan": 1 },
+    { "title": "閻浮眾生業感品第四", "juan": 1 },
+    { "title": "地獄名號品第五", "juan": 1 },
+    { "title": "如來讚歎品第六", "juan": 1 },
+    { "title": "卷下", "juan": 2 },
+    { "title": "利益存亡品第七", "juan": 2 },
+    { "title": "閻羅王眾讚歎品第八", "juan": 2 },
+    { "title": "稱佛名號品第九", "juan": 2 },
+    { "title": "校量布施功德緣品第十", "juan": 2 },
+    { "title": "地神護法品第十一", "juan": 2 },
+    { "title": "見聞利益品第十二", "juan": 2 },
+    { "title": "囑累人天品第十三", "juan": 2 }
   ]
 }
+
+open("public/mock/T0412.json", "w", encoding="utf-8").write(json.dumps(t0412_data, ensure_ascii=False, indent=2))
+print("Successfully generated complete T0412.json package!")

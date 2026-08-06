@@ -132,24 +132,22 @@ export class ReaderBuilder {
     } catch (onlineError) {
       console.warn(`Online fetch failed for ${workId}, trying fallback:`, onlineError);
       
-      // Fallback: 如果是地藏經或法華經，載入預設的 Mock 檔案
-      if (workId === 'T0412' || workId === 'T0262') {
-        try {
-          console.log(`Loading fallback local package for ${workId}...`);
-          const response = await fetch(`/mock/${workId}.json`);
-          if (response.ok) {
-            const preBuilt = await response.json();
-            if (onProgress) {
-              onProgress(100);
-            }
-            return {
-              content: preBuilt.content,
-              rawToc: preBuilt.rawToc || []
-            };
+      // Fallback: 優先嘗試載入本地離線預建經典 Package 檔案 (/mock/${workId}.json)
+      try {
+        console.log(`Loading fallback local package for ${workId}...`);
+        const response = await fetch(`/mock/${workId}.json`);
+        if (response.ok) {
+          const preBuilt = await response.json();
+          if (onProgress) {
+            onProgress(100);
           }
-        } catch (fallbackError) {
-          console.error(`Local fallback also failed for ${workId}:`, fallbackError);
+          return {
+            content: preBuilt.content,
+            rawToc: preBuilt.rawToc || []
+          };
         }
+      } catch (fallbackError) {
+        console.error(`Local fallback also failed for ${workId}:`, fallbackError);
       }
 
       // 如果不是預設經書，或者 Mock 載入也失敗，則產生模擬的 Fallback 資料以防止程式崩潰
