@@ -472,7 +472,14 @@ export class ReaderBuilder {
                                      anchorEl.classList.contains('anchor') ||
                                      anchorEl.getAttribute('class')?.includes('anchor');
             if (isFootnoteAnchor) {
-              anchorEl.remove();
+              const text = anchorEl.textContent || '';
+              const isPureLabel = /^\[?\d+\]?$/.test(text.trim()) || /^\[?[＊*]\]?$/.test(text.trim()) || text.trim() === '註' || text.trim() === '校' || text.trim() === '';
+              if (isPureLabel) {
+                anchorEl.remove();
+              } else {
+                const textNode = doc.createTextNode(text);
+                anchorEl.parentNode?.replaceChild(textNode, anchorEl);
+              }
             } else {
               const text = anchorEl.textContent || '';
               const textNode = doc.createTextNode(text);
@@ -482,7 +489,14 @@ export class ReaderBuilder {
 
           cleanClone.querySelectorAll('.lb, .note, [class*="lb"]').forEach(child => {
             if (!child.classList.contains('gaiji') && !child.classList.contains('gaijiAnchor') && !child.classList.contains('gaiji_note')) {
-              child.remove();
+              const text = child.textContent || '';
+              const isPureLabel = /^\[?\d+\]?$/.test(text.trim()) || /^\[?[＊*]\]?$/.test(text.trim()) || text.trim() === '註' || text.trim() === '校' || text.trim() === '';
+              if (isPureLabel) {
+                child.remove();
+              } else {
+                const textNode = doc.createTextNode(text);
+                child.parentNode?.replaceChild(textNode, child);
+              }
             }
           });
           

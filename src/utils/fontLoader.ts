@@ -1,4 +1,4 @@
-// 💡 教育部標準楷書 (MOE EduKai) 按需延遲載入器 (Lazy-Loader)
+// 💡 教育部標準楷書 (MOE EduKai) & 霞鶖文楷 (LXGW WenKai TC) 按需延遲載入器
 // 確保預設模式下 0 MB 流量、0 秒極速開啟網頁；僅在切換至標楷體時動態注入下載！
 
 let isEduKaiLoaded = false;
@@ -13,6 +13,14 @@ export function loadEduKaiFontOnDemand(): void {
     return;
   }
 
+  // 1. 注入 Google Fonts 雲端輕量化 WOFF2 分段標楷體 (專治 iOS / Safari / 手機端 8.7MB 本地字型遭封鎖問題)
+  const linkEl = document.createElement('link');
+  linkEl.id = 'lxgw-wenkai-tc-font';
+  linkEl.rel = 'stylesheet';
+  linkEl.href = 'https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@300;400;700&display=swap';
+  document.head.appendChild(linkEl);
+
+  // 2. 注入本地/全字庫標準楷書定義
   const styleEl = document.createElement('style');
   styleEl.id = 'moe-edukai-dynamic-font';
   styleEl.textContent = `
@@ -36,5 +44,5 @@ export function loadEduKaiFontOnDemand(): void {
 
   document.head.appendChild(styleEl);
   isEduKaiLoaded = true;
-  console.log('⚡ [FontLoader] 教育部標準楷書 (WOFF2 8.7MB) 按需載入完成！');
+  console.log('⚡ [FontLoader] 教育部標準楷書 & 雲端標楷體 (LXGW WenKai TC) 按需載入完成！');
 }
