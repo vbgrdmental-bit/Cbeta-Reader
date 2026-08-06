@@ -17,7 +17,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v3.2.0` (App: v3.2.0 / Builder: v2.4.0)
+- **Current Version**: `v4.0.0` (App: v4.0.0 / Builder: v2.4.0)
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -36,6 +36,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ v4.0.0** (2026-08-06) [App Major Release 重大更新]
+  - 新增文章「重點與筆記」功能，支援隨文寫下感悟心得，並可於首頁專屬資料夾集中集中複習、編輯與導航跳轉。
+  - 全面導入手勢與點擊雙向「絲滑切換」過渡動態，支援手指向左右滑動與點選平滑推進離場。
+  - 重構首頁編排版，固定為四大系統資料夾（我的資料夾、近期閱讀、我的最愛、重點與筆記），使版面更加簡潔直觀。
 - **v3.2.0** (2026-08-02) [App Only]
   - 調整首頁版面，新增「近期閱讀」與「我的最愛」系統資料夾，優化資料夾卡片高度、圖示與標題垂直置中排版。
   - 調整書籍與資料夾移動、刪除及命名設定，停用系統資料夾長按編輯，並支援資料夾嵌套移動。

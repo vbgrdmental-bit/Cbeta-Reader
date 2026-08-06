@@ -537,3 +537,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* 💡 CBETA 藏經庫向左平滑離場返回首頁動畫 (因首頁在 CBETA 的右邊) */
+.cbeta-catalog-container.catalog-exiting-slide {
+  transform: translateX(-100%) !important;
+  opacity: 0.2 !important;
+  transition: transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out !important;
+}

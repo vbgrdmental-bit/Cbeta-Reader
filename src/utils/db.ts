@@ -248,6 +248,7 @@ export interface AppSettings {
     notes: boolean;        // 顯示校勘
     pageNumber: boolean;   // 顯示頁碼
     ttsHighlight: boolean; // 朗讀時 Highlight
+    showNoteInText?: boolean; // 顯示筆記內容 (經文中顯示 (筆記：xxx))
   };
   ttsVoice: string; // 選定的 Voice Name
   ttsSpeed: number; // 播放速度 0.5 ~ 2
@@ -270,7 +271,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
     showReaderControls: true,    // 預設顯示上下控制列
     notes: true,                 // 預設顯示校勘
     pageNumber: true,            // 預設顯示頁碼
-    ttsHighlight: true
+    ttsHighlight: true,
+    showNoteInText: false        // 預設關閉「顯示筆記內容」
   },
   ttsVoice: '',
   ttsSpeed: 1.0,
@@ -312,6 +314,9 @@ export async function getSettings(): Promise<AppSettings> {
         if (stored.customVisibleElements?.showReaderControls === undefined) {
           mergedCustom.showReaderControls = true;
         }
+        if (stored.customVisibleElements?.showNoteInText === undefined) {
+          mergedCustom.showNoteInText = false;
+        }
         resolve({
           ...DEFAULT_SETTINGS,
           ...stored,
@@ -336,6 +341,7 @@ export interface BookHighlight {
   createdAt: number;
   color?: 'yellow' | 'red' | 'gray' | 'blue';
   style?: 'underline' | 'bottom-half' | 'full' | 'border';
+  note?: string; // 💡 讀者對該劃線的心得隨筆/筆記
 }
 
 export async function saveHighlight(highlight: BookHighlight): Promise<void> {

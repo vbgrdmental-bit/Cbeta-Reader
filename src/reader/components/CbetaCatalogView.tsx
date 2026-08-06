@@ -39,16 +39,6 @@ interface CatalogItem {
   timeTo?: number;
 }
 
-// 主題色彩選項
-const FOLDER_COLOR_OPTIONS = [
-  { name: '典雅綠', value: '#3d5a45' },
-  { name: '琥珀棕', value: '#8c4b27' },
-  { name: '琉璃藍', value: '#2b5c8f' },
-  { name: '黛紫', value: '#5b3a6e' },
-  { name: '朱紅', value: '#9c3427' },
-  { name: '墨灰', value: '#4a5568' }
-];
-
 // CBETA 官方筆劃分類標籤與代表字 (對齊圖 1、圖 2、圖 3、圖 4)
 export const CREATOR_STROKE_CATEGORIES = [
   { stroke: 1, label: '1 劃', sample: '一' },
@@ -642,12 +632,52 @@ export function CbetaCatalogView({
   const [showBatchDownloadModal, setShowBatchDownloadModal] = useState(false);
   const [batchFolderMode, setBatchFolderMode] = useState<'new' | 'existing' | 'none'>('new');
   const [batchFolderName, setBatchFolderName] = useState('');
-  const [batchFolderColor, setBatchFolderColor] = useState('#3d5a45');
+  const [batchFolderColor] = useState('#8b7355');
   const [selectedExistingFolderId, setSelectedExistingFolderId] = useState('');
   const [folders, setFolders] = useState<any[]>([]);
 
   // 💡 依類別查詢預設收合狀態 (點入畫面時預設收合，只顯示搜尋欄)
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
+
+  // 💡 平滑倒滑離場動畫返回首頁 (Smooth Slide Exit back to Library)
+  const [isCatalogExiting, setIsCatalogExiting] = useState(false);
+
+  const handleSmoothBackToLibrary = () => {
+    if (isCatalogExiting) return;
+    setIsCatalogExiting(true);
+    setTimeout(() => {
+      onBackToLibrary();
+    }, 220);
+  };
+
+  // 💡 在 CBETA 藏經庫 Modal 內向左劃動 (Swipe Left) 自動平滑離場返回首頁
+  const catalogTouchRef = useRef<{ x: number; y: number; time: number } | null>(null);
+
+  const handleCatalogTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    catalogTouchRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now()
+    };
+  };
+
+  const handleCatalogTouchEnd = (e: React.TouchEvent) => {
+    if (!catalogTouchRef.current) return;
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - catalogTouchRef.current.x;
+    const deltaY = touch.clientY - catalogTouchRef.current.y;
+    const deltaTime = Date.now() - catalogTouchRef.current.time;
+    catalogTouchRef.current = null;
+
+    // 水平滑動 > 28px 且未點選彈窗時
+    if (Math.abs(deltaX) > 28 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && deltaTime < 550) {
+      if (deltaX < -28) {
+        // 👈 向左滑動 1 下 ──> 直覺平滑離場關閉 CBETA 並返回首頁
+        handleSmoothBackToLibrary();
+      }
+    }
+  };
 
   // Builder 建置進度與遮罩
   const [buildProgress, setBuildProgress] = useState<BuildProgress | null>(null);
@@ -1241,13 +1271,17 @@ export function CbetaCatalogView({
   const currentCategoryWorks = catalogItems.filter(item => item.nodeType === 'work' || !!item.workId);
 
   return (
-    <div className={`cbeta-catalog-container theme-${settings.theme}`}>
+    <div 
+      className={`cbeta-catalog-container theme-${settings.theme} ${isCatalogExiting ? 'catalog-exiting-slide' : ''}`}
+      onTouchStart={handleCatalogTouchStart}
+      onTouchEnd={handleCatalogTouchEnd}
+    >
       {/* 頂部固定控制列 (Header Bar) */}
       <header className="cbeta-catalog-header">
         {/* 回首頁 (書架) 圖示 */}
         <button 
           className="library-header-btn" 
-          onClick={onBackToLibrary}
+          onClick={handleSmoothBackToLibrary}
           title="返回本地書架"
         >
           <Home size={20} />
@@ -1700,24 +1734,24 @@ export function CbetaCatalogView({
         <div className="search-dialog-overlay" style={{ zIndex: 1250 }} onClick={() => setShowBatchDownloadModal(false)}>
           <div className="changelog-dialog-card animate-slide-up" style={{ width: '92%', maxWidth: '380px' }} onClick={e => e.stopPropagation()}>
             <div className="dialog-header">
-              <h3 style={{ fontFamily: 'var(--font-rounded)' }}>批量下載經典收納設定</h3>
+              <h3 style={{ fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}>批量下載經典收納設定</h3>
               <button className="icon-button close-btn" onClick={() => setShowBatchDownloadModal(false)}>
                 <X size={18} />
               </button>
             </div>
 
-            <div className="dialog-body" style={{ padding: '1.2rem', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-              <div style={{ fontSize: '0.88rem', color: 'var(--text-primary)', lineHeight: 1.5, fontFamily: 'var(--font-rounded)' }}>
+            <div className="dialog-body" style={{ padding: '1.2rem', display: 'flex', flexDirection: 'column', gap: '1.2rem', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}>
+              <div style={{ fontSize: '0.88rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>
                 即將開始下載已勾選的 <strong style={{ color: 'var(--theme-accent)' }}>{selectedOnlineWorkIds.length}</strong> 本經典。
               </div>
 
               {/* 收納方式單選選項 */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-rounded)' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   選擇下載收納方式：
                 </span>
 
-                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'var(--font-rounded)' }}>
+                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
                   <input 
                     type="radio" 
                     name="batchFolderMode"
@@ -1730,40 +1764,19 @@ export function CbetaCatalogView({
 
                 {batchFolderMode === 'new' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginLeft: '1.6rem' }}>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-rounded)' }}>資料夾名稱：</span>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>資料夾名稱（預設於「我的資料夾」）：</span>
                     <input 
                       type="text" 
                       className="settings-select"
                       value={batchFolderName}
                       onChange={(e) => setBatchFolderName(e.target.value)}
                       placeholder="請輸入資料夾名稱..."
-                      style={{ fontSize: '0.88rem', padding: '0.5rem 0.8rem', fontFamily: 'var(--font-rounded)' }}
+                      style={{ fontSize: '0.88rem', padding: '0.5rem 0.8rem', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}
                     />
-
-                    <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', marginTop: '0.2rem' }}>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-rounded)' }}>主題色：</span>
-                      {FOLDER_COLOR_OPTIONS.map(opt => (
-                        <div 
-                          key={`batch-color-${opt.value}`}
-                          onClick={() => setBatchFolderColor(opt.value)}
-                          style={{
-                            width: '18px',
-                            height: '18px',
-                            borderRadius: '50%',
-                            backgroundColor: opt.value,
-                            cursor: 'pointer',
-                            border: batchFolderColor === opt.value ? '2px solid #ffffff' : '1px solid rgba(0,0,0,0.2)',
-                            boxShadow: batchFolderColor === opt.value ? '0 0 0 2px var(--theme-accent)' : 'none',
-                            transition: 'transform 0.15s'
-                          }}
-                          title={opt.name}
-                        />
-                      ))}
-                    </div>
                   </div>
                 )}
 
-                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'var(--font-rounded)' }}>
+                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
                   <input 
                     type="radio" 
                     name="batchFolderMode"
@@ -1771,7 +1784,7 @@ export function CbetaCatalogView({
                     onChange={() => setBatchFolderMode('existing')}
                     style={{ accentColor: 'var(--theme-accent)' }}
                   />
-                  放入已有資料夾
+                  放入我的資料夾
                 </label>
 
                 {batchFolderMode === 'existing' && (
@@ -1781,7 +1794,7 @@ export function CbetaCatalogView({
                         className="settings-select"
                         value={selectedExistingFolderId}
                         onChange={(e) => setSelectedExistingFolderId(e.target.value)}
-                        style={{ fontSize: '0.88rem', padding: '0.55rem 0.8rem', fontFamily: 'var(--font-rounded)' }}
+                        style={{ fontSize: '0.88rem', padding: '0.55rem 0.8rem', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}
                       >
                         {folders.map(f => (
                           <option key={f.id} value={f.id}>
@@ -1790,14 +1803,14 @@ export function CbetaCatalogView({
                         ))}
                       </select>
                     ) : (
-                      <div style={{ fontSize: '0.78rem', color: 'var(--theme-accent)', padding: '0.3rem 0', fontFamily: 'var(--font-rounded)' }}>
-                        （目前書架尚未建立任何資料夾，請選擇「建立新資料夾」）
+                      <div style={{ fontSize: '0.78rem', color: 'var(--theme-accent)', padding: '0.3rem 0' }}>
+                        （目前尚未建立任何資料夾，請選擇「建立新資料夾」）
                       </div>
                     )}
                   </div>
                 )}
 
-                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'var(--font-rounded)' }}>
+                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
                   <input 
                     type="radio" 
                     name="batchFolderMode"
@@ -1805,7 +1818,7 @@ export function CbetaCatalogView({
                     onChange={() => setBatchFolderMode('none')}
                     style={{ accentColor: 'var(--theme-accent)' }}
                   />
-                  下載至書架根目錄（不放入資料夾）
+                  下載至首頁
                 </label>
               </div>
 

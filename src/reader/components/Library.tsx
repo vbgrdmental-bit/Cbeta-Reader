@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
-  Plus, Check, AlertCircle, X, Download,
+  Plus, Check, AlertCircle, X, Download, FileDown,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, FileText, Play
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
-import { listBooks, deleteBook } from '../../utils/db';
-import type { AppSettings } from '../../utils/db';
+import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
+import type { AppSettings, BookHighlight } from '../../utils/db';
 import { IndexBuilder } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
@@ -135,9 +135,9 @@ export function Library({
   const [selectedOnlineWorkIds, setSelectedOnlineWorkIds] = useState<string[]>([]);
   const [showBatchDownloadModal, setShowBatchDownloadModal] = useState(false);
   const [batchFolderMode, setBatchFolderMode] = useState<'new' | 'existing' | 'none'>('new');
-  const [selectedExistingFolderId, setSelectedExistingFolderId] = useState<string>('');
   const [batchFolderName, setBatchFolderName] = useState('');
-  const [batchFolderColor, setBatchFolderColor] = useState('#3d5a45');
+  const [selectedExistingFolderId, setSelectedExistingFolderId] = useState<string>('');
+  const batchFolderColor = '#8b7355';
 
   const startLongPress = (e: React.MouseEvent | React.TouchEvent) => {
     if (isEditMode) return;
@@ -231,6 +231,16 @@ export function Library({
     return count;
   };
 
+  // 💡 同經典劃線重點折疊狀態 (Record<workId, boolean>)
+  const [collapsedBookGroups, setCollapsedBookGroups] = useState<Record<string, boolean>>({});
+
+  const toggleBookGroup = (workId: string) => {
+    setCollapsedBookGroups(prev => ({
+      ...prev,
+      [workId]: !prev[workId]
+    }));
+  };
+
   // 💡 全域空白處點擊監聽：當處於編輯模式時，點擊任何經書卡片、手把與編輯按鈕以外的任意全域空白處，立刻退出編輯模式
   useEffect(() => {
     if (!isEditMode) return;
@@ -266,7 +276,6 @@ export function Library({
 
   const handleShelfBackgroundClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    // 若點擊的不是卡片、不是任何正方形按鈕與頂層按鈕，則退出編輯模式
     if (
       !target.closest('.list-book-item') && 
       !target.closest('.square-btn') && 
@@ -279,14 +288,86 @@ export function Library({
     }
   };
 
-  const FOLDER_COLOR_OPTIONS = [
-    { name: '苔松綠', value: '#3d5a45' },
-    { name: '琥珀金', value: '#c07d2a' },
-    { name: '茜赭紅', value: '#9e3d3d' },
-    { name: '黛藍', value: '#2b4c7e' },
-    { name: '紫藤', value: '#6b46c1' },
-    { name: '烏墨灰', value: '#4a5568' }
-  ];
+  // 💡 全站 Swipe 左右手勢滑動導航系統 (含實時位移跟隨與彈性過渡)
+  const touchSwipeRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const swipeContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const handleGlobalTouchStart = (e: React.TouchEvent) => {
+    if (isEditMode) return;
+    const touch = e.touches[0];
+    touchSwipeRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now()
+    };
+    if (swipeContainerRef.current) {
+      swipeContainerRef.current.style.transition = 'none';
+    }
+  };
+
+  const handleGlobalTouchMove = (e: React.TouchEvent) => {
+    if (!touchSwipeRef.current || isEditMode) return;
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - touchSwipeRef.current.x;
+    const deltaY = touch.clientY - touchSwipeRef.current.y;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 6) {
+      if (swipeContainerRef.current) {
+        swipeContainerRef.current.style.transform = `translateX(${deltaX * 0.65}px)`;
+      }
+    }
+  };
+
+  const handleGlobalTouchEnd = (e: React.TouchEvent) => {
+    if (!touchSwipeRef.current || isEditMode) return;
+
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchSwipeRef.current.x;
+    const deltaY = touch.clientY - touchSwipeRef.current.y;
+    const deltaTime = Date.now() - touchSwipeRef.current.time;
+    touchSwipeRef.current = null;
+
+    if (swipeContainerRef.current) {
+      swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
+      swipeContainerRef.current.style.transform = 'translateX(0px)';
+    }
+
+    // 💡 靈敏觸發門檻：位移 > 28px, 時間 < 550ms, 水平角度寬容比 1.15
+    if (Math.abs(deltaX) > 28 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && deltaTime < 550) {
+      const SHELF_NAV_CHAIN: (string | null)[] = [
+        null, // 首頁
+        'virtual_my_folders', // 我的資料夾
+        'virtual_recent_reads', // 近期閱讀
+        'virtual_favorites', // 我的最愛
+        'virtual_highlights' // 重點與筆記
+      ];
+
+      if (deltaX < -28) {
+        // 👈 向左滑動 (推進)
+        if (activeTab === 'shelf') {
+          const currentIndex = SHELF_NAV_CHAIN.indexOf(currentFolderId);
+          if (currentIndex !== -1 && currentIndex < SHELF_NAV_CHAIN.length - 1) {
+            navigateToFolder(SHELF_NAV_CHAIN[currentIndex + 1]);
+          } else if (currentFolderId === 'virtual_highlights') {
+            setActiveTab('search');
+          }
+        }
+      } else if (deltaX > 28) {
+        // 👉 向右滑動 (返回 / 觸發 CBETA)
+        if (activeTab === 'search') {
+          setActiveTab('shelf');
+        } else if (activeTab === 'shelf') {
+          const currentIndex = SHELF_NAV_CHAIN.indexOf(currentFolderId);
+          if (currentIndex > 0) {
+            navigateToFolder(SHELF_NAV_CHAIN[currentIndex - 1]);
+          } else if (!currentFolderId) {
+            // 💡 在首頁向右滑 1 下：直接開啟 CBETA 藏經庫與下載
+            if (onOpenCbetaCatalog) onOpenCbetaCatalog();
+          }
+        }
+      }
+    }
+  };
 
   const [newFolderName, setNewFolderName] = useState('');
   const [newFolderColor, setNewFolderColor] = useState('#3d5a45');
@@ -306,6 +387,97 @@ export function Library({
   const handleSelectAllBooks = () => {
     const currentBookIds = displayBooks.map(b => b.workId);
     setSelectedBookIds(currentBookIds);
+  };
+
+  // 💡 點選進入專區/資料夾時的平滑推進動畫 (Forward Slide In)
+  const navigateToFolderWithAnimation = (targetFolderId: string | null) => {
+    if (currentFolderId === targetFolderId) return;
+
+    if (swipeContainerRef.current) {
+      const container = swipeContainerRef.current;
+      // 1. 當前首頁/舊視窗向左平滑流暢推走
+      container.style.transition = 'transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease-out';
+      container.style.transform = 'translateX(-80px)';
+      container.style.opacity = '0.3';
+
+      setTimeout(() => {
+        // 2. 切換狀態至目標專區
+        navigateToFolder(targetFolderId);
+
+        // 3. 新專區從右側 +40px 平滑流暢推入歸位
+        container.style.transition = 'none';
+        container.style.transform = 'translateX(40px)';
+        container.style.opacity = '0.7';
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease-out';
+            container.style.transform = 'translateX(0px)';
+            container.style.opacity = '1';
+          });
+        });
+      }, 200);
+    } else {
+      navigateToFolder(targetFolderId);
+    }
+  };
+
+  // 💡 點擊「+」開啟 CBETA 藏經庫時的平滑向右推進動畫 (Slide Right In)
+  const handleOpenCbetaCatalogWithAnimation = () => {
+    if (!onOpenCbetaCatalog) return;
+    if (swipeContainerRef.current) {
+      const container = swipeContainerRef.current;
+      container.style.transition = 'transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease-out';
+      container.style.transform = 'translateX(80px)';
+      container.style.opacity = '0.3';
+      setTimeout(() => {
+        onOpenCbetaCatalog();
+        container.style.transition = 'none';
+        container.style.transform = 'translateX(0px)';
+        container.style.opacity = '1';
+      }, 200);
+    } else {
+      onOpenCbetaCatalog();
+    }
+  };
+
+  // 💡 點擊「首頁」按鈕時的平滑倒滑往回動畫 (Smooth Reverse Slide back to Home)
+  const handleGoHomeWithAnimation = () => {
+    if (activeTab === 'shelf' && !currentFolderId) return; // 本身就在首頁時不觸發
+
+    if (swipeContainerRef.current) {
+      const container = swipeContainerRef.current;
+      // 1. 當前頁面向右平滑流暢滑出
+      container.style.transition = 'transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease-out';
+      container.style.transform = 'translateX(80px)';
+      container.style.opacity = '0.3';
+
+      setTimeout(() => {
+        // 2. 切換狀態回首頁
+        setActiveTab('shelf');
+        setCurrentFolderId(null);
+        setFolderHistory([null]);
+        setHistoryIndex(0);
+
+        // 3. 從左側微幅滑入歸位
+        container.style.transition = 'none';
+        container.style.transform = 'translateX(-40px)';
+        container.style.opacity = '0.7';
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease-out';
+            container.style.transform = 'translateX(0px)';
+            container.style.opacity = '1';
+          });
+        });
+      }, 200);
+    } else {
+      setActiveTab('shelf');
+      setCurrentFolderId(null);
+      setFolderHistory([null]);
+      setHistoryIndex(0);
+    }
   };
 
   // 取消全選
@@ -358,11 +530,14 @@ export function Library({
   const handleCreateFolder = () => {
     if (!newFolderName.trim()) return;
     
+    // 如果在「我的資料夾」專區，parentId 設為 null，屬於頂層自訂資料夾
+    const targetParentId = currentFolderId === 'virtual_my_folders' ? null : currentFolderId;
+
     const newFolder: BookFolder = {
       id: `folder-${Date.now()}`,
       name: newFolderName.trim(),
       bookIds: [],
-      parentId: currentFolderId, // 子資料夾的 parentId 為當前資料夾 ID
+      parentId: targetParentId,
       color: newFolderColor
     };
     
@@ -370,6 +545,27 @@ export function Library({
     setNewFolderName('');
     setNewFolderColor('#3d5a45');
     setShowNewFolderDialog(false);
+  };
+
+  // 💡 資料夾順序前移 (<) / 後移 (>)
+  const handleSwapFolderOrder = (folderId: string, direction: 'left' | 'right') => {
+    const idx = displayFolders.findIndex(f => f.id === folderId);
+    if (idx === -1) return;
+
+    const targetIdx = direction === 'left' ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= displayFolders.length) return;
+
+    // 交換 displayFolders 中的資料夾位置
+    const newDisplayFolders = [...displayFolders];
+    const temp = newDisplayFolders[idx];
+    newDisplayFolders[idx] = newDisplayFolders[targetIdx];
+    newDisplayFolders[targetIdx] = temp;
+
+    // 保留非目前層級的資料夾，更新全域 folders
+    const otherFolders = folders.filter(f => !newDisplayFolders.some(df => df.id === f.id));
+    const updatedFolders = [...otherFolders, ...newDisplayFolders];
+
+    saveFolders(updatedFolders);
   };
 
   // 刪除資料夾
@@ -808,17 +1004,53 @@ export function Library({
     setProgressUpdatedTrigger(prev => prev + 1);
   };
 
+  const [allHighlights, setAllHighlights] = useState<BookHighlight[]>([]);
+  const [editingHighlightInLibrary, setEditingHighlightInLibrary] = useState<BookHighlight | null>(null);
+  const [editingNoteTextInLibrary, setEditingNoteTextInLibrary] = useState('');
+
+  const groupedHighlights = useMemo(() => {
+    const map = new Map<string, { workId: string; title: string; list: BookHighlight[] }>();
+    allHighlights.forEach(hl => {
+      if (!map.has(hl.workId)) {
+        const bookMeta = downloadedBooks.find(b => b.workId === hl.workId);
+        const title = bookMeta ? bookMeta.title : hl.workId;
+        map.set(hl.workId, { workId: hl.workId, title, list: [] });
+      }
+      map.get(hl.workId)!.list.push(hl);
+    });
+    return Array.from(map.values());
+  }, [allHighlights, downloadedBooks]);
+
+  const loadAllHighlights = async () => {
+    try {
+      const hls = await getAllHighlights();
+      hls.sort((a, b) => b.createdAt - a.createdAt);
+      setAllHighlights(hls);
+    } catch (e) {
+      console.error('Failed to load all highlights:', e);
+    }
+  };
+
+  useEffect(() => {
+    loadLocalBooks();
+    loadAllHighlights();
+  }, [booksUpdatedTrigger]);
+
   const allInFolderBookIds = folders.flatMap(f => f.bookIds);
   
   // 近期閱讀（最多 10 本）與我的最愛經典列表
   const recentReadsBooks = resumeBooks.slice(0, 10).map(item => item.book);
   const favoriteBooksList = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
 
-  // 如果是虛擬系統資料夾，不顯示任何一般子資料夾
-  const isSystemFolder = currentFolderId === 'virtual_resume' || currentFolderId === 'virtual_recent_reads' || currentFolderId === 'virtual_favorites';
+  // 如果是虛擬系統資料夾，不顯示任何一般子資料夾；首頁亦不直鋪自訂資料夾（統一收納於「我的資料夾」）
+  const isSystemFolder = currentFolderId === 'virtual_resume' || currentFolderId === 'virtual_recent_reads' || currentFolderId === 'virtual_favorites' || currentFolderId === 'virtual_highlights';
   const displayFolders = isSystemFolder
     ? []
-    : folders.filter(f => f.parentId === currentFolderId);
+    : (currentFolderId === 'virtual_my_folders'
+        ? folders.filter(f => !f.parentId)
+        : (!currentFolderId
+            ? []
+            : folders.filter(f => f.parentId === currentFolderId)));
     
   // 💡 經文排序：先依英文字 A~Z 排，每個英文字的數字由小到大排
   const sortBooksByWorkId = (books: BookMetadata[]): BookMetadata[] => {
@@ -861,6 +1093,7 @@ export function Library({
     if (!folderId) return '首頁';
     if (folderId === 'virtual_recent_reads') return '近期閱讀 (最多10本)';
     if (folderId === 'virtual_favorites') return '我的最愛';
+    if (folderId === 'virtual_highlights') return '重點與筆記';
     if (folderId === 'virtual_resume') return '繼續閱讀';
     const path: string[] = [];
     let currentId: string | null = folderId;
@@ -875,11 +1108,17 @@ export function Library({
       }
       safetyCounter++;
     }
-    return ['首頁', ...path].join(' / ');
+    return ['我的資料夾', ...path].join(' / ');
   };
 
   return (
-    <div className="library-container" style={{ position: 'relative' }}>
+    <div 
+      className="library-container" 
+      style={{ position: 'relative' }}
+      onTouchStart={handleGlobalTouchStart}
+      onTouchMove={handleGlobalTouchMove}
+      onTouchEnd={handleGlobalTouchEnd}
+    >
       {/* 💡 長按觸發編輯模式：純 Absolute Overlay 懸浮工具列（不佔空間，首頁畫面完全不下移） */}
       {isEditMode && activeTab === 'shelf' && (
         <div className="batch-action-bar pure-floating-overlay animate-slide-up">
@@ -917,12 +1156,7 @@ export function Library({
       <div className="library-header animate-fade-in">
         <button 
           className={`library-header-btn ${activeTab === 'shelf' && !currentFolderId ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab('shelf');
-            setCurrentFolderId(null);
-            setFolderHistory([null]);
-            setHistoryIndex(0);
-          }}
+          onClick={handleGoHomeWithAnimation}
           title="書架首頁"
         >
           <Home size={20} />
@@ -938,23 +1172,15 @@ export function Library({
               <>
                 <button
                   className="library-header-btn"
-                  onClick={() => {
-                    if (onOpenCbetaCatalog) onOpenCbetaCatalog();
-                  }}
-                  title="進入 CBETA 藏經庫目錄"
+                  onClick={handleOpenCbetaCatalogWithAnimation}
+                  title="進入 CBETA 藏經庫目錄下載佛典"
                 >
-                  <Plus size={20} />
+                  <FileDown size={20} />
                 </button>
-                <button
-                  className="library-header-btn"
-                  onClick={() => setShowNewFolderDialog(true)}
-                  title="新建資料夾"
-                >
-                  <FolderPlus size={18} />
-                </button>
+                {/* 💡 首頁頂部控制列：保留原「+」進入 CBETA 藏經庫目錄 */}
               </>
             ) : (
-              // 💡 2. 處於第 2 層以上的資料夾內：將「<」和「>」整合到最上方控制列，並移去「+」下載按鈕
+              // 💡 2. 處於資料夾內：將「<」和「>」整合到最上方控制列
               <>
                 <button
                   className="library-header-btn"
@@ -974,16 +1200,6 @@ export function Library({
                 >
                   <ChevronRight size={20} />
                 </button>
-                {/* 💡 「近期閱讀」與「我的最愛」系統資料夾：不允許新增子資料夾，隱藏 FolderPlus 按鈕 */}
-                {currentFolderId !== 'virtual_recent_reads' && currentFolderId !== 'virtual_favorites' && (
-                  <button
-                    className="library-header-btn"
-                    onClick={() => setShowNewFolderDialog(true)}
-                    title="新建資料夾"
-                  >
-                    <FolderPlus size={18} />
-                  </button>
-                )}
               </>
             )}
           </>
@@ -1012,7 +1228,11 @@ export function Library({
         </div>
       </div>
 
-      <div className="library-content-area custom-scrollbar">
+      <div 
+        ref={swipeContainerRef}
+        className="library-content-area custom-scrollbar"
+        style={{ willChange: 'transform' }}
+      >
         {activeTab === 'shelf' ? (
         /* 書架主畫面 */
         <div className="bookshelf-section animate-slide-up" onClick={handleShelfBackgroundClick}>
@@ -1020,15 +1240,40 @@ export function Library({
           {currentFolderId && (
             <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
-                <div className="folder-nav-middle">
+                <div className="folder-nav-middle" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {/* 💡 專區/資料夾同款識別圖示 Badge */}
+                  <div 
+                    style={{ 
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '6px',
+                      backgroundColor: currentFolderId === 'virtual_my_folders' ? '#8c4b27' :
+                                       currentFolderId === 'virtual_recent_reads' ? '#4a2c11' :
+                                       currentFolderId === 'virtual_favorites' ? '#e53e3e' :
+                                       currentFolderId === 'virtual_highlights' ? '#c07d2a' :
+                                       '#8c4b27',
+                      flexShrink: 0
+                    }}
+                  >
+                    {currentFolderId === 'virtual_recent_reads' ? <Clock size={13} color="#ffffff" /> :
+                     currentFolderId === 'virtual_favorites' ? <Heart size={13} fill="#ffffff" color="#ffffff" /> :
+                     currentFolderId === 'virtual_highlights' ? <Notebook size={13} color="#ffffff" /> :
+                     <Folder size={13} color="#ffffff" />}
+                  </div>
+
                   <span className="folder-path-display">
                     {currentFolderId === 'virtual_resume' ? '繼續閱讀' : 
                      currentFolderId === 'virtual_recent_reads' ? '近期閱讀' :
                      currentFolderId === 'virtual_favorites' ? '我的最愛' :
+                     currentFolderId === 'virtual_highlights' ? '重點與筆記' :
+                     currentFolderId === 'virtual_my_folders' ? '我的資料夾' :
                      getFolderPath(currentFolderId)}
                   </span>
                 </div>
-                {currentFolderId !== 'virtual_recent_reads' && currentFolderId !== 'virtual_favorites' && (
+                {currentFolderId !== 'virtual_recent_reads' && currentFolderId !== 'virtual_favorites' && currentFolderId !== 'virtual_highlights' && currentFolderId !== 'virtual_my_folders' && (
                   <div className="folder-nav-right">
                     <span className="folder-book-count-badge" title="當前層級經典總數 (含子資料夾)">
                       {currentFolderId === 'virtual_resume' ? displayBooks.length : getFolderTotalBookCount(currentFolderId)}
@@ -1036,13 +1281,6 @@ export function Library({
                   </div>
                 )}
               </div>
-              {currentFolderId !== 'virtual_resume' && currentFolderId !== 'virtual_recent_reads' && currentFolderId !== 'virtual_favorites' && (
-                <div className="folder-sub-actions">
-                  <button className="folder-add-sub-btn-flat" onClick={() => setShowNewFolderDialog(true)}>
-                    <Plus size={13} /> 新建子資料夾
-                  </button>
-                </div>
-              )}
             </div>
           )}
 
@@ -1055,16 +1293,35 @@ export function Library({
                 <p>淨心小角落．閱讀大藏經</p>
               </div>
 
-              {/* 💡 首頁根目錄固定渲染 2 個系統固定資料夾（位在第一條細線與第二條細線中間） */}
+              {/* 💡 首頁根目錄固定渲染 4 個系統固定資料夾（由左至右：我的資料夾、近期閱讀、我的最愛、重點與筆記） */}
               <div className="folders-grid-container system-grid">
-                {/* 1. 近期閱讀系統資料夾 - 深咖啡色 (#4a2c11) - 不支援長按 */}
+                {/* 1. 我的資料夾 - 經典深琥珀色 (#8c4b27) */}
                 <div 
                   className="list-book-item list-folder-item system-folder-item"
-                  onClick={() => navigateToFolder('virtual_recent_reads')}
+                  onClick={() => navigateToFolderWithAnimation('virtual_my_folders')}
+                  title="點擊查看我的個人資料夾"
+                >
+                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#8c4b27' }}>
+                    <Folder size={15} color="#ffffff" />
+                  </div>
+                  <div className="list-folder-info">
+                    <div className="list-folder-title" title="我的資料夾">
+                      我的資料夾
+                    </div>
+                    <div className="list-folder-count-text">
+                      {folders.filter(f => !f.parentId).length}個資料夾
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. 近期閱讀系統資料夾 - 深咖啡色 (#4a2c11) */}
+                <div 
+                  className="list-book-item list-folder-item system-folder-item"
+                  onClick={() => navigateToFolderWithAnimation('virtual_recent_reads')}
                   title="點擊查看近期閱讀經典"
                 >
                   <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#4a2c11' }}>
-                    <Clock size={16} color="#ffffff" />
+                    <Clock size={15} color="#ffffff" />
                   </div>
                   <div className="list-folder-info">
                     <div className="list-folder-title" title="近期閱讀">
@@ -1076,14 +1333,14 @@ export function Library({
                   </div>
                 </div>
 
-                {/* 2. 我的最愛系統資料夾 - 不支援長按 */}
+                {/* 3. 我的最愛系統資料夾 */}
                 <div 
                   className="list-book-item list-folder-item system-folder-item"
-                  onClick={() => navigateToFolder('virtual_favorites')}
+                  onClick={() => navigateToFolderWithAnimation('virtual_favorites')}
                   title="點擊查看我的最愛經典"
                 >
                   <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#e53e3e' }}>
-                    <Heart size={15} fill="#ffffff" color="#ffffff" />
+                    <Heart size={14} fill="#ffffff" color="#ffffff" />
                   </div>
                   <div className="list-folder-info">
                     <div className="list-folder-title" title="我的最愛">
@@ -1094,11 +1351,208 @@ export function Library({
                     </div>
                   </div>
                 </div>
+
+                {/* 4. 重點與筆記系統資料夾 - 琥珀金 (#c07d2a) */}
+                <div 
+                  className="list-book-item list-folder-item system-folder-item"
+                  onClick={() => navigateToFolderWithAnimation('virtual_highlights')}
+                  title="點擊查看重點與筆記"
+                >
+                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#c07d2a' }}>
+                    <Notebook size={14} color="#ffffff" />
+                  </div>
+                  <div className="list-folder-info">
+                    <div className="list-folder-title" title="重點與筆記">
+                      重點與筆記
+                    </div>
+                    <div className="list-folder-count-text">
+                      {allHighlights.length}條筆記
+                    </div>
+                  </div>
+                </div>
               </div>
             </>
           )}
 
           <div className="shelf-list">
+            {/* 💡 溫習庫：專屬劃線與筆記清單 */}
+            {currentFolderId === 'virtual_highlights' && (
+              <div className="highlights-review-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%' }}>
+                {groupedHighlights.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
+                    <Notebook size={36} style={{ opacity: 0.4, marginBottom: '0.6rem' }} />
+                    <p>目前尚無任何劃線重點或感悟隨筆。</p>
+                    <p style={{ fontSize: '0.82rem', opacity: 0.7, marginTop: '0.3rem' }}>在閱讀經典時選取文字即可畫重點與寫心得筆記。</p>
+                  </div>
+                ) : (
+                  groupedHighlights.map((group) => {
+                    const isCollapsed = !!collapsedBookGroups[group.workId];
+
+                    return (
+                      <div 
+                        key={group.workId}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.6rem',
+                          width: '100%',
+                          border: '1px solid var(--border-color, rgba(140, 75, 39, 0.12))',
+                          borderRadius: '12px',
+                          padding: '0.75rem 0.9rem',
+                          backgroundColor: 'var(--input-bg, rgba(255, 255, 255, 0.02))'
+                        }}
+                      >
+                        {/* 經典分組開合標頭 ([+] / [-]) */}
+                        <div 
+                          onClick={() => toggleBookGroup(group.workId)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            cursor: 'pointer',
+                            userSelect: 'none',
+                            padding: '0.2rem 0'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', fontSize: '0.92rem', color: 'var(--text-primary)' }}>
+                            <span 
+                              style={{ 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                width: '20px', 
+                                height: '20px', 
+                                borderRadius: '4px', 
+                                border: '1px solid var(--border-color, rgba(0,0,0,0.15))', 
+                                fontSize: '0.85rem',
+                                color: 'var(--text-muted)',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              {isCollapsed ? '+' : '-'}
+                            </span>
+                            <BookOpen size={15} style={{ opacity: 0.75 }} />
+                            <span>《{group.title}》</span>
+                          </div>
+                          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', opacity: 0.8 }}>
+                            {group.list.length} 條重點
+                          </span>
+                        </div>
+
+                        {/* 該經典下的劃線重點清單 */}
+                        {!isCollapsed && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.2rem' }}>
+                            {group.list.map((hl) => (
+                              <div 
+                                key={hl.id} 
+                                className="highlight-card animate-fade-in"
+                                style={{
+                                  backgroundColor: 'var(--card-bg, rgba(255, 255, 255, 0.4))',
+                                  border: '1px solid var(--border-color, rgba(140, 75, 39, 0.15))',
+                                  borderRadius: '10px',
+                                  padding: '0.85rem',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '0.5rem'
+                                }}
+                              >
+                                {/* 標頭：卷次與日期 */}
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', opacity: 0.85 }}>
+                                    第 {hl.juan} 卷
+                                  </span>
+                                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', opacity: 0.7 }}>
+                                    {new Date(hl.createdAt).toLocaleDateString()}
+                                  </span>
+                                </div>
+
+                                {/* 劃線重點片段 */}
+                                <div 
+                                  className="reader-text-highlight-preview"
+                                  style={{
+                                    fontSize: '1rem',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'var(--font-serif)',
+                                    lineHeight: 1.6,
+                                    padding: '0.2rem 0.3rem',
+                                    cursor: 'pointer',
+                                    color: 'var(--text-primary)',
+                                    wordBreak: 'break-all'
+                                  }}
+                                  onClick={() => onSelectBook(hl.workId, hl.segmentId)}
+                                  title="點擊跳轉至經文處"
+                                >
+                                  「{hl.text}」
+                                </div>
+
+                                {/* 筆記隨筆卡片 (圓體，無筆記二字) */}
+                                {hl.note && (
+                                  <div 
+                                    style={{
+                                      fontSize: '0.85rem',
+                                      color: 'var(--text-primary)',
+                                      backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.08))',
+                                      borderLeft: '3px solid var(--color-gold-500, #c07d2a)',
+                                      padding: '0.45rem 0.7rem',
+                                      borderRadius: '4px',
+                                      fontFamily: '"Yuanti SC", "YouYuan", "圓體", "Quicksand", sans-serif',
+                                      whiteSpace: 'pre-wrap',
+                                      display: 'flex',
+                                      alignItems: 'flex-start',
+                                      gap: '4px'
+                                    }}
+                                  >
+                                    <FileText size={13} style={{ marginTop: '3px', flexShrink: 0, opacity: 0.7 }} />
+                                    <div>
+                                      {hl.note}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* 卡片動作按鈕 */}
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.2rem' }}>
+                                  <button
+                                    className="batch-btn batch-btn-secondary"
+                                    style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
+                                    onClick={() => onSelectBook(hl.workId, hl.segmentId)}
+                                  >
+                                    <Play size={10} fill="currentColor" /> 跳至經文
+                                  </button>
+                                  <button
+                                    className="batch-btn batch-btn-secondary"
+                                    style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
+                                    onClick={() => {
+                                      setEditingHighlightInLibrary(hl);
+                                      setEditingNoteTextInLibrary(hl.note || '');
+                                    }}
+                                  >
+                                    <Edit3 size={11} /> 編輯
+                                  </button>
+                                  <button
+                                    className="batch-btn batch-btn-secondary"
+                                    style={{ fontSize: '0.75rem', padding: '0.25rem 0.45rem', color: 'var(--text-muted)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                    title="刪除重點"
+                                    onClick={async () => {
+                                      if (window.confirm('確定要刪除這條劃線重點嗎？')) {
+                                        await deleteHighlight(hl.id);
+                                        await loadAllHighlights();
+                                      }
+                                    }}
+                                  >
+                                    <Trash2 size={12} />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+
             {/* 💡 第一次進入且無經典時，顯示「+ 點此下載佛典」長 Bar 導引 */}
             {!currentFolderId && downloadedBooks.length === 0 && (
               <div 
@@ -1113,8 +1567,8 @@ export function Library({
               </div>
             )}
 
-            {/* === A. 渲染使用者自訂資料夾清單 (iOS 檔案風格 雙欄 2-Column Layout) === */}
-            {displayFolders.length > 0 && (
+            {/* === A. 渲染使用者自訂資料夾清單 (僅在「我的資料夾」或自訂子資料夾專區內才渲染) === */}
+            {(currentFolderId === 'virtual_my_folders' || (!isSystemFolder && currentFolderId)) && (
               <div className="folders-grid-container">
                 {displayFolders.map((folder) => (
                   <div 
@@ -1125,7 +1579,7 @@ export function Library({
                         isLongPressTriggeredRef.current = false;
                         return;
                       }
-                      navigateToFolder(folder.id);
+                      navigateToFolderWithAnimation(folder.id);
                     }}
                     onMouseDown={startLongPress}
                     onMouseUp={cancelLongPress}
@@ -1148,7 +1602,7 @@ export function Library({
                       </button>
                     )}
 
-                    {/* iOS 檔案風格：上方資料夾圖示 (100% 精確居中) */}
+                    {/* iOS 檔案風格：上方資料夾圖示 */}
                     <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: '#8b7355' }}>
                       <Folder size={15} className="theme-folder-icon" />
                     </div>
@@ -1165,26 +1619,24 @@ export function Library({
                   </div>
                 ))}
 
-                {/* 💡 奇數資料夾補滿：右側虛線新建資料夾卡片 (圖 2 iOS 樣式) */}
-                {displayFolders.length % 2 !== 0 && (
-                  <div 
-                    className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
-                    onClick={() => setShowNewFolderDialog(true)}
-                    title="點擊新建資料夾"
-                  >
-                    <div className="dashed-icon-box">
-                      <FolderPlus size={16} />
+                {/* 💡 右側虛線新建資料夾卡片 (僅在「我的資料夾」或自訂子資料夾內顯示) */}
+                <div 
+                  className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
+                  onClick={() => setShowNewFolderDialog(true)}
+                  title="點擊新建資料夾"
+                >
+                  <div className="dashed-icon-box">
+                    <FolderPlus size={16} />
+                  </div>
+                  <div className="list-folder-info">
+                    <div className="list-folder-title" style={{ fontSize: '0.82rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
+                      + 新建資料夾
                     </div>
-                    <div className="list-folder-info">
-                      <div className="list-folder-title" style={{ fontSize: '0.82rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
-                        + 新建資料夾
-                      </div>
-                      <div className="list-folder-count-text">
-                        按此建立
-                      </div>
+                    <div className="list-folder-count-text">
+                      按此建立
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             )}
 
@@ -1450,7 +1902,7 @@ export function Library({
               </button>
             </div>
 
-            <div className="dialog-body" style={{ padding: '1.2rem', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+            <div className="dialog-body" style={{ padding: '1.2rem', display: 'flex', flexDirection: 'column', gap: '1.2rem', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}>
               <div style={{ fontSize: '0.88rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>
                 即將開始下載已勾選的 <strong style={{ color: 'var(--theme-accent)' }}>{selectedOnlineWorkIds.length}</strong> 本經典。
               </div>
@@ -1476,41 +1928,19 @@ export function Library({
                 {/* 建立新資料夾子項目 */}
                 {batchFolderMode === 'new' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginLeft: '1.6rem' }}>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>資料夾名稱（自動帶出關鍵字，可修改）：</span>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>資料夾名稱（預設於「我的資料夾」）：</span>
                     <input 
                       type="text" 
                       className="settings-select"
                       value={batchFolderName}
                       onChange={(e) => setBatchFolderName(e.target.value)}
                       placeholder="請輸入資料夾名稱..."
-                      style={{ fontSize: '0.88rem', padding: '0.5rem 0.8rem' }}
+                      style={{ fontSize: '0.88rem', padding: '0.5rem 0.8rem', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}
                     />
-
-                    {/* 顏色選擇點點 */}
-                    <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', marginTop: '0.2rem' }}>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>主題色：</span>
-                      {FOLDER_COLOR_OPTIONS.map(opt => (
-                        <div 
-                          key={`batch-color-${opt.value}`}
-                          onClick={() => setBatchFolderColor(opt.value)}
-                          style={{
-                            width: '18px',
-                            height: '18px',
-                            borderRadius: '50%',
-                            backgroundColor: opt.value,
-                            cursor: 'pointer',
-                            border: batchFolderColor === opt.value ? '2px solid #ffffff' : '1px solid rgba(0,0,0,0.2)',
-                            boxShadow: batchFolderColor === opt.value ? '0 0 0 2px var(--theme-accent)' : 'none',
-                            transition: 'transform 0.15s'
-                          }}
-                          title={opt.name}
-                        />
-                      ))}
-                    </div>
                   </div>
                 )}
 
-                {/* 選項 2: 放入已有資料夾 */}
+                {/* 選項 2: 放入我的資料夾 */}
                 <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
                   <input 
                     type="radio" 
@@ -1519,7 +1949,7 @@ export function Library({
                     onChange={() => setBatchFolderMode('existing')}
                     style={{ accentColor: 'var(--theme-accent)' }}
                   />
-                  放入已有資料夾
+                  放入我的資料夾
                 </label>
 
                 {/* 選擇已有資料夾下拉選單 */}
@@ -1532,7 +1962,7 @@ export function Library({
                           className="settings-select"
                           value={selectedExistingFolderId}
                           onChange={(e) => setSelectedExistingFolderId(e.target.value)}
-                          style={{ fontSize: '0.88rem', padding: '0.55rem 0.8rem' }}
+                          style={{ fontSize: '0.88rem', padding: '0.55rem 0.8rem', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}
                         >
                           {folders.map(f => (
                             <option key={f.id} value={f.id}>
@@ -1543,13 +1973,13 @@ export function Library({
                       </>
                     ) : (
                       <div style={{ fontSize: '0.78rem', color: 'var(--theme-accent)', padding: '0.3rem 0' }}>
-                        （目前書架尚未建立任何資料夾，請選擇「建立新資料夾」）
+                        （目前尚未建立任何資料夾，請選擇「建立新資料夾」）
                       </div>
                     )}
                   </div>
                 )}
 
-                {/* 選項 3: 下載至首頁/根目錄 */}
+                {/* 選項 3: 下載至首頁 */}
                 <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
                   <input 
                     type="radio" 
@@ -1558,7 +1988,7 @@ export function Library({
                     onChange={() => setBatchFolderMode('none')}
                     style={{ accentColor: 'var(--theme-accent)' }}
                   />
-                  下載至書架根目錄（不放入資料夾）
+                  下載至首頁
                 </label>
               </div>
 
@@ -1843,11 +2273,35 @@ export function Library({
       {menuTargetFolder && (
         <div className="search-dialog-overlay" onClick={() => setMenuTargetFolder(null)}>
           <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '320px', borderRadius: '16px', padding: '1.2rem' }}>
-            <div style={{ fontSize: '1.02rem', fontWeight: 'bold', marginBottom: '0.8rem', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-              📁 {menuTargetFolder.name}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.02rem', fontWeight: 'bold', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                <Folder size={18} style={{ color: '#8b7355', flexShrink: 0 }} />
+                <span>{menuTargetFolder.name}</span>
+              </div>
+              {/* 💡 順序移動控制：前移 (<) 與 後移 (>) */}
+              <div style={{ display: 'flex', gap: '0.3rem', flexShrink: 0 }}>
+                <button 
+                  className="square-btn"
+                  style={{ width: '28px', height: '28px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onClick={() => handleSwapFolderOrder(menuTargetFolder.id, 'left')}
+                  title="向前移動資料夾順序"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button 
+                  className="square-btn"
+                  style={{ width: '28px', height: '28px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onClick={() => handleSwapFolderOrder(menuTargetFolder.id, 'right')}
+                  title="向後移動資料夾順序"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
             </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {currentFolderId && (
+              {/* 💡 僅在自訂子資料夾（非我的資料夾頂層）內，才顯示「移出至上一層資料夾」 */}
+              {currentFolderId && currentFolderId !== 'virtual_my_folders' && (
                 <button 
                   className="action-menu-item-btn"
                   onClick={(e) => {
@@ -1956,6 +2410,82 @@ export function Library({
                   </button>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 💡 首頁「劃線筆記」編輯 Modal */}
+      {editingHighlightInLibrary && (
+        <div className="search-dialog-overlay" onClick={() => setEditingHighlightInLibrary(null)}>
+          <div className="search-dialog-card animate-slide-up" style={{ maxWidth: '420px', borderRadius: '16px' }} onClick={e => e.stopPropagation()}>
+            <div className="dialog-header">
+              <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>📝 編輯感悟筆記</span>
+              </h3>
+              <button className="icon-button close-btn" onClick={() => setEditingHighlightInLibrary(null)}>
+                <X size={18} />
+              </button>
+            </div>
+            <div className="dialog-body" style={{ gap: '1rem', padding: '1.2rem' }}>
+              <div 
+                style={{ 
+                  fontSize: '0.85rem', 
+                  color: 'var(--text-muted)', 
+                  backgroundColor: 'var(--theme-accent-light, rgba(0,0,0,0.04))', 
+                  padding: '0.6rem 0.8rem', 
+                  borderRadius: '8px',
+                  borderLeft: '3px solid var(--theme-accent)'
+                }}
+              >
+                「{editingHighlightInLibrary.text}」
+              </div>
+
+              <textarea
+                placeholder="寫下您對此句經文的感悟或讀後心得..."
+                value={editingNoteTextInLibrary}
+                onChange={(e) => setEditingNoteTextInLibrary(e.target.value)}
+                rows={4}
+                style={{
+                  width: '100%',
+                  padding: '0.8rem',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
+                  backgroundColor: 'var(--input-bg, rgba(255,255,255,0.8))',
+                  color: 'var(--text-primary)',
+                  fontSize: '0.92rem',
+                  fontFamily: 'var(--font-serif)',
+                  resize: 'vertical',
+                  boxSizing: 'border-box'
+                }}
+                autoFocus
+              />
+
+              <div style={{ display: 'flex', gap: '0.8rem', width: '100%', marginTop: '0.2rem' }}>
+                <button 
+                  className="dialog-btn-confirm"
+                  onClick={async () => {
+                    if (!editingHighlightInLibrary) return;
+                    const updated = {
+                      ...editingHighlightInLibrary,
+                      note: editingNoteTextInLibrary.trim()
+                    };
+                    await saveHighlight(updated);
+                    await loadAllHighlights();
+                    setEditingHighlightInLibrary(null);
+                  }}
+                  style={{ flex: 1 }}
+                >
+                  儲存修改
+                </button>
+                <button 
+                  className="dialog-btn-cancel"
+                  onClick={() => setEditingHighlightInLibrary(null)}
+                  style={{ flex: 1 }}
+                >
+                  取消
+                </button>
+              </div>
             </div>
           </div>
         </div>

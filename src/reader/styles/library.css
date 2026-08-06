@@ -182,7 +182,7 @@ body.theme-ebony .library-title-area {
 /* 💡 2 欄式 iOS 風格資料夾網格容器 (iOS Files Style 2-Column Grid Layout - 66px Ultra Compact) */
 .folders-grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr) !important;
   gap: 0.6rem;
   margin: 0;
   padding: 0;
@@ -191,14 +191,37 @@ body.theme-ebony .library-title-area {
 }
 
 .folders-grid-container.system-grid {
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 0.45rem;
   margin: 0;
   padding: 0 0 0.75rem 0;
   border-bottom: 1px solid rgba(140, 75, 39, 0.12);
 }
 
+.folders-grid-container.system-grid .list-folder-item {
+  padding: 0.65rem 0.3rem !important;
+}
+
+.folders-grid-container.system-grid .list-folder-title {
+  font-size: 0.8rem !important;
+}
+
+.folders-grid-container.system-grid .list-folder-count-text {
+  font-size: 0.68rem !important;
+}
+
 body.theme-dark .folders-grid-container.system-grid,
 body.theme-ebony .folders-grid-container.system-grid {
   border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+/* 💡 烏木黑 (夜間) 主題下，重點與筆記卡片無底色，僅有灰白細邊框 */
+body.theme-dark .highlight-card,
+body.theme-ebony .highlight-card {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: none !important;
 }
 
 .folders-grid-container .list-folder-item {

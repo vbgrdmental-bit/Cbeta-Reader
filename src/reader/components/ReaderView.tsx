@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Paintbrush, Search, Clock
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Paintbrush, Search, Clock, ArrowLeft, Edit3, Trash2, FileText
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
@@ -236,16 +236,13 @@ export function ReaderView({
 
   // 💡 畫重點相關狀態
   const [highlights, setHighlights] = useState<BookHighlight[]>([]);
-  const [pendingHighlight, setPendingHighlight] = useState<{
-    workId: string;
-    juan: number;
-    segmentId: string;
-    startOffset: number;
-    endOffset: number;
-    text: string;
-  } | null>(null);
+  const [pendingHighlights, setPendingHighlights] = useState<BookHighlight[]>([]);
   const [activeHighlightForDelete, setActiveHighlightForDelete] = useState<BookHighlight | null>(null);
   const [deleteMenuPosition, setDeleteMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  
+  // 💡 心得筆記編輯 Modal 狀態
+  const [editingNoteHighlight, setEditingNoteHighlight] = useState<BookHighlight | null>(null);
+  const [editingNoteText, setEditingNoteText] = useState('');
   const [isBrushModeActive, setIsBrushModeActive] = useState(false);
 
   // 💡 本書內動態關鍵字檢索
@@ -354,18 +351,44 @@ export function ReaderView({
           if (run.highlight) {
             const colorClass = `hl-color-${run.highlight.color || 'yellow'}`;
             const styleClass = `hl-style-${run.highlight.style || 'bottom-half'}`;
+            const hasNote = !!(run.highlight.note && run.highlight.note.trim());
+            const showNoteInText = !!settings.customVisibleElements?.showNoteInText;
+
             element = (
-              <mark 
-                key={idx}
-                className={`reader-text-highlight ${colorClass} ${styleClass}`}
-                data-highlight-id={run.highlight.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleHighlightClick(run.highlight!, e);
-                }}
-              >
-                {element}
-              </mark>
+              <React.Fragment key={idx}>
+                <mark 
+                  className={`reader-text-highlight ${colorClass} ${styleClass}`}
+                  data-highlight-id={run.highlight.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleHighlightClick(run.highlight!, e);
+                  }}
+                >
+                  {element}
+                  {/* 💡 劃重點右側小黃點：100% 精確垂直對齊劃重點第一行文字當行，並緊貼右側邊緣 Bar */}
+                  {run.start === run.highlight.startOffset && (
+                    <span className="highlight-right-accent-dot" title="重點位置指示標" />
+                  )}
+                </mark>
+                {hasNote && showNoteInText && (
+                  <span 
+                    style={{ 
+                      fontSize: '0.68em', 
+                      color: 'var(--text-muted, #718096)', 
+                      fontFamily: '"Yuanti SC", "YouYuan", "圓體", "Quicksand", sans-serif',
+                      fontWeight: 'normal',
+                      fontStyle: 'normal',
+                      marginLeft: '4px',
+                      opacity: 0.85,
+                      background: 'none',
+                      textDecoration: 'none',
+                      display: 'inline-block'
+                    }}
+                  >
+                    ({run.highlight.note})
+                  </span>
+                )}
+              </React.Fragment>
             );
           } else {
             element = <React.Fragment key={idx}>{element}</React.Fragment>;
@@ -675,10 +698,7 @@ export function ReaderView({
               try {
                 const progress = JSON.parse(savedProgressStr);
                 if (progress.juan || progress.segmentId) {
-                  // 💡 計算該段落對應的品名
                   const displayTitle = getMuluTitleForSegment(bookData, progress.juan || 1, progress.segmentId || '');
-                  
-                  // 暫存歷史進度，並彈出確認 Dialog 詢問
                   setPendingProgress({
                     juan: progress.juan || 1,
                     segmentId: progress.segmentId || '',
@@ -687,7 +707,6 @@ export function ReaderView({
                   });
                   setShowResumeDialog(true);
                 }
-                // 預設先進入卷 1
                 setCurrentJuanNum(1);
               } catch (err) {
                 console.warn('Failed to parse saved progress, fallback to juan 1:', err);
@@ -704,7 +723,6 @@ export function ReaderView({
     };
 
     loadBookData();
-    // 預設展示工具列，一段時間後自動隱藏
     resetToolbarTimeout();
 
     return () => {
@@ -729,53 +747,126 @@ export function ReaderView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workId]);
 
+
+
+  // 💡 計算選取 Range 涵蓋的所有段落與劃線資料（支援單段落與跨段落全選）
+  const calculateHighlightsFromRange = (range: Range): BookHighlight[] => {
+    const container = range.commonAncestorContainer;
+    const root = container.nodeType === Node.ELEMENT_NODE 
+      ? (container as HTMLElement) 
+      : container.parentElement;
+    if (!root) return [];
+
+    let segments: HTMLElement[] = [];
+    if (root.classList.contains('reader-paragraph')) {
+      segments = [root];
+    } else {
+      const all = Array.from(root.querySelectorAll<HTMLElement>('.reader-paragraph'));
+      segments = all.filter(el => {
+        try {
+          return range.intersectsNode(el);
+        } catch {
+          return false;
+        }
+      });
+      if (segments.length === 0) {
+        let p: HTMLElement | null = root;
+        while (p) {
+          if (p.classList.contains('reader-paragraph')) {
+            segments = [p];
+            break;
+          }
+          p = p.parentElement;
+        }
+      }
+    }
+
+    if (segments.length === 0) return [];
+
+    const results: BookHighlight[] = [];
+
+    segments.forEach((segEl, index) => {
+      const segmentId = segEl.getAttribute('data-segment-id');
+      if (!segmentId) return;
+
+      const segText = segEl.textContent || '';
+      if (!segText) return;
+
+      let startOffset = 0;
+      let endOffset = segText.length;
+
+      if (segments.length === 1) {
+        const preRange = range.cloneRange();
+        preRange.selectNodeContents(segEl);
+        preRange.setEnd(range.startContainer, range.startOffset);
+        startOffset = preRange.toString().length;
+
+        const postRange = range.cloneRange();
+        postRange.selectNodeContents(segEl);
+        postRange.setStart(range.endContainer, range.endOffset);
+        const postLength = postRange.toString().length;
+
+        endOffset = Math.max(startOffset, segText.length - postLength);
+      } else {
+        if (index === 0) {
+          const preRange = range.cloneRange();
+          preRange.selectNodeContents(segEl);
+          preRange.setEnd(range.startContainer, range.startOffset);
+          startOffset = preRange.toString().length;
+          endOffset = segText.length;
+        } else if (index === segments.length - 1) {
+          startOffset = 0;
+          const postRange = range.cloneRange();
+          postRange.selectNodeContents(segEl);
+          postRange.setStart(range.endContainer, range.endOffset);
+          const postLength = postRange.toString().length;
+          endOffset = Math.max(0, segText.length - postLength);
+        } else {
+          startOffset = 0;
+          endOffset = segText.length;
+        }
+      }
+
+      if (endOffset > startOffset) {
+        const text = segText.substring(startOffset, endOffset);
+        if (text.trim()) {
+          results.push({
+            id: `${workId}_${currentJuanNum}_${segmentId}_${startOffset}_${endOffset}`,
+            workId,
+            juan: currentJuanNum,
+            segmentId,
+            startOffset,
+            endOffset,
+            text,
+            createdAt: Date.now(),
+            color: settings.highlightColor,
+            style: settings.highlightStyle
+          });
+        }
+      }
+    });
+
+    return results;
+  };
+
   // 監聽全局選取事件，暫存選取區間
   useEffect(() => {
     const handleSelectionChange = () => {
       const selection = window.getSelection();
       if (!selection || selection.isCollapsed) {
-        setPendingHighlight(null);
+        setPendingHighlights([]);
         return;
       }
 
       const range = selection.getRangeAt(0);
       const selectedText = selection.toString().trim();
       if (!selectedText) {
-        setPendingHighlight(null);
+        setPendingHighlights([]);
         return;
       }
 
-      // 檢查選取範圍是否包含於段落內 (.reader-paragraph)
-      let node: Node | null = range.startContainer;
-      let segmentEl: HTMLElement | null = null;
-      while (node) {
-        if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('reader-paragraph')) {
-          segmentEl = node as HTMLElement;
-          break;
-        }
-        node = node.parentNode;
-      }
-
-      if (segmentEl) {
-        const segmentId = segmentEl.getAttribute('data-segment-id');
-        if (segmentId) {
-          // 計算相對於段落 textContent 的 startOffset 和 endOffset
-          const preSelectionRange = range.cloneRange();
-          preSelectionRange.selectNodeContents(segmentEl);
-          preSelectionRange.setEnd(range.startContainer, range.startOffset);
-          const startOffset = preSelectionRange.toString().length;
-          const endOffset = startOffset + range.toString().length;
-
-          setPendingHighlight({
-            workId,
-            juan: currentJuanNum,
-            segmentId,
-            startOffset,
-            endOffset,
-            text: range.toString()
-          });
-        }
-      }
+      const hls = calculateHighlightsFromRange(range);
+      setPendingHighlights(hls);
     };
 
     document.addEventListener('selectionchange', handleSelectionChange);
@@ -790,7 +881,6 @@ export function ReaderView({
     if (!isBrushModeActive) return;
 
     const handlePointerUp = () => {
-      // 延遲 100ms 確保行動裝置手勢與 selection 範圍計算完成
       setTimeout(async () => {
         const selection = window.getSelection();
         if (!selection || selection.isCollapsed) return;
@@ -799,47 +889,18 @@ export function ReaderView({
         if (!selectedText) return;
 
         const range = selection.getRangeAt(0);
-        let node: Node | null = range.startContainer;
-        let segmentEl: HTMLElement | null = null;
-        while (node) {
-          if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('reader-paragraph')) {
-            segmentEl = node as HTMLElement;
-            break;
-          }
-          node = node.parentNode;
-        }
+        const hls = calculateHighlightsFromRange(range);
 
-        if (segmentEl) {
-          const segmentId = segmentEl.getAttribute('data-segment-id');
-          if (segmentId) {
-            const preSelectionRange = range.cloneRange();
-            preSelectionRange.selectNodeContents(segmentEl);
-            preSelectionRange.setEnd(range.startContainer, range.startOffset);
-            const startOffset = preSelectionRange.toString().length;
-            const endOffset = startOffset + range.toString().length;
-
-            const id = `${workId}_${currentJuanNum}_${segmentId}_${startOffset}_${endOffset}`;
-            const newHl: BookHighlight = {
-              id,
-              workId,
-              juan: currentJuanNum,
-              segmentId,
-              startOffset,
-              endOffset,
-              text: range.toString(),
-              createdAt: Date.now(),
-              color: settings.highlightColor,
-              style: settings.highlightStyle
-            };
-
-            try {
+        if (hls.length > 0) {
+          try {
+            for (const newHl of hls) {
               await saveHighlight(newHl);
-              window.getSelection()?.removeAllRanges();
-              setPendingHighlight(null);
-              await loadBookHighlights();
-            } catch (err) {
-              console.error('Failed to auto create highlight on gesture end:', err);
             }
+            window.getSelection()?.removeAllRanges();
+            setPendingHighlights([]);
+            await loadBookHighlights();
+          } catch (err) {
+            console.error('Failed to auto create highlight on gesture end:', err);
           }
         }
       }, 100);
@@ -884,33 +945,23 @@ export function ReaderView({
   };
 
   const handleBrushButtonClick = async () => {
-    if (pendingHighlight) {
-      // 💡 如果當前有選取內容，直接對選取內容畫重點！
-      const { workId: wId, juan, segmentId, startOffset, endOffset, text } = pendingHighlight;
-      const id = `${wId}_${juan}_${segmentId}_${startOffset}_${endOffset}`;
-      const newHl: BookHighlight = {
-        id,
-        workId: wId,
-        juan,
-        segmentId,
-        startOffset,
-        endOffset,
-        text,
-        createdAt: Date.now(),
-        color: settings.highlightColor,
-        style: settings.highlightStyle
-      };
-
+    if (pendingHighlights.length > 0) {
       try {
-        await saveHighlight(newHl);
+        for (const hl of pendingHighlights) {
+          await saveHighlight({
+            ...hl,
+            color: settings.highlightColor,
+            style: settings.highlightStyle,
+            createdAt: Date.now()
+          });
+        }
         window.getSelection()?.removeAllRanges();
-        setPendingHighlight(null);
+        setPendingHighlights([]);
         await loadBookHighlights();
       } catch (err) {
         console.error('Failed to create highlight from brush button:', err);
       }
     } else {
-      // 💡 如果當前沒有選取內容，則切換筆刷模式的開啟/關閉狀態
       setIsBrushModeActive(prev => !prev);
     }
   };
@@ -925,6 +976,29 @@ export function ReaderView({
       await loadBookHighlights();
     } catch (err) {
       console.error('Failed to delete highlight:', err);
+    }
+  };
+
+  const handleOpenNoteEditor = (hl: BookHighlight) => {
+    setActiveHighlightForDelete(null);
+    setDeleteMenuPosition(null);
+    setEditingNoteHighlight(hl);
+    setEditingNoteText(hl.note || '');
+  };
+
+  const handleSaveNote = async () => {
+    if (!editingNoteHighlight) return;
+    const updated: BookHighlight = {
+      ...editingNoteHighlight,
+      note: editingNoteText.trim()
+    };
+    try {
+      await saveHighlight(updated);
+      await loadBookHighlights();
+      setEditingNoteHighlight(null);
+      setEditingNoteText('');
+    } catch (err) {
+      console.error('Failed to save highlight note:', err);
     }
   };
 
@@ -1244,6 +1318,10 @@ export function ReaderView({
         </button>
 
         <div className="control-divider" />
+
+        <button className="library-header-btn" onClick={() => onBackToLibrary(false)} title="返回上一頁">
+          <ArrowLeft size={20} />
+        </button>
 
 
 
@@ -1589,6 +1667,8 @@ export function ReaderView({
 
                         {/* 經文主體文字 */}
                         {renderParagraphContent(seg.content, seg.id)}
+
+
 
                         {/* 學術模式：顯示校勘標記 (暫時停用，留待日後開啟) */}
                         {/* eslint-disable-next-line no-constant-binary-expression */}
@@ -1936,7 +2016,7 @@ export function ReaderView({
 
 
 
-      {/* 💡 刪除重點懸浮選單 */}
+      {/* 💡 劃線懸浮操作工具列（寫心得 + 刪除重點） */}
       {activeHighlightForDelete && deleteMenuPosition && (
         <div 
           className="highlight-delete-menu"
@@ -1948,38 +2028,119 @@ export function ReaderView({
             zIndex: 3000,
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '8px',
             background: 'var(--reader-bg)',
             border: '1px solid var(--theme-accent-border, var(--reader-border))',
             boxShadow: '0 6px 20px rgba(0, 0, 0, 0.25)',
             borderRadius: '20px',
-            padding: '6px 14px',
-            cursor: 'pointer',
-            fontSize: '0.85rem',
+            padding: '4px 12px',
+            fontSize: '0.82rem',
             fontWeight: 'bold',
             fontFamily: 'var(--font-serif)',
-            color: '#bd3a3a',
             animation: 'fadeIn 0.15s ease-out',
             userSelect: 'none',
             WebkitUserSelect: 'none'
           }}
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            handleDeleteHighlight();
-          }}
-          onTouchEnd={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            handleDeleteHighlight();
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
-          <span style={{ fontSize: '0.9rem' }}>🗑️</span>
-          <span>刪除重點</span>
+          <button
+            type="button"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              border: 'none',
+              background: 'transparent',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              padding: '4px 6px'
+            }}
+            onClick={() => handleOpenNoteEditor(activeHighlightForDelete)}
+          >
+            <Edit3 size={13} />
+            <span>{activeHighlightForDelete.note ? '編輯筆記' : '寫筆記'}</span>
+          </button>
+
+          <span style={{ opacity: 0.3 }}>|</span>
+
+          <button
+            type="button"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              border: 'none',
+              background: 'transparent',
+              color: '#bd3a3a',
+              cursor: 'pointer',
+              padding: '4px 6px'
+            }}
+            onClick={() => handleDeleteHighlight()}
+          >
+            <Trash2 size={13} />
+            <span>刪除</span>
+          </button>
         </div>
       )}
 
+      {/* 💡 筆記寫作 Modal */}
+      {editingNoteHighlight && (
+        <div className="search-dialog-overlay" onClick={() => setEditingNoteHighlight(null)}>
+          <div className="search-dialog-card animate-slide-up" style={{ maxWidth: '420px', borderRadius: '16px' }} onClick={e => e.stopPropagation()}>
+            <div className="dialog-header">
+              <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FileText size={16} />
+                <span>隨手記筆記</span>
+              </h3>
+              <button className="icon-button close-btn" onClick={() => setEditingNoteHighlight(null)}>
+                <X size={18} />
+              </button>
+            </div>
+            <div className="dialog-body" style={{ gap: '1rem', padding: '1.2rem' }}>
+              <div 
+                style={{ 
+                  fontSize: '0.85rem', 
+                  color: 'var(--text-muted)', 
+                  backgroundColor: 'var(--theme-accent-light, rgba(0,0,0,0.04))', 
+                  padding: '0.6rem 0.8rem', 
+                  borderRadius: '8px',
+                  borderLeft: '3px solid var(--theme-accent)'
+                }}
+              >
+                「{editingNoteHighlight.text}」
+              </div>
+
+              <textarea
+                className="note-textarea"
+                placeholder="寫下您對此句經文的感悟或讀後心得..."
+                value={editingNoteText}
+                onChange={(e) => setEditingNoteText(e.target.value)}
+                rows={4}
+                autoFocus
+              />
+
+              <div style={{ display: 'flex', gap: '0.8rem', width: '100%', marginTop: '0.2rem' }}>
+                <button 
+                  className="dialog-btn-confirm"
+                  onClick={handleSaveNote}
+                  style={{ flex: 1 }}
+                >
+                  儲存心得
+                </button>
+                <button 
+                  className="dialog-btn-cancel"
+                  onClick={() => setEditingNoteHighlight(null)}
+                  style={{ flex: 1 }}
+                >
+                  取消
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 export default ReaderView;
