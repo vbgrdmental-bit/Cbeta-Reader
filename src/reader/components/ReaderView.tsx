@@ -305,7 +305,17 @@ export function ReaderView({
     // 3. 建立字元狀態陣列，標記每個字元是否為小註、是否被畫重點
     const charStates = Array.from({ length: text.length }, (_, i) => {
       const isNote = bracketRanges.some(r => i >= r.start && i < r.end);
-      const hl = segHighlights.find(h => i >= h.startOffset && i < h.endOffset);
+      const hl = segHighlights.find(h => {
+        if (i >= h.startOffset && i < h.endOffset) return true;
+        // 💡 防護修復：若舊畫重點 offset 因顯示筆記等 UI 元素發生偏差，根據正文內容比對自動校正
+        if (h.text && (h.startOffset >= text.length || text.substring(h.startOffset, h.endOffset) !== h.text)) {
+          const matchIdx = text.indexOf(h.text);
+          if (matchIdx !== -1 && i >= matchIdx && i < matchIdx + h.text.length) {
+            return true;
+          }
+        }
+        return false;
+      });
       return {
         isNote,
         highlightId: hl ? hl.id : null,
@@ -375,11 +385,13 @@ export function ReaderView({
                   {element}
                   {/* 💡 劃重點右側小黃點：100% 精確垂直對齊劃重點第一行文字當行，並緊貼右側邊緣 Bar */}
                   {run.start === run.highlight.startOffset && (
-                    <span className="highlight-right-accent-dot" title="重點位置指示標" />
+                    <span className="highlight-right-accent-dot" data-reader-ui="true" title="重點位置指示標" />
                   )}
                 </mark>
                 {hasNote && showNoteInText && (
                   <span 
+                    className="reader-ui-note-text"
+                    data-reader-ui="true"
                     style={{ 
                       fontSize: '0.68em', 
                       color: 'var(--text-muted, #718096)', 
@@ -757,6 +769,18 @@ export function ReaderView({
 
 
 
+  // 💡 Helper: 取得 DOM 節點/Fragment 扣除 UI 覆蓋元件 (如筆記內容、頁碼標籤) 後的真實經文正文文字
+  const getPureTextFromNodeOrFrag = (nodeOrFrag: Node): string => {
+    const clone = nodeOrFrag.cloneNode(true);
+    if (clone instanceof Element || clone instanceof DocumentFragment) {
+      clone.querySelectorAll('[data-reader-ui="true"]').forEach(el => el.remove());
+      if (clone instanceof Element && clone.getAttribute('data-reader-ui') === 'true') {
+        return '';
+      }
+    }
+    return clone.textContent || '';
+  };
+
   // 💡 計算選取 Range 涵蓋的所有段落與劃線資料（支援單段落與跨段落全選）
   const calculateHighlightsFromRange = (range: Range): BookHighlight[] => {
     const container = range.commonAncestorContainer;
@@ -797,7 +821,8 @@ export function ReaderView({
       const segmentId = segEl.getAttribute('data-segment-id');
       if (!segmentId) return;
 
-      const segText = segEl.textContent || '';
+      // 💡 取得段落中真實經文純文字 (過濾掉「顯示筆記內容」等 UI 注入節點)
+      const segText = getPureTextFromNodeOrFrag(segEl);
       if (!segText) return;
 
       let startOffset = 0;
@@ -807,28 +832,27 @@ export function ReaderView({
         const preRange = range.cloneRange();
         preRange.selectNodeContents(segEl);
         preRange.setEnd(range.startContainer, range.startOffset);
-        startOffset = preRange.toString().length;
+        startOffset = getPureTextFromNodeOrFrag(preRange.cloneContents()).length;
 
-        const postRange = range.cloneRange();
-        postRange.selectNodeContents(segEl);
-        postRange.setStart(range.endContainer, range.endOffset);
-        const postLength = postRange.toString().length;
+        const selRange = range.cloneRange();
+        selRange.setStart(range.startContainer, range.startOffset);
+        selRange.setEnd(range.endContainer, range.endOffset);
+        const selLength = getPureTextFromNodeOrFrag(selRange.cloneContents()).length;
 
-        endOffset = Math.max(startOffset, segText.length - postLength);
+        endOffset = startOffset + selLength;
       } else {
         if (index === 0) {
           const preRange = range.cloneRange();
           preRange.selectNodeContents(segEl);
           preRange.setEnd(range.startContainer, range.startOffset);
-          startOffset = preRange.toString().length;
+          startOffset = getPureTextFromNodeOrFrag(preRange.cloneContents()).length;
           endOffset = segText.length;
         } else if (index === segments.length - 1) {
           startOffset = 0;
-          const postRange = range.cloneRange();
-          postRange.selectNodeContents(segEl);
-          postRange.setStart(range.endContainer, range.endOffset);
-          const postLength = postRange.toString().length;
-          endOffset = Math.max(0, segText.length - postLength);
+          const endRange = range.cloneRange();
+          endRange.selectNodeContents(segEl);
+          endRange.setEnd(range.endContainer, range.endOffset);
+          endOffset = getPureTextFromNodeOrFrag(endRange.cloneContents()).length;
         } else {
           startOffset = 0;
           endOffset = segText.length;
