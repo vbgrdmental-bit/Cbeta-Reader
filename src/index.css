@@ -1,3 +1,12 @@
+/* 💡 教育部標準楷書 (MOE EduKai Official Standard Kai Font) */
+@font-face {
+  font-family: 'MOE-EduKai';
+  src: url('/fonts/edukai-5.1_20251208.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* 💡 注音芫荽體 (Iansui-ZY / Bopomofo Iansui) 雲端 WebFont */
 @font-face {
   font-family: 'Iansui-ZY';

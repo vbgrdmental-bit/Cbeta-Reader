@@ -1287,7 +1287,7 @@ export function ReaderView({
       case 'wenkai':
       case 'yuanti':
       case 'fangsong':
-        return '"DFKai-SB", "標楷體", "BiauKai", "TW-Kai", "LXGW WenKai TC", "LXGW WenKai", "CBETASupplement", serif';
+        return '"MOE-EduKai", "DFKai-SB", "標楷體", "BiauKai", "TW-Kai", "LXGW WenKai TC", "LXGW WenKai", "CBETASupplement", serif';
       case 'default':
       default:
         return 'var(--font-serif)';
