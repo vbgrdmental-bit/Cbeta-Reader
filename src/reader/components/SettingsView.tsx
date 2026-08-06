@@ -252,7 +252,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 { 
                   id: 'kaiti', 
                   name: '標楷體 (教育部)', 
-                  fontFamily: '"MOE-EduKai", "DFKai-SB", "標楷體", "BiauKai", "TW-Kai", "LXGW WenKai TC", "CBETASupplement", serif',
+                  fontFamily: '"TW-Kai-98", "MOE-EduKai", "TW-Kai", "DFKai-SB", "標楷體", "BiauKai", "Microsoft JhengHei", "PingFang TC", "CBETASupplement", serif',
                   sample: '永' 
                 }
               ].map((fontItem) => {
