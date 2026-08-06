@@ -643,55 +643,34 @@ export function ReaderView({
           const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
                               (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷');
 
-          // 💡 全自動修復：若經文包含預設備用文字（"經文預設段落"），自動在背景向 CBETA 重新獲取真實 HTML 正文並修復！
+          // 💡 全自動修復：若經文包含舊版快取、缺字、舊版號或備用文字，自動在背景向 CBETA 重新獲取真實 HTML 正文並修復！
           const hasFallbackContent = bookData.content.juans.some(j => 
             j.segments.some(s => s.content.includes('經文預設段落'))
           );
+          const isOutdatedVersion = !bookData.metadata.version || bookData.metadata.version !== BUILDER_VERSION;
 
-          if (hasFallbackContent || needsTocFix) {
+          if (hasFallbackContent || needsTocFix || isOutdatedVersion) {
             (async () => {
               try {
-                const isOfflineMock = workId === 'T0412' || workId === 'T0262';
-                if (isOfflineMock) {
-                  const res = await fetch(`/mock/${workId}.json`);
-                  if (res.ok) {
-                    const preBuilt = await res.json();
-                    if (workId === 'T0412') {
-                      bookData!.metadata.juansCount = 3;
-                    } else {
-                      bookData!.metadata.juansCount = preBuilt.content.juans.length;
-                    }
-                    const { toc, navigation } = NavigationBuilder.buildNavigation(
-                      workId,
-                      bookData!.content,
-                      preBuilt.rawToc || []
-                    );
-                    bookData!.toc = toc;
-                    bookData!.navigation = navigation;
-                    bookData!.metadata.version = BUILDER_VERSION;
-                    await saveBook(bookData!);
-                    setBook({ ...bookData! });
+                console.log(`[AutoHeal] Book ${workId} needs refresh. Auto-healing real text from CBETA...`);
+                const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+                const juansCount = bookData!.metadata.juansCount || bookData!.content.juans.length || 2;
+                const { content, rawToc } = await ReaderBuilder.buildContent(workId, juansCount);
+                const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
+                
+                const healedBook: ReaderPackage = {
+                  ...bookData!,
+                  content,
+                  toc,
+                  navigation,
+                  metadata: {
+                    ...bookData!.metadata,
+                    version: BUILDER_VERSION
                   }
-                } else if (hasFallbackContent) {
-                  console.log(`[AutoHeal] Book ${workId} contains fallback text. Auto-healing real text from CBETA...`);
-                  const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
-                  const { content, rawToc } = await ReaderBuilder.buildContent(workId, bookData!.metadata.juansCount);
-                  const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
-                  
-                  const healedBook: ReaderPackage = {
-                    ...bookData!,
-                    content,
-                    toc,
-                    navigation,
-                    metadata: {
-                      ...bookData!.metadata,
-                      version: BUILDER_VERSION
-                    }
-                  };
-                  await saveBook(healedBook);
-                  setBook(healedBook);
-                  console.log(`[AutoHeal] Successfully auto-healed real content for ${workId}`);
-                }
+                };
+                await saveBook(healedBook);
+                setBook(healedBook);
+                console.log(`[AutoHeal] Successfully auto-healed real content for ${workId}`);
               } catch (err) {
                 console.warn('[AutoHeal] Failed to sync or repair content:', err);
               }
