@@ -37,7 +37,7 @@ export class PackageBuilder {
     onProgress: (progress: BuildProgress) => void
   ): Promise<ReaderPackage> {
     const workId = searchResult.workId;
-    let actualJuansCount = searchResult.juansCount;
+    let actualJuansCount = (searchResult.juansCount && searchResult.juansCount > 0) ? searchResult.juansCount : 1;
     
     try {
       // 1. Metadata 階段 (加入 3.5 秒超時保護，防範 CBETA API 伺服器掛起)

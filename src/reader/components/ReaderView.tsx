@@ -636,46 +636,43 @@ export function ReaderView({
             }
           }
 
-          // ⚡⚡⚡ 優先渲染閱讀器介面，達到 0 秒極速開啟體驗！
-          setBook(bookData);
-
-          // 💡 全自動背景目次修復與 Mock 同步邏輯 (非阻塞式在背景進行)
+          // 💡 全自動背景目次修復與經文修復邏輯
           const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
                               (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷');
-
-          // 💡 全自動修復：若經文包含舊版快取、缺字、舊版號或備用文字，自動在背景向 CBETA 重新獲取真實 HTML 正文並修復！
           const hasFallbackContent = bookData.content.juans.some(j => 
             j.segments.some(s => s.content.includes('經文預設段落'))
           );
           const isOutdatedVersion = !bookData.metadata.version || bookData.metadata.version !== BUILDER_VERSION;
 
           if (hasFallbackContent || needsTocFix || isOutdatedVersion) {
-            (async () => {
-              try {
-                console.log(`[AutoHeal] Book ${workId} needs refresh. Auto-healing real text from CBETA...`);
-                const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
-                const juansCount = bookData!.metadata.juansCount || bookData!.content.juans.length || 2;
-                const { content, rawToc } = await ReaderBuilder.buildContent(workId, juansCount);
-                const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
-                
-                const healedBook: ReaderPackage = {
-                  ...bookData!,
-                  content,
-                  toc,
-                  navigation,
-                  metadata: {
-                    ...bookData!.metadata,
-                    version: BUILDER_VERSION
-                  }
-                };
-                await saveBook(healedBook);
-                setBook(healedBook);
-                console.log(`[AutoHeal] Successfully auto-healed real content for ${workId}`);
-              } catch (err) {
-                console.warn('[AutoHeal] Failed to sync or repair content:', err);
-              }
-            })();
+            try {
+              console.log(`[AutoHeal] Book ${workId} needs refresh. Auto-healing real text from CBETA...`);
+              const safeJuansCount = (bookData.metadata.juansCount && bookData.metadata.juansCount > 0)
+                ? bookData.metadata.juansCount 
+                : (bookData.content.juans.length > 0 ? bookData.content.juans.length : 1);
+              const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+              const { content, rawToc } = await ReaderBuilder.buildContent(workId, safeJuansCount);
+              const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
+              
+              bookData = {
+                ...bookData,
+                content,
+                toc,
+                navigation,
+                metadata: {
+                  ...bookData.metadata,
+                  juansCount: content.juans.length,
+                  version: BUILDER_VERSION
+                }
+              };
+              await saveBook(bookData);
+              console.log(`[AutoHeal] Successfully auto-healed real content for ${workId}`);
+            } catch (err) {
+              console.warn('[AutoHeal] Failed to sync or repair content:', err);
+            }
           }
+
+          setBook(bookData);
           
           // 如果有傳入特定跳轉段落
           if (initialSegmentId) {

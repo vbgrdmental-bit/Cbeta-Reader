@@ -19,10 +19,10 @@ export class ReaderBuilder {
    */
   static async buildContent(
     workId: string, 
-    juansCount: number,
+    juansCountInput: number,
     onProgress?: (progress: number, currentJuan?: number, totalJuans?: number, remSec?: number) => void
   ): Promise<{ content: BookContent; rawToc: any[] }> {
-    
+    const juansCount = (juansCountInput && juansCountInput > 0) ? juansCountInput : 1;
     const juans: JuanData[] = [];
     const juansMap = new Map<number, TextSegment[]>();
     let allRawTocs: any[] = [];
