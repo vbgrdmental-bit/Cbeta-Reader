@@ -1,38 +1,5 @@
-/* 💡 教育部全字庫正楷體 (TW-Kai-98_1 基本字集 36.9MB) */
-@font-face {
-  font-family: 'TW-Kai-98';
-  src: url('/fonts/TW-Kai-98_1.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* 💡 教育部全字庫正楷體 Ext-B (TW-Kai-Ext-B-98_1 46.5MB - 專治 𨪏 U+28A8F 等 Ext-B 罕見字) */
-@font-face {
-  font-family: 'TW-Kai-Ext-B';
-  src: url('/fonts/TW-Kai-Ext-B-98_1.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* 💡 教育部全字庫正楷體 Plus (TW-Kai-Plus-98_1 25.3MB - 專治大藏經/古籍私人造字區罕見字) */
-@font-face {
-  font-family: 'TW-Kai-Plus';
-  src: url('/fonts/TW-Kai-Plus-98_1.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* 💡 教育部國字標準字體楷書 (edukai-5.1_20251208.ttf 15.8MB) */
-@font-face {
-  font-family: 'MOE-EduKai';
-  src: url('/fonts/edukai-5.1_20251208.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* 💡 註：教育部標準楷書 (MOE-EduKai / TW-Kai) 現已改為【按需延遲動態載入 (Lazy Load)】 */
+/* 預設開啟頁面時 0 MB 流量、0 秒極速載入；僅在讀者切換至標楷體時動態注入 WOFF2 高壓字型檔。 */
 
 /* 💡 注音芫荽體 (Iansui-ZY / Bopomofo Iansui) 雲端 WebFont */
 @font-face {

@@ -10,6 +10,7 @@ import { BUILDER_VERSION } from '../../builder/version';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
+import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
 import type { ReadingTimerState } from '../../utils/readingTimer';
 import '../styles/reader.css';
 
@@ -217,6 +218,13 @@ export function ReaderView({
   
   // 💡 閱讀時間倒數計時狀態
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
+
+  // 💡 按需動態加載教育部標楷體 (Lazy-Load WOFF2)
+  useEffect(() => {
+    if (settings.fontFamily === 'kaiti') {
+      loadEduKaiFontOnDemand();
+    }
+  }, [settings.fontFamily]);
 
   useEffect(() => {
     const unsubscribe = readingTimer.subscribe(setTimerState);

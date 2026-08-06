@@ -5,6 +5,7 @@ import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
+import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
 import type { ReadingTimerState } from '../../utils/readingTimer';
 import '../styles/settings.css';
 
@@ -263,7 +264,12 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <div
                     key={`fontFamily-${fontItem.id}`}
                     className={`visual-option-card ${isActive ? 'active' : ''}`}
-                    onClick={() => onSave({ ...settings, fontFamily: fontItem.id as any })}
+                    onClick={() => {
+                      if (fontItem.id === 'kaiti') {
+                        loadEduKaiFontOnDemand();
+                      }
+                      onSave({ ...settings, fontFamily: fontItem.id as any });
+                    }}
                   >
                     <div 
                       style={{ 
