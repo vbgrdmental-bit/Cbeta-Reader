@@ -168,38 +168,38 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* 上方主標題：「| 檢索CBETA 並下載書籍」（向右縮排半格 ~0.7rem / 10px） */
-.cbeta-header-title {
+/* 兩大區塊（檢索CBETA / 依類別查詢）動態開關標題：置左對齊、字體與樣式 100% 一致 */
+.cbeta-section-toggle-header {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--theme-accent, #795548);
   font-family: var(--font-rounded);
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  margin-left: 0.7rem;
-  margin-bottom: 0.65rem;
-  user-select: none;
-}
-
-/* 下方分類展開標題：「+ 依類別查詢」（上方大幅增加 1.5rem 的間距進行視覺分區） */
-.cbeta-category-toggle {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--theme-accent, #795548);
-  font-family: var(--font-rounded);
-  display: inline-flex;
-  align-items: center;
+  justify-content: flex-start;
   gap: 0.45rem;
   margin-top: 0.2rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.55rem;
   cursor: pointer;
   user-select: none;
+  text-align: left;
   transition: opacity 0.15s ease;
 }
 
-.cbeta-category-toggle:hover {
+.cbeta-section-toggle-header:hover {
   opacity: 0.85;
+}
+
+/* 「CBETA」單字綠色品牌色 (與首頁 C 按鈕相同翡翠綠) */
+.cbeta-green-brand {
+  color: #059669;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+body.theme-ebony .cbeta-green-brand,
+body.theme-dark .cbeta-green-brand {
+  color: #10b981;
 }
 
 .cbeta-title-bar {

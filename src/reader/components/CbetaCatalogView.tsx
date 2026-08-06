@@ -636,8 +636,25 @@ export function CbetaCatalogView({
   const [selectedExistingFolderId, setSelectedExistingFolderId] = useState('');
   const [folders, setFolders] = useState<any[]>([]);
 
-  // 💡 依類別查詢預設收合狀態 (點入畫面時預設收合，只顯示搜尋欄)
+  // 💡 檢索CBETA與依類別查詢預設手風琴 state（預設「檢索CBETA」開啟，「依類別查詢」關閉）
+  const [isSearchExpanded, setIsSearchExpanded] = useState(true);
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
+
+  const handleToggleSearch = () => {
+    const nextState = !isSearchExpanded;
+    setIsSearchExpanded(nextState);
+    if (nextState) {
+      setIsCategoriesExpanded(false);
+    }
+  };
+
+  const handleToggleCategories = () => {
+    const nextState = !isCategoriesExpanded;
+    setIsCategoriesExpanded(nextState);
+    if (nextState) {
+      setIsSearchExpanded(false);
+    }
+  };
 
   // 💡 平滑倒滑離場動畫返回首頁 (Smooth Slide Exit back to Library)
   const [isCatalogExiting, setIsCatalogExiting] = useState(false);
@@ -1328,86 +1345,110 @@ export function CbetaCatalogView({
         <section className="cbeta-top-panel">
           {/* 1. 關鍵字搜尋卡片 */}
           <div className="cbeta-search-card">
-            {/* 💡 搜尋框上方小字標題：「| 檢索CBETA 並下載書籍」（向右縮排半格） */}
-            <div className="cbeta-header-title">
-              <span className="cbeta-title-bar" />
-              <span>檢索CBETA 並下載書籍</span>
+            {/* 💡 搜尋框上方標題：「[+] / [-] 檢索 CBETA 並下載書籍」（置左對齊、可點擊展開/收合） */}
+            <div 
+              className="cbeta-section-toggle-header"
+              onClick={handleToggleSearch}
+              title={isSearchExpanded ? '點擊收合檢索區塊' : '點擊展開檢索區塊'}
+            >
+              {isSearchExpanded ? (
+                <Minus size={18} style={{ strokeWidth: 2.5, flexShrink: 0 }} />
+              ) : (
+                <Plus size={18} style={{ strokeWidth: 2.5, flexShrink: 0 }} />
+              )}
+              <span>
+                檢索<span className="cbeta-green-brand">CBETA</span> 並下載書籍
+              </span>
             </div>
 
-            <form className="cbeta-search-input-wrapper" onSubmit={handleSearchSubmit}>
-              <input 
-                type="text" 
-                className="cbeta-search-input"
-                placeholder="輸入關鍵字，例如：地藏、鳩摩羅什、T0235"
-                value={onlineSearchQuery}
-                onChange={(e) => {
-                  setOnlineSearchQuery(e.target.value);
-                  if (!e.target.value.trim() && isTextSearchActive) {
-                    handleClearSearch();
-                  }
-                }}
-              />
-              <div className="cbeta-search-actions">
-                {onlineSearchQuery && (
-                  <button 
-                    type="button" 
-                    className="cbeta-search-clear-btn" 
-                    onClick={handleClearSearch}
-                    title="結束/清除搜尋"
-                  >
-                    <X size={18} />
-                  </button>
-                )}
-                <button type="submit" className="cbeta-search-btn" disabled={isSearchingOnline} title="搜尋 CBETA 經典">
-                  {isSearchingOnline ? <span style={{ fontSize: '0.75rem' }}>...</span> : <Search size={20} />}
-                </button>
-              </div>
-            </form>
-
-            {/* 💡 近期 5 個搜尋關鍵字 Chip 標籤列 (單行、灰黑小字) */}
-            {recentSearches.length > 0 && (
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '0.4rem', 
-                  marginTop: '0.55rem', 
-                  overflowX: 'auto', 
-                  whiteSpace: 'nowrap',
-                  paddingBottom: '0.15rem',
-                  width: '100%',
-                  boxSizing: 'border-box'
-                }}
-                className="custom-scrollbar"
-              >
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted, #718096)', flexShrink: 0, opacity: 0.85 }}>
-                  近期搜尋：
-                </span>
-                {recentSearches.map((q, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => executeSearch(q)}
-                    style={{
-                      fontSize: '0.76rem',
-                      color: 'var(--text-primary, #4a5568)',
-                      backgroundColor: 'var(--theme-accent-light, rgba(0, 0, 0, 0.04))',
-                      border: '1px solid var(--theme-accent-border, rgba(0, 0, 0, 0.12))',
-                      borderRadius: '12px',
-                      padding: '0.15rem 0.55rem',
-                      cursor: 'pointer',
-                      flexShrink: 0,
-                      transition: 'all 0.15s ease'
+            {/* 展開時才顯示搜尋輸入框與關鍵字晶片 */}
+            {isSearchExpanded && (
+              <>
+                <form className="cbeta-search-input-wrapper" onSubmit={handleSearchSubmit}>
+                  <input 
+                    type="text" 
+                    className="cbeta-search-input"
+                    placeholder="輸入關鍵字，例如：地藏、鳩摩羅什、T0235"
+                    value={onlineSearchQuery}
+                    onFocus={() => {
+                      if (isCategoriesExpanded) setIsCategoriesExpanded(false);
                     }}
-                    title={`點擊立即搜尋：${q}`}
+                    onChange={(e) => {
+                      setOnlineSearchQuery(e.target.value);
+                      if (e.target.value.trim() && isCategoriesExpanded) {
+                        setIsCategoriesExpanded(false);
+                      }
+                      if (!e.target.value.trim() && isTextSearchActive) {
+                        handleClearSearch();
+                      }
+                    }}
+                  />
+                  <div className="cbeta-search-actions">
+                    {onlineSearchQuery && (
+                      <button 
+                        type="button" 
+                        className="cbeta-search-clear-btn" 
+                        onClick={handleClearSearch}
+                        title="結束/清除搜尋"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
+                    <button type="submit" className="cbeta-search-btn" disabled={isSearchingOnline} title="搜尋 CBETA 經典">
+                      {isSearchingOnline ? <span style={{ fontSize: '0.75rem' }}>...</span> : <Search size={20} />}
+                    </button>
+                  </div>
+                </form>
+
+                {/* 💡 近期 5 個搜尋關鍵字 Chip 標籤列 (單行、灰黑小字) */}
+                {recentSearches.length > 0 && (
+                  <div 
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '0.4rem', 
+                      marginTop: '0.55rem', 
+                      overflowX: 'auto', 
+                      whiteSpace: 'nowrap',
+                      paddingBottom: '0.15rem',
+                      width: '100%',
+                      boxSizing: 'border-box'
+                    }}
+                    className="custom-scrollbar"
                   >
-                    {q}
-                  </button>
-                ))}
-              </div>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted, #718096)', flexShrink: 0, opacity: 0.85 }}>
+                      近期搜尋：
+                    </span>
+                    {recentSearches.map((q, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          if (isCategoriesExpanded) setIsCategoriesExpanded(false);
+                          executeSearch(q);
+                        }}
+                        style={{
+                          fontSize: '0.76rem',
+                          color: 'var(--text-primary, #4a5568)',
+                          backgroundColor: 'var(--theme-accent-light, rgba(0, 0, 0, 0.04))',
+                          border: '1px solid var(--theme-accent-border, rgba(0, 0, 0, 0.12))',
+                          borderRadius: '12px',
+                          padding: '0.15rem 0.55rem',
+                          cursor: 'pointer',
+                          flexShrink: 0,
+                          transition: 'all 0.15s ease'
+                        }}
+                        title={`點擊立即搜尋：${q}`}
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
 
-            {/* 💡 上方加一條細細的分隔線 + 粗體圓體「+依類別查詢」動態開關 */}
+            {/* 💡 上方加一條細細的分隔線 + 置左對齊動態開關：「+ 依類別查詢」 */}
             {!isTextSearchActive && (
               <>
                 <div 
@@ -1415,14 +1456,14 @@ export function CbetaCatalogView({
                   style={{
                     height: '1px',
                     backgroundColor: 'var(--reader-border, rgba(0, 0, 0, 0.08))',
-                    marginTop: '1.2rem',
+                    marginTop: isSearchExpanded ? '1.1rem' : '0.6rem',
                     marginBottom: '0.6rem',
                     width: '100%'
                   }}
                 />
                 <div 
-                  className="cbeta-category-toggle"
-                  onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
+                  className="cbeta-section-toggle-header"
+                  onClick={handleToggleCategories}
                   title={isCategoriesExpanded ? '點擊收合類別查詢' : '點擊展開類別查詢'}
                 >
                   {isCategoriesExpanded ? (
@@ -1576,8 +1617,8 @@ export function CbetaCatalogView({
         {/* 滿版樹狀與層級內容區 (非搜尋模式且點選「+依類別查詢」後呈現) */}
         {!isTextSearchActive && isCategoriesExpanded && (
           <section className="cbeta-content-pane">
-            {/* 💡 僅在深入子層級 (historyIndex > 0) 時顯示麵包屑導航，根目錄不重複寫標題 */}
-            {historyIndex > 0 && (
+            {/* 💡 當有經文清單（包含「常用經典」與深層目錄）時，顯示麵包屑與批量下載工具列 */}
+            {(historyIndex > 0 || currentCategoryWorks.length > 0) && (
               <div className="cbeta-pane-header">
                 <div className="cbeta-breadcrumb-row">
                   {historyStack.slice(0, historyIndex + 1).map((node, index) => {
