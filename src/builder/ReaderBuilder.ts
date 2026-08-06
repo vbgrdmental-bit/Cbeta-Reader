@@ -452,11 +452,19 @@ export class ReaderBuilder {
             }
           });
 
-          // 💡 處理連結標籤 (a)
-          cleanClone.querySelectorAll('a').forEach(anchorEl => {
+          // 💡 1. 移除所有行號標籤 (.lb, [class*="lb"])，防範 CBETA 行號文字 (如 T13n0412_p0782b07) 混入正文
+          cleanClone.querySelectorAll('.lb, [class*="lb"]').forEach(lbEl => {
+            if (!lbEl.classList.contains('gaiji') && !lbEl.classList.contains('gaijiAnchor') && !lbEl.classList.contains('gaiji_note')) {
+              lbEl.remove();
+            }
+          });
+
+          // 💡 2. 處理連結標籤 (a) 與 校勘腳註標籤 (.noteAnchor, .note)
+          cleanClone.querySelectorAll('a, .note, [class*="noteAnchor"]').forEach(anchorEl => {
             // 💡 異體字 / 缺字 / 組字標籤 (如 <a class='gaijiAnchor' href='#CB24136'>[圭*頁]</a>)
             const isGaiji = anchorEl.classList.contains('gaijiAnchor') || 
                             anchorEl.classList.contains('gaiji') || 
+                            anchorEl.classList.contains('gaiji_note') ||
                             (anchorEl.textContent && anchorEl.textContent.startsWith('[') && anchorEl.textContent.endsWith(']'));
             
             if (isGaiji) {
@@ -467,6 +475,7 @@ export class ReaderBuilder {
             }
 
             const isFootnoteAnchor = anchorEl.classList.contains('noteAnchor') || 
+                                     anchorEl.classList.contains('note') ||
                                      anchorEl.getAttribute('href')?.startsWith('#note') || 
                                      anchorEl.getAttribute('href')?.startsWith('#cb_note') || 
                                      anchorEl.classList.contains('anchor') ||
@@ -477,6 +486,7 @@ export class ReaderBuilder {
               if (isPureLabel) {
                 anchorEl.remove();
               } else {
+                // 💡 若腳註標籤內包裹真實經文文字 (如 恒、𨪏)，替換為純文字節點，防止經文缺字！
                 const textNode = doc.createTextNode(text);
                 anchorEl.parentNode?.replaceChild(textNode, anchorEl);
               }
@@ -484,19 +494,6 @@ export class ReaderBuilder {
               const text = anchorEl.textContent || '';
               const textNode = doc.createTextNode(text);
               anchorEl.parentNode?.replaceChild(textNode, anchorEl);
-            }
-          });
-
-          cleanClone.querySelectorAll('.lb, .note, [class*="lb"]').forEach(child => {
-            if (!child.classList.contains('gaiji') && !child.classList.contains('gaijiAnchor') && !child.classList.contains('gaiji_note')) {
-              const text = child.textContent || '';
-              const isPureLabel = /^\[?\d+\]?$/.test(text.trim()) || /^\[?[＊*]\]?$/.test(text.trim()) || text.trim() === '註' || text.trim() === '校' || text.trim() === '';
-              if (isPureLabel) {
-                child.remove();
-              } else {
-                const textNode = doc.createTextNode(text);
-                child.parentNode?.replaceChild(textNode, child);
-              }
             }
           });
           
