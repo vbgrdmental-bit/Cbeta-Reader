@@ -123,11 +123,13 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
     <div className="toc-tree-node-wrapper">
       <div 
         className={`drawer-item toc-tree-item ${isSelfActive ? 'active' : ''}`}
+        onClick={() => onSelectTOC(item)}
         style={{
           paddingLeft: `${level * 1.0 + 0.8}rem`,
           display: 'flex',
           alignItems: 'center',
-          gap: '6px'
+          gap: '6px',
+          cursor: 'pointer'
         }}
       >
         {/* [+] / [−] 折疊按鈕 */}
@@ -168,13 +170,11 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
         <span 
           style={{ 
             flexGrow: 1, 
-            cursor: 'pointer', 
             overflow: 'hidden', 
             textOverflow: 'ellipsis', 
             whiteSpace: 'nowrap',
             fontWeight: level === 0 ? '600' : 'normal'
           }}
-          onClick={() => onSelectTOC(item)}
         >
           {item.title}
         </span>
@@ -1222,13 +1222,25 @@ export function ReaderView({
     setShowNavDrawer(false);
     setActiveSegmentId(targetSegId);
     resetToolbarTimeout();
-    
-    const targetJuan = tocItem.juan || currentJuanNum;
+
+    // 💡 核心極速修復：從 targetSegId 中精確解析出所屬卷號 (例: T0412_02_seg0001 -> 卷 2)
+    let targetJuan = tocItem.juan;
+    const parts = targetSegId.split('_');
+    if (parts.length >= 2) {
+      const parsedJuan = parseInt(parts[1], 10);
+      if (!isNaN(parsedJuan) && parsedJuan > 0) {
+        targetJuan = parsedJuan;
+      }
+    }
+    if (!targetJuan) targetJuan = currentJuanNum;
+
     if (targetJuan === currentJuanNum) {
-      // 同一卷：直接滾動
-      scrollToSegment(targetSegId);
+      // 同一卷：使用 setTimeout 確保 50ms 後平滑滾動至中央
+      setTimeout(() => {
+        scrollToSegment(targetSegId);
+      }, 50);
     } else {
-      // 跨卷：記錄待跳轉段落 ID，切換卷數，讓 useEffect 處理滾動
+      // 跨卷：記錄待跳轉段落 ID，切換卷數，由 useEffect 處理自動滾動
       pendingScrollSegmentIdRef.current = targetSegId;
       setCurrentJuanNum(targetJuan);
     }
