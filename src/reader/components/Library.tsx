@@ -138,6 +138,21 @@ export function Library({
   const [selectedExistingFolderId, setSelectedExistingFolderId] = useState<string>('');
   const batchFolderColor = '#8b7355';
 
+  // 💡 直接位於「我的書櫃」頂層的經書 ID 清單 (localStorage 持久化)
+  const [myBookshelfBookIds, setMyBookshelfBookIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('cbeta_my_bookshelf_book_ids');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const saveMyBookshelfBookIds = (ids: string[]) => {
+    setMyBookshelfBookIds(ids);
+    localStorage.setItem('cbeta_my_bookshelf_book_ids', JSON.stringify(ids));
+  };
+
   const formatEstimatedReadingTime = (cjkChars?: number) => {
     const chars = cjkChars || 2000;
     const totalMins = Math.max(1, Math.round(chars / 200));
@@ -499,19 +514,41 @@ export function Library({
     setSelectedBookIds([]);
   };
 
-  // 執行批量移動至目標資料夾 (targetFolderId 為 null 代表移至首頁根目錄)
+  // 執行批量移動至目標資料夾 (targetFolderId 為 null 代表移至首頁暫存；'virtual_my_folders' 代表移至我的書櫃頂層)
   const handleBatchMoveBooks = (targetFolderId: string | null) => {
     if (selectedBookIds.length === 0) return;
 
-    const updatedFolders = folders.map(f => {
-      if (f.id === targetFolderId) {
-        const combined = Array.from(new Set([...f.bookIds, ...selectedBookIds]));
-        return { ...f, bookIds: combined };
-      }
-      return { ...f, bookIds: f.bookIds.filter(id => !selectedBookIds.includes(id)) };
-    });
+    if (targetFolderId === 'virtual_my_folders') {
+      // 移入「我的書櫃」頂層
+      const updatedMyBookshelf = Array.from(new Set([...myBookshelfBookIds, ...selectedBookIds]));
+      saveMyBookshelfBookIds(updatedMyBookshelf);
+      // 從所有自訂子資料夾移出
+      const updatedFolders = folders.map(f => ({
+        ...f,
+        bookIds: f.bookIds.filter(id => !selectedBookIds.includes(id))
+      }));
+      saveFolders(updatedFolders);
+    } else if (!targetFolderId) {
+      // 移回首頁 (擺脫「我的書櫃」頂層與任何子資料夾)
+      saveMyBookshelfBookIds(myBookshelfBookIds.filter(id => !selectedBookIds.includes(id)));
+      const updatedFolders = folders.map(f => ({
+        ...f,
+        bookIds: f.bookIds.filter(id => !selectedBookIds.includes(id))
+      }));
+      saveFolders(updatedFolders);
+    } else {
+      // 移入特定的子資料夾
+      saveMyBookshelfBookIds(myBookshelfBookIds.filter(id => !selectedBookIds.includes(id)));
+      const updatedFolders = folders.map(f => {
+        if (f.id === targetFolderId) {
+          const combined = Array.from(new Set([...f.bookIds, ...selectedBookIds]));
+          return { ...f, bookIds: combined };
+        }
+        return { ...f, bookIds: f.bookIds.filter(id => !selectedBookIds.includes(id)) };
+      });
+      saveFolders(updatedFolders);
+    }
 
-    saveFolders(updatedFolders);
     setSelectedBookIds([]);
     setShowBatchMoveDialog(false);
   };
@@ -1066,7 +1103,8 @@ export function Library({
     loadAllHighlights();
   }, [booksUpdatedTrigger]);
 
-  const allInFolderBookIds = folders.flatMap(f => f.bookIds);
+  const subfolderBookIds = useMemo(() => folders.flatMap(f => f.bookIds), [folders]);
+  const allBookshelfBookIds = useMemo(() => Array.from(new Set([...myBookshelfBookIds, ...subfolderBookIds])), [myBookshelfBookIds, subfolderBookIds]);
   
   // 近期閱讀（最多 10 本）與我的最愛經典列表
   const recentReadsBooks = resumeBooks.slice(0, 10).map(item => item.book);
@@ -1133,7 +1171,9 @@ export function Library({
                       const f = folders.find(folder => folder.id === currentFolderId);
                       return f ? f.bookIds.includes(b.workId) : false;
                     })
-                  : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId))
+                  : (currentFolderId === 'virtual_my_folders'
+                      ? downloadedBooks.filter(b => myBookshelfBookIds.includes(b.workId))
+                      : downloadedBooks.filter(b => !allBookshelfBookIds.includes(b.workId)))
               )));
 
   const displayBooks = useMemo(() => {
@@ -2298,13 +2338,25 @@ export function Library({
                 請選擇要移入的目標資料夾：
               </p>
               
+              {/* 首頁 (暫存經典) */}
               <div 
                 className="folder-target-option"
                 onClick={() => movingFolderId ? handleMoveFolder(null) : handleBatchMoveBooks(null)}
               >
                 <Home size={18} style={{ color: 'var(--theme-accent)', flexShrink: 0 }} />
-                <span style={{ fontWeight: 600 }}>首頁</span>
+                <span style={{ fontWeight: 600 }}>首頁 (暫存經典)</span>
               </div>
+
+              {/* 移入我的書櫃頂層 */}
+              {!movingFolderId && (
+                <div 
+                  className="folder-target-option"
+                  onClick={() => handleBatchMoveBooks('virtual_my_folders')}
+                >
+                  <Folder size={18} style={{ color: '#8c4b27', flexShrink: 0 }} />
+                  <span style={{ fontWeight: 600 }}>我的書櫃 (頂層)</span>
+                </div>
+              )}
 
               {folders
                 .filter(f => movingFolderId ? f.id !== movingFolderId : true)

@@ -2943,3 +2943,34 @@ body.theme-dark .book-more-btn-topright:hover {
     line-height: 1.25 !important;
   }
 }
+
+/* 💡 長按觸發編輯模式：膠囊型底部懸浮控制列 (Floating Action Bar) */
+.batch-action-bar.pure-floating-overlay {
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: calc(100% - 32px) !important;
+  max-width: 520px !important;
+  background: var(--bg-card, #ffffff) !important;
+  color: var(--text-primary) !important;
+  border: 1.5px solid var(--theme-accent-border, rgba(140, 75, 39, 0.3)) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  z-index: 9999 !important;
+  padding: 0.7rem 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+}
+
+body.theme-ebony .batch-action-bar.pure-floating-overlay,
+body.theme-dark .batch-action-bar.pure-floating-overlay {
+  background: rgba(30, 36, 43, 0.94) !important;
+  color: #f0f4f8 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6) !important;
+}
