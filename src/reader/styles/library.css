@@ -3268,34 +3268,35 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   z-index: 15 !important;
 }
 
-/* 經典正中央頂部編號 Badge (如 T0251) */
+/* 經典正中央頂部編號 Badge (如 T0251，加大圖示方框) */
 .grid-book-badge-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 42px;
+  height: 42px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: #ffffff;
-  margin-top: 0.2rem;
-  margin-bottom: 0.15rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.2rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
   flex-shrink: 0;
   letter-spacing: 0.02em;
 }
 
-/* 經典正中央經名標題 (橫式排版 horizontal-tb，絕非直式) */
+/* 經典正中央經名標題 (字體加大，緊貼圖示方框下方，水平置中、垂直置上) */
 .grid-book-title {
   writing-mode: horizontal-tb !important;
   text-orientation: mixed !important;
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   color: var(--text-primary);
   line-height: 1.25;
-  margin-bottom: 0.1rem;
+  margin-top: 0.1rem;
+  margin-bottom: auto;
   padding: 0 0.1rem;
   word-break: break-word;
   text-align: center;
@@ -3306,15 +3307,17 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   width: 100%;
 }
 
-/* 經典正中央下方朝代/譯者/卷數 (字體加大，清晰可見，最多呈現 2 行) */
+/* 經典正中央下方朝代/譯者/卷數 (字體再加大，水平置中、垂直置下，最多 2 行) */
 .grid-book-meta {
   writing-mode: horizontal-tb !important;
-  font-size: 0.78rem !important;
-  color: var(--text-muted, #555);
+  font-size: 0.8rem !important;
+  color: var(--text-muted, #444);
   line-height: 1.25;
   text-align: center;
   padding: 0 0.1rem;
-  opacity: 0.92;
+  margin-top: auto;
+  margin-bottom: 0.1rem;
+  opacity: 0.95;
   width: 100%;
   word-break: break-word;
   white-space: normal;

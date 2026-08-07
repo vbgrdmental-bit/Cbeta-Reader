@@ -1098,7 +1098,7 @@ export function Library({
         : (currentFolderId === 'virtual_resume'
             ? resumeBooks.map(item => item.book)
             : sortBooksByWorkId(
-                currentFolderId
+                currentFolderId && currentFolderId !== 'virtual_my_folders'
                   ? downloadedBooks.filter(b => {
                       const f = folders.find(folder => folder.id === currentFolderId);
                       return f ? f.bookIds.includes(b.workId) : false;
