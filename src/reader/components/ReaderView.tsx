@@ -637,6 +637,34 @@ export function ReaderView({
             }
           }
 
+          // 💡 自動檢測：本地書的 TOC 是否包含重複綁定在同一個 seg0001 的舊版無效導航鏈結
+          const hasInvalidTocLinks = (() => {
+            if (!bookData.toc || !bookData.toc.items || bookData.toc.items.length <= 1) return false;
+            const segIds = bookData.toc.items.map((i: any) => i.startSegmentId).filter(Boolean);
+            if (segIds.length <= 2) return false;
+            const uniqueSegIds = new Set(segIds);
+            return uniqueSegIds.size === 1 || uniqueSegIds.size < Math.min(3, segIds.length);
+          })();
+
+          if (hasInvalidTocLinks && bookData.content) {
+            console.log(`[ReaderView] Book ${workId} has old invalid TOC links. Rebuilding navigation tree with title matching...`);
+            let rawToc: any[] = [];
+            try {
+              const mockRes = await fetch(`/mock/${workId}.json`);
+              if (mockRes.ok) {
+                const mockData = await mockRes.json();
+                rawToc = mockData.rawToc || [];
+              }
+            } catch {}
+            const { toc, navigation } = NavigationBuilder.buildNavigation(workId, bookData.content, rawToc);
+            bookData = {
+              ...bookData,
+              toc,
+              navigation
+            };
+            await saveBook(bookData);
+          }
+
           // 💡 核心極速體驗：只要本地已有經書，立即 0 秒開書！絕不因版號更新或網路延遲阻斷開書
           setBook(bookData);
 
