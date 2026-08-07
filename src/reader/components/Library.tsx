@@ -15,7 +15,7 @@ import { SearchPanel } from './SearchPanel';
 import '../styles/library.css';
 
 interface LibraryProps {
-  onSelectBook: (workId: string, segmentId?: string, searchQuery?: string) => void;
+  onSelectBook: (workId: string, segmentId?: string, searchQuery?: string, autoResumeMode?: 'resume' | 'restart') => void;
   booksUpdatedTrigger: number;
   settings: AppSettings;
   initialSearchQuery?: string;
@@ -1357,7 +1357,7 @@ export function Library({
                      currentFolderId === 'virtual_recent_reads' ? '近期閱讀' :
                      currentFolderId === 'virtual_favorites' ? '我的最愛' :
                      currentFolderId === 'virtual_highlights' ? '重點與筆記' :
-                     currentFolderId === 'virtual_my_folders' ? '我的資料夾' :
+                     currentFolderId === 'virtual_my_folders' ? '我的書櫃' :
                      getFolderPath(currentFolderId)}
                   </span>
                 </div>
@@ -1381,20 +1381,20 @@ export function Library({
                 <p>淨心小角落．閱讀大藏經</p>
               </div>
 
-              {/* 💡 首頁根目錄固定渲染 4 個系統固定資料夾（由左至右：我的資料夾、近期閱讀、我的最愛、重點與筆記） */}
+              {/* 💡 首頁根目錄固定渲染 4 個系統固定資料夾（由左至右：我的書櫃、近期閱讀、我的最愛、重點與筆記） */}
               <div className="folders-grid-container system-grid">
-                {/* 1. 我的資料夾 - 經典深琥珀色 (#8c4b27) */}
+                {/* 1. 我的書櫃 - 經典深琥珀色 (#8c4b27) */}
                 <div 
                   className="list-book-item list-folder-item system-folder-item"
                   onClick={() => navigateToFolderWithAnimation('virtual_my_folders')}
-                  title="點擊查看我的個人資料夾"
+                  title="點擊查看我的書櫃"
                 >
                   <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#8c4b27' }}>
                     <Folder size={15} color="#ffffff" />
                   </div>
                   <div className="list-folder-info">
-                    <div className="list-folder-title" title="我的資料夾">
-                      我的資料夾
+                    <div className="list-folder-title" title="我的書櫃">
+                      我的書櫃
                     </div>
                     <div className="list-folder-count-text">
                       {folders.filter(f => !f.parentId).length}個資料夾
@@ -2551,7 +2551,7 @@ export function Library({
                     const b = menuTargetBook;
                     setMenuTargetBook(null);
                     localStorage.removeItem(`reader_progress_${b.workId}`);
-                    onSelectBook(b.workId, '', '');
+                    onSelectBook(b.workId, '', '', 'restart');
                   }}
                   title="從頭開始閱讀 (清空歷史進度)"
                 >
@@ -2565,7 +2565,7 @@ export function Library({
                   onClick={() => {
                     const b = menuTargetBook;
                     setMenuTargetBook(null);
-                    onSelectBook(b.workId, '', '');
+                    onSelectBook(b.workId, '', '', 'resume');
                   }}
                   title="接續上一次的閱讀位置"
                 >

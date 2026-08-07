@@ -66,11 +66,13 @@ export function App() {
   };
 
   const [resetFolderTrigger, setResetFolderTrigger] = useState(0);
+  const [autoResumeMode, setAutoResumeMode] = useState<'resume' | 'restart' | null>(null);
 
-  const handleSelectBook = (workId: string, segmentId?: string, searchQuery?: string) => {
+  const handleSelectBook = (workId: string, segmentId?: string, searchQuery?: string, autoResume?: 'resume' | 'restart') => {
     setActiveBookId(workId);
     setActiveSegmentId(segmentId);
     setLastSearchQuery(searchQuery);
+    setAutoResumeMode(autoResume || null);
     setView('reader');
   };
 
@@ -78,6 +80,7 @@ export function App() {
     setView('library');
     setActiveBookId(null);
     setActiveSegmentId(undefined);
+    setAutoResumeMode(null);
     // 觸發書庫重新整理（以防在閱讀器中做了一些變動）
     setBooksUpdatedTrigger(prev => prev + 1);
     if (resetToRoot) {
@@ -124,6 +127,7 @@ export function App() {
         <ReaderView 
           workId={activeBookId}
           initialSegmentId={activeSegmentId}
+          autoResumeMode={autoResumeMode}
           settings={settings}
           onBackToLibrary={handleBackToLibrary}
           onSaveSettings={handleSaveSettings}

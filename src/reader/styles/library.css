@@ -2819,6 +2819,36 @@ body.theme-ebony .batch-btn-secondary:hover {
   background: var(--theme-accent-light, rgba(140, 75, 39, 0.08)) !important;
 }
 
+/* 烏木與深色主題下 .grid-book-card 特化 (取消白底，改為與深色背景融為一體的半透明底 + 簡潔白/淺邊框) */
+body.theme-ebony .grid-book-card,
+body.theme-dark .grid-book-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.theme-ebony .grid-book-card:hover,
+body.theme-dark .grid-book-card:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+body.theme-ebony .grid-book-title,
+body.theme-dark .grid-book-title {
+  color: #f0f4f8 !important;
+}
+
+body.theme-ebony .book-more-btn-topright,
+body.theme-dark .book-more-btn-topright {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+body.theme-ebony .book-more-btn-topright:hover,
+body.theme-dark .book-more-btn-topright:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
 /* 經典右上角「...」選項按鈕 */
 .book-more-btn-topright {
   position: absolute;

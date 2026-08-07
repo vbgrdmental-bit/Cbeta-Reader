@@ -18,6 +18,7 @@ import '../styles/reader.css';
 interface ReaderViewProps {
   workId: string;
   initialSegmentId?: string; // 外部傳入要跳轉的段落 ID
+  autoResumeMode?: 'resume' | 'restart' | null;
   settings: AppSettings;
   onBackToLibrary: (resetToRoot?: boolean) => void;
   onSaveSettings: (settings: AppSettings) => void;
@@ -208,6 +209,7 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
 export function ReaderView({ 
   workId, 
   initialSegmentId, 
+  autoResumeMode,
   settings, 
   onBackToLibrary, 
   onSaveSettings,
@@ -751,6 +753,30 @@ export function ReaderView({
               scrollToSegment(initialSegmentId);
               setActiveSegmentId(initialSegmentId);
             }, 300);
+          } else if (autoResumeMode === 'restart') {
+            // 💡 使用者於選單中明確點擊「從頭開始閱讀」：直接載入第 1 卷，免跳出確認彈窗
+            setCurrentJuanNum(1);
+          } else if (autoResumeMode === 'resume') {
+            // 💡 使用者於選單中明確點擊「接續閱讀」：直接載入歷史進度並自動跳轉，免跳出確認彈窗
+            const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
+            if (savedProgressStr) {
+              try {
+                const progress = JSON.parse(savedProgressStr);
+                const targetJuan = progress.juan || 1;
+                setCurrentJuanNum(targetJuan);
+                if (progress.segmentId) {
+                  setTimeout(() => {
+                    scrollToSegment(progress.segmentId);
+                    setActiveSegmentId(progress.segmentId);
+                  }, 350);
+                }
+              } catch (err) {
+                console.warn('Failed to parse saved progress for auto resume:', err);
+                setCurrentJuanNum(1);
+              }
+            } else {
+              setCurrentJuanNum(1);
+            }
           } else {
             // 💡 嘗試從 localStorage 載入此書的歷史閱讀進度
             const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
