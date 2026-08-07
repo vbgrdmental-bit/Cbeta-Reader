@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Plus, Check, AlertCircle, X, Download,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, FileText, Play
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, FileText, Play, RotateCcw
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
@@ -881,6 +881,22 @@ export function Library({
     }
   };
 
+  // 💡 執行批次刪除選取書籍
+  const handleBatchDeleteBooks = async () => {
+    if (selectedBookIds.length === 0) return;
+    if (!window.confirm(`確定要批次刪除選取的 ${selectedBookIds.length} 本經典嗎？刪除後若需要閱讀需重新下載。`)) return;
+    try {
+      for (const workId of selectedBookIds) {
+        await deleteBook(workId);
+      }
+      setSelectedBookIds([]);
+      setIsEditMode(false);
+      await loadLocalBooks();
+    } catch (e) {
+      console.error('Batch delete failed:', e);
+    }
+  };
+
   // 渲染下載步驟圖示
   const renderStepIcon = (targetStep: BuildStep, itemIndex: number, currentProgressStep: BuildStep) => {
     const stepsOrder: BuildStep[] = ['metadata', 'fetch_content', 'navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'];
@@ -1179,6 +1195,15 @@ export function Library({
             >
               <FolderPlus size={15} style={{ marginRight: 4 }} />
               批量移動至資料夾
+            </button>
+            <button 
+              className="batch-btn batch-btn-danger"
+              style={{ backgroundColor: '#bd3a3a', color: '#ffffff' }}
+              disabled={selectedBookIds.length === 0}
+              onClick={handleBatchDeleteBooks}
+            >
+              <Trash2 size={15} style={{ marginRight: 4 }} />
+              批次刪除書籍
             </button>
             <button 
               className="batch-btn batch-btn-done"
@@ -1695,17 +1720,7 @@ export function Library({
             {displayBooks.length > 0 && (
               <div className="books-grid-container">
                 {displayBooks.map((book) => {
-                  // 💡 取得閱讀進度
-                  const progressStr = localStorage.getItem(`reader_progress_${book.workId}`);
-                  let savedProgress: { juan: number; segmentId: string } | null = null;
-                  if (progressStr) {
-                    try {
-                      savedProgress = JSON.parse(progressStr);
-                    } catch {}
-                  }
-
                   const isSelected = selectedBookIds.includes(book.workId);
-                  const isFavorite = favoriteWorkIds.includes(book.workId);
 
                   return (
                     <div 
@@ -1729,27 +1744,15 @@ export function Library({
                       onTouchMove={handleTouchMove}
                       onTouchEnd={cancelLongPress}
                     >
-                      {/* 💡 左上角：非編輯模式顯示「愛心」；長按/編輯模式下愛心隱藏並顯示勾選框 (Checkbox) */}
-                      {isEditMode ? (
+                      {/* 💡 左上角：長按/編輯模式下顯示勾選框 (Checkbox) */}
+                      {isEditMode && (
                         <div 
                           className={`batch-checkbox grid-card-checkbox ${isSelected ? 'checked' : ''}`}
                           onClick={(e) => toggleSelectBook(book.workId, e)}
-                          title="勾選以進行批量移動"
+                          title="勾選以進行批量移動或批次刪除"
                         >
                           {isSelected && <Check size={12} />}
                         </div>
-                      ) : (
-                        <button 
-                          className="book-favorite-btn-topleft"
-                          onClick={(e) => toggleFavoriteBook(e, book.workId)}
-                          title={isFavorite ? "從「我的最愛」移除" : "加入「我的最愛」"}
-                        >
-                          <Heart 
-                            size={15} 
-                            fill={isFavorite ? "#e53e3e" : "none"} 
-                            color={isFavorite ? "#e53e3e" : "var(--text-muted, #888)"} 
-                          />
-                        </button>
                       )}
 
                       {/* 💡 右上角：統一置於右上角的「...」選項按鈕 */}
@@ -1772,17 +1775,6 @@ export function Library({
                       {/* 💡 正中央：經名標題 (如「般若波羅蜜多心經」) */}
                       <div className="grid-book-title" title={book.title}>
                         {book.title}
-                      </div>
-
-                      {/* 💡 正中央下方：朝代 / 譯者 / 卷數 (如「唐 玄奘·共1卷」) */}
-                      <div className="grid-book-meta">
-                        {currentFolderId === 'virtual_resume' && savedProgress ? (
-                          <span style={{ color: 'var(--theme-accent)', fontWeight: 600 }}>
-                            讀至第 {savedProgress.juan} 卷
-                          </span>
-                        ) : (
-                          `${book.creators} · 共 ${book.juansCount} 卷`
-                        )}
                       </div>
                     </div>
                   );
@@ -2407,40 +2399,103 @@ export function Library({
         </div>
       )}
 
-      {/* 📖 經典 「...」選項 Modal */}
+      {/* 📖 經典 「...」選項 Modal (上半部經文詳細資訊 + 下半部功能鍵) */}
       {menuTargetBook && (
         <div className="search-dialog-overlay" onClick={() => setMenuTargetBook(null)}>
-          <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '320px', borderRadius: '16px', padding: '1.2rem' }}>
-            <div style={{ fontSize: '1.02rem', fontWeight: 'bold', marginBottom: '0.8rem', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-              📖 {menuTargetBook.title}
-            </div>
+          <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '340px', borderRadius: '16px', padding: '1.2rem' }}>
+            
+            {/* 💡 【上半部份：經文資訊】 */}
+            <div>
+              {/* 經名標題 */}
+              <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.6rem', fontFamily: 'var(--font-serif)' }}>
+                📖 {menuTargetBook.title}
+              </div>
 
-            {/* 💡 順序前後移動控制列 (< 與 >) */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.8rem', paddingBottom: '0.6rem', borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.1))' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>排序前後移動：</span>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button 
-                  className="square-btn"
-                  style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  disabled={displayBooks.findIndex(b => b.workId === menuTargetBook.workId) <= 0}
-                  onClick={() => handleSwapBookOrder(menuTargetBook.workId, 'left')}
-                  title="向前移動經書順序 (<)"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <button 
-                  className="square-btn"
-                  style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  disabled={displayBooks.findIndex(b => b.workId === menuTargetBook.workId) >= displayBooks.length - 1}
-                  onClick={() => handleSwapBookOrder(menuTargetBook.workId, 'right')}
-                  title="向後移動經書順序 (>)"
-                >
-                  <ChevronRight size={18} />
-                </button>
+              {/* 排序前後移動控制列 (< 與 >) */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem', padding: '0.4rem 0.6rem', background: 'var(--theme-accent-light, rgba(0,0,0,0.04))', borderRadius: '8px' }}>
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>排序前後移動：</span>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    className="square-btn"
+                    style={{ width: '30px', height: '30px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    disabled={displayBooks.findIndex(b => b.workId === menuTargetBook.workId) <= 0}
+                    onClick={() => handleSwapBookOrder(menuTargetBook.workId, 'left')}
+                    title="向前移動經書順序 (<)"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button 
+                    className="square-btn"
+                    style={{ width: '30px', height: '30px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    disabled={displayBooks.findIndex(b => b.workId === menuTargetBook.workId) >= displayBooks.length - 1}
+                    onClick={() => handleSwapBookOrder(menuTargetBook.workId, 'right')}
+                    title="向後移動經書順序 (>)"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* 詳細經文資訊 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.83rem', color: 'var(--text-primary)', opacity: 0.9, padding: '0 0.2rem' }}>
+                <div><span style={{ color: 'var(--text-muted)' }}>譯者：</span>{menuTargetBook.creators || '未知'}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>經號：</span>CBETA No. {menuTargetBook.workId}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>部類：</span>{menuTargetBook.category || '大藏經部類'}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>冊別：</span>{menuTargetBook.vol || menuTargetBook.canon || 'CBETA 典籍'}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>字數：</span>{(menuTargetBook.cjkChars || 0).toLocaleString()} 字</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>預計閱讀時間：</span>{Math.max(1, Math.round((menuTargetBook.cjkChars || 2000) / 300))} 分鐘</div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {/* 💡 【細細分隔線】 */}
+            <div style={{ margin: '0.8rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.12))' }} />
+
+            {/* 💡 【下半部份：功能鍵】 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {/* 0. 若目前在非根目錄的子資料夾內，提供移出至上一層資料夾 */}
+              {currentFolderId && !currentFolderId.startsWith('virtual_') && (
+                <button 
+                  className="action-menu-item-btn"
+                  onClick={(e) => {
+                    handleRemoveFromFolder(e, menuTargetBook.workId);
+                    setMenuTargetBook(null);
+                  }}
+                >
+                  <ArrowUp size={16} />
+                  <span>移出至上一層資料夾</span>
+                </button>
+              )}
+
+              {/* 1. 移動至資料夾 */}
+              <button 
+                className="action-menu-item-btn"
+                onClick={() => {
+                  const b = menuTargetBook;
+                  setMenuTargetBook(null);
+                  setSelectedBookIds([b.workId]);
+                  setShowBatchMoveDialog(true);
+                }}
+              >
+                <FolderInput size={16} />
+                <span>移動至資料夾</span>
+              </button>
+
+              {/* 2. 加入 / 移出我的最愛 */}
+              <button 
+                className="action-menu-item-btn"
+                onClick={(e) => {
+                  toggleFavoriteBook(e, menuTargetBook.workId);
+                }}
+              >
+                <Heart 
+                  size={16} 
+                  fill={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "none"} 
+                  color={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "currentColor"} 
+                />
+                <span>{favoriteWorkIds.includes(menuTargetBook.workId) ? '移出「我的最愛」' : '加入「我的最愛」'}</span>
+              </button>
+
+              {/* 3. 刪除經典 */}
               {currentFolderId === 'virtual_resume' ? (
                 <button 
                   className="action-menu-item-btn delete-action"
@@ -2454,44 +2509,50 @@ export function Library({
                   <span>清除此書閱讀記錄</span>
                 </button>
               ) : (
-                <>
-                  {currentFolderId && (
-                    <button 
-                      className="action-menu-item-btn"
-                      onClick={(e) => {
-                        handleRemoveFromFolder(e, menuTargetBook.workId);
-                        setMenuTargetBook(null);
-                      }}
-                    >
-                      <ArrowUp size={16} />
-                      <span>移出至上一層資料夾</span>
-                    </button>
-                  )}
-                  <button 
-                    className="action-menu-item-btn"
-                    onClick={() => {
-                      const b = menuTargetBook;
-                      setMenuTargetBook(null);
-                      setSelectedBookIds([b.workId]);
-                      setShowBatchMoveDialog(true);
-                    }}
-                  >
-                    <FolderInput size={16} />
-                    <span>移動至資料夾</span>
-                  </button>
-                  <button 
-                    className="action-menu-item-btn delete-action"
-                    onClick={(e) => {
-                      const b = menuTargetBook;
-                      setMenuTargetBook(null);
-                      handleDeleteBook(e, b.workId);
-                    }}
-                  >
-                    <Trash2 size={16} />
-                    <span>刪除經典</span>
-                  </button>
-                </>
+                <button 
+                  className="action-menu-item-btn delete-action"
+                  onClick={(e) => {
+                    const b = menuTargetBook;
+                    setMenuTargetBook(null);
+                    handleDeleteBook(e, b.workId);
+                  }}
+                >
+                  <Trash2 size={16} />
+                  <span>刪除經典</span>
+                </button>
               )}
+
+              {/* 4. 開始閱讀：分二個按鈕「從頭閱讀」與「接續閱讀」 */}
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.2rem' }}>
+                <button 
+                  className="dialog-btn-cancel"
+                  style={{ flex: 1, padding: '0.65rem 0.4rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                  onClick={() => {
+                    const b = menuTargetBook;
+                    setMenuTargetBook(null);
+                    localStorage.removeItem(`reader_progress_${b.workId}`);
+                    onSelectBook(b.workId, '', '');
+                  }}
+                  title="從頭閱讀 (清空歷史進度)"
+                >
+                  <RotateCcw size={14} />
+                  <span>從頭閱讀</span>
+                </button>
+
+                <button 
+                  className="dialog-btn-confirm"
+                  style={{ flex: 1, padding: '0.65rem 0.4rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                  onClick={() => {
+                    const b = menuTargetBook;
+                    setMenuTargetBook(null);
+                    onSelectBook(b.workId, '', '');
+                  }}
+                  title="接續上一次的閱讀位置"
+                >
+                  <Play size={14} />
+                  <span>接續閱讀</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -2758,80 +2758,6 @@ body.theme-ebony .batch-btn-secondary:hover {
   border-radius: 6px !important;
 }
 
-/* Drag Over Line Indicator (拖曳中間發亮提示線) */
-.list-book-item {
-  position: relative;
-}
-
-.list-book-item.drag-over-top::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--theme-accent);
-  border-radius: 2px;
-  box-shadow: 0 0 6px var(--theme-accent);
-  z-index: 50;
-  animation: pulseGlow 0.8s infinite alternate;
-}
-
-.list-book-item.drag-over-bottom::before {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--theme-accent);
-  border-radius: 2px;
-  box-shadow: 0 0 6px var(--theme-accent);
-  z-index: 50;
-  animation: pulseGlow 0.8s infinite alternate;
-}
-
-@keyframes pulseGlow {
-  from {
-    opacity: 0.6;
-    box-shadow: 0 0 3px var(--theme-accent);
-  }
-  to {
-    opacity: 1;
-    box-shadow: 0 0 8px var(--theme-accent);
-  }
-}
-
-/* Drag Folder Hover Style (資料夾移入懸浮高亮) */
-.list-folder-item.drag-folder-hover {
-  background: var(--theme-accent-light, rgba(140, 75, 39, 0.08)) !important;
-  border: 1.5px dashed var(--theme-accent) !important;
-  transform: scale(1.02);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* 資料夾移入時右上角顯示一個 "+" 符號，提示使用者這將被「移入」 */
-.list-folder-item.drag-folder-hover::after {
-  content: '+';
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  width: 20px;
-  height: 20px;
-  background: var(--theme-accent);
-  color: #fff !important;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-  animation: bounceIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
 @keyframes bounceIn {
   from {
     transform: scale(0);
@@ -2843,327 +2769,8 @@ body.theme-ebony .batch-btn-secondary:hover {
   }
 }
 
-/* 💡 第一次進入空書架時的導引長條 (幼圓體) */
-.empty-download-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
-  height: 64px;
-  background: var(--theme-accent-light, rgba(242, 163, 27, 0.04));
-  border: 1.5px dashed var(--theme-accent-border, rgba(242, 163, 27, 0.2));
-  border-radius: 12px;
-  color: var(--theme-accent);
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  user-select: none;
-  box-sizing: border-box;
-  /* 💡 指定圓體字體 */
-  font-family: "STYuanti-TC-Regular", "STYuanti-TC", "STXihei", "Microsoft JhengHei", sans-serif;
-}
-
-.empty-download-bar:hover {
-  background: var(--theme-accent-light, rgba(242, 163, 27, 0.08));
-  border-color: var(--theme-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(140, 75, 39, 0.08);
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.75; }
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* 💡 搜尋頁輸入框與說明提示之大一統佈局 */
-.search-bar-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.search-info-tip {
-  width: 100%;
-  max-width: 440px;
-  text-align: left;
-  font-size: 0.78rem;
-  color: var(--text-muted, rgba(140, 75, 39, 0.6));
-  margin-top: 0.5rem;
-  opacity: 0.8;
-  letter-spacing: 0.04em;
-  padding-left: 0.5rem;
-  box-sizing: border-box;
-}
-
-body.theme-ebony .search-info-tip {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* 💡 手機版自適應：搜尋 bar 與左右邊緣保持 10% 空間 (左右各 5% padding) */
-@media (max-width: 600px) {
-  .search-bar-wrapper {
-    padding: 0 !important;
-  }
-  .search-panel-bar {
-    width: 100% !important;
-    max-width: none !important;
-  }
-  .search-info-tip {
-    width: 100% !important;
-    max-width: none !important;
-  }
-
-  /* 💡 手機端強效防止 iOS Safari 點擊 Input 時字體小於 16px 觸發的自動縮放畫面 */
-  input,
-  select,
-  textarea,
-  .settings-select,
-  .dialog-search-bar input {
-    font-size: 16px !important;
-  }
-
-  /* 💡 手機端 Modal 彈窗與收納對話框極致適應 */
-  .search-dialog-card {
-    width: 94% !important;
-    max-width: 380px !important;
-    max-height: 85vh !important;
-    border-radius: 14px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-  }
-
-  .dialog-header {
-    height: 48px !important;
-    padding: 0 1rem !important;
-  }
-
-  .dialog-header h3 {
-    font-size: 1.05rem !important;
-  }
-
-  .dialog-body {
-    padding: 1rem !important;
-    gap: 0.9rem !important;
-  }
-}
-
-/* 💡 長按觸發編輯模式：貼合 App 100% 寬度且黏性懸浮 (Sticky Floating Bar - 永不溢出螢幕) */
-.batch-action-bar.sticky-floating-bar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.6rem 0.75rem;
-  border-radius: 12px;
-  margin-bottom: 0.8rem;
-  background: var(--bg-paper, rgba(255, 255, 255, 0.95));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-.batch-action-bar.sticky-floating-bar .batch-select-count {
-  font-size: 0.82rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.batch-action-bar.sticky-floating-bar .batch-action-right {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.batch-action-bar.sticky-floating-bar .batch-btn {
-  font-size: 0.78rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-
-.batch-action-bar.sticky-floating-bar .batch-btn-done {
-  background-color: var(--theme-accent, #8c4b27);
-  color: #ffffff;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  transition: all 0.15s ease;
-}
-
-.batch-action-bar.sticky-floating-bar .batch-btn-done:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
-}
-
-/* 烏木 / 深色主題 Sticky Floating Bar 相容樣式 */
-body.theme-ebony .batch-action-bar.sticky-floating-bar,
-body.theme-dark .batch-action-bar.sticky-floating-bar {
-  background: rgba(24, 28, 32, 0.95) !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
-}
-
-body.theme-ebony .batch-action-bar.sticky-floating-bar .batch-select-count,
-body.theme-dark .batch-action-bar.sticky-floating-bar .batch-select-count {
-  color: #e2e8f0;
-}
-
-body.theme-ebony .batch-action-bar.sticky-floating-bar .batch-btn-secondary,
-body.theme-dark .batch-action-bar.sticky-floating-bar .batch-btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e2e8f0;
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-/* 柔和沙丘 Paper Theme Sticky Floating Bar 相容樣式 */
-body.theme-paper .batch-action-bar.sticky-floating-bar {
-  background: rgba(244, 238, 224, 0.95) !important;
-  border-color: rgba(140, 75, 39, 0.2) !important;
-}/* 💡 長按觸發編輯模式：純 Absolute Overlay 懸浮工具列 (不佔空間，首頁完全不下移) */
-.batch-action-bar.pure-floating-overlay {
-  /* 💡 使用 absolute 定位對齊 .library-container 容器，左右留白 0.75rem 與卡片完全對齊，絕不偏右跑版 */
-  position: absolute;
-  top: calc(56px + env(safe-area-inset-top, 0px) + 0.4rem);
-  left: 0.75rem;
-  right: 0.75rem;
-  width: auto;
-  box-sizing: border-box;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.55rem 0.75rem;
-  border-radius: 12px;
-  background: var(--bg-paper, rgba(255, 255, 255, 0.97));
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.batch-action-bar.pure-floating-overlay .batch-select-count {
-  font-size: 0.82rem;
-  font-weight: 500;
-  white-space: nowrap;
-  color: var(--text-primary, #333);
-}
-
-.batch-action-bar.pure-floating-overlay .batch-action-right {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.batch-action-bar.pure-floating-overlay .batch-btn {
-  font-size: 0.78rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: 6px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.batch-action-bar.pure-floating-overlay .batch-btn-done {
-  background-color: var(--theme-accent, #8c4b27);
-  color: #ffffff;
-  border: none;
-  font-weight: 600;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-}
-
-.batch-action-bar.pure-floating-overlay .batch-btn-done:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
-}
-
-/* 烏木 / 深色主題 Pure Floating Overlay 相容樣式 */
-body.theme-ebony .batch-action-bar.pure-floating-overlay,
-body.theme-dark .batch-action-bar.pure-floating-overlay {
-  background: rgba(24, 28, 32, 0.97) !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5) !important;
-}
-
-body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-select-count,
-body.theme-dark .batch-action-bar.pure-floating-overlay .batch-select-count {
-  color: #e2e8f0;
-}
-
-body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-btn-secondary,
-body.theme-dark .batch-action-bar.pure-floating-overlay .batch-btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e2e8f0;
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-body.theme-ebony .batch-action-bar.pure-floating-overlay .batch-btn-secondary:hover,
-body.theme-dark .batch-action-bar.pure-floating-overlay .batch-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-/* 💡 首頁頂部控制列 CBETA 綠色圓體粗體「C」字按鈕：與「家」擁有完全相同的圓形底座背景 */
-.library-header-btn.cbeta-c-btn {
-  background: rgba(140, 75, 39, 0.12);
-}
-
-.library-header-btn.cbeta-c-btn:hover {
-  background: rgba(140, 75, 39, 0.18);
-}
-
-body.theme-ebony .library-header-btn.cbeta-c-btn,
-body.theme-dark .library-header-btn.cbeta-c-btn {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-body.theme-ebony .library-header-btn.cbeta-c-btn:hover,
-body.theme-dark .library-header-btn.cbeta-c-btn:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
-
-.cbeta-header-c-text {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #059669;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-weight: 800;
-  font-size: 1.25rem;
-  line-height: 1;
-  user-select: none;
-  transition: transform 0.18s ease, color 0.18s ease;
-}
-
-.library-header-btn:hover .cbeta-header-c-text {
-  transform: scale(1.08);
-  color: #047857;
-}
-
-body.theme-ebony .cbeta-header-c-text,
-body.theme-dark .cbeta-header-c-text {
-  color: #10b981;
-}
-
-body.theme-ebony .library-header-btn:hover .cbeta-header-c-text,
-body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
-  color: #34d399;
-}
-
 /* ==========================================================================
-   3 欄經典網格卡片佈局 (同一行三本書，從左至右、從上至下，視覺媲美圖1系統資料夾)
+   3 欄經典網格卡片佈局 (同一行三本書，從左至右、從上至下，極簡正方形卡片)
    ========================================================================== */
 .books-grid-container {
   display: grid;
@@ -3186,12 +2793,12 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   text-align: center;
   background: var(--bg-card, rgba(255, 255, 255, 0.75));
   border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
   border-radius: 14px;
-  padding: 0.55rem 0.35rem 0.45rem 0.35rem;
+  padding: 0.65rem 0.4rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
   box-sizing: border-box;
@@ -3212,35 +2819,13 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   background: var(--theme-accent-light, rgba(140, 75, 39, 0.08)) !important;
 }
 
-/* 經典左上角愛心按鈕 (長按/編輯模式下隱藏) */
-.book-favorite-btn-topleft {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  z-index: 10;
-  transition: transform 0.15s ease;
-}
-
-.book-favorite-btn-topleft:hover {
-  transform: scale(1.18);
-}
-
 /* 經典右上角「...」選項按鈕 */
 .book-more-btn-topright {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 22px;
-  height: 22px;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3262,41 +2847,40 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
 /* 編輯模式下左上角 Checkbox 特化 */
 .grid-card-checkbox {
   position: absolute !important;
-  top: 5px !important;
-  left: 5px !important;
+  top: 6px !important;
+  left: 6px !important;
   margin: 0 !important;
   z-index: 15 !important;
 }
 
 /* 經典正中央頂部編號 Badge (如 T0251) */
 .grid-book-badge-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   color: #ffffff;
   margin-top: 0.2rem;
-  margin-bottom: 0.25rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+  margin-bottom: 0.4rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
   flex-shrink: 0;
   letter-spacing: 0.02em;
 }
 
-/* 經典正中央經名標題 (字體調小 1 級至 0.92rem，緊貼圖示方框靠上排列) */
+/* 經典正中央經名標題 (極簡經典卡片) */
 .grid-book-title {
   writing-mode: horizontal-tb !important;
   text-orientation: mixed !important;
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 0.92rem !important;
+  font-size: 0.95rem !important;
   color: var(--text-primary);
-  line-height: 1.25;
-  margin-top: 0;
-  margin-bottom: 0.2rem;
+  line-height: 1.3;
+  margin: 0;
   padding: 0 0.1rem;
   word-break: break-word;
   text-align: center;
@@ -3308,54 +2892,24 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   width: 100%;
 }
 
-/* 經典正中央下方朝代/譯者/卷數 (緊貼經名標題靠上連續流暢排列，保留 2 行，過長用...代替) */
-.grid-book-meta {
-  writing-mode: horizontal-tb !important;
-  font-size: 0.76rem !important;
-  color: var(--text-muted, #666);
-  line-height: 1.2;
-  text-align: center;
-  padding: 0 0.1rem;
-  margin-top: 0;
-  margin-bottom: 0.1rem;
-  opacity: 0.88;
-  width: 100%;
-  word-break: break-word;
-  white-space: normal;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* 📱 手機端 (max-width: 600px) 特化響應式微調：防止 3 欄 1:1 卡片垂直空間擠壓造成底部文字被遮擋 */
+/* 📱 手機端 (max-width: 600px) 特化響應式微調 */
 @media (max-width: 600px) {
   .grid-book-card {
-    padding: 0.35rem 0.2rem 0.25rem 0.2rem !important;
-    min-height: 116px !important;
-    height: auto !important;
-    aspect-ratio: auto !important;
+    padding: 0.45rem 0.25rem !important;
+    aspect-ratio: 1 / 1 !important;
   }
 
   .grid-book-badge-icon {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 0.68rem !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.72rem !important;
     margin-top: 0.1rem !important;
-    margin-bottom: 0.15rem !important;
-    border-radius: 7px !important;
+    margin-bottom: 0.25rem !important;
+    border-radius: 8px !important;
   }
 
   .grid-book-title {
-    font-size: 0.8rem !important;
-    line-height: 1.2 !important;
-    margin-bottom: 0.1rem !important;
-  }
-
-  .grid-book-meta {
-    font-size: 0.68rem !important;
-    line-height: 1.15 !important;
-    margin-bottom: 0.05rem !important;
+    font-size: 0.85rem !important;
+    line-height: 1.25 !important;
   }
 }
