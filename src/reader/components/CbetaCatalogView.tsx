@@ -1357,7 +1357,7 @@ export function CbetaCatalogView({
                 <Plus size={18} style={{ strokeWidth: 2.5, flexShrink: 0 }} />
               )}
               <span>
-                檢索<span className="cbeta-green-brand">CBETA</span> 並下載書籍
+                搜尋 <span className="cbeta-green-brand">CBETA</span> 電子佛典
               </span>
             </div>
 
