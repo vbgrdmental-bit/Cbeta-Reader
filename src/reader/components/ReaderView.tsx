@@ -1322,10 +1322,41 @@ export function ReaderView({
   if (!book) {
     return (
       <div 
-        className={`reader-container theme-${settings.theme}`} 
-        style={{ display: 'flex', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', color: 'var(--reader-text)', background: 'var(--reader-bg)' }}
+        className={`reader-container theme-${settings.theme} animate-fade-in`} 
+        style={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          height: '100%', 
+          width: '100%', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          color: 'var(--reader-text, #333)', 
+          background: 'var(--reader-bg, #fdfbf7)',
+          gap: '1.2rem',
+          padding: '2rem'
+        }}
       >
-        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem' }}>經典載入中...</p>
+        <div 
+          className="loading-spinner"
+          style={{
+            width: '32px',
+            height: '32px',
+            border: '3px solid rgba(140, 75, 39, 0.15)',
+            borderTopColor: 'var(--theme-accent, #8b7355)',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite'
+          }}
+        />
+        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', color: 'var(--text-primary)', margin: 0 }}>
+          經典載入中，請稍候...
+        </p>
+        <button 
+          className="batch-btn batch-btn-secondary"
+          onClick={() => onBackToLibrary(true)}
+          style={{ fontSize: '0.82rem', padding: '0.35rem 0.85rem', marginTop: '0.5rem', borderRadius: '16px', opacity: 0.85 }}
+        >
+          返回書架
+        </button>
       </div>
     );
   }

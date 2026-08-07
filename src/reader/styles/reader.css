@@ -11,6 +11,11 @@
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Kindle-style Content Area */
 .reader-content-area {
   flex-grow: 1;
