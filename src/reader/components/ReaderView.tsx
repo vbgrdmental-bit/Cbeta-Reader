@@ -2061,7 +2061,7 @@ export function ReaderView({
                   ) : null;
                 })()}
                 <div className="copyright-text">
-                  經典來源：中華電子佛典協會 (CBETA)
+                  經典來源：財團法人佛教電子佛典基金會(CBETA)
                 </div>
               </div>
             )}
