@@ -3186,12 +3186,12 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   text-align: center;
   background: var(--bg-card, rgba(255, 255, 255, 0.75));
   border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
   border-radius: 14px;
-  padding: 0.5rem 0.35rem 0.45rem 0.35rem;
+  padding: 0.55rem 0.35rem 0.45rem 0.35rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
   box-sizing: border-box;
@@ -3280,22 +3280,23 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   font-size: 0.74rem;
   color: #ffffff;
   margin-top: 0.2rem;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.25rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
   flex-shrink: 0;
   letter-spacing: 0.02em;
 }
 
-/* 經典正中央經名標題 (字體大小與「我的資料夾」1.05rem 100% 一致) */
+/* 經典正中央經名標題 (字體調小 1 級至 0.92rem，緊貼圖示方框靠上排列) */
 .grid-book-title {
   writing-mode: horizontal-tb !important;
   text-orientation: mixed !important;
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 1.05rem !important;
+  font-size: 0.92rem !important;
   color: var(--text-primary);
   line-height: 1.25;
-  margin-bottom: 0.15rem;
+  margin-top: 0;
+  margin-bottom: 0.2rem;
   padding: 0 0.1rem;
   word-break: break-word;
   text-align: center;
@@ -3307,17 +3308,17 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   width: 100%;
 }
 
-/* 經典正中央下方朝代/譯者/卷數 (保留 2 行，過長用...代替) */
+/* 經典正中央下方朝代/譯者/卷數 (緊貼經名標題靠上連續流暢排列，保留 2 行，過長用...代替) */
 .grid-book-meta {
   writing-mode: horizontal-tb !important;
-  font-size: 0.78rem !important;
+  font-size: 0.76rem !important;
   color: var(--text-muted, #666);
-  line-height: 1.25;
+  line-height: 1.2;
   text-align: center;
   padding: 0 0.1rem;
   margin-top: 0;
-  margin-bottom: 0.05rem;
-  opacity: 0.9;
+  margin-bottom: 0.1rem;
+  opacity: 0.88;
   width: 100%;
   word-break: break-word;
   white-space: normal;
