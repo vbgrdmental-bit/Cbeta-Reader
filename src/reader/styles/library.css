@@ -3035,14 +3035,12 @@ body.theme-paper .batch-action-bar.sticky-floating-bar {
   border-color: rgba(140, 75, 39, 0.2) !important;
 }/* 💡 長按觸發編輯模式：純 Absolute Overlay 懸浮工具列 (不佔空間，首頁完全不下移) */
 .batch-action-bar.pure-floating-overlay {
-  /* 💡 使用 fixed 定位脫離所有 stacking context，並限制 max-width 不超過 App 容器寬度 (480px) */
-  position: fixed;
-  /* header 高度 = calc(56px + safe-area)，工具列貼在 header 正下方 */
-  top: calc(56px + env(safe-area-inset-top, 0px) + 0.5rem);
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 1.5rem);
-  max-width: calc(480px - 1.5rem);
+  /* 💡 使用 absolute 定位對齊 .library-container 容器，左右留白 0.75rem 與卡片完全對齊，絕不偏右跑版 */
+  position: absolute;
+  top: calc(56px + env(safe-area-inset-top, 0px) + 0.4rem);
+  left: 0.75rem;
+  right: 0.75rem;
+  width: auto;
   box-sizing: border-box;
   z-index: 999;
   display: flex;
