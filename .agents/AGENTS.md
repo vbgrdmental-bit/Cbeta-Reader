@@ -4,6 +4,18 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 ---
 
+## 0. Core Doctrine: Zero Text Tampering Policy (絕不篡改、精簡或摘要經文原則)
+
+> [!IMPORTANT]
+> **最高核心原則：絕不篡改、精簡、摘要或產生任何假的經文內容！**
+> 1. **CBETA 正統經典完整性**：本 App 以「CBETA」為名，核心宗旨為提供讀者 100% 忠實、原汁原味、完全無縮減、無摘要、無篡改的 CBETA 大藏經原文。
+> 2. **嚴禁任何精簡/摘要/假文字**：
+>    - **絕對禁止** 產生任何「模擬段落」、「經文預設段落」、「精簡示範版」或「摘要版」文字。
+>    - **寧可不提供內容**（跳出連線超時提示並引導讀者稍後重試），也**絕對不可**提供任何經簡化、摘錄、不完整或經修改的偽段落。
+> 3. **離線套件標準**：所有置於離線快取之經文套件，必須是 100% 來自 CBETA 官方原版且經 Parser 完全解析校對之真跡正文（包含所有卷數、品名、序文與完整段落）。
+
+---
+
 ## 1. Git Branching & Local Testing Workflow
 
 - **Rules**:

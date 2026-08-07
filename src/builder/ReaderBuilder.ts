@@ -129,8 +129,8 @@ export class ReaderBuilder {
           }
 
           if (!success) {
-            console.error(`[Juan ${j}] All 3 attempts failed. Using fallback.`);
-            juansMap.set(j, this.generateFallbackSegments(workId, j));
+            console.error(`[Juan ${j}] All 3 attempts failed to fetch from CBETA.`);
+            throw new Error(`無法向 CBETA 伺服器獲取《${workId}》第 ${j} 卷正統經文。本 App 堅持 100% CBETA 原文正統，絕不提供任何簡化或摘要內容。請檢查網路連線後重試。`);
           }
 
           completedJuansCount++;
@@ -149,9 +149,13 @@ export class ReaderBuilder {
 
       // 按卷數 1 ~ juansCount 正確順序排列
       for (let j = 1; j <= juansCount; j++) {
+        const segs = juansMap.get(j);
+        if (!segs || segs.length === 0) {
+          throw new Error(`《${workId}》第 ${j} 卷經文內容為空，未能成功取得 CBETA 官方原版正文。`);
+        }
         juans.push({
           juan: j,
-          segments: juansMap.get(j) || this.generateFallbackSegments(workId, j)
+          segments: segs
         });
       }
 
@@ -188,26 +192,9 @@ export class ReaderBuilder {
         console.error(`Local fallback also failed for ${workId}:`, fallbackError);
       }
 
-      // 如果不是預設經書，或者 Mock 載入也失敗，則產生模擬的 Fallback 資料以防止程式崩潰
-      const fallbackJuans: JuanData[] = [];
-      for (let j = 1; j <= juansCount; j++) {
-        fallbackJuans.push({
-          juan: j,
-          segments: this.generateFallbackSegments(workId, j)
-        });
-      }
-
-      if (onProgress) {
-        onProgress(100);
-      }
-
-      return {
-        content: {
-          workId,
-          juans: fallbackJuans
-        },
-        rawToc: []
-      };
+      // 💡 遵循最高核心原則：絕不產生任何「假段落」、「預設段落」或「摘要文字」！
+      // 寧可跳出網路連線超時提示，也絕對不提供任何非 CBETA 官方原版的文字內容。
+      throw new Error(`無法連線至 CBETA 伺服器獲取《${workId}》正統經文。本 App 堅持 100% CBETA 原版原汁原味，絕不提供任何簡化、摘要或替代文字。請檢查網路連線後重試。`);
     }
   }
 
@@ -625,24 +612,9 @@ export class ReaderBuilder {
 
     // 如果沒有解析出段落，回傳 fallback
     if (segments.length === 0) {
-      return this.generateFallbackSegments(workId, juan);
+      throw new Error(`無法解析《${workId}》第 ${juan} 卷之 CBETA HTML 內文。`);
     }
 
     return segments;
-  }
-
-  /**
-   * 生成 Fallback 模擬段落以確保容錯
-   */
-  private static generateFallbackSegments(workId: string, juan: number): TextSegment[] {
-    return [
-      {
-        id: `${workId}_${juan.toString().padStart(2, '0')}_seg0001`,
-        lb: `${workId}p0001a01`,
-        juan,
-        content: `（經典載入中，或目前為離線閱讀模式。此處為《${workId}》第 ${juan} 卷經文預設段落）`,
-        originalContent: `<p>（經典載入中，或目前為離線閱讀模式。此處為《${workId}》第 ${juan} 卷經文預設段落）</p>`
-      }
-    ];
   }
 }

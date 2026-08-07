@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Paintbrush, Search, Clock, ArrowLeft, Edit3, Trash2, FileText
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Paintbrush, Search, Clock, ArrowLeft, Edit3, Trash2, FileText, AlertCircle
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment, BookContent, JuanData } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
@@ -216,6 +216,7 @@ export function ReaderView({
   searchQuery
 }: ReaderViewProps) {
   const [book, setBook] = useState<ReaderPackage | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [currentJuanNum, setCurrentJuanNum] = useState<number>(1);
   const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null);
   
@@ -805,6 +806,7 @@ export function ReaderView({
         } else {
           // 💡 若 IndexedDB 中尚無此經書數據（如直接點擊未下載的經典或剛重置快取），線上動態構建並渲染經典
           console.log(`[ReaderView] Book ${workId} not found in IndexedDB. Building package...`);
+          let bookTitle = workId;
           try {
             const { ReferenceBuilder } = await import('../../builder/ReferenceBuilder');
             const { SearchIndexBuilder } = await import('../../builder/SearchIndexBuilder');
@@ -814,6 +816,7 @@ export function ReaderView({
             const targetMeta = searchRes && searchRes.length > 0 ? searchRes[0] : null;
             const juansCount = targetMeta?.juansCount || 1;
             const title = targetMeta?.title || workId;
+            bookTitle = title;
             const creators = targetMeta?.creators || 'CBETA 電子佛典';
 
             let content: BookContent | null = null;
@@ -863,19 +866,19 @@ export function ReaderView({
               embedding
             };
 
-            const isFallback = content.juans.some((j: JuanData) => j.segments.some((s: TextSegment) => s.content.includes('經文預設段落')));
-            if (!isFallback) {
-              await saveBook(newBook);
-            }
+            await saveBook(newBook);
             setBook(newBook);
+            setLoadError(null);
             setCurrentJuanNum(1);
             console.log(`[ReaderView] Successfully built and loaded package for ${workId}`);
-          } catch (buildErr) {
+          } catch (buildErr: any) {
             console.error(`[ReaderView] Failed to build package on-the-fly for ${workId}:`, buildErr);
+            setLoadError(buildErr?.message || `無法載入《${bookTitle}》經文。本 App 堅持 100% CBETA 原文正統，絕不提供任何簡化或摘要內容。請檢查網路連線後重試。`);
           }
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error('Failed to load book content:', e);
+        setLoadError(e?.message || `載入經文發生錯誤，請檢查網路連線或重試。`);
       }
     };
 
@@ -1458,30 +1461,61 @@ export function ReaderView({
           color: 'var(--reader-text, #333)', 
           background: 'var(--reader-bg, #fdfbf7)',
           gap: '1.2rem',
-          padding: '2rem'
+          padding: '2rem',
+          textAlign: 'center'
         }}
       >
-        <div 
-          className="loading-spinner"
-          style={{
-            width: '32px',
-            height: '32px',
-            border: '3px solid rgba(140, 75, 39, 0.15)',
-            borderTopColor: 'var(--theme-accent, #8b7355)',
-            borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite'
-          }}
-        />
-        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', color: 'var(--text-primary)', margin: 0 }}>
-          經典載入中，請稍候...
-        </p>
-        <button 
-          className="batch-btn batch-btn-secondary"
-          onClick={() => onBackToLibrary(true)}
-          style={{ fontSize: '0.82rem', padding: '0.35rem 0.85rem', marginTop: '0.5rem', borderRadius: '16px', opacity: 0.85 }}
-        >
-          返回書架
-        </button>
+        {loadError ? (
+          <>
+            <AlertCircle size={40} style={{ color: '#bd3a3a' }} />
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem', color: 'var(--text-primary)', margin: 0, maxWidth: '420px', lineHeight: 1.6 }}>
+              {loadError}
+            </p>
+            <div style={{ display: 'flex', gap: '0.8rem', marginTop: '0.5rem' }}>
+              <button 
+                className="batch-btn batch-btn-primary"
+                onClick={() => {
+                  setLoadError(null);
+                  window.location.reload();
+                }}
+                style={{ fontSize: '0.85rem', padding: '0.4rem 1rem', borderRadius: '16px' }}
+              >
+                重新嘗試連線
+              </button>
+              <button 
+                className="batch-btn batch-btn-secondary"
+                onClick={() => onBackToLibrary(true)}
+                style={{ fontSize: '0.85rem', padding: '0.4rem 1rem', borderRadius: '16px' }}
+              >
+                返回書架
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div 
+              className="loading-spinner"
+              style={{
+                width: '32px',
+                height: '32px',
+                border: '3px solid rgba(140, 75, 39, 0.15)',
+                borderTopColor: 'var(--theme-accent, #8b7355)',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }}
+            />
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', color: 'var(--text-primary)', margin: 0 }}>
+              經典載入中，請稍候...
+            </p>
+            <button 
+              className="batch-btn batch-btn-secondary"
+              onClick={() => onBackToLibrary(true)}
+              style={{ fontSize: '0.82rem', padding: '0.35rem 0.85rem', marginTop: '0.5rem', borderRadius: '16px', opacity: 0.85 }}
+            >
+              返回書架
+            </button>
+          </>
+        )}
       </div>
     );
   }
