@@ -6,12 +6,27 @@ export const getApiUrl = (path: string): string => {
   return `/api-cbeta${path}`;
 };
 
-// 帶超時保護的 fetch 輔助函式 (預設 3.5 秒超時，防止 CBETA 伺服器回應過慢卡死 UI)
+// 帶超時保護與有禮貌 Client 身份識別的 fetch 輔助函式 (預設 3.5 秒超時)
 export const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeoutMs = 3500): Promise<Response | null> => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
+  
+  // 💡 大義名分與有禮貌身份識別標頭 (Polite Client Identity Headers)
+  // 讓 CBETA / Cloudflare 系統管理員能清楚識別流量來源為正統開源 CBETA Reader 閱讀器，避免被誤判為匿名爬蟲
+  const clientHeaders = {
+    'X-Client-App': 'CBETA-Reader-App',
+    'X-Client-Version': BUILDER_VERSION,
+    'X-Client-Purpose': 'Scripture Reading (Polite Rate Limited Client)',
+    'X-Requested-With': 'CBETA-Reader-WebClient'
+  };
+
+  const mergedHeaders = {
+    ...clientHeaders,
+    ...(options.headers || {})
+  };
+
   try {
-    const res = await fetch(url, { ...options, signal: controller.signal });
+    const res = await fetch(url, { ...options, headers: mergedHeaders, signal: controller.signal });
     clearTimeout(timer);
     return res.ok ? res : null;
   } catch (err) {
