@@ -68,8 +68,8 @@ export class ReaderBuilder {
     const startTime = Date.now();
 
     try {
-      // 💡 安全高效併行池：保持同時最多 6 個 HTTP 管道流暢發送，完全避免觸發 CBETA 429 限流拒絕
-      const CONCURRENCY = 6;
+      // 💡 禮貌型請求防線流併行池：維持 2 線程平滑請求 + 100ms 微微延遲，避免觸發 CBETA/Cloudflare WAF 機器人防禦 (429/403)
+      const CONCURRENCY = 2;
       const queue = Array.from({ length: juansCount }, (_, idx) => idx + 1);
 
       const worker = async () => {
@@ -77,17 +77,26 @@ export class ReaderBuilder {
           const j = queue.shift();
           if (!j) break;
 
-          const relativeUrl = getApiUrl(`/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1&_t=${Date.now()}`);
-          const directUrl = `https://cbdata.dila.edu.tw/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1&_t=${Date.now()}`;
+          // 禮貌型微頻率延遲 (100ms)
+          await new Promise(r => setTimeout(r, 100));
+
+          const cleanPath = `/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1`;
+          const relativeUrl = getApiUrl(cleanPath);
+          const directUrl = `https://cbdata.dila.edu.tw${cleanPath}`;
           
           let success = false;
           // 自動重試最多 3 次
           for (let attempt = 1; attempt <= 3; attempt++) {
             try {
               const timeoutMs = attempt === 1 ? 6500 : 10000;
-              let response = await fetchWithTimeout(relativeUrl, { cache: 'reload' }, timeoutMs);
+              // 第一次嘗試允許 Cloudflare CDN 快取命中；後續重試才加強 reload
+              const fetchOptions = attempt === 1 ? {} : { cache: 'reload' as RequestCache };
+              const currentRelUrl = attempt === 1 ? relativeUrl : `${relativeUrl}&_t=${Date.now()}`;
+              const currentDirUrl = attempt === 1 ? directUrl : `${directUrl}&_t=${Date.now()}`;
+
+              let response = await fetchWithTimeout(currentRelUrl, fetchOptions, timeoutMs);
               if (!response || !response.ok) {
-                response = await fetchWithTimeout(directUrl, { cache: 'reload' }, timeoutMs);
+                response = await fetchWithTimeout(currentDirUrl, fetchOptions, timeoutMs);
               }
 
               if (response && response.ok) {
