@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Paintbrush, Search, Clock, ArrowLeft, Edit3, Trash2, FileText
 } from 'lucide-react';
-import type { ReaderPackage, TextSegment } from '../../types/book';
+import type { ReaderPackage, TextSegment, BookContent, JuanData } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
@@ -654,18 +654,50 @@ export function ReaderView({
               const safeJuansCount = (bookData.metadata.juansCount && bookData.metadata.juansCount > 0)
                 ? bookData.metadata.juansCount 
                 : (bookData.content.juans.length > 0 ? bookData.content.juans.length : 1);
-              const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
-              const { content, rawToc } = await ReaderBuilder.buildContent(workId, safeJuansCount);
-              const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
               
-              const updatedBook = {
+              let fetchedContent: BookContent | null = null;
+              let fetchedRawToc: any[] = [];
+
+              // 1. 優先嘗試讀取本地 pre-built mock 經典檔案（如 /mock/T0779.json, /mock/T0251.json, /mock/T0412.json, /mock/T0262.json）
+              try {
+                const mockRes = await fetch(`/mock/${workId}.json`);
+                if (mockRes.ok) {
+                  const mockData = await mockRes.json();
+                  if (mockData && mockData.content && mockData.content.juans && mockData.content.juans.length > 0) {
+                    fetchedContent = mockData.content;
+                    fetchedRawToc = mockData.rawToc || [];
+                  }
+                }
+              } catch {}
+
+              // 2. 若無本地 mock 且需更新，向 CBETA 發起線上抓取
+              if (!fetchedContent) {
+                const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+                const { content, rawToc } = await ReaderBuilder.buildContent(workId, safeJuansCount);
+                fetchedContent = content;
+                fetchedRawToc = rawToc;
+              }
+
+              // 💡 3. 關鍵數據保護安全防護：如果抓取結果為預設占位文字，絕不蓋掉原本資料！
+              const fetchedHasFallback = fetchedContent.juans.some((j: JuanData) => 
+                j.segments.some((s: TextSegment) => s.content.includes('經文預設段落'))
+              );
+
+              if (fetchedHasFallback) {
+                console.warn(`[AutoHeal] Fetched content for ${workId} still has fallback placeholder. Aborting save to protect existing data!`);
+                return;
+              }
+
+              // 4. 取得真實完整正文，安全更新 IndexedDB 並渲染畫面
+              const { toc, navigation } = NavigationBuilder.buildNavigation(workId, fetchedContent, fetchedRawToc);
+              const updatedBook: ReaderPackage = {
                 ...bookData,
-                content,
+                content: fetchedContent,
                 toc,
                 navigation,
                 metadata: {
                   ...bookData.metadata,
-                  juansCount: content.juans.length,
+                  juansCount: fetchedContent.juans.length,
                   version: BUILDER_VERSION
                 }
               };
@@ -718,9 +750,8 @@ export function ReaderView({
           }
         } else {
           // 💡 若 IndexedDB 中尚無此經書數據（如直接點擊未下載的經典或剛重置快取），線上動態構建並渲染經典
-          console.log(`[ReaderView] Book ${workId} not found in IndexedDB. Building package on-the-fly...`);
+          console.log(`[ReaderView] Book ${workId} not found in IndexedDB. Building package...`);
           try {
-            const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
             const { ReferenceBuilder } = await import('../../builder/ReferenceBuilder');
             const { SearchIndexBuilder } = await import('../../builder/SearchIndexBuilder');
             const { AIIndexBuilder } = await import('../../builder/AIIndexBuilder');
@@ -731,7 +762,29 @@ export function ReaderView({
             const title = targetMeta?.title || workId;
             const creators = targetMeta?.creators || 'CBETA 電子佛典';
 
-            const { content, rawToc } = await ReaderBuilder.buildContent(workId, juansCount);
+            let content: BookContent | null = null;
+            let rawToc: any[] = [];
+
+            // 1. 優先試圖載入本地預置 mock 套件
+            try {
+              const mockRes = await fetch(`/mock/${workId}.json`);
+              if (mockRes.ok) {
+                const mockData = await mockRes.json();
+                if (mockData && mockData.content && mockData.content.juans && mockData.content.juans.length > 0) {
+                  content = mockData.content;
+                  rawToc = mockData.rawToc || [];
+                }
+              }
+            } catch {}
+
+            // 2. 若無本地 mock，調用 ReaderBuilder 發起線上抓取
+            if (!content) {
+              const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+              const res = await ReaderBuilder.buildContent(workId, juansCount);
+              content = res.content;
+              rawToc = res.rawToc;
+            }
+
             const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
             const reference = ReferenceBuilder.buildReference(workId);
             const searchIndex = SearchIndexBuilder.buildSearchIndex(content, toc);
@@ -756,10 +809,13 @@ export function ReaderView({
               embedding
             };
 
-            await saveBook(newBook);
+            const isFallback = content.juans.some((j: JuanData) => j.segments.some((s: TextSegment) => s.content.includes('經文預設段落')));
+            if (!isFallback) {
+              await saveBook(newBook);
+            }
             setBook(newBook);
             setCurrentJuanNum(1);
-            console.log(`[ReaderView] Successfully built and loaded package on-the-fly for ${workId}`);
+            console.log(`[ReaderView] Successfully built and loaded package for ${workId}`);
           } catch (buildErr) {
             console.error(`[ReaderView] Failed to build package on-the-fly for ${workId}:`, buildErr);
           }
