@@ -637,6 +637,9 @@ export function ReaderView({
             }
           }
 
+          // 💡 核心極速體驗：只要本地已有經書，立即 0 秒開書！絕不因版號更新或網路延遲阻斷開書
+          setBook(bookData);
+
           // 💡 全自動背景目次修復與經文修復邏輯
           const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
                               (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷');
@@ -647,7 +650,7 @@ export function ReaderView({
 
           if (hasFallbackContent || needsTocFix || isOutdatedVersion) {
             try {
-              console.log(`[AutoHeal] Book ${workId} needs refresh. Auto-healing real text from CBETA...`);
+              console.log(`[AutoHeal] Book ${workId} needs refresh. Auto-healing real text in background...`);
               const safeJuansCount = (bookData.metadata.juansCount && bookData.metadata.juansCount > 0)
                 ? bookData.metadata.juansCount 
                 : (bookData.content.juans.length > 0 ? bookData.content.juans.length : 1);
@@ -655,7 +658,7 @@ export function ReaderView({
               const { content, rawToc } = await ReaderBuilder.buildContent(workId, safeJuansCount);
               const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
               
-              bookData = {
+              const updatedBook = {
                 ...bookData,
                 content,
                 toc,
@@ -666,14 +669,14 @@ export function ReaderView({
                   version: BUILDER_VERSION
                 }
               };
-              await saveBook(bookData);
+              await saveBook(updatedBook);
+              setBook(updatedBook);
               console.log(`[AutoHeal] Successfully auto-healed real content for ${workId}`);
             } catch (err) {
-              console.warn('[AutoHeal] Failed to sync or repair content:', err);
+              console.warn('[AutoHeal] Background refresh failed, keeping current local content:', err);
+              setBook(bookData);
             }
           }
-
-          setBook(bookData);
           
           // 如果有傳入特定跳轉段落
           if (initialSegmentId) {
