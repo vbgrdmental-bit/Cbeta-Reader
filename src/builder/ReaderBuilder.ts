@@ -172,25 +172,7 @@ export class ReaderBuilder {
       };
 
     } catch (onlineError) {
-      console.warn(`Online fetch failed for ${workId}, trying fallback:`, onlineError);
-      
-      // Fallback: 優先嘗試載入本地離線預建經典 Package 檔案 (/mock/${workId}.json)
-      try {
-        console.log(`Loading fallback local package for ${workId}...`);
-        const response = await fetch(`/mock/${workId}.json`);
-        if (response.ok) {
-          const preBuilt = await response.json();
-          if (onProgress) {
-            onProgress(100);
-          }
-          return {
-            content: preBuilt.content,
-            rawToc: preBuilt.rawToc || []
-          };
-        }
-      } catch (fallbackError) {
-        console.error(`Local fallback also failed for ${workId}:`, fallbackError);
-      }
+      console.warn(`Online fetch failed for ${workId}:`, onlineError);
 
       // 💡 遵循最高核心原則：絕不產生任何「假段落」、「預設段落」或「摘要文字」！
       // 寧可跳出網路連線超時提示，也絕對不提供任何非 CBETA 官方原版的文字內容。

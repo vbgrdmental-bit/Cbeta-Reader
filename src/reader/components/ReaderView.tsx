@@ -651,15 +651,7 @@ export function ReaderView({
 
           if (hasInvalidTocLinks && bookData.content) {
             console.log(`[ReaderView] Book ${workId} has old invalid TOC links. Rebuilding navigation tree with title matching...`);
-            let rawToc: any[] = [];
-            try {
-              const mockRes = await fetch(`/mock/${workId}.json`);
-              if (mockRes.ok) {
-                const mockData = await mockRes.json();
-                rawToc = mockData.rawToc || [];
-              }
-            } catch {}
-            const { toc, navigation } = NavigationBuilder.buildNavigation(workId, bookData.content, rawToc);
+            const { toc, navigation } = NavigationBuilder.buildNavigation(workId, bookData.content, []);
             bookData = {
               ...bookData,
               toc,
@@ -819,28 +811,10 @@ export function ReaderView({
             bookTitle = title;
             const creators = targetMeta?.creators || 'CBETA 電子佛典';
 
-            let content: BookContent | null = null;
-            let rawToc: any[] = [];
-
-            // 1. 優先試圖載入本地預置 mock 套件
-            try {
-              const mockRes = await fetch(`/mock/${workId}.json`);
-              if (mockRes.ok) {
-                const mockData = await mockRes.json();
-                if (mockData && mockData.content && mockData.content.juans && mockData.content.juans.length > 0) {
-                  content = mockData.content;
-                  rawToc = mockData.rawToc || [];
-                }
-              }
-            } catch {}
-
-            // 2. 若無本地 mock，調用 ReaderBuilder 發起線上抓取
-            if (!content) {
-              const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
-              const res = await ReaderBuilder.buildContent(workId, juansCount);
-              content = res.content;
-              rawToc = res.rawToc;
-            }
+            const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+            const res = await ReaderBuilder.buildContent(workId, juansCount);
+            const content = res.content;
+            const rawToc = res.rawToc;
 
             const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
             const reference = ReferenceBuilder.buildReference(workId);
