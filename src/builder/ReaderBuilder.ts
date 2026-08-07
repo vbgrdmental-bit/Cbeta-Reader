@@ -536,8 +536,13 @@ export class ReaderBuilder {
               }
             } else {
               const text = anchorEl.textContent || '';
-              const textNode = doc.createTextNode(resolveCbetaGaijiAssembly(text));
-              anchorEl.parentNode?.replaceChild(textNode, anchorEl);
+              const isLineAnchor = /^[A-Za-z0-9]+_p\d+[a-z]?\d*/i.test(text.trim()) || anchorEl.id.includes('p') || anchorEl.classList.contains('lb') || anchorEl.getAttribute('href')?.includes('_p');
+              if (isLineAnchor) {
+                anchorEl.remove();
+              } else {
+                const textNode = doc.createTextNode(resolveCbetaGaijiAssembly(text));
+                anchorEl.parentNode?.replaceChild(textNode, anchorEl);
+              }
             }
           });
           
@@ -554,7 +559,8 @@ export class ReaderBuilder {
             cleanContent = cleanClone.textContent?.trim() || textContent;
           }
 
-          // 💡 經文中途多餘空格清理與缺字自動對照轉換
+          // 💡 經文中途多餘空格清理、完全抹除殘留行號標籤 (如 T05n0220_p0001a07) 與缺字自動對照轉換
+          cleanContent = cleanContent.replace(/[A-Za-z0-9]+_p\d+[a-z]?\d*/gi, '');
           cleanContent = cleanContent.replace(/[ \t\r\n]+/g, '');
           cleanContent = resolveCbetaGaijiAssembly(cleanContent);
 
