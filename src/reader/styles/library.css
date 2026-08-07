@@ -3328,3 +3328,34 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* 📱 手機端 (max-width: 600px) 特化響應式微調：防止 3 欄 1:1 卡片垂直空間擠壓造成底部文字被遮擋 */
+@media (max-width: 600px) {
+  .grid-book-card {
+    padding: 0.35rem 0.2rem 0.25rem 0.2rem !important;
+    min-height: 116px !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+  }
+
+  .grid-book-badge-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.68rem !important;
+    margin-top: 0.1rem !important;
+    margin-bottom: 0.15rem !important;
+    border-radius: 7px !important;
+  }
+
+  .grid-book-title {
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.1rem !important;
+  }
+
+  .grid-book-meta {
+    font-size: 0.68rem !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0.05rem !important;
+  }
+}
