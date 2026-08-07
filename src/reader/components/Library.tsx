@@ -1072,7 +1072,26 @@ export function Library({
     });
   };
 
-  const displayBooks = currentFolderId === 'virtual_recent_reads'
+  const [bookOrderTrigger, setBookOrderTrigger] = useState(0);
+
+  const handleSwapBookOrder = (workId: string, direction: 'left' | 'right') => {
+    const currentIds = displayBooks.map(b => b.workId);
+    const idx = currentIds.indexOf(workId);
+    if (idx === -1) return;
+    const targetIdx = direction === 'left' ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= currentIds.length) return;
+
+    const newOrder = [...currentIds];
+    const temp = newOrder[idx];
+    newOrder[idx] = newOrder[targetIdx];
+    newOrder[targetIdx] = temp;
+
+    const key = `book_order_${currentFolderId || 'root'}`;
+    localStorage.setItem(key, JSON.stringify(newOrder));
+    setBookOrderTrigger(prev => prev + 1);
+  };
+
+  const rawDisplayBooks = currentFolderId === 'virtual_recent_reads'
     ? recentReadsBooks
     : (currentFolderId === 'virtual_favorites'
         ? favoriteBooksList
@@ -1086,6 +1105,25 @@ export function Library({
                     })
                   : downloadedBooks.filter(b => !allInFolderBookIds.includes(b.workId))
               )));
+
+  const displayBooks = useMemo(() => {
+    const key = `book_order_${currentFolderId || 'root'}`;
+    const savedOrderStr = localStorage.getItem(key);
+    if (!savedOrderStr) return rawDisplayBooks;
+    try {
+      const savedOrder: string[] = JSON.parse(savedOrderStr);
+      return [...rawDisplayBooks].sort((a, b) => {
+        const idxA = savedOrder.indexOf(a.workId);
+        const idxB = savedOrder.indexOf(b.workId);
+        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+        if (idxA !== -1) return -1;
+        if (idxB !== -1) return 1;
+        return 0;
+      });
+    } catch {
+      return rawDisplayBooks;
+    }
+  }, [rawDisplayBooks, currentFolderId, bookOrderTrigger]);
 
 
   // 獲取當前資料夾路徑麵包屑
@@ -1653,86 +1691,70 @@ export function Library({
               </div>
             )}
 
-            {/* === B. 渲染經典清單 === */}
-            {displayBooks.map((book) => {
-              // 💡 取得閱讀進度
-              const progressStr = localStorage.getItem(`reader_progress_${book.workId}`);
-              let savedProgress: { juan: number; segmentId: string } | null = null;
-              if (progressStr) {
-                try {
-                  savedProgress = JSON.parse(progressStr);
-                } catch {}
-              }
+            {/* === B. 渲染 3 欄經典網格清單 (同一行三本書，從左至右、從上至下) === */}
+            {displayBooks.length > 0 && (
+              <div className="books-grid-container">
+                {displayBooks.map((book) => {
+                  // 💡 取得閱讀進度
+                  const progressStr = localStorage.getItem(`reader_progress_${book.workId}`);
+                  let savedProgress: { juan: number; segmentId: string } | null = null;
+                  if (progressStr) {
+                    try {
+                      savedProgress = JSON.parse(progressStr);
+                    } catch {}
+                  }
 
-              const isSelected = selectedBookIds.includes(book.workId);
+                  const isSelected = selectedBookIds.includes(book.workId);
+                  const isFavorite = favoriteWorkIds.includes(book.workId);
 
-              return (
-                <div 
-                  key={book.workId}
-                  className={`list-book-item ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''}`}
-                  onClick={(e) => { 
-                    if (isLongPressTriggeredRef.current) {
-                      isLongPressTriggeredRef.current = false;
-                      return;
-                    }
-                    if (isEditMode) {
-                      toggleSelectBook(book.workId, e);
-                    } else {
-                      onSelectBook(book.workId); 
-                    }
-                  }}
-                  onMouseDown={startLongPress}
-                  onMouseUp={cancelLongPress}
-                  onMouseLeave={cancelLongPress}
-                  onTouchStart={startLongPress}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={cancelLongPress}
-                >
-
-                  {/* 💡 編輯模式下顯示勾選框 (Checkbox) */}
-                  {isEditMode && (
+                  return (
                     <div 
-                      className={`batch-checkbox ${isSelected ? 'checked' : ''}`}
-                      onClick={(e) => toggleSelectBook(book.workId, e)}
-                      title="勾選以進行批量移動"
+                      key={book.workId}
+                      className={`grid-book-card ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''}`}
+                      onClick={(e) => { 
+                        if (isLongPressTriggeredRef.current) {
+                          isLongPressTriggeredRef.current = false;
+                          return;
+                        }
+                        if (isEditMode) {
+                          toggleSelectBook(book.workId, e);
+                        } else {
+                          onSelectBook(book.workId); 
+                        }
+                      }}
+                      onMouseDown={startLongPress}
+                      onMouseUp={cancelLongPress}
+                      onMouseLeave={cancelLongPress}
+                      onTouchStart={startLongPress}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={cancelLongPress}
                     >
-                      {isSelected && <Check size={12} />}
-                    </div>
-                  )}
-
-                  <div className="list-book-cover" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
-                    {book.workId}
-                  </div>
-                  <div className="list-book-info">
-                    <div className="list-book-title">{book.title}</div>
-                    <div className="list-book-meta">
-                      {currentFolderId === 'virtual_resume' && savedProgress ? (
-                        <span style={{ color: 'var(--theme-accent)', fontWeight: 600 }}>
-                          上次讀到：第 {savedProgress.juan} 卷
-                        </span>
+                      {/* 💡 左上角：非編輯模式顯示「愛心」；長按/編輯模式下愛心隱藏並顯示勾選框 (Checkbox) */}
+                      {isEditMode ? (
+                        <div 
+                          className={`batch-checkbox grid-card-checkbox ${isSelected ? 'checked' : ''}`}
+                          onClick={(e) => toggleSelectBook(book.workId, e)}
+                          title="勾選以進行批量移動"
+                        >
+                          {isSelected && <Check size={12} />}
+                        </div>
                       ) : (
-                        `${book.creators} · 共 ${book.juansCount} 卷`
+                        <button 
+                          className="book-favorite-btn-topleft"
+                          onClick={(e) => toggleFavoriteBook(e, book.workId)}
+                          title={isFavorite ? "從「我的最愛」移除" : "加入「我的最愛」"}
+                        >
+                          <Heart 
+                            size={15} 
+                            fill={isFavorite ? "#e53e3e" : "none"} 
+                            color={isFavorite ? "#e53e3e" : "var(--text-muted, #888)"} 
+                          />
+                        </button>
                       )}
-                    </div>
-                  </div>
 
-                  {/* 💡 經書最右側按鈕群：最右邊愛心 + 「...」選單按鈕 */}
-                  <div className="book-card-right-actions" onClick={(e) => e.stopPropagation()}>
-                    <button 
-                      className={`fav-heart-btn ${favoriteWorkIds.includes(book.workId) ? 'is-favorite' : ''}`}
-                      onClick={(e) => toggleFavoriteBook(e, book.workId)}
-                      title={favoriteWorkIds.includes(book.workId) ? "從「我的最愛」移除" : "加入「我的最愛」"}
-                    >
-                      <Heart 
-                        size={18} 
-                        fill={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "none"} 
-                        color={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "var(--text-muted, #777)"} 
-                      />
-                    </button>
-
-                    {isEditMode && (
+                      {/* 💡 右上角：統一置於右上角的「...」選項按鈕 */}
                       <button 
-                        className="card-more-btn"
+                        className="book-more-btn-topright"
                         onClick={(e) => {
                           e.stopPropagation();
                           setMenuTargetBook(book);
@@ -1741,11 +1763,32 @@ export function Library({
                       >
                         <MoreVertical size={14} />
                       </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+
+                      {/* 💡 正中央頂部：經典編號顏色底座 Badge (如 T0251) */}
+                      <div className="grid-book-badge-icon" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
+                        {book.workId}
+                      </div>
+
+                      {/* 💡 正中央：經名標題 (如「般若波羅蜜多心經」) */}
+                      <div className="grid-book-title" title={book.title}>
+                        {book.title}
+                      </div>
+
+                      {/* 💡 正中央下方：朝代 / 譯者 / 卷數 (如「唐 玄奘·共1卷」) */}
+                      <div className="grid-book-meta">
+                        {currentFolderId === 'virtual_resume' && savedProgress ? (
+                          <span style={{ color: 'var(--theme-accent)', fontWeight: 600 }}>
+                            讀至第 {savedProgress.juan} 卷
+                          </span>
+                        ) : (
+                          `${book.creators} · 共 ${book.juansCount} 卷`
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       ) : (
@@ -2371,6 +2414,32 @@ export function Library({
             <div style={{ fontSize: '1.02rem', fontWeight: 'bold', marginBottom: '0.8rem', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
               📖 {menuTargetBook.title}
             </div>
+
+            {/* 💡 順序前後移動控制列 (< 與 >) */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.8rem', paddingBottom: '0.6rem', borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.1))' }}>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>排序前後移動：</span>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button 
+                  className="square-btn"
+                  style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  disabled={displayBooks.findIndex(b => b.workId === menuTargetBook.workId) <= 0}
+                  onClick={() => handleSwapBookOrder(menuTargetBook.workId, 'left')}
+                  title="向前移動經書順序 (<)"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button 
+                  className="square-btn"
+                  style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  disabled={displayBooks.findIndex(b => b.workId === menuTargetBook.workId) >= displayBooks.length - 1}
+                  onClick={() => handleSwapBookOrder(menuTargetBook.workId, 'right')}
+                  title="向後移動經書順序 (>)"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               {currentFolderId === 'virtual_resume' ? (
                 <button 
