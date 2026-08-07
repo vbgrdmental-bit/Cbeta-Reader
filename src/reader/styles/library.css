@@ -3185,20 +3185,19 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   text-align: center;
   background: var(--bg-card, rgba(255, 255, 255, 0.75));
   border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
   border-radius: 14px;
-  padding: 0.5rem 0.35rem 0.45rem 0.35rem;
+  padding: 0.7rem 0.4rem 0.65rem 0.4rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
-  aspect-ratio: 1 / 1 !important;
   width: 100% !important;
-  align-self: start;
+  align-self: stretch;
 }
 
 .grid-book-card:hover {
@@ -3215,10 +3214,10 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
 /* 經典左上角愛心按鈕 (長按/編輯模式下隱藏) */
 .book-favorite-btn-topleft {
   position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 22px;
-  height: 22px;
+  top: 6px;
+  left: 6px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3237,10 +3236,10 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
 /* 經典右上角「...」選項按鈕 */
 .book-more-btn-topright {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 22px;
-  height: 22px;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3262,41 +3261,40 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
 /* 編輯模式下左上角 Checkbox 特化 */
 .grid-card-checkbox {
   position: absolute !important;
-  top: 4px !important;
-  left: 4px !important;
+  top: 6px !important;
+  left: 6px !important;
   margin: 0 !important;
   z-index: 15 !important;
 }
 
-/* 經典正中央頂部編號 Badge (如 T0251，加大圖示方框) */
+/* 經典正中央頂部編號 Badge (如 T0251，圖示方框大於圖3) */
 .grid-book-badge-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 9px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: #ffffff;
-  margin-top: 0.25rem;
-  margin-bottom: 0.2rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+  margin-top: 0.4rem;
+  margin-bottom: 0.45rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
   flex-shrink: 0;
   letter-spacing: 0.02em;
 }
 
-/* 經典正中央經名標題 (字體加大，緊貼圖示方框下方，水平置中、垂直置上) */
+/* 經典正中央經名標題 (字體再加大，緊貼圖示方框下方，過長用...代替) */
 .grid-book-title {
   writing-mode: horizontal-tb !important;
   text-orientation: mixed !important;
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.96rem;
   color: var(--text-primary);
-  line-height: 1.25;
-  margin-top: 0.1rem;
-  margin-bottom: auto;
+  line-height: 1.3;
+  margin-bottom: 0.25rem;
   padding: 0 0.1rem;
   word-break: break-word;
   text-align: center;
@@ -3304,20 +3302,21 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
   width: 100%;
 }
 
-/* 經典正中央下方朝代/譯者/卷數 (字體再加大，水平置中、垂直置下，最多 2 行) */
+/* 經典正中央下方朝代/譯者/卷數 (緊接在經名下方無空白空隙，保留 2 行，過長用...代替) */
 .grid-book-meta {
   writing-mode: horizontal-tb !important;
   font-size: 0.8rem !important;
-  color: var(--text-muted, #444);
-  line-height: 1.25;
+  color: var(--text-muted, #666);
+  line-height: 1.3;
   text-align: center;
   padding: 0 0.1rem;
-  margin-top: auto;
+  margin-top: 0;
   margin-bottom: 0.1rem;
-  opacity: 0.95;
+  opacity: 0.9;
   width: 100%;
   word-break: break-word;
   white-space: normal;
@@ -3325,4 +3324,5 @@ body.theme-dark .library-header-btn:hover .cbeta-header-c-text {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
