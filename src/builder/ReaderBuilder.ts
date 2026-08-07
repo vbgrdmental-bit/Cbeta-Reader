@@ -10,6 +10,44 @@ export function formatTimeRemaining(seconds: number): string {
   return `${mins} 分 ${secs} 秒`;
 }
 
+/**
+ * 💡 CBETA 常見組字式 / 異體字 / 缺字對照表與自動解析引擎
+ */
+const CBETA_GAIJI_ASSEMBLY_MAP: Record<string, string> = {
+  '[言*(狂-王+主)]': '詶',
+  '[圭*頁]': '頯',
+  '[億-亻+金]': '億',
+  '[口*[(口*口)/土]]': '噐',
+  '[日*頁]': '暊',
+  '[目*頁]': '眭',
+  '[身*寸]': '躬',
+  '[月*正]': '覇',
+  '[言*成]': '訏',
+  '[目*黃]': '瞚',
+  '[王*利]': '俐',
+  '[束*力]': '勅',
+  '[立*立]': '竝',
+  '[禾*少]': '秒',
+};
+
+export function resolveCbetaGaijiAssembly(input: string): string {
+  if (!input) return input;
+  let text = input;
+  for (const [assembly, normChar] of Object.entries(CBETA_GAIJI_ASSEMBLY_MAP)) {
+    if (text.includes(assembly)) {
+      text = text.replaceAll(assembly, normChar);
+    }
+  }
+  text = text.replace(/\[([^\]]+)\]/g, (match, inner) => {
+    const chineseChars = inner.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df\u2a700-\u2b73f\u2b740-\u2b81f\u2b820-\u2ceaf\u2ceb0-\u2ebf0]/g);
+    if (chineseChars && chineseChars.length > 0) {
+      return chineseChars[0];
+    }
+    return match;
+  });
+  return text;
+}
+
 export class ReaderBuilder {
   /**
    * 抓取並解析特定經典的所有卷 (支援 6 線程併行流下載 + 自動重試 3 次，防止 CBETA 429 限流與預設空白段落)
@@ -457,21 +495,30 @@ export class ReaderBuilder {
             }
           });
 
+          // 💡 1.5 優先解析所有 CBETA 異體字 / 缺字 / 組字標籤 (gaiji, gaijiAnchor, data-norm, data-uni)
+          cleanClone.querySelectorAll('.gaiji, .gaijiAnchor, .gaiji_note, gaiji, [data-norm], [data-uni]').forEach(gaijiEl => {
+            let resolvedChar = gaijiEl.getAttribute('data-norm') || '';
+            if (!resolvedChar) {
+              const uniAttr = gaijiEl.getAttribute('data-uni') || gaijiEl.getAttribute('data-unicode');
+              if (uniAttr && /^U\+[0-9A-Fa-f]+$/i.test(uniAttr.trim())) {
+                try {
+                  const hex = parseInt(uniAttr.trim().replace(/^U\+/i, ''), 16);
+                  resolvedChar = String.fromCodePoint(hex);
+                } catch {}
+              }
+            }
+            if (!resolvedChar) {
+              resolvedChar = gaijiEl.textContent || '';
+            }
+            if (resolvedChar) {
+              resolvedChar = resolveCbetaGaijiAssembly(resolvedChar);
+            }
+            const textNode = doc.createTextNode(resolvedChar);
+            gaijiEl.parentNode?.replaceChild(textNode, gaijiEl);
+          });
+
           // 💡 2. 處理連結標籤 (a) 與 校勘腳註標籤 (.noteAnchor, .note)
           cleanClone.querySelectorAll('a, .note, [class*="noteAnchor"]').forEach(anchorEl => {
-            // 💡 異體字 / 缺字 / 組字標籤 (如 <a class='gaijiAnchor' href='#CB24136'>[圭*頁]</a>)
-            const isGaiji = anchorEl.classList.contains('gaijiAnchor') || 
-                            anchorEl.classList.contains('gaiji') || 
-                            anchorEl.classList.contains('gaiji_note') ||
-                            (anchorEl.textContent && anchorEl.textContent.startsWith('[') && anchorEl.textContent.endsWith(']'));
-            
-            if (isGaiji) {
-              const text = anchorEl.textContent || '';
-              const textNode = doc.createTextNode(text);
-              anchorEl.parentNode?.replaceChild(textNode, anchorEl);
-              return;
-            }
-
             const isFootnoteAnchor = anchorEl.classList.contains('noteAnchor') || 
                                      anchorEl.classList.contains('note') ||
                                      anchorEl.getAttribute('href')?.startsWith('#note') || 
@@ -484,13 +531,12 @@ export class ReaderBuilder {
               if (isPureLabel) {
                 anchorEl.remove();
               } else {
-                // 💡 若腳註標籤內包裹真實經文文字 (如 恒、𨪏)，替換為純文字節點，防止經文缺字！
-                const textNode = doc.createTextNode(text);
+                const textNode = doc.createTextNode(resolveCbetaGaijiAssembly(text));
                 anchorEl.parentNode?.replaceChild(textNode, anchorEl);
               }
             } else {
               const text = anchorEl.textContent || '';
-              const textNode = doc.createTextNode(text);
+              const textNode = doc.createTextNode(resolveCbetaGaijiAssembly(text));
               anchorEl.parentNode?.replaceChild(textNode, anchorEl);
             }
           });
@@ -500,7 +546,7 @@ export class ReaderBuilder {
             const cells = Array.from(cleanClone.querySelectorAll('.lg-cell'));
             if (cells.length > 0) {
               const cellTexts = cells.map(cell => cell.textContent?.trim() || '');
-              cleanContent = cellTexts.filter(Boolean).join('　'); // 使用全形空格，更具古典美感與排版對齊
+              cleanContent = cellTexts.filter(Boolean).join('　');
             } else {
               cleanContent = cleanClone.textContent?.trim() || textContent;
             }
@@ -508,9 +554,9 @@ export class ReaderBuilder {
             cleanContent = cleanClone.textContent?.trim() || textContent;
           }
 
-          // 💡 經文中途多餘空格清理：清除半形 ASCII 空格、換行與多餘空格（CBETA 紙本折行與腳註移除遺跡）
-          // 保持全形空格 '　' 不被清除，以保留印順導師著作與 CBETA 中的「一　慧能大師」、「二　刺史」等節號與清單縮排空格
+          // 💡 經文中途多餘空格清理與缺字自動對照轉換
           cleanContent = cleanContent.replace(/[ \t\r\n]+/g, '');
+          cleanContent = resolveCbetaGaijiAssembly(cleanContent);
 
           // 💡 取得當前元素前面兄弟節點中的縮排尺寸，並補上全形空格
           const precedingIndentSize = getPrecedingLineSpaceSize(el);
