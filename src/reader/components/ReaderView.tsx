@@ -7,6 +7,7 @@ import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } fro
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
 import { BUILDER_VERSION } from '../../builder/version';
+import { IndexBuilder } from '../../builder/IndexBuilder';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
@@ -711,6 +712,53 @@ export function ReaderView({
             } else {
               setCurrentJuanNum(1);
             }
+          }
+        } else {
+          // 💡 若 IndexedDB 中尚無此經書數據（如直接點擊未下載的經典或剛重置快取），線上動態構建並渲染經典
+          console.log(`[ReaderView] Book ${workId} not found in IndexedDB. Building package on-the-fly...`);
+          try {
+            const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+            const { ReferenceBuilder } = await import('../../builder/ReferenceBuilder');
+            const { SearchIndexBuilder } = await import('../../builder/SearchIndexBuilder');
+            const { AIIndexBuilder } = await import('../../builder/AIIndexBuilder');
+
+            const searchRes = await IndexBuilder.searchTitle(workId).catch(() => []);
+            const targetMeta = searchRes && searchRes.length > 0 ? searchRes[0] : null;
+            const juansCount = targetMeta?.juansCount || 1;
+            const title = targetMeta?.title || workId;
+            const creators = targetMeta?.creators || 'CBETA 電子佛典';
+
+            const { content, rawToc } = await ReaderBuilder.buildContent(workId, juansCount);
+            const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
+            const reference = ReferenceBuilder.buildReference(workId);
+            const searchIndex = SearchIndexBuilder.buildSearchIndex(content, toc);
+            const embedding = await AIIndexBuilder.buildAIIndex(content);
+
+            const newBook: ReaderPackage = {
+              metadata: {
+                workId,
+                title,
+                canon: workId.charAt(0),
+                creators,
+                category: targetMeta?.category || 'CBETA',
+                juansCount: content.juans.length,
+                packagedAt: new Date().toISOString(),
+                version: BUILDER_VERSION
+              },
+              content,
+              toc,
+              navigation,
+              reference,
+              searchIndex,
+              embedding
+            };
+
+            await saveBook(newBook);
+            setBook(newBook);
+            setCurrentJuanNum(1);
+            console.log(`[ReaderView] Successfully built and loaded package on-the-fly for ${workId}`);
+          } catch (buildErr) {
+            console.error(`[ReaderView] Failed to build package on-the-fly for ${workId}:`, buildErr);
           }
         }
       } catch (e) {
