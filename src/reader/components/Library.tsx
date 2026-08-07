@@ -131,7 +131,6 @@ export function Library({
   const [menuTargetFolder, setMenuTargetFolder] = useState<BookFolder | null>(null);
   const [menuTargetBook, setMenuTargetBook] = useState<BookMetadata | null>(null);
 
-  // 線上搜尋批量下載與資料夾設定狀態
   const [selectedOnlineWorkIds, setSelectedOnlineWorkIds] = useState<string[]>([]);
   const [showBatchDownloadModal, setShowBatchDownloadModal] = useState(false);
   const [batchFolderMode, setBatchFolderMode] = useState<'new' | 'existing' | 'none'>('new');
@@ -139,7 +138,22 @@ export function Library({
   const [selectedExistingFolderId, setSelectedExistingFolderId] = useState<string>('');
   const batchFolderColor = '#8b7355';
 
+  const formatEstimatedReadingTime = (cjkChars?: number) => {
+    const chars = cjkChars || 2000;
+    const totalMins = Math.max(1, Math.round(chars / 200));
+    if (totalMins < 60) {
+      return `${totalMins} 分鐘`;
+    }
+    const hours = Math.floor(totalMins / 60);
+    const mins = totalMins % 60;
+    if (mins === 0) {
+      return `${hours} 小時`;
+    }
+    return `${hours} 小時 ${mins} 分`;
+  };
+
   const startLongPress = (e: React.MouseEvent | React.TouchEvent) => {
+    isLongPressTriggeredRef.current = false;
     if (isEditMode) return;
     // 💡 「近期閱讀」與「我的最愛」系統虛擬資料夾內，長按完全無任何反應
     if (currentFolderId === 'virtual_recent_reads' || currentFolderId === 'virtual_favorites') return;
@@ -1058,7 +1072,7 @@ export function Library({
   const recentReadsBooks = resumeBooks.slice(0, 10).map(item => item.book);
   const favoriteBooksList = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
 
-  // 如果是虛擬系統資料夾，不顯示任何一般子資料夾；首頁亦不直鋪自訂資料夾（統一收納於「我的資料夾」）
+  // 如果是虛擬系統資料夾，不顯示任何一般子資料夾；首頁亦不直鋪自訂資料夾（統一收納於「我的書櫃」）
   const isSystemFolder = currentFolderId === 'virtual_resume' || currentFolderId === 'virtual_recent_reads' || currentFolderId === 'virtual_favorites' || currentFolderId === 'virtual_highlights';
   const displayFolders = isSystemFolder
     ? []
@@ -1732,6 +1746,8 @@ export function Library({
                           return;
                         }
                         if (isEditMode) {
+                          e.stopPropagation();
+                          if ((e.target as HTMLElement).closest('.grid-card-checkbox')) return;
                           toggleSelectBook(book.workId, e);
                         } else {
                           onSelectBook(book.workId); 
@@ -1748,7 +1764,10 @@ export function Library({
                       {isEditMode && (
                         <div 
                           className={`batch-checkbox grid-card-checkbox ${isSelected ? 'checked' : ''}`}
-                          onClick={(e) => toggleSelectBook(book.workId, e)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSelectBook(book.workId, e);
+                          }}
                           title="勾選以進行批量移動或批次刪除"
                         >
                           {isSelected && <Check size={12} />}
@@ -2406,18 +2425,35 @@ export function Library({
             
             {/* 💡 【上半部份：經文資訊】 */}
             <div>
-              {/* 經名標題 */}
-              <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.6rem', fontFamily: 'var(--font-serif)' }}>
-                📖 {menuTargetBook.title}
+              {/* 經名標題 (簡潔圖示 + 經名) */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.8rem', fontFamily: 'var(--font-serif)' }}>
+                <BookOpen size={20} style={{ color: '#5b82a6', flexShrink: 0 }} />
+                <span>{menuTargetBook.title}</span>
               </div>
 
-              {/* 排序前後移動控制列 (< 與 >) */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem', padding: '0.4rem 0.6rem', background: 'var(--theme-accent-light, rgba(0,0,0,0.04))', borderRadius: '8px' }}>
-                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>排序前後移動：</span>
+              {/* 詳細經文資訊 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.86rem', color: 'var(--text-primary)', opacity: 0.9, padding: '0 0.2rem' }}>
+                <div><span style={{ color: 'var(--text-muted)' }}>譯者 : </span>{menuTargetBook.creators || '未知'}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>經號 : </span>CBETA No. {menuTargetBook.workId}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>部類 : </span>{menuTargetBook.category || '大藏經部類'}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>冊別 : </span>{menuTargetBook.vol || menuTargetBook.canon || 'CBETA 典籍'}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>字數 : </span>{(menuTargetBook.cjkChars || 0).toLocaleString()} 字</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>預計閱讀時間 : </span>{formatEstimatedReadingTime(menuTargetBook.cjkChars)}</div>
+              </div>
+            </div>
+
+            {/* 💡 【細細分隔線】 */}
+            <div style={{ margin: '0.9rem 0 0.7rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.12))' }} />
+
+            {/* 💡 【下半部份：功能鍵】 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+              {/* 1. 排序前後移動控制列 (< 與 >) 置於下半部功能鍵頂部 (同圖1) */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.55rem 0.75rem', background: 'var(--bg-paper, rgba(0,0,0,0.03))', borderRadius: '12px', border: '1px solid var(--border-color, rgba(0,0,0,0.06))' }}>
+                <span style={{ fontSize: '0.86rem', color: 'var(--text-muted)' }}>排序前後移動：</span>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button 
                     className="square-btn"
-                    style={{ width: '30px', height: '30px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: '32px', height: '32px', padding: 0, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     disabled={displayBooks.findIndex(b => b.workId === menuTargetBook.workId) <= 0}
                     onClick={() => handleSwapBookOrder(menuTargetBook.workId, 'left')}
                     title="向前移動經書順序 (<)"
@@ -2426,7 +2462,7 @@ export function Library({
                   </button>
                   <button 
                     className="square-btn"
-                    style={{ width: '30px', height: '30px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: '32px', height: '32px', padding: 0, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     disabled={displayBooks.findIndex(b => b.workId === menuTargetBook.workId) >= displayBooks.length - 1}
                     onClick={() => handleSwapBookOrder(menuTargetBook.workId, 'right')}
                     title="向後移動經書順序 (>)"
@@ -2436,23 +2472,7 @@ export function Library({
                 </div>
               </div>
 
-              {/* 詳細經文資訊 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.83rem', color: 'var(--text-primary)', opacity: 0.9, padding: '0 0.2rem' }}>
-                <div><span style={{ color: 'var(--text-muted)' }}>譯者：</span>{menuTargetBook.creators || '未知'}</div>
-                <div><span style={{ color: 'var(--text-muted)' }}>經號：</span>CBETA No. {menuTargetBook.workId}</div>
-                <div><span style={{ color: 'var(--text-muted)' }}>部類：</span>{menuTargetBook.category || '大藏經部類'}</div>
-                <div><span style={{ color: 'var(--text-muted)' }}>冊別：</span>{menuTargetBook.vol || menuTargetBook.canon || 'CBETA 典籍'}</div>
-                <div><span style={{ color: 'var(--text-muted)' }}>字數：</span>{(menuTargetBook.cjkChars || 0).toLocaleString()} 字</div>
-                <div><span style={{ color: 'var(--text-muted)' }}>預計閱讀時間：</span>{Math.max(1, Math.round((menuTargetBook.cjkChars || 2000) / 300))} 分鐘</div>
-              </div>
-            </div>
-
-            {/* 💡 【細細分隔線】 */}
-            <div style={{ margin: '0.8rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.12))' }} />
-
-            {/* 💡 【下半部份：功能鍵】 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {/* 0. 若目前在非根目錄的子資料夾內，提供移出至上一層資料夾 */}
+              {/* 2. 若目前在非根目錄的子資料夾內，提供移出至上一層資料夾 */}
               {currentFolderId && !currentFolderId.startsWith('virtual_') && (
                 <button 
                   className="action-menu-item-btn"
@@ -2466,7 +2486,7 @@ export function Library({
                 </button>
               )}
 
-              {/* 1. 移動至資料夾 */}
+              {/* 3. 移動至資料夾 */}
               <button 
                 className="action-menu-item-btn"
                 onClick={() => {
@@ -2480,7 +2500,7 @@ export function Library({
                 <span>移動至資料夾</span>
               </button>
 
-              {/* 2. 加入 / 移出我的最愛 */}
+              {/* 4. 加入 / 移出我的最愛 */}
               <button 
                 className="action-menu-item-btn"
                 onClick={(e) => {
@@ -2495,7 +2515,7 @@ export function Library({
                 <span>{favoriteWorkIds.includes(menuTargetBook.workId) ? '移出「我的最愛」' : '加入「我的最愛」'}</span>
               </button>
 
-              {/* 3. 刪除經典 */}
+              {/* 5. 刪除經典 */}
               {currentFolderId === 'virtual_resume' ? (
                 <button 
                   className="action-menu-item-btn delete-action"
@@ -2522,26 +2542,26 @@ export function Library({
                 </button>
               )}
 
-              {/* 4. 開始閱讀：分二個按鈕「從頭閱讀」與「接續閱讀」 */}
+              {/* 6. 開始閱讀：分二個按鈕「從頭開始閱讀」與「接續閱讀」 */}
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.2rem' }}>
                 <button 
                   className="dialog-btn-cancel"
-                  style={{ flex: 1, padding: '0.65rem 0.4rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                  style={{ flex: 1, padding: '0.65rem 0.3rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
                   onClick={() => {
                     const b = menuTargetBook;
                     setMenuTargetBook(null);
                     localStorage.removeItem(`reader_progress_${b.workId}`);
                     onSelectBook(b.workId, '', '');
                   }}
-                  title="從頭閱讀 (清空歷史進度)"
+                  title="從頭開始閱讀 (清空歷史進度)"
                 >
                   <RotateCcw size={14} />
-                  <span>從頭閱讀</span>
+                  <span>從頭開始閱讀</span>
                 </button>
 
                 <button 
                   className="dialog-btn-confirm"
-                  style={{ flex: 1, padding: '0.65rem 0.4rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                  style={{ flex: 1, padding: '0.65rem 0.3rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
                   onClick={() => {
                     const b = menuTargetBook;
                     setMenuTargetBook(null);
