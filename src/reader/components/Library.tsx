@@ -2291,8 +2291,8 @@ export function Library({
                 className="folder-target-option"
                 onClick={() => movingFolderId ? handleMoveFolder(null) : handleBatchMoveBooks(null)}
               >
-                <Home size={18} style={{ color: 'var(--theme-accent)', flexShrink: 0 }} />
-                <span style={{ fontWeight: 600 }}>首頁 (根目錄)</span>
+                <Folder size={18} style={{ color: '#8c4b27', flexShrink: 0 }} />
+                <span style={{ fontWeight: 600 }}>我的資料夾 (根目錄)</span>
               </div>
 
               {folders
