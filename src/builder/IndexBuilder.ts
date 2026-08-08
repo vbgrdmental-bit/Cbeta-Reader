@@ -145,9 +145,9 @@ export class IndexBuilder {
     }
 
     const trimmedQuery = query.trim();
-    const cacheKey = trimmedQuery.toLowerCase();
+    const cacheKey = `${activeMode}_${trimmedQuery.toLowerCase()}`;
 
-    // 💡 0. 記憶體快取：若曾搜尋過該關鍵字，立即秒回結果
+    // 💡 0. 記憶體快取：若曾搜尋過該關鍵字，立場秒回結果
     if (searchCacheMap.has(cacheKey)) {
       return searchCacheMap.get(cacheKey)!;
     }
@@ -159,12 +159,6 @@ export class IndexBuilder {
         book.workId.toLowerCase().includes(trimmedQuery.toLowerCase()) ||
         book.creators.includes(trimmedQuery)
     ).map(b => ({ ...b, isBackupSource: activeMode === 'backup' }));
-
-    // 💡 若當前為備源專用模式 (backup)，不請求 CBETA 官方 API，直接傳回備源檢索結果
-    if (activeMode === 'backup') {
-      console.log(`⚡ [IndexBuilder] Running search under Backup Source Mode for query: "${trimmedQuery}"`);
-      return matchedFeatured;
-    }
 
     try {
       const queriesToSearch = new Set<string>([trimmedQuery]);
@@ -278,12 +272,15 @@ export class IndexBuilder {
         if (b.workId) {
           const existing = resultsMap.get(b.workId);
           if (!existing || existing.title === '未命名經典') {
-            resultsMap.set(b.workId, b);
+            resultsMap.set(b.workId, { ...b, isBackupSource: activeMode === 'backup' });
           }
         }
       });
 
-      const finalResults = Array.from(resultsMap.values());
+      const finalResults = Array.from(resultsMap.values()).map(b => ({
+        ...b,
+        isBackupSource: activeMode === 'backup'
+      }));
       if (finalResults.length > 0) {
         searchCacheMap.set(cacheKey, finalResults);
       }

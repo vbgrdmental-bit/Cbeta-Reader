@@ -1084,7 +1084,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                       <ul className="changelog-list">
                         <li>• <strong>開始日期</strong>：2026-08-08 正式建立獨立備援解析與靜態鏡像下載機制。</li>
                         <li>• <strong>備援來源地點</strong>：專屬 `/backup` 本地靜態庫與 GitHub CDN / Cloudflare R2 離線預編譯鏡像檔 (`/backup/[workId]/[juan].json`)。</li>
-                        <li>• <strong>備援資料摘要</strong>：收錄 CBETA 大藏經全冊全卷離線預編譯 JSON 經文包（包含完整段落正文、章節目錄 `toc` 與基礎經號索引），提供離線檢索與 0 秒極速開檔。</li>
+                        <li>• <strong>備援資料摘要</strong>：收錄 CBETA 大藏經全冊全卷（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）離線預編譯 JSON 經文包（包含完整段落正文、章節目錄 `toc` 與基礎經號索引），提供離線檢索與 0 秒極速開檔。</li>
                       </ul>
                     </div>
                   </div>
