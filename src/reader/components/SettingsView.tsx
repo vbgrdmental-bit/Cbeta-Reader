@@ -7,6 +7,7 @@ import { exportUserData, importUserData } from '../../utils/backup';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
 import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
 import type { ReadingTimerState } from '../../utils/readingTimer';
+import { isBackupMode } from '../../utils/sourceMode';
 import '../styles/settings.css';
 
 interface SettingsViewProps {
@@ -903,9 +904,11 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           {/* 5. 版本資訊與說明列 */}
           <div className="settings-version-row">
             <div className="settings-version-info">
-              <span>App: v{APP_VERSION}</span>
-              <span className="version-divider">|</span>
-              <span>Builder: v{BUILDER_VERSION}</span>
+              {isBackupMode() ? (
+                <span>backup App: v1.0.1 <span className="version-divider">|</span> Builder: v1.0.1</span>
+              ) : (
+                <span>App: v{APP_VERSION} <span className="version-divider">|</span> Builder: v{BUILDER_VERSION}</span>
+              )}
               <button 
                 type="button"
                 className="version-circle-btn version-help-btn"
@@ -1022,7 +1025,73 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
               </button>
             </div>
             <div ref={changelogBodyRef} className="changelog-dialog-body custom-scrollbar" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.2rem' }}>
-              {/* 第一部分：App 閱讀器介面更新 */}
+              {isBackupMode() ? (
+                <>
+                  {/* 第一部分：App 閱讀器介面更新 (備援專用) */}
+                  <div className="changelog-group-section" style={{ marginBottom: '1.8rem' }}>
+                    <div style={{
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      color: 'var(--theme-accent, #8c4b27)',
+                      borderBottom: '1.5px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
+                      paddingBottom: '0.4rem',
+                      marginBottom: '0.9rem',
+                      fontFamily: 'var(--font-serif)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem'
+                    }}>
+                      <FileText size={16} style={{ strokeWidth: 2.2 }} />
+                      <span>App 閱讀器介面更新 (備援專用)</span>
+                    </div>
+
+                    <div className="changelog-version-section">
+                      <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span>⭐ backup App: v1.0.1</span>
+                        <span className="changelog-date">(2026-08-08 開始)</span>
+                      </div>
+                      <ul className="changelog-list">
+                        <li>• 新增備援閱讀模式專用頂部「備援」宋體方框視覺識別標籤。</li>
+                        <li>• 支援獨立 `?source=backup` 網址切換與備援模式設定選項。</li>
+                        <li>• 全面隔離備援系統與主源 App 版本紀錄，獨立記錄 App 微調歷程。</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* 第二部分：Builder 經文解析引擎更新 (備援專用) */}
+                  <div ref={builderSectionRef} className="changelog-group-section" style={{ marginBottom: '1.5rem' }}>
+                    <div style={{
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      color: 'var(--theme-accent, #8c4b27)',
+                      borderBottom: '1.5px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
+                      paddingBottom: '0.4rem',
+                      marginBottom: '0.9rem',
+                      fontFamily: 'var(--font-serif)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem'
+                    }}>
+                      <Database size={16} style={{ strokeWidth: 2.2 }} />
+                      <span>Builder 經文解析引擎更新 (備援專用)</span>
+                    </div>
+
+                    <div className="changelog-version-section">
+                      <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span>⭐ backup Builder: v1.0.1</span>
+                        <span className="changelog-date">(2026-08-08 開始)</span>
+                      </div>
+                      <ul className="changelog-list">
+                        <li>• <strong>開始日期</strong>：2026-08-08 正式建立獨立備援解析與靜態鏡像下載機制。</li>
+                        <li>• <strong>備援來源地點</strong>：專屬 `/backup` 本地靜態庫與 GitHub CDN / Cloudflare R2 離線預編譯鏡像檔 (`/backup/[workId]/[juan].json`)。</li>
+                        <li>• <strong>備援資料摘要</strong>：收錄 CBETA 大藏經全冊全卷離線預編譯 JSON 經文包（包含完整段落正文、章節目錄 `toc` 與基礎經號索引），提供離線檢索與 0 秒極速開檔。</li>
+                      </ul>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* 第一部分：App 閱讀器介面更新 */}
               <div className="changelog-group-section" style={{ marginBottom: '1.8rem' }}>
                 <div style={{
                   fontSize: '0.95rem',
@@ -1287,6 +1356,8 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   </div>
                 )}
               </div>
+                </>
+              )}
 
 
               {/* 4. CBETA Reader 簡介與感言區塊 (隔一條線，小字呈現) */}

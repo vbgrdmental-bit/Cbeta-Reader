@@ -1431,11 +1431,6 @@ export function Library({
           {!currentFolderId && (
             <>
               <div className="library-title-area">
-                {isBackup && (
-                  <div className="title-backup-badge" title="備援模式">
-                    備援
-                  </div>
-                )}
                 <h1 style={{ fontFamily: 'var(--font-rounded)', letterSpacing: '0.04em' }}>
                   <span style={{ color: '#1ea98c' }}>CBETA</span> Reader
                 </h1>
