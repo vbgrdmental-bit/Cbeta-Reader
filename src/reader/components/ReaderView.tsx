@@ -13,6 +13,7 @@ import { SettingsView } from './SettingsView';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
 import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
 import type { ReadingTimerState } from '../../utils/readingTimer';
+import { isBackupMode } from '../../utils/sourceMode';
 import '../styles/reader.css';
 
 interface ReaderViewProps {
@@ -1533,6 +1534,11 @@ export function ReaderView({
       
       {/* 頂部工具列 */}
       <div className={`reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
+        {isBackupMode() && (
+          <div className="header-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
+            備援
+          </div>
+        )}
         <button className="library-header-btn" onClick={() => onBackToLibrary(true)} title="首頁">
           <Home size={20} />
         </button>

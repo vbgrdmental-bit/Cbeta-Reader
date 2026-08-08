@@ -9,6 +9,7 @@ import { IndexBuilder, getApiUrl } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress } from '../../builder/PackageBuilder';
+import { isBackupMode } from '../../utils/sourceMode';
 import '../styles/cbeta-catalog.css';
 
 interface CbetaCatalogViewProps {
@@ -1295,6 +1296,11 @@ export function CbetaCatalogView({
     >
       {/* 頂部固定控制列 (Header Bar) */}
       <header className="cbeta-catalog-header">
+        {isBackupMode() && (
+          <div className="header-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
+            備援
+          </div>
+        )}
         {/* 回首頁 (書架) 圖示 */}
         <button 
           className="library-header-btn" 

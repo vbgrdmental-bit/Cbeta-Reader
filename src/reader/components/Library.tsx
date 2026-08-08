@@ -12,6 +12,7 @@ import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress, BuildStep } from '../../builder/PackageBuilder';
 import { SearchPanel } from './SearchPanel';
+import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
 import '../styles/library.css';
 
 interface LibraryProps {
@@ -45,6 +46,12 @@ export function Library({
   const [activeTab, setActiveTab] = useState<'shelf' | 'search'>(initialSearchQuery ? 'search' : 'shelf');
   const [loadingDots, setLoadingDots] = useState('...');
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
+
+  const [isBackup, setIsBackup] = useState(isBackupMode());
+
+  useEffect(() => {
+    return subscribeSourceMode((mode) => setIsBackup(mode === 'backup'));
+  }, []);
 
   const isLongPressTriggeredRef = useRef(false);
 
@@ -1275,6 +1282,11 @@ export function Library({
       
       {/* 首頁一致控制列 */}
       <div className="library-header animate-fade-in">
+        {isBackup && (
+          <div className="header-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
+            備援
+          </div>
+        )}
         <button 
           className={`library-header-btn ${activeTab === 'shelf' && !currentFolderId ? 'active' : ''}`}
           onClick={handleGoHomeWithAnimation}
@@ -1419,6 +1431,11 @@ export function Library({
           {!currentFolderId && (
             <>
               <div className="library-title-area">
+                {isBackup && (
+                  <div className="title-backup-badge" title="備援模式">
+                    備援
+                  </div>
+                )}
                 <h1 style={{ fontFamily: 'var(--font-rounded)', letterSpacing: '0.04em' }}>
                   <span style={{ color: '#1ea98c' }}>CBETA</span> Reader
                 </h1>
