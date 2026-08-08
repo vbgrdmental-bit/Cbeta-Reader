@@ -73,10 +73,10 @@ export class ReaderBuilder {
       const queue = Array.from({ length: juansCount }, (_, idx) => idx + 1);
       let hasSwitchedToR2Backup = false;
 
-      // 💡 離線備用鏡像源 Base URL (支援 GitHub Releases / GitHub CDN / Cloudflare R2)
+      // 💡 離線備用鏡像源 Base URL (預設直接存取本地與部署之 /backup 離線快取庫)
       const BACKUP_CDN_BASE_URL = (import.meta.env && (import.meta.env.VITE_BACKUP_CDN_URL || import.meta.env.VITE_BACKUP_R2_URL))
         ? (import.meta.env.VITE_BACKUP_CDN_URL || import.meta.env.VITE_BACKUP_R2_URL) 
-        : 'https://raw.githubusercontent.com/vbgrdmental-bit/Cbeta-Reader/main/dist-r2-backup';
+        : '/backup';
 
       const worker = async () => {
         while (queue.length > 0) {
@@ -151,10 +151,13 @@ export class ReaderBuilder {
               const r2Res = await fetchWithTimeout(r2Url, {}, 5000);
               if (r2Res && r2Res.ok) {
                 const r2Data = await r2Res.json().catch(() => null);
+                if (r2Data && r2Data.toc && Array.isArray(r2Data.toc.mulu) && r2Data.toc.mulu.length > 0 && allRawTocs.length === 0) {
+                  allRawTocs = r2Data.toc.mulu;
+                }
                 if (r2Data && Array.isArray(r2Data.results) && r2Data.results.length > 0) {
                   const rawResult = r2Data.results[0];
                   const html = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
-                  const segments = this.parseHtmlToSegments(html, workId, j);
+                  const segments = this.parseHtmlToSegments(html, workId, j, allRawTocs.length > 0 ? undefined : allRawTocs);
                   if (segments && segments.length > 0) {
                     juansMap.set(j, segments);
                     success = true;

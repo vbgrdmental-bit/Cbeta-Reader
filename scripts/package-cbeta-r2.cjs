@@ -1,12 +1,8 @@
 /**
- * CBETA Local TEI XML Packager for Cloudflare R2 Backup
+ * CBETA Local TEI XML Packager for Cloudflare R2 / Local Backup
  * 
  * Usage:
- *   node scripts/package-cbeta-r2.cjs [workId]
- * 
- * Example:
- *   node scripts/package-cbeta-r2.cjs T0412
- *   node scripts/package-cbeta-r2.cjs ALL
+ *   node scripts/package-cbeta-r2.cjs [workId|POPULAR|ALL]
  */
 
 const fs = require('fs');
@@ -14,6 +10,7 @@ const path = require('path');
 
 const CBETA_BASE_DIR = 'D:/Antigravity專用/cbeta/CBReader2X/Bookcase/CBETA';
 const OUTPUT_DIR = path.join(__dirname, '../dist-r2-backup');
+const PUBLIC_BACKUP_DIR = path.join(__dirname, '../public/backup');
 
 function ensureDirSync(dirPath) {
   if (!fs.existsSync(dirPath)) {
@@ -22,35 +19,163 @@ function ensureDirSync(dirPath) {
 }
 
 /**
- * 簡易 TEI XML 轉化為前端相容的 HTML 標籤結構
+ * 解析 teiHeader 中的 <charDecl> 缺字/異體字對照表
+ */
+function parseCharDecl(xmlStr) {
+  const charMap = new Map();
+  const charRegex = /<char\s+xml:id="([^"]+)">([\s\S]*?)<\/char>/gi;
+  let match;
+  while ((match = charRegex.exec(xmlStr)) !== null) {
+    const id = match[1];
+    const content = match[2];
+    
+    // 優先讀取 Unicode 映射
+    const uniMatch = content.match(/<mapping\s+type="unicode">U\+([0-9A-F]+)<\/mapping>/i);
+    let charVal = null;
+    if (uniMatch) {
+      try {
+        charVal = String.fromCodePoint(parseInt(uniMatch[1], 16));
+      } catch (e) {}
+    }
+
+    // 其次讀取組字式 (composition)
+    if (!charVal) {
+      const compMatch = content.match(/<localName>composition<\/localName>\s*<value>([^<]+)<\/value>/i);
+      if (compMatch) {
+        charVal = compMatch[1];
+      }
+    }
+
+    if (!charVal) {
+      charVal = `[${id}]`;
+    }
+
+    charMap.set(id, charVal);
+  }
+  return charMap;
+}
+
+/**
+ * 精確處理 TEI XML 中的 <g ref="...">, <app>, <lem>, <rdg>, <note>, <lb>, <pb>, <cb:mulu> 標籤
  */
 function convertXmlToHtml(xmlStr) {
+  const charMap = parseCharDecl(xmlStr);
   let html = xmlStr;
   
-  // 移除 xml header / teiHeader 元資料宣告（保留正文）
+  // 1. 移除 xml header / teiHeader 元資料宣告（僅保留正文 <body>）
   const bodyMatch = html.match(/<body[\s\S]*<\/body>/i);
   if (bodyMatch) {
     html = bodyMatch[0];
   }
 
-  // 轉換 <lb n="0001a01" ed="T"/> 為前端識別之 <span class="lb">
-  html = html.replace(/<lb\s+n="([^"]+)"[^>]*>/gi, '<span class="lb" id="p$1">$1</span>');
+  // 2. 處理缺字 / 異體字標籤 <g ref="#CBxxxxx"> 與 <gaiji cb="CBxxxxx"/>
+  // 絕對不刪除任何缺字異體字！若有 Unicode 轉字，若無轉為 [組字式] 或保留對應文字
+  html = html.replace(/<g\s+ref="#([^"]+)"[^>]*>([\s\S]*?)<\/g>/gi, (match, cbId, innerText) => {
+    const mapped = charMap.get(cbId);
+    if (mapped) return mapped;
+    if (innerText && innerText.trim()) return innerText.trim();
+    return `[${cbId}]`;
+  });
+  html = html.replace(/<g\s+ref="#([^"]+)"[^>]*\/>/gi, (match, cbId) => {
+    const mapped = charMap.get(cbId);
+    return mapped || `[${cbId}]`;
+  });
+  html = html.replace(/<gaiji\s+[^>]*cb="([^"]+)"[^>]*\/>/gi, (match, cbId) => {
+    const mapped = charMap.get(cbId);
+    return mapped || `[${cbId}]`;
+  });
+
+  // 3. 處理 <app> 校勘標籤：保留正字 <lem> 的內容，刪除異體/底本字 <rdg>
+  html = html.replace(/<app\s+[^>]*>([\s\S]*?)<\/app>/gi, (match, inner) => {
+    const lemMatch = inner.match(/<lem[^>]*>([\s\S]*?)<\/lem>/i);
+    if (lemMatch) {
+      return lemMatch[1]; // 僅保留正字
+    }
+    return inner.replace(/<rdg[^>]*>[\s\S]*?<\/rdg>/gi, '');
+  });
+
+  // 4. 移除出處/參考對照標籤 <note type="cf1">, <note type="cf2">
+  html = html.replace(/<note\s+[^>]*type="cf\d+"[^>]*>[\s\S]*?<\/note>/gi, '');
+
+  // 5. 處理一般校勘與原註 <note n="...">：從正文中完全移出，集中置於頁尾 <div id="footnotes"> 容器中
+  const notes = [];
+  html = html.replace(/<note\s+[^>]*n="([^"]+)"[^>]*>([\s\S]*?)<\/note>/gi, (match, n, content) => {
+    const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+    notes.push({ n, content: cleanContent });
+    return ''; // 從段落正文中完全移除，防止【CB】【大】混入內文 textContent！
+  });
+
+  // 移除其餘無 n 屬性的雜項 <note>
+  html = html.replace(/<note[^>]*>[\s\S]*?<\/note>/gi, '');
+
+  // 6. 處理紙本頁碼分頁標籤 <pb> 與 <milestone>：轉為內聯行內空標籤，防範斷開 <p> 段落造成不當換行！
+  html = html.replace(/<pb\s+[^>]*\/>/gi, '');
+  html = html.replace(/<pb\s+[^>]*>[\s\S]*?<\/pb>/gi, '');
+  html = html.replace(/<milestone\s+[^>]*\/>/gi, '');
+
+  // 7. 處理品名/章節標籤 <cb:mulu> 與 <head>
+  html = html.replace(/<cb:mulu\s+[^>]*level="([^"]+)"[^>]*n="([^"]+)"[^>]*type="([^"]+)"[^>]*>([\s\S]*?)<\/cb:mulu>/gi, (match, level, n, type, title) => {
+    return `<div class="cb-mulu" data-level="${level}" data-n="${n}" data-type="${type}">${title}</div>`;
+  });
+  html = html.replace(/<cb:mulu\s+[^>]*>([\s\S]*?)<\/cb:mulu>/gi, (match, title) => {
+    return `<div class="cb-mulu">${title}</div>`;
+  });
+  html = html.replace(/<head[^>]*>([\s\S]*?)<\/head>/gi, (match, title) => {
+    return `<h2 class="head">${title}</h2>`;
+  });
+
+  // 8. 修正 <lb n="0001a01"/> 行號標籤：保持 inner text 為空
+  html = html.replace(/<lb\s+n="([^"]+)"[^>]*\/>/gi, '<span class="lb" id="p$1"></span>');
+  html = html.replace(/<lb\s+n="([^"]+)"[^>]*>/gi, '<span class="lb" id="p$1"></span>');
   
-  // 轉換 <p> 與 <l> 為段落容器
+  // 9. 轉換 <p> 與 <l> 為段落容器
   html = html.replace(/<p[^>]*>/gi, '<p>').replace(/<\/p>/gi, '</p>');
   html = html.replace(/<l[^>]*>/gi, '<p class="lg">').replace(/<\/l>/gi, '</p>');
-  
-  // 轉換 <note type="orig" n="..."> 為校勘腳註
-  html = html.replace(/<note\s+[^>]*n="([^"]+)"[^>]*>([\s\S]*?)<\/note>/gi, (match, n, content) => {
-    return `<span class="note-text" id="note_${n}">${content}</span>`;
-  });
 
-  // 轉換缺字 <gaiji> 標籤
-  html = html.replace(/<gaiji\s+[^>]*cb="([^"]+)"[^>]*\/>/gi, (match, cb) => {
-    return `<span class="gaiji" id="${cb}">[${cb}]</span>`;
-  });
+  // 10. 將抽離的校勘註腳集中附加在頁尾 <div id="footnotes"> 容器中
+  if (notes.length > 0) {
+    const footnotesHtml = `<div id="footnotes">${notes.map(item => `<div class="note-text" id="note_${item.n}">${item.content}</div>`).join('')}</div>`;
+    html += footnotesHtml;
+  }
 
   return html;
+}
+
+/**
+ * 解析 CBReader 2X 的 toc XML 檔 (例如 toc/T/T0412.xml)，生成官方 mulu 目錄樹
+ */
+function parseTocXml(workId) {
+  const prefix = workId.charAt(0);
+  const tocFilePath = path.join(CBETA_BASE_DIR, 'toc', prefix, `${workId}.xml`);
+  
+  if (!fs.existsSync(tocFilePath)) {
+    return [];
+  }
+
+  const xmlContent = fs.readFileSync(tocFilePath, 'utf8');
+  const muluList = [];
+
+  const catalogMatch = xmlContent.match(/<nav\s+type="catalog"[\s\S]*?<\/nav>/i);
+  if (!catalogMatch) return muluList;
+
+  const catalogXml = catalogMatch[0];
+  const cblinkRegex = /<cblink\s+href="[^"]*_(\d+)\.xml#p([^"]+)">([\s\S]*?)<\/cblink>/gi;
+  
+  let match;
+  while ((match = cblinkRegex.exec(catalogXml)) !== null) {
+    const juan = parseInt(match[1], 10);
+    const lb = `p${match[2]}`;
+    const rawTitle = match[3].replace(/<[^>]+>/g, '').trim();
+
+    muluList.push({
+      title: rawTitle,
+      lb: lb,
+      juan: juan,
+      type: '品'
+    });
+  }
+
+  return muluList;
 }
 
 /**
@@ -93,6 +218,8 @@ function packageWork(workId) {
   console.log(`Packaging ${workId} (${matchedFiles.length} files) from ${targetFolder}...`);
   matchedFiles.sort();
 
+  const muluToc = parseTocXml(workId);
+
   matchedFiles.forEach((file, index) => {
     const juanNum = index + 1;
     const filePath = path.join(targetFolder, file);
@@ -107,18 +234,26 @@ function packageWork(workId) {
           html: html
         }
       ],
+      toc: {
+        mulu: muluToc
+      },
       version: 'CBReader 2X v0.9.9 2026-01-21'
     };
 
     const targetWorkDir = path.join(OUTPUT_DIR, workId);
+    const publicWorkDir = path.join(PUBLIC_BACKUP_DIR, workId);
     ensureDirSync(targetWorkDir);
+    ensureDirSync(publicWorkDir);
     
+    const jsonStr = JSON.stringify(payload, null, 2);
     const outFilePath = path.join(targetWorkDir, `${juanNum}.json`);
-    fs.writeFileSync(outFilePath, JSON.stringify(payload, null, 2), 'utf8');
+    const publicFilePath = path.join(publicWorkDir, `${juanNum}.json`);
+    fs.writeFileSync(outFilePath, jsonStr, 'utf8');
+    fs.writeFileSync(publicFilePath, jsonStr, 'utf8');
     console.log(`  -> Wrote Juan ${juanNum}: ${outFilePath}`);
   });
 
-  console.log(`Successfully packaged ${workId} (${matchedFiles.length} juans).`);
+  console.log(`Successfully packaged ${workId} (${matchedFiles.length} juans, ${muluToc.length} TOC items).`);
 }
 
 // 常用與大部頭熱門經典對照表
@@ -170,7 +305,6 @@ function packageAll() {
       const workMap = new Map();
 
       files.forEach(file => {
-        // 例: T13n0412_001.xml => canon: T, workNo: 0412
         const match = file.match(/^([A-Z]+)\d+n([A-Z0-9]+)_(\d+)\.xml$/i);
         if (match) {
           const canonPrefix = match[1].toUpperCase();
@@ -184,7 +318,11 @@ function packageAll() {
       for (const [workId, fileList] of workMap.entries()) {
         fileList.sort((a, b) => a.file.localeCompare(b.file));
         const targetWorkDir = path.join(OUTPUT_DIR, workId);
+        const publicWorkDir = path.join(PUBLIC_BACKUP_DIR, workId);
         ensureDirSync(targetWorkDir);
+        ensureDirSync(publicWorkDir);
+
+        const muluToc = parseTocXml(workId);
 
         fileList.forEach((item, index) => {
           const juanNum = index + 1;
@@ -195,10 +333,13 @@ function packageAll() {
             workId: workId,
             juan: juanNum,
             results: [{ html }],
+            toc: { mulu: muluToc },
             version: 'CBReader 2X v0.9.9 2026-01-21'
           };
 
-          fs.writeFileSync(path.join(targetWorkDir, `${juanNum}.json`), JSON.stringify(payload, null, 2), 'utf8');
+          const jsonStr = JSON.stringify(payload, null, 2);
+          fs.writeFileSync(path.join(targetWorkDir, `${juanNum}.json`), jsonStr, 'utf8');
+          fs.writeFileSync(path.join(publicWorkDir, `${juanNum}.json`), jsonStr, 'utf8');
           totalFilesCount++;
         });
 
@@ -221,6 +362,7 @@ console.log(`Output: ${OUTPUT_DIR}`);
 console.log(`Mode: ${arg}`);
 
 ensureDirSync(OUTPUT_DIR);
+ensureDirSync(PUBLIC_BACKUP_DIR);
 
 if (arg === 'ALL') {
   packageAll();
@@ -231,4 +373,3 @@ if (arg === 'ALL') {
 } else {
   packageWork(arg);
 }
-

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Plus, Check, AlertCircle, X, Download,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, FileText, Play, RotateCcw
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, FileText, Play, RotateCcw, RefreshCw
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
@@ -2571,6 +2571,44 @@ export function Library({
                 <span>{favoriteWorkIds.includes(menuTargetBook.workId) ? '移出「我的最愛」' : '加入「我的最愛」'}</span>
               </button>
 
+              {/* 4.5 更新 / 重新加載經文內容 */}
+              <button 
+                className="action-menu-item-btn"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  const b = menuTargetBook;
+                  setMenuTargetBook(null);
+                  if (!b) return;
+                  try {
+                    setBuildProgress({
+                      step: 'metadata',
+                      percent: 5,
+                      message: `正在準備更新《${b.title}》最新經文...`
+                    });
+                    await PackageBuilder.downloadAndPackage(
+                      {
+                        workId: b.workId,
+                        title: b.title,
+                        category: b.category,
+                        juansCount: b.juansCount,
+                        creators: b.creators,
+                        vol: b.vol
+                      },
+                      (p) => setBuildProgress(p)
+                    );
+                    await loadLocalBooks();
+                    setBuildProgress(null);
+                    alert(`《${b.title}》已成功更新至最新校勘經文！`);
+                  } catch (err: any) {
+                    setBuildProgress(null);
+                    alert(`更新《${b.title}》失敗：${err.message || err}`);
+                  }
+                }}
+              >
+                <RefreshCw size={16} />
+                <span>更新 / 重新加載經文</span>
+              </button>
+
               {/* 5. 刪除經典 */}
               {currentFolderId === 'virtual_resume' ? (
                 <button 
@@ -2704,6 +2742,63 @@ export function Library({
                 >
                   取消
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 💡 Builder 更新 / 下載動態進度遮罩 */}
+      {buildProgress && (
+        <div className={`builder-progress-overlay theme-${settings.theme}`}>
+          <div className="builder-animation-box">
+            <div 
+              className="builder-outer-ring" 
+              style={{ transform: `rotate(${buildProgress.percent * 3.6}deg)`, transition: 'transform 0.2s linear' }}
+            />
+            <div className={`builder-mandala ${buildProgress.percent === 100 ? 'is-completed' : ''}`}>
+              <img 
+                src="/apple-touch-icon.png" 
+                alt="CBETA Reader 淨心閱讀"
+                className="builder-logo-img"
+              />
+            </div>
+          </div>
+
+          <div className="builder-header-message">
+            {buildProgress.message}
+          </div>
+
+          <div className="builder-details-card animate-slide-up">
+            <div className="builder-title">更新中{loadingDots}</div>
+            <div className="builder-progress-bar-wrapper">
+              <div className="builder-progress-bar-fill" style={{ width: `${buildProgress.percent}%` }} />
+            </div>
+            
+            <div className="builder-step-status">
+              <div className={`builder-step-item ${buildProgress.step === 'metadata' ? 'active' : ''} ${['fetch_content', 'navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
+                <span>1. 取得佛典詮釋資料(Index Builder)</span>
+                <span>{renderStepIcon('metadata', 1, buildProgress.step)}</span>
+              </div>
+              <div className={`builder-step-item ${buildProgress.step === 'fetch_content' ? 'active' : ''} ${['navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
+                <span>2. 經典段落標記解析(Reader Builder)</span>
+                <span>{renderStepIcon('fetch_content', 2, buildProgress.step)}</span>
+              </div>
+              <div className={`builder-step-item ${buildProgress.step === 'navigation' ? 'active' : ''} ${['reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
+                <span>3. 目錄結構與卷期編排(Navigation Builder)</span>
+                <span>{renderStepIcon('navigation', 3, buildProgress.step)}</span>
+              </div>
+              <div className={`builder-step-item ${buildProgress.step === 'reference' ? 'active' : ''} ${['search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
+                <span>4. 校勘註解與學術比對(Reference Builder)</span>
+                <span>{renderStepIcon('reference', 4, buildProgress.step)}</span>
+              </div>
+              <div className={`builder-step-item ${buildProgress.step === 'search_index' ? 'active' : ''} ${['ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
+                <span>5. 本地高速檢索索引建置(Search Index Builder)</span>
+                <span>{renderStepIcon('search_index', 5, buildProgress.step)}</span>
+              </div>
+              <div className={`builder-step-item ${buildProgress.step === 'ai_index' ? 'active' : ''} ${['saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
+                <span>6. AI 輔助閱讀與語意索引(AI Indexer)</span>
+                <span>{renderStepIcon('ai_index', 6, buildProgress.step)}</span>
               </div>
             </div>
           </div>
