@@ -9,6 +9,24 @@ lerna-debug.log*
 
 node_modules
 dist
+dist-r2-backup
+public/backup/*
+!public/backup/T0251/
+!public/backup/T0235/
+!public/backup/T0412/
+!public/backup/T0262/
+!public/backup/T0366/
+!public/backup/T0360/
+!public/backup/T0665/
+!public/backup/T0279/
+!public/backup/T0310/
+!public/backup/T0374/
+!public/backup/T0220/
+!public/backup/Y0001/
+!public/backup/Y0003/
+!public/backup/Y0004/
+!public/backup/Y0005/
+!public/backup/Y0014/
 dist-ssr
 *.local
 

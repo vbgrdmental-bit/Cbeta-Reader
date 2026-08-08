@@ -18,19 +18,21 @@
         "title": "1 壽命品",
         "lb": "p0365c05",
         "juan": 1,
-        "type": "品"
-      },
-      {
-        "title": "1",
-        "lb": "p0365c05",
-        "juan": 1,
-        "type": "品"
-      },
-      {
-        "title": "2",
-        "lb": "p0371c10",
-        "juan": 2,
-        "type": "品"
+        "type": "品",
+        "children": [
+          {
+            "title": "1",
+            "lb": "p0365c05",
+            "juan": 1,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0371c10",
+            "juan": 2,
+            "type": "品"
+          }
+        ]
       },
       {
         "title": "2 金剛身品",
@@ -48,43 +50,45 @@
         "title": "4 如來性品",
         "lb": "p0385b12",
         "juan": 4,
-        "type": "品"
-      },
-      {
-        "title": "1",
-        "lb": "p0385b12",
-        "juan": 4,
-        "type": "品"
-      },
-      {
-        "title": "2",
-        "lb": "p0390b11",
-        "juan": 5,
-        "type": "品"
-      },
-      {
-        "title": "3",
-        "lb": "p0396c14",
-        "juan": 6,
-        "type": "品"
-      },
-      {
-        "title": "4",
-        "lb": "p0402c14",
-        "juan": 7,
-        "type": "品"
-      },
-      {
-        "title": "5",
-        "lb": "p0409a15",
-        "juan": 8,
-        "type": "品"
-      },
-      {
-        "title": "6",
-        "lb": "p0416a14",
-        "juan": 9,
-        "type": "品"
+        "type": "品",
+        "children": [
+          {
+            "title": "1",
+            "lb": "p0385b12",
+            "juan": 4,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0390b11",
+            "juan": 5,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p0396c14",
+            "juan": 6,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p0402c14",
+            "juan": 7,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p0409a15",
+            "juan": 8,
+            "type": "品"
+          },
+          {
+            "title": "6",
+            "lb": "p0416a14",
+            "juan": 9,
+            "type": "品"
+          }
+        ]
       },
       {
         "title": "5 一切大眾所問品",
@@ -102,67 +106,71 @@
         "title": "7 聖行品",
         "lb": "p0432a07",
         "juan": 11,
-        "type": "品"
-      },
-      {
-        "title": "1",
-        "lb": "p0432a07",
-        "juan": 11,
-        "type": "品"
-      },
-      {
-        "title": "2",
-        "lb": "p0433c22",
-        "juan": 12,
-        "type": "品"
-      },
-      {
-        "title": "3",
-        "lb": "p0440a16",
-        "juan": 13,
-        "type": "品"
-      },
-      {
-        "title": "4",
-        "lb": "p0445b23",
-        "juan": 14,
-        "type": "品"
+        "type": "品",
+        "children": [
+          {
+            "title": "1",
+            "lb": "p0432a07",
+            "juan": 11,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0433c22",
+            "juan": 12,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p0440a16",
+            "juan": 13,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p0445b23",
+            "juan": 14,
+            "type": "品"
+          }
+        ]
       },
       {
         "title": "8 梵行品",
         "lb": "p0451b12",
         "juan": 15,
-        "type": "品"
-      },
-      {
-        "title": "1",
-        "lb": "p0451b12",
-        "juan": 15,
-        "type": "品"
-      },
-      {
-        "title": "2",
-        "lb": "p0457a15",
-        "juan": 16,
-        "type": "品"
-      },
-      {
-        "title": "3",
-        "lb": "p0462c18",
-        "juan": 17,
-        "type": "品"
-      },
-      {
-        "title": "4",
-        "lb": "p0468a08",
-        "juan": 18,
-        "type": "品"
-      },
-      {
-        "title": "5",
-        "lb": "p0474a23",
-        "juan": 19,
-        "type": "品"
+        "type": "品",
+        "children": [
+          {
+            "title": "1",
+            "lb": "p0451b12",
+            "juan": 15,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0457a15",
+            "juan": 16,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p0462c18",
+            "juan": 17,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p0468a08",
+            "juan": 18,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p0474a23",
+            "juan": 19,
+            "type": "品"
+          }
+        ]
       },
       {
         "title": "9 嬰兒行品",
@@ -174,127 +182,133 @@
         "title": "10 光明遍照高貴德王菩薩品",
         "lb": "p0487a06",
         "juan": 21,
-        "type": "品"
-      },
-      {
-        "title": "1",
-        "lb": "p0487a06",
-        "juan": 21,
-        "type": "品"
-      },
-      {
-        "title": "2",
-        "lb": "p0493b09",
-        "juan": 22,
-        "type": "品"
-      },
-      {
-        "title": "3",
-        "lb": "p0498b03",
-        "juan": 23,
-        "type": "品"
-      },
-      {
-        "title": "4",
-        "lb": "p0504a03",
-        "juan": 24,
-        "type": "品"
-      },
-      {
-        "title": "5",
-        "lb": "p0510b10",
-        "juan": 25,
-        "type": "品"
-      },
-      {
-        "title": "6",
-        "lb": "p0517c09",
-        "juan": 26,
-        "type": "品"
+        "type": "品",
+        "children": [
+          {
+            "title": "1",
+            "lb": "p0487a06",
+            "juan": 21,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0493b09",
+            "juan": 22,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p0498b03",
+            "juan": 23,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p0504a03",
+            "juan": 24,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p0510b10",
+            "juan": 25,
+            "type": "品"
+          },
+          {
+            "title": "6",
+            "lb": "p0517c09",
+            "juan": 26,
+            "type": "品"
+          }
+        ]
       },
       {
         "title": "11 師子吼菩薩品",
         "lb": "p0522b05",
         "juan": 27,
-        "type": "品"
-      },
-      {
-        "title": "1",
-        "lb": "p0522b05",
-        "juan": 27,
-        "type": "品"
-      },
-      {
-        "title": "2",
-        "lb": "p0528c13",
-        "juan": 28,
-        "type": "品"
-      },
-      {
-        "title": "3",
-        "lb": "p0535b23",
-        "juan": 29,
-        "type": "品"
-      },
-      {
-        "title": "4",
-        "lb": "p0541b21",
-        "juan": 30,
-        "type": "品"
-      },
-      {
-        "title": "5",
-        "lb": "p0547c13",
-        "juan": 31,
-        "type": "品"
-      },
-      {
-        "title": "6",
-        "lb": "p0554a02",
-        "juan": 32,
-        "type": "品"
+        "type": "品",
+        "children": [
+          {
+            "title": "1",
+            "lb": "p0522b05",
+            "juan": 27,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0528c13",
+            "juan": 28,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p0535b23",
+            "juan": 29,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p0541b21",
+            "juan": 30,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p0547c13",
+            "juan": 31,
+            "type": "品"
+          },
+          {
+            "title": "6",
+            "lb": "p0554a02",
+            "juan": 32,
+            "type": "品"
+          }
+        ]
       },
       {
         "title": "12 迦葉菩薩品",
         "lb": "p0560b09",
         "juan": 33,
-        "type": "品"
-      },
-      {
-        "title": "1",
-        "lb": "p0560b09",
-        "juan": 33,
-        "type": "品"
-      },
-      {
-        "title": "2",
-        "lb": "p0564c02",
-        "juan": 34,
-        "type": "品"
-      },
-      {
-        "title": "3",
-        "lb": "p0569a19",
-        "juan": 35,
-        "type": "品"
-      },
-      {
-        "title": "4",
-        "lb": "p0574b10",
-        "juan": 36,
-        "type": "品"
-      },
-      {
-        "title": "5",
-        "lb": "p0580c19",
-        "juan": 37,
-        "type": "品"
-      },
-      {
-        "title": "6",
-        "lb": "p0586a23",
-        "juan": 38,
-        "type": "品"
+        "type": "品",
+        "children": [
+          {
+            "title": "1",
+            "lb": "p0560b09",
+            "juan": 33,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0564c02",
+            "juan": 34,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p0569a19",
+            "juan": 35,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p0574b10",
+            "juan": 36,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p0580c19",
+            "juan": 37,
+            "type": "品"
+          },
+          {
+            "title": "6",
+            "lb": "p0586a23",
+            "juan": 38,
+            "type": "品"
+          }
+        ]
       },
       {
         "title": "13 憍陳如品",

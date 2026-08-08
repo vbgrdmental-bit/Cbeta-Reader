@@ -142,7 +142,7 @@ function convertXmlToHtml(xmlStr) {
 }
 
 /**
- * 解析 CBReader 2X 的 toc XML 檔 (例如 toc/T/T0412.xml)，生成官方 mulu 目錄樹
+ * 解析 CBReader 2X 的 toc XML 檔 (例如 toc/T/T0262.xml)，生成官方多層級 mulu 目錄樹 (含 children 樹狀節點)
  */
 function parseTocXml(workId) {
   const prefix = workId.charAt(0);
@@ -153,29 +153,71 @@ function parseTocXml(workId) {
   }
 
   const xmlContent = fs.readFileSync(tocFilePath, 'utf8');
-  const muluList = [];
 
   const catalogMatch = xmlContent.match(/<nav\s+type="catalog"[\s\S]*?<\/nav>/i);
-  if (!catalogMatch) return muluList;
+  if (!catalogMatch) return [];
 
-  const catalogXml = catalogMatch[0];
-  const cblinkRegex = /<cblink\s+href="[^"]*_(\d+)\.xml#p([^"]+)">([\s\S]*?)<\/cblink>/gi;
-  
-  let match;
-  while ((match = cblinkRegex.exec(catalogXml)) !== null) {
-    const juan = parseInt(match[1], 10);
-    const lb = `p${match[2]}`;
-    const rawTitle = match[3].replace(/<[^>]+>/g, '').trim();
+  const navContent = catalogMatch[0];
 
-    muluList.push({
-      title: rawTitle,
-      lb: lb,
-      juan: juan,
-      type: '品'
-    });
+  function parseOl(olString) {
+    const list = [];
+    let pos = 0;
+    while (pos < olString.length) {
+      const liStart = olString.indexOf('<li', pos);
+      if (liStart === -1) break;
+      
+      let depth = 1;
+      let cur = liStart + 3;
+      let liEnd = -1;
+      while (cur < olString.length) {
+        const nextSubLi = olString.indexOf('<li', cur);
+        const nextCloseLi = olString.indexOf('</li>', cur);
+        if (nextCloseLi === -1) break;
+        
+        if (nextSubLi !== -1 && nextSubLi < nextCloseLi) {
+          depth++;
+          cur = nextSubLi + 3;
+        } else {
+          depth--;
+          if (depth === 0) {
+            liEnd = nextCloseLi + 5;
+            break;
+          }
+          cur = nextCloseLi + 5;
+        }
+      }
+
+      if (liEnd === -1) break;
+      const liContent = olString.slice(liStart, liEnd);
+      pos = liEnd;
+
+      const cblinkMatch = liContent.match(/<cblink\s+href="[^"]*_(\d+)\.xml#p([^"]+)">([\s\S]*?)<\/cblink>/i);
+      if (cblinkMatch) {
+        const juan = parseInt(cblinkMatch[1], 10);
+        const lb = `p${cblinkMatch[2]}`;
+        const title = cblinkMatch[3].replace(/<[^>]+>/g, '').trim();
+
+        const node = { title, lb, juan, type: '品' };
+
+        const olMatch = liContent.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
+        if (olMatch) {
+          const children = parseOl(olMatch[1]);
+          if (children.length > 0) {
+            node.children = children;
+          }
+        }
+
+        list.push(node);
+      }
+    }
+
+    return list;
   }
 
-  return muluList;
+  const firstOlMatch = navContent.match(/<ol[^>]*>([\s\S]*?)<\/ol>\s*<\/nav>/i) || navContent.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
+  if (!firstOlMatch) return [];
+
+  return parseOl(firstOlMatch[1]);
 }
 
 /**
