@@ -905,7 +905,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           <div className="settings-version-row">
             <div className="settings-version-info">
               {isBackupMode() ? (
-                <span>backup App: v1.0.1 <span className="version-divider">|</span> Builder: v1.0.1</span>
+                <span>backup App: v1.0.2 <span className="version-divider">|</span> Builder: v1.0.2</span>
               ) : (
                 <span>App: v{APP_VERSION} <span className="version-divider">|</span> Builder: v{BUILDER_VERSION}</span>
               )}
@@ -1047,13 +1047,23 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
 
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <span>⭐ backup App: v1.0.1</span>
-                        <span className="changelog-date">(2026-08-08 開始)</span>
+                        <span>⭐ backup App: v1.0.2</span>
+                        <span className="changelog-date">(2026-08-09)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 新增備援閱讀模式專用頂部「備援」宋體方框視覺識別標籤。</li>
-                        <li>• 支援獨立 `?source=backup` 網址切換與備援模式設定選項。</li>
-                        <li>• 全面隔離備援系統與主源 App 版本紀錄，獨立記錄 App 微調歷程。</li>
+                        <li>• 調整閱讀頁「備援」標籤位置，由頂部控制列移至經文正文標題正上方。</li>
+                        <li>• 全面升級所有「備援」視覺標籤字型為清新正黑體（sans-serif）。</li>
+                      </ul>
+                    </div>
+
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">
+                        <span>backup App: v1.0.1</span>
+                        <span className="changelog-date">(2026-08-08)</span>
+                      </div>
+                      <ul className="changelog-list">
+                        <li>• 新增備援閱讀模式視覺識別標籤與獨立 `?source=backup` 網址切換機制。</li>
+                        <li>• 支援備援專用閱讀設定與系統版本歷史區隔。</li>
                       </ul>
                     </div>
                   </div>
@@ -1078,13 +1088,24 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
 
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <span>⭐ backup Builder: v1.0.1</span>
+                        <span>⭐ backup Builder: v1.0.2</span>
+                        <span className="changelog-date">(2026-08-09)</span>
+                      </div>
+                      <ul className="changelog-list">
+                        <li>• 修正備援模式線上檢索限制，解鎖全 CBETA 大藏經庫資料大範圍查詢（包含「玄奘」78 本、「地藏」20+ 本等全庫檢索）。</li>
+                        <li>• 備援資料摘要註明經文內容版本號 `(CBReader 2X v0.9.9 2026-01-21)`。</li>
+                      </ul>
+                    </div>
+
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">
+                        <span>backup Builder: v1.0.1</span>
                         <span className="changelog-date">(2026-08-08 開始)</span>
                       </div>
                       <ul className="changelog-list">
                         <li>• <strong>開始日期</strong>：2026-08-08 正式建立獨立備援解析與靜態鏡像下載機制。</li>
                         <li>• <strong>備援來源地點</strong>：專屬 `/backup` 本地靜態庫與 GitHub CDN / Cloudflare R2 離線預編譯鏡像檔 (`/backup/[workId]/[juan].json`)。</li>
-                        <li>• <strong>備援資料摘要</strong>：收錄 CBETA 大藏經全冊全卷（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）離線預編譯 JSON 經文包（包含完整段落正文、章節目錄 `toc` 與基礎經號索引），提供離線檢索與 0 秒極速開檔。</li>
+                        <li>• <strong>備援資料摘要</strong>：收錄 CBETA 大藏經全冊全卷（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）離線預編譯 JSON 經文包。</li>
                       </ul>
                     </div>
                   </div>

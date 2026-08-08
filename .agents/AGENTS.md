@@ -45,6 +45,7 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 - **對外 App 說明對話框原則 (SettingsView.tsx)**：
   - 對外 UI 的版本更新紀錄一律為**精簡摘要**，每次改版**不超過 3 項**，每項**不超過 50 字**。
   - 說明對話框（點選「？」）採用 **獨立分區（上方 App / 下方 Builder）** 呈現，最新版本直接顯示，其餘歷程依「+ 更多修改歷程」(置左) 收折呈現。
+  - **自動累積更新升版原則 (Auto-Batch Versioning Policy)**：當收集了 3 個（含）以上的調整項目，自動整合至對話框內摘要記錄，並自動提升第三位數 Patch 版號（例：`backup App: v1.0.2`、`backup Builder: v1.0.2`）。
   - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog

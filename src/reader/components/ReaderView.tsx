@@ -1534,11 +1534,6 @@ export function ReaderView({
       
       {/* 頂部工具列 */}
       <div className={`reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-        {isBackupMode() && (
-          <div className="header-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
-            備援
-          </div>
-        )}
         <button className="library-header-btn" onClick={() => onBackToLibrary(true)} title="首頁">
           <Home size={20} />
         </button>
@@ -1832,6 +1827,11 @@ export function ReaderView({
           {/* 書名與標題 */}
           {currentJuanNum === 1 && (
             <>
+              {isBackupMode() && (
+                <div className="reader-text-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
+                  備援
+                </div>
+              )}
               <h1 className="reader-book-title">{book.metadata.title}</h1>
               <div className="reader-book-author">{book.metadata.creators}</div>
             </>
