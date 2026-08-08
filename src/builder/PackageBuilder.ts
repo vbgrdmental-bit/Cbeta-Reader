@@ -99,16 +99,19 @@ export class PackageBuilder {
       const { content, rawToc } = await ReaderBuilder.buildContent(
         workId, 
         actualJuansCount,
-        (p: number, currentJuan?: number, totalJuans?: number, remSec?: number) => {
+        (p: number, currentJuan?: number, totalJuans?: number, remSec?: number, isBackup?: boolean) => {
           let detail = `（卷次下載進度: ${Math.floor(p)}%）`;
           if (currentJuan && totalJuans) {
             const timeStr = remSec != null && remSec > 0 ? `，剩餘約 ${formatTimeRemaining(remSec)}` : '';
             detail = `（已完成 ${currentJuan} / ${totalJuans} 卷${timeStr}）`;
           }
+          const backupNote = isBackup 
+            ? ' 💡 CBETA 官方伺服器連線繁忙，已自動切換至離線版本（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）。' 
+            : '';
           onProgress({ 
             step: 'fetch_content', 
             percent: 10 + Math.floor(p * 0.65), // 佔比 10% - 75%
-            message: `正在下載經典內文與標記 ${detail}` 
+            message: `正在下載經典內文與標記 ${detail}${backupNote}` 
           });
         }
       );

@@ -58,7 +58,7 @@ export class ReaderBuilder {
   static async buildContent(
     workId: string, 
     juansCountInput: number,
-    onProgress?: (progress: number, currentJuan?: number, totalJuans?: number, remSec?: number) => void
+    onProgress?: (progress: number, currentJuan?: number, totalJuans?: number, remSec?: number, isBackup?: boolean) => void
   ): Promise<{ content: BookContent; rawToc: any[] }> {
     const juansCount = (juansCountInput && juansCountInput > 0) ? juansCountInput : 1;
     const juans: JuanData[] = [];
@@ -71,6 +71,12 @@ export class ReaderBuilder {
       // 💡 禮貌型請求防線流併行池：維持 2 線程平滑請求 + 100ms 微微延遲，避免觸發 CBETA/Cloudflare WAF 機器人防禦 (429/403)
       const CONCURRENCY = 2;
       const queue = Array.from({ length: juansCount }, (_, idx) => idx + 1);
+      let hasSwitchedToR2Backup = false;
+
+      // 💡 Cloudflare R2 離線備用鏡像源 Base URL
+      const BACKUP_R2_BASE_URL = (import.meta.env && import.meta.env.VITE_BACKUP_R2_URL) 
+        ? import.meta.env.VITE_BACKUP_R2_URL 
+        : 'https://cdn.cbeta-reader.org/backup';
 
       const worker = async () => {
         while (queue.length > 0) {
@@ -85,7 +91,7 @@ export class ReaderBuilder {
           const directUrl = `https://cbdata.dila.edu.tw${cleanPath}`;
           
           let success = false;
-          // 自動重試最多 3 次
+          // 1. 自動重試官方 API 最多 3 次
           for (let attempt = 1; attempt <= 3; attempt++) {
             try {
               const timeoutMs = attempt === 1 ? 6500 : 10000;
@@ -137,8 +143,33 @@ export class ReaderBuilder {
             await new Promise(r => setTimeout(r, 250 * attempt));
           }
 
+          // 2. 官方 API 失敗時，自動切換至 Cloudflare R2 離線備用鏡像源
           if (!success) {
-            console.error(`[Juan ${j}] All 3 attempts failed to fetch from CBETA.`);
+            console.warn(`[Juan ${j}] Primary CBETA API unavailable, switching to Cloudflare R2 backup mirror...`);
+            try {
+              const r2Url = `${BACKUP_R2_BASE_URL}/${workId}/${j}.json`;
+              const r2Res = await fetchWithTimeout(r2Url, {}, 5000);
+              if (r2Res && r2Res.ok) {
+                const r2Data = await r2Res.json().catch(() => null);
+                if (r2Data && Array.isArray(r2Data.results) && r2Data.results.length > 0) {
+                  const rawResult = r2Data.results[0];
+                  const html = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
+                  const segments = this.parseHtmlToSegments(html, workId, j);
+                  if (segments && segments.length > 0) {
+                    juansMap.set(j, segments);
+                    success = true;
+                    hasSwitchedToR2Backup = true;
+                    console.log(`[Juan ${j}] Successfully retrieved from Cloudflare R2 Backup.`);
+                  }
+                }
+              }
+            } catch (r2Err) {
+              console.warn(`[Juan ${j}] Cloudflare R2 Backup mirror fetch failed:`, r2Err);
+            }
+          }
+
+          if (!success) {
+            console.error(`[Juan ${j}] All attempts (Official API + R2 Backup) failed to fetch.`);
             throw new Error(`無法向 CBETA 伺服器獲取《${workId}》第 ${j} 卷正統經文。本 App 堅持 100% CBETA 原文正統，絕不提供任何簡化或摘要內容。請檢查網路連線後重試。`);
           }
 
@@ -148,7 +179,12 @@ export class ReaderBuilder {
             const avgPerJuan = elapsed / completedJuansCount;
             const remainingSeconds = Math.ceil((juansCount - completedJuansCount) * avgPerJuan);
             const percent = Math.floor((completedJuansCount / juansCount) * 100);
-            onProgress(percent, completedJuansCount, juansCount, remainingSeconds);
+            
+            // 💡 若已切換至 R2 備用鏡像，附帶讀者透通提示訊息
+            if (hasSwitchedToR2Backup) {
+              console.info('💡 CBETA 官方伺服器連線繁忙，已自動切換至離線版本（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）。');
+            }
+            onProgress(percent, completedJuansCount, juansCount, remainingSeconds, hasSwitchedToR2Backup);
           }
         }
       };
