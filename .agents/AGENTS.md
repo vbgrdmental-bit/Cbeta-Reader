@@ -29,7 +29,8 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.0.0` (App: v4.0.0 / Builder: v2.4.0)
+- **Current Version**: `v4.0.1` (App: v4.0.1 / Builder: v2.9.0)
+- **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -48,6 +49,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ v4.0.1** (2026-08-08) [CBETA 官方主源純淨穩定基線 Checkpoint Tag: `checkpoint-v4.0.1-cbeta-primary-stable`]
+  - 確保 Vercel 主站 100% 直連 CBETA 官方 API (`cbdata.dila.edu.tw`)，零離線快取無感偷換污染。
+  - 修復 `<p class="lg">` 散文段落被誤判為偈頌體導致短句折行排版 Bug，還原完整連貫段落。
+  - 抹除 `<cb:docNumber>` 雜質 (如 `No.235N`)，完成 `sourceMode` (`?source=backup`) 獨立雙軌架構。
 - **⭐ v4.0.0** (2026-08-06) [App Major Release 重大更新]
   - 新增文章「重點與筆記」功能，支援隨文寫下感悟心得，並可於首頁專屬資料夾集中集中複習、編輯與導航跳轉。
   - 全面導入手勢與點擊雙向「絲滑切換」過渡動態，支援手指向左右滑動與點選平滑推進離場。
