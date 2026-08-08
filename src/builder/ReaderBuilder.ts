@@ -68,15 +68,8 @@ export class ReaderBuilder {
     const startTime = Date.now();
 
     try {
-      // 💡 極速併行池：啟用 6 線程極速併行流下載，離線/鏡像庫快取達成 0.1 秒極速獲取！
       const CONCURRENCY = 6;
       const queue = Array.from({ length: juansCount }, (_, idx) => idx + 1);
-      let hasSwitchedToR2Backup = false;
-
-      // 💡 離線備用鏡像源 Base URL (預設直接存取本地與部署之 /backup 離線快取庫)
-      const BACKUP_CDN_BASE_URL = (import.meta.env && (import.meta.env.VITE_BACKUP_CDN_URL || import.meta.env.VITE_BACKUP_R2_URL))
-        ? (import.meta.env.VITE_BACKUP_CDN_URL || import.meta.env.VITE_BACKUP_R2_URL) 
-        : '/backup';
 
       const worker = async () => {
         while (queue.length > 0) {
@@ -85,37 +78,10 @@ export class ReaderBuilder {
 
           let success = false;
 
-          // 💡 0. 優先通道 (Fast-Path)：先檢測本地 / CDN 離線鏡像源 (`/backup/${workId}/${j}.json`)
-          // 本地鏡像源反應速度極快 (0.005 秒)，免去向 CBETA 官方伺服器連線超時 (30~50 秒) 的空等！
-          try {
-            const r2Url = `${BACKUP_CDN_BASE_URL}/${workId}/${j}.json`;
-            const r2Res = await fetchWithTimeout(r2Url, {}, 1200);
-            if (r2Res && r2Res.ok) {
-              const r2Data = await r2Res.json().catch(() => null);
-              if (r2Data && r2Data.toc && Array.isArray(r2Data.toc.mulu) && r2Data.toc.mulu.length > 0 && allRawTocs.length === 0) {
-                allRawTocs = r2Data.toc.mulu;
-              }
-              if (r2Data && Array.isArray(r2Data.results) && r2Data.results.length > 0) {
-                const rawResult = r2Data.results[0];
-                const html = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
-                const segments = this.parseHtmlToSegments(html, workId, j, allRawTocs.length > 0 ? undefined : allRawTocs);
-                if (segments && segments.length > 0) {
-                  juansMap.set(j, segments);
-                  success = true;
-                  hasSwitchedToR2Backup = true;
-                  console.log(`[Juan ${j}] ⚡ Fast-Path: Successfully retrieved from Local Backup Mirror.`);
-                }
-              }
-            }
-          } catch (r2FastErr) {
-            // 本地鏡像無此經文時，回退至 CBETA 官方 API
-          }
-
-          // 1. 若本地鏡像無此經文，向 CBETA 官方 API 請求 (最多重試 2 次，防範無效等待)
-          if (!success) {
-            const cleanPath = `/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1`;
-            const relativeUrl = getApiUrl(cleanPath);
-            const directUrl = `https://cbdata.dila.edu.tw${cleanPath}`;
+          // 1. 向 CBETA 官方 API 請求 (最多重試 2 次，防範無效等待)
+          const cleanPath = `/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1`;
+          const relativeUrl = getApiUrl(cleanPath);
+          const directUrl = `https://cbdata.dila.edu.tw${cleanPath}`;
 
             for (let attempt = 1; attempt <= 2; attempt++) {
               try {
@@ -165,7 +131,6 @@ export class ReaderBuilder {
               }
               await new Promise(r => setTimeout(r, 150));
             }
-          }
 
           if (!success) {
             console.error(`[Juan ${j}] All attempts (Official API + R2 Backup) failed to fetch.`);
@@ -179,11 +144,7 @@ export class ReaderBuilder {
             const remainingSeconds = Math.ceil((juansCount - completedJuansCount) * avgPerJuan);
             const percent = Math.floor((completedJuansCount / juansCount) * 100);
             
-            // 💡 若已切換至 R2 備用鏡像，附帶讀者透通提示訊息
-            if (hasSwitchedToR2Backup) {
-              console.info('💡 CBETA 官方伺服器連線繁忙，已自動切換至離線版本（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）。');
-            }
-            onProgress(percent, completedJuansCount, juansCount, remainingSeconds, hasSwitchedToR2Backup);
+            onProgress(percent, completedJuansCount, juansCount, remainingSeconds);
           }
         }
       };
@@ -501,10 +462,16 @@ export class ReaderBuilder {
             }
           });
 
-          // 💡 1. 移除所有行號標籤 (.lb, [class*="lb"])，防範 CBETA 行號文字 (如 T13n0412_p0782b07) 混入正文
-          cleanClone.querySelectorAll('.lb, [class*="lb"]').forEach(lbEl => {
+          // 💡 1. 移除所有行號標籤 (.lb, [class*="lb"]) 與 目錄/經號中詮釋標籤 (docnumber, mulu)
+          cleanClone.querySelectorAll('.lb, [class*="lb"], docnumber, cb\\:docnumber, .docnumber, .cb-docnumber, mulu, cb\\:mulu, .cb-mulu').forEach(lbEl => {
             if (!lbEl.classList.contains('gaiji') && !lbEl.classList.contains('gaijiAnchor') && !lbEl.classList.contains('gaiji_note')) {
               lbEl.remove();
+            }
+          });
+          cleanClone.querySelectorAll('*').forEach(child => {
+            const tName = child.tagName.toLowerCase();
+            if (tName.includes('docnumber') || tName.includes('mulu') || child.classList.contains('cb-mulu')) {
+              child.remove();
             }
           });
 
@@ -594,8 +561,8 @@ export class ReaderBuilder {
           }
 
           const isHead = el.tagName.toUpperCase() === 'HEAD' || el.classList.contains('head') || el.hasAttribute('data-head-level');
-          const isVerse = el.classList.contains('lg') || isVerseLine;
-          const isByline = el.classList.contains('byline');
+          const isVerse = (el.tagName.toUpperCase() === 'LG' && !hasVerseLineChildren) || isVerseLine;
+          const isByline = el.classList.contains('byline') || el.tagName.toUpperCase() === 'BYLINE';
 
           // 💡 經文引文/粗體經文判斷 (div-orig, p.bold, orig 等標籤，表示為金剛經等論典中所引用的原始經文)
           const isOrig = !isByline && !isHead && (
