@@ -193,9 +193,9 @@ When comparing imported book segments with original CBETA documents to fix error
 
 - **雙軌架構原則**：
   1. **主線（Primary Source）**：以 CBETA 官方 API (`cbdata.dila.edu.tw`) 為第一優先經文下載來源，確保取得 100% CBETA 最新校勘版本。
-  2. **備援（Secondary Backup Source）**：以 Cloudflare R2 自建預編譯鏡像為第二備用來源。當官方 API 超時、斷線或遭遇 429 限流時，自動無感切換至備援鏡像。
+  2. **備援（Secondary Backup Source）**：以 GitHub Releases / GitHub CDN / Cloudflare R2 自建預編譯鏡像為第二備用來源。當官方 API 超時、斷線或遭遇 429 限流時，自動無感切換至備援鏡像。
 - **讀者知情與透明通知規範 (Notification Policy)**：
-  - 當觸發備援機制切換至 Cloudflare R2 離線備用鏡像源時，系統**必須主動向讀者顯示溫馨提示 Toast 或標籤**：
+  - 當觸發備援機制切換至離線備用鏡像源時，系統**必須主動向讀者顯示溫馨提示 Toast 或標籤**：
     > *「💡 CBETA 官方伺服器連線繁忙，已自動切換至離線版本（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）。」*
   - 確保讀者充分知情資料來源與版本狀態，兼顧高可用性下載體驗與資訊透明度。
 

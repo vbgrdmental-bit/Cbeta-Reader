@@ -73,10 +73,10 @@ export class ReaderBuilder {
       const queue = Array.from({ length: juansCount }, (_, idx) => idx + 1);
       let hasSwitchedToR2Backup = false;
 
-      // 💡 Cloudflare R2 離線備用鏡像源 Base URL
-      const BACKUP_R2_BASE_URL = (import.meta.env && import.meta.env.VITE_BACKUP_R2_URL) 
-        ? import.meta.env.VITE_BACKUP_R2_URL 
-        : 'https://cdn.cbeta-reader.org/backup';
+      // 💡 離線備用鏡像源 Base URL (支援 GitHub Releases / GitHub CDN / Cloudflare R2)
+      const BACKUP_CDN_BASE_URL = (import.meta.env && (import.meta.env.VITE_BACKUP_CDN_URL || import.meta.env.VITE_BACKUP_R2_URL))
+        ? (import.meta.env.VITE_BACKUP_CDN_URL || import.meta.env.VITE_BACKUP_R2_URL) 
+        : 'https://raw.githubusercontent.com/vbgrdmental-bit/Cbeta-Reader/main/dist-r2-backup';
 
       const worker = async () => {
         while (queue.length > 0) {
@@ -143,11 +143,11 @@ export class ReaderBuilder {
             await new Promise(r => setTimeout(r, 250 * attempt));
           }
 
-          // 2. 官方 API 失敗時，自動切換至 Cloudflare R2 離線備用鏡像源
+          // 2. 官方 API 失敗時，自動切換至 GitHub Releases / CDN 離線備用鏡像源
           if (!success) {
-            console.warn(`[Juan ${j}] Primary CBETA API unavailable, switching to Cloudflare R2 backup mirror...`);
+            console.warn(`[Juan ${j}] Primary CBETA API unavailable, switching to GitHub / CDN backup mirror...`);
             try {
-              const r2Url = `${BACKUP_R2_BASE_URL}/${workId}/${j}.json`;
+              const r2Url = `${BACKUP_CDN_BASE_URL}/${workId}/${j}.json`;
               const r2Res = await fetchWithTimeout(r2Url, {}, 5000);
               if (r2Res && r2Res.ok) {
                 const r2Data = await r2Res.json().catch(() => null);
@@ -159,12 +159,12 @@ export class ReaderBuilder {
                     juansMap.set(j, segments);
                     success = true;
                     hasSwitchedToR2Backup = true;
-                    console.log(`[Juan ${j}] Successfully retrieved from Cloudflare R2 Backup.`);
+                    console.log(`[Juan ${j}] Successfully retrieved from Backup CDN Mirror.`);
                   }
                 }
               }
             } catch (r2Err) {
-              console.warn(`[Juan ${j}] Cloudflare R2 Backup mirror fetch failed:`, r2Err);
+              console.warn(`[Juan ${j}] Backup CDN mirror fetch failed:`, r2Err);
             }
           }
 
