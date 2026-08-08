@@ -1,0 +1,472 @@
+{
+  "workId": "T0220",
+  "juan": 89,
+  "results": [
+    {
+      "html": "<body>\r\n<div class=\"cb-mulu\" data-level=\"1\" data-n=\"2\" data-type=\"會\">3 會</div><div class=\"cb-mulu\" data-level=\"2\" data-n=\"3\" data-type=\"品\">3 善現品</div><div class=\"cb-mulu\">7</div><cb:div n=\"03\" type=\"hui\"><cb:div type=\"pin\">\r\n\r\n<span class=\"lb\" id=\"p0483c07\"></span>\r\n<span class=\"lb\" id=\"p0483c08\"></span>\r\n<span class=\"lb\" id=\"p0483c09\"></span>\r\n<span class=\"lb\" id=\"p0483c10\"></span><cb:juan n=\"489\" fun=\"open\"><div class=\"cb-mulu\"></div><div class=\"cb-mulu\">8</div><cb:jhead><title>大般若波羅蜜多經</title>卷第四百八\r\n<span class=\"lb\" id=\"p0483c11\"></span>十九</cb:jhead>\r\n<span class=\"lb\" id=\"p0483c12\"></span>\r\n<span class=\"lb\" id=\"p0483c13\"></span><byline><anchor xml:id=\"fxT07p0483c01\"/>三藏法師玄奘奉　詔譯</byline>\r\n<span class=\"lb\" id=\"p0483c14\"></span><cb:jhead type=\"pin\">第三分善現品第三之八</cb:jhead></cb:juan>\r\n<span class=\"lb\" id=\"p0483c15\"></span><p>「云何名為普超一切三摩地？謂若住此三摩地\r\n<span class=\"lb\" id=\"p0483c16\"></span>時，普超三界有情諸法，是故名為普超一切\r\n<span class=\"lb\" id=\"p0483c17\"></span>三摩地。</p><p>「云何名為決判一切三摩地？謂若住此\r\n<span class=\"lb\" id=\"p0483c18\"></span>三摩地時，普能決判有情諸法，是故名為決\r\n<span class=\"lb\" id=\"p0483c19\"></span>判一切三摩地。</p><p>「云何名為散猶豫三摩地？謂\r\n<span class=\"lb\" id=\"p0483c20\"></span>若住此三摩地時，於諸等持及一切法，所有\r\n<span class=\"lb\" id=\"p0483c21\"></span>猶豫皆能散滅，是故名為散猶豫三摩地。</p><p>「云\r\n<span class=\"lb\" id=\"p0483c22\"></span>何名為無所住三摩地？謂若住此三摩地時，\r\n<span class=\"lb\" id=\"p0483c23\"></span>不見諸法有所住處，是故名為無所住三摩\r\n<span class=\"lb\" id=\"p0483c24\"></span>地。</p><p>「云何名為一相莊嚴三摩地？謂若住此三\r\n<span class=\"lb\" id=\"p0483c25\"></span>摩地時，不見諸法有少相者，是故名為一相\r\n<span class=\"lb\" id=\"p0483c26\"></span>莊嚴三摩地。</p><p>「云何名為引發行相三摩地？謂\r\n<span class=\"lb\" id=\"p0483c27\"></span>若住此三摩地時，於諸等持及一切法，雖能\r\n<span class=\"lb\" id=\"p0483c28\"></span>引發種種行相，而都不見能、所引發，是故名\r\n<span class=\"lb\" id=\"p0483c29\"></span>為引發行相三摩地。</p><p>「云何名為一行相三摩\r\n\r\n<span class=\"lb\" id=\"p0484a01\"></span>地？謂若住此三摩地時，見諸等持無二行相，\r\n<span class=\"lb\" id=\"p0484a02\"></span>是故名為一行相三摩地。</p><p>「云何名為離行相\r\n<span class=\"lb\" id=\"p0484a03\"></span>三摩地？謂若住此三摩地時，見諸等持都無\r\n<span class=\"lb\" id=\"p0484a04\"></span>行相，是故名為離行相三摩地。</p><p>「云何名為妙\r\n<span class=\"lb\" id=\"p0484a05\"></span>行相三摩地？謂若住此三摩地時，令諸等持\r\n<span class=\"lb\" id=\"p0484a06\"></span>行相微妙離諸戲論，是故名為妙行相三摩\r\n<span class=\"lb\" id=\"p0484a07\"></span>地。</p><p>「云何名為達諸有底散壞三摩地？謂若住\r\n<span class=\"lb\" id=\"p0484a08\"></span>此三摩地時，於諸等持及一切法，得通達智\r\n<span class=\"lb\" id=\"p0484a09\"></span>如實悟入，得悟入已於諸有法通達散壞令\r\n<span class=\"lb\" id=\"p0484a10\"></span>無所遺，是故名為達諸有底散壞三摩地。</p><p>「云\r\n<span class=\"lb\" id=\"p0484a11\"></span>何名為寶堅固三摩地？謂若住此三摩地時，\r\n<span class=\"lb\" id=\"p0484a12\"></span>見佛、法、僧不可破壞，同無相故，是故名為寶\r\n<span class=\"lb\" id=\"p0484a13\"></span>堅固三摩地。</p><p>「云何名為解脫音聲文字三摩\r\n<span class=\"lb\" id=\"p0484a14\"></span>地？謂若住此三摩地時，見諸等持解脫一切\r\n<span class=\"lb\" id=\"p0484a15\"></span>音聲文字眾相寂滅，是故名為解脫音聲文\r\n<span class=\"lb\" id=\"p0484a16\"></span>字三摩地。</p><p>「云何名為入施設語言三摩地？謂\r\n<span class=\"lb\" id=\"p0484a17\"></span>若住此三摩地時，悟入一切等持諸法，施設\r\n<span class=\"lb\" id=\"p0484a18\"></span>語言無著無礙，是故名為入施設語言三摩\r\n<span class=\"lb\" id=\"p0484a19\"></span>地。</p><p>「云何名為炬熾然三摩地？謂若住此三摩\r\n<span class=\"lb\" id=\"p0484a20\"></span>地時，於諸等持威光照曜，是故名為炬熾然\r\n<span class=\"lb\" id=\"p0484a21\"></span>三摩地。</p><p>「云何名為嚴淨相三摩地？謂若住此\r\n<span class=\"lb\" id=\"p0484a22\"></span>三摩地時，普能嚴淨一切定相，是故名為嚴\r\n<span class=\"lb\" id=\"p0484a23\"></span>淨相三摩地。</p><p>「云何名為無標幟三摩地？謂若\r\n<span class=\"lb\" id=\"p0484a24\"></span>住此三摩地時，於諸等持不見標幟，是故名\r\n<span class=\"lb\" id=\"p0484a25\"></span>為無標幟三摩地。</p><p>「云何名為具妙相三摩地？\r\n<span class=\"lb\" id=\"p0484a26\"></span>謂若住此三摩地時，諸定妙相無不具足，是\r\n<span class=\"lb\" id=\"p0484a27\"></span>故名為具妙相三摩地。</p><p>「云何名為不憙一切\r\n<span class=\"lb\" id=\"p0484a28\"></span>苦樂三摩地？謂若住此三摩地時，於諸等持\r\n<span class=\"lb\" id=\"p0484a29\"></span>樂苦之相不樂觀察，是故名為不憙一切苦\r\n\r\n<span class=\"lb\" id=\"p0484b01\"></span>樂三摩地。</p><p>「云何名為無盡行相三摩地？謂若\r\n<span class=\"lb\" id=\"p0484b02\"></span>住此三摩地時，不見諸定行相有盡，是故名\r\n<span class=\"lb\" id=\"p0484b03\"></span>為無盡行相三摩地。</p><p>「云何名為具總持三摩地？\r\n<span class=\"lb\" id=\"p0484b04\"></span>謂若住此三摩地時，能總任持諸定勝事，是\r\n<span class=\"lb\" id=\"p0484b05\"></span>故名為具總持三摩地。</p><p>「云何名為攝伏一切正\r\n<span class=\"lb\" id=\"p0484b06\"></span>性邪性三摩地？謂若住此三摩地時，於諸等\r\n<span class=\"lb\" id=\"p0484b07\"></span>持正性邪性攝伏諸見皆令不起，是故名為\r\n<span class=\"lb\" id=\"p0484b08\"></span>攝伏一切正性邪性三摩地。</p><p>「云何名為息違\r\n<span class=\"lb\" id=\"p0484b09\"></span>順三摩地？謂若住此三摩地時，於諸等持及\r\n<span class=\"lb\" id=\"p0484b10\"></span>一切法，都不見有違順之相，是故名為息違\r\n<span class=\"lb\" id=\"p0484b11\"></span>順三摩地。</p><p>「云何名為離愛憎三摩地？謂若住\r\n<span class=\"lb\" id=\"p0484b12\"></span>此三摩地時，於諸等持及一切法，都不見有\r\n<span class=\"lb\" id=\"p0484b13\"></span>愛憎之相，是故名為離愛憎三摩地。</p><p>「云何名\r\n<span class=\"lb\" id=\"p0484b14\"></span>為無垢明三摩地？謂若住此三摩地時，都不\r\n<span class=\"lb\" id=\"p0484b15\"></span>見有垢相、明相，是故名為無垢明三摩地。</p><p>「云\r\n<span class=\"lb\" id=\"p0484b16\"></span>何名為具堅固三摩地？謂若住此三摩地時，\r\n<span class=\"lb\" id=\"p0484b17\"></span>令諸等持皆得堅固，是故名為具堅固三摩\r\n<span class=\"lb\" id=\"p0484b18\"></span>地。</p><p>「云何名為滿月淨光三摩地？謂若住此三\r\n<span class=\"lb\" id=\"p0484b19\"></span>摩地時，令諸等持功德增益，如淨滿月光增\r\n<span class=\"lb\" id=\"p0484b20\"></span>海水，是故名為滿月淨光三摩地。</p><p>「云何名為\r\n<span class=\"lb\" id=\"p0484b21\"></span>大莊嚴三摩地？謂若住此三摩地時，令諸等\r\n<span class=\"lb\" id=\"p0484b22\"></span>持成就種種微妙希有大莊嚴事，是故名為\r\n<span class=\"lb\" id=\"p0484b23\"></span>大莊嚴三摩地。</p><p>「云何名為普照世間三摩地？\r\n<span class=\"lb\" id=\"p0484b24\"></span>謂若住此三摩地時，照諸等持及一切法，令\r\n<span class=\"lb\" id=\"p0484b25\"></span>有情類皆得開曉，是故名為普照世間三摩\r\n<span class=\"lb\" id=\"p0484b26\"></span>地。</p><p>「云何名為定平等性三摩地？謂若住此三\r\n<span class=\"lb\" id=\"p0484b27\"></span>摩地時，不見等持定散差別，是故名為定平\r\n<span class=\"lb\" id=\"p0484b28\"></span>等性三摩地。</p><p>「云何名為遠離塵垢三摩地？謂\r\n<span class=\"lb\" id=\"p0484b29\"></span>若住此三摩地時，能滅一切煩惱塵垢，是故\r\n\r\n<span class=\"lb\" id=\"p0484c01\"></span>名為遠離塵垢三摩地。</p><p>「云何名為有諍無諍\r\n<span class=\"lb\" id=\"p0484c02\"></span>平等理趣三摩地？謂若住此三摩地時，不見\r\n<span class=\"lb\" id=\"p0484c03\"></span>諸法及一切定有諍、無諍性相差別，是故名\r\n<span class=\"lb\" id=\"p0484c04\"></span>為有諍無諍平等理趣三摩地。</p><p>「云何名為無\r\n<span class=\"lb\" id=\"p0484c05\"></span>巢穴無標幟無愛樂三摩地？謂若住此三摩\r\n<span class=\"lb\" id=\"p0484c06\"></span>地時，破諸巢穴，捨諸標幟，斷諸愛樂而無所\r\n<span class=\"lb\" id=\"p0484c07\"></span>執，是故名為無巢穴無標幟無愛樂三摩地。</p>\r\n<span class=\"lb\" id=\"p0484c08\"></span><p>「云何名為決定安住真如三摩地？謂若住此\r\n<span class=\"lb\" id=\"p0484c09\"></span>三摩地時，於諸等持及一切法，常不棄捨真\r\n<span class=\"lb\" id=\"p0484c10\"></span>如實相，是故名為決定安住真如三摩地。</p><p>「云\r\n<span class=\"lb\" id=\"p0484c11\"></span>何名為離身語意穢惡三摩地？謂若住此三\r\n<span class=\"lb\" id=\"p0484c12\"></span>摩地時，於身、語、意都無所得，破壞一切身、語、\r\n<span class=\"lb\" id=\"p0484c13\"></span>意惡，於諸等持無障自在，是故名為離身語\r\n<span class=\"lb\" id=\"p0484c14\"></span>意穢惡三摩地。</p><p>「云何名為如虛空三摩地？謂\r\n<span class=\"lb\" id=\"p0484c15\"></span>若住此三摩地時，觀一切法都無所有，無障\r\n<span class=\"lb\" id=\"p0484c16\"></span>無礙如太虛空，是故名為如虛空三摩地。</p><p>「云\r\n<span class=\"lb\" id=\"p0484c17\"></span>何名為無染無著三摩地？謂若住此三摩地\r\n<span class=\"lb\" id=\"p0484c18\"></span>時，觀一切法皆同一相，所謂無相，無染無著，\r\n<span class=\"lb\" id=\"p0484c19\"></span>是故名為無染無著三摩地。善現！是為菩薩\r\n<span class=\"lb\" id=\"p0484c20\"></span>摩訶薩行深般若波羅蜜多時大乘之相。</p>\r\n<span class=\"lb\" id=\"p0484c21\"></span><p>「復次，善現！諸菩薩摩訶薩大乘相者，謂四念\r\n<span class=\"lb\" id=\"p0484c22\"></span>住。何等為四？一、身念住。二、受念住。三、心念住。\r\n<span class=\"lb\" id=\"p0484c23\"></span>四、法念住。</p><p>「云何身念住？謂菩薩摩訶薩行深\r\n<span class=\"lb\" id=\"p0484c24\"></span>般若波羅蜜多時，以無所得而為方便，雖於\r\n<span class=\"lb\" id=\"p0484c25\"></span>內身、或於外身、或於內外身住循身觀，而能\r\n<span class=\"lb\" id=\"p0484c26\"></span>不起身俱尋思，熾然精進，正知具念，除世貪\r\n<span class=\"lb\" id=\"p0484c27\"></span>憂。</p><p>「云何受念住？謂菩薩摩訶薩行深般若波\r\n<span class=\"lb\" id=\"p0484c28\"></span>羅蜜多時，以無所得而為方便，雖於內受、或\r\n<span class=\"lb\" id=\"p0484c29\"></span>於外受、或於內外受住循受觀，而能不起受\r\n\r\n<span class=\"lb\" id=\"p0485a01\"></span>俱尋思，熾然精進，正知具念，除世貪憂。</p><p>「云何\r\n<span class=\"lb\" id=\"p0485a02\"></span>心念住？謂菩薩摩訶薩行深般若波羅蜜多\r\n<span class=\"lb\" id=\"p0485a03\"></span>時，以無所得而為方便，雖於內心、或於外心、\r\n<span class=\"lb\" id=\"p0485a04\"></span>或於內外心住循心觀，而能不起心俱尋思，\r\n<span class=\"lb\" id=\"p0485a05\"></span>熾然精進，正知具念，除世貪憂。</p><p>「云何法念住？\r\n<span class=\"lb\" id=\"p0485a06\"></span>謂菩薩摩訶薩行深般若波羅蜜多時，以無\r\n<span class=\"lb\" id=\"p0485a07\"></span>所得而為方便，雖於內法、或於外法、或於內\r\n<span class=\"lb\" id=\"p0485a08\"></span>外法住循法觀，而能不起法俱尋思，熾然精\r\n<span class=\"lb\" id=\"p0485a09\"></span>進，正知具念，除世貪憂。</p><p>「復次，善現！諸菩薩摩\r\n<span class=\"lb\" id=\"p0485a10\"></span>訶薩行深般若波羅蜜多時，以無所得而為\r\n<span class=\"lb\" id=\"p0485a11\"></span>方便，於內身住循身觀，熾然精進，正知具念，\r\n<span class=\"lb\" id=\"p0485a12\"></span>除世貪憂者，謂菩薩摩訶薩行深般若波羅\r\n<span class=\"lb\" id=\"p0485a13\"></span>蜜多時，以無所得而為方便，審觀自身，行時\r\n<span class=\"lb\" id=\"p0485a14\"></span>如實知行，住時如實知住，坐時如實知坐，臥\r\n<span class=\"lb\" id=\"p0485a15\"></span>時如實知臥，如如自身威儀差別，如是如是\r\n<span class=\"lb\" id=\"p0485a16\"></span>皆如實知，熾然精進，正知具念，除世貪憂。是\r\n<span class=\"lb\" id=\"p0485a17\"></span>為菩薩摩訶薩行深般若波羅蜜多時，以無\r\n<span class=\"lb\" id=\"p0485a18\"></span>所得而為方便，於內身住循身觀，熾然精進，\r\n<span class=\"lb\" id=\"p0485a19\"></span>正知具念，除世貪憂。</p><p>「復次，善現！諸菩薩摩訶\r\n<span class=\"lb\" id=\"p0485a20\"></span>薩行深般若波羅蜜多時，以無所得而為方\r\n<span class=\"lb\" id=\"p0485a21\"></span>便，於內身住循身觀，熾然精進，正知具念，除\r\n<span class=\"lb\" id=\"p0485a22\"></span>世貪憂者，謂菩薩摩訶薩行深般若波羅蜜\r\n<span class=\"lb\" id=\"p0485a23\"></span>多時，以無所得而為方便，審觀自身，正知往\r\n<span class=\"lb\" id=\"p0485a24\"></span>來，正知瞻顧，正知俯仰，正知屈伸，服僧伽\r\n<span class=\"lb\" id=\"p0485a25\"></span>胝，執持衣鉢，若食若飲，臥息經行，坐起承\r\n<span class=\"lb\" id=\"p0485a26\"></span>迎，寤寐語默，入出諸定皆念正知。是為菩薩\r\n<span class=\"lb\" id=\"p0485a27\"></span>摩訶薩行深般若波羅蜜多時，以無所得而\r\n<span class=\"lb\" id=\"p0485a28\"></span>為方便，於內身住循身觀，熾然精進，正知具\r\n<span class=\"lb\" id=\"p0485a29\"></span>念，除世貪憂。</p><p>「復次，善現！諸菩薩摩訶薩行深\r\n\r\n<span class=\"lb\" id=\"p0485b01\"></span>般若波羅蜜多時，以無所得而為方便，於內\r\n<span class=\"lb\" id=\"p0485b02\"></span>身住循身觀，熾然精進，正知具念，除世貪憂\r\n<span class=\"lb\" id=\"p0485b03\"></span>者，謂菩薩摩訶薩行深般若波羅蜜多時，以\r\n<span class=\"lb\" id=\"p0485b04\"></span>無所得而為方便，審觀自身，於息入時如實\r\n<span class=\"lb\" id=\"p0485b05\"></span>知息入，於息出時如實知息出，於息長時如\r\n<span class=\"lb\" id=\"p0485b06\"></span>實知息長，於息短時如實知息短。如轉輪師\r\n<span class=\"lb\" id=\"p0485b07\"></span>或彼弟子，輪勢長時如實知輪勢長，輪勢短\r\n<span class=\"lb\" id=\"p0485b08\"></span>時如實知輪勢短。是菩薩摩訶薩亦復如是，\r\n<span class=\"lb\" id=\"p0485b09\"></span>如實知息若入若出、長短差別。是為菩薩摩\r\n<span class=\"lb\" id=\"p0485b10\"></span>訶薩行深般若波羅蜜多時，以無所得而為\r\n<span class=\"lb\" id=\"p0485b11\"></span>方便，於內身住循身觀，熾然精進，正知具念，\r\n<span class=\"lb\" id=\"p0485b12\"></span>除世貪憂。</p><p>「復次，善現！諸菩薩摩訶薩行深般\r\n<span class=\"lb\" id=\"p0485b13\"></span>若波羅蜜多時，以無所得而為方便，於內身\r\n<span class=\"lb\" id=\"p0485b14\"></span>住循身觀，熾然精進，正知具念，除世貪憂者，\r\n<span class=\"lb\" id=\"p0485b15\"></span>謂菩薩摩訶薩行深般若波羅蜜多時，以無\r\n<span class=\"lb\" id=\"p0485b16\"></span>所得而為方便，如實了知自身所有諸界差\r\n<span class=\"lb\" id=\"p0485b17\"></span>別，於諸地界如實了知此是地界，於諸水界\r\n<span class=\"lb\" id=\"p0485b18\"></span>如實了知此是水界，於諸火界如實了知此\r\n<span class=\"lb\" id=\"p0485b19\"></span>是火界，於諸風界如實了知此是風界。如巧\r\n<span class=\"lb\" id=\"p0485b20\"></span>屠師或彼弟子，斷牛命已，復用利刀剖析其\r\n<span class=\"lb\" id=\"p0485b21\"></span>身分為四分，若坐若立如實觀知。是菩薩摩\r\n<span class=\"lb\" id=\"p0485b22\"></span>訶薩亦復如是，行深般若波羅蜜多時，以無\r\n<span class=\"lb\" id=\"p0485b23\"></span>所得而為方便，觀察自身地、水、火、風四界差\r\n<span class=\"lb\" id=\"p0485b24\"></span>別。是為菩薩摩訶薩行深般若波羅蜜多時，\r\n<span class=\"lb\" id=\"p0485b25\"></span>以無所得而為方便，於內身住循身觀，熾然\r\n<span class=\"lb\" id=\"p0485b26\"></span>精進，正知具念，除世貪憂。</p><p>「復次，善現！諸菩薩\r\n<span class=\"lb\" id=\"p0485b27\"></span>摩訶薩行深般若波羅蜜多時，以無所得而\r\n<span class=\"lb\" id=\"p0485b28\"></span>為方便，於內身住循身觀，熾然精進，正知具\r\n<span class=\"lb\" id=\"p0485b29\"></span>念，除世貪憂者，謂菩薩摩訶薩行深般若波\r\n\r\n<span class=\"lb\" id=\"p0485c01\"></span>羅蜜多時，以無所得而為方便，審觀自身，從\r\n<span class=\"lb\" id=\"p0485c02\"></span>足至頂種種不淨充滿其中，外為薄皮之所\r\n<span class=\"lb\" id=\"p0485c03\"></span>纏裹，所謂此身唯有種種髮毛爪齒、皮革血\r\n<span class=\"lb\" id=\"p0485c04\"></span>肉、筋脈骨髓、心肝肺腎、脾膽胞胃、大腸小腸、屎\r\n<span class=\"lb\" id=\"p0485c05\"></span>尿洟唾、涎淚垢汗、痰膿肪𦙽、腦膜[目*(嵐-几)]聹，如是\r\n<span class=\"lb\" id=\"p0485c06\"></span>不淨充滿身中。如有農夫或諸長者，倉中盛\r\n<span class=\"lb\" id=\"p0485c07\"></span>滿種種雜穀，所謂稻、麻、粟、豆、麥等，有明眼者\r\n<span class=\"lb\" id=\"p0485c08\"></span>開倉覩之，能如實知其中唯有稻、麻、粟等種\r\n<span class=\"lb\" id=\"p0485c09\"></span>種雜穀。是菩薩摩訶薩亦復如是，審觀自身，\r\n<span class=\"lb\" id=\"p0485c10\"></span>從足至頂不淨充滿，不可貪樂。是為菩薩摩\r\n<span class=\"lb\" id=\"p0485c11\"></span>訶薩行深般若波羅蜜多時，以無所得而為\r\n<span class=\"lb\" id=\"p0485c12\"></span>方便，於內身住循身觀，熾然精進，正知具念，\r\n<span class=\"lb\" id=\"p0485c13\"></span>除世貪憂。</p><p>「復次，善現！諸菩薩摩訶薩行深般\r\n<span class=\"lb\" id=\"p0485c14\"></span>若波羅蜜多時，以無所得而為方便，於內身\r\n<span class=\"lb\" id=\"p0485c15\"></span>住循身觀，熾然精進，正知具念，除世貪憂者，\r\n<span class=\"lb\" id=\"p0485c16\"></span>謂菩薩摩訶薩行深般若波羅蜜多時，以無\r\n<span class=\"lb\" id=\"p0485c17\"></span>所得而為方便，往至塚間觀所棄屍，死經一\r\n<span class=\"lb\" id=\"p0485c18\"></span>日或經二日乃至七日，其身膖脹，色變青瘀，\r\n<span class=\"lb\" id=\"p0485c19\"></span>臭爛皮穿，膿血流出。見是事已，自念我身有\r\n<span class=\"lb\" id=\"p0485c20\"></span>如是性，具如是法，未得涅槃終歸如是，深生\r\n<span class=\"lb\" id=\"p0485c21\"></span>厭離。是為菩薩摩訶薩行深般若波羅蜜多\r\n<span class=\"lb\" id=\"p0485c22\"></span>時，以無所得而為方便，於內身住循身觀，熾\r\n<span class=\"lb\" id=\"p0485c23\"></span>然精進，正知具念，除世貪憂。</p><p>「復次，善現！諸菩\r\n<span class=\"lb\" id=\"p0485c24\"></span>薩摩訶薩行深般若波羅蜜多時，以無所得\r\n<span class=\"lb\" id=\"p0485c25\"></span>而為方便，於內身住循身觀，熾然精進，正知\r\n<span class=\"lb\" id=\"p0485c26\"></span>具念，除世貪憂者，謂菩薩摩訶薩行深般若\r\n<span class=\"lb\" id=\"p0485c27\"></span>波羅蜜多時，以無所得而為方便，往至塚間\r\n<span class=\"lb\" id=\"p0485c28\"></span>觀所棄屍，死經一日或經二日乃至七日，為\r\n<span class=\"lb\" id=\"p0485c29\"></span>諸鵰、鷲、烏、鵲、鵄、梟、虎、豹、豺、狼、野干、狗等種種禽\r\n\r\n<span class=\"lb\" id=\"p0486a01\"></span>獸或啄或攫，骨肉狼籍，𪙁掣食噉。見是事已，\r\n<span class=\"lb\" id=\"p0486a02\"></span>自念我身有如是性，具如是法，未得涅槃終\r\n<span class=\"lb\" id=\"p0486a03\"></span>歸如是，深生厭離。是為菩薩摩訶薩行深般\r\n<span class=\"lb\" id=\"p0486a04\"></span>若波羅蜜多時，以無所得而為方便，於內身\r\n<span class=\"lb\" id=\"p0486a05\"></span>住循身觀，熾然精進，正知具念，除世貪憂。</p><p>「復\r\n<span class=\"lb\" id=\"p0486a06\"></span>次，善現！諸菩薩摩訶薩行深般若波羅蜜多\r\n<span class=\"lb\" id=\"p0486a07\"></span>時，以無所得而為方便，於內身住循身觀，熾\r\n<span class=\"lb\" id=\"p0486a08\"></span>然精進，正知具念，除世貪憂者，謂菩薩摩訶\r\n<span class=\"lb\" id=\"p0486a09\"></span>薩行深般若波羅蜜多時，以無所得而為方\r\n<span class=\"lb\" id=\"p0486a10\"></span>便，往至塚間觀所棄屍，禽獸食已，不淨潰爛、\r\n<span class=\"lb\" id=\"p0486a11\"></span>膿血流離，有無量種蟲蛆雜出，臭穢可污過\r\n<span class=\"lb\" id=\"p0486a12\"></span>於死狗。見是事已，自念我身有如是性，具如\r\n<span class=\"lb\" id=\"p0486a13\"></span>是法，未得涅槃終歸如是，深生厭離。是為菩\r\n<span class=\"lb\" id=\"p0486a14\"></span>薩摩訶薩行深般若波羅蜜多時，以無所得\r\n<span class=\"lb\" id=\"p0486a15\"></span>而為方便，於內身住循身觀，熾然精進，正知\r\n<span class=\"lb\" id=\"p0486a16\"></span>具念，除世貪憂。</p><p>「復次，善現！諸菩薩摩訶薩行\r\n<span class=\"lb\" id=\"p0486a17\"></span>深般若波羅蜜多時，以無所得而為方便，於\r\n<span class=\"lb\" id=\"p0486a18\"></span>內身住循身觀，熾然精進，正知具念，除世貪\r\n<span class=\"lb\" id=\"p0486a19\"></span>憂者，謂菩薩摩訶薩行深般若波羅蜜多時，\r\n<span class=\"lb\" id=\"p0486a20\"></span>以無所得而為方便，往至塚間觀所棄屍，蟲\r\n<span class=\"lb\" id=\"p0486a21\"></span>蛆食已，肉離骨現，肢節相連，筋纏血塗，尚餘\r\n<span class=\"lb\" id=\"p0486a22\"></span>腐肉。見是事已，自念我身有如是性，具如是\r\n<span class=\"lb\" id=\"p0486a23\"></span>法，未得涅槃終歸如是，深生厭離。是為菩薩\r\n<span class=\"lb\" id=\"p0486a24\"></span>摩訶薩行深般若波羅蜜多時，以無所得而\r\n<span class=\"lb\" id=\"p0486a25\"></span>為方便，於內身住循身觀，熾然精進，正知具\r\n<span class=\"lb\" id=\"p0486a26\"></span>念，除世貪憂。</p><p>「復次，善現！諸菩薩摩訶薩行深\r\n<span class=\"lb\" id=\"p0486a27\"></span>般若波羅蜜多時，以無所得而為方便，於內\r\n<span class=\"lb\" id=\"p0486a28\"></span>身住循身觀，熾然精進，正知具念，除世貪憂\r\n<span class=\"lb\" id=\"p0486a29\"></span>者，謂菩薩摩訶薩行深般若波羅蜜多時，以\r\n\r\n<span class=\"lb\" id=\"p0486b01\"></span>無所得而為方便，往至塚間觀所棄屍，已成\r\n<span class=\"lb\" id=\"p0486b02\"></span>骨鎖，血肉都盡餘筋相連。見是事已，自念我\r\n<span class=\"lb\" id=\"p0486b03\"></span>身有如是性，具如是法，未得涅槃終歸如是，\r\n<span class=\"lb\" id=\"p0486b04\"></span>深生厭離。是為菩薩摩訶薩行深般若波羅\r\n<span class=\"lb\" id=\"p0486b05\"></span>蜜多時，以無所得而為方便，於內身住循身\r\n<span class=\"lb\" id=\"p0486b06\"></span>觀，熾然精進，正知具念，除世貪憂。</p><p>「復次，善現！\r\n<span class=\"lb\" id=\"p0486b07\"></span>諸菩薩摩訶薩行深般若波羅蜜多時，以無\r\n<span class=\"lb\" id=\"p0486b08\"></span>所得而為方便，於內身住循身觀，熾然精進，\r\n<span class=\"lb\" id=\"p0486b09\"></span>正知具念，除世貪憂者，謂菩薩摩訶薩行深\r\n<span class=\"lb\" id=\"p0486b10\"></span>般若波羅蜜多時，以無所得而為方便，往至\r\n<span class=\"lb\" id=\"p0486b11\"></span>塚間觀所棄屍，但餘眾骨，其色皓白如雪珂\r\n<span class=\"lb\" id=\"p0486b12\"></span>貝，諸筋糜爛肢節分離。見是事已，自念我身\r\n<span class=\"lb\" id=\"p0486b13\"></span>有如是性，具如是法，未得涅槃終歸如是，深\r\n<span class=\"lb\" id=\"p0486b14\"></span>生厭離。是為菩薩摩訶薩行深般若波羅蜜\r\n<span class=\"lb\" id=\"p0486b15\"></span>多時，以無所得而為方便，於內身住循身觀，\r\n<span class=\"lb\" id=\"p0486b16\"></span>熾然精進，正知具念，除世貪憂。</p><p>「復次，善現！諸\r\n<span class=\"lb\" id=\"p0486b17\"></span>菩薩摩訶薩行深般若波羅蜜多時，以無所\r\n<span class=\"lb\" id=\"p0486b18\"></span>得而為方便，於內身住循身觀，熾然精進，正\r\n<span class=\"lb\" id=\"p0486b19\"></span>知具念，除世貪憂者，謂菩薩摩訶薩行深般\r\n<span class=\"lb\" id=\"p0486b20\"></span>若波羅蜜多時，以無所得而為方便，往至塚\r\n<span class=\"lb\" id=\"p0486b21\"></span>間觀所棄屍，成白色已，肢節分散零落異方。\r\n<span class=\"lb\" id=\"p0486b22\"></span>見是事已，自念我身有如是性，具如是法，未\r\n<span class=\"lb\" id=\"p0486b23\"></span>得涅槃終歸如是，深生厭離。是為菩薩摩訶\r\n<span class=\"lb\" id=\"p0486b24\"></span>薩行深般若波羅蜜多時，以無所得而為方\r\n<span class=\"lb\" id=\"p0486b25\"></span>便，於內身住循身觀，熾然精進，正知具念，除\r\n<span class=\"lb\" id=\"p0486b26\"></span>世貪憂。</p><p>「復次，善現！諸菩薩摩訶薩行深般若\r\n<span class=\"lb\" id=\"p0486b27\"></span>波羅蜜多時，以無所得而為方便，於內身住\r\n<span class=\"lb\" id=\"p0486b28\"></span>循身觀，熾然精進，正知具念，除世貪憂者，謂\r\n<span class=\"lb\" id=\"p0486b29\"></span>菩薩摩訶薩行深般若波羅蜜多時，以無所\r\n\r\n<span class=\"lb\" id=\"p0486c01\"></span>得而為方便，往至塚間觀所棄屍，諸骨分散\r\n<span class=\"lb\" id=\"p0486c02\"></span>各在異處，足骨異處，腨骨異處，膝骨異處，髀\r\n<span class=\"lb\" id=\"p0486c03\"></span>骨異處，髖骨異處，脊骨異處，脇骨異處，胸\r\n<span class=\"lb\" id=\"p0486c04\"></span>骨異處，膊骨異處，臂骨異處，手骨異處，項\r\n<span class=\"lb\" id=\"p0486c05\"></span>骨異處，頷骨異處，頰骨異處，其髑髏骨亦\r\n<span class=\"lb\" id=\"p0486c06\"></span>在異處。見是事已，自念我身有如是性，具如\r\n<span class=\"lb\" id=\"p0486c07\"></span>是法，未得涅槃終歸如是，深生厭離。是為菩\r\n<span class=\"lb\" id=\"p0486c08\"></span>薩摩訶薩行深般若波羅蜜多時，以無所得\r\n<span class=\"lb\" id=\"p0486c09\"></span>而為方便，於內身住循身觀，熾然精進，正知\r\n<span class=\"lb\" id=\"p0486c10\"></span>具念，除世貪憂。</p><p>「復次，善現！諸菩薩摩訶薩行\r\n<span class=\"lb\" id=\"p0486c11\"></span>深般若波羅蜜多時，以無所得而為方便，於\r\n<span class=\"lb\" id=\"p0486c12\"></span>內身住循身觀，熾然精進，正知具念，除世貪\r\n<span class=\"lb\" id=\"p0486c13\"></span>憂者，謂菩薩摩訶薩行深般若波羅蜜多時，\r\n<span class=\"lb\" id=\"p0486c14\"></span>以無所得而為方便，往至塚間觀所棄屍，骸\r\n<span class=\"lb\" id=\"p0486c15\"></span>骨狼籍，風吹日曝，雨灌霜封，積有歲年，色如\r\n<span class=\"lb\" id=\"p0486c16\"></span>珂雪。見是事已，自念我身有如是性，具如是\r\n<span class=\"lb\" id=\"p0486c17\"></span>法，未得涅槃終歸如是，深生厭離。是為菩薩\r\n<span class=\"lb\" id=\"p0486c18\"></span>摩訶薩行深般若波羅蜜多時，以無所得而\r\n<span class=\"lb\" id=\"p0486c19\"></span>為方便，於內身住循身觀，熾然精進，正知具\r\n<span class=\"lb\" id=\"p0486c20\"></span>念，除世貪憂。</p><p>「復次，善現！諸菩薩摩訶薩行深\r\n<span class=\"lb\" id=\"p0486c21\"></span>般若波羅蜜多時，以無所得而為方便，於內\r\n<span class=\"lb\" id=\"p0486c22\"></span>身住循身觀，熾然精進，正知具念，除世貪憂\r\n<span class=\"lb\" id=\"p0486c23\"></span>者，謂菩薩摩訶薩行深般若波羅蜜多時，以\r\n<span class=\"lb\" id=\"p0486c24\"></span>無所得而為方便，往至塚間觀所棄屍，餘骨\r\n<span class=\"lb\" id=\"p0486c25\"></span>散地經多百歲或多千年，其相變青狀如鴿\r\n<span class=\"lb\" id=\"p0486c26\"></span>色，或有腐朽碎末如塵，與土相和難可分別。\r\n<span class=\"lb\" id=\"p0486c27\"></span>見是事已，自念我身有如是性，具如是法，未\r\n<span class=\"lb\" id=\"p0486c28\"></span>得涅槃終歸如是，深生厭離。是為菩薩摩訶\r\n<span class=\"lb\" id=\"p0486c29\"></span>薩行深般若波羅蜜多時，以無所得而為方\r\n\r\n<span class=\"lb\" id=\"p0487a01\"></span>便，於內身住循身觀，熾然精進，正知具念，除\r\n<span class=\"lb\" id=\"p0487a02\"></span>世貪憂。</p><p>「善現！諸菩薩摩訶薩行深般若波羅\r\n<span class=\"lb\" id=\"p0487a03\"></span>蜜多時，以無所得而為方便，如於內身如是\r\n<span class=\"lb\" id=\"p0487a04\"></span>差別住循身觀，熾然精進，正知具念，除世貪\r\n<span class=\"lb\" id=\"p0487a05\"></span>憂，於外身住循身觀，於內外身住循身觀，熾\r\n<span class=\"lb\" id=\"p0487a06\"></span>然精進，正知具念，除世貪憂，隨其所應亦復\r\n<span class=\"lb\" id=\"p0487a07\"></span>如是。善現！諸菩薩摩訶薩行深般若波羅蜜\r\n<span class=\"lb\" id=\"p0487a08\"></span>多時，以無所得而為方便，於內外俱受、心、法，\r\n<span class=\"lb\" id=\"p0487a09\"></span>住循受、心、法觀，熾然精進，正知具念，除世貪\r\n<span class=\"lb\" id=\"p0487a10\"></span>憂，隨其所應皆應廣說。善現！如是菩薩摩訶\r\n<span class=\"lb\" id=\"p0487a11\"></span>薩行深般若波羅蜜多時，以無所得而為方\r\n<span class=\"lb\" id=\"p0487a12\"></span>便，於內外俱身、受、心、法住，循身、受、心、法觀時，\r\n<span class=\"lb\" id=\"p0487a13\"></span>雖作是觀而無所得。善現！是為菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0487a14\"></span>行深般若波羅蜜多時大乘之相。</p>\r\n<span class=\"lb\" id=\"p0487a15\"></span><p>「復次，善現！諸菩薩摩訶薩大乘相者，謂四正\r\n<span class=\"lb\" id=\"p0487a16\"></span>斷。何等為四？善現當知！若菩薩摩訶薩行深\r\n<span class=\"lb\" id=\"p0487a17\"></span>般若波羅蜜多時，以無所得而為方便，於諸\r\n<span class=\"lb\" id=\"p0487a18\"></span>未生惡不善法為不生故，生欲策勵發起正\r\n<span class=\"lb\" id=\"p0487a19\"></span>勤策心持心，是為第一。若菩薩摩訶薩行深\r\n<span class=\"lb\" id=\"p0487a20\"></span>般若波羅蜜多時，以無所得而為方便，於諸\r\n<span class=\"lb\" id=\"p0487a21\"></span>已生惡不善法為永斷故，生欲策勵發起正\r\n<span class=\"lb\" id=\"p0487a22\"></span>勤策心持心，是為第二。若菩薩摩訶薩行深\r\n<span class=\"lb\" id=\"p0487a23\"></span>般若波羅蜜多時，以無所得而為方便，未生\r\n<span class=\"lb\" id=\"p0487a24\"></span>善法為令生故，生欲策勵發起正勤策心持\r\n<span class=\"lb\" id=\"p0487a25\"></span>心，是為第三。若菩薩摩訶薩行深般若波羅\r\n<span class=\"lb\" id=\"p0487a26\"></span>蜜多時，以無所得而為方便，已生善法為令\r\n<span class=\"lb\" id=\"p0487a27\"></span>安住，不忘增廣倍修滿故，生欲策勵發起正\r\n<span class=\"lb\" id=\"p0487a28\"></span>勤策心持心，是為第四。善現！是為菩薩摩\r\n<span class=\"lb\" id=\"p0487a29\"></span>訶薩行深般若波羅蜜多時大乘之相。</p><p>「復次，\r\n\r\n<span class=\"lb\" id=\"p0487b01\"></span>善現！諸菩薩摩訶薩大乘相者，謂四神足。何\r\n<span class=\"lb\" id=\"p0487b02\"></span>等為四？善現當知！若菩薩摩訶薩行深般若\r\n<span class=\"lb\" id=\"p0487b03\"></span>波羅蜜多時，以無所得而為方便，修欲等持\r\n<span class=\"lb\" id=\"p0487b04\"></span>斷行成就神足，依離、依無染、依滅、迴向捨，是\r\n<span class=\"lb\" id=\"p0487b05\"></span>為第一。若菩薩摩訶薩行深般若波羅蜜多\r\n<span class=\"lb\" id=\"p0487b06\"></span>時，以無所得而為方便，修勤等持斷行成就\r\n<span class=\"lb\" id=\"p0487b07\"></span>神足，依離、依無染、依滅、迴向捨，是為第二。若\r\n<span class=\"lb\" id=\"p0487b08\"></span>菩薩摩訶薩行深般若波羅蜜多時，以無所\r\n<span class=\"lb\" id=\"p0487b09\"></span>得而為方便，修心等持斷行成就神足，依離、\r\n<span class=\"lb\" id=\"p0487b10\"></span>依無染、依滅、迴向捨，是為第三。若菩薩摩訶\r\n<span class=\"lb\" id=\"p0487b11\"></span>薩行深般若波羅蜜多時，以無所得而為方\r\n<span class=\"lb\" id=\"p0487b12\"></span>便，修觀等持斷行成就神足，依離、依無染、依\r\n<span class=\"lb\" id=\"p0487b13\"></span>滅、迴向捨，是為第四。善現！是為菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0487b14\"></span>行深般若波羅蜜多時大乘之相。</p><p>「復次，善現！\r\n<span class=\"lb\" id=\"p0487b15\"></span>諸菩薩摩訶薩大乘相者，謂五根。何等為五？\r\n<span class=\"lb\" id=\"p0487b16\"></span>善現當知！若菩薩摩訶薩行深般若波羅蜜\r\n<span class=\"lb\" id=\"p0487b17\"></span>多時，所修信根、精進根、念根、定根、慧根。善現！\r\n<span class=\"lb\" id=\"p0487b18\"></span>是為菩薩摩訶薩行深般若波羅蜜多時大乘\r\n<span class=\"lb\" id=\"p0487b19\"></span>之相。</p><p>「復次，善現！諸菩薩摩訶薩大乘相者，謂\r\n<span class=\"lb\" id=\"p0487b20\"></span>五力。何等為五？善現當知！若菩薩摩訶薩行\r\n<span class=\"lb\" id=\"p0487b21\"></span>深般若波羅蜜多時，以無所得而為方便，所\r\n<span class=\"lb\" id=\"p0487b22\"></span>修信力、精進力、念力、定力、慧力。善現！是為菩\r\n<span class=\"lb\" id=\"p0487b23\"></span>薩摩訶薩行深般若波羅蜜多時大乘之相。</p>\r\n<span class=\"lb\" id=\"p0487b24\"></span><p>「復次，善現！諸菩薩摩訶薩大乘相者，謂七等\r\n<span class=\"lb\" id=\"p0487b25\"></span>覺支。何等為七？善現當知！若菩薩摩訶薩行\r\n<span class=\"lb\" id=\"p0487b26\"></span>深般若波羅蜜多時，以無所得而為方便，所\r\n<span class=\"lb\" id=\"p0487b27\"></span>修念等覺支、擇法等覺支、精進等覺支、喜\r\n<span class=\"lb\" id=\"p0487b28\"></span>等覺支、輕安等覺支、定等覺支、捨等覺支，\r\n<span class=\"lb\" id=\"p0487b29\"></span>依離、依無染、依滅、迴向捨。善現！是為菩薩摩\r\n\r\n<span class=\"lb\" id=\"p0487c01\"></span>訶薩行深般若波羅蜜多時大乘之相。</p><p>「復次，\r\n<span class=\"lb\" id=\"p0487c02\"></span>善現！諸菩薩摩訶薩大乘相者，謂八聖道支。\r\n<span class=\"lb\" id=\"p0487c03\"></span>何等為八？善現當知！若菩薩摩訶薩行深般\r\n<span class=\"lb\" id=\"p0487c04\"></span>若波羅蜜多時，以無所得而為方便，所修正\r\n<span class=\"lb\" id=\"p0487c05\"></span>見、正思惟、正語、正業、正命、正精進、正念、正定，\r\n<span class=\"lb\" id=\"p0487c06\"></span>依離、依無染、依滅、迴向捨。善現！是為菩薩摩\r\n<span class=\"lb\" id=\"p0487c07\"></span>訶薩行深般若波羅蜜多時大乘之相。</p><p>「復次，\r\n<span class=\"lb\" id=\"p0487c08\"></span>善現！諸菩薩摩訶薩大乘相者，謂三解脫門。\r\n<span class=\"lb\" id=\"p0487c09\"></span>何等為三？</p><p>「善現當知！若菩薩摩訶薩行深般\r\n<span class=\"lb\" id=\"p0487c10\"></span>若波羅蜜多時，以無所得而為方便，觀一切\r\n<span class=\"lb\" id=\"p0487c11\"></span>法自相皆空，其心安住，名空解脫門，亦名空\r\n<span class=\"lb\" id=\"p0487c12\"></span>三摩地，是為第一，諸菩薩摩訶薩欲學大乘\r\n<span class=\"lb\" id=\"p0487c13\"></span>當於中學。若菩薩摩訶薩行深般若波羅蜜\r\n<span class=\"lb\" id=\"p0487c14\"></span>多時，以無所得而為方便，觀一切法自相空\r\n<span class=\"lb\" id=\"p0487c15\"></span>故皆無有相，其心安住，名無相解脫門，亦名\r\n<span class=\"lb\" id=\"p0487c16\"></span>無相三摩地，是為第二，諸菩薩摩訶薩欲學\r\n<span class=\"lb\" id=\"p0487c17\"></span>大乘當於中學。若菩薩摩訶薩行深般若波\r\n<span class=\"lb\" id=\"p0487c18\"></span>羅蜜多時，以無所得而為方便，觀一切法自\r\n<span class=\"lb\" id=\"p0487c19\"></span>相空故皆無所願，其心安住，名無願解脫門，\r\n<span class=\"lb\" id=\"p0487c20\"></span>亦名無願三摩地，是為第三，諸菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0487c21\"></span>欲學大乘當於中學。善現！是為菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0487c22\"></span>行深般若波羅蜜多時大乘之相。</p>\r\n<span class=\"lb\" id=\"p0487c23\"></span><p>「復次，善現！諸菩薩摩訶薩大乘相者，謂十一\r\n<span class=\"lb\" id=\"p0487c24\"></span>智。何等十一？所謂苦智、集智、滅智、道智、盡智、\r\n<span class=\"lb\" id=\"p0487c25\"></span>無生智、法智、類智、世俗智、他心智、如說智。</p><p>「云\r\n<span class=\"lb\" id=\"p0487c26\"></span>何苦智？謂若智以無所得而為方便，知苦應\r\n<span class=\"lb\" id=\"p0487c27\"></span>不生，是為苦智。</p><p>「云何集智？謂若智以無所得\r\n<span class=\"lb\" id=\"p0487c28\"></span>而為方便，知集應永斷，是為集智。</p><p>「云何滅智？\r\n<span class=\"lb\" id=\"p0487c29\"></span>謂若智以無所得而為方便，知滅應作證，是\r\n\r\n<span class=\"lb\" id=\"p0488a01\"></span>為滅智。</p><p>「云何道智？謂若智以無所得而為方\r\n<span class=\"lb\" id=\"p0488a02\"></span>便，知道應修習，是為道智。</p><p>「云何盡智？謂若智\r\n<span class=\"lb\" id=\"p0488a03\"></span>以無所得而為方便，知貪、瞋、癡盡，是為盡智。</p>\r\n<span class=\"lb\" id=\"p0488a04\"></span><p>「云何無生智？謂若智以無所得而為方便，知\r\n<span class=\"lb\" id=\"p0488a05\"></span>諸有不復生，是為無生智。</p><p>「云何法智？謂若智\r\n<span class=\"lb\" id=\"p0488a06\"></span>以無所得而為方便，知五蘊等各別自性，是\r\n<span class=\"lb\" id=\"p0488a07\"></span>為法智。</p><p>「云何類智？謂若智以無所得而為方\r\n<span class=\"lb\" id=\"p0488a08\"></span>便，知五蘊等差別之相，謂苦、無常、空、無我等，\r\n<span class=\"lb\" id=\"p0488a09\"></span>是為類智。</p><p>「云何世俗智？謂若智以無所得而\r\n<span class=\"lb\" id=\"p0488a10\"></span>為方便，知諸有情修行差別，及知諸法名相\r\n<span class=\"lb\" id=\"p0488a11\"></span>等異，是為世俗智。</p><p>「云何他心智？謂若智以\r\n<span class=\"lb\" id=\"p0488a12\"></span>無所得而為方便，知他有情補特伽羅心、心\r\n<span class=\"lb\" id=\"p0488a13\"></span>所法無所疑滯，是為他心智。</p><p>「云何如說智？謂\r\n<span class=\"lb\" id=\"p0488a14\"></span>若智以無所得而為方便，知一切法如說之\r\n<span class=\"lb\" id=\"p0488a15\"></span>相即是如來一切相智，是為如說智。善現當\r\n<span class=\"lb\" id=\"p0488a16\"></span>知！此十一智是為菩薩摩訶薩行深般若波\r\n<span class=\"lb\" id=\"p0488a17\"></span>羅蜜多時大乘之相。</p><p>「復次，善現！諸菩薩摩訶\r\n<span class=\"lb\" id=\"p0488a18\"></span>薩大乘相者，謂三無漏根。何等為三？一者、未\r\n<span class=\"lb\" id=\"p0488a19\"></span>知當知根。二者、已知根。三者、具知根。</p><p>「云何未\r\n<span class=\"lb\" id=\"p0488a20\"></span>知當知根？謂諸有學補特伽羅，於諸聖諦未\r\n<span class=\"lb\" id=\"p0488a21\"></span>已現觀，未得聖果，所有信根、精進根、念根、定\r\n<span class=\"lb\" id=\"p0488a22\"></span>根、慧根是為未知當知根。</p><p>「云何已知根？謂諸\r\n<span class=\"lb\" id=\"p0488a23\"></span>有學補特伽羅，於諸聖諦已得現觀，已得聖\r\n<span class=\"lb\" id=\"p0488a24\"></span>果，所有信根、精進根、念根、定根、慧根是為已\r\n<span class=\"lb\" id=\"p0488a25\"></span>知根。</p><p>「云何具知根？謂諸無學補特伽羅，若阿\r\n<span class=\"lb\" id=\"p0488a26\"></span>羅漢、若諸獨覺、若菩薩摩訶薩已住十地、若\r\n<span class=\"lb\" id=\"p0488a27\"></span>諸如來、應、正等覺，所有信根、精進根、念根、定\r\n<span class=\"lb\" id=\"p0488a28\"></span>根、慧根是為具知根。若此三根，以無所得而\r\n<span class=\"lb\" id=\"p0488a29\"></span>為方便，當知是為菩薩摩訶薩行深般若波\r\n\r\n<span class=\"lb\" id=\"p0488b01\"></span>羅蜜多時大乘之相。</p><p>「復次，善現！諸菩薩摩訶\r\n<span class=\"lb\" id=\"p0488b02\"></span>薩大乘相者，謂三三摩地。何等為三？一者、有\r\n<span class=\"lb\" id=\"p0488b03\"></span>尋有伺三摩地。二者、無尋唯伺三摩地。三者、\r\n<span class=\"lb\" id=\"p0488b04\"></span>無尋無伺三摩地。</p><p>「云何有尋有伺三摩地？謂\r\n<span class=\"lb\" id=\"p0488b05\"></span>菩薩摩訶薩離欲惡不善法，有尋有伺，離生\r\n<span class=\"lb\" id=\"p0488b06\"></span>喜樂，入初靜慮具足安住，是為有尋有伺三\r\n<span class=\"lb\" id=\"p0488b07\"></span>摩地。</p><p>「云何無尋唯伺三摩地？謂菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0488b08\"></span>所有初靜慮、第二靜慮中間定，是為無尋唯\r\n<span class=\"lb\" id=\"p0488b09\"></span>伺三摩地。</p><p>「云何無尋無伺三摩地？謂菩薩摩\r\n<span class=\"lb\" id=\"p0488b10\"></span>訶薩從第二靜慮乃至非想非非想處定，是\r\n<span class=\"lb\" id=\"p0488b11\"></span>為無尋無伺三摩地。</p><p>「若此三種，以無所得而\r\n<span class=\"lb\" id=\"p0488b12\"></span>為方便，當知是為菩薩摩訶薩行深般若波\r\n<span class=\"lb\" id=\"p0488b13\"></span>羅蜜多時大乘之相。</p>\r\n<span class=\"lb\" id=\"p0488b14\"></span><p>「復次，善現！諸菩薩摩訶薩大乘相者，謂十隨\r\n<span class=\"lb\" id=\"p0488b15\"></span>念。何等為十？一者、佛隨念。二者、法隨念。三者、\r\n<span class=\"lb\" id=\"p0488b16\"></span>僧隨念。四者、戒隨念。五者、捨隨念。六者、天\r\n<span class=\"lb\" id=\"p0488b17\"></span>隨念。七者、厭隨念。八者、死隨念。九者、身隨念。\r\n<span class=\"lb\" id=\"p0488b18\"></span>十者、息隨念。若此十種，以無所得而為方便，\r\n<span class=\"lb\" id=\"p0488b19\"></span>當知是為菩薩摩訶薩行深般若波羅蜜多時\r\n<span class=\"lb\" id=\"p0488b20\"></span>大乘之相。</p><p>「復次，善現！諸菩薩摩訶薩大乘相\r\n<span class=\"lb\" id=\"p0488b21\"></span>者，謂四靜慮、四無量、四無色定、八解脫、八勝\r\n<span class=\"lb\" id=\"p0488b22\"></span>處、九次第定、十遍處等清淨善法，以無所得\r\n<span class=\"lb\" id=\"p0488b23\"></span>而為方便，當知是為菩薩摩訶薩行深般若\r\n<span class=\"lb\" id=\"p0488b24\"></span>波羅蜜多時大乘之相。</p><p>「復次，善現！諸菩薩摩\r\n<span class=\"lb\" id=\"p0488b25\"></span>訶薩大乘相者，謂佛十力。何等為十？</p><p>「善現當\r\n<span class=\"lb\" id=\"p0488b26\"></span>知！若無所得而為方便，如實了知因果等法\r\n<span class=\"lb\" id=\"p0488b27\"></span>處非處相，是第一力。</p><p>「若無所得而為方便，如\r\n<span class=\"lb\" id=\"p0488b28\"></span>實了知諸有情類過去、未來、現在種種諸業法\r\n<span class=\"lb\" id=\"p0488b29\"></span>受因果別相，是第二力。</p><p>「若無所得而為方便，\r\n\r\n<span class=\"lb\" id=\"p0488c01\"></span>如實了知世間非一種種界相，是第三力。</p><p>「若\r\n<span class=\"lb\" id=\"p0488c02\"></span>無所得而為方便，如實了知諸有情類非一\r\n<span class=\"lb\" id=\"p0488c03\"></span>勝解種種勝解，是第四力。</p><p>「若無所得而為方\r\n<span class=\"lb\" id=\"p0488c04\"></span>便，如實了知諸有情類諸根勝劣，是第五力。</p>\r\n<span class=\"lb\" id=\"p0488c05\"></span><p>「若無所得而為方便，如實了知遍行行相，是\r\n<span class=\"lb\" id=\"p0488c06\"></span>第六力。</p><p>「若無所得而為方便，如實了知諸有\r\n<span class=\"lb\" id=\"p0488c07\"></span>情類根、力、覺支、解脫、靜慮、等持、等至、染淨差\r\n<span class=\"lb\" id=\"p0488c08\"></span>別，是第七力。</p><p>「若無所得而為方便，如實了知\r\n<span class=\"lb\" id=\"p0488c09\"></span>諸有情類有無量種宿住差別，是第八力。</p><p>「若\r\n<span class=\"lb\" id=\"p0488c10\"></span>無所得而為方便，由淨天眼如實了知諸有\r\n<span class=\"lb\" id=\"p0488c11\"></span>情類有無量種死生差別，是第九力。</p><p>「若無所\r\n<span class=\"lb\" id=\"p0488c12\"></span>得而為方便，如實了知諸漏永盡，得無漏心\r\n<span class=\"lb\" id=\"p0488c13\"></span>解脫、得無漏慧解脫，於現法中自作證具足\r\n<span class=\"lb\" id=\"p0488c14\"></span>住，能正了知我生已盡，梵行已立，所作已辦，\r\n<span class=\"lb\" id=\"p0488c15\"></span>不受後有，是第十力。當知是為菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0488c16\"></span>行深般若波羅蜜多時大乘之相。</p><p>「復次，善現！\r\n<span class=\"lb\" id=\"p0488c17\"></span>諸菩薩摩訶薩大乘相者，謂四無所畏。何等\r\n<span class=\"lb\" id=\"p0488c18\"></span>為四？</p><p>「善現當知！若無所得而為方便，自稱我\r\n<span class=\"lb\" id=\"p0488c19\"></span>是正等覺者，設有沙門、若婆羅門、若天魔\r\n<span class=\"lb\" id=\"p0488c20\"></span>梵、或餘世間，依法立難及令憶念，言於是\r\n<span class=\"lb\" id=\"p0488c21\"></span>法非正等覺，我於彼難正見無由。以於彼難\r\n<span class=\"lb\" id=\"p0488c22\"></span>見無由故，得安隱住無怖無畏，自稱我處大\r\n<span class=\"lb\" id=\"p0488c23\"></span>仙尊位，於大眾中正師子吼轉妙梵輪。其輪\r\n<span class=\"lb\" id=\"p0488c24\"></span>清淨正真無上，一切沙門、婆羅門等皆無有\r\n<span class=\"lb\" id=\"p0488c25\"></span>能如法轉者。是第一無所畏。</p><p>「若無所得而為\r\n<span class=\"lb\" id=\"p0488c26\"></span>方便，自稱我已永盡諸漏，設有沙門、若婆羅\r\n<span class=\"lb\" id=\"p0488c27\"></span>門、若天魔梵、或餘世間，依法立難及令憶\r\n<span class=\"lb\" id=\"p0488c28\"></span>念，言如是漏未得永盡，我於彼難正見無由。\r\n<span class=\"lb\" id=\"p0488c29\"></span>以於彼難見無由故，得安隱住無怖無畏，自\r\n\r\n<span class=\"lb\" id=\"p0489a01\"></span>稱我處大仙尊位，於大眾中正師子吼，轉妙\r\n<span class=\"lb\" id=\"p0489a02\"></span>梵輪。其輪清淨正真無上，一切沙門、婆羅門\r\n<span class=\"lb\" id=\"p0489a03\"></span>等皆無有能如法轉者。是第二無所畏。</p><p>「若無\r\n<span class=\"lb\" id=\"p0489a04\"></span>所得而為方便，為諸弟子說障道法，設有沙\r\n<span class=\"lb\" id=\"p0489a05\"></span>門、若婆羅門、若天魔梵、或餘世間，依法立\r\n<span class=\"lb\" id=\"p0489a06\"></span>難及令憶念，言習此法不能障道，我於彼難\r\n<span class=\"lb\" id=\"p0489a07\"></span>正見無由。以於彼難見無由故，得安隱住無\r\n<span class=\"lb\" id=\"p0489a08\"></span>怖無畏，自稱我處大仙尊位，於大眾中正師\r\n<span class=\"lb\" id=\"p0489a09\"></span>子吼轉妙梵輪。其輪清淨正真無上，一切沙\r\n<span class=\"lb\" id=\"p0489a10\"></span>門、婆羅門等皆無有能如法轉者。是第三無\r\n<span class=\"lb\" id=\"p0489a11\"></span>所畏。</p><p>「若無所得而為方便，為諸弟子說盡苦\r\n<span class=\"lb\" id=\"p0489a12\"></span>道，設有沙門、若婆羅門、若天魔梵、或餘世\r\n<span class=\"lb\" id=\"p0489a13\"></span>間，依法立難及令憶念，言修此道不能盡苦，\r\n<span class=\"lb\" id=\"p0489a14\"></span>我於彼難正見無由。以於彼難見無由故，得\r\n<span class=\"lb\" id=\"p0489a15\"></span>安隱住無怖無畏，自稱我處大仙尊位，於大\r\n<span class=\"lb\" id=\"p0489a16\"></span>眾中正師子吼轉妙梵輪。其輪清淨正真無\r\n<span class=\"lb\" id=\"p0489a17\"></span>上，一切沙門、婆羅門等皆無有能如法轉者。\r\n<span class=\"lb\" id=\"p0489a18\"></span>是第四無所畏。</p><p>「當知是為菩薩摩訶薩行深\r\n<span class=\"lb\" id=\"p0489a19\"></span>般若波羅蜜多時大乘之相。</p>\r\n<span class=\"lb\" id=\"p0489a20\"></span><cb:juan n=\"489\" fun=\"close\"><cb:jhead><title>大般若波羅蜜多經</title>卷第四百八十九</cb:jhead></cb:juan>\r\n</cb:div></cb:div></body><div id=\"footnotes\"><div class=\"note-text\" id=\"note_0484001\">定平＝平定【明】</div><div class=\"note-text\" id=\"note_0484001\">定平【大】，平定【明】</div><div class=\"note-text\" id=\"note_0484002\">謂若＝若謂【宋】</div><div class=\"note-text\" id=\"note_0484002\">謂若【大】，若謂【宋】</div><div class=\"note-text\" id=\"note_0485001\">淡＝痰【三】</div><div class=\"note-text\" id=\"note_0485001\">痰【CB】【宋】【元】【明】，淡【大】</div><div class=\"note-text\" id=\"note_0486001\">得＝德【明】</div><div class=\"note-text\" id=\"note_0486001\">得【大】，德【明】</div><div class=\"note-text\" id=\"note_0486002\">肢＝支【三】下同</div><div class=\"note-text\" id=\"note_0486002\">肢【大】下同，支【宋】下同【元】下同【明】下同</div><div class=\"note-text\" id=\"note_0486003\">鎖＝瑣【三】</div><div class=\"note-text\" id=\"note_0486003\">鎖【大】，瑣【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0486004\">訶＝諸【明】</div><div class=\"note-text\" id=\"note_0486004\">訶【大】，諸【明】</div><div class=\"note-text\" id=\"note_0486005\">狼＝[藐-白+臼]【宋】</div><div class=\"note-text\" id=\"note_0486005\">狼【大】，[藐-白+臼]【宋】</div><div class=\"note-text\" id=\"note_0487001\">勤＝念【明】</div><div class=\"note-text\" id=\"note_0487001\">勤【大】，念【明】</div><div class=\"note-text\" id=\"note_0488001\">間＝問【明】</div><div class=\"note-text\" id=\"note_0488001\">間【大】，問【明】</div><div class=\"note-text\" id=\"note_0489a0101\">於【CB】【麗-CB】【磧-CB】，我【大】</div></div>"
+    }
+  ],
+  "toc": {
+    "mulu": [
+      {
+        "title": "1 會",
+        "lb": "p0001a03",
+        "juan": 1,
+        "type": "品",
+        "children": [
+          {
+            "title": "初會序",
+            "lb": "p0001a03",
+            "juan": 1,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "2 會",
+        "lb": "p0001a02",
+        "juan": 401,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0001a02",
+            "juan": 401,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0001b05",
+            "juan": 401,
+            "type": "品"
+          },
+          {
+            "title": "2 歡喜品",
+            "lb": "p0007a21",
+            "juan": 402,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "3 會",
+        "lb": "p0427a02",
+        "juan": 479,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0427a02",
+            "juan": 479,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0427b06",
+            "juan": 479,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "4 會",
+        "lb": "p0763a02",
+        "juan": 538,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0763a02",
+            "juan": 538,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "5 會",
+        "lb": "p0865b02",
+        "juan": 556,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0865b02",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "1 善現品",
+            "lb": "p0865c06",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "2 天帝品",
+            "lb": "p0870a28",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "3 窣堵波品",
+            "lb": "p0872a21",
+            "juan": 557,
+            "type": "品"
+          },
+          {
+            "title": "4 神咒品",
+            "lb": "p0874c19",
+            "juan": 557,
+            "type": "品"
+          },
+          {
+            "title": "5 設利羅品",
+            "lb": "p0877c08",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "6 經典品",
+            "lb": "p0879a08",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "7 迴向品",
+            "lb": "p0880b22",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "8 地獄品",
+            "lb": "p0883b10",
+            "juan": 559,
+            "type": "品"
+          },
+          {
+            "title": "9 清淨品",
+            "lb": "p0885b14",
+            "juan": 559,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "6 會",
+        "lb": "p0921a01",
+        "juan": 566,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0921a01",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0921a25",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "2 通達品",
+            "lb": "p0922b05",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "3 顯相品",
+            "lb": "p0926a06",
+            "juan": 567,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "7 會",
+        "lb": "p0963c23",
+        "juan": 574,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0963c24",
+            "juan": 574,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p0964a21",
+            "juan": 574,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0969b02",
+            "juan": 575,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "8 會",
+        "lb": "p0974b05",
+        "juan": 576,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0974b05",
+            "juan": 576,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "9 會",
+        "lb": "p0979c02",
+        "juan": 577,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0979c02",
+            "juan": 577,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "10 會",
+        "lb": "p0986a02",
+        "juan": 578,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0986a02",
+            "juan": 578,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "11 會",
+        "lb": "p0991b12",
+        "juan": 579,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0991b13",
+            "juan": 579,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p0991c12",
+            "juan": 579,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0997a20",
+            "juan": 580,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1003a02",
+            "juan": 581,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1008b02",
+            "juan": 582,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1014a12",
+            "juan": 583,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "12 會",
+        "lb": "p1019a19",
+        "juan": 584,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1019a20",
+            "juan": 584,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1019b18",
+            "juan": 584,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1024b15",
+            "juan": 585,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1029b18",
+            "juan": 586,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1034a21",
+            "juan": 587,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1039b02",
+            "juan": 588,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "13 會",
+        "lb": "p1044a13",
+        "juan": 589,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1044a14",
+            "juan": 589,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "14 會",
+        "lb": "p1049c20",
+        "juan": 590,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1049c21",
+            "juan": 590,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "15 會",
+        "lb": "p1055b02",
+        "juan": 591,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1055b03",
+            "juan": 591,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1055c02",
+            "juan": 591,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1060b16",
+            "juan": 592,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "16 會",
+        "lb": "p1065b16",
+        "juan": 593,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1065b17",
+            "juan": 593,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1065c21",
+            "juan": 593,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1071a23",
+            "juan": 594,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1076c18",
+            "juan": 595,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1082b17",
+            "juan": 596,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1088b02",
+            "juan": 597,
+            "type": "品"
+          },
+          {
+            "title": "6",
+            "lb": "p1093c23",
+            "juan": 598,
+            "type": "品"
+          },
+          {
+            "title": "7",
+            "lb": "p1099c02",
+            "juan": 599,
+            "type": "品"
+          },
+          {
+            "title": "8",
+            "lb": "p1105c03",
+            "juan": 600,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "般若佛姆心咒",
+        "lb": "p1110a25",
+        "juan": 600,
+        "type": "品"
+      },
+      {
+        "title": "般若佛姆親心咒",
+        "lb": "p1110b01",
+        "juan": 600,
+        "type": "品"
+      }
+    ]
+  },
+  "version": "CBReader 2X v0.9.9 2026-01-21"
+}

@@ -1,15 +1,13 @@
 import type { ReaderPackage } from '../types/book';
-import { IndexBuilder, getApiUrl } from './IndexBuilder';
+import { IndexBuilder, getApiUrl, fetchWithTimeout } from './IndexBuilder';
 import type { SearchResult } from './IndexBuilder';
-import { ReaderBuilder } from './ReaderBuilder';
+import { ReaderBuilder, formatTimeRemaining } from './ReaderBuilder';
 import { NavigationBuilder } from './NavigationBuilder';
 import { ReferenceBuilder } from './ReferenceBuilder';
 import { SearchIndexBuilder } from './SearchIndexBuilder';
 import { AIIndexBuilder } from './AIIndexBuilder';
 import { saveBook } from '../utils/db';
 import { BUILDER_VERSION } from './version';
-import { getSourceMode } from '../utils/sourceMode';
-import type { SourceMode } from '../utils/sourceMode';
 export { BUILDER_VERSION };
 
 export type BuildStep = 
@@ -36,62 +34,57 @@ export class PackageBuilder {
    */
   static async downloadAndPackage(
     searchResult: SearchResult,
-    onProgress: (progress: BuildProgress) => void,
-    options?: { sourceMode?: SourceMode }
+    onProgress: (progress: BuildProgress) => void
   ): Promise<ReaderPackage> {
-    const activeMode = options?.sourceMode || getSourceMode();
     const workId = searchResult.workId;
-    let actualJuansCount = searchResult.juansCount;
+    let actualJuansCount = (searchResult.juansCount && searchResult.juansCount > 0) ? searchResult.juansCount : 1;
     
     try {
-      // 1. Metadata 階段
-      const isBackup = activeMode === 'backup';
-      const metaMsg = isBackup 
-        ? '⚡ [備源專用模式] 正在讀取備份庫經典元資料...' 
-        : '正在向 CBETA 獲取經典最新元資料...';
-      onProgress({ step: 'metadata', percent: 2, message: metaMsg });
-
-      if (!isBackup) {
-        try {
-          const metaUrl = getApiUrl(`/stable/works?work=${workId}`);
-          const response = await fetch(metaUrl);
-          if (response.ok) {
-            const data = await response.json();
-            if (data && Array.isArray(data.results) && data.results.length > 0) {
-              const workInfo = data.results[0];
-              if (workInfo.juan && typeof workInfo.juan === 'number') {
-                actualJuansCount = workInfo.juan;
-                console.log(`Successfully fetched true juansCount for ${workId}: ${actualJuansCount}`);
-              }
-              if (workInfo.category) {
-                searchResult.category = workInfo.category;
-              }
-              // 💡 規範譯者姓名 (朝代 + creators，例如：西晉 竺法護)
-              if (workInfo.creators) {
-                const dynasty = workInfo.time_dynasty ? `${workInfo.time_dynasty} ` : '';
-                const creatorName = workInfo.creators.replace(/\(.*\)/, '').trim();
-                searchResult.creators = creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`;
-              } else if (workInfo.byline) {
-                searchResult.creators = workInfo.byline;
-              }
-              // 💡 冊別：優先讀取 CBETA API 的 vol 欄位 (例如 T12)
-              if (workInfo.vol) {
-                searchResult.vol = workInfo.vol;
-              } else if (workInfo.file) {
-                const match = workInfo.file.match(/^([A-Z]\d+)/i);
-                if (match) searchResult.vol = match[1].toUpperCase();
-              } else if (workInfo.n != null) {
-                const volNum = String(workInfo.n).padStart(2, '0');
-                searchResult.vol = `${searchResult.workId.charAt(0)}${volNum}`;
-              }
-              if (workInfo.cjk_chars != null && typeof workInfo.cjk_chars === 'number') {
-                searchResult.cjkChars = workInfo.cjk_chars;
-              }
+      // 1. Metadata 階段 (加入 3.5 秒超時保護，防範 CBETA API 伺服器掛起)
+      onProgress({ step: 'metadata', percent: 3, message: `正在向 CBETA 獲取《${searchResult.title}》最新元資料...` });
+      try {
+        const relativeMetaUrl = getApiUrl(`/stable/works?work=${workId}`);
+        const directMetaUrl = `https://cbdata.dila.edu.tw/stable/works?work=${workId}`;
+        let response = await fetchWithTimeout(relativeMetaUrl, { headers: { 'Accept': 'application/json' } }, 3500);
+        if (!response || !response.ok) {
+          response = await fetchWithTimeout(directMetaUrl, { headers: { 'Accept': 'application/json' } }, 5000);
+        }
+        if (response && response.ok) {
+          const data = await response.json().catch(() => null);
+          if (data && Array.isArray(data.results) && data.results.length > 0) {
+            const workInfo = data.results[0];
+            if (workInfo.juan && typeof workInfo.juan === 'number') {
+              actualJuansCount = workInfo.juan;
+              console.log(`Successfully fetched true juansCount for ${workId}: ${actualJuansCount}`);
+            }
+            if (workInfo.category) {
+              searchResult.category = workInfo.category;
+            }
+            // 💡 規範譯者姓名 (朝代 + creators，例如：西晉 竺法護)
+            if (workInfo.creators) {
+              const dynasty = workInfo.time_dynasty ? `${workInfo.time_dynasty} ` : '';
+              const creatorName = workInfo.creators.replace(/\(.*\)/, '').trim();
+              searchResult.creators = creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`;
+            } else if (workInfo.byline) {
+              searchResult.creators = workInfo.byline;
+            }
+            // 💡 冊別：優先讀取 CBETA API 的 vol 欄位 (例如 T12)
+            if (workInfo.vol) {
+              searchResult.vol = workInfo.vol;
+            } else if (workInfo.file) {
+              const match = workInfo.file.match(/^([A-Z]\d+)/i);
+              if (match) searchResult.vol = match[1].toUpperCase();
+            } else if (workInfo.n != null) {
+              const volNum = String(workInfo.n).padStart(2, '0');
+              searchResult.vol = `${searchResult.workId.charAt(0)}${volNum}`;
+            }
+            if (workInfo.cjk_chars != null && typeof workInfo.cjk_chars === 'number') {
+              searchResult.cjkChars = workInfo.cjk_chars;
             }
           }
-        } catch (metaErr) {
-          console.warn('Failed to fetch online metadata for juansCount, fallback to searchResult count:', metaErr);
         }
+      } catch (metaErr) {
+        console.warn('Failed to fetch online metadata for juansCount, fallback to searchResult count:', metaErr);
       }
 
       onProgress({ step: 'metadata', percent: 5, message: '正在建立書籍元資料...' });
@@ -99,26 +92,28 @@ export class PackageBuilder {
         ...searchResult,
         juansCount: actualJuansCount
       });
-      await new Promise(resolve => setTimeout(resolve, 400));
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       // 2. Fetch Content 階段 (解析 HTML 卷次)
-      const fetchMsg = isBackup 
-        ? '⚡ [備源專用模式] 正在從備份鏡像庫下載經文與標記...'
-        : '正在從 CBETA 獲取經文內文與標記...';
-      onProgress({ step: 'fetch_content', percent: 10, message: fetchMsg });
+      onProgress({ step: 'fetch_content', percent: 10, message: '正在從 CBETA 獲取經文內文與標記...' });
       const { content, rawToc } = await ReaderBuilder.buildContent(
         workId, 
         actualJuansCount,
-        (p) => {
+        (p: number, currentJuan?: number, totalJuans?: number, remSec?: number, isBackup?: boolean) => {
+          let detail = `（卷次下載進度: ${Math.floor(p)}%）`;
+          if (currentJuan && totalJuans) {
+            const timeStr = remSec != null && remSec > 0 ? `，剩餘約 ${formatTimeRemaining(remSec)}` : '';
+            detail = `（已完成 ${currentJuan} / ${totalJuans} 卷${timeStr}）`;
+          }
+          const backupNote = isBackup 
+            ? ' 💡 CBETA 官方伺服器連線繁忙，已自動切換至離線版本（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）。' 
+            : '';
           onProgress({ 
             step: 'fetch_content', 
-            percent: 10 + Math.floor(p * 0.6), // 佔比最大 10% - 70%
-            message: isBackup
-              ? `⚡ [備源專用模式] 經文下載中 (${Math.floor(p)}%)...`
-              : `正在載入經文 HTML（卷次下載中: ${Math.floor(p)}%）...` 
+            percent: 10 + Math.floor(p * 0.65), // 佔比 10% - 75%
+            message: `正在下載經典內文與標記 ${detail}${backupNote}` 
           });
-        },
-        { sourceMode: activeMode }
+        }
       );
 
       // 3. Navigation 階段 (建立品/卷對照)

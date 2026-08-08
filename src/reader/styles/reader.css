@@ -11,6 +11,11 @@
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Kindle-style Content Area */
 .reader-content-area {
   flex-grow: 1;
@@ -20,6 +25,7 @@
   flex-direction: column;
   align-items: center;
   scroll-behavior: smooth;
+  position: relative;
 }
 
 .reader-book-title {
@@ -44,7 +50,6 @@
   max-width: 800px;
   width: 100%;
   margin-bottom: 1.5rem;
-  position: relative;
 }
 
 /* 💡 偈頌行與行之間的上下間距縮小，使詩歌排版緊湊優雅 */
@@ -53,19 +58,43 @@
 }
 
 .reader-paragraph {
-  font-family: var(--font-serif);
+  font-family: var(--reader-body-font, var(--font-serif));
+  font-weight: var(--reader-body-weight, normal);
   line-height: var(--reader-line-height, 2.0);
   font-size: var(--reader-font-size, 22px);
   text-align: justify;
   letter-spacing: 0.08em;
-  position: relative;
+  font-feature-settings: "calt" 1, "liga" 1;
+  font-variant-ligatures: contextual;
   transition: font-size var(--transition-fast), line-height var(--transition-fast);
 }
 
-/* 偈頌 (韻文) 排版美化 */
+.reader-text-highlight {
+  /* 💡 不設 position: relative，解鎖向外穿透至視窗最右牆壁 */
+}
+
+/* 💡 劃重點右側隨文流動小黃點：
+   1. 100% 穿透中層排版，死死貼在視窗最右側上下拉曳 Bar 軌道上 (right: 2px)
+   2. Y 軸靜態高度 100% 留置在劃重點第一行文字 (Line Box) 當行高度，隨經文天然滾動
+*/
+.highlight-right-accent-dot {
+  position: absolute;
+  right: 2px !important;
+  margin-top: 0.65em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--theme-accent, #c07d2a);
+  box-shadow: 0 0 6px rgba(234, 179, 8, 0.9);
+  pointer-events: none;
+  display: inline-block;
+  z-index: 1000;
+}
+
+/* 偈頌 (韻文) 排版美化 (固定使用圓體，維持閱讀層次感) */
 .reader-paragraph.verse {
   font-weight: bold;
-  font-family: 'DFYuan-Medium', 'DFYuan', 'YuanTi', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: "圓體-繁", "華康圓體", "DFYuan-Medium", "DFYuan", "YuanTi", "Yu Gothic", "Hiragino Maru Gothic ProN", "HGMaruGothicMPRO", "PingFang TC", "Microsoft JhengHei", sans-serif !important;
   text-align: left; /* 💡 將偈頌改為置左對齊，便於換行閱讀 */
   padding-left: 2em; /* 💡 左側縮排 2 字符，維持詩歌體排版質感 */
   margin-top: 0.15rem;
@@ -98,7 +127,13 @@
   font-weight: 600;
 }
 
-/* 💡 畫重點主題與配色變數 */
+/* 💡 畫重點主題與配色變數與瀏覽器 mark 黑字重置 */
+mark.reader-text-highlight,
+mark.search-highlight {
+  color: inherit !important;
+  font-style: normal;
+}
+
 .reader-container {
   --hl-color-yellow: rgba(251, 191, 36, 0.45);
   --hl-color-red: rgba(248, 113, 113, 0.4);
@@ -107,15 +142,16 @@
 }
 
 .reader-container.theme-ebony {
-  --hl-color-yellow: rgba(234, 179, 8, 0.45);
-  --hl-color-red: rgba(239, 68, 68, 0.45);
-  --hl-color-gray: rgba(107, 114, 128, 0.55);
-  --hl-color-blue: rgba(59, 130, 246, 0.45);
+  --hl-color-yellow: rgba(245, 158, 11, 0.55);
+  --hl-color-red: rgba(239, 68, 68, 0.5);
+  --hl-color-gray: rgba(156, 163, 175, 0.5);
+  --hl-color-blue: rgba(59, 130, 246, 0.5);
 }
 
 .reader-text-highlight {
   cursor: pointer;
   padding: 1px 0;
+  color: inherit !important;
   transition: opacity var(--transition-fast), background-color var(--transition-fast);
 }
 
@@ -137,26 +173,47 @@
   --hl-active-color: var(--hl-color-blue);
 }
 
-/* 4種粗細/標註樣式 */
+/* 4種粗細/標註樣式 (底部底線、半塗、全塗、方框) */
 .reader-text-highlight.hl-style-underline {
-  border-bottom: 2.5px solid var(--hl-active-color);
+  border-bottom: 2.5px solid var(--hl-active-color) !important;
   background-color: transparent !important;
   border-radius: 0;
+  color: inherit !important;
 }
+
 .reader-text-highlight.hl-style-bottom-half {
-  background: linear-gradient(180deg, transparent 55%, var(--hl-active-color) 55%) !important;
+  background: linear-gradient(180deg, transparent 52%, var(--hl-active-color) 52%) !important;
   border-bottom: none !important;
+  color: inherit !important;
 }
+
 .reader-text-highlight.hl-style-full {
   background-color: var(--hl-active-color) !important;
   border-bottom: none !important;
+  color: inherit !important;
+  border-radius: 3px;
 }
+
 .reader-text-highlight.hl-style-border {
-  border: 2.5px solid var(--hl-active-color) !important;
+  border: 2.2px solid var(--hl-active-color) !important;
   border-radius: 4px;
-  padding: 0 2px;
+  padding: 1px 4px;
+  margin: 0 1px;
   background-color: transparent !important;
-  border-bottom: none !important;
+  color: inherit !important;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  display: inline;
+}
+
+/* 💡 烏木 (Ebony) 暗色主題特別適配：防止瀏覽器預設 <mark> 的黑字 (black) 蓋掉文字，強效還原白字高對比 */
+body.theme-ebony .reader-text-highlight,
+body.theme-ebony mark.reader-text-highlight {
+  color: #e0dcd3 !important;
+}
+
+body.theme-ebony .reader-text-highlight.hl-style-full {
+  color: #ffffff !important;
 }
 
 /* 懸浮按鈕/筆刷按鈕微動畫 */
@@ -225,6 +282,8 @@
   /* 💡 採用與首頁控制列 100% 一致的手機端 Safe Area 填充與 56px 身高，達成完全等高與按鈕像素級重合 */
   padding-top: env(safe-area-inset-top, 0px);
   height: calc(56px + env(safe-area-inset-top, 0px));
+  min-height: calc(56px + env(safe-area-inset-top, 0px));
+  max-height: calc(56px + env(safe-area-inset-top, 0px));
   border-bottom: 1.2px solid;
   display: flex;
   align-items: center;
@@ -233,17 +292,25 @@
   padding-left: 0.8rem;
   padding-right: 0.8rem;
   box-sizing: border-box;
+  flex-shrink: 0;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .reader-bottom-bar {
   bottom: 0;
   height: 52px;
+  min-height: 52px;
+  max-height: 52px;
   border-top: 1.2px solid;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
   box-sizing: border-box;
+  flex-shrink: 0;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Visibility classes for Kindle Tap zone */
@@ -626,8 +693,9 @@ body.theme-ebony .drawer-item.active {
   text-decoration: underline;
 }
 
-/* 經文品名/標題段落樣式（粗體、稍大、靠左以區分） */
+/* 經文品名/標題段落樣式（粗體、稍大、靠左以區分，保持篇章節段標題字體不變） */
 .reader-paragraph.paragraph-head {
+  font-family: var(--font-serif) !important;
   font-weight: bold !important;
   font-size: 1.15em !important;
   margin-top: 2rem !important;
@@ -821,5 +889,120 @@ body.theme-ebony .resume-dialog-btn-secondary:hover {
   font-family: "圓體-繁", "華康圓體", "DFYuan-Medium", "DFYuan", "YuanTi", "Yu Gothic", "Hiragino Maru Gothic ProN", "HGMaruGothicMPRO", "PingFang TC", "Microsoft JhengHei", sans-serif !important;
   letter-spacing: 0.05em !important;
   opacity: 0.98;
+}
+
+/* 💡 本書內關鍵字搜尋對話框 (In-Book Search Modal) */
+.inbook-search-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: calc(65px + env(safe-area-inset-top, 0px));
+  animation: fadeIn 0.18s ease-out forwards;
+}
+
+.inbook-search-modal-card {
+  width: 90%;
+  max-width: 400px;
+  background-color: var(--reader-bg, #fdfbf7);
+  border: 1.5px solid var(--theme-accent-border, var(--reader-border));
+  border-radius: var(--radius-lg, 12px);
+  padding: 1.1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+  font-family: var(--font-rounded, sans-serif);
+}
+
+.inbook-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.04);
+  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.12));
+}
+
+.theme-ebony .inbook-search-input-wrapper {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.inbook-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  font-family: var(--font-rounded);
+}
+
+.inbook-search-btn-cancel {
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.15));
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  cursor: pointer;
+  font-family: var(--font-rounded);
+  transition: all 0.15s ease;
+}
+
+.inbook-search-btn-cancel:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.inbook-search-btn-submit {
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-rounded);
+  transition: all 0.15s ease;
+}
+
+.inbook-search-btn-submit:hover {
+  opacity: 0.9;
+}
+
+/* 💡 隨手記筆記輸入框樣式 */
+.note-textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.15));
+  background-color: var(--reader-bg-card, #ffffff);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  font-family: "Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.note-textarea:focus {
+  outline: none;
+  border-color: var(--theme-accent, #cf9f60);
+}
+
+/* 💡 烏木黑 (Ebony) 模式下：黑底 + 灰白細框線 + 淺色正黑體文字 */
+.theme-ebony .note-textarea {
+  background-color: rgba(0, 0, 0, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #e2e8f0 !important;
+}
+
+.theme-ebony .note-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
 }
 

@@ -1,7 +1,75 @@
+/* 💡 教育部標準楷書 (MOE-EduKai / TW-Kai-98 WOFF2 官方字型檔) */
+@font-face {
+  font-family: 'MOE-EduKai';
+  src: url('/fonts/edukai-5.1_20251208.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TW-Kai-98';
+  src: url('/fonts/edukai-5.1_20251208.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 💡 注音芫荽體 (Iansui-ZY / Bopomofo Iansui) 雲端 WebFont */
+@font-face {
+  font-family: 'Iansui-ZY';
+  src: url('https://cdn.jsdelivr.net/gh/but11/iansui@main/Iansui-ZY.ttf') format('truetype'),
+       url('https://cdn.jsdelivr.net/gh/but11/iansui/Iansui-ZY.ttf') format('truetype'),
+       url('https://raw.githubusercontent.com/but11/iansui/main/Iansui-ZY.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Iansui ZY';
+  src: url('https://cdn.jsdelivr.net/gh/but11/iansui@main/Iansui-ZY.ttf') format('truetype'),
+       url('https://cdn.jsdelivr.net/gh/but11/iansui/Iansui-ZY.ttf') format('truetype'),
+       url('https://raw.githubusercontent.com/but11/iansui/main/Iansui-ZY.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bopomofo Iansui';
+  src: url('https://cdn.jsdelivr.net/gh/but11/iansui@main/Iansui-ZY.ttf') format('truetype'),
+       url('https://cdn.jsdelivr.net/gh/but11/iansui/Iansui-ZY.ttf') format('truetype'),
+       url('https://raw.githubusercontent.com/but11/iansui/main/Iansui-ZY.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 💡 CBETA 補充字型 (CBETA Supplement WebFont) - 涵蓋 13,929+ 佛典罕見字與缺字 */
+@font-face {
+  font-family: 'CBETASupplement';
+  src: url('https://cbeta-org.github.io/cbeta-fonts/CBETASupplement.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/cbeta-org/cbeta-fonts@main/CBETASupplement.woff2') format('woff2'),
+       url('https://raw.githubusercontent.com/cbeta-org/cbeta-fonts/main/CBETASupplement.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 💡 全字庫標準正楷體 / 標楷體 (TW-Kai / Standard Kai WebFont) */
+@font-face {
+  font-family: 'TW-Kai';
+  src: url('/fonts/edukai-5.1_20251208.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Fonts */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: 'Noto Serif TC', "PingFang TC", "Songti TC", "Noto Sans CJK TC", "Microsoft JhengHei", serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, 'CBETASupplement';
+  --font-serif: 'Noto Serif TC', 'CBETASupplement', "PingFang TC", "Songti TC", "Noto Sans CJK TC", "Microsoft JhengHei", serif;
 
   /* Theme: Wood & Ivory (Default Library Theme) */
   --color-wood-50: #fbf8f3;

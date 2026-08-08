@@ -1,0 +1,472 @@
+{
+  "workId": "T0220",
+  "juan": 166,
+  "results": [
+    {
+      "html": "<body>\r\n\r\n\r\n<span class=\"lb\" id=\"p0921a01\"></span><cb:div n=\"06\" type=\"hui\"><div class=\"cb-mulu\" data-level=\"1\" data-n=\"5\" data-type=\"會\">6 會</div><h2 class=\"head\"><title>大般若經</title>第六會</h2><cb:div type=\"xu\"><div class=\"cb-mulu\">序</div><h2 class=\"head\">序</h2>\r\n<span class=\"lb\" id=\"p0921a02\"></span>\r\n<span class=\"lb\" id=\"p0921a03\"></span><byline><app n=\"0921002b\"><p class=\"lg\">西明寺沙門玄則撰</lem><rdg resp=\"Taisho\" wit=\"【宋】 【元】\"><space quantity=\"0\"/></rdg></app></byline>\r\n<span class=\"lb\" id=\"p0921a04\"></span><p>源夫控歸塗以彌綸、踐要極而端務，莫若警\r\n<span class=\"lb\" id=\"p0921a05\"></span>十度於一施、披六蔽於三檀。矧般若之大猷，\r\n<span class=\"lb\" id=\"p0921a06\"></span>固總領而高視，誠庶心之扃牖，積行之樞軸，\r\n<span class=\"lb\" id=\"p0921a07\"></span>故能範圍真際、充塞塵區。泛之則無緣、綏\r\n<span class=\"lb\" id=\"p0921a08\"></span>之則無動，大悲抗其首、大捨維其末，恬五痛\r\n<span class=\"lb\" id=\"p0921a09\"></span>之苦修、倏三祇之遙序。願無近遠，遇物成資；\r\n<span class=\"lb\" id=\"p0921a10\"></span>善靡鴻纖，觸塗必衍。馮無象而永日，輟有\r\n<span class=\"lb\" id=\"p0921a11\"></span>輪於長夜，窮幽盡妙，其般若之致乎。粵有天\r\n<span class=\"lb\" id=\"p0921a12\"></span>王，是為最勝，捐樂宮而下拜，泛嘉名而上\r\n<span class=\"lb\" id=\"p0921a13\"></span>表，念茲在茲，爰究爰度。然以位懸道隔，非目\r\n<span class=\"lb\" id=\"p0921a14\"></span>擊之能存；所以軌眾諧辰，寄言提而取悟。\r\n<span class=\"lb\" id=\"p0921a15\"></span>即舊《勝天王般若》，今譯成八卷、一十七品。其\r\n<span class=\"lb\" id=\"p0921a16\"></span>發明弘旨、敞拔幽關，固已法寶駢映、義林交\r\n<span class=\"lb\" id=\"p0921a17\"></span>積。自性三種，欝無性以阡眠；果德萬區，殷\r\n<span class=\"lb\" id=\"p0921a18\"></span>不德而輝煥。凡鼓篋之士，猶希取質；況乘杯\r\n<span class=\"lb\" id=\"p0921a19\"></span>之客，如何勿思？</p></cb:div>\r\n<span class=\"lb\" id=\"p0921a20\"></span>\r\n<span class=\"lb\" id=\"p0921a21\"></span><cb:juan n=\"566\" fun=\"open\"><div class=\"cb-mulu\"></div><cb:jhead><title>大般若波羅蜜多經</title>卷第五百六\r\n<span class=\"lb\" id=\"p0921a22\"></span>十六</cb:jhead></cb:juan>\r\n<span class=\"lb\" id=\"p0921a23\"></span>\r\n<span class=\"lb\" id=\"p0921a24\"></span><byline><anchor xml:id=\"fxT07p0921a01\"/>三藏法師玄奘奉　詔譯</byline>\r\n<span class=\"lb\" id=\"p0921a25\"></span><cb:div type=\"pin\"><div class=\"cb-mulu\" data-level=\"2\" data-n=\"1\" data-type=\"品\">1 緣起品</div><h2 class=\"head\">第六分緣起品第一</h2>\r\n<span class=\"lb\" id=\"p0921a26\"></span><p>如是我聞：</p><p>一時，薄伽梵住王舍城鷲峯山頂，\r\n<span class=\"lb\" id=\"p0921a27\"></span>與大苾芻眾四萬二千人俱，皆阿羅漢，諸漏\r\n<span class=\"lb\" id=\"p0921a28\"></span>已盡無復煩惱，得真自在心善解脫、慧善解\r\n<span class=\"lb\" id=\"p0921a29\"></span>脫，如調慧馬亦如大龍，已作所作已辦所辦，\r\n\r\n<span class=\"lb\" id=\"p0921b01\"></span>棄諸重擔逮得己利，盡諸有結正智解脫，到\r\n<span class=\"lb\" id=\"p0921b02\"></span>心自在第一究竟，除阿難陀獨居學地得預\r\n<span class=\"lb\" id=\"p0921b03\"></span>流果，所謂具壽解憍陳那、大迦葉波、笈防鉢\r\n<span class=\"lb\" id=\"p0921b04\"></span>底、褐麗筏多、大採菽氏、大迦多衍那、畢藺\r\n<span class=\"lb\" id=\"p0921b05\"></span>陀筏蹉、舍利子、滿慈子、薄俱羅、鄔波離、羅\r\n<span class=\"lb\" id=\"p0921b06\"></span>怙羅、無滅、善現而為上首。</p><p>復有七萬二千菩\r\n<span class=\"lb\" id=\"p0921b07\"></span>薩摩訶薩皆已通達甚深法性，調順易化妙\r\n<span class=\"lb\" id=\"p0921b08\"></span>行平等，得無礙辯陀羅尼門，一切有情真淨\r\n<span class=\"lb\" id=\"p0921b09\"></span>善友，能轉不退微妙法輪，哀愍世間護持法\r\n<span class=\"lb\" id=\"p0921b10\"></span>藏，已曾供養無量如來，紹隆三寶能使不絕，\r\n<span class=\"lb\" id=\"p0921b11\"></span>通達諸佛甚深境界，一生所繫法王真子，常\r\n<span class=\"lb\" id=\"p0921b12\"></span>能紹佛轉正法輪，雖處世間而無所染，具如\r\n<span class=\"lb\" id=\"p0921b13\"></span>是等無量功德，從此佛國或從他方，為聽法\r\n<span class=\"lb\" id=\"p0921b14\"></span>故來詣佛所，所謂寶相菩薩、寶手菩薩、寶印\r\n<span class=\"lb\" id=\"p0921b15\"></span>菩薩、寶髻菩薩、寶冠菩薩、寶峯菩薩、寶海\r\n<span class=\"lb\" id=\"p0921b16\"></span>菩薩、寶焰菩薩、寶幢菩薩、寶藏菩薩、金藏\r\n<span class=\"lb\" id=\"p0921b17\"></span>菩薩、淨藏菩薩、德藏菩薩、定藏菩薩、智藏\r\n<span class=\"lb\" id=\"p0921b18\"></span>菩薩、日藏菩薩、月藏菩薩、如來藏菩薩、蓮\r\n<span class=\"lb\" id=\"p0921b19\"></span>華藏菩薩、金剛藏菩薩、解脫月菩薩、普賢\r\n<span class=\"lb\" id=\"p0921b20\"></span>菩薩、普音菩薩、普戒菩薩、普行菩薩、普眼\r\n<span class=\"lb\" id=\"p0921b21\"></span>菩薩、廣眼菩薩、蓮華眼菩薩、智慧菩薩、上慧\r\n<span class=\"lb\" id=\"p0921b22\"></span>菩薩、勝慧菩薩、蓮華慧菩薩、金剛慧菩薩、日\r\n<span class=\"lb\" id=\"p0921b23\"></span>光菩薩、月光菩薩、智光菩薩、智德菩薩、賢德\r\n<span class=\"lb\" id=\"p0921b24\"></span>菩薩、華德菩薩、日觀菩薩、月觀菩薩、無染菩\r\n<span class=\"lb\" id=\"p0921b25\"></span>薩、妙音菩薩、大音王菩薩、師子吼菩薩、師子\r\n<span class=\"lb\" id=\"p0921b26\"></span>遊戲菩薩，賢首菩薩等十六賢菩薩，慈氏菩\r\n<span class=\"lb\" id=\"p0921b27\"></span>薩等賢劫諸菩薩，觀自在菩薩、妙吉祥菩薩\r\n<span class=\"lb\" id=\"p0921b28\"></span>而為上首。</p><p>復有無量四大王眾天，四大天王\r\n<span class=\"lb\" id=\"p0921b29\"></span>而為上首。復有無量三十三天，帝釋天王而\r\n\r\n<span class=\"lb\" id=\"p0921c01\"></span>為上首。復有無量夜摩天，蘇夜摩天王而為\r\n<span class=\"lb\" id=\"p0921c02\"></span>上首。復有無量覩史多天，珊覩史多天王而\r\n<span class=\"lb\" id=\"p0921c03\"></span>為上首。復有無量樂變化天，善化天王而為\r\n<span class=\"lb\" id=\"p0921c04\"></span>上首。復有無量他化自在天，自在天王而為\r\n<span class=\"lb\" id=\"p0921c05\"></span>上首。復有無量梵眾等天，大梵天王而為上\r\n<span class=\"lb\" id=\"p0921c06\"></span>首。復有無量淨居天，大自在天而為上首。如\r\n<span class=\"lb\" id=\"p0921c07\"></span>是天王將諸眷屬，為聽法故來詣佛所。復有\r\n<span class=\"lb\" id=\"p0921c08\"></span>無量阿素洛王，所謂具力阿素洛王、堅蘊阿\r\n<span class=\"lb\" id=\"p0921c09\"></span>素洛王、雜威阿素洛王、暴執阿素洛王而為\r\n<span class=\"lb\" id=\"p0921c10\"></span>上首，各領無量百千眷屬，為聽法故來詣佛\r\n<span class=\"lb\" id=\"p0921c11\"></span>所。復有無量大力龍王，所謂無熱龍王、猛意\r\n<span class=\"lb\" id=\"p0921c12\"></span>龍王、海住龍王、工巧龍王而為上首，各領無\r\n<span class=\"lb\" id=\"p0921c13\"></span>量百千眷屬，為聽法故來詣佛所。復有無量\r\n<span class=\"lb\" id=\"p0921c14\"></span>藥叉大神、人非人等并諸眷屬，為聽法故來\r\n<span class=\"lb\" id=\"p0921c15\"></span>詣佛所。</p><p>時，鷲峯山縱廣四十踰繕那量大眾\r\n<span class=\"lb\" id=\"p0921c16\"></span>充滿，地及虛空靡有間隙。</p>\r\n<span class=\"lb\" id=\"p0921c17\"></span><p>爾時，世尊處師子座，無量大眾前後圍遶，供\r\n<span class=\"lb\" id=\"p0921c18\"></span>養尊重、恭敬讚歎，一心合掌瞻仰尊顏。於是\r\n<span class=\"lb\" id=\"p0921c19\"></span>如來現神通力，從面門出種種色光，普照十\r\n<span class=\"lb\" id=\"p0921c20\"></span>方無邊世界，現希有事還至佛所，右遶三匝\r\n<span class=\"lb\" id=\"p0921c21\"></span>歸於面門。</p><p>是時，東方去此佛土過十殑伽沙\r\n<span class=\"lb\" id=\"p0921c22\"></span>數世界，有佛世界名曰莊嚴，佛號普光如來、\r\n<span class=\"lb\" id=\"p0921c23\"></span>應、正等覺、明行圓滿、善逝、世間解、無上丈夫、調\r\n<span class=\"lb\" id=\"p0921c24\"></span>御士、天人師、佛、薄伽梵。時，現在彼安隱住持，\r\n<span class=\"lb\" id=\"p0921c25\"></span>為諸菩薩摩訶薩眾，宣說一乘相應正法。彼\r\n<span class=\"lb\" id=\"p0921c26\"></span>佛世界，尚不聞有二乘之名，況有精勤修其\r\n<span class=\"lb\" id=\"p0921c27\"></span>法者；彼諸菩薩皆於無上正等菩提得不退\r\n<span class=\"lb\" id=\"p0921c28\"></span>轉；彼諸有情不假段食，但資解脫、靜慮、等至；\r\n<span class=\"lb\" id=\"p0921c29\"></span>彼界不待日月等光，唯佛身光晝夜常照，其\r\n\r\n<span class=\"lb\" id=\"p0922a01\"></span>土無有毒刺、礫石、谿谷、山陵，地平如掌。彼有\r\n<span class=\"lb\" id=\"p0922a02\"></span>菩薩名曰離障，既見此光心懷猶豫，與諸菩\r\n<span class=\"lb\" id=\"p0922a03\"></span>薩摩訶薩眾，前詣佛所，頂禮雙足，偏覆左\r\n<span class=\"lb\" id=\"p0922a04\"></span>肩，右膝著地，合掌恭敬，白言：「世尊！何因何緣\r\n<span class=\"lb\" id=\"p0922a05\"></span>而有此瑞？」</p><p>時，普光佛告離障言：「西方去此過\r\n<span class=\"lb\" id=\"p0922a06\"></span>十殑伽沙數世界，有佛世界名曰堪忍，佛號\r\n<span class=\"lb\" id=\"p0922a07\"></span>釋迦牟尼，如來十號具足，現為菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0922a08\"></span>眾，說大般若波羅蜜多，由彼因緣故現斯瑞。」</p>\r\n<span class=\"lb\" id=\"p0922a09\"></span><p>離障菩薩聞已白言：「我今請往堪忍世界，觀\r\n<span class=\"lb\" id=\"p0922a10\"></span>禮供養釋迦如來聽受正法，唯願聽許！」</p><p>時，普\r\n<span class=\"lb\" id=\"p0922a11\"></span>光佛告離障言：「今正是時，汝宜速往。」</p><p>離障蒙\r\n<span class=\"lb\" id=\"p0922a12\"></span>許歡喜踊躍，即與無量菩薩眾，俱來至鷲峯，\r\n<span class=\"lb\" id=\"p0922a13\"></span>頂禮佛足，右遶三匝，退坐一面。</p><p>南方去此過\r\n<span class=\"lb\" id=\"p0922a14\"></span>十殑伽沙數世界，有佛世界名清淨花，佛號\r\n<span class=\"lb\" id=\"p0922a15\"></span>日光，十號具足，彼有菩薩名曰日藏。西方去\r\n<span class=\"lb\" id=\"p0922a16\"></span>此過十殑伽沙數世界，有佛世界名曰寶花，\r\n<span class=\"lb\" id=\"p0922a17\"></span>佛號功德光明，十號具足，彼有菩薩名功德\r\n<span class=\"lb\" id=\"p0922a18\"></span>藏。北方去此過十殑伽沙數世界，有佛世界\r\n<span class=\"lb\" id=\"p0922a19\"></span>名曰清淨，佛號自在王，彼有菩薩名曰廣聞。\r\n<span class=\"lb\" id=\"p0922a20\"></span>東南方去此過十殑伽沙數世界，有佛世界\r\n<span class=\"lb\" id=\"p0922a21\"></span>名曰火焰，佛號甘露王，十號具足，彼有菩薩\r\n<span class=\"lb\" id=\"p0922a22\"></span>名不退轉。西南方去此過十殑伽沙數世界，\r\n<span class=\"lb\" id=\"p0922a23\"></span>有佛世界名清淨功德，佛號智炬，十號具足，\r\n<span class=\"lb\" id=\"p0922a24\"></span>彼有菩薩名曰大慧。西北方去此過十殑伽\r\n<span class=\"lb\" id=\"p0922a25\"></span>沙數世界，有佛世界名曰悅意，佛號妙音王，\r\n<span class=\"lb\" id=\"p0922a26\"></span>十號具足，彼有菩薩名功德聚。東北方去此\r\n<span class=\"lb\" id=\"p0922a27\"></span>過十殑伽沙數世界，有佛世界名慧莊嚴，佛\r\n<span class=\"lb\" id=\"p0922a28\"></span>號智上，十號具足，彼有菩薩名曰常喜。上方\r\n<span class=\"lb\" id=\"p0922a29\"></span>去此過十殑伽沙數世界，有佛世界名曰不\r\n\r\n<span class=\"lb\" id=\"p0922b01\"></span>動，佛號金剛相，十號具足，彼有菩薩名曰寶\r\n<span class=\"lb\" id=\"p0922b02\"></span>幢。下方去此過十殑伽沙數世界，有佛世界\r\n<span class=\"lb\" id=\"p0922b03\"></span>名月光明，佛號金剛寶莊嚴王，十號具足，彼\r\n<span class=\"lb\" id=\"p0922b04\"></span>有菩薩名曰寶信。如是一切皆如東方。</p></cb:div>\r\n<span class=\"lb\" id=\"p0922b05\"></span><cb:div type=\"pin\"><div class=\"cb-mulu\" data-level=\"2\" data-n=\"2\" data-type=\"品\">2 通達品</div><h2 class=\"head\">第六分通達品第二</h2>\r\n<span class=\"lb\" id=\"p0922b06\"></span><p>時，有天王名曰最勝，從座而起，頂禮佛足，偏\r\n<span class=\"lb\" id=\"p0922b07\"></span>覆左肩，右膝著地，合掌恭敬，白言：「世尊！我有\r\n<span class=\"lb\" id=\"p0922b08\"></span>少疑今欲問佛，若蒙開許乃敢陳請。」</p><p>於是佛\r\n<span class=\"lb\" id=\"p0922b09\"></span>告最勝天言：「天王！如來、應、正等覺隨所疑問\r\n<span class=\"lb\" id=\"p0922b10\"></span>當為決之。」</p><p>時，最勝天既蒙佛許踊躍歡喜，便\r\n<span class=\"lb\" id=\"p0922b11\"></span>白佛言：「世尊！云何諸菩薩摩訶薩修學一法，\r\n<span class=\"lb\" id=\"p0922b12\"></span>能通達一切法？」</p><p>佛告最勝：「善哉！善哉！能問如\r\n<span class=\"lb\" id=\"p0922b13\"></span>來如是深義，諦聽！諦聽！善思念之，如汝所疑\r\n<span class=\"lb\" id=\"p0922b14\"></span>當為開釋。」</p><p>最勝天曰：「唯然！願聞！」</p><p>爾時，世尊告\r\n<span class=\"lb\" id=\"p0922b15\"></span>最勝曰：「天王當知！諸菩薩摩訶薩修學一法，\r\n<span class=\"lb\" id=\"p0922b16\"></span>能通達一切法者，所謂般若波羅蜜多。若菩\r\n<span class=\"lb\" id=\"p0922b17\"></span>薩摩訶薩修學般若波羅蜜多，則能通達布\r\n<span class=\"lb\" id=\"p0922b18\"></span>施、淨戒、安忍、精進、靜慮、般若、方便善巧、妙願、力、\r\n<span class=\"lb\" id=\"p0922b19\"></span>智波羅蜜多。</p><p>「天王！云何諸菩薩摩訶薩修學\r\n<span class=\"lb\" id=\"p0922b20\"></span>般若波羅蜜多，能通達布施波羅蜜多？天王\r\n<span class=\"lb\" id=\"p0922b21\"></span>當知！若菩薩摩訶薩修學般若波羅蜜多，則\r\n<span class=\"lb\" id=\"p0922b22\"></span>能行妙法施波羅蜜多。謂以淨心無所希願，\r\n<span class=\"lb\" id=\"p0922b23\"></span>為他說法不求名利但為滅苦，不見我能為\r\n<span class=\"lb\" id=\"p0922b24\"></span>彼說法，不見彼聽，無二無別，自性離故。</p><p>「若菩\r\n<span class=\"lb\" id=\"p0922b25\"></span>薩摩訶薩修學般若波羅蜜多，則能行無畏\r\n<span class=\"lb\" id=\"p0922b26\"></span>施波羅蜜多。謂觀有情猶如父母、兄弟、親戚，\r\n<span class=\"lb\" id=\"p0922b27\"></span>令一切眾咸親附我。何以故？無始時來流轉\r\n<span class=\"lb\" id=\"p0922b28\"></span>六趣皆為親戚，若諸有情在怖畏難，尚以身\r\n<span class=\"lb\" id=\"p0922b29\"></span>命而救拔之，況應於彼而加惱害！不見我能\r\n\r\n<span class=\"lb\" id=\"p0922c01\"></span>施彼無畏，不見彼受，無二無別，自性離故。</p><p>「若\r\n<span class=\"lb\" id=\"p0922c02\"></span>菩薩摩訶薩修學般若波羅蜜多，則能行資\r\n<span class=\"lb\" id=\"p0922c03\"></span>生施波羅蜜多。謂隨有情所須資具種種布\r\n<span class=\"lb\" id=\"p0922c04\"></span>施，令其受行十善業道，不見我能施彼資具，\r\n<span class=\"lb\" id=\"p0922c05\"></span>不見彼受，無二無別，自性離故。</p><p>「若菩薩摩訶\r\n<span class=\"lb\" id=\"p0922c06\"></span>薩修學般若波羅蜜多，則能行亡報施波羅\r\n<span class=\"lb\" id=\"p0922c07\"></span>蜜多。謂行施時不望果報，菩薩法爾自應布\r\n<span class=\"lb\" id=\"p0922c08\"></span>施，不見我能行亡報施，不見施報，無二無別，\r\n<span class=\"lb\" id=\"p0922c09\"></span>自性離故。</p><p>「若菩薩摩訶薩修學般若波羅蜜\r\n<span class=\"lb\" id=\"p0922c10\"></span>多，則能行大悲施波羅蜜多。謂見有情貧窮\r\n<span class=\"lb\" id=\"p0922c11\"></span>老病無救濟者，起大悲心而發誓願：『我得無\r\n<span class=\"lb\" id=\"p0922c12\"></span>上正等覺時，為諸有情作歸依處，為有情故，\r\n<span class=\"lb\" id=\"p0922c13\"></span>以少善根迴向菩提，亦不分別我能救濟受\r\n<span class=\"lb\" id=\"p0922c14\"></span>救濟者，無二無別，自性離故。』</p><p>「若菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0922c15\"></span>修學般若波羅蜜多，則能行恭敬施波羅蜜\r\n<span class=\"lb\" id=\"p0922c16\"></span>多。謂隨有情所須之物，尋自敬奉不令疲倦，\r\n<span class=\"lb\" id=\"p0922c17\"></span>不見我能行恭敬施，不見彼受，無二無別，自性\r\n<span class=\"lb\" id=\"p0922c18\"></span>離故。</p><p>「若菩薩摩訶薩修學般若波羅蜜多，則\r\n<span class=\"lb\" id=\"p0922c19\"></span>能行尊重施波羅蜜多。謂於有情起師僧想\r\n<span class=\"lb\" id=\"p0922c20\"></span>或父母想尊重心施，若無財物惠以善言，不\r\n<span class=\"lb\" id=\"p0922c21\"></span>見我能行尊重施，不見彼受，無二無別，自性\r\n<span class=\"lb\" id=\"p0922c22\"></span>離故。</p><p>「若菩薩摩訶薩修學般若波羅蜜多，則\r\n<span class=\"lb\" id=\"p0922c23\"></span>能行供養施波羅蜜多。謂見制多、若僧住處，\r\n<span class=\"lb\" id=\"p0922c24\"></span>則應掃灑，以諸花香及燈明等而為供養，若\r\n<span class=\"lb\" id=\"p0922c25\"></span>見尊像正法毀缺，即應精勤修治供養，若見\r\n<span class=\"lb\" id=\"p0922c26\"></span>僧眾，應以飲食、臥具、醫藥而供養之，不見我\r\n<span class=\"lb\" id=\"p0922c27\"></span>能行供養施，不見彼受，無二無別，自性離故。</p>\r\n<span class=\"lb\" id=\"p0922c28\"></span><p>「若菩薩摩訶薩修學般若波羅蜜多，則能行\r\n<span class=\"lb\" id=\"p0922c29\"></span>無依施波羅蜜多。謂行施時不作是念：『願以\r\n\r\n<span class=\"lb\" id=\"p0923a01\"></span>此施得生天、人，作天、人王富貴受樂。』乃至無\r\n<span class=\"lb\" id=\"p0923a02\"></span>上正等菩提亦不取求，無所得故。</p><p>「天王！是名\r\n<span class=\"lb\" id=\"p0923a03\"></span>諸菩薩摩訶薩修學般若波羅蜜多，能通達\r\n<span class=\"lb\" id=\"p0923a04\"></span>布施波羅蜜多。</p><p>「天王！云何諸菩薩摩訶薩修\r\n<span class=\"lb\" id=\"p0923a05\"></span>學般若波羅蜜多，能通達淨戒波羅蜜多？天\r\n<span class=\"lb\" id=\"p0923a06\"></span>王當知！若菩薩摩訶薩修學般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0923a07\"></span>則能行淨戒波羅蜜多。謂諸菩薩作是思惟：\r\n<span class=\"lb\" id=\"p0923a08\"></span>『佛於淨教毘奈耶中，說別解脫相應戒經，菩\r\n<span class=\"lb\" id=\"p0923a09\"></span>薩應學，不見戒相及能受持，不著戒見亦不\r\n<span class=\"lb\" id=\"p0923a10\"></span>著我，無二無別，自性離故。』</p><p>「若菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0923a11\"></span>修學般若波羅蜜多，則能行淨戒波羅蜜多。\r\n<span class=\"lb\" id=\"p0923a12\"></span>謂諸菩薩作是思惟：『諸佛無上正等菩提，非\r\n<span class=\"lb\" id=\"p0923a13\"></span>唯受持淨戒便得，要應遍學菩薩戒行，戒性\r\n<span class=\"lb\" id=\"p0923a14\"></span>清涼寂靜不起，無二無別，自性離故。』</p><p>「若菩薩\r\n<span class=\"lb\" id=\"p0923a15\"></span>摩訶薩修學般若波羅蜜多，則能行淨戒波羅\r\n<span class=\"lb\" id=\"p0923a16\"></span>蜜多。謂諸菩薩作是思惟：『云何持戒能斷煩\r\n<span class=\"lb\" id=\"p0923a17\"></span>惱？煩惱三種謂貪、瞋、癡，此又各三即上、中、下。\r\n<span class=\"lb\" id=\"p0923a18\"></span>斷此煩惱應知對治：貪增上者，修不淨觀，具\r\n<span class=\"lb\" id=\"p0923a19\"></span>足觀身三十六物；瞋增上者，修慈悲觀；癡增\r\n<span class=\"lb\" id=\"p0923a20\"></span>上者，修緣起觀。不見能觀及所觀法，無二無\r\n<span class=\"lb\" id=\"p0923a21\"></span>別，自性離故。』</p><p>「若菩薩摩訶薩修學般若波羅\r\n<span class=\"lb\" id=\"p0923a22\"></span>蜜多，則能行淨戒波羅蜜多。謂諸菩薩作是\r\n<span class=\"lb\" id=\"p0923a23\"></span>思惟：『云何菩薩應正遠離不正思惟？謂諸菩\r\n<span class=\"lb\" id=\"p0923a24\"></span>薩不起是心：「我行寂靜行、離行、空行，諸餘沙\r\n<span class=\"lb\" id=\"p0923a25\"></span>門、婆羅門等皆處喧雜不樂空行。」見無二別\r\n<span class=\"lb\" id=\"p0923a26\"></span>知自性離，即能遠離不正思惟。』</p><p>「若菩薩摩訶\r\n<span class=\"lb\" id=\"p0923a27\"></span>薩修學般若波羅蜜多，則能行淨戒波羅蜜\r\n<span class=\"lb\" id=\"p0923a28\"></span>多。謂諸菩薩雖知諸法離而深畏眾罪，如佛\r\n<span class=\"lb\" id=\"p0923a29\"></span>所說應持淨戒，修諸福業乃至般若波羅蜜\r\n\r\n<span class=\"lb\" id=\"p0923b01\"></span>多，於少罪中應懷大懼不與同止，以世尊說：\r\n<span class=\"lb\" id=\"p0923b02\"></span>譬如毒藥多少俱害。</p><p>「若菩薩摩訶薩修學般\r\n<span class=\"lb\" id=\"p0923b03\"></span>若波羅蜜多，則能行淨戒波羅蜜多。謂諸菩\r\n<span class=\"lb\" id=\"p0923b04\"></span>薩常生怖畏信行相應，設空閑處獨守無侶，\r\n<span class=\"lb\" id=\"p0923b05\"></span>有沙門等齎持金、銀及吠瑠璃、真珠等寶以寄\r\n<span class=\"lb\" id=\"p0923b06\"></span>菩薩，於中不起貪著取心，作是思惟：『世尊常\r\n<span class=\"lb\" id=\"p0923b07\"></span>說：寧當自割身肉噉之，而於他財不與弗取。』</p>\r\n<span class=\"lb\" id=\"p0923b08\"></span><p>「若菩薩摩訶薩修學般若波羅蜜多，則能行淨\r\n<span class=\"lb\" id=\"p0923b09\"></span>戒波羅蜜多。謂諸菩薩持戒堅固，若諸惡魔\r\n<span class=\"lb\" id=\"p0923b10\"></span>及魔眷屬，以妙色形逼試菩薩，菩薩於彼心\r\n<span class=\"lb\" id=\"p0923b11\"></span>不動搖，作是思惟：『世尊常說：色等諸法如夢、\r\n<span class=\"lb\" id=\"p0923b12\"></span>幻、化，無二無別，自性離故。』</p><p>「若菩薩摩訶薩修\r\n<span class=\"lb\" id=\"p0923b13\"></span>學般若波羅蜜多，則能行淨戒波羅蜜多。謂\r\n<span class=\"lb\" id=\"p0923b14\"></span>諸菩薩雖勤持戒，而不希求人天王位，身離\r\n<span class=\"lb\" id=\"p0923b15\"></span>三過，語無四失，意免三愆，如是持戒，不見我\r\n<span class=\"lb\" id=\"p0923b16\"></span>持，不見戒相，無二無別，自性離故。</p><p>「天王！是名\r\n<span class=\"lb\" id=\"p0923b17\"></span>諸菩薩摩訶薩修學般若波羅蜜多，能通達淨\r\n<span class=\"lb\" id=\"p0923b18\"></span>戒波羅蜜多。</p><p>「天王！云何諸菩薩摩訶薩修\r\n<span class=\"lb\" id=\"p0923b19\"></span>學般若波羅蜜多，能通達安忍波羅蜜多？天\r\n<span class=\"lb\" id=\"p0923b20\"></span>王當知！若菩薩摩訶薩修學般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0923b21\"></span>則能行安忍波羅蜜多。謂諸菩薩常學內忍，\r\n<span class=\"lb\" id=\"p0923b22\"></span>憂悲苦惱皆悉不隨，亦學外忍，若他打罵、欺\r\n<span class=\"lb\" id=\"p0923b23\"></span>奪、凌辱終不生瞋，亦學法忍，如世尊說甚深\r\n<span class=\"lb\" id=\"p0923b24\"></span>實性無法、無我、無生、寂靜，即是涅槃，聞如是\r\n<span class=\"lb\" id=\"p0923b25\"></span>說心不驚怖，作是思惟：『不學是法，云何能得\r\n<span class=\"lb\" id=\"p0923b26\"></span>所求無上正等菩提，能盡未來利益安樂諸\r\n<span class=\"lb\" id=\"p0923b27\"></span>有情類？』審諦思惟貪、瞋、癡毒，如是一一於何\r\n<span class=\"lb\" id=\"p0923b28\"></span>處起？何因緣生？何因緣滅？如實觀察都不見\r\n<span class=\"lb\" id=\"p0923b29\"></span>有能生、所生、能滅、所滅，如是忍心相續不斷，\r\n\r\n<span class=\"lb\" id=\"p0923c01\"></span>晝夜諸位甞無間隙，於所忍境無簡擇心，\r\n<span class=\"lb\" id=\"p0923c02\"></span>謂於國王、父母、師長我應修忍，餘可加惡。菩\r\n<span class=\"lb\" id=\"p0923c03\"></span>薩行忍不為報恩、名利、仁義、怖畏、慚恥，菩薩\r\n<span class=\"lb\" id=\"p0923c04\"></span>法爾應行忍故；若他加害、撾打、罵辱、侵奪、欺\r\n<span class=\"lb\" id=\"p0923c05\"></span>凌，心不傾動。菩薩若處王臣等位，有貧賤人\r\n<span class=\"lb\" id=\"p0923c06\"></span>毀罵、恥辱，終不卒暴輒示威刑，謂我居尊法\r\n<span class=\"lb\" id=\"p0923c07\"></span>應訶罰，但作是念：『我於往昔佛世尊所發弘\r\n<span class=\"lb\" id=\"p0923c08\"></span>誓願：一切有情我皆濟拔，令得無上正等菩\r\n<span class=\"lb\" id=\"p0923c09\"></span>提，今若起瞋便違本願。譬如良醫發如是誓：\r\n<span class=\"lb\" id=\"p0923c10\"></span>世間盲瞖我悉療之，若自失明豈愈他疾？』如\r\n<span class=\"lb\" id=\"p0923c11\"></span>是菩薩為除他闇，自起瞋恚安能救彼？不見\r\n<span class=\"lb\" id=\"p0923c12\"></span>我能忍及可忍，無二無別，自性離故。</p><p>「天王！是\r\n<span class=\"lb\" id=\"p0923c13\"></span>名諸菩薩摩訶薩修學般若波羅蜜多，能通達\r\n<span class=\"lb\" id=\"p0923c14\"></span>安忍波羅蜜多。</p><p>「天王！云何諸菩薩摩訶薩修\r\n<span class=\"lb\" id=\"p0923c15\"></span>學般若波羅蜜多，能通達精進波羅蜜多？天\r\n<span class=\"lb\" id=\"p0923c16\"></span>王當知！若菩薩摩訶薩修學般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0923c17\"></span>則能行精進波羅蜜多。謂諸菩薩未滅令滅，\r\n<span class=\"lb\" id=\"p0923c18\"></span>未度令度，未脫令脫，未安令安，未覺令覺，菩\r\n<span class=\"lb\" id=\"p0923c19\"></span>薩如是行精進時，有諸惡魔為作留難，謂菩\r\n<span class=\"lb\" id=\"p0923c20\"></span>薩曰：『汝善男子！莫修此行空受勤苦。何以故？\r\n<span class=\"lb\" id=\"p0923c21\"></span>我於往昔曾修此行，未滅令滅，未度令度，未\r\n<span class=\"lb\" id=\"p0923c22\"></span>脫令脫，未安令安，未覺令覺，空受勤苦都無\r\n<span class=\"lb\" id=\"p0923c23\"></span>實利。我從昔來，多見菩薩修學此行並皆退\r\n<span class=\"lb\" id=\"p0923c24\"></span>轉，汝可迴心修二乘道，取二乘果而自滅度。』\r\n<span class=\"lb\" id=\"p0923c25\"></span>菩薩聞已即便覺知，告惡魔言：『汝復道去，我\r\n<span class=\"lb\" id=\"p0923c26\"></span>心堅固猶若金剛，非汝謬言所能退壞，汝固\r\n<span class=\"lb\" id=\"p0923c27\"></span>留難長夜自苦。』魔聞此言便沒不現。若餘菩\r\n<span class=\"lb\" id=\"p0923c28\"></span>薩未得般若波羅蜜多，修前五種波羅蜜多\r\n<span class=\"lb\" id=\"p0923c29\"></span>經百千劫，菩薩如是行精進時，尚能超過，\r\n\r\n<span class=\"lb\" id=\"p0924a01\"></span>況二乘地！如是菩薩修行般若波羅蜜多，成\r\n<span class=\"lb\" id=\"p0924a02\"></span>就佛法眾惡皆離，雖行精進不速不遲，而能\r\n<span class=\"lb\" id=\"p0924a03\"></span>發起殊勝大願：『使我感身與如來等，頂上肉\r\n<span class=\"lb\" id=\"p0924a04\"></span>髻、眉間白毫，佛轉法輪我亦如是。』譬如真金，\r\n<span class=\"lb\" id=\"p0924a05\"></span>眾寶瑩飾則為嚴淨。菩薩精進亦復如是，離\r\n<span class=\"lb\" id=\"p0924a06\"></span>諸垢穢，謂離懶惰、懈怠、疲極，不自知覺、不正\r\n<span class=\"lb\" id=\"p0924a07\"></span>思惟，由此便能獲勝清淨福德智慧而共莊\r\n<span class=\"lb\" id=\"p0924a08\"></span>嚴，身不疲勞、心無厭怠，一切障道惡不善法\r\n<span class=\"lb\" id=\"p0924a09\"></span>皆使滅除，所有助道向涅槃法悉令增長；少\r\n<span class=\"lb\" id=\"p0924a10\"></span>惡不起，何況其多！假使十方殑伽沙界，滿中\r\n<span class=\"lb\" id=\"p0924a11\"></span>大火如無間獄，此世界外但一有情應可度\r\n<span class=\"lb\" id=\"p0924a12\"></span>者，菩薩為彼尚從中過，況多有情！此諸菩薩\r\n<span class=\"lb\" id=\"p0924a13\"></span>不作是念：『無上菩提不易可得，菩薩修行如\r\n<span class=\"lb\" id=\"p0924a14\"></span>救頭然，要經百千那庾多劫，如斯重擔實\r\n<span class=\"lb\" id=\"p0924a15\"></span>難荷負。』但作是思：『過、現諸佛皆修此行證大\r\n<span class=\"lb\" id=\"p0924a16\"></span>菩提，我亦如是正應修習，寧百千劫處地獄\r\n<span class=\"lb\" id=\"p0924a17\"></span>中，使諸有情皆得度脫，終不棄捨速趣涅槃。』\r\n<span class=\"lb\" id=\"p0924a18\"></span>菩薩如是行精進時，心不自高，於他不下，不\r\n<span class=\"lb\" id=\"p0924a19\"></span>見能行及所行法，無二無別，自性離故。</p><p>「天\r\n<span class=\"lb\" id=\"p0924a20\"></span>王！是名諸菩薩摩訶薩修學般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0924a21\"></span>能通達精進波羅蜜多。</p><p>「天王！云何諸菩薩\r\n<span class=\"lb\" id=\"p0924a22\"></span>摩訶薩修學般若波羅蜜多，能通達靜慮波\r\n<span class=\"lb\" id=\"p0924a23\"></span>羅蜜多？天王當知！若菩薩摩訶薩修學般\r\n<span class=\"lb\" id=\"p0924a24\"></span>若波羅蜜多，則能行靜慮波羅蜜多。謂諸菩\r\n<span class=\"lb\" id=\"p0924a25\"></span>薩於大乘中深種善根，生生世世多修妙行，\r\n<span class=\"lb\" id=\"p0924a26\"></span>親近善友，不生貧賤、邪見等家，常生婆羅門、\r\n<span class=\"lb\" id=\"p0924a27\"></span>剎帝利大姓，正信三寶增長善法，因宿善根\r\n<span class=\"lb\" id=\"p0924a28\"></span>作如是念：『有情長夜諸趣流轉，苦輪不息皆\r\n<span class=\"lb\" id=\"p0924a29\"></span>由貪愛。』菩薩念已起厭離心，知從虛妄分別\r\n<span class=\"lb\" id=\"p0924a30\"></span>而有：『世尊經中種種方便，說欲過患如矟、\r\n\r\n<span class=\"lb\" id=\"p0924b01\"></span>如䂌、如刀、如蛇、如泡、如沫，臭穢不淨轉變無\r\n<span class=\"lb\" id=\"p0924b02\"></span>常，云何智人貪著此法？』即剃鬚髮出家修道，\r\n<span class=\"lb\" id=\"p0924b03\"></span>未見為見，未得為得，未證為證，聞說受持若\r\n<span class=\"lb\" id=\"p0924b04\"></span>世俗諦、若勝義諦，如實修行，如法觀察，謂正\r\n<span class=\"lb\" id=\"p0924b05\"></span>見、正思惟、正語、正業、正命、正精進、正念、正定，\r\n<span class=\"lb\" id=\"p0924b06\"></span>遠離喧雜不侚名譽，亦復不求供養恭敬，身\r\n<span class=\"lb\" id=\"p0924b07\"></span>心精進常無懈息，思惟此心多行何境？為善、\r\n<span class=\"lb\" id=\"p0924b08\"></span>為惡、為無記耶？若行惡境速便止息，若行無\r\n<span class=\"lb\" id=\"p0924b09\"></span>記亦應捨之，若行善境即勤精進，策令增長\r\n<span class=\"lb\" id=\"p0924b10\"></span>殊勝善根。為欲對治惡不善法，引三十七妙\r\n<span class=\"lb\" id=\"p0924b11\"></span>菩提分。惡不善者謂貪、瞋、癡。貪復有三，謂上、\r\n<span class=\"lb\" id=\"p0924b12\"></span>中、下。上品貪者，聞欲境名舉身踊躍，深心歡\r\n<span class=\"lb\" id=\"p0924b13\"></span>喜，不觀欲過，厭離不生，非理追求，無有慚愧；\r\n<span class=\"lb\" id=\"p0924b14\"></span>無慚愧者，謂若獨行，諸所經遊恒思欲境，心\r\n<span class=\"lb\" id=\"p0924b15\"></span>心相續曾無暫捨，唯見妙好不知過患，父母\r\n<span class=\"lb\" id=\"p0924b16\"></span>師尊訶彼所欲，都無愧恥不覺起爭，如是名\r\n<span class=\"lb\" id=\"p0924b17\"></span>為無慚愧者，此類命終當墮惡趣；中品貪者，\r\n<span class=\"lb\" id=\"p0924b18\"></span>離欲境時欲心不起；下品貪者，但共言笑欲\r\n<span class=\"lb\" id=\"p0924b19\"></span>情便歇。瞋亦有三：上品瞋者，憤恚若發心惛\r\n<span class=\"lb\" id=\"p0924b20\"></span>目亂，或造無間，或謗正法，或復造餘諸重罪\r\n<span class=\"lb\" id=\"p0924b21\"></span>業過五無間多百千倍；中品瞋者，以瞋恚故，\r\n<span class=\"lb\" id=\"p0924b22\"></span>雖造諸惡尋即生悔；下品瞋者，心無嫌恨，但\r\n<span class=\"lb\" id=\"p0924b23\"></span>口訶毀即便追悔。癡亦三品，如理應知。雖作\r\n<span class=\"lb\" id=\"p0924b24\"></span>是觀，而知諸法皆如幻、夢、響、像、光影、陽焰、變化\r\n<span class=\"lb\" id=\"p0924b25\"></span>及尋香城，虛妄不實，顛倒故見。滅外境界，內\r\n<span class=\"lb\" id=\"p0924b26\"></span>心寂靜，不見能行及所行法，無二無別，自性\r\n<span class=\"lb\" id=\"p0924b27\"></span>離故。</p><p>「天王！是名諸菩薩摩訶薩修學般若波\r\n<span class=\"lb\" id=\"p0924b28\"></span>羅蜜多，能通達靜慮波羅蜜多。</p><p>「天王！云何諸\r\n<span class=\"lb\" id=\"p0924b29\"></span>菩薩摩訶薩修學般若波羅蜜多，能通達般若\r\n\r\n<span class=\"lb\" id=\"p0924c01\"></span>波羅蜜多？天王當知！若菩薩摩訶薩修學般\r\n<span class=\"lb\" id=\"p0924c02\"></span>若波羅蜜多，則能行般若波羅蜜多。謂諸菩\r\n<span class=\"lb\" id=\"p0924c03\"></span>薩正智觀色、受、想、行、識，不見色生，不見色集，\r\n<span class=\"lb\" id=\"p0924c04\"></span>不見色滅，受、想、行、識亦復如是。何以故？自性\r\n<span class=\"lb\" id=\"p0924c05\"></span>皆空無有真實，但有虛假施設名字，而行般\r\n<span class=\"lb\" id=\"p0924c06\"></span>若波羅蜜多化諸有情，終不為說無業無果。\r\n<span class=\"lb\" id=\"p0924c07\"></span>雖知諸法皆如幻、夢、響、像、光影、陽焰、變化及尋\r\n<span class=\"lb\" id=\"p0924c08\"></span>香城，無我、有情、命者、生者、養者、士夫、補特伽\r\n<span class=\"lb\" id=\"p0924c09\"></span>羅，而常宣說有業有果。菩薩如是修行般若\r\n<span class=\"lb\" id=\"p0924c10\"></span>波羅蜜多，惡魔眷屬不能得便。何以故？是諸\r\n<span class=\"lb\" id=\"p0924c11\"></span>菩薩親近善友，成助菩提離世間法，於諸如\r\n<span class=\"lb\" id=\"p0924c12\"></span>來甚深正法歡喜讚歎，諸天魔梵及餘沙門、\r\n<span class=\"lb\" id=\"p0924c13\"></span>婆羅門等，除佛正智無能及者，不見能行及\r\n<span class=\"lb\" id=\"p0924c14\"></span>所行法，無二無別，自性離故。</p><p>「天王！是名諸菩\r\n<span class=\"lb\" id=\"p0924c15\"></span>薩摩訶薩修學般若波羅蜜多，能通達般若波\r\n<span class=\"lb\" id=\"p0924c16\"></span>羅蜜多。</p><p>「天王！云何諸菩薩摩訶薩修學般若\r\n<span class=\"lb\" id=\"p0924c17\"></span>波羅蜜多，能通達方便善巧波羅蜜多？天王當\r\n<span class=\"lb\" id=\"p0924c18\"></span>知！若菩薩摩訶薩修學般若波羅蜜多，則能\r\n<span class=\"lb\" id=\"p0924c19\"></span>行方便善巧波羅蜜多。謂諸菩薩方便善巧，\r\n<span class=\"lb\" id=\"p0924c20\"></span>迴向無上正等菩提，若見世間勝妙花果，常\r\n<span class=\"lb\" id=\"p0924c21\"></span>持供養諸佛、菩薩，日夜六時曾無暫廢，以斯\r\n<span class=\"lb\" id=\"p0924c22\"></span>勝善迴向菩提，見花果樹亦復如是。若聞如\r\n<span class=\"lb\" id=\"p0924c23\"></span>來契經中說甚深法義，歡喜信受，愛樂誦持，\r\n<span class=\"lb\" id=\"p0924c24\"></span>轉為他說，以斯妙善迴向菩提。若見如來制\r\n<span class=\"lb\" id=\"p0924c25\"></span>多形像，即持種種香華供養，願有情類離破\r\n<span class=\"lb\" id=\"p0924c26\"></span>戒香，得淨戒香猶如諸佛；掃灑塗地，願諸有\r\n<span class=\"lb\" id=\"p0924c27\"></span>情威儀齊整；花蓋覆罩，願諸有情皆離熱惱；\r\n<span class=\"lb\" id=\"p0924c28\"></span>入僧住處，願諸有情皆入圓寂；出僧住處，願\r\n<span class=\"lb\" id=\"p0924c29\"></span>諸有情皆出魔境；見開僧門，便作是願：『以出\r\n\r\n<span class=\"lb\" id=\"p0925a01\"></span>世智為諸有情啟未開門，皆令悟入。』若見關\r\n<span class=\"lb\" id=\"p0925a02\"></span>閉，願為有情關閉三有或四惡趣；若得安坐，\r\n<span class=\"lb\" id=\"p0925a03\"></span>願諸有情坐菩提座；若右脇臥，願諸有情皆\r\n<span class=\"lb\" id=\"p0925a04\"></span>證圓寂；從坐臥起，願諸有情離諸起惑；若時\r\n<span class=\"lb\" id=\"p0925a05\"></span>洗足，願諸有情遠離塵垢；若時禮佛右遶制\r\n<span class=\"lb\" id=\"p0925a06\"></span>多，願諸有情皆當作佛，天人恭敬不以為喜。\r\n<span class=\"lb\" id=\"p0925a07\"></span>若有外道邪見難化，便作是念：『我為彼師，彼\r\n<span class=\"lb\" id=\"p0925a08\"></span>慢所持必不肯信，且作同學或為弟子；雖處\r\n<span class=\"lb\" id=\"p0925a09\"></span>彼眾，戒行多聞勝諸外道，因以降伏尊事為\r\n<span class=\"lb\" id=\"p0925a10\"></span>師言必信受，毀其邪法說正涅槃，令入如來\r\n<span class=\"lb\" id=\"p0925a11\"></span>清淨法教，精修梵行、靜慮、等持，得勝神通廣\r\n<span class=\"lb\" id=\"p0925a12\"></span>修妙善。』見多欲者，化作女人第一端正令其\r\n<span class=\"lb\" id=\"p0925a13\"></span>愛著，倐忽之頃示現無常，色變、膖脹、爛壞、臭\r\n<span class=\"lb\" id=\"p0925a14\"></span>處，令深憎惡起厭離心，即復本形為菩薩像，\r\n<span class=\"lb\" id=\"p0925a15\"></span>因而為說甚深法要，令發無上正等覺心，修\r\n<span class=\"lb\" id=\"p0925a16\"></span>行大乘成無上果。見大乘者離善知識，雖勤\r\n<span class=\"lb\" id=\"p0925a17\"></span>精進學二乘道，而於其果不能證得，失於大\r\n<span class=\"lb\" id=\"p0925a18\"></span>乘無上法利；觀彼根性為說大乘，令其迴心\r\n<span class=\"lb\" id=\"p0925a19\"></span>入無上道，未發心者化令發心，若已發心勸\r\n<span class=\"lb\" id=\"p0925a20\"></span>令堅固。見持戒人犯少輕罪，不解陳悔，懈退\r\n<span class=\"lb\" id=\"p0925a21\"></span>愁憂，由此不能進修勝道；便為說法令速悔\r\n<span class=\"lb\" id=\"p0925a22\"></span>除，心離愁憂進修勝道。是諸菩薩摩訶薩眾，\r\n<span class=\"lb\" id=\"p0925a23\"></span>少欲喜足專求法利，為有情說供養如來，由\r\n<span class=\"lb\" id=\"p0925a24\"></span>此便成六到彼岸：說法供養，是為布施波羅蜜\r\n<span class=\"lb\" id=\"p0925a25\"></span>多；行不違言，是為淨戒波羅蜜多；諸天魔等\r\n<span class=\"lb\" id=\"p0925a26\"></span>不能壞亂，是為安忍波羅蜜多；心心相續不\r\n<span class=\"lb\" id=\"p0925a27\"></span>覺勞倦，是為精進波羅蜜多；專心一念不緣\r\n<span class=\"lb\" id=\"p0925a28\"></span>異境，是為靜慮波羅蜜多；說法供養離我、我\r\n<span class=\"lb\" id=\"p0925a29\"></span>所，是為般若波羅蜜多。不見能行及所行法，\r\n\r\n<span class=\"lb\" id=\"p0925b01\"></span>無二無別，自性離故。</p><p>「天王！是名諸菩薩摩訶\r\n<span class=\"lb\" id=\"p0925b02\"></span>薩修學般若波羅蜜多，能通達方便善巧波羅\r\n<span class=\"lb\" id=\"p0925b03\"></span>蜜多。</p><p>「天王！云何諸菩薩摩訶薩修學般若波\r\n<span class=\"lb\" id=\"p0925b04\"></span>羅蜜多，能通達妙願波羅蜜多？天王當知！若\r\n<span class=\"lb\" id=\"p0925b05\"></span>菩薩摩訶薩修學般若波羅蜜多，則能行妙願\r\n<span class=\"lb\" id=\"p0925b06\"></span>波羅蜜多。謂諸菩薩諸有所願不為世間所\r\n<span class=\"lb\" id=\"p0925b07\"></span>受快樂，亦不為己求出三界修二乘道證涅\r\n<span class=\"lb\" id=\"p0925b08\"></span>槃樂，但作是願：『一切有情皆入無餘般涅槃\r\n<span class=\"lb\" id=\"p0925b09\"></span>界，我身最後乃成正覺。未發心者化令發心，\r\n<span class=\"lb\" id=\"p0925b10\"></span>若已發心令修大行，已修大行令得菩提，已\r\n<span class=\"lb\" id=\"p0925b11\"></span>得菩提勸請說法，展轉乃至般涅槃後，以妙\r\n<span class=\"lb\" id=\"p0925b12\"></span>七寶起窣堵波置設利羅而興供養，令無量\r\n<span class=\"lb\" id=\"p0925b13\"></span>眾獲福無邊。』復發願言：『諸有世界佛成正覺，\r\n<span class=\"lb\" id=\"p0925b14\"></span>悉無天魔及諸外道而為擾亂；願由自智發無\r\n<span class=\"lb\" id=\"p0925b15\"></span>上心，不假外緣雖發而退；又當願我常處世\r\n<span class=\"lb\" id=\"p0925b16\"></span>間，成熟有情令獲利樂；願新發意諸菩薩等，\r\n<span class=\"lb\" id=\"p0925b17\"></span>若聞如來說甚深法，如實悟入心無驚怖；願\r\n<span class=\"lb\" id=\"p0925b18\"></span>諸有情得大智慧，皆善通達無邊佛道、無邊\r\n<span class=\"lb\" id=\"p0925b19\"></span>佛境、無邊大悲，饒益無邊諸有情類。』是諸菩\r\n<span class=\"lb\" id=\"p0925b20\"></span>薩多願自身恒處穢國不生淨土。何以故？如\r\n<span class=\"lb\" id=\"p0925b21\"></span>有病者乃假醫藥，若無其疾醫藥無用。菩薩\r\n<span class=\"lb\" id=\"p0925b22\"></span>如是發妙願時，不見能行及所行法，無二無\r\n<span class=\"lb\" id=\"p0925b23\"></span>別，自性離故。</p><p>「天王！是名諸菩薩摩訶薩修學\r\n<span class=\"lb\" id=\"p0925b24\"></span>般若波羅蜜多，能通達妙願波羅蜜多。</p><p>「天王！\r\n<span class=\"lb\" id=\"p0925b25\"></span>云何諸菩薩摩訶薩修學般若波羅蜜多，能通\r\n<span class=\"lb\" id=\"p0925b26\"></span>達力波羅蜜多？天王當知！若菩薩摩訶薩修\r\n<span class=\"lb\" id=\"p0925b27\"></span>學般若波羅蜜多，則能行力波羅蜜多。謂諸\r\n<span class=\"lb\" id=\"p0925b28\"></span>菩薩能伏天魔、摧諸外道，具足福德智慧力\r\n<span class=\"lb\" id=\"p0925b29\"></span>故，一切佛法無不修行，一切佛境無不證見。\r\n\r\n<span class=\"lb\" id=\"p0925c01\"></span>以神通力，用一毛端舉贍部洲或四洲界或\r\n<span class=\"lb\" id=\"p0925c02\"></span>大千界乃至十方無量殑伽沙等世界，還置\r\n<span class=\"lb\" id=\"p0925c03\"></span>本處而無所損；或以神力，於虛空中取種種\r\n<span class=\"lb\" id=\"p0925c04\"></span>寶施有情類；能於十方無邊世界，諸佛說法\r\n<span class=\"lb\" id=\"p0925c05\"></span>無不聞持。不見能行及所行法，無二無別，自\r\n<span class=\"lb\" id=\"p0925c06\"></span>性離故。</p><p>「天王！是名諸菩薩摩訶薩修學般若\r\n<span class=\"lb\" id=\"p0925c07\"></span>波羅蜜多，能通達力波羅蜜多。</p><p>「天王！云何諸\r\n<span class=\"lb\" id=\"p0925c08\"></span>菩薩摩訶薩修學般若波羅蜜多，能通達智\r\n<span class=\"lb\" id=\"p0925c09\"></span>波羅蜜多？天王當知！若菩薩摩訶薩修學般\r\n<span class=\"lb\" id=\"p0925c10\"></span>若波羅蜜多，則能行智波羅蜜多。謂諸菩薩\r\n<span class=\"lb\" id=\"p0925c11\"></span>觀察五蘊生非實生，滅非實滅，思惟五蘊皆\r\n<span class=\"lb\" id=\"p0925c12\"></span>畢竟空，無我、有情、命者、生者、養者、士夫、補特\r\n<span class=\"lb\" id=\"p0925c13\"></span>伽羅。愚夫顛倒虛妄執著，不如實知諸蘊非\r\n<span class=\"lb\" id=\"p0925c14\"></span>我，蘊中無我；不如實知我非諸蘊，我中無蘊，\r\n<span class=\"lb\" id=\"p0925c15\"></span>由斯諸趣生死輪迴，如旋火輪愚夫妄執。然\r\n<span class=\"lb\" id=\"p0925c16\"></span>一切法自性本空、無生、無滅，緣合謂生，緣離\r\n<span class=\"lb\" id=\"p0925c17\"></span>謂滅，實無生滅，性非無故不可說生，性非有\r\n<span class=\"lb\" id=\"p0925c18\"></span>故不可說滅。是諸菩薩於一切境無有一法\r\n<span class=\"lb\" id=\"p0925c19\"></span>不通達者，修行此智波羅蜜多，二乘外道不\r\n<span class=\"lb\" id=\"p0925c20\"></span>能掩蔽，以智觀察，從初發心乃至涅槃皆悉\r\n<span class=\"lb\" id=\"p0925c21\"></span>明了；能以一法知一切境，達一切境不離一\r\n<span class=\"lb\" id=\"p0925c22\"></span>法。所以者何？真如一故。是諸菩薩修此智時，\r\n<span class=\"lb\" id=\"p0925c23\"></span>不見能修及所修法，無二無別，自性離故。</p><p>「天\r\n<span class=\"lb\" id=\"p0925c24\"></span>王！是名諸菩薩摩訶薩修學般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0925c25\"></span>能通達智波羅蜜多，是名菩薩修學一法，能\r\n<span class=\"lb\" id=\"p0925c26\"></span>通達一切法。」</p></cb:div>\r\n<span class=\"lb\" id=\"p0925c27\"></span><cb:juan n=\"566\" fun=\"close\"><cb:jhead><title>大般若波羅蜜多經</title>卷第五百六十六</cb:jhead></cb:juan>\r\n</cb:div></body><div id=\"footnotes\"><div class=\"note-text\" id=\"note_0921001\">若＋（波羅蜜多）【三】</div><div class=\"note-text\" id=\"note_0921001\">若【大】，若波羅蜜多【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0921002\">（唐）＋西【明】，〔西明…撰〕八字－【宋】【元】</div><div class=\"note-text\" id=\"note_0921002a\">西明寺沙門玄則撰【大】，〔－〕【宋】【元】</div><div class=\"note-text\" id=\"note_0921002b\">西【大】，唐西【明】</div><div class=\"note-text\" id=\"note_0921003\">撰＝製【明】</div><div class=\"note-text\" id=\"note_0921003\">撰【大】，製【明】</div><div class=\"note-text\" id=\"note_0921004\">源＝原【元】【明】</div><div class=\"note-text\" id=\"note_0921004\">源【大】，原【元】【明】</div><div class=\"note-text\" id=\"note_0921a1001\">馮【CB】【麗-CB】，憑【大】</div><div class=\"note-text\" id=\"note_0921005\">泛＝汎【三】＊</div><div class=\"note-text\" id=\"note_0921005\">泛【大】＊，汎【宋】＊【元】＊【明】＊</div><div class=\"note-text\" id=\"note_0921006\">阡＝芉【明】</div><div class=\"note-text\" id=\"note_0921006\">阡【大】，芉【明】</div><div class=\"note-text\" id=\"note_0921007\">第六分 [No. 231]</div><div class=\"note-text\" id=\"note_0921008\">智＝知【三】</div><div class=\"note-text\" id=\"note_0921008\">智【大】，知【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0921009\">釆＝採【三】</div><div class=\"note-text\" id=\"note_0921009\">採【CB】【宋】【元】【明】，釆【大】</div><div class=\"note-text\" id=\"note_0921010\">俱＝矩【三】</div><div class=\"note-text\" id=\"note_0921010\">俱【大】，矩【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0922001\">唯＝惟【明】</div><div class=\"note-text\" id=\"note_0922001\">唯【大】，惟【明】</div><div class=\"note-text\" id=\"note_0922002\">鷲峯＋（山）【三】</div><div class=\"note-text\" id=\"note_0922002\">鷲峯【大】，鷲峯山【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0923001\">〔行〕－【三】</div><div class=\"note-text\" id=\"note_0923001\">行【大】，〔－〕【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0923002\">（有）＋別【明】</div><div class=\"note-text\" id=\"note_0923002\">別【大】，有別【明】</div><div class=\"note-text\" id=\"note_0923003\">凌＝陵【三】＊</div><div class=\"note-text\" id=\"note_0923003\">凌【大】＊，陵【宋】＊【元】＊【明】＊</div><div class=\"note-text\" id=\"note_0923004\">甞＝常【三】</div><div class=\"note-text\" id=\"note_0923004\">甞【大】，常【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0923005\">簡＝揀【三】</div><div class=\"note-text\" id=\"note_0923005\">簡【大】，揀【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0923006\">刑＝形【三】</div><div class=\"note-text\" id=\"note_0923006\">刑【大】，形【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0923007\">醫＝曀【明】</div><div class=\"note-text\" id=\"note_0923007\">醫【大】，曀【明】</div><div class=\"note-text\" id=\"note_0923c1001\">瞖【CB】【麗-CB】，醫【大】</div><div class=\"note-text\" id=\"note_0924001\">賴＝懶【三】</div><div class=\"note-text\" id=\"note_0924001\">懶【CB】【麗-CB】【宋】【元】【明】，賴【大】</div><div class=\"note-text\" id=\"note_0924002\">矛＝䂌【三】</div><div class=\"note-text\" id=\"note_0924002\">䂌【CB】【宋】【元】【明】，矛【大】</div><div class=\"note-text\" id=\"note_0924b1801\">下【CB】【麗-CB】【磧-CB】，不【大】</div><div class=\"note-text\" id=\"note_0924003\">（虛妄）＋無【明】</div><div class=\"note-text\" id=\"note_0924003\">無【大】，虛妄無【明】</div><div class=\"note-text\" id=\"note_0925001\">違＝能【宋】【元】</div><div class=\"note-text\" id=\"note_0925001\">違【大】，能【宋】【元】</div><div class=\"note-text\" id=\"note_0925002\">亂＝故【宋】【元】</div><div class=\"note-text\" id=\"note_0925002\">亂【大】，故【宋】【元】</div></div>"
+    }
+  ],
+  "toc": {
+    "mulu": [
+      {
+        "title": "1 會",
+        "lb": "p0001a03",
+        "juan": 1,
+        "type": "品",
+        "children": [
+          {
+            "title": "初會序",
+            "lb": "p0001a03",
+            "juan": 1,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "2 會",
+        "lb": "p0001a02",
+        "juan": 401,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0001a02",
+            "juan": 401,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0001b05",
+            "juan": 401,
+            "type": "品"
+          },
+          {
+            "title": "2 歡喜品",
+            "lb": "p0007a21",
+            "juan": 402,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "3 會",
+        "lb": "p0427a02",
+        "juan": 479,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0427a02",
+            "juan": 479,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0427b06",
+            "juan": 479,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "4 會",
+        "lb": "p0763a02",
+        "juan": 538,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0763a02",
+            "juan": 538,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "5 會",
+        "lb": "p0865b02",
+        "juan": 556,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0865b02",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "1 善現品",
+            "lb": "p0865c06",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "2 天帝品",
+            "lb": "p0870a28",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "3 窣堵波品",
+            "lb": "p0872a21",
+            "juan": 557,
+            "type": "品"
+          },
+          {
+            "title": "4 神咒品",
+            "lb": "p0874c19",
+            "juan": 557,
+            "type": "品"
+          },
+          {
+            "title": "5 設利羅品",
+            "lb": "p0877c08",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "6 經典品",
+            "lb": "p0879a08",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "7 迴向品",
+            "lb": "p0880b22",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "8 地獄品",
+            "lb": "p0883b10",
+            "juan": 559,
+            "type": "品"
+          },
+          {
+            "title": "9 清淨品",
+            "lb": "p0885b14",
+            "juan": 559,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "6 會",
+        "lb": "p0921a01",
+        "juan": 566,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0921a01",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0921a25",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "2 通達品",
+            "lb": "p0922b05",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "3 顯相品",
+            "lb": "p0926a06",
+            "juan": 567,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "7 會",
+        "lb": "p0963c23",
+        "juan": 574,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0963c24",
+            "juan": 574,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p0964a21",
+            "juan": 574,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0969b02",
+            "juan": 575,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "8 會",
+        "lb": "p0974b05",
+        "juan": 576,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0974b05",
+            "juan": 576,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "9 會",
+        "lb": "p0979c02",
+        "juan": 577,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0979c02",
+            "juan": 577,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "10 會",
+        "lb": "p0986a02",
+        "juan": 578,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0986a02",
+            "juan": 578,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "11 會",
+        "lb": "p0991b12",
+        "juan": 579,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0991b13",
+            "juan": 579,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p0991c12",
+            "juan": 579,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0997a20",
+            "juan": 580,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1003a02",
+            "juan": 581,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1008b02",
+            "juan": 582,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1014a12",
+            "juan": 583,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "12 會",
+        "lb": "p1019a19",
+        "juan": 584,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1019a20",
+            "juan": 584,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1019b18",
+            "juan": 584,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1024b15",
+            "juan": 585,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1029b18",
+            "juan": 586,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1034a21",
+            "juan": 587,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1039b02",
+            "juan": 588,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "13 會",
+        "lb": "p1044a13",
+        "juan": 589,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1044a14",
+            "juan": 589,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "14 會",
+        "lb": "p1049c20",
+        "juan": 590,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1049c21",
+            "juan": 590,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "15 會",
+        "lb": "p1055b02",
+        "juan": 591,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1055b03",
+            "juan": 591,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1055c02",
+            "juan": 591,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1060b16",
+            "juan": 592,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "16 會",
+        "lb": "p1065b16",
+        "juan": 593,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1065b17",
+            "juan": 593,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1065c21",
+            "juan": 593,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1071a23",
+            "juan": 594,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1076c18",
+            "juan": 595,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1082b17",
+            "juan": 596,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1088b02",
+            "juan": 597,
+            "type": "品"
+          },
+          {
+            "title": "6",
+            "lb": "p1093c23",
+            "juan": 598,
+            "type": "品"
+          },
+          {
+            "title": "7",
+            "lb": "p1099c02",
+            "juan": 599,
+            "type": "品"
+          },
+          {
+            "title": "8",
+            "lb": "p1105c03",
+            "juan": 600,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "般若佛姆心咒",
+        "lb": "p1110a25",
+        "juan": 600,
+        "type": "品"
+      },
+      {
+        "title": "般若佛姆親心咒",
+        "lb": "p1110b01",
+        "juan": 600,
+        "type": "品"
+      }
+    ]
+  },
+  "version": "CBReader 2X v0.9.9 2026-01-21"
+}

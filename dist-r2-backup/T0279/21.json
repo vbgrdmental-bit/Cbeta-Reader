@@ -1,0 +1,634 @@
+{
+  "workId": "T0279",
+  "juan": 21,
+  "results": [
+    {
+      "html": "<body>\r\n<div class=\"cb-mulu\" data-level=\"1\" data-n=\"21\" data-type=\"品\">21 十行品</div><div class=\"cb-mulu\">之二</div>\r\n\r\n<span class=\"lb\" id=\"p0111a22\"></span>\r\n<span class=\"lb\" id=\"p0111a23\"></span>\r\n<span class=\"lb\" id=\"p0111a24\"></span><cb:juan n=\"021\" fun=\"open\"><div class=\"cb-mulu\"></div><cb:jhead><title>大方廣佛華嚴經</title>卷第二十一</cb:jhead></cb:juan>\r\n<span class=\"lb\" id=\"p0111a25\"></span>\r\n<span class=\"lb\" id=\"p0111a26\"></span><byline><app n=\"0111002b\"><p class=\"lg\">于闐國三藏實叉難陀奉　制譯</lem><rdg resp=\"Taisho\" wit=\"【聖】\">新譯</rdg></app></byline>\r\n<span class=\"lb\" id=\"p0111a27\"></span><cb:div type=\"pin\"><div class=\"cb-mulu\" data-level=\"1\" data-n=\"22\" data-type=\"品\">22 十無盡藏品</div><h2 class=\"head\">十無盡藏品第二十二</h2>\r\n<span class=\"lb\" id=\"p0111a28\"></span><p>爾時，功德林菩薩復告諸菩薩言：</p><p>「佛子！菩薩\r\n<span class=\"lb\" id=\"p0111a29\"></span>摩訶薩有十種藏，過去、未來、現在諸佛，已說、\r\n\r\n<span class=\"lb\" id=\"p0111b01\"></span>當說、今說。何等為十？所謂：信藏、戒藏、慚藏、\r\n<span class=\"lb\" id=\"p0111b02\"></span>愧藏、聞藏、施藏、慧藏、念藏、持藏、辯藏，是為\r\n<span class=\"lb\" id=\"p0111b03\"></span>十。</p><p>「佛子！何等為菩薩摩訶薩信藏？此菩薩信\r\n<span class=\"lb\" id=\"p0111b04\"></span>一切法空，信一切法無相，信一切法無願，信\r\n<span class=\"lb\" id=\"p0111b05\"></span>一切法無作，信一切法無分別，信一切法無\r\n<span class=\"lb\" id=\"p0111b06\"></span>所依，信一切法不可量，信一切法無有上，信\r\n<span class=\"lb\" id=\"p0111b07\"></span>一切法難超越，信一切法無生。若菩薩能如\r\n<span class=\"lb\" id=\"p0111b08\"></span>是隨順一切法，生淨信已，聞諸佛法不可思\r\n<span class=\"lb\" id=\"p0111b09\"></span>議，心不怯弱；聞一切佛不可思議，心不怯\r\n<span class=\"lb\" id=\"p0111b10\"></span>弱；聞眾生界不可思議，心不怯弱；聞法界\r\n<span class=\"lb\" id=\"p0111b11\"></span>不可思議，心不怯弱；聞虛空界不可思議，心\r\n<span class=\"lb\" id=\"p0111b12\"></span>不怯弱；聞涅槃界不可思議，心不怯弱；聞過\r\n<span class=\"lb\" id=\"p0111b13\"></span>去世不可思議，心不怯弱；聞未來世不可思\r\n<span class=\"lb\" id=\"p0111b14\"></span>議，心不怯弱；聞現在世不可思議，心不怯\r\n<span class=\"lb\" id=\"p0111b15\"></span>弱；聞入一切劫不可思議，心不怯弱。何以\r\n<span class=\"lb\" id=\"p0111b16\"></span>故？此菩薩於諸佛所一向堅信，知佛智慧\r\n<span class=\"lb\" id=\"p0111b17\"></span>無邊無盡。十方無量諸世界中，一一各有無\r\n<span class=\"lb\" id=\"p0111b18\"></span>量諸佛，於阿耨多羅三藐三菩提，已得、今\r\n<span class=\"lb\" id=\"p0111b19\"></span>得、當得，已出世、今出世、當出世，已入涅槃、\r\n<span class=\"lb\" id=\"p0111b20\"></span>今入涅槃、當入涅槃，彼諸佛智慧不增不減、\r\n<span class=\"lb\" id=\"p0111b21\"></span>不生不滅、不進不退、不近不遠、無知無捨。此\r\n<span class=\"lb\" id=\"p0111b22\"></span>菩薩入佛智慧，成就無邊無盡信；得此信已，\r\n<span class=\"lb\" id=\"p0111b23\"></span>心不退轉，心不雜亂，不可破壞，無所染著，常\r\n<span class=\"lb\" id=\"p0111b24\"></span>有根本，隨順聖人，住如來家，護持一切諸佛\r\n<span class=\"lb\" id=\"p0111b25\"></span>種性，增長一切菩薩信解，隨順一切如來善\r\n<span class=\"lb\" id=\"p0111b26\"></span>根，出生一切諸佛方便。是名：菩薩摩訶薩信\r\n<span class=\"lb\" id=\"p0111b27\"></span>藏。菩薩住此信藏，則能聞持一切佛法，為眾\r\n<span class=\"lb\" id=\"p0111b28\"></span>生說，皆令開悟。</p>\r\n<span class=\"lb\" id=\"p0111b29\"></span><p>「佛子！何等為菩薩摩訶薩戒藏？此菩薩成\r\n\r\n<span class=\"lb\" id=\"p0111c01\"></span>就普饒益戒、不受戒、不住戒、無悔恨戒、無\r\n<span class=\"lb\" id=\"p0111c02\"></span>違諍戒、不損惱戒、無雜穢戒、無貪求戒、無過\r\n<span class=\"lb\" id=\"p0111c03\"></span>失戒、無毀犯戒。云何為普饒益戒？此菩薩受\r\n<span class=\"lb\" id=\"p0111c04\"></span>持淨戒，本為利益一切眾生。云何為不受戒？\r\n<span class=\"lb\" id=\"p0111c05\"></span>此菩薩不受行外道諸所有戒，但性自精進，\r\n<span class=\"lb\" id=\"p0111c06\"></span>奉持三世諸佛如來平等淨戒。云何為不\r\n<span class=\"lb\" id=\"p0111c07\"></span>住戒？此菩薩受持戒時，心不住欲界、不住色\r\n<span class=\"lb\" id=\"p0111c08\"></span>界、不住無色界。何以故？不求生彼，而持戒\r\n<span class=\"lb\" id=\"p0111c09\"></span>故。云何為無悔恨戒？此菩薩恒得安住\r\n<span class=\"lb\" id=\"p0111c10\"></span>無悔恨心。何以故？不作重罪，不行諂詐，不破\r\n<span class=\"lb\" id=\"p0111c11\"></span>淨戒故。云何為無違諍戒？此菩薩不非先\r\n<span class=\"lb\" id=\"p0111c12\"></span>制，不更造立；心常隨順，向涅槃戒，具足受\r\n<span class=\"lb\" id=\"p0111c13\"></span>持，無所毀犯；不以持戒，惱他眾生，令其生\r\n<span class=\"lb\" id=\"p0111c14\"></span>苦，但願一切心常歡喜而持於戒。云何為\r\n<span class=\"lb\" id=\"p0111c15\"></span>不惱害戒？此菩薩不因於戒，學諸呪術，造作\r\n<span class=\"lb\" id=\"p0111c16\"></span>方藥，惱害眾生，但為救護一切眾生而持\r\n<span class=\"lb\" id=\"p0111c17\"></span>於戒。云何為不雜戒？此菩薩不著邊見，不\r\n<span class=\"lb\" id=\"p0111c18\"></span>持雜戒，但觀緣起持出離戒。云何為無貪求\r\n<span class=\"lb\" id=\"p0111c19\"></span>戒？此菩薩不現異相，彰己有德，但為滿足出\r\n<span class=\"lb\" id=\"p0111c20\"></span>離法故而持於戒。云何為無過失戒？此菩\r\n<span class=\"lb\" id=\"p0111c21\"></span>薩不自貢高，言我持戒；見破戒人亦不輕毀，\r\n<span class=\"lb\" id=\"p0111c22\"></span>令他愧恥；但一其心而持於戒。云何為無毀\r\n<span class=\"lb\" id=\"p0111c23\"></span>犯戒？此菩薩永斷殺、盜、邪婬、妄語、兩舌、惡\r\n<span class=\"lb\" id=\"p0111c24\"></span>口，及無義語、貪、瞋、邪見，具足受持十種善業。\r\n<span class=\"lb\" id=\"p0111c25\"></span>菩薩持此無犯戒時，作是念言：『一切眾生\r\n<span class=\"lb\" id=\"p0111c26\"></span>毀犯淨戒，皆由顛倒；唯佛世尊能知眾生\r\n<span class=\"lb\" id=\"p0111c27\"></span>以何因緣而生顛倒，毀犯淨戒。我當成就\r\n<span class=\"lb\" id=\"p0111c28\"></span>無上菩提，廣為眾生說真實法，令離顛倒。』\r\n<span class=\"lb\" id=\"p0111c29\"></span>是名：菩薩摩訶薩第二戒藏。</p>\r\n\r\n<span class=\"lb\" id=\"p0112a01\"></span><p>「佛子！何等為菩薩摩訶薩慚藏？此菩薩憶\r\n<span class=\"lb\" id=\"p0112a02\"></span>念過去所作諸惡而生於慚。謂彼菩薩，心自\r\n<span class=\"lb\" id=\"p0112a03\"></span>念言：『我無始世來，與諸眾生皆悉互作父母、\r\n<span class=\"lb\" id=\"p0112a04\"></span>兄弟、姊妹、男女，具貪、瞋、癡、憍慢、諂誑及餘一\r\n<span class=\"lb\" id=\"p0112a05\"></span>切諸煩惱故，更相惱害，遞相陵奪，姦婬、傷\r\n<span class=\"lb\" id=\"p0112a06\"></span>殺，無惡不造；一切眾生，悉亦如是，以諸煩\r\n<span class=\"lb\" id=\"p0112a07\"></span>惱備造眾惡，是故各各不相恭敬、不相尊重、\r\n<span class=\"lb\" id=\"p0112a08\"></span>不相承順、不相謙下、不相啟導、不相護惜，\r\n<span class=\"lb\" id=\"p0112a09\"></span>更相殺害，互為怨讎。自惟我身及諸眾生，去、\r\n<span class=\"lb\" id=\"p0112a10\"></span>來、現在，行無慚法，三世諸佛無不知見。今若\r\n<span class=\"lb\" id=\"p0112a11\"></span>不斷此無慚行，三世諸佛亦當見我。我當云\r\n<span class=\"lb\" id=\"p0112a12\"></span>何猶行不止？甚為不可。是故我應專心斷除，\r\n<span class=\"lb\" id=\"p0112a13\"></span>證阿耨多羅三藐三菩提，廣為眾生說真實\r\n<span class=\"lb\" id=\"p0112a14\"></span>法。』是名：菩薩摩訶薩第三慚藏。</p>\r\n<span class=\"lb\" id=\"p0112a15\"></span><p>「佛子！何等為菩薩摩訶薩愧藏？此菩薩自愧\r\n<span class=\"lb\" id=\"p0112a16\"></span>昔來，於五欲中，種種貪求，無有厭足，因此增\r\n<span class=\"lb\" id=\"p0112a17\"></span>長貪、恚、癡等一切煩惱：『我今不應復行是事。』\r\n<span class=\"lb\" id=\"p0112a18\"></span>又作是念：『眾生無智，起諸煩惱，具行惡法，不\r\n<span class=\"lb\" id=\"p0112a19\"></span>相恭敬，不相尊重，乃至展轉互為怨讎。如是\r\n<span class=\"lb\" id=\"p0112a20\"></span>等惡，無不備造，造已歡喜，追求稱歎，盲無\r\n<span class=\"lb\" id=\"p0112a21\"></span>慧眼，無所知見。於母人腹中，入胎受生，成垢\r\n<span class=\"lb\" id=\"p0112a22\"></span>穢身，畢竟至於髮白面皺。有智慧者，觀此但\r\n<span class=\"lb\" id=\"p0112a23\"></span>是從婬欲，生不淨之法，三世諸佛皆悉知\r\n<span class=\"lb\" id=\"p0112a24\"></span>見。若我於今猶行是事，則為欺誑三世諸佛。\r\n<span class=\"lb\" id=\"p0112a25\"></span>是故我當修行於愧，速成阿耨多羅三藐三\r\n<span class=\"lb\" id=\"p0112a26\"></span>菩提，廣為眾生說真實法。』是名：菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0112a27\"></span>第四愧藏。</p>\r\n<span class=\"lb\" id=\"p0112a28\"></span><p>「佛子！何等為菩薩摩訶薩聞藏？此菩薩知\r\n<span class=\"lb\" id=\"p0112a29\"></span>是事有故是事有，是事無故是事無；是事起\r\n\r\n<span class=\"lb\" id=\"p0112b01\"></span>故是事起，是事滅故是事滅；是世間法，是\r\n<span class=\"lb\" id=\"p0112b02\"></span>出世間法；是有為法，是無為法；是有記法，是\r\n<span class=\"lb\" id=\"p0112b03\"></span>無記法。何等為是事有故是事有？謂：無明有\r\n<span class=\"lb\" id=\"p0112b04\"></span>故行有。何等為是事無故是事無？謂：識無\r\n<span class=\"lb\" id=\"p0112b05\"></span>故名色無。何等為是事起故是事起？謂：愛起\r\n<span class=\"lb\" id=\"p0112b06\"></span>故苦起。何等為是事滅故是事滅？謂：有滅\r\n<span class=\"lb\" id=\"p0112b07\"></span>故生滅。何等為世間法？所謂：色、受、想、行、識。\r\n<span class=\"lb\" id=\"p0112b08\"></span>何等為出世間法？所謂：戒、定、慧、解脫、解脫\r\n<span class=\"lb\" id=\"p0112b09\"></span>知見。何等為有為法？所謂：欲界、色界、無\r\n<span class=\"lb\" id=\"p0112b10\"></span>色界、眾生界。何等為無為法？所謂：虛空、涅槃、\r\n<span class=\"lb\" id=\"p0112b11\"></span>數緣滅、非數緣滅、緣起法性住。何等為有記\r\n<span class=\"lb\" id=\"p0112b12\"></span>法？謂：四聖諦、四沙門果、四辯、四無所畏、四\r\n<span class=\"lb\" id=\"p0112b13\"></span>念處、四正勤、四神足、五根、五力、七覺分、八\r\n<span class=\"lb\" id=\"p0112b14\"></span>聖道分。何等為無記法？謂：世間有邊，世間無\r\n<span class=\"lb\" id=\"p0112b15\"></span>邊，世間亦有邊亦無邊，世間非有邊非無邊；\r\n<span class=\"lb\" id=\"p0112b16\"></span>世間有常，世間無常，世間亦有常亦無常，\r\n<span class=\"lb\" id=\"p0112b17\"></span>世間非有常非無常；如來滅後有，如來滅後\r\n<span class=\"lb\" id=\"p0112b18\"></span>無，如來滅後亦有亦無，如來滅後非有非\r\n<span class=\"lb\" id=\"p0112b19\"></span>無；我及眾生有，我及眾生無，我及眾生亦\r\n<span class=\"lb\" id=\"p0112b20\"></span>有亦無，我及眾生非有非無；過去，有幾如\r\n<span class=\"lb\" id=\"p0112b21\"></span>來般涅槃？幾聲聞、辟支佛般涅槃？未來，有\r\n<span class=\"lb\" id=\"p0112b22\"></span>幾如來？幾聲聞、辟支佛？幾眾生？現在，有幾佛\r\n<span class=\"lb\" id=\"p0112b23\"></span>住？幾聲聞、辟支佛住？幾眾生住？何等如來最\r\n<span class=\"lb\" id=\"p0112b24\"></span>先出？何等聲聞、辟支佛最先出？何等眾生\r\n<span class=\"lb\" id=\"p0112b25\"></span>最先出？何等如來最後出？何等聲聞、辟支佛\r\n<span class=\"lb\" id=\"p0112b26\"></span>最後出？何等眾生最後出？何法最在初？何\r\n<span class=\"lb\" id=\"p0112b27\"></span>法最在後？世間從何處來，去至何所？有幾\r\n<span class=\"lb\" id=\"p0112b28\"></span>世界成？有幾世界壞？世界從何處來，去至何\r\n<span class=\"lb\" id=\"p0112b29\"></span>所？何者為生死最初際？何者為生死最後際？\r\n\r\n<span class=\"lb\" id=\"p0112c01\"></span>是名無記法。菩薩摩訶薩作如是念：『一切\r\n<span class=\"lb\" id=\"p0112c02\"></span>眾生於生死中，無有多聞，不能了知此一切\r\n<span class=\"lb\" id=\"p0112c03\"></span>法。我當發意，持多聞藏，證阿耨多羅三藐\r\n<span class=\"lb\" id=\"p0112c04\"></span>三菩提，為諸眾生說真實法。』是名：菩薩摩訶\r\n<span class=\"lb\" id=\"p0112c05\"></span>薩第五多聞藏。</p>\r\n<span class=\"lb\" id=\"p0112c06\"></span><p>「佛子！何等為菩薩摩訶薩施藏？此菩薩行\r\n<span class=\"lb\" id=\"p0112c07\"></span>十種施，所謂：分減施、竭盡施、內施、外施、內\r\n<span class=\"lb\" id=\"p0112c08\"></span>外施、一切施、過去施、未來施、現在施、究竟\r\n<span class=\"lb\" id=\"p0112c09\"></span>施。佛子！云何為菩薩分減施？此菩薩稟性仁\r\n<span class=\"lb\" id=\"p0112c10\"></span>慈，好行惠施。若得美味，不專自受，要與眾\r\n<span class=\"lb\" id=\"p0112c11\"></span>生，然後方食；凡所受物，悉亦如是。若自食\r\n<span class=\"lb\" id=\"p0112c12\"></span>時，作是念言：『我身中有八萬戶蟲依於我\r\n<span class=\"lb\" id=\"p0112c13\"></span>住，我身充樂，彼亦充樂；我身飢苦，彼亦飢\r\n<span class=\"lb\" id=\"p0112c14\"></span>苦。我今受此所有飲食，願令眾生普得充\r\n<span class=\"lb\" id=\"p0112c15\"></span>飽。』為施彼故而自食之，不貪其味。復作\r\n<span class=\"lb\" id=\"p0112c16\"></span>是念：『我於長夜愛著其身，欲令充飽而受\r\n<span class=\"lb\" id=\"p0112c17\"></span>飲食。今以此食惠施眾生，願我於身永斷貪\r\n<span class=\"lb\" id=\"p0112c18\"></span>著。』是名：分減施。云何為菩薩竭盡施？佛子！此\r\n<span class=\"lb\" id=\"p0112c19\"></span>菩薩得種種上味飲食、香華、衣服、資生之具，\r\n<span class=\"lb\" id=\"p0112c20\"></span>若自以受用則安樂延年，若輟己施人則\r\n<span class=\"lb\" id=\"p0112c21\"></span>窮苦夭命。時，或有人來作是言：『汝今所有，悉\r\n<span class=\"lb\" id=\"p0112c22\"></span>當與我。』菩薩自念：『我無始已來，以飢餓故\r\n<span class=\"lb\" id=\"p0112c23\"></span>喪身無數，未曾得有如毫末許饒益眾生\r\n<span class=\"lb\" id=\"p0112c24\"></span>而獲善利。今我亦當同於往昔而捨其命，\r\n<span class=\"lb\" id=\"p0112c25\"></span>是故應為饒益眾生，隨其所有，一切皆捨；乃\r\n<span class=\"lb\" id=\"p0112c26\"></span>至盡命，亦無所吝。』是名：竭盡施。云何為菩薩\r\n<span class=\"lb\" id=\"p0112c27\"></span>內施？佛子！此菩薩年方少盛，端正美好，香\r\n<span class=\"lb\" id=\"p0112c28\"></span>華、衣服以嚴其身；始受灌頂，轉輪王位，七\r\n<span class=\"lb\" id=\"p0112c29\"></span>寶具足，王四天下。時，或有人來白王言：『大\r\n\r\n<span class=\"lb\" id=\"p0113a01\"></span>王當知！我今衰老，身嬰重疾，煢獨羸頓，死將\r\n<span class=\"lb\" id=\"p0113a02\"></span>不久；若得王身手足、血肉、頭目、骨髓，我之\r\n<span class=\"lb\" id=\"p0113a03\"></span>身命必冀存活。唯願大王莫更籌量，有所\r\n<span class=\"lb\" id=\"p0113a04\"></span>顧惜；但見慈念，以施於我！』爾時，菩薩作是念\r\n<span class=\"lb\" id=\"p0113a05\"></span>言：『今我此身，後必當死，無一利益；宜時疾\r\n<span class=\"lb\" id=\"p0113a06\"></span>捨，以濟眾生。』念已施之，心無所悔。是名：內\r\n<span class=\"lb\" id=\"p0113a07\"></span>施。云何為菩薩外施？佛子！此菩薩年盛色\r\n<span class=\"lb\" id=\"p0113a08\"></span>美，眾相具足，名華、上服而以嚴身；始受灌\r\n<span class=\"lb\" id=\"p0113a09\"></span>頂，轉輪王位，七寶具足，王四天下。時，或有\r\n<span class=\"lb\" id=\"p0113a10\"></span>人來白王言：『我今貧窶，眾苦逼迫。唯願仁\r\n<span class=\"lb\" id=\"p0113a11\"></span>慈，特垂矜念，捨此王位以贍於我；我當統\r\n<span class=\"lb\" id=\"p0113a12\"></span>領，受王福樂！』爾時，菩薩作是念言：『一切榮\r\n<span class=\"lb\" id=\"p0113a13\"></span>盛必當衰歇，於衰歇時，不能復更饒益眾\r\n<span class=\"lb\" id=\"p0113a14\"></span>生。我今宜應隨彼所求，充滿其意。』作是念已，\r\n<span class=\"lb\" id=\"p0113a15\"></span>即便施之而無所悔。是名：外施。云何為菩\r\n<span class=\"lb\" id=\"p0113a16\"></span>薩內外施？佛子！此菩薩如上所說，處輪王\r\n<span class=\"lb\" id=\"p0113a17\"></span>位，七寶具足，王四天下。時，或有人而來白\r\n<span class=\"lb\" id=\"p0113a18\"></span>言：『此轉輪位，王處已久，我未曾得。唯願大\r\n<span class=\"lb\" id=\"p0113a19\"></span>王捨之與我，并及王身，為我臣僕！』爾時，菩\r\n<span class=\"lb\" id=\"p0113a20\"></span>薩作是念言：『我身財寶及以王位，悉是無\r\n<span class=\"lb\" id=\"p0113a21\"></span>常、敗壞之法。我今盛壯，富有天下；乞者現\r\n<span class=\"lb\" id=\"p0113a22\"></span>前，當以不堅而求堅法。』作是念已，即便施\r\n<span class=\"lb\" id=\"p0113a23\"></span>之，乃至以身恭勤作役，心無所悔。是名：內\r\n<span class=\"lb\" id=\"p0113a24\"></span>外施。云何為菩薩一切施？佛子！此菩薩亦如\r\n<span class=\"lb\" id=\"p0113a25\"></span>上說，處輪王位，七寶具足，王四天下。時，有\r\n<span class=\"lb\" id=\"p0113a26\"></span>無量貧窮之人來詣其前，而作是言：『大王\r\n<span class=\"lb\" id=\"p0113a27\"></span>名稱周聞十方，我等欽風故來至此。吾曹\r\n<span class=\"lb\" id=\"p0113a28\"></span>今者各有所求，願普垂慈，令得滿足！』時，諸\r\n<span class=\"lb\" id=\"p0113a29\"></span>貧人從彼大王，或乞國土，或乞妻子，或乞\r\n\r\n<span class=\"lb\" id=\"p0113b01\"></span>手足、血肉、心肺、頭目、髓腦。菩薩是時，心作\r\n<span class=\"lb\" id=\"p0113b02\"></span>是念：『一切恩愛會當別離，而於眾生無所\r\n<span class=\"lb\" id=\"p0113b03\"></span>饒益。我今為欲永捨貪愛，以此一切必離散\r\n<span class=\"lb\" id=\"p0113b04\"></span>物滿眾生願。』作是念已，悉皆施與，心無\r\n<span class=\"lb\" id=\"p0113b05\"></span>悔恨，亦不於眾生而生厭賤。是名：一切施。云\r\n<span class=\"lb\" id=\"p0113b06\"></span>何為菩薩過去施？此菩薩聞過去諸佛菩薩\r\n<span class=\"lb\" id=\"p0113b07\"></span>所有功德，聞已不著，了達非有，不起分別，不\r\n<span class=\"lb\" id=\"p0113b08\"></span>貪不味，亦不求取，無所依倚；見法如夢，無\r\n<span class=\"lb\" id=\"p0113b09\"></span>有堅固；於諸善根，不起有想，亦無所倚；但為\r\n<span class=\"lb\" id=\"p0113b10\"></span>教化，取著眾生，成熟佛法，而為演說；又復觀\r\n<span class=\"lb\" id=\"p0113b11\"></span>察：『過去諸法，十方推求都不可得。』作是念\r\n<span class=\"lb\" id=\"p0113b12\"></span>已，於過去法，畢竟皆捨。是名：過去施。云何為\r\n<span class=\"lb\" id=\"p0113b13\"></span>菩薩未來施？此菩薩聞未來諸佛之所修行，\r\n<span class=\"lb\" id=\"p0113b14\"></span>了達非有，不取於相，不別樂往生諸佛國土，\r\n<span class=\"lb\" id=\"p0113b15\"></span>不味不著，亦不生厭；不以善根迴向於彼，亦\r\n<span class=\"lb\" id=\"p0113b16\"></span>不於彼而退善根，常勤修行，未曾廢捨；但\r\n<span class=\"lb\" id=\"p0113b17\"></span>欲因彼境界攝取眾生，為說真實，令成熟佛\r\n<span class=\"lb\" id=\"p0113b18\"></span>法；然此法者非有處所、非無處所，非內、非\r\n<span class=\"lb\" id=\"p0113b19\"></span>外，非近、非遠。復作是念：『若法非有，不可不\r\n<span class=\"lb\" id=\"p0113b20\"></span>捨。』是名：未來施。云何為菩薩現在施？此菩\r\n<span class=\"lb\" id=\"p0113b21\"></span>薩聞四天王眾天、三十三天、夜摩天、兜率陀\r\n<span class=\"lb\" id=\"p0113b22\"></span>天、化樂天、他化自在天、梵天、梵身天、梵輔\r\n<span class=\"lb\" id=\"p0113b23\"></span>天、梵眾天、大梵天、光天、少光天、無量光天、光\r\n<span class=\"lb\" id=\"p0113b24\"></span>音天、淨天、少淨天、無量淨天、遍淨天、廣天、少\r\n<span class=\"lb\" id=\"p0113b25\"></span>廣天、無量廣天、廣果天、無煩天、無熱天、善\r\n<span class=\"lb\" id=\"p0113b26\"></span>見天、善現天、色究竟天，乃至聞聲聞、緣覺具\r\n<span class=\"lb\" id=\"p0113b27\"></span>足功德。聞已，其心不迷、不沒、不聚、不散，但觀\r\n<span class=\"lb\" id=\"p0113b28\"></span>諸行如夢不實，無有貪著；為令眾生，捨離惡\r\n<span class=\"lb\" id=\"p0113b29\"></span>趣，心無分別，修菩薩道，成就佛法，而為開\r\n\r\n<span class=\"lb\" id=\"p0113c01\"></span>演。是名：現在施。云何為菩薩究竟施？佛子！此\r\n<span class=\"lb\" id=\"p0113c02\"></span>菩薩，假使有無量眾生或有無眼、或有無耳、\r\n<span class=\"lb\" id=\"p0113c03\"></span>或無鼻舌及以手足，來至其所，告菩薩言：『我\r\n<span class=\"lb\" id=\"p0113c04\"></span>身薄祜，諸根殘缺。唯願仁慈，以善方便，捨\r\n<span class=\"lb\" id=\"p0113c05\"></span>己所有，令我具足。』菩薩聞之，即便施與；假使\r\n<span class=\"lb\" id=\"p0113c06\"></span>由此，經阿僧祇劫，諸根不具，亦不心生一念\r\n<span class=\"lb\" id=\"p0113c07\"></span>悔惜。但自觀身，從初入胎，不淨微形，胞段諸\r\n<span class=\"lb\" id=\"p0113c08\"></span>根，生老病死；又觀此身，無有真實，無有慚\r\n<span class=\"lb\" id=\"p0113c09\"></span>愧，非賢聖物，臭穢不潔，骨節相持，血肉所\r\n<span class=\"lb\" id=\"p0113c10\"></span>塗，九孔常流，人所惡賤。作是觀已，不生一\r\n<span class=\"lb\" id=\"p0113c11\"></span>念愛著之心。復作是念：『此身危脆，無有堅固。\r\n<span class=\"lb\" id=\"p0113c12\"></span>我今云何而生戀著？應以施彼，充滿其願。如\r\n<span class=\"lb\" id=\"p0113c13\"></span>我所作，以此開導一切眾生，令於身心不生\r\n<span class=\"lb\" id=\"p0113c14\"></span>貪愛，悉得成就清淨智身。』是名：究竟施。是為\r\n<span class=\"lb\" id=\"p0113c15\"></span>菩薩摩訶薩第六施藏。</p>\r\n<span class=\"lb\" id=\"p0113c16\"></span><p>「佛子！何等為菩薩摩訶薩慧藏？此菩薩於色\r\n<span class=\"lb\" id=\"p0113c17\"></span>如實知，色集如實知，色滅如實知，色滅道\r\n<span class=\"lb\" id=\"p0113c18\"></span>如實知；於受、想、行、識如實知，受、想、行、識集如\r\n<span class=\"lb\" id=\"p0113c19\"></span>實知，受、想、行、識滅如實知，受、想、行、識滅道如\r\n<span class=\"lb\" id=\"p0113c20\"></span>實知；於無明如實知，無明集如實知，無明滅\r\n<span class=\"lb\" id=\"p0113c21\"></span>如實知，無明滅道如實知；於愛如實知，愛\r\n<span class=\"lb\" id=\"p0113c22\"></span>集如實知，愛滅如實知，愛滅道如實知；於聲\r\n<span class=\"lb\" id=\"p0113c23\"></span>聞如實知，聲聞法如實知，聲聞集如實知，\r\n<span class=\"lb\" id=\"p0113c24\"></span>聲聞涅槃如實知；於獨覺如實知，獨覺法如\r\n<span class=\"lb\" id=\"p0113c25\"></span>實知，獨覺集如實知，獨覺涅槃如實知；於菩\r\n<span class=\"lb\" id=\"p0113c26\"></span>薩如實知，菩薩法如實知，菩薩集如實知，\r\n<span class=\"lb\" id=\"p0113c27\"></span>菩薩涅槃如實知。云何知？知從業報諸行因\r\n<span class=\"lb\" id=\"p0113c28\"></span>緣之所造作，一切虛假，空無有實，非我非\r\n<span class=\"lb\" id=\"p0113c29\"></span>堅固，無有少法可得成立。欲令眾生知\r\n\r\n<span class=\"lb\" id=\"p0114a01\"></span>其實性，廣為宣說。為說何等？說諸法不可\r\n<span class=\"lb\" id=\"p0114a02\"></span>壞。何等法不可壞？色不可壞，受、想、行、識不\r\n<span class=\"lb\" id=\"p0114a03\"></span>可壞，無明不可壞，聲聞法、獨覺法、菩薩法不\r\n<span class=\"lb\" id=\"p0114a04\"></span>可壞。何以故？一切法無作、無作者、無言說、無\r\n<span class=\"lb\" id=\"p0114a05\"></span>處所、不生、不起、不與、不取、無動轉、無作用。菩\r\n<span class=\"lb\" id=\"p0114a06\"></span>薩成就如是等無量慧藏，以少方便，了一切\r\n<span class=\"lb\" id=\"p0114a07\"></span>法，自然明達，不由他悟。此慧無盡藏有十種\r\n<span class=\"lb\" id=\"p0114a08\"></span>不可盡故，說為無盡。何等為十？所謂：多聞善\r\n<span class=\"lb\" id=\"p0114a09\"></span>巧不可盡故，親近善知識不可盡故，善分別\r\n<span class=\"lb\" id=\"p0114a10\"></span>句義不可盡故，入深法界不可盡故，以一味\r\n<span class=\"lb\" id=\"p0114a11\"></span>智莊嚴不可盡故，集一切福德心無疲倦不\r\n<span class=\"lb\" id=\"p0114a12\"></span>可盡故，入一切陀羅尼門不可盡故，能分別\r\n<span class=\"lb\" id=\"p0114a13\"></span>一切眾生語言音聲不可盡故，能斷一切眾\r\n<span class=\"lb\" id=\"p0114a14\"></span>生疑惑不可盡故，為一切眾生現一切佛神\r\n<span class=\"lb\" id=\"p0114a15\"></span>力教化調伏令修行不斷不可盡故；是為十。\r\n<span class=\"lb\" id=\"p0114a16\"></span>是為菩薩摩訶薩第七慧藏。住此藏者，得無\r\n<span class=\"lb\" id=\"p0114a17\"></span>盡智慧，普能開悟一切眾生。</p>\r\n<span class=\"lb\" id=\"p0114a18\"></span><p>「佛子！何等為菩薩摩訶薩念藏？此菩薩捨\r\n<span class=\"lb\" id=\"p0114a19\"></span>離癡惑，得具足念，憶念過去一生、二生，乃至\r\n<span class=\"lb\" id=\"p0114a20\"></span>十生、百生、千生、百千生、無量百千生，成劫、壞\r\n<span class=\"lb\" id=\"p0114a21\"></span>劫、成壞劫、非一成劫、非一壞劫、非一成壞劫，\r\n<span class=\"lb\" id=\"p0114a22\"></span>百劫、千劫、百千億那由他，乃至無數、無量、無\r\n<span class=\"lb\" id=\"p0114a23\"></span>邊、無等、不可數、不可稱、不可思、不可量、不\r\n<span class=\"lb\" id=\"p0114a24\"></span>可說、不可說不可說劫；念一佛名號，乃\r\n<span class=\"lb\" id=\"p0114a25\"></span>至不可說不可說佛名號；念一佛出世說授\r\n<span class=\"lb\" id=\"p0114a26\"></span>記，乃至不可說不可說佛出世說授記；念\r\n<span class=\"lb\" id=\"p0114a27\"></span>一佛出世說修多羅，乃至不可說不可說\r\n<span class=\"lb\" id=\"p0114a28\"></span>佛出世說修多羅；如修多羅，祇夜、授記、伽\r\n<span class=\"lb\" id=\"p0114a29\"></span>他、尼陀那、優陀那、本事、本生、方廣、未曾\r\n\r\n<span class=\"lb\" id=\"p0114b01\"></span>有、譬諭、論議，亦如是；念一眾會，乃至不可\r\n<span class=\"lb\" id=\"p0114b02\"></span>說不可說眾會；念演一法，乃至演不可說不\r\n<span class=\"lb\" id=\"p0114b03\"></span>可說法；念一根種種性，乃至不可說不可說\r\n<span class=\"lb\" id=\"p0114b04\"></span>根種種性；念一根無量種種性，乃至不可說\r\n<span class=\"lb\" id=\"p0114b05\"></span>不可說根無量種種性；念一煩惱種種性，乃\r\n<span class=\"lb\" id=\"p0114b06\"></span>至不可說不可說煩惱種種性；念一三昧種\r\n<span class=\"lb\" id=\"p0114b07\"></span>種性，乃至不可說不可說三昧種種性。此念\r\n<span class=\"lb\" id=\"p0114b08\"></span>有十種，所謂：寂靜念、清淨念、不濁念、明徹\r\n<span class=\"lb\" id=\"p0114b09\"></span>念、離塵念、離種種塵念、離垢念、光耀念、可\r\n<span class=\"lb\" id=\"p0114b10\"></span>愛樂念、無障礙念。菩薩住是念時，一切世間\r\n<span class=\"lb\" id=\"p0114b11\"></span>無能嬈亂，一切異論無能變動，往世善根悉\r\n<span class=\"lb\" id=\"p0114b12\"></span>得清淨，於諸世法無所染著，眾魔外道所不\r\n<span class=\"lb\" id=\"p0114b13\"></span>能壞，轉身受生無所忘失；過、現、未來，說法無\r\n<span class=\"lb\" id=\"p0114b14\"></span>盡；於一切世界中，與眾生同住，曾無過咎；入\r\n<span class=\"lb\" id=\"p0114b15\"></span>一切諸佛眾會道場無所障礙，一切佛所悉\r\n<span class=\"lb\" id=\"p0114b16\"></span>得親近。是名：菩薩摩訶薩第八念藏。</p>\r\n<span class=\"lb\" id=\"p0114b17\"></span><p>「佛子！何等為菩薩摩訶薩持藏？此菩薩持諸\r\n<span class=\"lb\" id=\"p0114b18\"></span>佛所說修多羅，文句義理，無有忘失；一生持，\r\n<span class=\"lb\" id=\"p0114b19\"></span>乃至不可說不可說生持；持一佛名號，乃至\r\n<span class=\"lb\" id=\"p0114b20\"></span>不可說不可說佛名號；持一劫數，乃至不可\r\n<span class=\"lb\" id=\"p0114b21\"></span>說不可說劫數；持一佛授記，乃至不可說不\r\n<span class=\"lb\" id=\"p0114b22\"></span>可說佛授記；持一修多羅，乃至不可說不可\r\n<span class=\"lb\" id=\"p0114b23\"></span>說修多羅；持一眾會，乃至不可說不可說眾\r\n<span class=\"lb\" id=\"p0114b24\"></span>會；持演一法，乃至演不可說不可說法；持一\r\n<span class=\"lb\" id=\"p0114b25\"></span>根無量種種性，乃至不可說不可說根無量\r\n<span class=\"lb\" id=\"p0114b26\"></span>種種性；持一煩惱種種性，乃至不可說不可\r\n<span class=\"lb\" id=\"p0114b27\"></span>說煩惱種種性；持一三昧種種性，乃至不可\r\n<span class=\"lb\" id=\"p0114b28\"></span>說不可說三昧種種性。佛子！此持藏無邊難\r\n<span class=\"lb\" id=\"p0114b29\"></span>滿，難至其底，難得親近，無能制伏，無量無\r\n\r\n<span class=\"lb\" id=\"p0114c01\"></span>盡，具大威力，是佛境界，唯佛能了。是名：菩\r\n<span class=\"lb\" id=\"p0114c02\"></span>薩摩訶薩第九持藏。</p>\r\n<span class=\"lb\" id=\"p0114c03\"></span><p>「佛子！何等為菩薩摩訶薩辯藏？此菩薩有深\r\n<span class=\"lb\" id=\"p0114c04\"></span>智慧，了知實相，廣為眾生演說諸法，不違一\r\n<span class=\"lb\" id=\"p0114c05\"></span>切諸佛經典；說一品法，乃至不可說不可說\r\n<span class=\"lb\" id=\"p0114c06\"></span>品法；說一佛名號，乃至不可說不可說佛名\r\n<span class=\"lb\" id=\"p0114c07\"></span>號；如是，說一世界，說一佛授記，說一修多\r\n<span class=\"lb\" id=\"p0114c08\"></span>羅，說一眾會，說演一法，說一根無量種種\r\n<span class=\"lb\" id=\"p0114c09\"></span>性，說一煩惱無量種種性，說一三昧無量種\r\n<span class=\"lb\" id=\"p0114c10\"></span>種性，乃至說不可說不可說三昧無量種種\r\n<span class=\"lb\" id=\"p0114c11\"></span>性；或一日說，或半月、一月說，或百年、千年、\r\n<span class=\"lb\" id=\"p0114c12\"></span>百千年說，或一劫、百劫、千劫、百千劫說，或百\r\n<span class=\"lb\" id=\"p0114c13\"></span>千億那由他劫說，或無數無量乃至不可說\r\n<span class=\"lb\" id=\"p0114c14\"></span>不可說劫說。劫數可盡，一文一句，義理難盡。\r\n<span class=\"lb\" id=\"p0114c15\"></span>何以故？此菩薩成就十種無盡藏故。成就此\r\n<span class=\"lb\" id=\"p0114c16\"></span>藏，得攝一切法陀羅尼門現在前，百萬阿\r\n<span class=\"lb\" id=\"p0114c17\"></span>僧祇陀羅尼以為眷屬；得此陀羅尼已，以法\r\n<span class=\"lb\" id=\"p0114c18\"></span>光明，廣為眾生演說於法。其說法時，以廣長\r\n<span class=\"lb\" id=\"p0114c19\"></span>舌出妙音聲，充滿十方一切世界；隨其根性，\r\n<span class=\"lb\" id=\"p0114c20\"></span>悉令滿足，心得歡喜，滅除一切煩惱纏垢。善\r\n<span class=\"lb\" id=\"p0114c21\"></span>入一切音聲、言語、文字、辯才，令一切眾生\r\n<span class=\"lb\" id=\"p0114c22\"></span>佛種不斷，淨心相續，亦以法光明而演說法，\r\n<span class=\"lb\" id=\"p0114c23\"></span>無有窮盡，不生疲倦。何以故？此菩薩成就盡\r\n<span class=\"lb\" id=\"p0114c24\"></span>虛空遍法界無邊身故。是為菩薩摩訶薩第\r\n<span class=\"lb\" id=\"p0114c25\"></span>十辯藏。此藏無窮盡、無分段、無間、無斷、無變\r\n<span class=\"lb\" id=\"p0114c26\"></span>異、無隔礙、無退轉，甚深無底，難可得入，普\r\n<span class=\"lb\" id=\"p0114c27\"></span>入一切佛法之門。</p>\r\n<span class=\"lb\" id=\"p0114c28\"></span><p>「佛子！此十種無盡藏，有十種無盡法，令諸菩\r\n<span class=\"lb\" id=\"p0114c29\"></span>薩究竟成就無上菩提。何等為十？饒益一切\r\n\r\n<span class=\"lb\" id=\"p0115a01\"></span>眾生故，以本願善迴向故，一切劫無斷絕故，\r\n<span class=\"lb\" id=\"p0115a02\"></span>盡虛空界悉開悟心無限故，迴向有為而不\r\n<span class=\"lb\" id=\"p0115a03\"></span>著故，一念境界一切法無盡故，大願心無變\r\n<span class=\"lb\" id=\"p0115a04\"></span>異故，善攝取諸陀羅尼故，一切諸佛所護念\r\n<span class=\"lb\" id=\"p0115a05\"></span>故，了一切法皆如幻故。是為十種無盡法，能\r\n<span class=\"lb\" id=\"p0115a06\"></span>令一切世間所作，悉得究竟無盡大藏。」</p></cb:div>\r\n<span class=\"lb\" id=\"p0115a07\"></span><cb:juan n=\"021\" fun=\"close\"><cb:jhead><title>大方廣佛華嚴經</title>卷第二十一</cb:jhead></cb:juan>\r\n</body><div id=\"footnotes\"><div class=\"note-text\" id=\"note_0111001\">〔第〕－【聖】＊</div><div class=\"note-text\" id=\"note_0111001\">第【大】＊，〔－〕【聖】＊</div><div class=\"note-text\" id=\"note_0111002\">（唐）＋于【明】＊，（（于闐…譯））十二字＝（（新譯））二字【聖】＊</div><div class=\"note-text\" id=\"note_0111002a\">于闐國三藏實叉難陀奉制譯【大】＊，新譯【聖】＊</div><div class=\"note-text\" id=\"note_0111002b\">于【大】＊，唐于【明】＊</div><div class=\"note-text\" id=\"note_0111003\">三藏＋（沙門）【三】＊，三藏＋（法師）【宮】＊</div><div class=\"note-text\" id=\"note_0111003\">三藏【大】＊，三藏沙門【宋】＊【元】＊【明】＊，三藏法師【宮】＊</div><div class=\"note-text\" id=\"note_0111004\">〔奉制〕－【三】【宮】＊</div><div class=\"note-text\" id=\"note_0111004\">奉制【大】＊，〔－〕【宋】【元】【明】【宮】＊</div><div class=\"note-text\" id=\"note_0112001\">欲＝慾【三】</div><div class=\"note-text\" id=\"note_0112001\">欲【大】，慾【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0113001\">唯＝惟【三】＊</div><div class=\"note-text\" id=\"note_0113001\">唯【大】＊，惟【宋】＊【元】＊【明】＊</div><div class=\"note-text\" id=\"note_0113002\">味＝求【宮】</div><div class=\"note-text\" id=\"note_0113002\">味【大】，求【宮】</div><div class=\"note-text\" id=\"note_0113003\">祜＝祐【宮】</div><div class=\"note-text\" id=\"note_0113003\">祜【大】，祐【宮】</div><div class=\"note-text\" id=\"note_0114001\">教化＝故化【宮】</div><div class=\"note-text\" id=\"note_0114001\">教化【大】，故化【宮】</div><div class=\"note-text\" id=\"note_0114002\">無數無量＝無量無數【三】</div><div class=\"note-text\" id=\"note_0114002\">無數無量【大】，無量無數【宋】【元】【明】</div><div class=\"note-text\" id=\"note_0114003\">〔不可說〕－【宋】【元】，明註曰南藏無不可說三字</div><div class=\"note-text\" id=\"note_0114003\">不可說【大】，〔－〕【宋】【元】，明註曰南藏無不可說三字</div><div class=\"note-text\" id=\"note_0114004\">他＝陀【元】【明】【宮】</div><div class=\"note-text\" id=\"note_0114004\">他【大】，陀【元】【明】【宮】</div><div class=\"note-text\" id=\"note_0114005\">諭＝喻【三】【宮】</div><div class=\"note-text\" id=\"note_0114005\">諭【大】，喻【宋】【元】【明】【宮】</div><div class=\"note-text\" id=\"note_0114006\">耀＝曜【宮】</div><div class=\"note-text\" id=\"note_0114006\">耀【大】，曜【宮】</div><div class=\"note-text\" id=\"note_0114007\">有十種無盡＝十有種無盡【宋】，有十種無盡法【明】</div><div class=\"note-text\" id=\"note_0114007\">有十種無盡法【CB】【明】，有十種無盡【大】，十有種無盡【宋】</div></div>"
+    }
+  ],
+  "toc": {
+    "mulu": [
+      {
+        "title": "大周新譯序",
+        "lb": "p0001a03",
+        "juan": 1,
+        "type": "品"
+      },
+      {
+        "title": "1 世主妙嚴品",
+        "lb": "p0001b25",
+        "juan": 1,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0001b25",
+            "juan": 1,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0005b23",
+            "juan": 2,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0010c05",
+            "juan": 3,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0015c27",
+            "juan": 4,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0021c05",
+            "juan": 5,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "2 如來現相品",
+        "lb": "p0026a19",
+        "juan": 6,
+        "type": "品"
+      },
+      {
+        "title": "3 普賢三昧品",
+        "lb": "p0032c25",
+        "juan": 7,
+        "type": "品"
+      },
+      {
+        "title": "4 世界成就品",
+        "lb": "p0034b09",
+        "juan": 7,
+        "type": "品"
+      },
+      {
+        "title": "5 華藏世界品",
+        "lb": "p0039a15",
+        "juan": 8,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0039a15",
+            "juan": 8,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0044a08",
+            "juan": 9,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0048c23",
+            "juan": 10,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "6 毘盧遮那品",
+        "lb": "p0053c20",
+        "juan": 11,
+        "type": "品"
+      },
+      {
+        "title": "7 如來名號品",
+        "lb": "p0057c22",
+        "juan": 12,
+        "type": "品"
+      },
+      {
+        "title": "8 四聖諦品",
+        "lb": "p0060a13",
+        "juan": 12,
+        "type": "品"
+      },
+      {
+        "title": "9 光明覺品",
+        "lb": "p0062b15",
+        "juan": 13,
+        "type": "品"
+      },
+      {
+        "title": "10 菩薩問明品",
+        "lb": "p0066a26",
+        "juan": 13,
+        "type": "品"
+      },
+      {
+        "title": "11 淨行品",
+        "lb": "p0069b19",
+        "juan": 14,
+        "type": "品"
+      },
+      {
+        "title": "12 賢首品",
+        "lb": "p0072a22",
+        "juan": 14,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0072a22",
+            "juan": 14,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0075b23",
+            "juan": 15,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "13 昇須彌山頂品",
+        "lb": "p0080c07",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "14 須彌頂上偈讚品",
+        "lb": "p0081a22",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "15 十住品",
+        "lb": "p0083c29",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "16 梵行品",
+        "lb": "p0088b05",
+        "juan": 17,
+        "type": "品"
+      },
+      {
+        "title": "17 初發心功德品",
+        "lb": "p0089a04",
+        "juan": 17,
+        "type": "品"
+      },
+      {
+        "title": "18 明法品",
+        "lb": "p0095a21",
+        "juan": 18,
+        "type": "品"
+      },
+      {
+        "title": "19 昇夜摩天宮品",
+        "lb": "p0099a19",
+        "juan": 19,
+        "type": "品"
+      },
+      {
+        "title": "20 夜摩宮中偈讚品",
+        "lb": "p0099c13",
+        "juan": 19,
+        "type": "品"
+      },
+      {
+        "title": "21 十行品",
+        "lb": "p0102b24",
+        "juan": 19,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0102b24",
+            "juan": 19,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0105c15",
+            "juan": 20,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "22 十無盡藏品",
+        "lb": "p0111a27",
+        "juan": 21,
+        "type": "品"
+      },
+      {
+        "title": "23 昇兜率天宮品",
+        "lb": "p0115a12",
+        "juan": 22,
+        "type": "品"
+      },
+      {
+        "title": "24 兜率宮中偈讚品",
+        "lb": "p0121a12",
+        "juan": 23,
+        "type": "品"
+      },
+      {
+        "title": "25 十迴向品",
+        "lb": "p0124a24",
+        "juan": 23,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0124a24",
+            "juan": 23,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0127b17",
+            "juan": 24,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0133a05",
+            "juan": 25,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0139a05",
+            "juan": 26,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0144b05",
+            "juan": 27,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0150a19",
+            "juan": 28,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0156c27",
+            "juan": 29,
+            "type": "品"
+          },
+          {
+            "title": "之八",
+            "lb": "p0160c24",
+            "juan": 30,
+            "type": "品"
+          },
+          {
+            "title": "之九",
+            "lb": "p0165b05",
+            "juan": 31,
+            "type": "品"
+          },
+          {
+            "title": "之十",
+            "lb": "p0171a05",
+            "juan": 32,
+            "type": "品"
+          },
+          {
+            "title": "之十一",
+            "lb": "p0174c05",
+            "juan": 33,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "26 十地品",
+        "lb": "p0178b28",
+        "juan": 34,
+        "type": "品"
+      },
+      {
+        "title": "27 十定品",
+        "lb": "p0211a05",
+        "juan": 40,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0211a05",
+            "juan": 40,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0215a05",
+            "juan": 41,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0218c26",
+            "juan": 42,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0223c05",
+            "juan": 43,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "28 十通品",
+        "lb": "p0229c16",
+        "juan": 44,
+        "type": "品"
+      },
+      {
+        "title": "29 十忍品",
+        "lb": "p0232b05",
+        "juan": 44,
+        "type": "品"
+      },
+      {
+        "title": "30 阿僧祇品",
+        "lb": "p0237b07",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "31 壽量品",
+        "lb": "p0241a16",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "32 諸菩薩住處品",
+        "lb": "p0241b06",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "33 佛不思議法品",
+        "lb": "p0242a05",
+        "juan": 46,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0242a05",
+            "juan": 46,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0246b14",
+            "juan": 47,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "34 如來十身相海品",
+        "lb": "p0251b24",
+        "juan": 48,
+        "type": "品"
+      },
+      {
+        "title": "35 如來隨好光明功德品",
+        "lb": "p0255c11",
+        "juan": 48,
+        "type": "品"
+      },
+      {
+        "title": "36 普賢行品",
+        "lb": "p0257c09",
+        "juan": 49,
+        "type": "品"
+      },
+      {
+        "title": "37 如來出現品",
+        "lb": "p0262a15",
+        "juan": 50,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0262a15",
+            "juan": 50,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0268a23",
+            "juan": 51,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0273c05",
+            "juan": 52,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "38 離世間品",
+        "lb": "p0279a05",
+        "juan": 53,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0279a05",
+            "juan": 53,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0284a05",
+            "juan": 54,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0288c22",
+            "juan": 55,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0293c10",
+            "juan": 56,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0299b11",
+            "juan": 57,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0304c21",
+            "juan": 58,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0310c26",
+            "juan": 59,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "39 入法界品",
+        "lb": "p0319a05",
+        "juan": 60,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0319a05",
+            "juan": 60,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0326c21",
+            "juan": 61,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0331c27",
+            "juan": 62,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0337b22",
+            "juan": 63,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0343a08",
+            "juan": 64,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0348a25",
+            "juan": 65,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0353c05",
+            "juan": 66,
+            "type": "品"
+          },
+          {
+            "title": "之八",
+            "lb": "p0360a05",
+            "juan": 67,
+            "type": "品"
+          },
+          {
+            "title": "之九",
+            "lb": "p0365a27",
+            "juan": 68,
+            "type": "品"
+          },
+          {
+            "title": "之十",
+            "lb": "p0372a09",
+            "juan": 69,
+            "type": "品"
+          },
+          {
+            "title": "之十一",
+            "lb": "p0378a24",
+            "juan": 70,
+            "type": "品"
+          },
+          {
+            "title": "之十二",
+            "lb": "p0384a18",
+            "juan": 71,
+            "type": "品"
+          },
+          {
+            "title": "之十三",
+            "lb": "p0391a05",
+            "juan": 72,
+            "type": "品"
+          },
+          {
+            "title": "之十四",
+            "lb": "p0396b12",
+            "juan": 73,
+            "type": "品"
+          },
+          {
+            "title": "之十五",
+            "lb": "p0401c15",
+            "juan": 74,
+            "type": "品"
+          },
+          {
+            "title": "之十六",
+            "lb": "p0405c05",
+            "juan": 75,
+            "type": "品"
+          },
+          {
+            "title": "之十七",
+            "lb": "p0413c08",
+            "juan": 76,
+            "type": "品"
+          },
+          {
+            "title": "之十八",
+            "lb": "p0419c13",
+            "juan": 77,
+            "type": "品"
+          },
+          {
+            "title": "之十九",
+            "lb": "p0428b05",
+            "juan": 78,
+            "type": "品"
+          },
+          {
+            "title": "之二十",
+            "lb": "p0434c28",
+            "juan": 79,
+            "type": "品"
+          },
+          {
+            "title": "之二十一",
+            "lb": "p0439b05",
+            "juan": 80,
+            "type": "品"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "CBReader 2X v0.9.9 2026-01-21"
+}

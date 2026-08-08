@@ -1,0 +1,472 @@
+{
+  "workId": "T0220",
+  "juan": 43,
+  "results": [
+    {
+      "html": "<body>\r\n<div class=\"cb-mulu\" data-level=\"1\" data-n=\"1\" data-type=\"會\">2 會</div><div class=\"cb-mulu\" data-level=\"2\" data-n=\"47\" data-type=\"品\">47 示相品</div><div class=\"cb-mulu\">1</div><cb:div n=\"02\" type=\"hui\"><cb:div type=\"pin\">\r\n\r\n\r\n<span class=\"lb\" id=\"p0231c01\"></span>\r\n<span class=\"lb\" id=\"p0231c02\"></span><cb:juan n=\"443\" fun=\"open\"><div class=\"cb-mulu\"></div><div class=\"cb-mulu\">2</div><cb:jhead><title>大般若波羅蜜多經</title>卷第四百四\r\n<span class=\"lb\" id=\"p0231c03\"></span>十三</cb:jhead>\r\n<span class=\"lb\" id=\"p0231c04\"></span>\r\n<span class=\"lb\" id=\"p0231c05\"></span><byline><anchor xml:id=\"fxT07p0231c01\"/>三藏法師玄奘奉　詔譯</byline>\r\n<span class=\"lb\" id=\"p0231c06\"></span><cb:jhead type=\"pin\">第二分示相品第四十七之二</cb:jhead></cb:juan>\r\n<span class=\"lb\" id=\"p0231c07\"></span><p>爾時，佛告諸天眾言：「如是！如是！如汝所說。諸\r\n<span class=\"lb\" id=\"p0231c08\"></span>天當知！一切法相如來如實覺為無相，謂\r\n<span class=\"lb\" id=\"p0231c09\"></span>變礙是色相，如來如實覺為無相；領納是受\r\n<span class=\"lb\" id=\"p0231c10\"></span>相，如來如實覺為無相；取像是想相，如來\r\n<span class=\"lb\" id=\"p0231c11\"></span>如實覺為無相；造作是行相，如來如實覺為\r\n<span class=\"lb\" id=\"p0231c12\"></span>無相；了別是識相，如來如實覺為無相；苦\r\n<span class=\"lb\" id=\"p0231c13\"></span>惱聚是蘊相，如來如實覺為無相；生長門是\r\n<span class=\"lb\" id=\"p0231c14\"></span>處相，如來如實覺為無相；多毒害是界相，如\r\n<span class=\"lb\" id=\"p0231c15\"></span>來如實覺為無相；能惠捨是布施波羅蜜多\r\n<span class=\"lb\" id=\"p0231c16\"></span>相，如來如實覺為無相；無熱惱是淨戒波羅\r\n<span class=\"lb\" id=\"p0231c17\"></span>蜜多相，如來如實覺為無相；不忿恚是安忍\r\n<span class=\"lb\" id=\"p0231c18\"></span>波羅蜜多相，如來如實覺為無相；不可屈是\r\n<span class=\"lb\" id=\"p0231c19\"></span>精進波羅蜜多相，如來如實覺為無相；無散\r\n<span class=\"lb\" id=\"p0231c20\"></span>亂是靜慮波羅蜜多相，如來如實覺為無相；\r\n<span class=\"lb\" id=\"p0231c21\"></span>無執著是般若波羅蜜多相，如來如實覺為\r\n<span class=\"lb\" id=\"p0231c22\"></span>無相；無所有是內空等相，如來如實覺為無\r\n<span class=\"lb\" id=\"p0231c23\"></span>相；不顛倒是真如等相，如來如實覺為無相；\r\n<span class=\"lb\" id=\"p0231c24\"></span>不虛妄是四聖諦相，如來如實覺為無相；無\r\n<span class=\"lb\" id=\"p0231c25\"></span>擾惱是四靜慮相，如來如實覺為無相；無\r\n<span class=\"lb\" id=\"p0231c26\"></span>限礙是四無量相，如來如實覺為無相；無諠\r\n<span class=\"lb\" id=\"p0231c27\"></span>雜是四無色定相，如來如實覺為無相；無繫\r\n<span class=\"lb\" id=\"p0231c28\"></span>縛是八解脫相，如來如實覺為無相；能制伏\r\n<span class=\"lb\" id=\"p0231c29\"></span>是八勝處相，如來如實覺為無相；能寂靜是\r\n\r\n<span class=\"lb\" id=\"p0232a01\"></span>九次第定相，如來如實覺為無相；無邊際是\r\n<span class=\"lb\" id=\"p0232a02\"></span>十遍處相，如來如實覺為無相；能出離是三\r\n<span class=\"lb\" id=\"p0232a03\"></span>十七菩提分法相，如來如實覺為無相；能遠\r\n<span class=\"lb\" id=\"p0232a04\"></span>離是空解脫門相，如來如實覺為無相；無取\r\n<span class=\"lb\" id=\"p0232a05\"></span>著是無相解脫門相，如來如實覺為無相；無\r\n<span class=\"lb\" id=\"p0232a06\"></span>所求是無願解脫門相，如來如實覺為無相；\r\n<span class=\"lb\" id=\"p0232a07\"></span>攝淨位是三乘十地相，如來如實覺為無相；\r\n<span class=\"lb\" id=\"p0232a08\"></span>趣大覺是菩薩十地相，如來如實覺為無相；\r\n<span class=\"lb\" id=\"p0232a09\"></span>能觀照是五眼相，如來如實覺為無相；無滯\r\n<span class=\"lb\" id=\"p0232a10\"></span>礙是六神通相，如來如實覺為無相；難屈伏\r\n<span class=\"lb\" id=\"p0232a11\"></span>是如來十力相，如來如實覺為無相；無怯懼\r\n<span class=\"lb\" id=\"p0232a12\"></span>是四無所畏相，如來如實覺為無相；無斷絕\r\n<span class=\"lb\" id=\"p0232a13\"></span>是四無礙解相，如來如實覺為無相；與利樂\r\n<span class=\"lb\" id=\"p0232a14\"></span>是大慈相，如來如實覺為無相；拔衰苦是大\r\n<span class=\"lb\" id=\"p0232a15\"></span>悲相，如來如實覺為無相；慶善事是大喜相，\r\n<span class=\"lb\" id=\"p0232a16\"></span>如來如實覺為無相；棄雜穢是大捨相，如來\r\n<span class=\"lb\" id=\"p0232a17\"></span>如實覺為無相；餘絕分是十八佛不共法相，\r\n<span class=\"lb\" id=\"p0232a18\"></span>如來如實覺為無相；能嚴飾是相好相，如來\r\n<span class=\"lb\" id=\"p0232a19\"></span>如實覺為無相；能憶念是無忘失法相，如來\r\n<span class=\"lb\" id=\"p0232a20\"></span>如實覺為無相；無所執是恒住捨性相，如來\r\n<span class=\"lb\" id=\"p0232a21\"></span>如實覺為無相；遍攝持是一切陀羅尼門相，\r\n<span class=\"lb\" id=\"p0232a22\"></span>如來如實覺為無相；遍攝受是一切三摩地門\r\n<span class=\"lb\" id=\"p0232a23\"></span>相，如來如實覺為無相；善受教是四沙門\r\n<span class=\"lb\" id=\"p0232a24\"></span>果相，如來如實覺為無相；自開悟是獨覺菩\r\n<span class=\"lb\" id=\"p0232a25\"></span>提相，如來如實覺為無相；能辦大事是一切\r\n<span class=\"lb\" id=\"p0232a26\"></span>菩薩摩訶薩行相，如來如實覺為無相；具大\r\n<span class=\"lb\" id=\"p0232a27\"></span>作用是諸佛無上正等菩提相，如來如實覺\r\n<span class=\"lb\" id=\"p0232a28\"></span>為無相；現正等覺是一切智相，如來如實覺\r\n<span class=\"lb\" id=\"p0232a29\"></span>為無相；極善通達是道相智相，如來如實覺\r\n\r\n<span class=\"lb\" id=\"p0232b01\"></span>為無相；現等別覺是一切相智相，如來如實\r\n<span class=\"lb\" id=\"p0232b02\"></span>覺為無相。</p><p>「諸天當知！一切如來、應、正等覺於\r\n<span class=\"lb\" id=\"p0232b03\"></span>如是等一切法相，皆能如實覺為無相，是\r\n<span class=\"lb\" id=\"p0232b04\"></span>故我說一切如來、應、正等覺智見無礙無與等\r\n<span class=\"lb\" id=\"p0232b05\"></span>者。」</p>\r\n<span class=\"lb\" id=\"p0232b06\"></span><p>爾時，世尊告具壽善現曰：「善現當知！甚深般\r\n<span class=\"lb\" id=\"p0232b07\"></span>若波羅蜜多是諸佛母，甚深般若波羅蜜多\r\n<span class=\"lb\" id=\"p0232b08\"></span>能示世間諸法實相，是故如來、應、正等覺依\r\n<span class=\"lb\" id=\"p0232b09\"></span>法而住，供養恭敬、尊重讚歎、攝受護持所依\r\n<span class=\"lb\" id=\"p0232b10\"></span>住法，此法即是甚深般若波羅蜜多。一切如\r\n<span class=\"lb\" id=\"p0232b11\"></span>來、應、正等覺無不依止甚深般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0232b12\"></span>供養恭敬、尊重讚歎、攝受護持。何以故？善現！\r\n<span class=\"lb\" id=\"p0232b13\"></span>一切如來、應、正等覺，皆因如是甚深般若波\r\n<span class=\"lb\" id=\"p0232b14\"></span>羅蜜多而得生長。甚深般若波羅蜜多與諸\r\n<span class=\"lb\" id=\"p0232b15\"></span>如來、應、正等覺作所依處，能示世間諸法實\r\n<span class=\"lb\" id=\"p0232b16\"></span>相。</p><p>「善現當知！一切如來、應、正等覺是知恩\r\n<span class=\"lb\" id=\"p0232b17\"></span>者、能報恩者。善現！若有問言：『誰是知恩能\r\n<span class=\"lb\" id=\"p0232b18\"></span>報恩者？』應正答言：『佛是知恩能報恩者。』何以\r\n<span class=\"lb\" id=\"p0232b19\"></span>故？一切世間知恩、報恩無過佛故。」</p><p>時，具壽善\r\n<span class=\"lb\" id=\"p0232b20\"></span>現白佛言：「世尊！云何如來、應、正等覺知恩報\r\n<span class=\"lb\" id=\"p0232b21\"></span>恩？」</p><p>佛言：「善現！一切如來、應、正等覺乘如是\r\n<span class=\"lb\" id=\"p0232b22\"></span>乘行如是道，來至無上正等菩提，得菩提已，\r\n<span class=\"lb\" id=\"p0232b23\"></span>於一切時供養恭敬、尊重讚歎、攝受護持是乘、\r\n<span class=\"lb\" id=\"p0232b24\"></span>是道，常無暫廢，此乘此道當知即是甚深般\r\n<span class=\"lb\" id=\"p0232b25\"></span>若波羅蜜多。善現！是名如來、應、正等覺知恩\r\n<span class=\"lb\" id=\"p0232b26\"></span>報恩。</p><p>「復次，善現！一切如來、應、正等覺無不\r\n<span class=\"lb\" id=\"p0232b27\"></span>皆依甚深般若波羅蜜多，覺一切法皆無作\r\n<span class=\"lb\" id=\"p0232b28\"></span>用，以能作者無所有故。一切如來、應、正等覺\r\n<span class=\"lb\" id=\"p0232b29\"></span>無不皆依甚深般若波羅蜜多，覺一切法無所\r\n\r\n<span class=\"lb\" id=\"p0232c01\"></span>成辦，以諸形質不可得故。善現！以諸如來、\r\n<span class=\"lb\" id=\"p0232c02\"></span>應、正等覺知依如是甚深般若波羅蜜多，覺一\r\n<span class=\"lb\" id=\"p0232c03\"></span>切法皆無作用，無所成辦，於一切時供養恭敬、\r\n<span class=\"lb\" id=\"p0232c04\"></span>尊重讚歎，攝受護持曾無間斷，故名真實知\r\n<span class=\"lb\" id=\"p0232c05\"></span>恩報恩。</p><p>「復次，善現！一切如來、應、正等覺無\r\n<span class=\"lb\" id=\"p0232c06\"></span>不皆依甚深般若波羅蜜多，於一切法無作、\r\n<span class=\"lb\" id=\"p0232c07\"></span>無成、無生智轉，復能知此無轉因緣。是故，應\r\n<span class=\"lb\" id=\"p0232c08\"></span>知甚深般若波羅蜜多，能生如來、應、正等覺，\r\n<span class=\"lb\" id=\"p0232c09\"></span>亦能如實示世間相。」</p>\r\n<span class=\"lb\" id=\"p0232c10\"></span><p>爾時，具壽善現白佛言：「世尊！如來常說一切\r\n<span class=\"lb\" id=\"p0232c11\"></span>法性無生、無起、無知、無見，如何可說甚深般\r\n<span class=\"lb\" id=\"p0232c12\"></span>若波羅蜜多，能生如來、應、正等覺，能示世間\r\n<span class=\"lb\" id=\"p0232c13\"></span>諸法實相？」</p><p>佛告善現：「如是！如是！如汝所說。\r\n<span class=\"lb\" id=\"p0232c14\"></span>一切如來、應、正等覺說一切法無生、無起、無\r\n<span class=\"lb\" id=\"p0232c15\"></span>知、無見。依世俗說甚深般若波羅蜜多，能生\r\n<span class=\"lb\" id=\"p0232c16\"></span>如來、應、正等覺，亦能如實示世間相。」</p><p>時，具壽\r\n<span class=\"lb\" id=\"p0232c17\"></span>善現白佛言：「世尊！云何諸法無生、無起、無知、\r\n<span class=\"lb\" id=\"p0232c18\"></span>無見？」</p><p>佛言：「善現！以一切法空無所有，皆不\r\n<span class=\"lb\" id=\"p0232c19\"></span>自在、虛誑不堅故，一切法無生、無起、無知、無\r\n<span class=\"lb\" id=\"p0232c20\"></span>見。復次，善現！一切法性無所依止，無所繫屬，\r\n<span class=\"lb\" id=\"p0232c21\"></span>由此因緣，無生、無起、無知、無見。善現當知！甚\r\n<span class=\"lb\" id=\"p0232c22\"></span>深般若波羅蜜多雖生如來、應、正等覺，亦能\r\n<span class=\"lb\" id=\"p0232c23\"></span>示現世間實相，而無所生亦無所示。</p><p>「善現當\r\n<span class=\"lb\" id=\"p0232c24\"></span>知！甚深般若波羅蜜多，不見色故，名示色相；\r\n<span class=\"lb\" id=\"p0232c25\"></span>不見受、想、行、識故，名示受、想、行、識相。不見眼\r\n<span class=\"lb\" id=\"p0232c26\"></span>處故，名示眼處相；不見耳、鼻、舌、身、意處故，名\r\n<span class=\"lb\" id=\"p0232c27\"></span>示耳、鼻、舌、身、意處相。不見色處故，名示色處\r\n<span class=\"lb\" id=\"p0232c28\"></span>相；不見聲、香、味、觸、法處故，名示聲、香、味、觸、法\r\n<span class=\"lb\" id=\"p0232c29\"></span>處相。不見眼界故，名示眼界相；不見耳、鼻、舌、\r\n\r\n<span class=\"lb\" id=\"p0233a01\"></span>身、意界故，名示耳、鼻、舌、身、意界相。不見色界\r\n<span class=\"lb\" id=\"p0233a02\"></span>故，名示色界相；不見聲、香、味、觸、法界故，名示\r\n<span class=\"lb\" id=\"p0233a03\"></span>聲、香、味、觸、法界相。不見眼識界故，名示眼識\r\n<span class=\"lb\" id=\"p0233a04\"></span>界相；不見耳、鼻、舌、身、意識界故，名示耳、鼻、舌、\r\n<span class=\"lb\" id=\"p0233a05\"></span>身、意識界相。不見眼觸故，名示眼觸相；不見\r\n<span class=\"lb\" id=\"p0233a06\"></span>耳、鼻、舌、身、意觸故，名示耳、鼻、舌、身、意觸相。不\r\n<span class=\"lb\" id=\"p0233a07\"></span>見眼觸為緣所生諸受故，名示眼觸為緣所生\r\n<span class=\"lb\" id=\"p0233a08\"></span>諸受相；不見耳、鼻、舌、身、意觸為緣所生諸受\r\n<span class=\"lb\" id=\"p0233a09\"></span>故，名示耳、鼻、舌、身、意觸為緣所生諸受相。不\r\n<span class=\"lb\" id=\"p0233a10\"></span>見地界故，名示地界相；不見水、火、風、空、識界故，\r\n<span class=\"lb\" id=\"p0233a11\"></span>名示水、火、風、空、識界相。不見無明故，名示無\r\n<span class=\"lb\" id=\"p0233a12\"></span>明相；不見行識、名色、六處、觸、受、愛、取、有、生、老\r\n<span class=\"lb\" id=\"p0233a13\"></span>死愁歎苦憂惱故，名示行乃至老死愁歎苦憂\r\n<span class=\"lb\" id=\"p0233a14\"></span>惱相。不見布施波羅蜜多故，名示布施波羅\r\n<span class=\"lb\" id=\"p0233a15\"></span>蜜多相；不見淨戒、安忍、精進、靜慮、般若波羅\r\n<span class=\"lb\" id=\"p0233a16\"></span>蜜多故，名示淨戒乃至般若波羅蜜多相。不\r\n<span class=\"lb\" id=\"p0233a17\"></span>見內空故，名示內空相；不見外空、內外空、空\r\n<span class=\"lb\" id=\"p0233a18\"></span>空、大空、勝義空、有為空、無為空、畢竟空、無際空、\r\n<span class=\"lb\" id=\"p0233a19\"></span>散無散空、本性空、自共相空、一切法空、不可得\r\n<span class=\"lb\" id=\"p0233a20\"></span>空、無性空、自性空、無性自性空故，名示外空乃\r\n<span class=\"lb\" id=\"p0233a21\"></span>至無性自性空相。不見真如故，名示真如相；\r\n<span class=\"lb\" id=\"p0233a22\"></span>不見法界、法性、不虛妄性、不變異性、平等性、離\r\n<span class=\"lb\" id=\"p0233a23\"></span>生性、法定、法住、實際、虛空界、不思議界故，名示\r\n<span class=\"lb\" id=\"p0233a24\"></span>法界乃至不思議界相。不見苦聖諦故，名示\r\n<span class=\"lb\" id=\"p0233a25\"></span>苦聖諦相；不見集、滅、道聖諦故，名示集、滅、道\r\n<span class=\"lb\" id=\"p0233a26\"></span>聖諦相。不見四靜慮故，名示四靜慮相；不見\r\n<span class=\"lb\" id=\"p0233a27\"></span>四無量、四無色定故，名示四無量、四無色定相。\r\n<span class=\"lb\" id=\"p0233a28\"></span>不見八解脫故，名示八解脫相；不見八勝處、\r\n<span class=\"lb\" id=\"p0233a29\"></span>九次第定、十遍處故，名示八勝處、九次第定、十\r\n\r\n<span class=\"lb\" id=\"p0233b01\"></span>遍處相。不見四念住故，名示四念住相；不見\r\n<span class=\"lb\" id=\"p0233b02\"></span>四正斷、四神足、五根、五力、七等覺支、八聖道支\r\n<span class=\"lb\" id=\"p0233b03\"></span>故，名示四正斷乃至八聖道支相。不見空解\r\n<span class=\"lb\" id=\"p0233b04\"></span>脫門故，名示空解脫門相；不見無相、無願解\r\n<span class=\"lb\" id=\"p0233b05\"></span>脫門故，名示無相、無願解脫門相。不見三乘\r\n<span class=\"lb\" id=\"p0233b06\"></span>十地故，名示三乘十地相；不見菩薩十地故，\r\n<span class=\"lb\" id=\"p0233b07\"></span>名示菩薩十地相。不見五眼故，名示五眼相；\r\n<span class=\"lb\" id=\"p0233b08\"></span>不見六神通故，名示六神通相。不見如來十\r\n<span class=\"lb\" id=\"p0233b09\"></span>力故，名示如來十力相；不見四無所畏、四無\r\n<span class=\"lb\" id=\"p0233b10\"></span>礙解、大慈、大悲、大喜、大捨、十八佛不共法故，名\r\n<span class=\"lb\" id=\"p0233b11\"></span>示四無所畏乃至十八佛不共法相。不見三\r\n<span class=\"lb\" id=\"p0233b12\"></span>十二大士相故，名示三十二大士相相；不見\r\n<span class=\"lb\" id=\"p0233b13\"></span>八十隨好故，名示八十隨好相。不見無忘失\r\n<span class=\"lb\" id=\"p0233b14\"></span>法故，名示無忘失法相；不見恒住捨性故，名\r\n<span class=\"lb\" id=\"p0233b15\"></span>示恒住捨性相。不見一切陀羅尼門故，名示\r\n<span class=\"lb\" id=\"p0233b16\"></span>一切陀羅尼門相；不見一切三摩地門故，名\r\n<span class=\"lb\" id=\"p0233b17\"></span>示一切三摩地門相。不見預流果故，名示預\r\n<span class=\"lb\" id=\"p0233b18\"></span>流果相；不見一來、不還、阿羅漢果、獨覺菩提\r\n<span class=\"lb\" id=\"p0233b19\"></span>故，名示一來、不還、阿羅漢果、獨覺菩提相。不\r\n<span class=\"lb\" id=\"p0233b20\"></span>見一切菩薩摩訶薩行故，名示一切菩薩摩訶\r\n<span class=\"lb\" id=\"p0233b21\"></span>薩行相；不見諸佛無上正等菩提故，名示諸\r\n<span class=\"lb\" id=\"p0233b22\"></span>佛無上正等菩提相。不見一切智故，名示一\r\n<span class=\"lb\" id=\"p0233b23\"></span>切智相；不見道相智、一切相智故，名示道相\r\n<span class=\"lb\" id=\"p0233b24\"></span>智、一切相智相。善現！由如是義，甚深般若波\r\n<span class=\"lb\" id=\"p0233b25\"></span>羅蜜多能示世間諸法實相，名如來母能生\r\n<span class=\"lb\" id=\"p0233b26\"></span>如來。」</p>\r\n<span class=\"lb\" id=\"p0233b27\"></span><p>爾時，具壽善現白佛言：「世尊！云何如是甚深\r\n<span class=\"lb\" id=\"p0233b28\"></span>般若波羅蜜多不見色故，名示色相；不見受、\r\n<span class=\"lb\" id=\"p0233b29\"></span>想、行、識故，名示受、想、行、識相？如是乃至不見\r\n\r\n<span class=\"lb\" id=\"p0233c01\"></span>一切智故，名示一切智相；不見道相智、一切\r\n<span class=\"lb\" id=\"p0233c02\"></span>相智故，名示道相智、一切相智相？」</p><p>佛告善現：\r\n<span class=\"lb\" id=\"p0233c03\"></span>「甚深般若波羅蜜多，由不緣色而生於識，是\r\n<span class=\"lb\" id=\"p0233c04\"></span>為不見色故，名示色相；不緣受、想、行、識而生\r\n<span class=\"lb\" id=\"p0233c05\"></span>於識，是為不見受、想、行、識故，名示受、想、行、識\r\n<span class=\"lb\" id=\"p0233c06\"></span>相。如是乃至由不緣一切智而生於識，是為\r\n<span class=\"lb\" id=\"p0233c07\"></span>不見一切智故，名示一切智相；不緣道相智、\r\n<span class=\"lb\" id=\"p0233c08\"></span>一切相智而生於識，是為不見道相智、一切\r\n<span class=\"lb\" id=\"p0233c09\"></span>相智故，名示道相智、一切相智相。善現！由如\r\n<span class=\"lb\" id=\"p0233c10\"></span>是義，甚深般若波羅蜜多能示世間諸法實\r\n<span class=\"lb\" id=\"p0233c11\"></span>相，名如來母能生如來。</p><p>「復次，善現！甚深般\r\n<span class=\"lb\" id=\"p0233c12\"></span>若波羅蜜多，能為如來顯世間空故名如來\r\n<span class=\"lb\" id=\"p0233c13\"></span>母，能示如來世間實相。」</p><p>時，具壽善現白佛言：\r\n<span class=\"lb\" id=\"p0233c14\"></span>「世尊！云何如是甚深般若波羅蜜多，能為如\r\n<span class=\"lb\" id=\"p0233c15\"></span>來顯世間空？」</p><p>佛言：「善現！甚深般若波羅蜜\r\n<span class=\"lb\" id=\"p0233c16\"></span>多，能為如來顯色世間空，顯受、想、行、識世間\r\n<span class=\"lb\" id=\"p0233c17\"></span>空；顯眼處世間空，顯耳、鼻、舌、身、意處世間空；\r\n<span class=\"lb\" id=\"p0233c18\"></span>顯色處世間空，顯聲、香、味、觸、法處世間空；顯\r\n<span class=\"lb\" id=\"p0233c19\"></span>眼界世間空，顯耳、鼻、舌、身、意界世間空；顯色\r\n<span class=\"lb\" id=\"p0233c20\"></span>界世間空，顯聲、香、味、觸、法界世間空；顯眼識\r\n<span class=\"lb\" id=\"p0233c21\"></span>界世間空，顯耳、鼻、舌、身、意識界世間空；顯眼\r\n<span class=\"lb\" id=\"p0233c22\"></span>觸世間空，顯耳、鼻、舌、身、意觸世間空；顯眼觸\r\n<span class=\"lb\" id=\"p0233c23\"></span>為緣所生諸受世間空，顯耳、鼻、舌、身、意觸為\r\n<span class=\"lb\" id=\"p0233c24\"></span>緣所生諸受世間空；顯地界世間空，顯水、火、\r\n<span class=\"lb\" id=\"p0233c25\"></span>風、空、識界世間空；顯十二支緣起世間空；顯\r\n<span class=\"lb\" id=\"p0233c26\"></span>我見為根本六十二見世間空；顯十善業道\r\n<span class=\"lb\" id=\"p0233c27\"></span>世間空；顯四靜慮世間空，顯四無量、四無色\r\n<span class=\"lb\" id=\"p0233c28\"></span>定世間空；顯布施波羅蜜多世間空，乃至顯\r\n<span class=\"lb\" id=\"p0233c29\"></span>般若波羅蜜多世間空；顯內空世間空，乃至\r\n\r\n<span class=\"lb\" id=\"p0234a01\"></span>顯無性自性空世間空；顯苦聖諦世間空，顯\r\n<span class=\"lb\" id=\"p0234a02\"></span>集、滅、道聖諦世間空；顯八解脫世間空，顯八\r\n<span class=\"lb\" id=\"p0234a03\"></span>勝處、九次第定、十遍處世間空；顯四念住世\r\n<span class=\"lb\" id=\"p0234a04\"></span>間空，乃至顯八聖道支世間空；顯空解脫門\r\n<span class=\"lb\" id=\"p0234a05\"></span>世間空，顯無相、無願解脫門世間空；顯三乘\r\n<span class=\"lb\" id=\"p0234a06\"></span>十地世間空，顯菩薩十地世間空；顯五眼世\r\n<span class=\"lb\" id=\"p0234a07\"></span>間空，顯六神通世間空；顯佛十力世間空，乃\r\n<span class=\"lb\" id=\"p0234a08\"></span>至顯十八佛不共法世間空；顯三十二大士\r\n<span class=\"lb\" id=\"p0234a09\"></span>相世間空，顯八十隨好世間空；顯無忘失法\r\n<span class=\"lb\" id=\"p0234a10\"></span>世間空，顯恒住捨性世間空；顯一切陀羅尼\r\n<span class=\"lb\" id=\"p0234a11\"></span>門世間空，顯一切三摩地門世間空；顯預流\r\n<span class=\"lb\" id=\"p0234a12\"></span>果世間空，乃至顯獨覺菩提世間空；顯一切\r\n<span class=\"lb\" id=\"p0234a13\"></span>菩薩摩訶薩行世間空，顯諸佛無上正等菩\r\n<span class=\"lb\" id=\"p0234a14\"></span>提世間空；顯一切智世間空，顯道相智、一切\r\n<span class=\"lb\" id=\"p0234a15\"></span>相智世間空。善現！由如是義，甚深般若波\r\n<span class=\"lb\" id=\"p0234a16\"></span>羅蜜多能示如來世間實相，名如來母能生\r\n<span class=\"lb\" id=\"p0234a17\"></span>如來。</p>\r\n<span class=\"lb\" id=\"p0234a18\"></span><p>「復次，善現！一切如來、應、正等覺依深般若波\r\n<span class=\"lb\" id=\"p0234a19\"></span>羅蜜多，能為世間顯色世間空，顯受、想、行、識\r\n<span class=\"lb\" id=\"p0234a20\"></span>世間空，如是乃至顯一切智世間空，顯道相\r\n<span class=\"lb\" id=\"p0234a21\"></span>智、一切相智世間空，令諸世間受世間空、想\r\n<span class=\"lb\" id=\"p0234a22\"></span>世間空、思世間空、了世間空。善現！由如是\r\n<span class=\"lb\" id=\"p0234a23\"></span>義，甚深般若波羅蜜多，能示如來、應、正等覺\r\n<span class=\"lb\" id=\"p0234a24\"></span>世間實相，名如來母能生如來。</p><p>「復次，善現！甚\r\n<span class=\"lb\" id=\"p0234a25\"></span>深般若波羅蜜多，能使如來、應、正等覺見世\r\n<span class=\"lb\" id=\"p0234a26\"></span>間空。見何等世間空？謂見色世間空，見受、\r\n<span class=\"lb\" id=\"p0234a27\"></span>想、行、識世間空，如是乃至見一切智世間空，\r\n<span class=\"lb\" id=\"p0234a28\"></span>見道相智、一切相智世間空。善現！由如是義，\r\n<span class=\"lb\" id=\"p0234a29\"></span>甚深般若波羅蜜多，能示如來、應、正等覺世\r\n\r\n<span class=\"lb\" id=\"p0234b01\"></span>間實相，名如來母能生如來。</p><p>「復次，善現！甚\r\n<span class=\"lb\" id=\"p0234b02\"></span>深般若波羅蜜多，能示如來、應、正等覺世間\r\n<span class=\"lb\" id=\"p0234b03\"></span>不可思議相，名如來母能示如來世間實相。」</p>\r\n<span class=\"lb\" id=\"p0234b04\"></span><p>時，具壽善現白佛言：「世尊！云何如是甚深般\r\n<span class=\"lb\" id=\"p0234b05\"></span>若波羅蜜多，能示如來、應、正等覺世間不可\r\n<span class=\"lb\" id=\"p0234b06\"></span>思議相？」</p><p>佛言：「善現！甚深般若波羅蜜多，能\r\n<span class=\"lb\" id=\"p0234b07\"></span>示如來、應、正等覺色世間不可思議相，受、想、\r\n<span class=\"lb\" id=\"p0234b08\"></span>行、識世間不可思議相，如是乃至一切智世\r\n<span class=\"lb\" id=\"p0234b09\"></span>間不可思議相，道相智、一切相智世間不可\r\n<span class=\"lb\" id=\"p0234b10\"></span>思議相。善現！由如是義，甚深般若波羅蜜\r\n<span class=\"lb\" id=\"p0234b11\"></span>多，能示如來、應、正等覺世間實相，名如來母，\r\n<span class=\"lb\" id=\"p0234b12\"></span>能生如來。</p><p>「復次，善現！甚深般若波羅蜜多，能\r\n<span class=\"lb\" id=\"p0234b13\"></span>示如來、應、正等覺世間遠離相，名如來母，能\r\n<span class=\"lb\" id=\"p0234b14\"></span>示如來世間實相。」</p><p>時，具壽善現白佛言：「世尊！\r\n<span class=\"lb\" id=\"p0234b15\"></span>云何如是甚深般若波羅蜜多，能示如來、應、\r\n<span class=\"lb\" id=\"p0234b16\"></span>正等覺世間遠離相？」</p><p>佛言：「善現！甚深般若\r\n<span class=\"lb\" id=\"p0234b17\"></span>波羅蜜多，能示如來、應、正等覺色世間遠離\r\n<span class=\"lb\" id=\"p0234b18\"></span>相，受、想、行、識世間遠離相，如是乃至一切智\r\n<span class=\"lb\" id=\"p0234b19\"></span>世間遠離相，道相智、一切相智世間遠離相。\r\n<span class=\"lb\" id=\"p0234b20\"></span>善現！由如是義，甚深般若波羅蜜多，能示\r\n<span class=\"lb\" id=\"p0234b21\"></span>如來、應、正等覺世間實相，名如來母能生如\r\n<span class=\"lb\" id=\"p0234b22\"></span>來。</p><p>「復次，善現！甚深般若波羅蜜多，能示如\r\n<span class=\"lb\" id=\"p0234b23\"></span>來、應、正等覺世間寂靜相，名如來母，能示如\r\n<span class=\"lb\" id=\"p0234b24\"></span>來世間實相。」</p><p>時，具壽善現白佛言：「世尊！云\r\n<span class=\"lb\" id=\"p0234b25\"></span>何如是甚深般若波羅蜜多，能示如來、應、正\r\n<span class=\"lb\" id=\"p0234b26\"></span>等覺世間寂靜相？」</p><p>佛言：「善現！甚深般若波\r\n<span class=\"lb\" id=\"p0234b27\"></span>羅蜜多，能示如來、應、正等覺色世間寂靜相，\r\n<span class=\"lb\" id=\"p0234b28\"></span>受、想、行、識世間寂靜相，如是乃至一切智世\r\n<span class=\"lb\" id=\"p0234b29\"></span>間寂靜相，道相智、一切相智世間寂靜相。善\r\n\r\n<span class=\"lb\" id=\"p0234c01\"></span>現！由如是義，甚深般若波羅蜜多，能示如\r\n<span class=\"lb\" id=\"p0234c02\"></span>來、應、正等覺世間實相，名如來母能生如來。</p>\r\n<span class=\"lb\" id=\"p0234c03\"></span><p>「復次，善現！甚深般若波羅蜜多，能示如來、應、\r\n<span class=\"lb\" id=\"p0234c04\"></span>正等覺世間畢竟空相，名如來母，能示如來\r\n<span class=\"lb\" id=\"p0234c05\"></span>世間實相。」</p><p>時，具壽善現白佛言：「世尊！云何\r\n<span class=\"lb\" id=\"p0234c06\"></span>如是甚深般若波羅蜜多，能示如來、應、正等\r\n<span class=\"lb\" id=\"p0234c07\"></span>覺世間畢竟空相？」</p><p>佛言：「善現！甚深般若波\r\n<span class=\"lb\" id=\"p0234c08\"></span>羅蜜多，能示如來、應、正等覺色世間畢竟空\r\n<span class=\"lb\" id=\"p0234c09\"></span>相，受、想、行、識世間畢竟空相，如是乃至一切\r\n<span class=\"lb\" id=\"p0234c10\"></span>智世間畢竟空相，道相智、一切相智世間畢\r\n<span class=\"lb\" id=\"p0234c11\"></span>竟空相。善現！由如是義，甚深般若波羅蜜\r\n<span class=\"lb\" id=\"p0234c12\"></span>多，能示如來、應、正等覺世間實相，名如來母\r\n<span class=\"lb\" id=\"p0234c13\"></span>能生如來。</p><p>「復次，善現！甚深般若波羅蜜多，能\r\n<span class=\"lb\" id=\"p0234c14\"></span>示如來、應、正等覺世間無性空相，名如來母，\r\n<span class=\"lb\" id=\"p0234c15\"></span>能示如來世間實相。」</p><p>時，具壽善現白佛言：「世\r\n<span class=\"lb\" id=\"p0234c16\"></span>尊！云何如是甚深般若波羅蜜多，能示如來、\r\n<span class=\"lb\" id=\"p0234c17\"></span>應、正等覺世間無性空相？」</p><p>佛言：「善現！甚深\r\n<span class=\"lb\" id=\"p0234c18\"></span>般若波羅蜜多，能示如來、應、正等覺色世間\r\n<span class=\"lb\" id=\"p0234c19\"></span>無性空相，受、想、行、識世間無性空相，如是乃\r\n<span class=\"lb\" id=\"p0234c20\"></span>至一切智世間無性空相，道相智、一切相智\r\n<span class=\"lb\" id=\"p0234c21\"></span>世間無性空相。善現！由如是義，甚深般若\r\n<span class=\"lb\" id=\"p0234c22\"></span>波羅蜜多，能示如來、應、正等覺世間實相，名\r\n<span class=\"lb\" id=\"p0234c23\"></span>如來母能生如來。</p><p>「復次，善現！甚深般若波羅\r\n<span class=\"lb\" id=\"p0234c24\"></span>蜜多，能示如來、應、正等覺世間自性空相，名\r\n<span class=\"lb\" id=\"p0234c25\"></span>如來母，能示如來世間實相。」</p><p>時，具壽善現白\r\n<span class=\"lb\" id=\"p0234c26\"></span>佛言：「世尊！云何如是甚深般若波羅蜜多，能\r\n<span class=\"lb\" id=\"p0234c27\"></span>示如來、應、正等覺世間自性空相？」</p><p>佛言：「善現！\r\n<span class=\"lb\" id=\"p0234c28\"></span>甚深般若波羅蜜多，能示如來、應、正等覺色\r\n<span class=\"lb\" id=\"p0234c29\"></span>世間自性空相，受、想、行、識世間自性空相，如\r\n\r\n<span class=\"lb\" id=\"p0235a01\"></span>是乃至一切智世間自性空相，道相智、一切\r\n<span class=\"lb\" id=\"p0235a02\"></span>相智世間自性空相。善現！由如是義，甚深\r\n<span class=\"lb\" id=\"p0235a03\"></span>般若波羅蜜多，能示如來、應、正等覺世間實\r\n<span class=\"lb\" id=\"p0235a04\"></span>相，名如來母能生如來。</p><p>「復次，善現！甚深般\r\n<span class=\"lb\" id=\"p0235a05\"></span>若波羅蜜多，能示如來、應、正等覺世間無性\r\n<span class=\"lb\" id=\"p0235a06\"></span>自性空相，名如來母，能示如來世間實相。」</p><p>時，\r\n<span class=\"lb\" id=\"p0235a07\"></span>具壽善現白佛言：「世尊！云何如是甚深般若\r\n<span class=\"lb\" id=\"p0235a08\"></span>波羅蜜多，能示如來、應、正等覺世間無性自\r\n<span class=\"lb\" id=\"p0235a09\"></span>性空相？」</p><p>佛言：「善現！甚深般若波羅蜜多，能\r\n<span class=\"lb\" id=\"p0235a10\"></span>示如來、應、正等覺色世間無性自性空相，受、\r\n<span class=\"lb\" id=\"p0235a11\"></span>想、行、識世間無性自性空相，如是乃至一切\r\n<span class=\"lb\" id=\"p0235a12\"></span>智世間無性自性空相，道相智、一切相智世\r\n<span class=\"lb\" id=\"p0235a13\"></span>間無性自性空相。善現！由如是義，甚深般\r\n<span class=\"lb\" id=\"p0235a14\"></span>若波羅蜜多，能示如來、應、正等覺世間實相，\r\n<span class=\"lb\" id=\"p0235a15\"></span>名如來母能生如來。</p><p>「復次，善現！甚深般若波\r\n<span class=\"lb\" id=\"p0235a16\"></span>羅蜜多，能示如來、應、正等覺世間純空相，名\r\n<span class=\"lb\" id=\"p0235a17\"></span>如來母，能示如來世間實相。」</p><p>時，具壽善現白\r\n<span class=\"lb\" id=\"p0235a18\"></span>佛言：「世尊！云何如是甚深般若波羅蜜多，能\r\n<span class=\"lb\" id=\"p0235a19\"></span>示如來、應、正等覺世間純空相？」</p><p>佛言：「善現！甚\r\n<span class=\"lb\" id=\"p0235a20\"></span>深般若波羅蜜多，能示如來、應、正等覺色世\r\n<span class=\"lb\" id=\"p0235a21\"></span>間純空相，受、想、行、識世間純空相，如是乃至\r\n<span class=\"lb\" id=\"p0235a22\"></span>一切智世間純空相，道相智、一切相智世間\r\n<span class=\"lb\" id=\"p0235a23\"></span>純空相。善現！由如是義，甚深般若波羅蜜\r\n<span class=\"lb\" id=\"p0235a24\"></span>多，能示如來、應、正等覺世間實相，名如來母\r\n<span class=\"lb\" id=\"p0235a25\"></span>能生如來。</p><p>「復次，善現！甚深般若波羅蜜多，能\r\n<span class=\"lb\" id=\"p0235a26\"></span>示如來、應、正等覺世間無我相，名如來母，能\r\n<span class=\"lb\" id=\"p0235a27\"></span>示如來世間實相。」</p><p>時，具壽善現白佛言：「世尊！\r\n<span class=\"lb\" id=\"p0235a28\"></span>云何如是甚深般若波羅蜜多，能示如來、應、\r\n<span class=\"lb\" id=\"p0235a29\"></span>正等覺世間無我相？」</p><p>佛言：「善現！甚深般若\r\n\r\n<span class=\"lb\" id=\"p0235b01\"></span>波羅蜜多，能示如來、應、正等覺色世間無我\r\n<span class=\"lb\" id=\"p0235b02\"></span>相，受、想、行、識世間無我相，如是乃至一切智\r\n<span class=\"lb\" id=\"p0235b03\"></span>世間無我相，道相智、一切相智世間無我相。\r\n<span class=\"lb\" id=\"p0235b04\"></span>善現！由如是義，甚深般若波羅蜜多，能示\r\n<span class=\"lb\" id=\"p0235b05\"></span>如來、應、正等覺世間實相，名如來母能生如\r\n<span class=\"lb\" id=\"p0235b06\"></span>來。</p><p>「復次，善現！甚深般若波羅蜜多，能示如\r\n<span class=\"lb\" id=\"p0235b07\"></span>來、應、正等覺世間相者，謂令不起此世間想，\r\n<span class=\"lb\" id=\"p0235b08\"></span>亦令不起他世間想。所以者何？以一切法皆\r\n<span class=\"lb\" id=\"p0235b09\"></span>無所有實不可得，無可依彼起此世間、他世\r\n<span class=\"lb\" id=\"p0235b10\"></span>間想。」</p>\r\n<span class=\"lb\" id=\"p0235b11\"></span><p>爾時，具壽善現白佛言：「世尊！甚深般若波羅\r\n<span class=\"lb\" id=\"p0235b12\"></span>蜜多，為大事故出現世間，為不可思議事故\r\n<span class=\"lb\" id=\"p0235b13\"></span>出現世間，為不可稱量事故出現世間，為無\r\n<span class=\"lb\" id=\"p0235b14\"></span>數量事故出現世間，為無等等事故出現世\r\n<span class=\"lb\" id=\"p0235b15\"></span>間。」</p><p>佛言：「善現！如是！如是！如汝所說。甚深\r\n<span class=\"lb\" id=\"p0235b16\"></span>般若波羅蜜多，為大事故出現世間，為不可\r\n<span class=\"lb\" id=\"p0235b17\"></span>思議事故出現世間，為不可稱量事故出現\r\n<span class=\"lb\" id=\"p0235b18\"></span>世間，為無數量事故出現世間，為無等等事\r\n<span class=\"lb\" id=\"p0235b19\"></span>故出現世間。</p><p>「善現！云何如是甚深般若波羅\r\n<span class=\"lb\" id=\"p0235b20\"></span>蜜多，為大事故出現世間？善現！一切如來、\r\n<span class=\"lb\" id=\"p0235b21\"></span>應、正等覺，皆以救拔一切有情無時暫捨而\r\n<span class=\"lb\" id=\"p0235b22\"></span>為大事，甚深般若波羅蜜多，為此大事故出\r\n<span class=\"lb\" id=\"p0235b23\"></span>現世間。</p><p>「善現！云何如是甚深般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0235b24\"></span>為不可思議事故出現世間？善現！一切如來、\r\n<span class=\"lb\" id=\"p0235b25\"></span>應、正等覺所有正等覺性、如來性、自然覺性、\r\n<span class=\"lb\" id=\"p0235b26\"></span>一切智性，皆不可思議，甚深般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0235b27\"></span>為此不可思議事故出現世間。</p><p>「善現！云何如\r\n<span class=\"lb\" id=\"p0235b28\"></span>是甚深般若波羅蜜多，為不可稱量事故出\r\n<span class=\"lb\" id=\"p0235b29\"></span>現世間？善現！一切如來、應、正等覺所有正等\r\n\r\n<span class=\"lb\" id=\"p0235c01\"></span>覺性、如來性、自然覺性、一切智性，定無有\r\n<span class=\"lb\" id=\"p0235c02\"></span>情有情數攝三界、五趣、四生攝者可能稱量，\r\n<span class=\"lb\" id=\"p0235c03\"></span>甚深般若波羅蜜多，為此不可稱量事故出\r\n<span class=\"lb\" id=\"p0235c04\"></span>現世間。</p><p>「善現！云何如是甚深般若波羅蜜多，\r\n<span class=\"lb\" id=\"p0235c05\"></span>為無數量事故出現世間？善現！一切如來、應、\r\n<span class=\"lb\" id=\"p0235c06\"></span>正等覺所有正等覺性、如來性、自然覺性、一\r\n<span class=\"lb\" id=\"p0235c07\"></span>切智性，定無有情有情數攝三界、五趣、四生\r\n<span class=\"lb\" id=\"p0235c08\"></span>攝者知其數量，甚深般若波羅蜜多，為此\r\n<span class=\"lb\" id=\"p0235c09\"></span>無數量事故出現世間。</p><p>「善現！云何如是甚深\r\n<span class=\"lb\" id=\"p0235c10\"></span>般若波羅蜜多，為無等等事故出現世間？善\r\n<span class=\"lb\" id=\"p0235c11\"></span>現！一切如來、應、正等覺，所有正等覺性、如來\r\n<span class=\"lb\" id=\"p0235c12\"></span>性、自然覺性、一切智性，一切世間有情及\r\n<span class=\"lb\" id=\"p0235c13\"></span>法，尚無等者，況有能過！甚深般若波羅蜜\r\n<span class=\"lb\" id=\"p0235c14\"></span>多，為此無等等事故出現世間。」</p><p>時，具壽善現\r\n<span class=\"lb\" id=\"p0235c15\"></span>復白佛言：「世尊！為但如來、應、正等覺所有正\r\n<span class=\"lb\" id=\"p0235c16\"></span>等覺性、如來性、自然覺性、一切智性不可\r\n<span class=\"lb\" id=\"p0235c17\"></span>思議、不可稱量、無數量、無等等，為更有餘法\r\n<span class=\"lb\" id=\"p0235c18\"></span>耶？」</p><p>佛言：「善現！非但如來、應、正等覺所有正\r\n<span class=\"lb\" id=\"p0235c19\"></span>等覺性、如來性、自然覺性、一切智性不可\r\n<span class=\"lb\" id=\"p0235c20\"></span>思議、不可稱量、無數量、無等等，亦有餘法不\r\n<span class=\"lb\" id=\"p0235c21\"></span>可思議、不可稱量、無數量、無等等。善現！謂色\r\n<span class=\"lb\" id=\"p0235c22\"></span>亦不可思議、不可稱量、無數量、無等等，受、想、\r\n<span class=\"lb\" id=\"p0235c23\"></span>行、識亦不可思議、不可稱量、無數量、無等等。\r\n<span class=\"lb\" id=\"p0235c24\"></span>如是乃至一切智亦不可思議、不可稱量、無數\r\n<span class=\"lb\" id=\"p0235c25\"></span>量、無等等，道相智、一切相智亦不可思議、不\r\n<span class=\"lb\" id=\"p0235c26\"></span>可稱量、無數量、無等等。善現！一切法亦不可\r\n<span class=\"lb\" id=\"p0235c27\"></span>思議、不可稱量、無數量、無等等。善現！於一切\r\n<span class=\"lb\" id=\"p0235c28\"></span>法真法性中，心及心所皆不可得。</p><p>「復次，善現！\r\n<span class=\"lb\" id=\"p0235c29\"></span>色不可施設不可思議、不可稱量、無數量、無等\r\n\r\n<span class=\"lb\" id=\"p0236a01\"></span>等性，受、想、行、識亦不可施設不可思議、不可\r\n<span class=\"lb\" id=\"p0236a02\"></span>稱量、無數量、無等等性，如是乃至一切智不\r\n<span class=\"lb\" id=\"p0236a03\"></span>可施設不可思議、不可稱量、無數量、無等等\r\n<span class=\"lb\" id=\"p0236a04\"></span>性，道相智、一切相智亦不可施設不可思議、\r\n<span class=\"lb\" id=\"p0236a05\"></span>不可稱量、無數量、無等等性。」</p>\r\n<span class=\"lb\" id=\"p0236a06\"></span><p>爾時，具壽善現白佛言：「世尊！何因緣故，色\r\n<span class=\"lb\" id=\"p0236a07\"></span>不可施設不可思議、不可稱量、無數量、無等等\r\n<span class=\"lb\" id=\"p0236a08\"></span>性？受、想、行、識亦不可施設不可思議、不可稱\r\n<span class=\"lb\" id=\"p0236a09\"></span>量、無數量、無等等性？如是乃至一切智不可\r\n<span class=\"lb\" id=\"p0236a10\"></span>施設不可思議、不可稱量、無數量、無等等性，\r\n<span class=\"lb\" id=\"p0236a11\"></span>道相智、一切相智亦不可施設不可思議、不可\r\n<span class=\"lb\" id=\"p0236a12\"></span>稱量、無數量、無等等性？」</p><p>佛言：「善現！色不可\r\n<span class=\"lb\" id=\"p0236a13\"></span>施設思議、稱量、數量、平等不平等性故，受、想、\r\n<span class=\"lb\" id=\"p0236a14\"></span>行、識亦不可施設思議、稱量、數量、平等不平\r\n<span class=\"lb\" id=\"p0236a15\"></span>等性故，如是乃至一切智不可施設思議、稱\r\n<span class=\"lb\" id=\"p0236a16\"></span>量、數量、平等不平等性故，道相智、一切相智\r\n<span class=\"lb\" id=\"p0236a17\"></span>亦不可施設思議、稱量、數量、平等不平等性\r\n<span class=\"lb\" id=\"p0236a18\"></span>故。」</p><p>時，具壽善現白佛言：「世尊！何因緣故，色\r\n<span class=\"lb\" id=\"p0236a19\"></span>不可施設思議、稱量、數量、平等不平等性，受、\r\n<span class=\"lb\" id=\"p0236a20\"></span>想、行、識亦不可施設思議、稱量、數量、平等不\r\n<span class=\"lb\" id=\"p0236a21\"></span>平等性，如是乃至一切智不可施設思議、稱\r\n<span class=\"lb\" id=\"p0236a22\"></span>量、數量、平等不平等性，道相智、一切相智亦\r\n<span class=\"lb\" id=\"p0236a23\"></span>不可施設思議、稱量、數量、平等不平等性？」</p><p>佛\r\n<span class=\"lb\" id=\"p0236a24\"></span>言：「善現！色自性不可思議、不可稱量、無數量、\r\n<span class=\"lb\" id=\"p0236a25\"></span>無等等、無自性故，色不可施設思議、稱量、數\r\n<span class=\"lb\" id=\"p0236a26\"></span>量、平等不平等性；受、想、行、識自性亦不可思\r\n<span class=\"lb\" id=\"p0236a27\"></span>議、不可稱量、無數量、無等等、無自性故，受、想、\r\n<span class=\"lb\" id=\"p0236a28\"></span>行、識亦不可施設思議、稱量、數量、平等不平\r\n<span class=\"lb\" id=\"p0236a29\"></span>等性。如是乃至一切智自性不可思議、不可\r\n\r\n<span class=\"lb\" id=\"p0236b01\"></span>稱量、無數量、無等等、無自性故，一切智不可\r\n<span class=\"lb\" id=\"p0236b02\"></span>施設思議、稱量、數量、平等不平等性；道相智、\r\n<span class=\"lb\" id=\"p0236b03\"></span>一切相智自性亦不可思議、不可稱量、無數量、\r\n<span class=\"lb\" id=\"p0236b04\"></span>無等等、無自性故，道相智、一切相智亦不可\r\n<span class=\"lb\" id=\"p0236b05\"></span>施設思議、稱量、數量、平等不平等性。</p><p>「復次，\r\n<span class=\"lb\" id=\"p0236b06\"></span>善現！色不可得故不可思議、不可稱量、無數\r\n<span class=\"lb\" id=\"p0236b07\"></span>量、無等等，受、想、行、識亦不可得故不可思議、\r\n<span class=\"lb\" id=\"p0236b08\"></span>不可稱量、無數量、無等等，如是乃至一切智\r\n<span class=\"lb\" id=\"p0236b09\"></span>不可得故不可思議、不可稱量、無數量、無等\r\n<span class=\"lb\" id=\"p0236b10\"></span>等，道相智、一切相智亦不可得故不可思議、\r\n<span class=\"lb\" id=\"p0236b11\"></span>不可稱量、無數量、無等等。」</p><p>時，具壽善現白佛\r\n<span class=\"lb\" id=\"p0236b12\"></span>言：「世尊！以何因緣色不可得故不可思議、\r\n<span class=\"lb\" id=\"p0236b13\"></span>不可稱量、無數量、無等等，受、想、行、識亦不可\r\n<span class=\"lb\" id=\"p0236b14\"></span>得故不可思議、不可稱量、無數量、無等等，如\r\n<span class=\"lb\" id=\"p0236b15\"></span>是乃至一切智不可得故不可思議、不可稱量、\r\n<span class=\"lb\" id=\"p0236b16\"></span>無數量、無等等，道相智、一切相智亦不可得\r\n<span class=\"lb\" id=\"p0236b17\"></span>故不可思議、不可稱量、無數量、無等等？」</p><p>佛言：\r\n<span class=\"lb\" id=\"p0236b18\"></span>「善現！色無限量故不可得，不可得故不可思\r\n<span class=\"lb\" id=\"p0236b19\"></span>議、不可稱量、無數量、無等等；受、想、行、識亦無\r\n<span class=\"lb\" id=\"p0236b20\"></span>限量故不可得，不可得故不可思議、不可稱\r\n<span class=\"lb\" id=\"p0236b21\"></span>量、無數量、無等等。如是乃至一切智無限量\r\n<span class=\"lb\" id=\"p0236b22\"></span>故不可得，不可得故不可思議、不可稱量、無\r\n<span class=\"lb\" id=\"p0236b23\"></span>數量、無等等；道相智、一切相智亦無限量故\r\n<span class=\"lb\" id=\"p0236b24\"></span>不可得，不可得故不可思議、不可稱量、無數\r\n<span class=\"lb\" id=\"p0236b25\"></span>量、無等等。」</p><p>時，具壽善現白佛言：「世尊！復何\r\n<span class=\"lb\" id=\"p0236b26\"></span>因緣色無限量故不可得，受、想、行、識亦無限\r\n<span class=\"lb\" id=\"p0236b27\"></span>量故不可得，如是乃至一切智無限量故不\r\n<span class=\"lb\" id=\"p0236b28\"></span>可得，道相智、一切相智亦無限量故不可得？」</p>\r\n<span class=\"lb\" id=\"p0236b29\"></span><p>佛言：「善現！色相不可思議、不可稱量、無數量、\r\n\r\n<span class=\"lb\" id=\"p0236c01\"></span>無等等故無限量，受、想、行、識相亦不可思議、\r\n<span class=\"lb\" id=\"p0236c02\"></span>不可稱量、無數量、無等等故無限量，如是乃\r\n<span class=\"lb\" id=\"p0236c03\"></span>至一切智相不可思議、不可稱量、無數量、無等\r\n<span class=\"lb\" id=\"p0236c04\"></span>等故無限量，道相智、一切相智相亦不可思\r\n<span class=\"lb\" id=\"p0236c05\"></span>議、不可稱量、無數量、無等等故無限量。</p><p>「復次，\r\n<span class=\"lb\" id=\"p0236c06\"></span>善現！於意云何？色不可思議、不可稱量、無數\r\n<span class=\"lb\" id=\"p0236c07\"></span>量、無等等中，色可得不？受、想、行、識不可思議、\r\n<span class=\"lb\" id=\"p0236c08\"></span>不可稱量、無數量、無等等中，受、想、行、識可得\r\n<span class=\"lb\" id=\"p0236c09\"></span>不？如是乃至一切智不可思議、不可稱量、無\r\n<span class=\"lb\" id=\"p0236c10\"></span>數量、無等等中，一切智可得不？道相智、一切\r\n<span class=\"lb\" id=\"p0236c11\"></span>相智不可思議、不可稱量、無數量、無等等中，道\r\n<span class=\"lb\" id=\"p0236c12\"></span>相智、一切相智可得不？」</p><p>善現對曰：「不也！世尊！\r\n<span class=\"lb\" id=\"p0236c13\"></span>不也！善逝！」</p><p>佛言：「善現！如是！如是！由此因緣，\r\n<span class=\"lb\" id=\"p0236c14\"></span>一切法皆不可思議、不可稱量、無數量、無等等。\r\n<span class=\"lb\" id=\"p0236c15\"></span>善現！以一切法皆不可思議、不可稱量、無數\r\n<span class=\"lb\" id=\"p0236c16\"></span>量、無等等故，一切如來、應、正等覺所有正等\r\n<span class=\"lb\" id=\"p0236c17\"></span>覺法、如來法、自然覺法、一切智法，亦不可思\r\n<span class=\"lb\" id=\"p0236c18\"></span>議、不可稱量、無數量、無等等。善現！一切如來、\r\n<span class=\"lb\" id=\"p0236c19\"></span>應、正等覺所有正等覺法、如來法、自然覺法、\r\n<span class=\"lb\" id=\"p0236c20\"></span>一切智法皆不可思議，思議滅故；不可稱\r\n<span class=\"lb\" id=\"p0236c21\"></span>量，稱量滅故；無數量，數量滅故；無等等，等\r\n<span class=\"lb\" id=\"p0236c22\"></span>等滅故。善現！由此因緣，一切法亦不可思\r\n<span class=\"lb\" id=\"p0236c23\"></span>議、不可稱量、無數量、無等等。</p><p>「善現！一切如來、\r\n<span class=\"lb\" id=\"p0236c24\"></span>應、正等覺所有正等覺法、如來法、自然覺\r\n<span class=\"lb\" id=\"p0236c25\"></span>法、一切智法皆不可思議，過思議故；不可\r\n<span class=\"lb\" id=\"p0236c26\"></span>稱量，過稱量故；無數量，過數量故；無等等，\r\n<span class=\"lb\" id=\"p0236c27\"></span>過等等故。善現！由此因緣，一切法亦不可\r\n<span class=\"lb\" id=\"p0236c28\"></span>思議、不可稱量、無數量、無等等。</p><p>「善現！不可思\r\n<span class=\"lb\" id=\"p0236c29\"></span>議者但有不可思議增語，不可稱量者但\r\n\r\n<span class=\"lb\" id=\"p0237a01\"></span>有不可稱量增語，無數量者但有無數量增\r\n<span class=\"lb\" id=\"p0237a02\"></span>語，無等等者但有無等等增語。善現！由此\r\n<span class=\"lb\" id=\"p0237a03\"></span>因緣，一切如來、應、正等覺所有正等覺法、如\r\n<span class=\"lb\" id=\"p0237a04\"></span>來法、自然覺法、一切智法，皆不可思議、不\r\n<span class=\"lb\" id=\"p0237a05\"></span>可稱量、無數量、無等等。</p><p>「善現！不可思議者，如\r\n<span class=\"lb\" id=\"p0237a06\"></span>虛空不可思議故；不可稱量者，如虛空不可\r\n<span class=\"lb\" id=\"p0237a07\"></span>稱量故；無數量者，如虛空無數量故；無等\r\n<span class=\"lb\" id=\"p0237a08\"></span>等者，如虛空無等等故。善現！由此因緣，一\r\n<span class=\"lb\" id=\"p0237a09\"></span>切如來、應、正等覺所有正等覺法、如來法、自\r\n<span class=\"lb\" id=\"p0237a10\"></span>然覺法、一切智法，皆不可思議、不可稱量、無\r\n<span class=\"lb\" id=\"p0237a11\"></span>數量、無等等。</p><p>「善現！一切如來、應、正等覺所有\r\n<span class=\"lb\" id=\"p0237a12\"></span>正等覺法、如來法、自然覺法、一切智法，聲\r\n<span class=\"lb\" id=\"p0237a13\"></span>聞、獨覺、世間天、人、阿素洛等，皆悉不能思\r\n<span class=\"lb\" id=\"p0237a14\"></span>議、稱量、數量、等等。善現！由此因緣，一切如\r\n<span class=\"lb\" id=\"p0237a15\"></span>來、應、正等覺所有正等覺法、如來法、自然覺\r\n<span class=\"lb\" id=\"p0237a16\"></span>法、一切智法，皆不可思議、不可稱量、無數量、\r\n<span class=\"lb\" id=\"p0237a17\"></span>無等等。」</p><p>佛說如是不可思議、不可稱量、無數\r\n<span class=\"lb\" id=\"p0237a18\"></span>量、無等等品時，眾中有五百苾芻，不受諸漏\r\n<span class=\"lb\" id=\"p0237a19\"></span>心得解脫。復有二百苾芻尼，皆不受諸漏心\r\n<span class=\"lb\" id=\"p0237a20\"></span>得解脫。復有六百鄔波索迦於諸法中，遠塵\r\n<span class=\"lb\" id=\"p0237a21\"></span>離垢生淨法眼。復有三百鄔波斯迦亦於諸\r\n<span class=\"lb\" id=\"p0237a22\"></span>法中，遠塵離垢生淨法眼。復有二千菩薩摩\r\n<span class=\"lb\" id=\"p0237a23\"></span>訶薩得無生法忍，於賢劫中當受佛記。</p></cb:div>\r\n<span class=\"lb\" id=\"p0237a24\"></span><cb:juan n=\"443\" fun=\"close\"><cb:jhead><title>大般若波羅蜜多經</title>卷第四百四十三</cb:jhead></cb:juan>\r\n</cb:div></body><div id=\"footnotes\"><div class=\"note-text\" id=\"note_0231001\">擾＝憂【明】</div><div class=\"note-text\" id=\"note_0231001\">擾【大】，憂【明】</div><div class=\"note-text\" id=\"note_0232001\">位＝住【明】</div><div class=\"note-text\" id=\"note_0232001\">位【大】，住【明】</div><div class=\"note-text\" id=\"note_0237001\">緣＝獨【三】</div><div class=\"note-text\" id=\"note_0237001\">獨【CB】【宋】【元】【明】，緣【大】</div><div class=\"note-text\" id=\"note_0237002\">梵 ityacintyatādiviśeṣeṇaduḥkhacatvāraḥ kṣaṇāḥ.</div></div>"
+    }
+  ],
+  "toc": {
+    "mulu": [
+      {
+        "title": "1 會",
+        "lb": "p0001a03",
+        "juan": 1,
+        "type": "品",
+        "children": [
+          {
+            "title": "初會序",
+            "lb": "p0001a03",
+            "juan": 1,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "2 會",
+        "lb": "p0001a02",
+        "juan": 401,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0001a02",
+            "juan": 401,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0001b05",
+            "juan": 401,
+            "type": "品"
+          },
+          {
+            "title": "2 歡喜品",
+            "lb": "p0007a21",
+            "juan": 402,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "3 會",
+        "lb": "p0427a02",
+        "juan": 479,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0427a02",
+            "juan": 479,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0427b06",
+            "juan": 479,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "4 會",
+        "lb": "p0763a02",
+        "juan": 538,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0763a02",
+            "juan": 538,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "5 會",
+        "lb": "p0865b02",
+        "juan": 556,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0865b02",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "1 善現品",
+            "lb": "p0865c06",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "2 天帝品",
+            "lb": "p0870a28",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "3 窣堵波品",
+            "lb": "p0872a21",
+            "juan": 557,
+            "type": "品"
+          },
+          {
+            "title": "4 神咒品",
+            "lb": "p0874c19",
+            "juan": 557,
+            "type": "品"
+          },
+          {
+            "title": "5 設利羅品",
+            "lb": "p0877c08",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "6 經典品",
+            "lb": "p0879a08",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "7 迴向品",
+            "lb": "p0880b22",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "8 地獄品",
+            "lb": "p0883b10",
+            "juan": 559,
+            "type": "品"
+          },
+          {
+            "title": "9 清淨品",
+            "lb": "p0885b14",
+            "juan": 559,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "6 會",
+        "lb": "p0921a01",
+        "juan": 566,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0921a01",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0921a25",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "2 通達品",
+            "lb": "p0922b05",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "3 顯相品",
+            "lb": "p0926a06",
+            "juan": 567,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "7 會",
+        "lb": "p0963c23",
+        "juan": 574,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0963c24",
+            "juan": 574,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p0964a21",
+            "juan": 574,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0969b02",
+            "juan": 575,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "8 會",
+        "lb": "p0974b05",
+        "juan": 576,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0974b05",
+            "juan": 576,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "9 會",
+        "lb": "p0979c02",
+        "juan": 577,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0979c02",
+            "juan": 577,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "10 會",
+        "lb": "p0986a02",
+        "juan": 578,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0986a02",
+            "juan": 578,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "11 會",
+        "lb": "p0991b12",
+        "juan": 579,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0991b13",
+            "juan": 579,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p0991c12",
+            "juan": 579,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0997a20",
+            "juan": 580,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1003a02",
+            "juan": 581,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1008b02",
+            "juan": 582,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1014a12",
+            "juan": 583,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "12 會",
+        "lb": "p1019a19",
+        "juan": 584,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1019a20",
+            "juan": 584,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1019b18",
+            "juan": 584,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1024b15",
+            "juan": 585,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1029b18",
+            "juan": 586,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1034a21",
+            "juan": 587,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1039b02",
+            "juan": 588,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "13 會",
+        "lb": "p1044a13",
+        "juan": 589,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1044a14",
+            "juan": 589,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "14 會",
+        "lb": "p1049c20",
+        "juan": 590,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1049c21",
+            "juan": 590,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "15 會",
+        "lb": "p1055b02",
+        "juan": 591,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1055b03",
+            "juan": 591,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1055c02",
+            "juan": 591,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1060b16",
+            "juan": 592,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "16 會",
+        "lb": "p1065b16",
+        "juan": 593,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1065b17",
+            "juan": 593,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1065c21",
+            "juan": 593,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1071a23",
+            "juan": 594,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1076c18",
+            "juan": 595,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1082b17",
+            "juan": 596,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1088b02",
+            "juan": 597,
+            "type": "品"
+          },
+          {
+            "title": "6",
+            "lb": "p1093c23",
+            "juan": 598,
+            "type": "品"
+          },
+          {
+            "title": "7",
+            "lb": "p1099c02",
+            "juan": 599,
+            "type": "品"
+          },
+          {
+            "title": "8",
+            "lb": "p1105c03",
+            "juan": 600,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "般若佛姆心咒",
+        "lb": "p1110a25",
+        "juan": 600,
+        "type": "品"
+      },
+      {
+        "title": "般若佛姆親心咒",
+        "lb": "p1110b01",
+        "juan": 600,
+        "type": "品"
+      }
+    ]
+  },
+  "version": "CBReader 2X v0.9.9 2026-01-21"
+}

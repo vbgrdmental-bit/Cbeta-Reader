@@ -4,6 +4,18 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 ---
 
+## 0. Core Doctrine: Zero Text Tampering Policy (絕不篡改、精簡或摘要經文原則)
+
+> [!IMPORTANT]
+> **最高核心原則：絕不篡改、精簡、摘要或產生任何假的經文內容！**
+> 1. **CBETA 正統經典完整性**：本 App 以「CBETA」為名，核心宗旨為提供讀者 100% 忠實、原汁原味、完全無縮減、無摘要、無篡改的 CBETA 大藏經原文。
+> 2. **嚴禁任何精簡/摘要/假文字**：
+>    - **絕對禁止** 產生任何「模擬段落」、「經文預設段落」、「精簡示範版」或「摘要版」文字。
+>    - **寧可不提供內容**（跳出連線超時提示並引導讀者稍後重試），也**絕對不可**提供任何經簡化、摘錄、不完整或經修改的偽段落。
+> 3. **離線套件標準**：所有置於離線快取之經文套件，必須是 100% 來自 CBETA 官方原版且經 Parser 完全解析校對之真跡正文（包含所有卷數、品名、序文與完整段落）。
+
+---
+
 ## 1. Git Branching & Local Testing Workflow
 
 - **Rules**:
@@ -17,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v2.3.0` (App: v2.0.0 / Builder: v2.3.0)
+- **Current Version**: `v4.0.0` (App: v4.0.0 / Builder: v2.4.0)
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
 - **Independent Versioning Rules (獨立版號原則)**：
@@ -31,10 +43,41 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
   - 向 CBETA 請求新經文時一律帶有 `cache: 'reload'` 與時間戳記，確保必定取得 CBETA 最新校勘版本。
 - **對外 App 說明對話框原則 (SettingsView.tsx)**：
   - 對外 UI 的版本更新紀錄一律為**精簡摘要**，每次改版**不超過 3 項**，每項**不超過 50 字**。
+  - 說明對話框（點選「？」）採用 **獨立分區（上方 App / 下方 Builder）** 呈現，最新版本直接顯示，其餘歷程依「+ 更多修改歷程」(置左) 收折呈現。
   - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog
 
+- **⭐ v4.0.0** (2026-08-06) [App Major Release 重大更新]
+  - 新增文章「重點與筆記」功能，支援隨文寫下感悟心得，並可於首頁專屬資料夾集中集中複習、編輯與導航跳轉。
+  - 全面導入手勢與點擊雙向「絲滑切換」過渡動態，支援手指向左右滑動與點選平滑推進離場。
+  - 重構首頁編排版，固定為四大系統資料夾（我的資料夾、近期閱讀、我的最愛、重點與筆記），使版面更加簡潔直觀。
+- **v3.2.0** (2026-08-02) [App Only]
+  - 調整首頁版面，新增「近期閱讀」與「我的最愛」系統資料夾，優化資料夾卡片高度、圖示與標題垂直置中排版。
+  - 調整書籍與資料夾移動、刪除及命名設定，停用系統資料夾長按編輯，並支援資料夾嵌套移動。
+  - 優化閱讀設定初始預設值（預設正黑體、全塗筆刷、開啟校勘與頁碼），升級「清空經典」包含一鍵重置為初始預設值。
+- **v3.1.0** (2026-08-01) [App Only]
+  - 「畫重點設定」直覺設定。
+  - 新增「設定閱讀時間 (護眼模式)」，時間到了溫馨提醒。
+  - 主頁更名為「CBETA Reader 淨心小角落．閱讀大藏經」。
+- **⭐ v3.0.0** (2026-07-31) [App Major Release 重大更新]
+  - 提升 CBETA Reader 藏經庫搜尋功能，導入 CBETA 原有的四大檢索方式「依部類查詢」、「依冊別查詢」、「依作譯者查詢」、「依朝代查詢」等，並加入「常用經典」，更方便讀者搜尋經典。
+- **⭐ v2.4.0** (2026-07-31) [Builder Major Release 重大更新]
+  - 重構全自動背景無感修復機制 (Auto-Healing Engine)，開啟舊有經文 0 秒瞬開並背景自動向 CBETA 補齊真實完整 HTML 段落正文。
+  - 全面導入 6 線程極速防限流下載串流池 (`CONCURRENCY = 6`) 與 3 次自動重試，消除 Cloudflare 429 丟包問題。
+  - 導入部類關鍵字智慧自動關聯 (Category Keyword Auto-Mapping)，解決大範圍檢索伺服器斷線難題。
+- **v2.3.0** (2026-07-29) [App Only]
+  - 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型（例字：永）。
+  - 新增「儲存空間與全集壓縮管理」儀表板，支援高動態 Gzip 壓縮引擎，大部頭經典全集（如《大般若經》600卷）節省 80% 本地儲存容量。
+  - 新增一鍵「清理 HTTP 網路快取」與即時容量統計，輕鬆維護手機與瀏覽器快取暫存。
+- **v2.2.0** (2026-07-28) [App Only]
+  - 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型（例字：永）。
+  - 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。
+  - 修復「烏木」模式劃線高對比字體與 iOS Safari 點擊輸入框時觸發自動縮放畫面之跑版問題。
+- **v2.1.0** (2026-07-28) [App Only]
+  - 支援線上搜尋「整批勾選經典與一鍵批量下載」。
+  - 批量下載自動帶出關鍵字作為資料夾名稱，支援讀者自訂修改。
+  - 新增「放入已有資料夾」選項，輕鬆收納新下載經書至指定資料夾。
 - **v2.3.0** (2026-07-28) [Builder Only]
   - 全面過濾 CBETA 頁尾與腳註備註容器（`<div id="back">` / `<div class="footnotes">` / `[id^="cb_note"]`），防止腳註中的出版資訊與書目備註（如「參見《印順導師著作總目．序》...」）被誤判為正文段落出現在卷末。
 - **v2.2.0** (2026-07-28) [Builder Only]
@@ -113,3 +156,47 @@ When comparing imported book segments with original CBETA documents to fix error
 | Book ID | Book Title | Description of Exception | Code Location | Builder Version | Date |
 | --- | --- | --- | --- | --- | --- |
 | - | - | - | - | - | - |
+
+---
+
+## 5. Reading Timer & Sleep Lock System Specifications (設定閱讀時間與防睡眠鎖系統規範)
+
+- **核心檔案位置**：
+  - 管理器邏輯：[src/utils/readingTimer.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/utils/readingTimer.ts)
+  - UI 選項按鈕：[src/reader/components/SettingsView.tsx](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/reader/components/SettingsView.tsx)
+  - 閱讀頁底部控制列顯示：[src/reader/components/ReaderView.tsx](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/reader/components/ReaderView.tsx)
+  - 全域提醒彈窗與純黑屏休眠：[src/App.tsx](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/App.tsx)
+
+- **功能架構與核心規則**：
+  1. **防睡眠鎖 (Screen Wake Lock API)**：
+     - 當點擊 `15分 / 30分 / 45分 / 60分` 啟動計時器時，系統自動請求 `navigator.wakeLock.request('screen')`，閱讀期間保持螢幕恆亮不自動熄屏。
+  2. **全域與跨頁連貫性**：
+     - 計時器為全域單例 (`readingTimer`)，狀態同步儲存至 `localStorage`，切換書籍、搜尋或重新整理皆保持連貫倒數。
+     - 閱讀器下方工具列正中間即時顯示分秒倒數（例：`⏱ 14:59`），點擊可開啟時間設定。
+  3. **第一對話框（T-1 分鐘 / 60 秒溫馨提醒）**：
+     - 剩餘 60 秒時跳出對話框：*「您的閱讀時間即將到達，要適當休息一下，身體動一動，眼睛眨一眨…」*。
+     - **若按下「時間到就休息」**：標記 `restOnTimeChoice = true` 並關閉第一對話框。當 `00:00` 到達時，**直接進入全黑屏休眠/釋放 WakeLock，絕不跳出第二對話框打擾！**
+     - **若按下「繼續閱讀 +X分」**：重置為延長後的分鐘數並重新倒數，關閉對話框，不跳出第二對話框。
+     - **若 30 秒無視無動作**：對話框在 30 秒後自動淡出隱藏 (`warningAutoDismissed = true`)，避免阻擋閱讀正文。
+  4. **第二對話框（T-0 時間到 / 黑幕休息）**：
+     - **僅在第一對話框未點擊（無視或無回應）且時間歸零時跳出**。
+     - 顯示：*「時間到了，請適當休息。您已完成預定的閱讀時間。請放鬆雙眼，活動身心，常保健康。」*
+     - 提供「關閉並休息」與「繼續閱讀 (+15分 | +30分 | +45分 | +60分)」選項。
+     - **若 30 秒無視無動作**：對話框自動隱藏，畫面上保持 OLED 全純黑屏休眠。
+     - **若出現後 1 分鐘（T+1 min）無動作**：自動呼叫 `releaseWakeLock()` 釋放防睡眠鎖，交由作業系統/手機原生省電機制關閉螢幕。
+  5. **純黑屏休眠 (OLED Blackout Overlay)**：
+     - 時間到進入黑幕休眠時，畫面呈現全純黑 (`#000000`) 樣式，點擊畫面任意處即可隨時恢復閱讀狀態。
+
+---
+
+## 6. High-Availability Scripture Source & Failover Notification Policy (經文備用源與切換通知規範)
+
+- **雙軌架構原則**：
+  1. **主線（Primary Source）**：以 CBETA 官方 API (`cbdata.dila.edu.tw`) 為第一優先經文下載來源，確保取得 100% CBETA 最新校勘版本。
+  2. **備援（Secondary Backup Source）**：以 GitHub Releases / GitHub CDN / Cloudflare R2 自建預編譯鏡像為第二備用來源。當官方 API 超時、斷線或遭遇 429 限流時，自動無感切換至備援鏡像。
+- **讀者知情與透明通知規範 (Notification Policy)**：
+  - 當觸發備援機制切換至離線備用鏡像源時，系統**必須主動向讀者顯示溫馨提示 Toast 或標籤**：
+    > *「💡 CBETA 官方伺服器連線繁忙，已自動切換至離線版本（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）。」*
+  - 確保讀者充分知情資料來源與版本狀態，兼顧高可用性下載體驗與資訊透明度。
+
+

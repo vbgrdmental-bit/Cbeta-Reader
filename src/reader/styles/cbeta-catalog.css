@@ -1,0 +1,546 @@
+/* CBETA Catalog View Styles */
+
+:root {
+  --font-rounded: 'M PLUS Rounded 1c', 'Zen Maru Gothic', 'Yusei Magic', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+}
+
+.cbeta-catalog-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--reader-bg, #fbf8f3);
+  color: var(--text-primary, #2c2016);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 頂部固定控制列 (Header Bar) - 56pxBaseHeight 完全對齊首頁 */
+.cbeta-catalog-header {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.4rem;
+  border-bottom: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  padding-top: env(safe-area-inset-top, 0px);
+  height: calc(56px + env(safe-area-inset-top, 0px));
+  min-height: calc(56px + env(safe-area-inset-top, 0px));
+  max-height: calc(56px + env(safe-area-inset-top, 0px));
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0;
+  z-index: 100;
+  background-color: var(--reader-bg, #fbf8f3) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.cbeta-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cbeta-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cbeta-header-divider {
+  width: 1px;
+  height: 18px;
+  background-color: var(--reader-border, rgba(0, 0, 0, 0.15));
+}
+
+.nav-hist-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  opacity: 0.85;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.nav-hist-btn:hover:not(:disabled) {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-hist-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* 主區域 (Main Content Area) */
+.cbeta-catalog-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 1.2rem 1.2rem 1.2rem;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 上方固定控制與搜尋面板 (固定置頂) */
+.cbeta-top-panel {
+  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.cbeta-search-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cbeta-search-input-wrapper {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* 搜尋框內文字採用圓體 (Round Font) */
+.cbeta-search-input {
+  width: 100%;
+  padding: 0.85rem 3.2rem 0.85rem 1.4rem;
+  font-size: 0.95rem;
+  border-radius: 24px;
+  border: 1.5px dashed var(--reader-border, #d2c0a8);
+  background-color: rgba(255, 255, 255, 0.45);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: var(--font-rounded);
+}
+
+.theme-ebony .cbeta-search-input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.cbeta-search-input:focus {
+  border-style: solid;
+  border-color: var(--theme-accent, #cf9f60);
+  background-color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 12px rgba(207, 159, 96, 0.15);
+}
+
+.cbeta-search-actions {
+  position: absolute;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cbeta-search-btn, .cbeta-search-clear-btn {
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.15s ease;
+}
+
+.cbeta-search-btn:hover, .cbeta-search-clear-btn:hover {
+  color: var(--text-primary);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 兩大區塊（檢索CBETA / 依類別查詢）動態開關標題：置左對齊、字體與樣式 100% 一致 */
+.cbeta-section-toggle-header {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--theme-accent, #795548);
+  font-family: var(--font-rounded);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.55rem;
+  cursor: pointer;
+  user-select: none;
+  text-align: left;
+  transition: opacity 0.15s ease;
+}
+
+.cbeta-section-toggle-header:hover {
+  opacity: 0.85;
+}
+
+/* 「CBETA」單字綠色品牌色 (與首頁 C 按鈕相同翡翠綠) */
+.cbeta-green-brand {
+  color: #059669;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+body.theme-ebony .cbeta-green-brand,
+body.theme-dark .cbeta-green-brand {
+  color: #10b981;
+}
+
+.cbeta-title-bar {
+  width: 4px;
+  height: 16px;
+  background-color: var(--theme-accent, #795548);
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* 5 個 Chrome 風精緻 Tab 頁籤 - 符號在文字上方 (垂直佈局) */
+.cbeta-tabs-grid {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  margin-bottom: -1.5px;
+  z-index: 10;
+  position: relative;
+}
+
+.cbeta-tab-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0.55rem 0.1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s ease;
+  font-family: var(--font-rounded);
+  user-select: none;
+  background: transparent;
+  border: 1.5px solid transparent;
+  border-bottom: none;
+  position: relative;
+}
+
+.cbeta-tab-block span {
+  font-size: 0.78rem;
+  white-space: nowrap;
+  letter-spacing: -0.2px;
+}
+
+/* 未選中時：兩兩之間有一個淺色的「|」豎條分隔線 */
+.cbeta-tab-block:not(.active):not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 28%;
+  height: 44%;
+  width: 1px;
+  background-color: var(--reader-border, rgba(0, 0, 0, 0.18));
+  transition: opacity 0.15s ease;
+}
+
+/* 💡 當某分頁被選中 (Active) 時，自動隱藏左、右兩邊的「|」豎條分隔線 */
+.cbeta-tab-block.active::after,
+.cbeta-tab-block.prev-active::after,
+.cbeta-tab-block:has(+ .cbeta-tab-block.active)::after {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+.theme-ebony .cbeta-tab-block:not(.active):not(:last-child)::after {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.cbeta-tab-block:hover:not(.active) {
+  color: var(--text-primary);
+  background-color: rgba(0, 0, 0, 0.04);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* 切換到這頁時 (Active Tab)：圓角分頁顯現出來，並與下方內容框 100% 貼合 */
+.cbeta-tab-block.active {
+  background-color: var(--reader-card-bg, #ffffff);
+  color: var(--theme-accent, #8c4b27);
+  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.14));
+  border-bottom: 2.5px solid var(--reader-card-bg, #ffffff);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.03);
+  font-weight: 700;
+  z-index: 12;
+}
+
+.theme-ebony .cbeta-tab-block.active {
+  background-color: rgba(30, 36, 42, 0.95);
+  border-color: rgba(255, 255, 255, 0.2);
+  border-bottom-color: rgba(30, 36, 42, 0.95);
+  color: var(--theme-accent, #cf9f60);
+}
+
+@media (max-width: 480px) {
+  .cbeta-tab-block {
+    padding: 0.6rem 0.1rem;
+    gap: 0.25rem;
+  }
+  .cbeta-tab-block span {
+    font-size: 0.76rem;
+  }
+}
+
+/* 層級內容卡片區塊 - 頂部圓角為 0，與 4 個頁籤 100% 完美貼合，無任何導角漏洞 */
+.cbeta-content-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background-color: var(--reader-card-bg, #ffffff);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  padding: 1.1rem 1.2rem;
+  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.12));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.theme-ebony .cbeta-content-pane {
+  background-color: rgba(30, 36, 42, 0.95);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 固定於內容卡片頂部的「麵包屑與批量工具列」 */
+.cbeta-pane-header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 麵包屑導航 (Breadcrumb Trail) */
+.cbeta-breadcrumb-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  font-family: var(--font-rounded);
+}
+
+.cbeta-breadcrumb-crumb {
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.cbeta-breadcrumb-crumb:hover {
+  color: var(--theme-accent, #cf9f60);
+  text-decoration: underline;
+}
+
+.cbeta-breadcrumb-crumb.current {
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: default;
+  text-decoration: none;
+}
+
+.cbeta-breadcrumb-sep {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* 💡 獨立垂直滾動區：加強右側 padding-right 避開手機滾動條遮擋邊線 */
+.cbeta-items-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.65rem;
+  min-height: 0;
+}
+
+/* 列表網格容器 */
+.cbeta-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.85rem;
+  width: 100%;
+  padding-bottom: 1rem;
+  padding-right: 0.15rem;
+}
+
+/* 資料夾卡片 (Folder Item) */
+.cbeta-folder-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-ebony .cbeta-folder-card {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.cbeta-folder-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-color: var(--theme-accent, #cf9f60);
+}
+
+.cbeta-folder-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-rounded);
+}
+
+/* 經文卡片 (Work Scripture Item) */
+.cbeta-work-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.theme-ebony .cbeta-work-card {
+  background-color: rgba(30, 36, 42, 0.9);
+}
+
+.cbeta-work-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.cbeta-work-card.selected {
+  border-color: var(--theme-accent, #cf9f60);
+  background-color: rgba(242, 163, 27, 0.04);
+}
+
+/* 經文選取核取框 - 顯眼但精緻的淺色正方形方框 */
+.batch-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.25));
+  background-color: rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.theme-ebony .batch-checkbox {
+  border-color: rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.batch-checkbox:hover {
+  border-color: var(--theme-accent, #cf9f60);
+  background-color: rgba(207, 159, 96, 0.15);
+}
+
+.batch-checkbox.checked {
+  background-color: var(--theme-accent, #8c4b27);
+  border-color: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+}
+
+.cbeta-work-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background-color: #2b5c8f;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cbeta-work-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+/* 經文卡片內容：經名與作譯者一律使用「宋/明體」傳統古典字型 */
+.cbeta-work-card,
+.cbeta-work-title,
+.cbeta-work-meta,
+.cbeta-work-badge {
+  font-family: var(--font-serif, 'Noto Serif TC', 'Songti TC', 'PMingLiU', serif) !important;
+}
+
+.cbeta-work-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cbeta-work-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 💡 CBETA 藏經庫向左平滑離場返回首頁動畫 (因首頁在 CBETA 的右邊) */
+.cbeta-catalog-container.catalog-exiting-slide {
+  transform: translateX(-100%) !important;
+  opacity: 0.2 !important;
+  transition: transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out !important;
+}

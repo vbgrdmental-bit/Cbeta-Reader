@@ -294,11 +294,12 @@ body.theme-ebony .settings-select:focus {
 }
 
 .visual-option-card {
-  flex: 1;
+  flex: 1 1 0px;
+  min-width: 0;
   border: 1px solid var(--reader-border);
   background: rgba(140, 75, 39, 0.02);
   border-radius: var(--radius-md);
-  padding: 0.8rem 0.5rem;
+  padding: 0.8rem 0.2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -347,9 +348,14 @@ body.theme-ebony .visual-option-card.active {
 }
 
 .visual-option-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-primary);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* SVG Styles */
@@ -474,12 +480,78 @@ body.theme-ebony .changelog-trigger-btn:hover {
   border-color: var(--color-gold-500);
 }
 
+/* 圓形版本列控制按鈕基礎樣式 */
+.version-circle-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.version-circle-btn:hover {
+  transform: scale(1.08);
+}
+
+.version-circle-btn:active {
+  transform: scale(0.92);
+}
+
+/* 1. 說明按鈕：圓形 / 灰色圖示 / 淺灰色背景 (放置於 Builder 版號右邊) */
+.version-help-btn {
+  background: rgba(140, 140, 140, 0.15);
+  color: var(--text-muted, #666);
+  margin-left: 0.2rem;
+}
+
+.version-help-btn:hover {
+  background: rgba(140, 140, 140, 0.28);
+  color: var(--text-primary);
+}
+
+body.theme-ebony .version-help-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #a1a1aa;
+}
+
+body.theme-ebony .version-help-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+/* 2. 重新整理按鈕：圓形 / 藍色圖示 / 淺藍色背景 (放置於最右邊) */
+.version-reload-btn {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+
+.version-reload-btn:hover {
+  background: rgba(59, 130, 246, 0.22);
+  color: #1d4ed8;
+}
+
+body.theme-ebony .version-reload-btn {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+body.theme-ebony .version-reload-btn:hover {
+  background: rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+}
+
 .changelog-version-title {
   font-family: var(--font-serif);
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.25rem;
   border-left: 2px solid var(--color-wood-700);
   padding-left: 6px;
 }
@@ -560,12 +632,75 @@ body.theme-ebony .changelog-version-title {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.35rem;
 }
 
 .changelog-list li {
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 0.78rem;
+  line-height: 1.4;
   color: var(--text-primary);
   text-align: left;
+}
+
+.changelog-history-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  color: var(--reader-text-muted, #666);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.35rem 0.75rem;
+  margin-top: 0.4rem;
+  transition: all 0.2s ease;
+}
+.changelog-history-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+}
+body.theme-ebony .changelog-history-btn {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #aaa;
+}
+body.theme-ebony .changelog-history-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+/* ==========================================================================
+   💡 手機端 (Mobile Safari / iOS) 全域彈窗與 Input 自動放大防跑版專用覆蓋
+   ========================================================================== */
+@media (max-width: 600px) {
+  /* 1. 防範 iOS Safari 點擊 Input 時字體小於 16px 觸發的自動縮放畫面 */
+  input,
+  select,
+  textarea,
+  .settings-select {
+    font-size: 16px !important;
+  }
+
+  /* 2. 手機端彈出視窗對話框 (Modal Cards) 尺寸與內邊距自動限高縮放 */
+  .changelog-dialog-card {
+    width: 92% !important;
+    max-width: 360px !important;
+    max-height: 85vh !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .changelog-dialog-header {
+    padding: 0.75rem 1rem !important;
+  }
+
+  .changelog-dialog-header h4 {
+    font-size: 0.98rem !important;
+  }
+
+  .changelog-dialog-body {
+    padding: 0.9rem 1rem !important;
+  }
 }

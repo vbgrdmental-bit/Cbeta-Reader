@@ -52,6 +52,34 @@ export class NavigationBuilder {
         }
       }
 
+      // 2.5. 高精度標題文字比對：優先在目標卷及全卷段落中搜尋與品名 (mulu.title) 相符的標題段落
+      if (!startSegmentId && juanData) {
+        const cleanTitle = title.replace(/[\s\u3000]/g, '');
+        const segByTitle = juanData.segments.find(seg => {
+          const cleanSeg = seg.content.replace(/[\s\u3000]/g, '');
+          return cleanSeg.includes(cleanTitle) || (cleanTitle.length >= 4 && cleanSeg.startsWith(cleanTitle.substring(0, 4)));
+        });
+        if (segByTitle) {
+          startSegmentId = segByTitle.id;
+        }
+      }
+
+      if (!startSegmentId) {
+        const cleanTitle = title.replace(/[\s\u3000]/g, '');
+        for (const jData of content.juans) {
+          const segByTitle = jData.segments.find(seg => {
+            const cleanSeg = seg.content.replace(/[\s\u3000]/g, '');
+            return cleanSeg.includes(cleanTitle) || (cleanTitle.length >= 4 && cleanSeg.startsWith(cleanTitle.substring(0, 4)));
+          });
+          if (segByTitle) {
+            startSegmentId = segByTitle.id;
+            targetJuan = jData.juan;
+            juanData = jData;
+            break;
+          }
+        }
+      }
+
       // 3. 嘗試在目標卷中搜尋已標記此 tocId 的段落
       if (!startSegmentId && juanData && juanData.segments.length > 0) {
         const segWithTocId = juanData.segments.find(seg => seg.tocId === tocId);

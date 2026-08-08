@@ -1,0 +1,472 @@
+{
+  "workId": "T0220",
+  "juan": 22,
+  "results": [
+    {
+      "html": "<body>\r\n<div class=\"cb-mulu\" data-level=\"1\" data-n=\"1\" data-type=\"會\">2 會</div><div class=\"cb-mulu\" data-level=\"2\" data-n=\"23\" data-type=\"品\">23 無邊際品</div><div class=\"cb-mulu\">2</div><cb:div n=\"02\" type=\"hui\"><cb:div type=\"pin\">\r\n\r\n\r\n<span class=\"lb\" id=\"p0118b01\"></span>\r\n<span class=\"lb\" id=\"p0118b02\"></span><cb:juan n=\"422\" fun=\"open\"><div class=\"cb-mulu\"></div><div class=\"cb-mulu\">3</div><cb:jhead><title>大般若波羅蜜多經</title>卷第四百二\r\n<span class=\"lb\" id=\"p0118b03\"></span>十二</cb:jhead>\r\n<span class=\"lb\" id=\"p0118b04\"></span>\r\n<span class=\"lb\" id=\"p0118b05\"></span><byline><anchor xml:id=\"fxT07p0118b01\"/>三藏法師玄奘奉　詔譯</byline>\r\n<span class=\"lb\" id=\"p0118b06\"></span><cb:jhead type=\"pin\">第二分無邊際品第二十三之三</cb:jhead></cb:juan>\r\n<span class=\"lb\" id=\"p0118b07\"></span><p>「舍利子！布施波羅蜜多，布施波羅蜜多性空\r\n<span class=\"lb\" id=\"p0118b08\"></span>故，布施波羅蜜多於布施波羅蜜多無所有\r\n<span class=\"lb\" id=\"p0118b09\"></span>不可得，布施波羅蜜多於淨戒、安忍、精進、靜\r\n<span class=\"lb\" id=\"p0118b10\"></span>慮、般若波羅蜜多無所有不可得，布施波羅\r\n<span class=\"lb\" id=\"p0118b11\"></span>蜜多中淨戒、安忍、精進、靜慮、般若波羅蜜多亦\r\n<span class=\"lb\" id=\"p0118b12\"></span>無所有不可得。乃至般若波羅蜜多，般若波\r\n<span class=\"lb\" id=\"p0118b13\"></span>羅蜜多性空故，般若波羅蜜多於般若波羅\r\n<span class=\"lb\" id=\"p0118b14\"></span>蜜多無所有不可得，般若波羅蜜多於布施、\r\n<span class=\"lb\" id=\"p0118b15\"></span>淨戒、安忍、精進、靜慮波羅蜜多無所有不可\r\n<span class=\"lb\" id=\"p0118b16\"></span>得，般若波羅蜜多中布施、淨戒、安忍、精進、靜\r\n<span class=\"lb\" id=\"p0118b17\"></span>慮波羅蜜多亦無所有不可得。</p><p>「舍利子！內空，\r\n<span class=\"lb\" id=\"p0118b18\"></span>內空性空故，內空於內空無所有不可得，內\r\n<span class=\"lb\" id=\"p0118b19\"></span>空於外空、內外空、空空、大空、勝義空、有為空、無\r\n<span class=\"lb\" id=\"p0118b20\"></span>為空、畢竟空、無際空、散無散空、本性空、自共相\r\n<span class=\"lb\" id=\"p0118b21\"></span>空、一切法空、不可得空、無性空、自性空、無性自\r\n<span class=\"lb\" id=\"p0118b22\"></span>性空無所有不可得，內空中外空乃至無性\r\n<span class=\"lb\" id=\"p0118b23\"></span>自性空亦無所有不可得。如是乃至無性自\r\n<span class=\"lb\" id=\"p0118b24\"></span>性空，無性自性空性空故，無性自性空於無\r\n<span class=\"lb\" id=\"p0118b25\"></span>性自性空無所有不可得，無性自性空於內\r\n<span class=\"lb\" id=\"p0118b26\"></span>空乃至自性空無所有不可得，無性自性空\r\n<span class=\"lb\" id=\"p0118b27\"></span>中內空乃至自性空亦無所有不可得。</p><p>「舍利\r\n<span class=\"lb\" id=\"p0118b28\"></span>子！四念住，四念住性空故，四念住於四念住\r\n<span class=\"lb\" id=\"p0118b29\"></span>無所有不可得，四念住於四正斷、四神足、五根、\r\n\r\n<span class=\"lb\" id=\"p0118c01\"></span>五力、七等覺支、八聖道支無所有不可得，四念\r\n<span class=\"lb\" id=\"p0118c02\"></span>住中四正斷乃至八聖道支亦無所有不可得。\r\n<span class=\"lb\" id=\"p0118c03\"></span>乃至八聖道支，八聖道支性空故，八聖道支\r\n<span class=\"lb\" id=\"p0118c04\"></span>於八聖道支無所有不可得，八聖道支於四\r\n<span class=\"lb\" id=\"p0118c05\"></span>念住乃至七等覺支無所有不可得，八聖道支\r\n<span class=\"lb\" id=\"p0118c06\"></span>中四念住乃至七等覺支亦無所有不可得。</p><p>「舍\r\n<span class=\"lb\" id=\"p0118c07\"></span>利子！如是乃至佛十力，佛十力性空故，佛十\r\n<span class=\"lb\" id=\"p0118c08\"></span>力於佛十力無所有不可得，佛十力於四無所\r\n<span class=\"lb\" id=\"p0118c09\"></span>畏、四無礙解、大慈、大悲、大喜、大捨、十八佛不共\r\n<span class=\"lb\" id=\"p0118c10\"></span>法無所有不可得，佛十力中四無所畏乃至\r\n<span class=\"lb\" id=\"p0118c11\"></span>十八佛不共法亦無所有不可得。如是乃至\r\n<span class=\"lb\" id=\"p0118c12\"></span>十八佛不共法，十八佛不共法性空故，十八\r\n<span class=\"lb\" id=\"p0118c13\"></span>佛不共法於十八佛不共法無所有不可得、\r\n<span class=\"lb\" id=\"p0118c14\"></span>十八佛不共法於佛十力乃至大捨無所有不\r\n<span class=\"lb\" id=\"p0118c15\"></span>可得，十八佛不共法中佛十力乃至大捨亦\r\n<span class=\"lb\" id=\"p0118c16\"></span>無所有不可得。</p><p>「舍利子！一切三摩地門，一切\r\n<span class=\"lb\" id=\"p0118c17\"></span>三摩地門性空故，一切三摩地門於一切三\r\n<span class=\"lb\" id=\"p0118c18\"></span>摩地門無所有不可得，一切三摩地門於一\r\n<span class=\"lb\" id=\"p0118c19\"></span>切陀羅尼門無所有不可得，一切三摩地門\r\n<span class=\"lb\" id=\"p0118c20\"></span>中一切陀羅尼門亦無所有不可得。一切陀\r\n<span class=\"lb\" id=\"p0118c21\"></span>羅尼門，一切陀羅尼門性空故，一切陀羅尼\r\n<span class=\"lb\" id=\"p0118c22\"></span>門於一切陀羅尼門無所有不可得，一切陀\r\n<span class=\"lb\" id=\"p0118c23\"></span>羅尼門於一切三摩地門無所有不可得，一\r\n<span class=\"lb\" id=\"p0118c24\"></span>切陀羅尼門中一切三摩地門亦無所有不可\r\n<span class=\"lb\" id=\"p0118c25\"></span>得。</p><p>「舍利子！種性法，種性法性空故，種性法\r\n<span class=\"lb\" id=\"p0118c26\"></span>於種性法無所有不可得，種性法於第八、預\r\n<span class=\"lb\" id=\"p0118c27\"></span>流、一來、不還、阿羅漢、獨覺、菩薩、如來法無所有\r\n<span class=\"lb\" id=\"p0118c28\"></span>不可得，種性法中第八乃至如來法亦無所\r\n<span class=\"lb\" id=\"p0118c29\"></span>有不可得。如是乃至如來法，如來法性空故，\r\n\r\n<span class=\"lb\" id=\"p0119a01\"></span>如來法於如來法無所有不可得，如來法於\r\n<span class=\"lb\" id=\"p0119a02\"></span>種性乃至菩薩法無所有不可得，如來法中\r\n<span class=\"lb\" id=\"p0119a03\"></span>種性乃至菩薩法亦無所有不可得。</p><p>「舍利子！\r\n<span class=\"lb\" id=\"p0119a04\"></span>淨觀地，淨觀地性空故，淨觀地於淨觀地無\r\n<span class=\"lb\" id=\"p0119a05\"></span>所有不可得，淨觀地於種性地、第八地、具見\r\n<span class=\"lb\" id=\"p0119a06\"></span>地、薄地、離欲地、已辦地、獨覺地、菩薩地、如來\r\n<span class=\"lb\" id=\"p0119a07\"></span>地無所有不可得，淨觀地中種性地乃至如\r\n<span class=\"lb\" id=\"p0119a08\"></span>來地亦無所有不可得。如是乃至如來地，如\r\n<span class=\"lb\" id=\"p0119a09\"></span>來地性空故，如來地於如來地無所有不可\r\n<span class=\"lb\" id=\"p0119a10\"></span>得，如來地於淨觀地乃至菩薩地無所有不\r\n<span class=\"lb\" id=\"p0119a11\"></span>可得，如來地中淨觀地乃至菩薩地亦無所\r\n<span class=\"lb\" id=\"p0119a12\"></span>有不可得。</p><p>「舍利子！極喜地，極喜地性空故，極\r\n<span class=\"lb\" id=\"p0119a13\"></span>喜地於極喜地無所有不可得，極喜地於離\r\n<span class=\"lb\" id=\"p0119a14\"></span>垢地、發光地、焰慧地、極難勝地、現前地、遠行地、\r\n<span class=\"lb\" id=\"p0119a15\"></span>不動地、善慧地、法雲地無所有不可得，極喜\r\n<span class=\"lb\" id=\"p0119a16\"></span>地中離垢地乃至法雲地亦無所有不可得。\r\n<span class=\"lb\" id=\"p0119a17\"></span>如是乃至法雲地，法雲地性空故，法雲地於\r\n<span class=\"lb\" id=\"p0119a18\"></span>法雲地無所有不可得，法雲地於極喜地乃\r\n<span class=\"lb\" id=\"p0119a19\"></span>至善慧地無所有不可得，法雲地中極喜地\r\n<span class=\"lb\" id=\"p0119a20\"></span>乃至善慧地亦無所有不可得。</p><p>「舍利子！一切\r\n<span class=\"lb\" id=\"p0119a21\"></span>智，一切智性空故，一切智於一切智無所有\r\n<span class=\"lb\" id=\"p0119a22\"></span>不可得，一切智於道相智、一切相智無所有\r\n<span class=\"lb\" id=\"p0119a23\"></span>不可得，一切智中道相智、一切相智亦無所\r\n<span class=\"lb\" id=\"p0119a24\"></span>有不可得。道相智，道相智性空故，道相智\r\n<span class=\"lb\" id=\"p0119a25\"></span>於道相智無所有不可得，道相智於一切智、\r\n<span class=\"lb\" id=\"p0119a26\"></span>一切相智無所有不可得，道相智中一切智、\r\n<span class=\"lb\" id=\"p0119a27\"></span>一切相智亦無所有不可得。一切相智，一切\r\n<span class=\"lb\" id=\"p0119a28\"></span>相智性空故，一切相智於一切相智無所有\r\n<span class=\"lb\" id=\"p0119a29\"></span>不可得，一切相智於一切智、道相智無所\r\n\r\n<span class=\"lb\" id=\"p0119b01\"></span>有不可得，一切相智中一切智、道相智亦無\r\n<span class=\"lb\" id=\"p0119b02\"></span>所有不可得。</p><p>「舍利子！預流，預流性空故，預\r\n<span class=\"lb\" id=\"p0119b03\"></span>流於預流無所有不可得，預流於一來、不還、\r\n<span class=\"lb\" id=\"p0119b04\"></span>阿羅漢、獨覺、菩薩、如來無所有不可得，預\r\n<span class=\"lb\" id=\"p0119b05\"></span>流中一來乃至如來亦無所有不可得。如是\r\n<span class=\"lb\" id=\"p0119b06\"></span>乃至如來，如來性空故，如來於如來無所有\r\n<span class=\"lb\" id=\"p0119b07\"></span>不可得，如來於預流乃至菩薩無所有不\r\n<span class=\"lb\" id=\"p0119b08\"></span>可得，如來中預流乃至菩薩亦無所有不\r\n<span class=\"lb\" id=\"p0119b09\"></span>可得。</p>\r\n<span class=\"lb\" id=\"p0119b10\"></span><p>「舍利子！菩薩摩訶薩，菩薩摩訶薩性空故，菩\r\n<span class=\"lb\" id=\"p0119b11\"></span>薩摩訶薩於菩薩摩訶薩無所有不可得，菩\r\n<span class=\"lb\" id=\"p0119b12\"></span>薩摩訶薩於般若波羅蜜多、教誡教授無所有\r\n<span class=\"lb\" id=\"p0119b13\"></span>不可得，菩薩摩訶薩中般若波羅蜜多、教誡\r\n<span class=\"lb\" id=\"p0119b14\"></span>教授亦無所有不可得。般若波羅蜜多，般若\r\n<span class=\"lb\" id=\"p0119b15\"></span>波羅蜜多性空故，般若波羅蜜多於般若波\r\n<span class=\"lb\" id=\"p0119b16\"></span>羅蜜多無所有不可得，般若波羅蜜多於菩\r\n<span class=\"lb\" id=\"p0119b17\"></span>薩摩訶薩、教誡教授無所有不可得，般若波\r\n<span class=\"lb\" id=\"p0119b18\"></span>羅蜜多中菩薩摩訶薩、教誡教授亦無所有不\r\n<span class=\"lb\" id=\"p0119b19\"></span>可得。教誡教授，教誡教授性空故，教誡教\r\n<span class=\"lb\" id=\"p0119b20\"></span>授於教誡教授無所有不可得，教誡教授於\r\n<span class=\"lb\" id=\"p0119b21\"></span>菩薩摩訶薩、般若波羅蜜多無所有不可得，\r\n<span class=\"lb\" id=\"p0119b22\"></span>教誡教授中菩薩摩訶薩、般若波羅蜜多亦無\r\n<span class=\"lb\" id=\"p0119b23\"></span>所有不可得。</p>\r\n<span class=\"lb\" id=\"p0119b24\"></span><p>「舍利子！我於是等一切法，以一切種、一切處、\r\n<span class=\"lb\" id=\"p0119b25\"></span>一切時求菩薩摩訶薩都無所有亦不可得。\r\n<span class=\"lb\" id=\"p0119b26\"></span>何以故？自性空故。舍利子！由此因緣，我作\r\n<span class=\"lb\" id=\"p0119b27\"></span>是說：我於是等一切法，以一切種、一切處、一\r\n<span class=\"lb\" id=\"p0119b28\"></span>切時，求諸菩薩摩訶薩都無所有竟不可得，\r\n<span class=\"lb\" id=\"p0119b29\"></span>云何令我以般若波羅蜜多教誡、教授諸菩\r\n\r\n<span class=\"lb\" id=\"p0119c01\"></span>薩摩訶薩？</p>\r\n<span class=\"lb\" id=\"p0119c02\"></span><p>「復次，舍利子！尊者所問『何緣故說：諸菩薩摩\r\n<span class=\"lb\" id=\"p0119c03\"></span>訶薩諸菩薩摩訶薩但有假名都無自性？』者，\r\n<span class=\"lb\" id=\"p0119c04\"></span>舍利子！以諸菩薩摩訶薩名唯客攝故。」</p><p>時，舍\r\n<span class=\"lb\" id=\"p0119c05\"></span>利子問善現言：「何緣故說：以諸菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0119c06\"></span>名唯客所攝？」</p><p>善現對曰：「舍利子！如色名唯客\r\n<span class=\"lb\" id=\"p0119c07\"></span>所攝，受、想、行、識名亦唯客所攝。所以者何？色\r\n<span class=\"lb\" id=\"p0119c08\"></span>非名，名非色；受、想、行、識非名，名非受、想、行、識。\r\n<span class=\"lb\" id=\"p0119c09\"></span>色等中無名，名中無色等，非合非散但假施\r\n<span class=\"lb\" id=\"p0119c10\"></span>設。何以故？以色等與名俱自性空故，自性空\r\n<span class=\"lb\" id=\"p0119c11\"></span>中，若色等、若名，俱無所有不可得故。舍利子！\r\n<span class=\"lb\" id=\"p0119c12\"></span>菩薩摩訶薩名亦復如是唯客所攝，由斯故\r\n<span class=\"lb\" id=\"p0119c13\"></span>說：諸菩薩摩訶薩但有假名都無自性。</p><p>「舍利\r\n<span class=\"lb\" id=\"p0119c14\"></span>子！如眼處名唯客所攝，耳、鼻、舌、身、意處名亦\r\n<span class=\"lb\" id=\"p0119c15\"></span>唯客所攝。所以者何？眼處非名，名非眼處；耳、\r\n<span class=\"lb\" id=\"p0119c16\"></span>鼻、舌、身、意處非名，名非耳、鼻、舌、身、意處。眼處\r\n<span class=\"lb\" id=\"p0119c17\"></span>等中無名，名中無眼處等，非合非散但假施\r\n<span class=\"lb\" id=\"p0119c18\"></span>設。何以故？以眼處等與名俱自性空故，自性\r\n<span class=\"lb\" id=\"p0119c19\"></span>空中，若眼處等、若名，俱無所有不可得故。舍\r\n<span class=\"lb\" id=\"p0119c20\"></span>利子！菩薩摩訶薩名亦復如是唯客所攝，由\r\n<span class=\"lb\" id=\"p0119c21\"></span>斯故說：諸菩薩摩訶薩但有假名都無自性。</p>\r\n<span class=\"lb\" id=\"p0119c22\"></span><p>「舍利子！如色處名唯客所攝，聲、香、味、觸、法處\r\n<span class=\"lb\" id=\"p0119c23\"></span>名亦唯客所攝。所以者何？色處非名，名非色\r\n<span class=\"lb\" id=\"p0119c24\"></span>處；聲、香、味、觸、法處非名，名非聲、香、味、觸、法處。\r\n<span class=\"lb\" id=\"p0119c25\"></span>色處等中無名，名中無色處等，非合非散但\r\n<span class=\"lb\" id=\"p0119c26\"></span>假施設。何以故？以色處等與名俱自性空故，\r\n<span class=\"lb\" id=\"p0119c27\"></span>自性空中，若色處等、若名，俱無所有不可得\r\n<span class=\"lb\" id=\"p0119c28\"></span>故。舍利子！菩薩摩訶薩名亦復如是唯客所\r\n<span class=\"lb\" id=\"p0119c29\"></span>攝，由斯故說：諸菩薩摩訶薩但有假名都無\r\n\r\n<span class=\"lb\" id=\"p0120a01\"></span>自性。</p><p>「舍利子！如眼界名唯客所攝，耳、鼻、舌、身、\r\n<span class=\"lb\" id=\"p0120a02\"></span>意界名亦唯客所攝。所以者何？眼界非名，名\r\n<span class=\"lb\" id=\"p0120a03\"></span>非眼界；耳、鼻、舌、身、意界非名，名非耳、鼻、舌、身、\r\n<span class=\"lb\" id=\"p0120a04\"></span>意界。眼界等中無名，名中無眼界等，非合\r\n<span class=\"lb\" id=\"p0120a05\"></span>非散但假施設。何以故？以眼界等與名俱自\r\n<span class=\"lb\" id=\"p0120a06\"></span>性空故，自性空中，若眼界等、若名，俱無所有\r\n<span class=\"lb\" id=\"p0120a07\"></span>不可得故。舍利子！菩薩摩訶薩名亦復如是\r\n<span class=\"lb\" id=\"p0120a08\"></span>唯客所攝，由斯故說：諸菩薩摩訶薩但有假\r\n<span class=\"lb\" id=\"p0120a09\"></span>名都無自性。</p><p>「舍利子！如色界名唯客所攝，\r\n<span class=\"lb\" id=\"p0120a10\"></span>聲、香、味、觸、法界名亦唯客所攝。所以者何？色\r\n<span class=\"lb\" id=\"p0120a11\"></span>界非名，名非色界，聲、香、味、觸、法界非名，名\r\n<span class=\"lb\" id=\"p0120a12\"></span>非聲、香、味、觸、法界。色界等中無名，名中無色\r\n<span class=\"lb\" id=\"p0120a13\"></span>界等，非合非散但假施設。何以故？以色界\r\n<span class=\"lb\" id=\"p0120a14\"></span>等與名俱自性空故，自性空中，若色界等、若\r\n<span class=\"lb\" id=\"p0120a15\"></span>名，俱無所有不可得故。舍利子！菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0120a16\"></span>名亦復如是唯客所攝，由斯故說：諸菩薩摩\r\n<span class=\"lb\" id=\"p0120a17\"></span>訶薩但有假名都無自性。</p><p>「舍利子！如眼識\r\n<span class=\"lb\" id=\"p0120a18\"></span>界名唯客所攝，耳、鼻、舌、身、意識界名亦唯客\r\n<span class=\"lb\" id=\"p0120a19\"></span>所攝。所以者何？眼識界非名，名非眼識界；耳、\r\n<span class=\"lb\" id=\"p0120a20\"></span>鼻、舌、身、意識界非名，名非耳、鼻、舌、身、意識界。\r\n<span class=\"lb\" id=\"p0120a21\"></span>眼識界等中無名，名中無眼識界等，非合非\r\n<span class=\"lb\" id=\"p0120a22\"></span>散但假施設。何以故？以眼識界等與名俱自\r\n<span class=\"lb\" id=\"p0120a23\"></span>性空故，自性空中，若眼識界等、若名，俱無所\r\n<span class=\"lb\" id=\"p0120a24\"></span>有不可得故。舍利子！菩薩摩訶薩名亦復如\r\n<span class=\"lb\" id=\"p0120a25\"></span>是唯客所攝，由斯故說：諸菩薩摩訶薩但有\r\n<span class=\"lb\" id=\"p0120a26\"></span>假名都無自性。</p><p>「舍利子！如眼觸名唯客所攝，\r\n<span class=\"lb\" id=\"p0120a27\"></span>耳、鼻、舌、身、意觸名亦唯客所攝。所以者何？眼\r\n<span class=\"lb\" id=\"p0120a28\"></span>觸非名，名非眼觸；耳、鼻、舌、身、意觸非名，名\r\n<span class=\"lb\" id=\"p0120a29\"></span>非耳、鼻、舌、身、意觸。眼觸等中無名，名中無眼\r\n\r\n<span class=\"lb\" id=\"p0120b01\"></span>觸等，非合非散但假施設。何以故？以眼觸\r\n<span class=\"lb\" id=\"p0120b02\"></span>等與名俱自性空故，自性空中，若眼觸等、若\r\n<span class=\"lb\" id=\"p0120b03\"></span>名，俱無所有不可得故。舍利子！菩薩摩訶\r\n<span class=\"lb\" id=\"p0120b04\"></span>薩名亦復如是唯客所攝，由斯故說：諸菩薩\r\n<span class=\"lb\" id=\"p0120b05\"></span>摩訶薩但有假名都無自性。</p><p>「舍利子！如眼觸\r\n<span class=\"lb\" id=\"p0120b06\"></span>為緣所生諸受名唯客所攝，耳、鼻、舌、身、意觸\r\n<span class=\"lb\" id=\"p0120b07\"></span>為緣所生諸受名亦唯客所攝。所以者何？眼\r\n<span class=\"lb\" id=\"p0120b08\"></span>觸為緣所生諸受非名，名非眼觸為緣所生\r\n<span class=\"lb\" id=\"p0120b09\"></span>諸受；耳、鼻、舌、身、意觸為緣所生諸受非名，名\r\n<span class=\"lb\" id=\"p0120b10\"></span>非耳、鼻、舌、身、意觸為緣所生諸受。眼觸為緣\r\n<span class=\"lb\" id=\"p0120b11\"></span>所生諸受等中無名，名中無眼觸為緣所生\r\n<span class=\"lb\" id=\"p0120b12\"></span>諸受等，非合非散但假施設。何以故？以眼\r\n<span class=\"lb\" id=\"p0120b13\"></span>觸為緣所生諸受等與名俱自性空故，自性\r\n<span class=\"lb\" id=\"p0120b14\"></span>空中，若眼觸為緣所生諸受等、若名，俱無所有\r\n<span class=\"lb\" id=\"p0120b15\"></span>不可得故。舍利子！菩薩摩訶薩名亦復如是\r\n<span class=\"lb\" id=\"p0120b16\"></span>唯客所攝，由斯故說：諸菩薩摩訶薩但有假\r\n<span class=\"lb\" id=\"p0120b17\"></span>名都無自性。</p><p>「舍利子！如布施波羅蜜多名唯\r\n<span class=\"lb\" id=\"p0120b18\"></span>客所攝，淨戒、安忍、精進、靜慮、般若波羅蜜多\r\n<span class=\"lb\" id=\"p0120b19\"></span>名亦唯客所攝。所以者何？布施波羅蜜多非\r\n<span class=\"lb\" id=\"p0120b20\"></span>名，名非布施波羅蜜多；淨戒、安忍、精進、靜慮、\r\n<span class=\"lb\" id=\"p0120b21\"></span>般若波羅蜜多非名，名非淨戒、安忍、精進、靜\r\n<span class=\"lb\" id=\"p0120b22\"></span>慮、般若波羅蜜多。布施波羅蜜多等中無名，\r\n<span class=\"lb\" id=\"p0120b23\"></span>名中無布施波羅蜜多等，非合非散但假施\r\n<span class=\"lb\" id=\"p0120b24\"></span>設。何以故？以布施波羅蜜多等與名俱自性\r\n<span class=\"lb\" id=\"p0120b25\"></span>空故，自性空中，若布施波羅蜜多等、若名，俱\r\n<span class=\"lb\" id=\"p0120b26\"></span>無所有不可得故。舍利子！菩薩摩訶薩名亦\r\n<span class=\"lb\" id=\"p0120b27\"></span>復如是唯客所攝，由斯故說：諸菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0120b28\"></span>但有假名都無自性。</p><p>「舍利子！如內空名唯客\r\n<span class=\"lb\" id=\"p0120b29\"></span>所攝，外空、內外空、空空、大空、勝義空、有為空、\r\n\r\n<span class=\"lb\" id=\"p0120c01\"></span>無為空、畢竟空、無際空、散無散空、本性空、自共\r\n<span class=\"lb\" id=\"p0120c02\"></span>相空、一切法空、不可得空、無性空、自性空、無性\r\n<span class=\"lb\" id=\"p0120c03\"></span>自性空名亦唯客所攝。所以者何？內空非名，\r\n<span class=\"lb\" id=\"p0120c04\"></span>名非內空；外空乃至無性自性空非名，名\r\n<span class=\"lb\" id=\"p0120c05\"></span>非外空乃至無性自性空。內空等中無名，名\r\n<span class=\"lb\" id=\"p0120c06\"></span>中無內空等，非合非散但假施設。何以故？\r\n<span class=\"lb\" id=\"p0120c07\"></span>以內空等與名俱自性空故，自性空中，若內\r\n<span class=\"lb\" id=\"p0120c08\"></span>空等、若名，俱無所有不可得故。舍利子！菩薩\r\n<span class=\"lb\" id=\"p0120c09\"></span>摩訶薩名亦復如是唯客所攝，由斯故說：諸\r\n<span class=\"lb\" id=\"p0120c10\"></span>菩薩摩訶薩但有假名都無自性。</p><p>「舍利子！如\r\n<span class=\"lb\" id=\"p0120c11\"></span>四念住名唯客所攝，四正斷、四神足、五根、五\r\n<span class=\"lb\" id=\"p0120c12\"></span>力、七等覺支、八聖道支名亦唯客所攝。所以\r\n<span class=\"lb\" id=\"p0120c13\"></span>者何？四念住非名，名非四念住；四正斷乃\r\n<span class=\"lb\" id=\"p0120c14\"></span>至八聖道支非名，名非四正斷乃至八聖道\r\n<span class=\"lb\" id=\"p0120c15\"></span>支。四念住等中無名，名中無四念住等，非合\r\n<span class=\"lb\" id=\"p0120c16\"></span>非散但假施設。何以故？以四念住等與名俱\r\n<span class=\"lb\" id=\"p0120c17\"></span>自性空故，自性空中，若四念住等、若名，俱無\r\n<span class=\"lb\" id=\"p0120c18\"></span>所有不可得故。舍利子！菩薩摩訶薩名亦復\r\n<span class=\"lb\" id=\"p0120c19\"></span>如是唯客所攝，由斯故說：諸菩薩摩訶薩但\r\n<span class=\"lb\" id=\"p0120c20\"></span>有假名都無自性。</p><p>「舍利子！如是乃至如佛十\r\n<span class=\"lb\" id=\"p0120c21\"></span>力名唯客所攝，四無所畏、四無礙解、大慈、大\r\n<span class=\"lb\" id=\"p0120c22\"></span>悲、大喜、大捨、十八佛不共法名亦唯客所攝。\r\n<span class=\"lb\" id=\"p0120c23\"></span>所以者何？佛十力非名，名非佛十力；四無\r\n<span class=\"lb\" id=\"p0120c24\"></span>所畏乃至十八佛不共法非名，名非四無所\r\n<span class=\"lb\" id=\"p0120c25\"></span>畏乃至十八佛不共法。佛十力等中無名，名\r\n<span class=\"lb\" id=\"p0120c26\"></span>中無佛十力等，非合非散但假施設。何以\r\n<span class=\"lb\" id=\"p0120c27\"></span>故？以佛十力等與名俱自性空故，自性空中，\r\n<span class=\"lb\" id=\"p0120c28\"></span>若佛十力等、若名，俱無所有不可得故。舍利\r\n<span class=\"lb\" id=\"p0120c29\"></span>子！菩薩摩訶薩名亦復如是唯客所攝，由\r\n\r\n<span class=\"lb\" id=\"p0121a01\"></span>斯故說：諸菩薩摩訶薩但有假名都無自性。</p>\r\n<span class=\"lb\" id=\"p0121a02\"></span><p>「舍利子！如一切三摩地門名唯客所攝，一切陀\r\n<span class=\"lb\" id=\"p0121a03\"></span>羅尼門名亦唯客所攝。所以者何？一切三摩\r\n<span class=\"lb\" id=\"p0121a04\"></span>地門非名，名非一切三摩地門；一切陀羅尼\r\n<span class=\"lb\" id=\"p0121a05\"></span>門非名，名非一切陀羅尼門。一切三摩地門\r\n<span class=\"lb\" id=\"p0121a06\"></span>等中無名，名中無一切三摩地門等，非合非\r\n<span class=\"lb\" id=\"p0121a07\"></span>散但假施設。何以故？以一切三摩地門等\r\n<span class=\"lb\" id=\"p0121a08\"></span>與名俱自性空故，自性空中，若一切三摩地\r\n<span class=\"lb\" id=\"p0121a09\"></span>門等、若名，俱無所有不可得故。舍利子！菩\r\n<span class=\"lb\" id=\"p0121a10\"></span>薩摩訶薩名亦復如是唯客所攝，由斯故說：\r\n<span class=\"lb\" id=\"p0121a11\"></span>諸菩薩摩訶薩但有假名都無自性。</p><p>「舍利子！\r\n<span class=\"lb\" id=\"p0121a12\"></span>乃至如一切智名唯客所攝，道相智、一切相\r\n<span class=\"lb\" id=\"p0121a13\"></span>智名亦唯客所攝。所以者何？一切智非名，\r\n<span class=\"lb\" id=\"p0121a14\"></span>名非一切智；道相智、一切相智非名，名非道\r\n<span class=\"lb\" id=\"p0121a15\"></span>相智、一切相智。一切智等中無名，名中無一\r\n<span class=\"lb\" id=\"p0121a16\"></span>切智等，非合非散但假施設。何以故？以一\r\n<span class=\"lb\" id=\"p0121a17\"></span>切智等與名俱自性空故，自性空中，若一切\r\n<span class=\"lb\" id=\"p0121a18\"></span>智等、若名，俱無所有不可得故。舍利子！菩薩\r\n<span class=\"lb\" id=\"p0121a19\"></span>摩訶薩名亦復如是唯客所攝，由斯故說：諸\r\n<span class=\"lb\" id=\"p0121a20\"></span>菩薩摩訶薩但有假名都無自性。</p>\r\n<span class=\"lb\" id=\"p0121a21\"></span><p>「復次，舍利子！尊者所問『何緣故說如說我等\r\n<span class=\"lb\" id=\"p0121a22\"></span>畢竟不生但有假名都無自性？』者，舍利子！我\r\n<span class=\"lb\" id=\"p0121a23\"></span>畢竟無所有不可得，云何有生？乃至見者亦\r\n<span class=\"lb\" id=\"p0121a24\"></span>畢竟無所有不可得，云何有生？舍利子！色\r\n<span class=\"lb\" id=\"p0121a25\"></span>畢竟無所有不可得，云何有生？受、想、行、識亦\r\n<span class=\"lb\" id=\"p0121a26\"></span>畢竟無所有不可得，云何有生？舍利子！眼\r\n<span class=\"lb\" id=\"p0121a27\"></span>處畢竟無所有不可得，云何有生？耳、鼻、舌、身、\r\n<span class=\"lb\" id=\"p0121a28\"></span>意處亦畢竟無所有不可得，云何有生？舍利\r\n<span class=\"lb\" id=\"p0121a29\"></span>子！色處畢竟無所有不可得，云何有生？聲、香、\r\n\r\n<span class=\"lb\" id=\"p0121b01\"></span>味、觸、法處亦畢竟無所有不可得，云何有生？\r\n<span class=\"lb\" id=\"p0121b02\"></span>舍利子！眼界畢竟無所有不可得，云何有生？\r\n<span class=\"lb\" id=\"p0121b03\"></span>耳、鼻、舌、身、意界亦畢竟無所有不可得，云何有\r\n<span class=\"lb\" id=\"p0121b04\"></span>生？舍利子！色界畢竟無所有不可得，云何有\r\n<span class=\"lb\" id=\"p0121b05\"></span>生？聲、香、味、觸、法界亦畢竟無所有不可得，云\r\n<span class=\"lb\" id=\"p0121b06\"></span>何有生？舍利子！眼識界畢竟無所有不可得，\r\n<span class=\"lb\" id=\"p0121b07\"></span>云何有生？耳、鼻、舌、身、意識界亦畢竟無所有\r\n<span class=\"lb\" id=\"p0121b08\"></span>不可得，云何有生？舍利子！眼觸畢竟無所有\r\n<span class=\"lb\" id=\"p0121b09\"></span>不可得，云何有生？耳、鼻、舌、身、意觸亦畢竟無\r\n<span class=\"lb\" id=\"p0121b10\"></span>所有不可得，云何有生？舍利子！眼觸為緣所\r\n<span class=\"lb\" id=\"p0121b11\"></span>生諸受畢竟無所有不可得，云何有生？耳、鼻、\r\n<span class=\"lb\" id=\"p0121b12\"></span>舌、身、意觸為緣所生諸受亦畢竟無所有不可\r\n<span class=\"lb\" id=\"p0121b13\"></span>得，云何有生？舍利子！布施波羅蜜多畢竟\r\n<span class=\"lb\" id=\"p0121b14\"></span>無所有不可得，云何有生？淨戒、安忍、精進、靜\r\n<span class=\"lb\" id=\"p0121b15\"></span>慮、般若波羅蜜多亦畢竟無所有不可得，云何\r\n<span class=\"lb\" id=\"p0121b16\"></span>有生？舍利子！內空畢竟無所有不可得，云何\r\n<span class=\"lb\" id=\"p0121b17\"></span>有生？外空乃至無性自性空亦畢竟無所有\r\n<span class=\"lb\" id=\"p0121b18\"></span>不可得，云何有生？舍利子！四念住畢竟無所\r\n<span class=\"lb\" id=\"p0121b19\"></span>有不可得，云何有生？四正斷乃至八聖道支\r\n<span class=\"lb\" id=\"p0121b20\"></span>亦畢竟無所有不可得，云何有生？舍利子！如\r\n<span class=\"lb\" id=\"p0121b21\"></span>是乃至佛十力畢竟無所有不可得，云何有\r\n<span class=\"lb\" id=\"p0121b22\"></span>生？四無所畏乃至十八佛不共法亦畢竟無\r\n<span class=\"lb\" id=\"p0121b23\"></span>所有不可得，云何有生？舍利子！一切三摩地\r\n<span class=\"lb\" id=\"p0121b24\"></span>門畢竟無所有不可得，云何有生？一切陀羅\r\n<span class=\"lb\" id=\"p0121b25\"></span>尼門亦畢竟無所有不可得，云何有生？舍利\r\n<span class=\"lb\" id=\"p0121b26\"></span>子！乃至聲聞乘畢竟無所有不可得，云何有\r\n<span class=\"lb\" id=\"p0121b27\"></span>生？獨覺乘、大乘亦畢竟無所有不可得，云何\r\n<span class=\"lb\" id=\"p0121b28\"></span>有生？舍利子！由此因緣我作是說：如說我\r\n\r\n<span class=\"lb\" id=\"p0121c01\"></span>等畢竟不生，但有假名都無自性。</p>\r\n<span class=\"lb\" id=\"p0121c02\"></span><p>「復次，舍利子！尊者所問『何緣故說諸法亦爾\r\n<span class=\"lb\" id=\"p0121c03\"></span>畢竟不生但有假名都無自性』者，舍利子！\r\n<span class=\"lb\" id=\"p0121c04\"></span>諸法都無和合自性。何以故？和合有法自性\r\n<span class=\"lb\" id=\"p0121c05\"></span>空故。」</p><p>時，舍利子問善現言：「何法都無和合自\r\n<span class=\"lb\" id=\"p0121c06\"></span>性？」</p><p>善現對曰：「舍利子！色都無和合自性，受、\r\n<span class=\"lb\" id=\"p0121c07\"></span>想、行、識亦都無和合自性；眼處都無和合自\r\n<span class=\"lb\" id=\"p0121c08\"></span>性，耳、鼻、舌、身、意處亦都無和合自性；色處都\r\n<span class=\"lb\" id=\"p0121c09\"></span>無和合自性，聲、香、味、觸、法處亦都無和合自\r\n<span class=\"lb\" id=\"p0121c10\"></span>性；眼界都無和合自性，耳、鼻、舌、身、意界亦都\r\n<span class=\"lb\" id=\"p0121c11\"></span>無和合自性；色界都無和合自性，聲、香、味、觸、\r\n<span class=\"lb\" id=\"p0121c12\"></span>法界亦都無和合自性；眼識界都無和合自\r\n<span class=\"lb\" id=\"p0121c13\"></span>性，耳、鼻、舌、身、意識界亦都無和合自性；眼觸\r\n<span class=\"lb\" id=\"p0121c14\"></span>都無和合自性，耳、鼻、舌、身、意觸亦都無和合\r\n<span class=\"lb\" id=\"p0121c15\"></span>自性；眼觸為緣所生諸受都無和合自性，\r\n<span class=\"lb\" id=\"p0121c16\"></span>耳、鼻、舌、身、意觸為緣所生諸受亦都無和合自\r\n<span class=\"lb\" id=\"p0121c17\"></span>性；布施波羅蜜多都無和合自性，淨戒、安忍、\r\n<span class=\"lb\" id=\"p0121c18\"></span>精進、靜慮、般若波羅蜜多亦都無和合自性；\r\n<span class=\"lb\" id=\"p0121c19\"></span>四念住都無和合自性，四正斷、四神足、五根、\r\n<span class=\"lb\" id=\"p0121c20\"></span>五力、七等覺支、八聖道支亦都無和合自性；\r\n<span class=\"lb\" id=\"p0121c21\"></span>乃至佛十力都無和合自性，四無所畏、四無\r\n<span class=\"lb\" id=\"p0121c22\"></span>礙解、大慈、大悲、大喜、大捨、十八佛不共法亦都\r\n<span class=\"lb\" id=\"p0121c23\"></span>無和合自性；乃至聲聞乘都無和合自性，獨\r\n<span class=\"lb\" id=\"p0121c24\"></span>覺乘、大乘亦都無和合自性。舍利子！由此因\r\n<span class=\"lb\" id=\"p0121c25\"></span>緣我作是說：諸法亦爾畢竟不生，但有假名\r\n<span class=\"lb\" id=\"p0121c26\"></span>都無自性。</p>\r\n<span class=\"lb\" id=\"p0121c27\"></span><p>「復次，舍利子！諸法非常亦無所去。」</p><p>時，舍利子\r\n<span class=\"lb\" id=\"p0121c28\"></span>問善現言：「何法非常亦無所去？」</p><p>善現對曰：\r\n<span class=\"lb\" id=\"p0121c29\"></span>「舍利子！色非常亦無所去，受、想、行、識非常亦\r\n\r\n<span class=\"lb\" id=\"p0122a01\"></span>無所去。何以故？舍利子！若法非常，自性盡故。\r\n<span class=\"lb\" id=\"p0122a02\"></span>舍利子！由斯故說若法非常亦無所去。</p><p>「舍利\r\n<span class=\"lb\" id=\"p0122a03\"></span>子！有為法非常亦無所去，無為法非常亦無\r\n<span class=\"lb\" id=\"p0122a04\"></span>所去；有漏法非常亦無所去，無漏法非常亦\r\n<span class=\"lb\" id=\"p0122a05\"></span>無所去；善法非常亦無所去，非善法非常亦\r\n<span class=\"lb\" id=\"p0122a06\"></span>無所去；有記法非常亦無所去，無記法非常\r\n<span class=\"lb\" id=\"p0122a07\"></span>亦無所去。何以故？舍利子！若法非常，自性\r\n<span class=\"lb\" id=\"p0122a08\"></span>盡故。舍利子！由斯故說：若法非常亦無所\r\n<span class=\"lb\" id=\"p0122a09\"></span>去。</p><p>「復次，舍利子！諸法非常亦不滅壞。」</p><p>時，舍\r\n<span class=\"lb\" id=\"p0122a10\"></span>利子問善現言：「何法非常亦不滅壞？」</p><p>善現\r\n<span class=\"lb\" id=\"p0122a11\"></span>對曰：「舍利子！色非常亦不滅壞，受、想、行、識\r\n<span class=\"lb\" id=\"p0122a12\"></span>非常亦不滅壞。何以故？本性爾故。</p><p>「舍利子！\r\n<span class=\"lb\" id=\"p0122a13\"></span>有為法非常亦不滅壞，無為法非常亦不滅\r\n<span class=\"lb\" id=\"p0122a14\"></span>壞；有漏法非常亦不滅壞，無漏法非常亦不\r\n<span class=\"lb\" id=\"p0122a15\"></span>滅壞；善法非常亦不滅壞，非善法非常亦不\r\n<span class=\"lb\" id=\"p0122a16\"></span>滅壞；有記法非常亦不滅壞，無記法非常亦\r\n<span class=\"lb\" id=\"p0122a17\"></span>不滅壞。何以故？本性爾故。</p><p>「舍利子！由此\r\n<span class=\"lb\" id=\"p0122a18\"></span>因緣我作是說：諸法亦爾畢竟不生，但有假\r\n<span class=\"lb\" id=\"p0122a19\"></span>名都無自性。</p>\r\n<span class=\"lb\" id=\"p0122a20\"></span><p>「復次，舍利子！尊者所問『何緣故說何等色畢\r\n<span class=\"lb\" id=\"p0122a21\"></span>竟不生？何等受、想、行、識畢竟不生？乃至何等\r\n<span class=\"lb\" id=\"p0122a22\"></span>聲聞乘畢竟不生？何等獨覺乘、大乘畢竟不\r\n<span class=\"lb\" id=\"p0122a23\"></span>生？』者，舍利子！一切色本性不生，一切受、想、\r\n<span class=\"lb\" id=\"p0122a24\"></span>行、識本性不生。何以故？舍利子！一切色乃至\r\n<span class=\"lb\" id=\"p0122a25\"></span>識非所作故，非所起故。所以者何？以一切\r\n<span class=\"lb\" id=\"p0122a26\"></span>色乃至識作者、起者不可得故。舍利子！乃\r\n<span class=\"lb\" id=\"p0122a27\"></span>至一切聲聞乘本性不生，一切獨覺乘、大乘\r\n<span class=\"lb\" id=\"p0122a28\"></span>本性不生。何以故？舍利子！一切聲聞乘、獨\r\n<span class=\"lb\" id=\"p0122a29\"></span>覺乘、大乘非所作故，非所起故。所以者何？以\r\n\r\n<span class=\"lb\" id=\"p0122b01\"></span>一切聲聞乘、獨覺乘、大乘作者、起者不可得\r\n<span class=\"lb\" id=\"p0122b02\"></span>故。舍利子！由此因緣我作是說：何等色畢\r\n<span class=\"lb\" id=\"p0122b03\"></span>竟不生，何等受、想、行、識畢竟不生？乃至何\r\n<span class=\"lb\" id=\"p0122b04\"></span>等聲聞乘畢竟不生？何等獨覺乘、大乘畢竟\r\n<span class=\"lb\" id=\"p0122b05\"></span>不生？</p>\r\n<span class=\"lb\" id=\"p0122b06\"></span><p>「復次，舍利子！尊者所問『何緣故說：若畢竟不\r\n<span class=\"lb\" id=\"p0122b07\"></span>生則不名色，亦不名受、想、行、識；乃至若畢竟\r\n<span class=\"lb\" id=\"p0122b08\"></span>不生則不名聲聞乘，亦不名獨覺乘、大乘？』者，\r\n<span class=\"lb\" id=\"p0122b09\"></span>舍利子！色本性空故，若法本性空則不可施\r\n<span class=\"lb\" id=\"p0122b10\"></span>設若生、若滅、若住、若異。由此緣故，若畢竟不\r\n<span class=\"lb\" id=\"p0122b11\"></span>生則不名色。何以故？空非色故。舍利子！受、\r\n<span class=\"lb\" id=\"p0122b12\"></span>想、行、識本性空故，若法本性空則不可施設\r\n<span class=\"lb\" id=\"p0122b13\"></span>若生、若滅、若住、若異。由此緣故，若畢竟不生\r\n<span class=\"lb\" id=\"p0122b14\"></span>則不名受、想、行、識。何以故？空非受、想、行、識故。\r\n<span class=\"lb\" id=\"p0122b15\"></span>舍利子！乃至聲聞乘本性空故，若法本性空\r\n<span class=\"lb\" id=\"p0122b16\"></span>則不可施設若生、若滅、若住、若異。由此緣故，\r\n<span class=\"lb\" id=\"p0122b17\"></span>若畢竟不生則不名聲聞乘。何以故？空非聲\r\n<span class=\"lb\" id=\"p0122b18\"></span>聞乘故。舍利子！獨覺乘、大乘本性空故，若法\r\n<span class=\"lb\" id=\"p0122b19\"></span>本性空則不可施設若生、若滅、若住、若異。由\r\n<span class=\"lb\" id=\"p0122b20\"></span>此緣故，若畢竟不生則不名獨覺乘、大乘。何\r\n<span class=\"lb\" id=\"p0122b21\"></span>以故？空非獨覺乘、大乘故。舍利子！由此因緣\r\n<span class=\"lb\" id=\"p0122b22\"></span>我作是說：若畢竟不生則不名色，亦不名受、\r\n<span class=\"lb\" id=\"p0122b23\"></span>想、行、識；乃至若畢竟不生則不名聲聞乘，亦\r\n<span class=\"lb\" id=\"p0122b24\"></span>不名獨覺乘、大乘。</p>\r\n<span class=\"lb\" id=\"p0122b25\"></span><p>「復次，舍利子！尊者所問『何緣故說：我豈能以\r\n<span class=\"lb\" id=\"p0122b26\"></span>畢竟不生般若波羅蜜多教誡教授畢竟不\r\n<span class=\"lb\" id=\"p0122b27\"></span>生諸菩薩摩訶薩？』者，舍利子！畢竟不生即是\r\n<span class=\"lb\" id=\"p0122b28\"></span>般若波羅蜜多，般若波羅蜜多即是畢竟不\r\n<span class=\"lb\" id=\"p0122b29\"></span>生。何以故？畢竟不生與般若波羅蜜多無二\r\n\r\n<span class=\"lb\" id=\"p0122c01\"></span>無二處故。舍利子！畢竟不生即是菩薩摩訶\r\n<span class=\"lb\" id=\"p0122c02\"></span>薩，菩薩摩訶薩即是畢竟不生。何以故？畢\r\n<span class=\"lb\" id=\"p0122c03\"></span>竟不生與菩薩摩訶薩亦無二無二處故。舍\r\n<span class=\"lb\" id=\"p0122c04\"></span>利子！由此因緣我作是說：我豈能以畢竟不\r\n<span class=\"lb\" id=\"p0122c05\"></span>生般若波羅蜜多，教誡教授畢竟不生諸菩\r\n<span class=\"lb\" id=\"p0122c06\"></span>薩摩訶薩？</p>\r\n<span class=\"lb\" id=\"p0122c07\"></span><p>「復次，舍利子！尊者所問『何緣故說：離畢竟不\r\n<span class=\"lb\" id=\"p0122c08\"></span>生亦無菩薩摩訶薩能行無上正等菩提？』者，\r\n<span class=\"lb\" id=\"p0122c09\"></span>舍利子！諸菩薩摩訶薩修行般若波羅蜜多\r\n<span class=\"lb\" id=\"p0122c10\"></span>時，不見離畢竟不生有般若波羅蜜多，亦不\r\n<span class=\"lb\" id=\"p0122c11\"></span>見離畢竟不生有菩薩摩訶薩。何以故？若般\r\n<span class=\"lb\" id=\"p0122c12\"></span>若波羅蜜多，若菩薩摩訶薩，與畢竟不生無\r\n<span class=\"lb\" id=\"p0122c13\"></span>二無二處故。舍利子！諸菩薩摩訶薩修行般\r\n<span class=\"lb\" id=\"p0122c14\"></span>若波羅蜜多時，不見離畢竟不生有色，亦不\r\n<span class=\"lb\" id=\"p0122c15\"></span>見離畢竟不生有受、想、行、識。何以故？若色，若\r\n<span class=\"lb\" id=\"p0122c16\"></span>受、想、行、識，與畢竟不生無二無二處故。舍利\r\n<span class=\"lb\" id=\"p0122c17\"></span>子！諸菩薩摩訶薩修行般若波羅蜜多時，不\r\n<span class=\"lb\" id=\"p0122c18\"></span>見離畢竟不生有眼處，亦不見離畢竟不生\r\n<span class=\"lb\" id=\"p0122c19\"></span>有耳、鼻、舌、身、意處。何以故？若眼處，若耳、鼻、\r\n<span class=\"lb\" id=\"p0122c20\"></span>舌、身、意處，與畢竟不生無二無二處故。舍利\r\n<span class=\"lb\" id=\"p0122c21\"></span>子！諸菩薩摩訶薩修行般若波羅蜜多時，\r\n<span class=\"lb\" id=\"p0122c22\"></span>不見離畢竟不生有色處，亦不見離畢竟不\r\n<span class=\"lb\" id=\"p0122c23\"></span>生有聲、香、味、觸、法處。何以故？若色處，若聲、\r\n<span class=\"lb\" id=\"p0122c24\"></span>香、味、觸、法處，與畢竟不生無二無二處故。舍\r\n<span class=\"lb\" id=\"p0122c25\"></span>利子！諸菩薩摩訶薩修行般若波羅蜜多時，\r\n<span class=\"lb\" id=\"p0122c26\"></span>不見離畢竟不生有眼界，亦不見離畢竟不\r\n<span class=\"lb\" id=\"p0122c27\"></span>生有耳、鼻、舌、身、意界。何以故？若眼界，若耳、鼻、\r\n<span class=\"lb\" id=\"p0122c28\"></span>舌、身、意界，與畢竟不生無二無二處故。舍利\r\n<span class=\"lb\" id=\"p0122c29\"></span>子！諸菩薩摩訶薩修行般若波羅蜜多時，不\r\n\r\n<span class=\"lb\" id=\"p0123a01\"></span>見離畢竟不生有色界，亦不見離畢竟不生\r\n<span class=\"lb\" id=\"p0123a02\"></span>有聲、香、味、觸、法界。何以故？若色界，若聲、香、味、\r\n<span class=\"lb\" id=\"p0123a03\"></span>觸、法界，與畢竟不生無二無二處故。舍利子！\r\n<span class=\"lb\" id=\"p0123a04\"></span>諸菩薩摩訶薩修行般若波羅蜜多時，不見\r\n<span class=\"lb\" id=\"p0123a05\"></span>離畢竟不生有眼識界，亦不見離畢竟不生\r\n<span class=\"lb\" id=\"p0123a06\"></span>有耳、鼻、舌、身、意識界。何以故？若眼識界，若耳、\r\n<span class=\"lb\" id=\"p0123a07\"></span>鼻、舌、身、意識界，與畢竟不生無二無二處故。\r\n<span class=\"lb\" id=\"p0123a08\"></span>舍利子！諸菩薩摩訶薩修行般若波羅蜜多\r\n<span class=\"lb\" id=\"p0123a09\"></span>時，不見離畢竟不生有眼觸，亦不見離畢竟\r\n<span class=\"lb\" id=\"p0123a10\"></span>不生有耳、鼻、舌、身、意觸。何以故？若眼觸，若耳、\r\n<span class=\"lb\" id=\"p0123a11\"></span>鼻、舌、身、意觸，與畢竟不生無二無二處故。舍\r\n<span class=\"lb\" id=\"p0123a12\"></span>利子！諸菩薩摩訶薩修行般若波羅蜜多時，\r\n<span class=\"lb\" id=\"p0123a13\"></span>不見離畢竟不生有眼觸為緣所生諸受，亦\r\n<span class=\"lb\" id=\"p0123a14\"></span>不見離畢竟不生有耳、鼻、舌、身、意觸為緣所生\r\n<span class=\"lb\" id=\"p0123a15\"></span>諸受。何以故？若眼觸為緣所生諸受，若耳、\r\n<span class=\"lb\" id=\"p0123a16\"></span>鼻、舌、身、意觸為緣所生諸受，與畢竟不生無二\r\n<span class=\"lb\" id=\"p0123a17\"></span>無二處故。舍利子！諸菩薩摩訶薩修行般若\r\n<span class=\"lb\" id=\"p0123a18\"></span>波羅蜜多時，不見離畢竟不生有布施波羅\r\n<span class=\"lb\" id=\"p0123a19\"></span>蜜多，亦不見離畢竟不生有淨戒、安忍、精進、\r\n<span class=\"lb\" id=\"p0123a20\"></span>靜慮、般若波羅蜜多。何以故？若布施波羅蜜\r\n<span class=\"lb\" id=\"p0123a21\"></span>多，若淨戒、安忍、精進、靜慮、般若波羅蜜多，與畢\r\n<span class=\"lb\" id=\"p0123a22\"></span>竟不生無二無二處故。舍利子！諸菩薩摩\r\n<span class=\"lb\" id=\"p0123a23\"></span>訶薩修行般若波羅蜜多時，不見離畢竟不\r\n<span class=\"lb\" id=\"p0123a24\"></span>生有四念住，亦不見離畢竟不生有四正斷、\r\n<span class=\"lb\" id=\"p0123a25\"></span>四神足、五根、五力、七等覺支、八聖道支。何以\r\n<span class=\"lb\" id=\"p0123a26\"></span>故？若四念住，若四正斷乃至八聖道支，與畢\r\n<span class=\"lb\" id=\"p0123a27\"></span>竟不生無二無二處故。舍利子！諸菩薩摩\r\n<span class=\"lb\" id=\"p0123a28\"></span>訶薩修行般若波羅蜜多時，不見離畢竟不\r\n<span class=\"lb\" id=\"p0123a29\"></span>生廣說乃至有佛十力，亦不見離畢竟不生\r\n\r\n<span class=\"lb\" id=\"p0123b01\"></span>有四無所畏、四無礙解、大慈、大悲、大喜、大捨、十\r\n<span class=\"lb\" id=\"p0123b02\"></span>八佛不共法。何以故？若佛十力，若四無所\r\n<span class=\"lb\" id=\"p0123b03\"></span>畏乃至十八佛不共法，與畢竟不生無二無二\r\n<span class=\"lb\" id=\"p0123b04\"></span>處故。舍利子！諸菩薩摩訶薩修行般若波\r\n<span class=\"lb\" id=\"p0123b05\"></span>羅蜜多時，不見離畢竟不生有一切三摩地\r\n<span class=\"lb\" id=\"p0123b06\"></span>門，亦不見離畢竟不生有一切陀羅尼門。何\r\n<span class=\"lb\" id=\"p0123b07\"></span>以故？若一切三摩地門，若一切陀羅尼門，與\r\n<span class=\"lb\" id=\"p0123b08\"></span>畢竟不生無二無二處故。舍利子！諸菩薩摩\r\n<span class=\"lb\" id=\"p0123b09\"></span>訶薩修行般若波羅蜜多時，不見離畢竟不\r\n<span class=\"lb\" id=\"p0123b10\"></span>生有一切智，亦不見離畢竟不生有道相智、\r\n<span class=\"lb\" id=\"p0123b11\"></span>一切相智。何以故？若一切智，若道相智、一切\r\n<span class=\"lb\" id=\"p0123b12\"></span>相智，與畢竟不生無二無二處故。舍利子！諸\r\n<span class=\"lb\" id=\"p0123b13\"></span>菩薩摩訶薩修行般若波羅蜜多時，不見離\r\n<span class=\"lb\" id=\"p0123b14\"></span>畢竟不生有聲聞乘，亦不見離畢竟不生有\r\n<span class=\"lb\" id=\"p0123b15\"></span>獨覺乘、大乘。何以故？若聲聞乘，若獨覺乘、大\r\n<span class=\"lb\" id=\"p0123b16\"></span>乘，與畢竟不生無二無二處故。舍利子！由此\r\n<span class=\"lb\" id=\"p0123b17\"></span>因緣我作是說：離畢竟不生，亦無菩薩摩訶\r\n<span class=\"lb\" id=\"p0123b18\"></span>薩能行無上正等菩提。</p>\r\n<span class=\"lb\" id=\"p0123b19\"></span><p>「復次，舍利子！尊者所問『何緣故說：若菩薩摩\r\n<span class=\"lb\" id=\"p0123b20\"></span>訶薩聞如是說，心不沈沒亦不憂悔，其心不\r\n<span class=\"lb\" id=\"p0123b21\"></span>驚、不恐、不怖，當知是菩薩摩訶薩能行般若\r\n<span class=\"lb\" id=\"p0123b22\"></span>波羅蜜多？』者，舍利子！諸菩薩摩訶薩修行般\r\n<span class=\"lb\" id=\"p0123b23\"></span>若波羅蜜多時，不見諸法有實作用，但見諸\r\n<span class=\"lb\" id=\"p0123b24\"></span>法如夢、如幻、如響、如像、如陽焰、如光影、如尋香\r\n<span class=\"lb\" id=\"p0123b25\"></span>城、如變化事，雖現似有而無實用，聞說諸法\r\n<span class=\"lb\" id=\"p0123b26\"></span>本性皆空，深生歡喜離沈沒等。舍利子！由\r\n<span class=\"lb\" id=\"p0123b27\"></span>此因緣我作是說：若菩薩摩訶薩聞如是說，\r\n<span class=\"lb\" id=\"p0123b28\"></span>心不沈沒亦不憂悔，其心不驚、不恐、不怖，當\r\n<span class=\"lb\" id=\"p0123b29\"></span>知是菩薩摩訶薩能行般若波羅蜜多。」</p>\r\n\r\n<span class=\"lb\" id=\"p0123c01\"></span><cb:juan n=\"422\" fun=\"close\"><cb:jhead><title>大般若波羅蜜多經</title>卷第四百二十二</cb:jhead></cb:juan>\r\n</cb:div></cb:div></body><div id=\"footnotes\"><div class=\"note-text\" id=\"note_0118c0801\">力【CB】【麗-CB】【磧-CB】，方【大】</div><div class=\"note-text\" id=\"note_0118001\">性＝姓【宋】下同</div><div class=\"note-text\" id=\"note_0118001\">性【大】下同，姓【宋】下同</div><div class=\"note-text\" id=\"note_0119b1601\">羅【CB】【麗-CB】【磧-CB】，薩【大】</div><div class=\"note-text\" id=\"note_0119001\">有＝見【三】</div><div class=\"note-text\" id=\"note_0119001\">有【大】，見【宋】【元】【明】</div></div>"
+    }
+  ],
+  "toc": {
+    "mulu": [
+      {
+        "title": "1 會",
+        "lb": "p0001a03",
+        "juan": 1,
+        "type": "品",
+        "children": [
+          {
+            "title": "初會序",
+            "lb": "p0001a03",
+            "juan": 1,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "2 會",
+        "lb": "p0001a02",
+        "juan": 401,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0001a02",
+            "juan": 401,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0001b05",
+            "juan": 401,
+            "type": "品"
+          },
+          {
+            "title": "2 歡喜品",
+            "lb": "p0007a21",
+            "juan": 402,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "3 會",
+        "lb": "p0427a02",
+        "juan": 479,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0427a02",
+            "juan": 479,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0427b06",
+            "juan": 479,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "4 會",
+        "lb": "p0763a02",
+        "juan": 538,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0763a02",
+            "juan": 538,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "5 會",
+        "lb": "p0865b02",
+        "juan": 556,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0865b02",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "1 善現品",
+            "lb": "p0865c06",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "2 天帝品",
+            "lb": "p0870a28",
+            "juan": 556,
+            "type": "品"
+          },
+          {
+            "title": "3 窣堵波品",
+            "lb": "p0872a21",
+            "juan": 557,
+            "type": "品"
+          },
+          {
+            "title": "4 神咒品",
+            "lb": "p0874c19",
+            "juan": 557,
+            "type": "品"
+          },
+          {
+            "title": "5 設利羅品",
+            "lb": "p0877c08",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "6 經典品",
+            "lb": "p0879a08",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "7 迴向品",
+            "lb": "p0880b22",
+            "juan": 558,
+            "type": "品"
+          },
+          {
+            "title": "8 地獄品",
+            "lb": "p0883b10",
+            "juan": 559,
+            "type": "品"
+          },
+          {
+            "title": "9 清淨品",
+            "lb": "p0885b14",
+            "juan": 559,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "6 會",
+        "lb": "p0921a01",
+        "juan": 566,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0921a01",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "1 緣起品",
+            "lb": "p0921a25",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "2 通達品",
+            "lb": "p0922b05",
+            "juan": 566,
+            "type": "品"
+          },
+          {
+            "title": "3 顯相品",
+            "lb": "p0926a06",
+            "juan": 567,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "7 會",
+        "lb": "p0963c23",
+        "juan": 574,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0963c24",
+            "juan": 574,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p0964a21",
+            "juan": 574,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0969b02",
+            "juan": 575,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "8 會",
+        "lb": "p0974b05",
+        "juan": 576,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0974b05",
+            "juan": 576,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "9 會",
+        "lb": "p0979c02",
+        "juan": 577,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0979c02",
+            "juan": 577,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "10 會",
+        "lb": "p0986a02",
+        "juan": 578,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0986a02",
+            "juan": 578,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "11 會",
+        "lb": "p0991b12",
+        "juan": 579,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p0991b13",
+            "juan": 579,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p0991c12",
+            "juan": 579,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p0997a20",
+            "juan": 580,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1003a02",
+            "juan": 581,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1008b02",
+            "juan": 582,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1014a12",
+            "juan": 583,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "12 會",
+        "lb": "p1019a19",
+        "juan": 584,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1019a20",
+            "juan": 584,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1019b18",
+            "juan": 584,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1024b15",
+            "juan": 585,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1029b18",
+            "juan": 586,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1034a21",
+            "juan": 587,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1039b02",
+            "juan": 588,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "13 會",
+        "lb": "p1044a13",
+        "juan": 589,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1044a14",
+            "juan": 589,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "14 會",
+        "lb": "p1049c20",
+        "juan": 590,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1049c21",
+            "juan": 590,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "15 會",
+        "lb": "p1055b02",
+        "juan": 591,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1055b03",
+            "juan": 591,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1055c02",
+            "juan": 591,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1060b16",
+            "juan": 592,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "16 會",
+        "lb": "p1065b16",
+        "juan": 593,
+        "type": "品",
+        "children": [
+          {
+            "title": "序",
+            "lb": "p1065b17",
+            "juan": 593,
+            "type": "品"
+          },
+          {
+            "title": "1",
+            "lb": "p1065c21",
+            "juan": 593,
+            "type": "品"
+          },
+          {
+            "title": "2",
+            "lb": "p1071a23",
+            "juan": 594,
+            "type": "品"
+          },
+          {
+            "title": "3",
+            "lb": "p1076c18",
+            "juan": 595,
+            "type": "品"
+          },
+          {
+            "title": "4",
+            "lb": "p1082b17",
+            "juan": 596,
+            "type": "品"
+          },
+          {
+            "title": "5",
+            "lb": "p1088b02",
+            "juan": 597,
+            "type": "品"
+          },
+          {
+            "title": "6",
+            "lb": "p1093c23",
+            "juan": 598,
+            "type": "品"
+          },
+          {
+            "title": "7",
+            "lb": "p1099c02",
+            "juan": 599,
+            "type": "品"
+          },
+          {
+            "title": "8",
+            "lb": "p1105c03",
+            "juan": 600,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "般若佛姆心咒",
+        "lb": "p1110a25",
+        "juan": 600,
+        "type": "品"
+      },
+      {
+        "title": "般若佛姆親心咒",
+        "lb": "p1110b01",
+        "juan": 600,
+        "type": "品"
+      }
+    ]
+  },
+  "version": "CBReader 2X v0.9.9 2026-01-21"
+}

@@ -1,19 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, ArrowLeft, Paintbrush
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Paintbrush, Search, Clock, ArrowLeft, Edit3, Trash2, FileText, AlertCircle
 } from 'lucide-react';
-import type { ReaderPackage, TextSegment } from '../../types/book';
+import type { ReaderPackage, TextSegment, BookContent, JuanData } from '../../types/book';
 import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
 import { BUILDER_VERSION } from '../../builder/version';
+import { IndexBuilder } from '../../builder/IndexBuilder';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
+import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
+import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
+import type { ReadingTimerState } from '../../utils/readingTimer';
 import '../styles/reader.css';
 
 interface ReaderViewProps {
   workId: string;
   initialSegmentId?: string; // 外部傳入要跳轉的段落 ID
+  autoResumeMode?: 'resume' | 'restart' | null;
   settings: AppSettings;
   onBackToLibrary: (resetToRoot?: boolean) => void;
   onSaveSettings: (settings: AppSettings) => void;
@@ -119,11 +124,13 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
     <div className="toc-tree-node-wrapper">
       <div 
         className={`drawer-item toc-tree-item ${isSelfActive ? 'active' : ''}`}
+        onClick={() => onSelectTOC(item)}
         style={{
           paddingLeft: `${level * 1.0 + 0.8}rem`,
           display: 'flex',
           alignItems: 'center',
-          gap: '6px'
+          gap: '6px',
+          cursor: 'pointer'
         }}
       >
         {/* [+] / [−] 折疊按鈕 */}
@@ -164,13 +171,11 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
         <span 
           style={{ 
             flexGrow: 1, 
-            cursor: 'pointer', 
             overflow: 'hidden', 
             textOverflow: 'ellipsis', 
             whiteSpace: 'nowrap',
             fontWeight: level === 0 ? '600' : 'normal'
           }}
-          onClick={() => onSelectTOC(item)}
         >
           {item.title}
         </span>
@@ -204,15 +209,32 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
 export function ReaderView({ 
   workId, 
   initialSegmentId, 
+  autoResumeMode,
   settings, 
   onBackToLibrary, 
   onSaveSettings,
   searchQuery
 }: ReaderViewProps) {
   const [book, setBook] = useState<ReaderPackage | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [currentJuanNum, setCurrentJuanNum] = useState<number>(1);
   const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null);
   
+  // 💡 閱讀時間倒數計時狀態
+  const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
+
+  // 💡 按需動態加載教育部標楷體 (Lazy-Load WOFF2)
+  useEffect(() => {
+    if (settings.fontFamily === 'kaiti') {
+      loadEduKaiFontOnDemand();
+    }
+  }, [settings.fontFamily]);
+
+  useEffect(() => {
+    const unsubscribe = readingTimer.subscribe(setTimerState);
+    return unsubscribe;
+  }, []);
+
   // UI 覆蓋層（工具列）狀態
   const [showToolbar, setShowToolbar] = useState(true);
   const toolbarTimeoutRef = useRef<number | null>(null);
@@ -226,22 +248,27 @@ export function ReaderView({
 
   // 💡 畫重點相關狀態
   const [highlights, setHighlights] = useState<BookHighlight[]>([]);
-  const [pendingHighlight, setPendingHighlight] = useState<{
-    workId: string;
-    juan: number;
-    segmentId: string;
-    startOffset: number;
-    endOffset: number;
-    text: string;
-  } | null>(null);
+  const [pendingHighlights, setPendingHighlights] = useState<BookHighlight[]>([]);
   const [activeHighlightForDelete, setActiveHighlightForDelete] = useState<BookHighlight | null>(null);
   const [deleteMenuPosition, setDeleteMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  
+  // 💡 心得筆記編輯 Modal 狀態
+  const [editingNoteHighlight, setEditingNoteHighlight] = useState<BookHighlight | null>(null);
+  const [editingNoteText, setEditingNoteText] = useState('');
   const [isBrushModeActive, setIsBrushModeActive] = useState(false);
+
+  // 💡 本書內動態關鍵字檢索
+  const [internalSearchQuery, setInternalSearchQuery] = useState('');
+  const [showInBookSearchModal, setShowInBookSearchModal] = useState(false);
+  const [inBookSearchInput, setInBookSearchInput] = useState('');
+
+  // 最終採用的檢索關鍵字 (優先採用閱讀器內部主動搜尋的關鍵字，否則退回外部帶入的 searchQuery)
+  const activeSearchQuery = internalSearchQuery.trim() || searchQuery?.trim() || '';
 
   // 💡 全文檢索跳轉高亮支援
   const renderHighlightedContent = (text: string) => {
-    if (!searchQuery) return text;
-    const keywords = searchQuery.trim().split(/\s+/).filter(Boolean);
+    if (!activeSearchQuery) return text;
+    const keywords = activeSearchQuery.trim().split(/\s+/).filter(Boolean);
     if (keywords.length === 0) return text;
 
     // 將關鍵字轉義並建立 regex
@@ -282,7 +309,17 @@ export function ReaderView({
     // 3. 建立字元狀態陣列，標記每個字元是否為小註、是否被畫重點
     const charStates = Array.from({ length: text.length }, (_, i) => {
       const isNote = bracketRanges.some(r => i >= r.start && i < r.end);
-      const hl = segHighlights.find(h => i >= h.startOffset && i < h.endOffset);
+      const hl = segHighlights.find(h => {
+        if (i >= h.startOffset && i < h.endOffset) return true;
+        // 💡 防護修復：若舊畫重點 offset 因顯示筆記等 UI 元素發生偏差，根據正文內容比對自動校正
+        if (h.text && (h.startOffset >= text.length || text.substring(h.startOffset, h.endOffset) !== h.text)) {
+          const matchIdx = text.indexOf(h.text);
+          if (matchIdx !== -1 && i >= matchIdx && i < matchIdx + h.text.length) {
+            return true;
+          }
+        }
+        return false;
+      });
       return {
         isNote,
         highlightId: hl ? hl.id : null,
@@ -336,18 +373,46 @@ export function ReaderView({
           if (run.highlight) {
             const colorClass = `hl-color-${run.highlight.color || 'yellow'}`;
             const styleClass = `hl-style-${run.highlight.style || 'bottom-half'}`;
+            const hasNote = !!(run.highlight.note && run.highlight.note.trim());
+            const showNoteInText = !!settings.customVisibleElements?.showNoteInText;
+
             element = (
-              <mark 
-                key={idx}
-                className={`reader-text-highlight ${colorClass} ${styleClass}`}
-                data-highlight-id={run.highlight.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleHighlightClick(run.highlight!, e);
-                }}
-              >
-                {element}
-              </mark>
+              <React.Fragment key={idx}>
+                <mark 
+                  className={`reader-text-highlight ${colorClass} ${styleClass}`}
+                  data-highlight-id={run.highlight.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleHighlightClick(run.highlight!, e);
+                  }}
+                >
+                  {element}
+                  {/* 💡 劃重點右側小黃點：100% 精確垂直對齊劃重點第一行文字當行，並緊貼右側邊緣 Bar */}
+                  {run.start === run.highlight.startOffset && (
+                    <span className="highlight-right-accent-dot" data-reader-ui="true" title="重點位置指示標" />
+                  )}
+                </mark>
+                {hasNote && showNoteInText && (
+                  <span 
+                    className="reader-ui-note-text"
+                    data-reader-ui="true"
+                    style={{ 
+                      fontSize: '0.68em', 
+                      color: 'var(--text-muted, #718096)', 
+                      fontFamily: '"Yuanti SC", "YouYuan", "圓體", "Quicksand", sans-serif',
+                      fontWeight: 'normal',
+                      fontStyle: 'normal',
+                      marginLeft: '4px',
+                      opacity: 0.85,
+                      background: 'none',
+                      textDecoration: 'none',
+                      display: 'inline-block'
+                    }}
+                  >
+                    ({run.highlight.note})
+                  </span>
+                )}
+              </React.Fragment>
             );
           } else {
             element = <React.Fragment key={idx}>{element}</React.Fragment>;
@@ -390,13 +455,13 @@ export function ReaderView({
   };
 
   useEffect(() => {
-    if (!book || !searchQuery) {
+    if (!book || !activeSearchQuery) {
       setMatchedSegments([]);
       setCurrentMatchIndex(-1);
       return;
     }
 
-    const keywords = searchQuery.trim().split(/\s+/).filter(Boolean);
+    const keywords = activeSearchQuery.trim().split(/\s+/).filter(Boolean);
     if (keywords.length === 0) {
       setMatchedSegments([]);
       setCurrentMatchIndex(-1);
@@ -427,10 +492,21 @@ export function ReaderView({
       setCurrentMatchIndex(idx !== -1 ? idx : 0);
     } else if (matches.length > 0) {
       setCurrentMatchIndex(0);
+      // 自動滾動至第一筆匹配處
+      const firstTarget = matches[0];
+      if (firstTarget) {
+        if (firstTarget.juan !== currentJuanNum) {
+          pendingScrollSegmentIdRef.current = firstTarget.segmentId;
+          setCurrentJuanNum(firstTarget.juan);
+        } else {
+          scrollToSegment(firstTarget.segmentId);
+          setActiveSegmentId(firstTarget.segmentId);
+        }
+      }
     } else {
       setCurrentMatchIndex(-1);
     }
-  }, [book, searchQuery, initialSegmentId]);
+  }, [book, activeSearchQuery, initialSegmentId]);
 
   const navigateToMatch = (index: number) => {
     const target = matchedSegments[index];
@@ -515,6 +591,12 @@ export function ReaderView({
       };
       localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));
       localStorage.setItem('last_read_work_id', workId);
+      try {
+        const historyStr = localStorage.getItem('recent_read_work_ids');
+        let history: string[] = historyStr ? JSON.parse(historyStr) : [];
+        history = [workId, ...history.filter(id => id !== workId)].slice(0, 5);
+        localStorage.setItem('recent_read_work_ids', JSON.stringify(history));
+      } catch {}
     }
   }, [currentJuanNum, activeSegmentId, book, workId, scrollPercent]);
   const {
@@ -539,59 +621,10 @@ export function ReaderView({
       try {
         let bookData = await getBook(workId);
         if (bookData) {
-          // 💡 全自動目次修復與 Mock 同步邏輯
-          // 只有當書籍的目錄結構毀損、遺失（如退化為預設的 "第 X 卷"）或 Builder 版本變更時，才在背景升級/修復
-          const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
-                              (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷') ||
-                              (!bookData.metadata.version || bookData.metadata.version !== BUILDER_VERSION);
-
-          if (needsTocFix) {
-            try {
-              const isOfflineMock = workId === 'T0412' || workId === 'T0262';
-              if (isOfflineMock) {
-                const res = await fetch(`/mock/${workId}.json`);
-                if (res.ok) {
-                  const preBuilt = await res.json();
-                  // 僅修正卷數，不覆蓋使用者已下載的完整經文內容
-                  if (workId === 'T0412') {
-                    bookData.metadata.juansCount = 3;
-                  } else {
-                    bookData.metadata.juansCount = preBuilt.content.juans.length;
-                  }
-                  const { toc, navigation } = NavigationBuilder.buildNavigation(
-                    workId,
-                    bookData.content,
-                    preBuilt.rawToc || []
-                  );
-                  bookData.toc = toc;
-                  bookData.navigation = navigation;
-                  bookData.metadata.version = BUILDER_VERSION;
-                  await saveBook(bookData);
-                }
-              } else {
-                console.log(`[TOC AutoFix] Silently repairing TOC for online work: ${workId}...`);
-                const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
-                const { content, rawToc } = await ReaderBuilder.buildContent(workId, bookData.metadata.juansCount);
-                const { toc, navigation } = NavigationBuilder.buildNavigation(
-                  workId,
-                  content,
-                  rawToc
-                );
-                bookData.toc = toc;
-                bookData.navigation = navigation;
-                bookData.content = content;
-                bookData.metadata.version = BUILDER_VERSION;
-                await saveBook(bookData);
-                console.log(`[TOC AutoFix] TOC repaired successfully for ${workId}`);
-              }
-            } catch (err) {
-              console.warn('[TOC AutoFix] Failed to sync or repair TOC:', err);
-            }
-          }
-          // 💡 已知內建經典 Metadata 自動修正（修正本地儲存的舊錯誤資料）
+          // 💡 已知內建經典 Metadata 自動修正
           const KNOWN_METADATA_FIXES: Record<string, Partial<typeof bookData.metadata>> = {
             'T0412': { category: '大集部類', creators: '唐 實叉難陀譯' },
-            'T0262': { category: '法華部類',   creators: '姚秦 鳩摩羅什譯' }
+            'T0262': { category: '法華部類', creators: '姚秦 鳩摩羅什譯' }
           };
           const fix = KNOWN_METADATA_FIXES[workId];
           if (fix) {
@@ -604,11 +637,101 @@ export function ReaderView({
             }
             if (needsSave) {
               await saveBook(bookData);
-              console.log(`[MetaFix] Auto-corrected metadata for ${workId}`);
             }
           }
 
+          // 💡 自動檢測：本地書的 TOC 是否包含重複綁定在同一個 seg0001 的舊版無效導航鏈結
+          const hasInvalidTocLinks = (() => {
+            if (!bookData.toc || !bookData.toc.items || bookData.toc.items.length <= 1) return false;
+            const segIds = bookData.toc.items.map((i: any) => i.startSegmentId).filter(Boolean);
+            if (segIds.length <= 2) return false;
+            const uniqueSegIds = new Set(segIds);
+            return uniqueSegIds.size === 1 || uniqueSegIds.size < Math.min(3, segIds.length);
+          })();
+
+          if (hasInvalidTocLinks && bookData.content) {
+            console.log(`[ReaderView] Book ${workId} has old invalid TOC links. Rebuilding navigation tree with title matching...`);
+            const { toc, navigation } = NavigationBuilder.buildNavigation(workId, bookData.content, []);
+            bookData = {
+              ...bookData,
+              toc,
+              navigation
+            };
+            await saveBook(bookData);
+          }
+
+          // 💡 核心極速體驗：只要本地已有經書，立即 0 秒開書！絕不因版號更新或網路延遲阻斷開書
           setBook(bookData);
+
+          // 💡 全自動背景目次修復與經文修復邏輯
+          const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
+                              (bookData.toc.items.length > 0 && bookData.toc.items[0].title === '第 1 卷');
+          const hasFallbackContent = bookData.content.juans.some(j => 
+            j.segments.some(s => s.content.includes('經文預設段落'))
+          );
+          const isOutdatedVersion = !bookData.metadata.version || bookData.metadata.version !== BUILDER_VERSION;
+
+          if (hasFallbackContent || needsTocFix || isOutdatedVersion) {
+            try {
+              console.log(`[AutoHeal] Book ${workId} needs refresh. Auto-healing real text in background...`);
+              const safeJuansCount = (bookData.metadata.juansCount && bookData.metadata.juansCount > 0)
+                ? bookData.metadata.juansCount 
+                : (bookData.content.juans.length > 0 ? bookData.content.juans.length : 1);
+              
+              let fetchedContent: BookContent | null = null;
+              let fetchedRawToc: any[] = [];
+
+              // 1. 優先嘗試讀取本地 pre-built mock 經典檔案（如 /mock/T0779.json, /mock/T0251.json, /mock/T0412.json, /mock/T0262.json）
+              try {
+                const mockRes = await fetch(`/mock/${workId}.json`);
+                if (mockRes.ok) {
+                  const mockData = await mockRes.json();
+                  if (mockData && mockData.content && mockData.content.juans && mockData.content.juans.length > 0) {
+                    fetchedContent = mockData.content;
+                    fetchedRawToc = mockData.rawToc || [];
+                  }
+                }
+              } catch {}
+
+              // 2. 若無本地 mock 且需更新，向 CBETA 發起線上抓取
+              if (!fetchedContent) {
+                const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+                const { content, rawToc } = await ReaderBuilder.buildContent(workId, safeJuansCount);
+                fetchedContent = content;
+                fetchedRawToc = rawToc;
+              }
+
+              // 💡 3. 關鍵數據保護安全防護：如果抓取結果為預設占位文字，絕不蓋掉原本資料！
+              const fetchedHasFallback = fetchedContent.juans.some((j: JuanData) => 
+                j.segments.some((s: TextSegment) => s.content.includes('經文預設段落'))
+              );
+
+              if (fetchedHasFallback) {
+                console.warn(`[AutoHeal] Fetched content for ${workId} still has fallback placeholder. Aborting save to protect existing data!`);
+                return;
+              }
+
+              // 4. 取得真實完整正文，安全更新 IndexedDB 並渲染畫面
+              const { toc, navigation } = NavigationBuilder.buildNavigation(workId, fetchedContent, fetchedRawToc);
+              const updatedBook: ReaderPackage = {
+                ...bookData,
+                content: fetchedContent,
+                toc,
+                navigation,
+                metadata: {
+                  ...bookData.metadata,
+                  juansCount: fetchedContent.juans.length,
+                  version: BUILDER_VERSION
+                }
+              };
+              await saveBook(updatedBook);
+              setBook(updatedBook);
+              console.log(`[AutoHeal] Successfully auto-healed real content for ${workId}`);
+            } catch (err) {
+              console.warn('[AutoHeal] Background refresh failed, keeping current local content:', err);
+              setBook(bookData);
+            }
+          }
           
           // 如果有傳入特定跳轉段落
           if (initialSegmentId) {
@@ -623,6 +746,30 @@ export function ReaderView({
               scrollToSegment(initialSegmentId);
               setActiveSegmentId(initialSegmentId);
             }, 300);
+          } else if (autoResumeMode === 'restart') {
+            // 💡 使用者於選單中明確點擊「從頭開始閱讀」：直接載入第 1 卷，免跳出確認彈窗
+            setCurrentJuanNum(1);
+          } else if (autoResumeMode === 'resume') {
+            // 💡 使用者於選單中明確點擊「接續閱讀」：直接載入歷史進度並自動跳轉，免跳出確認彈窗
+            const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
+            if (savedProgressStr) {
+              try {
+                const progress = JSON.parse(savedProgressStr);
+                const targetJuan = progress.juan || 1;
+                setCurrentJuanNum(targetJuan);
+                if (progress.segmentId) {
+                  setTimeout(() => {
+                    scrollToSegment(progress.segmentId);
+                    setActiveSegmentId(progress.segmentId);
+                  }, 350);
+                }
+              } catch (err) {
+                console.warn('Failed to parse saved progress for auto resume:', err);
+                setCurrentJuanNum(1);
+              }
+            } else {
+              setCurrentJuanNum(1);
+            }
           } else {
             // 💡 嘗試從 localStorage 載入此書的歷史閱讀進度
             const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
@@ -630,10 +777,7 @@ export function ReaderView({
               try {
                 const progress = JSON.parse(savedProgressStr);
                 if (progress.juan || progress.segmentId) {
-                  // 💡 計算該段落對應的品名
                   const displayTitle = getMuluTitleForSegment(bookData, progress.juan || 1, progress.segmentId || '');
-                  
-                  // 暫存歷史進度，並彈出確認 Dialog 詢問
                   setPendingProgress({
                     juan: progress.juan || 1,
                     segmentId: progress.segmentId || '',
@@ -642,7 +786,6 @@ export function ReaderView({
                   });
                   setShowResumeDialog(true);
                 }
-                // 預設先進入卷 1
                 setCurrentJuanNum(1);
               } catch (err) {
                 console.warn('Failed to parse saved progress, fallback to juan 1:', err);
@@ -652,14 +795,68 @@ export function ReaderView({
               setCurrentJuanNum(1);
             }
           }
+        } else {
+          // 💡 若 IndexedDB 中尚無此經書數據（如直接點擊未下載的經典或剛重置快取），線上動態構建並渲染經典
+          console.log(`[ReaderView] Book ${workId} not found in IndexedDB. Building package...`);
+          let bookTitle = workId;
+          try {
+            const { ReferenceBuilder } = await import('../../builder/ReferenceBuilder');
+            const { SearchIndexBuilder } = await import('../../builder/SearchIndexBuilder');
+            const { AIIndexBuilder } = await import('../../builder/AIIndexBuilder');
+
+            const searchRes = await IndexBuilder.searchTitle(workId).catch(() => []);
+            const targetMeta = searchRes && searchRes.length > 0 ? searchRes[0] : null;
+            const juansCount = targetMeta?.juansCount || 1;
+            const title = targetMeta?.title || workId;
+            bookTitle = title;
+            const creators = targetMeta?.creators || 'CBETA 電子佛典';
+
+            const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
+            const res = await ReaderBuilder.buildContent(workId, juansCount);
+            const content = res.content;
+            const rawToc = res.rawToc;
+
+            const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
+            const reference = ReferenceBuilder.buildReference(workId);
+            const searchIndex = SearchIndexBuilder.buildSearchIndex(content, toc);
+            const embedding = await AIIndexBuilder.buildAIIndex(content);
+
+            const newBook: ReaderPackage = {
+              metadata: {
+                workId,
+                title,
+                canon: workId.charAt(0),
+                creators,
+                category: targetMeta?.category || 'CBETA',
+                juansCount: content.juans.length,
+                packagedAt: new Date().toISOString(),
+                version: BUILDER_VERSION
+              },
+              content,
+              toc,
+              navigation,
+              reference,
+              searchIndex,
+              embedding
+            };
+
+            await saveBook(newBook);
+            setBook(newBook);
+            setLoadError(null);
+            setCurrentJuanNum(1);
+            console.log(`[ReaderView] Successfully built and loaded package for ${workId}`);
+          } catch (buildErr: any) {
+            console.error(`[ReaderView] Failed to build package on-the-fly for ${workId}:`, buildErr);
+            setLoadError(buildErr?.message || `無法載入《${bookTitle}》經文。本 App 堅持 100% CBETA 原文正統，絕不提供任何簡化或摘要內容。請檢查網路連線後重試。`);
+          }
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error('Failed to load book content:', e);
+        setLoadError(e?.message || `載入經文發生錯誤，請檢查網路連線或重試。`);
       }
     };
 
     loadBookData();
-    // 預設展示工具列，一段時間後自動隱藏
     resetToolbarTimeout();
 
     return () => {
@@ -684,53 +881,138 @@ export function ReaderView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workId]);
 
+
+
+  // 💡 Helper: 取得 DOM 節點/Fragment 扣除 UI 覆蓋元件 (如筆記內容、頁碼標籤) 後的真實經文正文文字
+  const getPureTextFromNodeOrFrag = (nodeOrFrag: Node): string => {
+    const clone = nodeOrFrag.cloneNode(true);
+    if (clone instanceof Element || clone instanceof DocumentFragment) {
+      clone.querySelectorAll('[data-reader-ui="true"]').forEach(el => el.remove());
+      if (clone instanceof Element && clone.getAttribute('data-reader-ui') === 'true') {
+        return '';
+      }
+    }
+    return clone.textContent || '';
+  };
+
+  // 💡 計算選取 Range 涵蓋的所有段落與劃線資料（支援單段落與跨段落全選）
+  const calculateHighlightsFromRange = (range: Range): BookHighlight[] => {
+    const container = range.commonAncestorContainer;
+    const root = container.nodeType === Node.ELEMENT_NODE 
+      ? (container as HTMLElement) 
+      : container.parentElement;
+    if (!root) return [];
+
+    let segments: HTMLElement[] = [];
+    if (root.classList.contains('reader-paragraph')) {
+      segments = [root];
+    } else {
+      const all = Array.from(root.querySelectorAll<HTMLElement>('.reader-paragraph'));
+      segments = all.filter(el => {
+        try {
+          return range.intersectsNode(el);
+        } catch {
+          return false;
+        }
+      });
+      if (segments.length === 0) {
+        let p: HTMLElement | null = root;
+        while (p) {
+          if (p.classList.contains('reader-paragraph')) {
+            segments = [p];
+            break;
+          }
+          p = p.parentElement;
+        }
+      }
+    }
+
+    if (segments.length === 0) return [];
+
+    const results: BookHighlight[] = [];
+
+    segments.forEach((segEl, index) => {
+      const segmentId = segEl.getAttribute('data-segment-id');
+      if (!segmentId) return;
+
+      // 💡 取得段落中真實經文純文字 (過濾掉「顯示筆記內容」等 UI 注入節點)
+      const segText = getPureTextFromNodeOrFrag(segEl);
+      if (!segText) return;
+
+      let startOffset = 0;
+      let endOffset = segText.length;
+
+      if (segments.length === 1) {
+        const preRange = range.cloneRange();
+        preRange.selectNodeContents(segEl);
+        preRange.setEnd(range.startContainer, range.startOffset);
+        startOffset = getPureTextFromNodeOrFrag(preRange.cloneContents()).length;
+
+        const selRange = range.cloneRange();
+        selRange.setStart(range.startContainer, range.startOffset);
+        selRange.setEnd(range.endContainer, range.endOffset);
+        const selLength = getPureTextFromNodeOrFrag(selRange.cloneContents()).length;
+
+        endOffset = startOffset + selLength;
+      } else {
+        if (index === 0) {
+          const preRange = range.cloneRange();
+          preRange.selectNodeContents(segEl);
+          preRange.setEnd(range.startContainer, range.startOffset);
+          startOffset = getPureTextFromNodeOrFrag(preRange.cloneContents()).length;
+          endOffset = segText.length;
+        } else if (index === segments.length - 1) {
+          startOffset = 0;
+          const endRange = range.cloneRange();
+          endRange.selectNodeContents(segEl);
+          endRange.setEnd(range.endContainer, range.endOffset);
+          endOffset = getPureTextFromNodeOrFrag(endRange.cloneContents()).length;
+        } else {
+          startOffset = 0;
+          endOffset = segText.length;
+        }
+      }
+
+      if (endOffset > startOffset) {
+        const text = segText.substring(startOffset, endOffset);
+        if (text.trim()) {
+          results.push({
+            id: `${workId}_${currentJuanNum}_${segmentId}_${startOffset}_${endOffset}`,
+            workId,
+            juan: currentJuanNum,
+            segmentId,
+            startOffset,
+            endOffset,
+            text,
+            createdAt: Date.now(),
+            color: settings.highlightColor,
+            style: settings.highlightStyle
+          });
+        }
+      }
+    });
+
+    return results;
+  };
+
   // 監聽全局選取事件，暫存選取區間
   useEffect(() => {
     const handleSelectionChange = () => {
       const selection = window.getSelection();
       if (!selection || selection.isCollapsed) {
-        setPendingHighlight(null);
+        setPendingHighlights([]);
         return;
       }
 
       const range = selection.getRangeAt(0);
       const selectedText = selection.toString().trim();
       if (!selectedText) {
-        setPendingHighlight(null);
+        setPendingHighlights([]);
         return;
       }
 
-      // 檢查選取範圍是否包含於段落內 (.reader-paragraph)
-      let node: Node | null = range.startContainer;
-      let segmentEl: HTMLElement | null = null;
-      while (node) {
-        if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('reader-paragraph')) {
-          segmentEl = node as HTMLElement;
-          break;
-        }
-        node = node.parentNode;
-      }
-
-      if (segmentEl) {
-        const segmentId = segmentEl.getAttribute('data-segment-id');
-        if (segmentId) {
-          // 計算相對於段落 textContent 的 startOffset 和 endOffset
-          const preSelectionRange = range.cloneRange();
-          preSelectionRange.selectNodeContents(segmentEl);
-          preSelectionRange.setEnd(range.startContainer, range.startOffset);
-          const startOffset = preSelectionRange.toString().length;
-          const endOffset = startOffset + range.toString().length;
-
-          setPendingHighlight({
-            workId,
-            juan: currentJuanNum,
-            segmentId,
-            startOffset,
-            endOffset,
-            text: range.toString()
-          });
-        }
-      }
+      const hls = calculateHighlightsFromRange(range);
+      setPendingHighlights(hls);
     };
 
     document.addEventListener('selectionchange', handleSelectionChange);
@@ -745,7 +1027,6 @@ export function ReaderView({
     if (!isBrushModeActive) return;
 
     const handlePointerUp = () => {
-      // 延遲 100ms 確保行動裝置手勢與 selection 範圍計算完成
       setTimeout(async () => {
         const selection = window.getSelection();
         if (!selection || selection.isCollapsed) return;
@@ -754,47 +1035,18 @@ export function ReaderView({
         if (!selectedText) return;
 
         const range = selection.getRangeAt(0);
-        let node: Node | null = range.startContainer;
-        let segmentEl: HTMLElement | null = null;
-        while (node) {
-          if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('reader-paragraph')) {
-            segmentEl = node as HTMLElement;
-            break;
-          }
-          node = node.parentNode;
-        }
+        const hls = calculateHighlightsFromRange(range);
 
-        if (segmentEl) {
-          const segmentId = segmentEl.getAttribute('data-segment-id');
-          if (segmentId) {
-            const preSelectionRange = range.cloneRange();
-            preSelectionRange.selectNodeContents(segmentEl);
-            preSelectionRange.setEnd(range.startContainer, range.startOffset);
-            const startOffset = preSelectionRange.toString().length;
-            const endOffset = startOffset + range.toString().length;
-
-            const id = `${workId}_${currentJuanNum}_${segmentId}_${startOffset}_${endOffset}`;
-            const newHl: BookHighlight = {
-              id,
-              workId,
-              juan: currentJuanNum,
-              segmentId,
-              startOffset,
-              endOffset,
-              text: range.toString(),
-              createdAt: Date.now(),
-              color: settings.highlightColor,
-              style: settings.highlightStyle
-            };
-
-            try {
+        if (hls.length > 0) {
+          try {
+            for (const newHl of hls) {
               await saveHighlight(newHl);
-              window.getSelection()?.removeAllRanges();
-              setPendingHighlight(null);
-              await loadBookHighlights();
-            } catch (err) {
-              console.error('Failed to auto create highlight on gesture end:', err);
             }
+            window.getSelection()?.removeAllRanges();
+            setPendingHighlights([]);
+            await loadBookHighlights();
+          } catch (err) {
+            console.error('Failed to auto create highlight on gesture end:', err);
           }
         }
       }, 100);
@@ -829,58 +1081,70 @@ export function ReaderView({
 
   const handleHighlightClick = (hl: BookHighlight, e: React.MouseEvent) => {
     e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
+    e.preventDefault();
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setActiveHighlightForDelete(hl);
     setDeleteMenuPosition({
-      top: rect.top + window.scrollY - 45,
-      left: rect.left + window.scrollX + rect.width / 2
+      top: Math.max(10, rect.top - 46),
+      left: rect.left + rect.width / 2
     });
   };
 
   const handleBrushButtonClick = async () => {
-    if (pendingHighlight) {
-      // 💡 如果當前有選取內容，直接對選取內容畫重點！
-      const { workId: wId, juan, segmentId, startOffset, endOffset, text } = pendingHighlight;
-      const id = `${wId}_${juan}_${segmentId}_${startOffset}_${endOffset}`;
-      const newHl: BookHighlight = {
-        id,
-        workId: wId,
-        juan,
-        segmentId,
-        startOffset,
-        endOffset,
-        text,
-        createdAt: Date.now(),
-        color: settings.highlightColor,
-        style: settings.highlightStyle
-      };
-
+    if (pendingHighlights.length > 0) {
       try {
-        await saveHighlight(newHl);
+        for (const hl of pendingHighlights) {
+          await saveHighlight({
+            ...hl,
+            color: settings.highlightColor,
+            style: settings.highlightStyle,
+            createdAt: Date.now()
+          });
+        }
         window.getSelection()?.removeAllRanges();
-        setPendingHighlight(null);
+        setPendingHighlights([]);
         await loadBookHighlights();
       } catch (err) {
         console.error('Failed to create highlight from brush button:', err);
       }
     } else {
-      // 💡 如果當前沒有選取內容，則切換筆刷模式的開啟/關閉狀態
       setIsBrushModeActive(prev => !prev);
     }
   };
 
-
-
   const handleDeleteHighlight = async () => {
     if (!activeHighlightForDelete) return;
+    const targetHl = activeHighlightForDelete;
+    setActiveHighlightForDelete(null);
+    setDeleteMenuPosition(null);
     try {
-      await deleteHighlight(activeHighlightForDelete.id);
-      setActiveHighlightForDelete(null);
-      setDeleteMenuPosition(null);
+      await deleteHighlight(targetHl.id);
       await loadBookHighlights();
     } catch (err) {
       console.error('Failed to delete highlight:', err);
+    }
+  };
+
+  const handleOpenNoteEditor = (hl: BookHighlight) => {
+    setActiveHighlightForDelete(null);
+    setDeleteMenuPosition(null);
+    setEditingNoteHighlight(hl);
+    setEditingNoteText(hl.note || '');
+  };
+
+  const handleSaveNote = async () => {
+    if (!editingNoteHighlight) return;
+    const updated: BookHighlight = {
+      ...editingNoteHighlight,
+      note: editingNoteText.trim()
+    };
+    try {
+      await saveHighlight(updated);
+      await loadBookHighlights();
+      setEditingNoteHighlight(null);
+      setEditingNoteText('');
+    } catch (err) {
+      console.error('Failed to save highlight note:', err);
     }
   };
 
@@ -989,13 +1253,25 @@ export function ReaderView({
     setShowNavDrawer(false);
     setActiveSegmentId(targetSegId);
     resetToolbarTimeout();
-    
-    const targetJuan = tocItem.juan || currentJuanNum;
+
+    // 💡 核心極速修復：從 targetSegId 中精確解析出所屬卷號 (例: T0412_02_seg0001 -> 卷 2)
+    let targetJuan = tocItem.juan;
+    const parts = targetSegId.split('_');
+    if (parts.length >= 2) {
+      const parsedJuan = parseInt(parts[1], 10);
+      if (!isNaN(parsedJuan) && parsedJuan > 0) {
+        targetJuan = parsedJuan;
+      }
+    }
+    if (!targetJuan) targetJuan = currentJuanNum;
+
     if (targetJuan === currentJuanNum) {
-      // 同一卷：直接滾動
-      scrollToSegment(targetSegId);
+      // 同一卷：使用 setTimeout 確保 50ms 後平滑滾動至中央
+      setTimeout(() => {
+        scrollToSegment(targetSegId);
+      }, 50);
     } else {
-      // 跨卷：記錄待跳轉段落 ID，切換卷數，讓 useEffect 處理滾動
+      // 跨卷：記錄待跳轉段落 ID，切換卷數，由 useEffect 處理自動滾動
       pendingScrollSegmentIdRef.current = targetSegId;
       setCurrentJuanNum(targetJuan);
     }
@@ -1148,19 +1424,102 @@ export function ReaderView({
   if (!book) {
     return (
       <div 
-        className={`reader-container theme-${settings.theme}`} 
-        style={{ display: 'flex', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', color: 'var(--reader-text)', background: 'var(--reader-bg)' }}
+        className={`reader-container theme-${settings.theme} animate-fade-in`} 
+        style={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          height: '100%', 
+          width: '100%', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          color: 'var(--reader-text, #333)', 
+          background: 'var(--reader-bg, #fdfbf7)',
+          gap: '1.2rem',
+          padding: '2rem',
+          textAlign: 'center'
+        }}
       >
-        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem' }}>經典載入中...</p>
+        {loadError ? (
+          <>
+            <AlertCircle size={40} style={{ color: '#bd3a3a' }} />
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem', color: 'var(--text-primary)', margin: 0, maxWidth: '420px', lineHeight: 1.6 }}>
+              {loadError}
+            </p>
+            <div style={{ display: 'flex', gap: '0.8rem', marginTop: '0.5rem' }}>
+              <button 
+                className="batch-btn batch-btn-primary"
+                onClick={() => {
+                  setLoadError(null);
+                  window.location.reload();
+                }}
+                style={{ fontSize: '0.85rem', padding: '0.4rem 1rem', borderRadius: '16px' }}
+              >
+                重新嘗試連線
+              </button>
+              <button 
+                className="batch-btn batch-btn-secondary"
+                onClick={() => onBackToLibrary(true)}
+                style={{ fontSize: '0.85rem', padding: '0.4rem 1rem', borderRadius: '16px' }}
+              >
+                返回書架
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div 
+              className="loading-spinner"
+              style={{
+                width: '32px',
+                height: '32px',
+                border: '3px solid rgba(140, 75, 39, 0.15)',
+                borderTopColor: 'var(--theme-accent, #8b7355)',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }}
+            />
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', color: 'var(--text-primary)', margin: 0 }}>
+              經典載入中，請稍候...
+            </p>
+            <button 
+              className="batch-btn batch-btn-secondary"
+              onClick={() => onBackToLibrary(true)}
+              style={{ fontSize: '0.82rem', padding: '0.35rem 0.85rem', marginTop: '0.5rem', borderRadius: '16px', opacity: 0.85 }}
+            >
+              返回書架
+            </button>
+          </>
+        )}
       </div>
     );
   }
 
-  // 套用 Reading Settings 對內文左右留白
+  // 💡 套用 Reading Settings 對內文左右留白、字體大小、行高與內文字體 (加入 CBETASupplement 自動補缺字)
+  const getBodyFontFamily = (fontFamily?: string) => {
+    switch (fontFamily) {
+      case 'jhenghei':
+        return '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", "CBETASupplement", sans-serif';
+      case 'iansui':
+        return '"Iansui", "Klee One", "CBETASupplement", serif';
+      case 'kaiti':
+      case 'iansui-bold':
+      case 'iansui-zy':
+      case 'wenkai':
+      case 'yuanti':
+      case 'fangsong':
+        return '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif';
+      case 'default':
+      default:
+        return 'var(--font-serif)';
+    }
+  };
+
   const paddingStyle = {
     '--reader-padding': `${settings.padding}%`,
     '--reader-font-size': `${settings.fontSize}px`,
-    '--reader-line-height': settings.lineHeight
+    '--reader-line-height': settings.lineHeight,
+    '--reader-body-font': getBodyFontFamily(settings.fontFamily),
+    '--reader-body-weight': settings.fontFamily === 'iansui-bold' ? '700' : 'normal'
   } as React.CSSProperties;
 
   const activeJuan = book.content.juans.find(j => j.juan === currentJuanNum);
@@ -1174,18 +1533,13 @@ export function ReaderView({
       
       {/* 頂部工具列 */}
       <div className={`reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-        <button className="icon-button" onClick={() => onBackToLibrary(true)} title="首頁">
+        <button className="library-header-btn" onClick={() => onBackToLibrary(true)} title="首頁">
           <Home size={20} />
         </button>
 
         <div className="control-divider" />
 
-        <button 
-          className="icon-button" 
-          onClick={() => onBackToLibrary(false)} 
-          title="返回前一頁"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        >
+        <button className="library-header-btn" onClick={() => onBackToLibrary(false)} title="返回上一頁">
           <ArrowLeft size={20} />
         </button>
 
@@ -1236,48 +1590,126 @@ export function ReaderView({
           }}>A</span>
         </button>
 
-        {/* 💡 筆刷按鈕 */}
-        <button 
-          className={`reader-text-btn brush-btn ${isBrushModeActive ? 'active' : ''}`} 
-          onClick={handleBrushButtonClick}
-          title={isBrushModeActive ? '劃記重點模式 (開啟中)' : '劃記重點模式'}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0 0.4rem',
-            position: 'relative',
-            transition: 'all 0.2s',
-            borderRadius: '6px',
-            border: isBrushModeActive ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
-            background: isBrushModeActive ? 'rgba(250, 204, 21, 0.08)' : 'transparent'
-          }}
-        >
-          <Paintbrush 
-            size={20} 
-            style={{
-              color: isBrushModeActive ? 'var(--theme-accent, var(--color-wood-700))' : 'currentColor'
-            }}
-          />
-          {/* 顯示目前選定的顏色指示器 */}
-          <div 
-            className="brush-color-indicator"
-            style={{
-              position: 'absolute',
-              bottom: '2px',
-              width: '14px',
-              height: '3px',
-              borderRadius: '1.5px',
-              backgroundColor: 
-                settings.highlightColor === 'yellow' ? '#fbbf24' :
-                settings.highlightColor === 'red' ? '#f87171' :
-                settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa'
-            }}
-          />
-        </button>
+        {/* 💡 筆刷按鈕 (動態顯示當前 4 種顏色 x 4 種粗細標註模式) */}
+        {(() => {
+          const colorHex = 
+            settings.highlightColor === 'yellow' ? '#fbbf24' :
+            settings.highlightColor === 'red' ? '#f87171' :
+            settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
+
+          const colorLabel = 
+            settings.highlightColor === 'yellow' ? '淺黃' :
+            settings.highlightColor === 'red' ? '淺紅' :
+            settings.highlightColor === 'gray' ? '淺灰' : '淺藍';
+
+          const styleLabel = 
+            settings.highlightStyle === 'underline' ? '底線' :
+            settings.highlightStyle === 'bottom-half' ? '半塗' :
+            settings.highlightStyle === 'full' ? '全塗' : '方框';
+
+          const modeTitle = `劃記重點模式 (${colorLabel} + ${styleLabel}${isBrushModeActive ? ' - 已開啟' : ''})`;
+
+          const getIndicatorStyle = (): React.CSSProperties => {
+            const currentStyle = settings.highlightStyle || 'bottom-half';
+            switch (currentStyle) {
+              case 'underline':
+                return {
+                  position: 'absolute',
+                  bottom: '2px',
+                  width: '14px',
+                  height: '3px',
+                  borderRadius: '1.5px',
+                  backgroundColor: colorHex,
+                  boxSizing: 'border-box'
+                };
+              case 'bottom-half':
+                return {
+                  position: 'absolute',
+                  bottom: '2px',
+                  width: '16px',
+                  height: '7px',
+                  borderRadius: '2px',
+                  backgroundColor: colorHex,
+                  opacity: 0.85,
+                  boxSizing: 'border-box'
+                };
+              case 'full':
+                return {
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '5px',
+                  backgroundColor: colorHex,
+                  opacity: 0.45,
+                  boxSizing: 'border-box',
+                  zIndex: 1
+                };
+              case 'border':
+                return {
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '5px',
+                  border: `2.2px solid ${colorHex}`,
+                  backgroundColor: 'transparent',
+                  boxSizing: 'border-box',
+                  zIndex: 1
+                };
+            }
+          };
+
+          return (
+            <button 
+              className={`reader-text-btn brush-btn ${isBrushModeActive ? 'active' : ''}`} 
+              onClick={handleBrushButtonClick}
+              title={modeTitle}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 0.4rem',
+                position: 'relative',
+                transition: 'all 0.2s',
+                borderRadius: '6px',
+                border: isBrushModeActive ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
+                background: isBrushModeActive ? 'rgba(250, 204, 21, 0.08)' : 'transparent'
+              }}
+            >
+              <Paintbrush 
+                size={20} 
+                style={{
+                  color: isBrushModeActive ? 'var(--theme-accent, var(--color-wood-700))' : 'currentColor',
+                  zIndex: 2
+                }}
+              />
+              {/* 顯示目前選定的顏色與粗細標註模式指示器 */}
+              <div 
+                className="brush-color-indicator"
+                style={getIndicatorStyle()}
+              />
+            </button>
+          );
+        })()}
 
 
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          {/* 💡 頂部列：「三」左邊新增搜尋鍵，樣式 100% 統一 */}
+          <button 
+            className={`icon-button ${activeSearchQuery ? 'active' : ''}`} 
+            onClick={() => {
+              setInBookSearchInput(activeSearchQuery);
+              setShowInBookSearchModal(true);
+            }} 
+            title="搜尋本書關鍵字"
+          >
+            <Search size={20} />
+          </button>
           <button className="icon-button" onClick={() => setShowNavDrawer(prev => !prev)} title="目次">
             <Menu size={20} />
           </button>
@@ -1287,19 +1719,96 @@ export function ReaderView({
         </div>
       </div>
 
-      {/* 搜尋結果同一書內導航懸浮條 */}
-      {searchQuery && matchedSegments.length > 0 && (
+      {/* 💡 本書內關鍵字搜尋對話框 */}
+      {showInBookSearchModal && (
+        <div className="inbook-search-modal-backdrop" onClick={() => setShowInBookSearchModal(false)}>
+          <div className="inbook-search-modal-card" onClick={e => e.stopPropagation()}>
+            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', marginBottom: '0.8rem', color: 'var(--theme-accent, #8c4b27)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Search size={18} />
+              <span>搜尋本書經文關鍵字</span>
+            </div>
+            <div className="inbook-search-input-wrapper">
+              <input 
+                type="text" 
+                className="inbook-search-input"
+                placeholder="請輸入關鍵字，例如：地藏、勝鬘" 
+                value={inBookSearchInput}
+                onChange={e => setInBookSearchInput(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    setInternalSearchQuery(inBookSearchInput.trim());
+                    setShowInBookSearchModal(false);
+                  }
+                }}
+                autoFocus
+              />
+              {inBookSearchInput && (
+                <button 
+                  type="button" 
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }} 
+                  onClick={() => setInBookSearchInput('')}
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.6rem', marginTop: '0.9rem' }}>
+              {activeSearchQuery && (
+                <button 
+                  className="inbook-search-btn-cancel" 
+                  style={{ color: '#ef4444', borderColor: '#fca5a5' }}
+                  onClick={() => {
+                    setInternalSearchQuery('');
+                    setInBookSearchInput('');
+                    setShowInBookSearchModal(false);
+                  }}
+                >
+                  清除搜尋
+                </button>
+              )}
+              <button 
+                className="inbook-search-btn-cancel" 
+                onClick={() => setShowInBookSearchModal(false)}
+              >
+                取消
+              </button>
+              <button 
+                className="inbook-search-btn-submit" 
+                onClick={() => {
+                  setInternalSearchQuery(inBookSearchInput.trim());
+                  setShowInBookSearchModal(false);
+                }}
+              >
+                搜尋經文
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 搜尋結果同一書內導航懸浮條 (Image 2) */}
+      {activeSearchQuery && matchedSegments.length > 0 && (
         <div className={`search-nav-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-          <span className="search-nav-query" title={searchQuery}>檢索: {searchQuery}</span>
+          <span className="search-nav-query" title={activeSearchQuery}>檢索: {activeSearchQuery}</span>
           <div className="search-nav-controls">
             <button className="search-nav-btn" onClick={handlePrevMatch} title="上一個匹配">
               <ChevronLeft size={16} />
             </button>
             <span className="search-nav-stats">
-              {currentMatchIndex !== -1 ? currentMatchIndex + 1 : '?'} / {matchedSegments.length}
+              {currentMatchIndex !== -1 ? currentMatchIndex + 1 : 0} / {matchedSegments.length}
             </span>
             <button className="search-nav-btn" onClick={handleNextMatch} title="下一個匹配">
               <ChevronRight size={16} />
+            </button>
+            <button 
+              className="search-nav-btn" 
+              onClick={() => {
+                setInternalSearchQuery('');
+              }} 
+              title="關閉檢索"
+              style={{ marginLeft: '0.3rem' }}
+            >
+              <X size={15} />
             </button>
           </div>
         </div>
@@ -1378,6 +1887,8 @@ export function ReaderView({
 
                         {/* 經文主體文字 */}
                         {renderParagraphContent(seg.content, seg.id)}
+
+
 
                         {/* 學術模式：顯示校勘標記 (暫時停用，留待日後開啟) */}
                         {/* eslint-disable-next-line no-constant-binary-expression */}
@@ -1470,6 +1981,34 @@ export function ReaderView({
           <span>{currentMuluTitle}</span>
         </div>
 
+        {/* ⏱️ 閱讀時間倒數計時 (下方控制列中間 / 小字 / 淺灰 / 顯示分和秒倒數) */}
+        {timerState.duration && timerState.remainingSeconds > 0 && (
+          <div 
+            className="bar-center-timer"
+            onClick={() => setShowSettingsView(true)}
+            title="閱讀時間倒數中 (點擊開啟設定)"
+            style={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '0.78rem',
+              color: 'var(--reader-text-muted, #888)',
+              fontFamily: 'var(--font-rounded)',
+              cursor: 'pointer',
+              opacity: 0.9,
+              padding: '2px 8px',
+              borderRadius: '4px',
+              userSelect: 'none'
+            }}
+          >
+            <Clock size={13} style={{ strokeWidth: 2, opacity: 0.85 }} />
+            <span>{formatTimerMMSS(timerState.remainingSeconds)}</span>
+          </div>
+        )}
+
         <div className="bar-right-controls">
           <button className="icon-button" onClick={handleToggleTTS} title={isPlaying ? "停止朗讀" : "語音朗讀"}>
             {isPlaying ? <Square size={20} /> : <Volume2 size={20} />}
@@ -1556,7 +2095,7 @@ export function ReaderView({
                   ) : null;
                 })()}
                 <div className="copyright-text">
-                  經典來源：中華電子佛典協會 (CBETA)
+                  經典來源：財團法人佛教電子佛典基金會(CBETA)
                 </div>
               </div>
             )}
@@ -1697,45 +2236,131 @@ export function ReaderView({
 
 
 
-      {/* 💡 刪除重點懸浮選單 */}
+      {/* 💡 劃線懸浮操作工具列（寫心得 + 刪除重點） */}
       {activeHighlightForDelete && deleteMenuPosition && (
         <div 
           className="highlight-delete-menu"
           style={{
-            position: 'absolute',
-            top: deleteMenuPosition.top,
-            left: deleteMenuPosition.left,
+            position: 'fixed',
+            top: `${deleteMenuPosition.top}px`,
+            left: `${deleteMenuPosition.left}px`,
             transform: 'translateX(-50%)',
-            zIndex: 1000,
+            zIndex: 3000,
             display: 'flex',
-            gap: '6px',
+            alignItems: 'center',
+            gap: '8px',
             background: 'var(--reader-bg)',
-            border: '1px solid var(--reader-border)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            border: '1px solid var(--theme-accent-border, var(--reader-border))',
+            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.25)',
             borderRadius: '20px',
             padding: '4px 12px',
-            alignItems: 'center',
-            cursor: 'pointer',
-            fontSize: '0.85rem',
+            fontSize: '0.82rem',
+            fontWeight: 'bold',
             fontFamily: 'var(--font-serif)',
-            color: 'var(--color-wood-700)',
-            animation: 'fadeIn 0.15s ease-out'
+            animation: 'fadeIn 0.15s ease-out',
+            userSelect: 'none',
+            WebkitUserSelect: 'none'
           }}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteHighlight();
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
-          <span style={{ fontSize: '0.9rem' }}>🗑️</span>
-          <span>刪除重點</span>
+          <button
+            type="button"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              border: 'none',
+              background: 'transparent',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              padding: '4px 6px'
+            }}
+            onClick={() => handleOpenNoteEditor(activeHighlightForDelete)}
+          >
+            <Edit3 size={13} />
+            <span>{activeHighlightForDelete.note ? '編輯筆記' : '寫筆記'}</span>
+          </button>
+
+          <span style={{ opacity: 0.3 }}>|</span>
+
+          <button
+            type="button"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              border: 'none',
+              background: 'transparent',
+              color: '#bd3a3a',
+              cursor: 'pointer',
+              padding: '4px 6px'
+            }}
+            onClick={() => handleDeleteHighlight()}
+          >
+            <Trash2 size={13} />
+            <span>刪除</span>
+          </button>
         </div>
       )}
 
+      {/* 💡 筆記寫作 Modal */}
+      {editingNoteHighlight && (
+        <div className="search-dialog-overlay" onClick={() => setEditingNoteHighlight(null)}>
+          <div className="search-dialog-card animate-slide-up" style={{ maxWidth: '420px', borderRadius: '16px' }} onClick={e => e.stopPropagation()}>
+            <div className="dialog-header">
+              <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FileText size={16} />
+                <span>隨手記筆記</span>
+              </h3>
+              <button className="icon-button close-btn" onClick={() => setEditingNoteHighlight(null)}>
+                <X size={18} />
+              </button>
+            </div>
+            <div className="dialog-body" style={{ gap: '1rem', padding: '1.2rem' }}>
+              <div 
+                style={{ 
+                  fontSize: '0.85rem', 
+                  color: 'var(--text-muted)', 
+                  backgroundColor: 'var(--theme-accent-light, rgba(0,0,0,0.04))', 
+                  padding: '0.6rem 0.8rem', 
+                  borderRadius: '8px',
+                  borderLeft: '3px solid var(--theme-accent)'
+                }}
+              >
+                「{editingNoteHighlight.text}」
+              </div>
+
+              <textarea
+                className="note-textarea"
+                placeholder="寫下您對此句經文的感悟或讀後心得..."
+                value={editingNoteText}
+                onChange={(e) => setEditingNoteText(e.target.value)}
+                rows={4}
+                autoFocus
+              />
+
+              <div style={{ display: 'flex', gap: '0.8rem', width: '100%', marginTop: '0.2rem' }}>
+                <button 
+                  className="dialog-btn-confirm"
+                  onClick={handleSaveNote}
+                  style={{ flex: 1 }}
+                >
+                  儲存心得
+                </button>
+                <button 
+                  className="dialog-btn-cancel"
+                  onClick={() => setEditingNoteHighlight(null)}
+                  style={{ flex: 1 }}
+                >
+                  取消
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 export default ReaderView;

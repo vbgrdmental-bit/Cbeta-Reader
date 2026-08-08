@@ -1,0 +1,634 @@
+{
+  "workId": "T0279",
+  "juan": 60,
+  "results": [
+    {
+      "html": "<body>\r\n<div class=\"cb-mulu\" data-level=\"1\" data-n=\"38\" data-type=\"品\">38 離世間品</div><div class=\"cb-mulu\" data-level=\"2\" data-n=\"7\" data-type=\"品\">之七</div>\r\n\r\n\r\n<span class=\"lb\" id=\"p0319a01\"></span>\r\n<span class=\"lb\" id=\"p0319a02\"></span><cb:juan n=\"060\" fun=\"open\"><div class=\"cb-mulu\"></div><cb:jhead><title>大方廣佛華嚴經</title>卷第六十</cb:jhead></cb:juan>\r\n<span class=\"lb\" id=\"p0319a03\"></span>\r\n<span class=\"lb\" id=\"p0319a04\"></span><byline>于闐國<anchor xml:id=\"fxT10p0319a01\"/>三藏實叉難陀<anchor xml:id=\"fxT10p0319a02\"/>奉　制譯</byline>\r\n<span class=\"lb\" id=\"p0319a05\"></span><cb:div type=\"pin\"><div class=\"cb-mulu\" data-level=\"1\" data-n=\"39\" data-type=\"品\">39 入法界品</div><cb:div><div class=\"cb-mulu\" data-level=\"2\" data-n=\"1\" data-type=\"品\">之一</div><h2 class=\"head\">入法界品第三十九之一</h2>\r\n<span class=\"lb\" id=\"p0319a06\"></span><p>爾時，世尊在室羅筏國逝多林給孤獨園大\r\n<span class=\"lb\" id=\"p0319a07\"></span>莊嚴重閣，與菩薩摩訶薩五百人俱，普賢菩\r\n<span class=\"lb\" id=\"p0319a08\"></span>薩、文殊師利菩薩而為上首，其名曰：光焰幢\r\n<span class=\"lb\" id=\"p0319a09\"></span>菩薩、須彌幢菩薩、寶幢菩薩、無礙幢菩薩、華\r\n<span class=\"lb\" id=\"p0319a10\"></span>幢菩薩、離垢幢菩薩、日幢菩薩、妙幢菩薩、離\r\n<span class=\"lb\" id=\"p0319a11\"></span>塵幢菩薩、普光幢菩薩、地威力菩薩、寶威力\r\n<span class=\"lb\" id=\"p0319a12\"></span>菩薩、大威力菩薩、金剛智威力菩薩、離塵垢\r\n<span class=\"lb\" id=\"p0319a13\"></span>威力菩薩、正法日威力菩薩、功德山威力菩\r\n<span class=\"lb\" id=\"p0319a14\"></span>薩、智光影威力菩薩、普吉祥威力菩薩、地藏\r\n<span class=\"lb\" id=\"p0319a15\"></span>菩薩、虛空藏菩薩、蓮華藏菩薩、寶藏菩薩、日\r\n<span class=\"lb\" id=\"p0319a16\"></span>藏菩薩、淨德藏菩薩、法印藏菩薩、光明藏菩\r\n<span class=\"lb\" id=\"p0319a17\"></span>薩、臍藏菩薩、蓮華德藏菩薩、善眼菩薩、淨眼\r\n<span class=\"lb\" id=\"p0319a18\"></span>菩薩、離垢眼菩薩、無礙眼菩薩、普見眼菩薩、\r\n<span class=\"lb\" id=\"p0319a19\"></span>善觀眼菩薩、青蓮華眼菩薩、金剛眼菩薩、寶\r\n<span class=\"lb\" id=\"p0319a20\"></span>眼菩薩、虛空眼菩薩、喜眼菩薩、普眼菩薩、天\r\n<span class=\"lb\" id=\"p0319a21\"></span>冠菩薩、普照法界智慧冠菩薩、道場冠菩薩、\r\n<span class=\"lb\" id=\"p0319a22\"></span>普照十方冠菩薩、一切佛藏冠菩薩、超出一\r\n<span class=\"lb\" id=\"p0319a23\"></span>切世間冠菩薩、普照冠菩薩、不可壞冠菩薩、\r\n<span class=\"lb\" id=\"p0319a24\"></span>持一切如來師子座冠菩薩、普照法界虛空\r\n<span class=\"lb\" id=\"p0319a25\"></span>冠菩薩、梵王髻菩薩、龍王髻菩薩、一切化\r\n<span class=\"lb\" id=\"p0319a26\"></span>佛光明髻菩薩、一切道場髻菩薩、一切願海\r\n<span class=\"lb\" id=\"p0319a27\"></span>音寶王髻菩薩、一切佛光明摩尼髻菩薩、示\r\n<span class=\"lb\" id=\"p0319a28\"></span>現一切虛空平等相摩尼王莊嚴髻菩薩、示\r\n<span class=\"lb\" id=\"p0319a29\"></span>現一切如來神變摩尼王幢網垂覆髻菩薩、\r\n\r\n<span class=\"lb\" id=\"p0319b01\"></span>出一切佛轉法輪音髻菩薩、說三世一切名\r\n<span class=\"lb\" id=\"p0319b02\"></span>字音髻菩薩、大光菩薩、離垢光菩薩、寶光菩\r\n<span class=\"lb\" id=\"p0319b03\"></span>薩、離塵光菩薩、焰光菩薩、法光菩薩、寂靜光\r\n<span class=\"lb\" id=\"p0319b04\"></span>菩薩、日光菩薩、自在光菩薩、天光菩薩、福德\r\n<span class=\"lb\" id=\"p0319b05\"></span>幢菩薩、智慧幢菩薩、法幢菩薩、神通幢菩薩、\r\n<span class=\"lb\" id=\"p0319b06\"></span>光幢菩薩、華幢菩薩、摩尼幢菩薩、菩提幢菩\r\n<span class=\"lb\" id=\"p0319b07\"></span>薩、梵幢菩薩、普光幢菩薩、梵音菩薩、海音\r\n<span class=\"lb\" id=\"p0319b08\"></span>菩薩、大地音菩薩、世主音菩薩、山相擊音菩\r\n<span class=\"lb\" id=\"p0319b09\"></span>薩、遍一切法界音菩薩、震一切法海雷音菩\r\n<span class=\"lb\" id=\"p0319b10\"></span>薩、降魔音菩薩、大悲方便雲雷音菩薩、息一\r\n<span class=\"lb\" id=\"p0319b11\"></span>切世間苦安慰音菩薩、法上菩薩、勝上菩薩、\r\n<span class=\"lb\" id=\"p0319b12\"></span>智上菩薩、福德須彌上菩薩、功德珊瑚上菩\r\n<span class=\"lb\" id=\"p0319b13\"></span>薩、名稱上菩薩、普光上菩薩、大慈上菩薩、智\r\n<span class=\"lb\" id=\"p0319b14\"></span>海上菩薩、佛種上菩薩、光勝菩薩、德勝菩薩、\r\n<span class=\"lb\" id=\"p0319b15\"></span>上勝菩薩、普明勝菩薩、法勝菩薩、月勝菩薩、\r\n<span class=\"lb\" id=\"p0319b16\"></span>虛空勝菩薩、寶勝菩薩、幢勝菩薩、智勝菩薩、\r\n<span class=\"lb\" id=\"p0319b17\"></span>娑羅自在王菩薩、法自在王菩薩、象自在王\r\n<span class=\"lb\" id=\"p0319b18\"></span>菩薩、梵自在王菩薩、山自在王菩薩、眾自\r\n<span class=\"lb\" id=\"p0319b19\"></span>在王菩薩、速疾自在王菩薩、寂靜自在王菩\r\n<span class=\"lb\" id=\"p0319b20\"></span>薩、不動自在王菩薩、勢力自在王菩薩、最勝\r\n<span class=\"lb\" id=\"p0319b21\"></span>自在王菩薩、寂靜音菩薩、無礙音菩薩、地震\r\n<span class=\"lb\" id=\"p0319b22\"></span>音菩薩、海震音菩薩、雲音菩薩、法光音菩薩、\r\n<span class=\"lb\" id=\"p0319b23\"></span>虛空音菩薩、說一切眾生善根音菩薩、示一\r\n<span class=\"lb\" id=\"p0319b24\"></span>切大願音菩薩、道場音菩薩、須彌光覺菩薩、\r\n<span class=\"lb\" id=\"p0319b25\"></span>虛空覺菩薩、離染覺菩薩、無礙覺菩薩、善覺\r\n<span class=\"lb\" id=\"p0319b26\"></span>菩薩、普照三世覺菩薩、廣大覺菩薩、普明覺\r\n<span class=\"lb\" id=\"p0319b27\"></span>菩薩、法界光明覺菩薩……如是等菩薩摩訶薩\r\n<span class=\"lb\" id=\"p0319b28\"></span>五百人俱。此諸菩薩皆悉成就普賢行願，境\r\n<span class=\"lb\" id=\"p0319b29\"></span>界無礙，普遍一切諸佛剎故；現身無量，親近\r\n\r\n<span class=\"lb\" id=\"p0319c01\"></span>一切諸如來故；淨眼無障，見一切佛神變事\r\n<span class=\"lb\" id=\"p0319c02\"></span>故；至處無限，一切如來成正覺所恒普詣故；\r\n<span class=\"lb\" id=\"p0319c03\"></span>光明無際，以智慧光普照一切實法海故；說\r\n<span class=\"lb\" id=\"p0319c04\"></span>法無盡，清淨辯才無邊際劫無窮盡故；等虛\r\n<span class=\"lb\" id=\"p0319c05\"></span>空界，智慧所行悉清淨故；無所依止，隨眾生\r\n<span class=\"lb\" id=\"p0319c06\"></span>心現色身故；除滅癡翳，了眾生界無眾生\r\n<span class=\"lb\" id=\"p0319c07\"></span>故；等虛空智，以大光網照法界故。及與五百\r\n<span class=\"lb\" id=\"p0319c08\"></span>聲聞眾俱，悉覺真諦，皆證實際，深入法性，永\r\n<span class=\"lb\" id=\"p0319c09\"></span>出有海；依佛功德，離結、使、縛，住無礙處；其心\r\n<span class=\"lb\" id=\"p0319c10\"></span>寂靜猶如虛空，於諸佛所永斷疑惑，於佛智\r\n<span class=\"lb\" id=\"p0319c11\"></span>海深信趣入。及與無量諸世主俱，悉曾供養\r\n<span class=\"lb\" id=\"p0319c12\"></span>無量諸佛，常能利益一切眾生，為不請友，恒\r\n<span class=\"lb\" id=\"p0319c13\"></span>勤守護，誓願不捨；入於世間殊勝智門，從佛\r\n<span class=\"lb\" id=\"p0319c14\"></span>教生，護佛正法，起於大願，不斷佛種，生如來\r\n<span class=\"lb\" id=\"p0319c15\"></span>家，求一切智。</p>\r\n<span class=\"lb\" id=\"p0319c16\"></span><p>時，諸菩薩大德、聲聞、世間諸王并其眷屬，咸\r\n<span class=\"lb\" id=\"p0319c17\"></span>作是念：「如來境界、如來智行、如來加持、如來\r\n<span class=\"lb\" id=\"p0319c18\"></span>力、如來無畏、如來三昧、如來所住、如來自\r\n<span class=\"lb\" id=\"p0319c19\"></span>在、如來身、如來智，一切世間諸天及人無\r\n<span class=\"lb\" id=\"p0319c20\"></span>能通達、無能趣入、無能信解、無能了知、無能\r\n<span class=\"lb\" id=\"p0319c21\"></span>忍受、無能觀察、無能揀擇、無能開示、無能宣\r\n<span class=\"lb\" id=\"p0319c22\"></span>明、無有能令眾生解了，唯除諸佛加被之力、\r\n<span class=\"lb\" id=\"p0319c23\"></span>佛神通力、佛威德力、佛本願力，及其宿世善\r\n<span class=\"lb\" id=\"p0319c24\"></span>根之力、諸善知識攝受之力、深淨信力、大明\r\n<span class=\"lb\" id=\"p0319c25\"></span>解力、趣向菩提清淨心力、求一切智廣大願\r\n<span class=\"lb\" id=\"p0319c26\"></span>力。唯願世尊隨順我等及諸眾生種種欲、種\r\n<span class=\"lb\" id=\"p0319c27\"></span>種解、種種智、種種語、種種自在、種種住地、\r\n<span class=\"lb\" id=\"p0319c28\"></span>種種根清淨、種種意方便、種種心境界、種種\r\n<span class=\"lb\" id=\"p0319c29\"></span>依止如來功德、種種聽受諸所說法，顯示如\r\n\r\n<span class=\"lb\" id=\"p0320a01\"></span>來往昔趣求一切智心、往昔所起菩薩大願、\r\n<span class=\"lb\" id=\"p0320a02\"></span>往昔所淨諸波羅蜜、往昔所入菩薩諸地、往\r\n<span class=\"lb\" id=\"p0320a03\"></span>昔圓滿諸菩薩行、往昔成就方便、往昔修行\r\n<span class=\"lb\" id=\"p0320a04\"></span>諸道、往昔所得出離法、往昔所作神通事、往\r\n<span class=\"lb\" id=\"p0320a05\"></span>昔所有本事因緣，及成等正覺、轉妙法輪、淨\r\n<span class=\"lb\" id=\"p0320a06\"></span>佛國土、調伏眾生、開一切智法城、示一切眾\r\n<span class=\"lb\" id=\"p0320a07\"></span>生道、入一切眾生所住、受一切眾生所施、為\r\n<span class=\"lb\" id=\"p0320a08\"></span>一切眾生說布施功德、為一切眾生現諸佛\r\n<span class=\"lb\" id=\"p0320a09\"></span>影像；如是等法，願皆為說！」</p>\r\n<span class=\"lb\" id=\"p0320a10\"></span><p>爾時，世尊知諸菩薩心之所念，大悲為身，大\r\n<span class=\"lb\" id=\"p0320a11\"></span>悲為門，大悲為首，以大悲法而為方便，充遍\r\n<span class=\"lb\" id=\"p0320a12\"></span>虛空，入師子頻申三昧；入此三昧已，一切\r\n<span class=\"lb\" id=\"p0320a13\"></span>世間普皆嚴淨。于時，此大莊嚴樓閣忽然廣\r\n<span class=\"lb\" id=\"p0320a14\"></span>博無有邊際。金剛為地，寶王覆上，無量寶\r\n<span class=\"lb\" id=\"p0320a15\"></span>華及諸摩尼普散其中處處盈滿。瑠璃為\r\n<span class=\"lb\" id=\"p0320a16\"></span>柱，眾寶合成，大光摩尼之所莊嚴，閻浮檀金\r\n<span class=\"lb\" id=\"p0320a17\"></span>如意寶王周置其上以為嚴飾。危樓逈帶，\r\n<span class=\"lb\" id=\"p0320a18\"></span>閣道傍出，棟宇相承，窓闥交映，階、墀、軒、檻\r\n<span class=\"lb\" id=\"p0320a19\"></span>種種備足，一切皆以妙寶莊嚴；其寶悉作人、\r\n<span class=\"lb\" id=\"p0320a20\"></span>天形像，堅固妙好，世中第一，摩尼寶網彌覆\r\n<span class=\"lb\" id=\"p0320a21\"></span>其上。於諸門側悉建幢幡，咸放光明普周法\r\n<span class=\"lb\" id=\"p0320a22\"></span>界。道場之外，階隥、欄楯，其數無量不可稱說，\r\n<span class=\"lb\" id=\"p0320a23\"></span>靡不咸以摩尼所成。</p><p>爾時，復以佛神力故，其\r\n<span class=\"lb\" id=\"p0320a24\"></span>逝多林忽然廣博，與不可說佛剎微塵數諸\r\n<span class=\"lb\" id=\"p0320a25\"></span>佛國土其量正等。一切妙寶間錯莊嚴，不可\r\n<span class=\"lb\" id=\"p0320a26\"></span>說寶遍布其地，阿僧祇寶以為垣牆，寶多羅\r\n<span class=\"lb\" id=\"p0320a27\"></span>樹莊嚴道側。其間復有無量香河，香水盈滿，\r\n<span class=\"lb\" id=\"p0320a28\"></span>湍激洄澓；一切寶華隨流右轉，自然演出佛\r\n<span class=\"lb\" id=\"p0320a29\"></span>法音聲；不思議寶芬陀利華，菡萏芬敷，彌布\r\n\r\n<span class=\"lb\" id=\"p0320b01\"></span>水上；眾寶華樹列植其岸；種種臺榭不可思\r\n<span class=\"lb\" id=\"p0320b02\"></span>議，皆於岸上次第行列，摩尼寶網之所彌覆。\r\n<span class=\"lb\" id=\"p0320b03\"></span>阿僧祇寶放大光明，阿僧祇寶莊嚴其地。燒\r\n<span class=\"lb\" id=\"p0320b04\"></span>眾妙香，香氣氛氳。復建無量種種寶幢，所\r\n<span class=\"lb\" id=\"p0320b05\"></span>謂：寶香幢、寶衣幢、寶幡幢、寶繒幢、寶華幢、\r\n<span class=\"lb\" id=\"p0320b06\"></span>寶瓔珞幢、寶鬘幢、寶鈴幢、摩尼寶蓋幢、大摩\r\n<span class=\"lb\" id=\"p0320b07\"></span>尼寶幢、光明遍照摩尼寶幢、出一切如來名\r\n<span class=\"lb\" id=\"p0320b08\"></span>號音聲摩尼王幢、師子摩尼王幢、說一切如\r\n<span class=\"lb\" id=\"p0320b09\"></span>來本事海摩尼王幢、現一切法界影像摩尼\r\n<span class=\"lb\" id=\"p0320b10\"></span>王幢，周遍十方，行列莊嚴。</p><p>時，逝多林上虛空\r\n<span class=\"lb\" id=\"p0320b11\"></span>之中，有不思議天宮殿雲、無數香樹雲、不可\r\n<span class=\"lb\" id=\"p0320b12\"></span>說須彌山雲、不可說妓樂雲、出美妙音歌讚\r\n<span class=\"lb\" id=\"p0320b13\"></span>如來不可說寶蓮華雲、不可說寶座雲、敷以\r\n<span class=\"lb\" id=\"p0320b14\"></span>天衣菩薩坐上歎佛功德不可說諸天王形像\r\n<span class=\"lb\" id=\"p0320b15\"></span>摩尼寶雲、不可說白真珠雲、不可說赤珠樓\r\n<span class=\"lb\" id=\"p0320b16\"></span>閣莊嚴具雲、不可說雨金剛堅固珠雲，皆住\r\n<span class=\"lb\" id=\"p0320b17\"></span>虛空，周匝遍滿，以為嚴飾。何以故？如來善\r\n<span class=\"lb\" id=\"p0320b18\"></span>根不思議故，如來白法不思議故，如來威力\r\n<span class=\"lb\" id=\"p0320b19\"></span>不思議故，如來能以一身自在變化遍一切\r\n<span class=\"lb\" id=\"p0320b20\"></span>世界不思議故，如來能以神力令一切佛及\r\n<span class=\"lb\" id=\"p0320b21\"></span>佛國莊嚴皆入其身不思議故，如來能於一\r\n<span class=\"lb\" id=\"p0320b22\"></span>微塵內普現一切法界影像不思議故，如來\r\n<span class=\"lb\" id=\"p0320b23\"></span>能於一毛孔中示現過去一切諸佛不思議\r\n<span class=\"lb\" id=\"p0320b24\"></span>故，如來隨放一一光明悉能遍照一切世界\r\n<span class=\"lb\" id=\"p0320b25\"></span>不思議故，如來能於一毛孔中出一切佛剎\r\n<span class=\"lb\" id=\"p0320b26\"></span>微塵數變化雲充滿一切諸佛國土不思議\r\n<span class=\"lb\" id=\"p0320b27\"></span>故，如來能於一毛孔中普現一切十方世界\r\n<span class=\"lb\" id=\"p0320b28\"></span>成、住、壞劫不思議故。如於此逝多林給孤獨\r\n<span class=\"lb\" id=\"p0320b29\"></span>園見佛國土清淨莊嚴，十方一切盡法界、虛\r\n\r\n<span class=\"lb\" id=\"p0320c01\"></span>空界、一切世界亦如是見。所謂：見如來身住\r\n<span class=\"lb\" id=\"p0320c02\"></span>逝多林，菩薩眾會皆悉遍滿；見普雨一切莊\r\n<span class=\"lb\" id=\"p0320c03\"></span>嚴雲，見普雨一切寶光明照曜雲，見普雨一\r\n<span class=\"lb\" id=\"p0320c04\"></span>切摩尼寶雲，見普雨一切莊嚴蓋彌覆佛剎\r\n<span class=\"lb\" id=\"p0320c05\"></span>雲，見普雨一切天身雲，見普雨一切華樹雲，\r\n<span class=\"lb\" id=\"p0320c06\"></span>見普雨一切衣樹雲，見普雨一切寶鬘、瓔珞\r\n<span class=\"lb\" id=\"p0320c07\"></span>相續不絕周遍一切大地雲，見普雨一切莊\r\n<span class=\"lb\" id=\"p0320c08\"></span>嚴具雲，見普雨一切如眾生形種種香雲，見\r\n<span class=\"lb\" id=\"p0320c09\"></span>普雨一切微妙寶華網相續不斷雲，見普雨\r\n<span class=\"lb\" id=\"p0320c10\"></span>一切諸天女持寶幢幡於虛空中周旋來去\r\n<span class=\"lb\" id=\"p0320c11\"></span>雲，見普雨一切眾寶蓮華於華葉間自然而\r\n<span class=\"lb\" id=\"p0320c12\"></span>出種種樂音雲，見普雨一切師子座寶網瓔\r\n<span class=\"lb\" id=\"p0320c13\"></span>珞而為莊嚴雲。</p>\r\n<span class=\"lb\" id=\"p0320c14\"></span><p>爾時，東方過不可說佛剎微塵數世界海外\r\n<span class=\"lb\" id=\"p0320c15\"></span>有世界，名：金燈雲幢，佛號：毘盧遮那勝德王。\r\n<span class=\"lb\" id=\"p0320c16\"></span>彼佛眾中有菩薩，名：毘盧遮那願光明，與不\r\n<span class=\"lb\" id=\"p0320c17\"></span>可說佛剎微塵數菩薩俱，來向佛所，悉以神\r\n<span class=\"lb\" id=\"p0320c18\"></span>力興種種雲，所謂：天華雲、天香雲、天末香\r\n<span class=\"lb\" id=\"p0320c19\"></span>雲、天鬘雲、天寶雲、天莊嚴具雲、天寶蓋雲、\r\n<span class=\"lb\" id=\"p0320c20\"></span>天微妙衣雲、天寶幢幡雲、天一切妙寶諸莊\r\n<span class=\"lb\" id=\"p0320c21\"></span>嚴雲，充滿虛空。至佛所已，頂禮佛足，即於東\r\n<span class=\"lb\" id=\"p0320c22\"></span>方化作寶莊嚴樓閣及普照十方寶蓮華藏\r\n<span class=\"lb\" id=\"p0320c23\"></span>師子之座，如意寶網羅覆其身，與其眷屬結\r\n<span class=\"lb\" id=\"p0320c24\"></span>跏趺坐。</p><p>南方過不可說佛剎微塵數世界海\r\n<span class=\"lb\" id=\"p0320c25\"></span>外有世界，名：金剛藏，佛號：普光明無勝藏王。\r\n<span class=\"lb\" id=\"p0320c26\"></span>彼佛眾中有菩薩，名：不可壞精進王，與不可\r\n<span class=\"lb\" id=\"p0320c27\"></span>說佛剎微塵數菩薩俱，來向佛所，持一切寶\r\n<span class=\"lb\" id=\"p0320c28\"></span>香網，持一切寶瓔珞，持一切寶華帶，持一切\r\n<span class=\"lb\" id=\"p0320c29\"></span>寶鬘帶，持一切金剛瓔珞，持一切摩尼寶網，\r\n\r\n<span class=\"lb\" id=\"p0321a01\"></span>持一切寶衣帶，持一切寶瓔珞帶，持一切最\r\n<span class=\"lb\" id=\"p0321a02\"></span>勝光明摩尼帶，持一切師子摩尼寶瓔珞，悉\r\n<span class=\"lb\" id=\"p0321a03\"></span>以神力充遍一切諸世界海。到佛所已，頂禮\r\n<span class=\"lb\" id=\"p0321a04\"></span>佛足，即於南方化作遍照世間摩尼寶莊嚴\r\n<span class=\"lb\" id=\"p0321a05\"></span>樓閣及普照十方寶蓮華藏師子之座，以一\r\n<span class=\"lb\" id=\"p0321a06\"></span>切寶華網羅覆其身，與其眷屬結跏趺坐。</p>\r\n<span class=\"lb\" id=\"p0321a07\"></span><p>西方過不可說佛剎微塵數世界海外有世\r\n<span class=\"lb\" id=\"p0321a08\"></span>界，名：摩尼寶燈須彌山幢，佛號：法界智燈。彼\r\n<span class=\"lb\" id=\"p0321a09\"></span>佛眾中有菩薩，名：普勝無上威德王，與世界\r\n<span class=\"lb\" id=\"p0321a10\"></span>海微塵數菩薩俱，來向佛所，悉以神力興不\r\n<span class=\"lb\" id=\"p0321a11\"></span>可說佛剎微塵數種種塗香燒香須彌山雲、不\r\n<span class=\"lb\" id=\"p0321a12\"></span>可說佛剎微塵數種種色香水須彌山雲、不\r\n<span class=\"lb\" id=\"p0321a13\"></span>可說佛剎微塵數一切大地微塵等光明摩尼\r\n<span class=\"lb\" id=\"p0321a14\"></span>寶王須彌山雲、不可說佛剎微塵數種種光\r\n<span class=\"lb\" id=\"p0321a15\"></span>焰輪莊嚴幢須彌山雲、不可說佛剎微塵數\r\n<span class=\"lb\" id=\"p0321a16\"></span>種種色金剛藏摩尼王莊嚴須彌山雲、不可\r\n<span class=\"lb\" id=\"p0321a17\"></span>說佛剎微塵數普照一切世界閻浮檀摩尼寶\r\n<span class=\"lb\" id=\"p0321a18\"></span>幢須彌山雲、不可說佛剎微塵數現一切法\r\n<span class=\"lb\" id=\"p0321a19\"></span>界摩尼寶須彌山雲、不可說佛剎微塵數現一\r\n<span class=\"lb\" id=\"p0321a20\"></span>切諸佛相好摩尼寶王須彌山雲、不可說佛\r\n<span class=\"lb\" id=\"p0321a21\"></span>剎微塵數現一切如來本事因緣說諸菩薩所\r\n<span class=\"lb\" id=\"p0321a22\"></span>行之行摩尼寶王須彌山雲、不可說佛剎微\r\n<span class=\"lb\" id=\"p0321a23\"></span>塵數現一切佛坐菩提場摩尼寶王須彌山\r\n<span class=\"lb\" id=\"p0321a24\"></span>雲，充滿法界。至佛所已，頂禮佛足，即於西方\r\n<span class=\"lb\" id=\"p0321a25\"></span>化作一切香王樓閣，真珠寶網彌覆其上，及\r\n<span class=\"lb\" id=\"p0321a26\"></span>化作帝釋影幢寶蓮華藏師子之座，以妙色\r\n<span class=\"lb\" id=\"p0321a27\"></span>摩尼網羅覆其身，心王寶冠以嚴其首，與其\r\n<span class=\"lb\" id=\"p0321a28\"></span>眷屬結<anchor xml:id=\"fxT10p0321a01\"/>跏趺坐。</p><p>北方過不可說佛剎微塵數\r\n<span class=\"lb\" id=\"p0321a29\"></span>世界海外有世界，名：寶衣光明幢，佛號：照虛\r\n\r\n<span class=\"lb\" id=\"p0321b01\"></span>空法界大光明。彼佛眾中有菩薩，名：無礙勝\r\n<span class=\"lb\" id=\"p0321b02\"></span>藏王，與世界海微塵數菩薩俱，來向佛所，悉\r\n<span class=\"lb\" id=\"p0321b03\"></span>以神力興一切寶衣雲，所謂：黃色寶光明衣\r\n<span class=\"lb\" id=\"p0321b04\"></span>雲、種種香所熏衣雲、日幢摩尼王衣雲、金色\r\n<span class=\"lb\" id=\"p0321b05\"></span>熾然摩尼衣雲、一切寶光焰衣雲、一切星辰\r\n<span class=\"lb\" id=\"p0321b06\"></span>像上妙摩尼衣雲、白玉光摩尼衣雲、光明遍\r\n<span class=\"lb\" id=\"p0321b07\"></span>照殊勝赫奕摩尼衣雲、光明遍照威勢熾盛\r\n<span class=\"lb\" id=\"p0321b08\"></span>摩尼衣雲、莊嚴海摩尼衣雲，充遍虛空。至佛\r\n<span class=\"lb\" id=\"p0321b09\"></span>所已，頂禮佛足，即於北方化作摩尼寶海莊\r\n<span class=\"lb\" id=\"p0321b10\"></span>嚴樓閣及毘瑠璃寶蓮華藏師子之座，以師\r\n<span class=\"lb\" id=\"p0321b11\"></span>子威德摩尼王網羅覆其身，清淨寶王為髻\r\n<span class=\"lb\" id=\"p0321b12\"></span>明珠，與其眷屬結跏趺坐。</p><p>東北方過不可說\r\n<span class=\"lb\" id=\"p0321b13\"></span>佛剎微塵數世界海外有世界，名：一切歡喜\r\n<span class=\"lb\" id=\"p0321b14\"></span>清淨光明網，佛號：無礙眼。彼佛眾中有菩薩，\r\n<span class=\"lb\" id=\"p0321b15\"></span>名：化現法界願月王，與世界海微塵數菩薩\r\n<span class=\"lb\" id=\"p0321b16\"></span>俱，來向佛所，悉以神力興寶樓閣雲、香樓閣\r\n<span class=\"lb\" id=\"p0321b17\"></span>雲、燒香樓閣雲、華樓閣雲、栴檀樓閣雲、金剛\r\n<span class=\"lb\" id=\"p0321b18\"></span>樓閣雲、摩尼樓閣雲、金樓閣雲、衣樓閣雲、\r\n<span class=\"lb\" id=\"p0321b19\"></span>蓮華樓閣雲，彌覆十方一切世界。至佛所已，\r\n<span class=\"lb\" id=\"p0321b20\"></span>頂禮佛足，即於東北方化作一切法界門大\r\n<span class=\"lb\" id=\"p0321b21\"></span>摩尼樓閣及無等香王蓮華藏師子之座，摩\r\n<span class=\"lb\" id=\"p0321b22\"></span>尼華網羅覆其身，著妙寶藏摩尼王冠，與其\r\n<span class=\"lb\" id=\"p0321b23\"></span>眷屬結跏趺坐。</p><p>東南方過不可說佛剎微塵\r\n<span class=\"lb\" id=\"p0321b24\"></span>數世界海外有世界，名：香雲莊嚴幢，佛號：龍\r\n<span class=\"lb\" id=\"p0321b25\"></span>自在王。彼佛眾中有菩薩，名：法慧光焰王，與\r\n<span class=\"lb\" id=\"p0321b26\"></span>世界海微塵數菩薩俱，來向佛所，悉以神力\r\n<span class=\"lb\" id=\"p0321b27\"></span>興金色圓滿光明雲、無量寶色圓滿光明雲、\r\n<span class=\"lb\" id=\"p0321b28\"></span>如來毫相圓滿光明雲、種種寶色圓滿光明\r\n<span class=\"lb\" id=\"p0321b29\"></span>雲、蓮華藏圓滿光明雲、眾寶樹枝圓滿光明\r\n\r\n<span class=\"lb\" id=\"p0321c01\"></span>雲、如來頂髻圓滿光明雲、閻浮檀金色圓滿\r\n<span class=\"lb\" id=\"p0321c02\"></span>光明雲、日色圓滿光明雲、星月色圓滿光明\r\n<span class=\"lb\" id=\"p0321c03\"></span>雲，悉遍虛空。到佛所已，頂禮佛足，即於東南\r\n<span class=\"lb\" id=\"p0321c04\"></span>方化作毘盧遮那最上寶光明樓閣、金剛摩\r\n<span class=\"lb\" id=\"p0321c05\"></span>尼蓮華藏師子之座，眾寶光焰摩尼王網羅\r\n<span class=\"lb\" id=\"p0321c06\"></span>覆其身，與其眷屬結跏趺坐。</p><p>西南方過不可\r\n<span class=\"lb\" id=\"p0321c07\"></span>說佛剎微塵數世界海外有世界，名：日光摩\r\n<span class=\"lb\" id=\"p0321c08\"></span>尼藏，佛號：普照諸法智月王。彼佛眾中有菩\r\n<span class=\"lb\" id=\"p0321c09\"></span>薩，名：摧破一切魔軍智幢王，與世界海微塵\r\n<span class=\"lb\" id=\"p0321c10\"></span>數菩薩俱，來向佛所，於一切毛孔中出等虛\r\n<span class=\"lb\" id=\"p0321c11\"></span>空界華焰雲、香焰雲、寶焰雲、金剛焰雲、燒香\r\n<span class=\"lb\" id=\"p0321c12\"></span>焰雲、電光焰雲、毘盧遮那摩尼寶焰雲、一切\r\n<span class=\"lb\" id=\"p0321c13\"></span>金光焰雲、勝藏摩尼王光焰雲、等三世如來\r\n<span class=\"lb\" id=\"p0321c14\"></span>海光焰雲，一一皆從毛孔中出，遍虛空界。到\r\n<span class=\"lb\" id=\"p0321c15\"></span>佛所已，頂禮佛足，即於西南方化作普現十\r\n<span class=\"lb\" id=\"p0321c16\"></span>方法界光明網大摩尼寶樓閣及香燈焰寶蓮\r\n<span class=\"lb\" id=\"p0321c17\"></span>華藏師子之座，以離垢藏摩尼網羅覆其身，\r\n<span class=\"lb\" id=\"p0321c18\"></span>著出一切眾生發趣音摩尼王嚴飾冠，與其\r\n<span class=\"lb\" id=\"p0321c19\"></span>眷屬結跏趺坐。</p><p>西北方過不可說佛剎微塵\r\n<span class=\"lb\" id=\"p0321c20\"></span>數世界海外，有世界，名：毘盧遮那願摩尼王\r\n<span class=\"lb\" id=\"p0321c21\"></span>藏，佛號：普光明最勝須彌王。彼佛眾中有\r\n<span class=\"lb\" id=\"p0321c22\"></span>菩薩，名：願智光明幢，與世界海微塵數菩薩\r\n<span class=\"lb\" id=\"p0321c23\"></span>俱，來向佛所，於念念中，一切相好、一切毛\r\n<span class=\"lb\" id=\"p0321c24\"></span>孔、一切身分，皆出三世一切如來形像雲、一\r\n<span class=\"lb\" id=\"p0321c25\"></span>切菩薩形像雲、一切如來眾會形像雲、一切\r\n<span class=\"lb\" id=\"p0321c26\"></span>如來變化身形像雲、一切如來本生身形像\r\n<span class=\"lb\" id=\"p0321c27\"></span>雲、一切聲聞辟支佛形像雲、一切如來菩提\r\n<span class=\"lb\" id=\"p0321c28\"></span>場形像雲、一切如來神變形像雲、一切世間\r\n<span class=\"lb\" id=\"p0321c29\"></span>主形像雲、一切清淨國土形像雲，充滿虛空。\r\n\r\n<span class=\"lb\" id=\"p0322a01\"></span>至佛所已，頂禮佛足，即於西北方化作普照\r\n<span class=\"lb\" id=\"p0322a02\"></span>十方摩尼寶莊嚴樓閣及普照世間寶蓮華藏\r\n<span class=\"lb\" id=\"p0322a03\"></span>師子之座，以無能勝光明真珠網羅覆其身，\r\n<span class=\"lb\" id=\"p0322a04\"></span>著普光明摩尼寶冠，與其眷屬結跏趺坐。</p><p>下\r\n<span class=\"lb\" id=\"p0322a05\"></span>方過不可說佛剎微塵數世界海外有世界，\r\n<span class=\"lb\" id=\"p0322a06\"></span>名：一切如來圓滿光普照，佛號：虛空無礙相\r\n<span class=\"lb\" id=\"p0322a07\"></span>智幢王。彼佛眾中有菩薩，名：破一切障勇猛\r\n<span class=\"lb\" id=\"p0322a08\"></span>智王，與世界海微塵數菩薩俱，來向佛所，於\r\n<span class=\"lb\" id=\"p0322a09\"></span>一切毛孔中，出說一切眾生語言海音聲雲，\r\n<span class=\"lb\" id=\"p0322a10\"></span>出說一切三世菩薩修行方便海音聲雲，出\r\n<span class=\"lb\" id=\"p0322a11\"></span>說一切菩薩所起願方便海音聲雲，出說一\r\n<span class=\"lb\" id=\"p0322a12\"></span>切菩薩成滿清淨波羅蜜方便海音聲雲，出\r\n<span class=\"lb\" id=\"p0322a13\"></span>說一切菩薩圓滿行遍一切剎音聲雲，出說\r\n<span class=\"lb\" id=\"p0322a14\"></span>一切菩薩成就自在用音聲雲，出說一切如\r\n<span class=\"lb\" id=\"p0322a15\"></span>來往詣道場破魔軍眾成等正覺自在用音聲\r\n<span class=\"lb\" id=\"p0322a16\"></span>雲，出說一切如來轉法輪契經門名號海音\r\n<span class=\"lb\" id=\"p0322a17\"></span>聲雲，出說一切隨應教化調伏眾生法方便\r\n<span class=\"lb\" id=\"p0322a18\"></span>海音聲雲，出說一切隨時、隨善根、隨願力普\r\n<span class=\"lb\" id=\"p0322a19\"></span>令眾生證得智慧方便海音聲雲。到佛所已，\r\n<span class=\"lb\" id=\"p0322a20\"></span>頂禮佛足，即於下方化作現一切如來宮殿\r\n<span class=\"lb\" id=\"p0322a21\"></span>形像眾寶莊嚴樓閣及一切寶蓮華藏師子之\r\n<span class=\"lb\" id=\"p0322a22\"></span>座，著普現道場影摩尼寶冠，與其眷屬結跏\r\n<span class=\"lb\" id=\"p0322a23\"></span>趺坐。</p><p>上方過不可說佛剎微塵數世界海外\r\n<span class=\"lb\" id=\"p0322a24\"></span>有世界，名：說佛種性無有盡，佛號：普智輪光\r\n<span class=\"lb\" id=\"p0322a25\"></span>明音。彼佛眾中有菩薩，名：法界差別願，與世\r\n<span class=\"lb\" id=\"p0322a26\"></span>界海微塵數菩薩俱，發彼道場來向此娑婆\r\n<span class=\"lb\" id=\"p0322a27\"></span>世界釋迦牟尼佛所，於一切相好、一切毛孔、\r\n<span class=\"lb\" id=\"p0322a28\"></span>一切身分、一切肢節、一切莊嚴具、一切衣\r\n<span class=\"lb\" id=\"p0322a29\"></span>服中，現毘盧遮那等過去一切諸佛、未來一\r\n\r\n<span class=\"lb\" id=\"p0322b01\"></span>切諸佛、已得授記、未授記者，現在十方一切\r\n<span class=\"lb\" id=\"p0322b02\"></span>國土、一切諸佛并其眾會，亦現過去行檀那\r\n<span class=\"lb\" id=\"p0322b03\"></span>波羅蜜及其一切受布施者諸本事海，亦現\r\n<span class=\"lb\" id=\"p0322b04\"></span>過去行尸羅波羅蜜諸本事海，亦現過去行\r\n<span class=\"lb\" id=\"p0322b05\"></span>羼提波羅蜜割截肢體心無動亂諸本事\r\n<span class=\"lb\" id=\"p0322b06\"></span>海，亦現過去行精進波羅蜜勇猛不退諸\r\n<span class=\"lb\" id=\"p0322b07\"></span>本事海，亦現過去求一切如來禪波羅蜜海\r\n<span class=\"lb\" id=\"p0322b08\"></span>而得成就諸本事海，亦現過去求一切佛所\r\n<span class=\"lb\" id=\"p0322b09\"></span>轉法輪所成就法發勇猛心一切皆捨諸本\r\n<span class=\"lb\" id=\"p0322b10\"></span>事海，亦現過去樂見一切佛、樂行一切菩薩\r\n<span class=\"lb\" id=\"p0322b11\"></span>道、樂化一切眾生界諸本事海，亦現過去\r\n<span class=\"lb\" id=\"p0322b12\"></span>所發一切菩薩大願清淨莊嚴諸本事海，亦\r\n<span class=\"lb\" id=\"p0322b13\"></span>現過去菩薩所成力波羅蜜勇猛清淨諸本\r\n<span class=\"lb\" id=\"p0322b14\"></span>事海，亦現過去一切菩薩所修圓滿智波羅\r\n<span class=\"lb\" id=\"p0322b15\"></span>蜜諸本事海；如是一切本事海，悉皆遍滿廣\r\n<span class=\"lb\" id=\"p0322b16\"></span>大法界。至佛所已，頂禮佛足，即於上方化作\r\n<span class=\"lb\" id=\"p0322b17\"></span>一切金剛藏莊嚴樓閣及帝青金剛王蓮華藏\r\n<span class=\"lb\" id=\"p0322b18\"></span>師子之座，以一切寶光明摩尼王網羅覆其\r\n<span class=\"lb\" id=\"p0322b19\"></span>身，以演說三世如來名摩尼寶王為髻明珠，\r\n<span class=\"lb\" id=\"p0322b20\"></span>與其眷屬結跏趺坐。</p><p>如是十方一切菩薩并\r\n<span class=\"lb\" id=\"p0322b21\"></span>其眷屬，皆從普賢菩薩行願中生，以淨智眼\r\n<span class=\"lb\" id=\"p0322b22\"></span>見三世佛，普聞一切諸佛如來所轉法輪、修\r\n<span class=\"lb\" id=\"p0322b23\"></span>多羅海，已得至於一切菩薩自在彼岸；於念\r\n<span class=\"lb\" id=\"p0322b24\"></span>念中現大神變，親近一切諸佛如來，一身\r\n<span class=\"lb\" id=\"p0322b25\"></span>充滿一切世界一切如來眾會道場，於一塵\r\n<span class=\"lb\" id=\"p0322b26\"></span>中普現一切世間境界，教化成熟一切眾\r\n<span class=\"lb\" id=\"p0322b27\"></span>生未曾失時，一毛孔中出一切如來說法音\r\n<span class=\"lb\" id=\"p0322b28\"></span>聲；知一切眾生悉皆如幻，知一切佛悉皆如\r\n<span class=\"lb\" id=\"p0322b29\"></span>影，知一切諸趣受生悉皆如夢，知一切業報\r\n\r\n<span class=\"lb\" id=\"p0322c01\"></span>如鏡中像，知一切諸有生起如熱時焰，知一\r\n<span class=\"lb\" id=\"p0322c02\"></span>切世界皆如變化；成就如來十力、無畏，勇猛\r\n<span class=\"lb\" id=\"p0322c03\"></span>自在，能師子吼，深入無盡辯才大海，得一切\r\n<span class=\"lb\" id=\"p0322c04\"></span>眾生言辭海諸法智；於虛空法界所行無礙，\r\n<span class=\"lb\" id=\"p0322c05\"></span>知一切法無有障礙；一切菩薩神通境界悉\r\n<span class=\"lb\" id=\"p0322c06\"></span>已清淨，勇猛精進，摧伏魔軍；恒以智慧了達\r\n<span class=\"lb\" id=\"p0322c07\"></span>三世，知一切法猶如虛空，無有違諍，亦無取\r\n<span class=\"lb\" id=\"p0322c08\"></span>著；雖勤精進而知一切智終無所來，雖觀境\r\n<span class=\"lb\" id=\"p0322c09\"></span>界而知一切有悉不可得；以方便智入一\r\n<span class=\"lb\" id=\"p0322c10\"></span>切法界，以平等智入一切國土，以自在力令\r\n<span class=\"lb\" id=\"p0322c11\"></span>一切世界展轉相入，於一切世界處處受生，\r\n<span class=\"lb\" id=\"p0322c12\"></span>見一切世界種種形相；於微細境現廣大剎，\r\n<span class=\"lb\" id=\"p0322c13\"></span>於廣大境現微細剎；於一佛所一念之頃，得\r\n<span class=\"lb\" id=\"p0322c14\"></span>一切佛威神所加，普見十方無所迷惑，於剎\r\n<span class=\"lb\" id=\"p0322c15\"></span>那頃悉能往詣。如是等一切菩薩滿逝多林，\r\n<span class=\"lb\" id=\"p0322c16\"></span>皆是如來威神之力。</p><p>于時，上首諸大聲聞——舍\r\n<span class=\"lb\" id=\"p0322c17\"></span>利弗、大目揵連、摩訶迦葉、離婆多、須菩提、\r\n<span class=\"lb\" id=\"p0322c18\"></span>阿㝹樓馱、難陀、劫賓那、迦旃延、富樓那等\r\n<span class=\"lb\" id=\"p0322c19\"></span>諸大聲聞，在逝多林皆悉不見如來神力、如\r\n<span class=\"lb\" id=\"p0322c20\"></span>來嚴好、如來境界、如來遊戲、如來神變、如來\r\n<span class=\"lb\" id=\"p0322c21\"></span>尊勝、如來妙行、如來威德、如來住持、如來淨\r\n<span class=\"lb\" id=\"p0322c22\"></span>剎，亦復不見不可思議菩薩境界、菩薩大會、\r\n<span class=\"lb\" id=\"p0322c23\"></span>菩薩普入、菩薩普至、菩薩普詣、菩薩神變、菩\r\n<span class=\"lb\" id=\"p0322c24\"></span>薩遊戲、菩薩眷屬、菩薩方所、菩薩莊嚴師子\r\n<span class=\"lb\" id=\"p0322c25\"></span>座、菩薩宮殿、菩薩住處、菩薩所入三昧自在、\r\n<span class=\"lb\" id=\"p0322c26\"></span>菩薩觀察、菩薩頻申、菩薩勇猛、菩薩供養、\r\n<span class=\"lb\" id=\"p0322c27\"></span>菩薩受記、菩薩成熟、菩薩勇健、菩薩法身清\r\n<span class=\"lb\" id=\"p0322c28\"></span>淨、菩薩智身圓滿、菩薩願身示現、菩薩色身\r\n<span class=\"lb\" id=\"p0322c29\"></span>成就、菩薩諸相具足清淨、菩薩常光眾色莊\r\n\r\n<span class=\"lb\" id=\"p0323a01\"></span>嚴、菩薩放大光網、菩薩起變化雲、菩薩身遍\r\n<span class=\"lb\" id=\"p0323a02\"></span>十方、菩薩諸行圓滿。如是等事，一切聲聞諸\r\n<span class=\"lb\" id=\"p0323a03\"></span>大弟子皆悉不見。何以故？以善根不同故，本\r\n<span class=\"lb\" id=\"p0323a04\"></span>不修習見佛自在善根故，本不讚說十方世\r\n<span class=\"lb\" id=\"p0323a05\"></span>界一切佛剎清淨功德故，本不稱歎諸佛世尊\r\n<span class=\"lb\" id=\"p0323a06\"></span>種種神變故，本不於生死流轉之中發阿\r\n<span class=\"lb\" id=\"p0323a07\"></span>耨多羅三藐三菩提心故，本不令他住菩提\r\n<span class=\"lb\" id=\"p0323a08\"></span>心故，本不能令如來種性不斷絕故，本不攝\r\n<span class=\"lb\" id=\"p0323a09\"></span>受諸眾生故，本不勸他修習菩薩波羅蜜故，\r\n<span class=\"lb\" id=\"p0323a10\"></span>本在生死流轉之時不勸眾生求於最勝大\r\n<span class=\"lb\" id=\"p0323a11\"></span>智眼故，本不修習生一切智諸善根故，本不\r\n<span class=\"lb\" id=\"p0323a12\"></span>成就如來出世諸善根故，本不得嚴淨佛剎\r\n<span class=\"lb\" id=\"p0323a13\"></span>神通智故，本不得諸菩薩眼所知境故，本不\r\n<span class=\"lb\" id=\"p0323a14\"></span>求超出世間不共菩提諸善根故，本不發一\r\n<span class=\"lb\" id=\"p0323a15\"></span>切菩薩諸大願故，本不從如來加被之所生\r\n<span class=\"lb\" id=\"p0323a16\"></span>故，本不知諸法如幻、菩薩如夢故，本不得諸\r\n<span class=\"lb\" id=\"p0323a17\"></span>大菩薩廣大歡喜故。如是皆是普賢菩薩智\r\n<span class=\"lb\" id=\"p0323a18\"></span>眼境界，不與一切二乘所共。以是因緣，諸大\r\n<span class=\"lb\" id=\"p0323a19\"></span>聲聞不能見、不能知、不能聞、不能入、不能\r\n<span class=\"lb\" id=\"p0323a20\"></span>得、不能念、不能觀察、不能籌量、不能思惟、不\r\n<span class=\"lb\" id=\"p0323a21\"></span>能分別；是故，雖在逝多林中，不見如來諸大\r\n<span class=\"lb\" id=\"p0323a22\"></span>神變。</p><p>復次，諸大聲聞無如是善根故，無如是\r\n<span class=\"lb\" id=\"p0323a23\"></span>智眼故，無如是三昧故，無如是解脫故，無如\r\n<span class=\"lb\" id=\"p0323a24\"></span>是神通故，無如是威德故，無如是勢力故，無\r\n<span class=\"lb\" id=\"p0323a25\"></span>如是自在故，無如是住處故，無如是境界故，\r\n<span class=\"lb\" id=\"p0323a26\"></span>是故於此不能知、不能見、不能入、不能證、不\r\n<span class=\"lb\" id=\"p0323a27\"></span>能住、不能解、不能觀察、不能忍受、不能趣向、\r\n<span class=\"lb\" id=\"p0323a28\"></span>不能遊履；又亦不能廣為他人，開闡解說，稱\r\n<span class=\"lb\" id=\"p0323a29\"></span>揚示現，引導勸進，令其趣向，令其修習，令其\r\n\r\n<span class=\"lb\" id=\"p0323b01\"></span>安住，令其證入。何以故？諸大弟子依聲聞\r\n<span class=\"lb\" id=\"p0323b02\"></span>乘而出離故，成就聲聞道，滿足聲聞行，安住\r\n<span class=\"lb\" id=\"p0323b03\"></span>聲聞果，於無有諦得決定智，常住實際究竟\r\n<span class=\"lb\" id=\"p0323b04\"></span>寂靜，遠離大悲，捨於眾生，住於自事；於彼智\r\n<span class=\"lb\" id=\"p0323b05\"></span>慧，不能積集，不能修行，不能安住，不能願\r\n<span class=\"lb\" id=\"p0323b06\"></span>求，不能成就，不能清淨，不能趣入，不能通\r\n<span class=\"lb\" id=\"p0323b07\"></span>達，不能知見，不能證得。是故，雖在逝多林中\r\n<span class=\"lb\" id=\"p0323b08\"></span>對於如來，不見如是廣大神變。</p><p>佛子！如恒河\r\n<span class=\"lb\" id=\"p0323b09\"></span>岸有百千億無量餓鬼，裸形飢渴，舉體焦然，\r\n<span class=\"lb\" id=\"p0323b10\"></span>烏鷲犲狼競來搏撮，為渴所逼，欲求水飲，雖\r\n<span class=\"lb\" id=\"p0323b11\"></span>住河邊而不見河；設有見者，見其枯竭。何以\r\n<span class=\"lb\" id=\"p0323b12\"></span>故？深厚業障之所覆故。彼大聲聞亦復如是，\r\n<span class=\"lb\" id=\"p0323b13\"></span>雖復住在逝多林中，不見如來廣大神力，捨\r\n<span class=\"lb\" id=\"p0323b14\"></span>一切智，無明瞖瞙覆其眼故，不曾種植薩\r\n<span class=\"lb\" id=\"p0323b15\"></span>婆若地諸善根故。譬如有人，於大會中昏睡\r\n<span class=\"lb\" id=\"p0323b16\"></span>安寢，忽然夢見須彌山頂帝釋所住善見大\r\n<span class=\"lb\" id=\"p0323b17\"></span>城，宮殿、園林種種嚴好，天子、天女百千萬\r\n<span class=\"lb\" id=\"p0323b18\"></span>億，普散天華遍滿其地，種種衣樹出妙衣\r\n<span class=\"lb\" id=\"p0323b19\"></span>服，種種華樹開敷妙華，諸音樂樹奏天音\r\n<span class=\"lb\" id=\"p0323b20\"></span>樂，天諸采女歌詠美音，無量諸天於中戲\r\n<span class=\"lb\" id=\"p0323b21\"></span>樂；其人自見著天衣服，普於其處住止周旋。\r\n<span class=\"lb\" id=\"p0323b22\"></span>其大會中一切諸人雖同一處，不知不見。何\r\n<span class=\"lb\" id=\"p0323b23\"></span>以故？夢中所見，非彼大眾所能見故。一切菩\r\n<span class=\"lb\" id=\"p0323b24\"></span>薩、世間諸王亦復如是，以久積集善根力故，\r\n<span class=\"lb\" id=\"p0323b25\"></span>發一切智廣大願故，學習一切佛功德故，修\r\n<span class=\"lb\" id=\"p0323b26\"></span>行菩薩莊嚴道故，圓滿一切智智法故，滿足\r\n<span class=\"lb\" id=\"p0323b27\"></span>普賢諸行願故，趣入一切菩薩智地故，遊戲\r\n<span class=\"lb\" id=\"p0323b28\"></span>一切菩薩所住諸三昧故，已能觀察一切菩\r\n<span class=\"lb\" id=\"p0323b29\"></span>薩智慧境界無障礙故，是故悉見如來世尊\r\n\r\n<span class=\"lb\" id=\"p0323c01\"></span>不可思議自在神變。一切聲聞諸大弟子，皆\r\n<span class=\"lb\" id=\"p0323c02\"></span>不能見，皆不能知，以無菩薩清淨眼故。譬如\r\n<span class=\"lb\" id=\"p0323c03\"></span>雪山具眾藥草，良醫詣彼悉能分別；其諸捕\r\n<span class=\"lb\" id=\"p0323c04\"></span>獵、放牧之人恒住彼山，不見其藥。此亦如是，\r\n<span class=\"lb\" id=\"p0323c05\"></span>以諸菩薩入智境界，具自在力，能見如來廣\r\n<span class=\"lb\" id=\"p0323c06\"></span>大神變；諸大弟子唯求自利，不欲利他，唯求\r\n<span class=\"lb\" id=\"p0323c07\"></span>自安，不欲安他，雖在林中，不知不見。譬如地\r\n<span class=\"lb\" id=\"p0323c08\"></span>中有諸寶藏，種種珍異悉皆充滿，有一丈夫\r\n<span class=\"lb\" id=\"p0323c09\"></span>聰慧明達，善能分別一切伏藏，其人復有大\r\n<span class=\"lb\" id=\"p0323c10\"></span>福德力，能隨所欲自在而取，奉養父母，賑恤\r\n<span class=\"lb\" id=\"p0323c11\"></span>親屬，老、病、窮乏靡不均贍；其無智慧、無福德\r\n<span class=\"lb\" id=\"p0323c12\"></span>人，雖亦至於寶藏之處，不知不見，不得其益。\r\n<span class=\"lb\" id=\"p0323c13\"></span>此亦如是，諸大菩薩有淨智眼，能入如來不\r\n<span class=\"lb\" id=\"p0323c14\"></span>可思議甚深境界，能見佛神力，能入諸法門，\r\n<span class=\"lb\" id=\"p0323c15\"></span>能遊三昧海，能供養諸佛，能以正法開悟眾\r\n<span class=\"lb\" id=\"p0323c16\"></span>生，能以四攝攝受眾生；諸大聲聞不能得見\r\n<span class=\"lb\" id=\"p0323c17\"></span>如來神力，亦不能見諸菩薩眾。譬如盲人至\r\n<span class=\"lb\" id=\"p0323c18\"></span>大寶洲，若行、若住、若坐、若臥，不能得見一切\r\n<span class=\"lb\" id=\"p0323c19\"></span>眾寶；以不見故，不能採取，不得受用。此亦如\r\n<span class=\"lb\" id=\"p0323c20\"></span>是，諸大弟子雖在林中親近世尊，不見如來\r\n<span class=\"lb\" id=\"p0323c21\"></span>自在神力，亦不得見菩薩大會。何以故？無\r\n<span class=\"lb\" id=\"p0323c22\"></span>有菩薩無礙淨眼，不能次第悟入法界見於\r\n<span class=\"lb\" id=\"p0323c23\"></span>如來自在力故。譬如有人得清淨眼，名：離垢\r\n<span class=\"lb\" id=\"p0323c24\"></span>光明，一切暗色不能為障。爾時，彼人於夜暗\r\n<span class=\"lb\" id=\"p0323c25\"></span>中，處在無量百千萬億人眾之內，或行、或住、\r\n<span class=\"lb\" id=\"p0323c26\"></span>或坐、或臥，彼諸人眾形相威儀，此明眼人莫\r\n<span class=\"lb\" id=\"p0323c27\"></span>不具見；其明眼者威儀進退，彼諸人眾悉不\r\n<span class=\"lb\" id=\"p0323c28\"></span>能覩。佛亦如是，成就智眼，清淨無礙，悉能明\r\n<span class=\"lb\" id=\"p0323c29\"></span>見一切世間；其所示現神通變化，大菩薩眾\r\n\r\n<span class=\"lb\" id=\"p0324a01\"></span>所共圍遶，諸大弟子悉不能見。譬如比丘在\r\n<span class=\"lb\" id=\"p0324a02\"></span>大眾中入遍處定，所謂：地遍處定、水遍處定、\r\n<span class=\"lb\" id=\"p0324a03\"></span>火遍處定、風遍處定、青遍處定、黃遍處定、赤\r\n<span class=\"lb\" id=\"p0324a04\"></span>遍處定、白遍處定、天遍處定、種種眾生身遍\r\n<span class=\"lb\" id=\"p0324a05\"></span>處定、一切語言音聲遍處定、一切所緣遍處\r\n<span class=\"lb\" id=\"p0324a06\"></span>定；入此定者見其所緣，其餘大眾悉不能\r\n<span class=\"lb\" id=\"p0324a07\"></span>見，唯除有住此三昧者。如來所現不可思議\r\n<span class=\"lb\" id=\"p0324a08\"></span>諸佛境界亦復如是，菩薩具見，聲聞莫覩。譬\r\n<span class=\"lb\" id=\"p0324a09\"></span>如有人以翳形藥自塗其眼，在於眾會去、來、\r\n<span class=\"lb\" id=\"p0324a10\"></span>坐、立無能見者，而能悉覩眾會中事。應知如\r\n<span class=\"lb\" id=\"p0324a11\"></span>來亦復如是，超過於世，普見世間，非諸聲聞\r\n<span class=\"lb\" id=\"p0324a12\"></span>所能得見，唯除趣向一切智境諸大菩薩。如\r\n<span class=\"lb\" id=\"p0324a13\"></span>人生已，則有二天，恒相隨逐，一曰：同生，二曰：\r\n<span class=\"lb\" id=\"p0324a14\"></span>同名；天常見人，人不見天。應知如來亦復如\r\n<span class=\"lb\" id=\"p0324a15\"></span>是，在諸菩薩大集會中現大神通，諸大聲聞\r\n<span class=\"lb\" id=\"p0324a16\"></span>悉不能見。譬如比丘得心自在，入滅盡定，六\r\n<span class=\"lb\" id=\"p0324a17\"></span>根作業皆悉不行，一切語言不知不覺；定力\r\n<span class=\"lb\" id=\"p0324a18\"></span>持故，不般涅槃。一切聲聞亦復如是，雖復住\r\n<span class=\"lb\" id=\"p0324a19\"></span>在逝多林中，具足六根，而不知不見不解不\r\n<span class=\"lb\" id=\"p0324a20\"></span>入如來自在、菩薩眾會諸所作事。何以故？\r\n<span class=\"lb\" id=\"p0324a21\"></span>如來境界甚深廣大，難見難知，難測難量，超\r\n<span class=\"lb\" id=\"p0324a22\"></span>諸世間，不可思議，無能壞者，非是一切二乘\r\n<span class=\"lb\" id=\"p0324a23\"></span>境界；是故，如來自在神力、菩薩眾會及逝多\r\n<span class=\"lb\" id=\"p0324a24\"></span>林普遍一切清淨世界，如是等事，諸大聲聞\r\n<span class=\"lb\" id=\"p0324a25\"></span>悉不知見，非其器故。</p><p>爾時，毘盧遮那願光明\r\n<span class=\"lb\" id=\"p0324a26\"></span>菩薩，承佛神力，觀察十方而說頌言：</p>\r\n<span class=\"lb\" id=\"p0324a27\"></span><p class=\"lg\"><p class=\"lg\">「汝等應觀察，<caesura/>佛道不思議，</p>\r\n<span class=\"lb\" id=\"p0324a28\"></span><p class=\"lg\">於此逝多林，<caesura/>示現神通力。</p>\r\n<span class=\"lb\" id=\"p0324a29\"></span><p class=\"lg\">善逝威神力，<caesura/>所現無央數；</p>\r\n\r\n<span class=\"lb\" id=\"p0324b01\"></span><p class=\"lg\">一切諸世間，<caesura/>迷惑不能了。</p>\r\n<span class=\"lb\" id=\"p0324b02\"></span><p class=\"lg\">法王深妙法，<caesura/>無量難思議，</p>\r\n<span class=\"lb\" id=\"p0324b03\"></span><p class=\"lg\">所現諸神通，<caesura/>舉世莫能測。</p>\r\n<span class=\"lb\" id=\"p0324b04\"></span><p class=\"lg\">以了法無相，<caesura/>是故名為佛，</p>\r\n<span class=\"lb\" id=\"p0324b05\"></span><p class=\"lg\">而具相莊嚴，<caesura/>稱揚不可盡。</p>\r\n<span class=\"lb\" id=\"p0324b06\"></span><p class=\"lg\">今於此林內，<caesura/>示現大神力，</p>\r\n<span class=\"lb\" id=\"p0324b07\"></span><p class=\"lg\">甚深無有邊，<caesura/>言辭莫能辯。</p>\r\n<span class=\"lb\" id=\"p0324b08\"></span><p class=\"lg\">汝觀大威德，<caesura/>無量菩薩眾，</p>\r\n<span class=\"lb\" id=\"p0324b09\"></span><p class=\"lg\">十方諸國土，<caesura/>而來見世尊。</p>\r\n<span class=\"lb\" id=\"p0324b10\"></span><p class=\"lg\">所願皆具足，<caesura/>所行無障礙；</p>\r\n<span class=\"lb\" id=\"p0324b11\"></span><p class=\"lg\">一切諸世間，<caesura/>無能測量者。</p>\r\n<span class=\"lb\" id=\"p0324b12\"></span><p class=\"lg\">一切諸緣覺，<caesura/>及彼大聲聞，</p>\r\n<span class=\"lb\" id=\"p0324b13\"></span><p class=\"lg\">皆悉不能知，<caesura/>菩薩行境界。</p>\r\n<span class=\"lb\" id=\"p0324b14\"></span><p class=\"lg\">菩薩大智慧，<caesura/>諸地悉究竟，</p>\r\n<span class=\"lb\" id=\"p0324b15\"></span><p class=\"lg\">高建勇猛幢，<caesura/>難摧難可動。</p>\r\n<span class=\"lb\" id=\"p0324b16\"></span><p class=\"lg\">諸大名稱士，<caesura/>無量三昧力，</p>\r\n<span class=\"lb\" id=\"p0324b17\"></span><p class=\"lg\">所現諸神變，<caesura/>法界悉充滿。」</p></lg>\r\n<span class=\"lb\" id=\"p0324b18\"></span><p>爾時，不可壞精進王菩薩，承佛神力，觀察十\r\n<span class=\"lb\" id=\"p0324b19\"></span>方而說頌言：</p>\r\n<span class=\"lb\" id=\"p0324b20\"></span><p class=\"lg\"><p class=\"lg\">「汝觀諸佛子，<caesura/>智慧功德藏，</p>\r\n<span class=\"lb\" id=\"p0324b21\"></span><p class=\"lg\">究竟菩提行，<caesura/>安隱諸世間。</p>\r\n<span class=\"lb\" id=\"p0324b22\"></span><p class=\"lg\">其心本明達，<caesura/>善入諸三昧，</p>\r\n<span class=\"lb\" id=\"p0324b23\"></span><p class=\"lg\">智慧無邊際，<caesura/>境界不可量。</p>\r\n<span class=\"lb\" id=\"p0324b24\"></span><p class=\"lg\">今此逝多林，<caesura/>種種皆嚴飾，</p>\r\n<span class=\"lb\" id=\"p0324b25\"></span><p class=\"lg\">菩薩眾雲集，<caesura/>親近如來住。</p>\r\n<span class=\"lb\" id=\"p0324b26\"></span><p class=\"lg\">汝觀無所著，<caesura/>無量大眾海，</p>\r\n<span class=\"lb\" id=\"p0324b27\"></span><p class=\"lg\">十方來詣此，<caesura/>坐寶蓮華座。</p>\r\n<span class=\"lb\" id=\"p0324b28\"></span><p class=\"lg\">無來亦無住，<caesura/>無依無戲論，</p>\r\n<span class=\"lb\" id=\"p0324b29\"></span><p class=\"lg\">離垢心無礙，<caesura/>究竟於法界。</p>\r\n\r\n<span class=\"lb\" id=\"p0324c01\"></span><p class=\"lg\">建立智慧幢，<caesura/>堅固不動搖，</p>\r\n<span class=\"lb\" id=\"p0324c02\"></span><p class=\"lg\">知無變化法，<caesura/>而現變化事。</p>\r\n<span class=\"lb\" id=\"p0324c03\"></span><p class=\"lg\">十方無量剎，<caesura/>一切諸佛所，</p>\r\n<span class=\"lb\" id=\"p0324c04\"></span><p class=\"lg\">同時悉往詣，<caesura/>而亦不分身。</p>\r\n<span class=\"lb\" id=\"p0324c05\"></span><p class=\"lg\">汝觀釋師子，<caesura/>自在神通力，</p>\r\n<span class=\"lb\" id=\"p0324c06\"></span><p class=\"lg\">能令菩薩眾，<caesura/>一切俱來集。</p>\r\n<span class=\"lb\" id=\"p0324c07\"></span><p class=\"lg\">一切諸佛法，<caesura/>法界悉平等，</p>\r\n<span class=\"lb\" id=\"p0324c08\"></span><p class=\"lg\">言說故不同，<caesura/>此眾咸通達。</p>\r\n<span class=\"lb\" id=\"p0324c09\"></span><p class=\"lg\">諸佛常安住，<caesura/>法界平等際，</p>\r\n<span class=\"lb\" id=\"p0324c10\"></span><p class=\"lg\">演說差別法，<caesura/>言辭無有盡。」</p></lg>\r\n<span class=\"lb\" id=\"p0324c11\"></span><p>爾時，普勝無上威德王菩薩，承佛神力，觀察\r\n<span class=\"lb\" id=\"p0324c12\"></span>十方而說頌言：</p>\r\n<span class=\"lb\" id=\"p0324c13\"></span><p class=\"lg\"><p class=\"lg\">「汝觀無上士，<caesura/>廣大智圓滿，</p>\r\n<span class=\"lb\" id=\"p0324c14\"></span><p class=\"lg\">善達時非時，<caesura/>為眾演說法；</p>\r\n<span class=\"lb\" id=\"p0324c15\"></span><p class=\"lg\">摧伏眾外道，<caesura/>一切諸異論，</p>\r\n<span class=\"lb\" id=\"p0324c16\"></span><p class=\"lg\">普隨眾生心，<caesura/>為現神通力。</p>\r\n<span class=\"lb\" id=\"p0324c17\"></span><p class=\"lg\">正覺非有量，<caesura/>亦復非無量；</p>\r\n<span class=\"lb\" id=\"p0324c18\"></span><p class=\"lg\">若量若無量，<caesura/>牟尼悉超越。</p>\r\n<span class=\"lb\" id=\"p0324c19\"></span><p class=\"lg\">如日在虛空，<caesura/>照臨一切處；</p>\r\n<span class=\"lb\" id=\"p0324c20\"></span><p class=\"lg\">佛智亦如是，<caesura/>了達三世法。</p>\r\n<span class=\"lb\" id=\"p0324c21\"></span><p class=\"lg\">譬如十五夜，<caesura/>月輪無減缺；</p>\r\n<span class=\"lb\" id=\"p0324c22\"></span><p class=\"lg\">如來亦復然，<caesura/>白法悉圓滿。</p>\r\n<span class=\"lb\" id=\"p0324c23\"></span><p class=\"lg\">譬如空中日，<caesura/>運行無暫已；</p>\r\n<span class=\"lb\" id=\"p0324c24\"></span><p class=\"lg\">如來亦如是，<caesura/>神變恒相續。</p>\r\n<span class=\"lb\" id=\"p0324c25\"></span><p class=\"lg\">譬如十方剎，<caesura/>於空無所礙，</p>\r\n<span class=\"lb\" id=\"p0324c26\"></span><p class=\"lg\">世燈現變化，<caesura/>於世亦復然。</p>\r\n<span class=\"lb\" id=\"p0324c27\"></span><p class=\"lg\">譬如世間地，<caesura/>群生之所依；</p>\r\n<span class=\"lb\" id=\"p0324c28\"></span><p class=\"lg\">照世燈法輪，<caesura/>為依亦如是。</p>\r\n<span class=\"lb\" id=\"p0324c29\"></span><p class=\"lg\">譬如猛疾風，<caesura/>所行無障礙；</p>\r\n\r\n<span class=\"lb\" id=\"p0325a01\"></span><p class=\"lg\">佛法亦如是，<caesura/>速遍於世間。</p>\r\n<span class=\"lb\" id=\"p0325a02\"></span><p class=\"lg\">譬如大水輪，<caesura/>世界所依住；</p>\r\n<span class=\"lb\" id=\"p0325a03\"></span><p class=\"lg\">智慧輪亦爾，<caesura/>三世佛所依。」</p></lg>\r\n<span class=\"lb\" id=\"p0325a04\"></span><p>爾時，無礙勝藏王菩薩，承佛神力，觀察十方\r\n<span class=\"lb\" id=\"p0325a05\"></span>而說頌言：</p>\r\n<span class=\"lb\" id=\"p0325a06\"></span><p class=\"lg\"><p class=\"lg\">「譬如大寶山，<caesura/>饒益諸含識；</p>\r\n<span class=\"lb\" id=\"p0325a07\"></span><p class=\"lg\">佛山亦如是，<caesura/>普益於世間。</p>\r\n<span class=\"lb\" id=\"p0325a08\"></span><p class=\"lg\">譬如大海水，<caesura/>澄淨無垢濁；</p>\r\n<span class=\"lb\" id=\"p0325a09\"></span><p class=\"lg\">見佛亦如是，<caesura/>能除諸渴愛。</p>\r\n<span class=\"lb\" id=\"p0325a10\"></span><p class=\"lg\">譬如須彌山，<caesura/>出於大海中；</p>\r\n<span class=\"lb\" id=\"p0325a11\"></span><p class=\"lg\">世間燈亦爾，<caesura/>從於法海出。</p>\r\n<span class=\"lb\" id=\"p0325a12\"></span><p class=\"lg\">如海具眾寶，<caesura/>求者皆滿足；</p>\r\n<span class=\"lb\" id=\"p0325a13\"></span><p class=\"lg\">無師智亦然，<caesura/>見者悉開悟。</p>\r\n<span class=\"lb\" id=\"p0325a14\"></span><p class=\"lg\">如來甚深智，<caesura/>無量無有數；</p>\r\n<span class=\"lb\" id=\"p0325a15\"></span><p class=\"lg\">是故神通力，<caesura/>示現難思議。</p>\r\n<span class=\"lb\" id=\"p0325a16\"></span><p class=\"lg\">譬如工幻師，<caesura/>示現種種事；</p>\r\n<span class=\"lb\" id=\"p0325a17\"></span><p class=\"lg\">佛智亦如是，<caesura/>現諸自在力。</p>\r\n<span class=\"lb\" id=\"p0325a18\"></span><p class=\"lg\">譬如如意寶，<caesura/>能滿一切欲；</p>\r\n<span class=\"lb\" id=\"p0325a19\"></span><p class=\"lg\">最勝亦復然，<caesura/>滿諸清淨願。</p>\r\n<span class=\"lb\" id=\"p0325a20\"></span><p class=\"lg\">譬如明淨寶，<caesura/>普照一切物；</p>\r\n<span class=\"lb\" id=\"p0325a21\"></span><p class=\"lg\">佛智亦如是，<caesura/>普照群生心。</p>\r\n<span class=\"lb\" id=\"p0325a22\"></span><p class=\"lg\">譬如八面寶，<caesura/>等鑒於諸方；</p>\r\n<span class=\"lb\" id=\"p0325a23\"></span><p class=\"lg\">無礙燈亦然，<caesura/>普照於法界。</p>\r\n<span class=\"lb\" id=\"p0325a24\"></span><p class=\"lg\">譬如水清珠，<caesura/>能清諸濁水；</p>\r\n<span class=\"lb\" id=\"p0325a25\"></span><p class=\"lg\">見佛亦如是，<caesura/>諸根悉清淨。」</p></lg>\r\n<span class=\"lb\" id=\"p0325a26\"></span><p>爾時，化現法界願月王菩薩，承佛神力，觀察\r\n<span class=\"lb\" id=\"p0325a27\"></span>十方而說頌言：</p>\r\n<span class=\"lb\" id=\"p0325a28\"></span><p class=\"lg\"><p class=\"lg\">「譬如帝青寶，<caesura/>能青一切色；</p>\r\n<span class=\"lb\" id=\"p0325a29\"></span><p class=\"lg\">見佛者亦然，<caesura/>悉發菩提行。</p>\r\n\r\n<span class=\"lb\" id=\"p0325b01\"></span><p class=\"lg\">一一微塵內，<caesura/>佛現神通力，</p>\r\n<span class=\"lb\" id=\"p0325b02\"></span><p class=\"lg\">令無量無邊，<caesura/>菩薩皆清淨。</p>\r\n<span class=\"lb\" id=\"p0325b03\"></span><p class=\"lg\">甚深微妙力，<caesura/>無邊不可知；</p>\r\n<span class=\"lb\" id=\"p0325b04\"></span><p class=\"lg\">菩薩之境界，<caesura/>世間莫能測。</p>\r\n<span class=\"lb\" id=\"p0325b05\"></span><p class=\"lg\">如來所現身，<caesura/>清淨相莊嚴，</p>\r\n<span class=\"lb\" id=\"p0325b06\"></span><p class=\"lg\">普入於法界，<caesura/>成就諸菩薩。</p>\r\n<span class=\"lb\" id=\"p0325b07\"></span><p class=\"lg\">難思佛國土，<caesura/>於中成正覺；</p>\r\n<span class=\"lb\" id=\"p0325b08\"></span><p class=\"lg\">一切諸菩薩，<caesura/>世主皆充滿。</p>\r\n<span class=\"lb\" id=\"p0325b09\"></span><p class=\"lg\">釋迦無上尊，<caesura/>於法悉自在，</p>\r\n<span class=\"lb\" id=\"p0325b10\"></span><p class=\"lg\">示現神通力，<caesura/>無邊不可量。</p>\r\n<span class=\"lb\" id=\"p0325b11\"></span><p class=\"lg\">菩薩種種行，<caesura/>無量無有盡；</p>\r\n<span class=\"lb\" id=\"p0325b12\"></span><p class=\"lg\">如來自在力，<caesura/>為之悉示現。</p>\r\n<span class=\"lb\" id=\"p0325b13\"></span><p class=\"lg\">佛子善修學，<caesura/>甚深諸法界，</p>\r\n<span class=\"lb\" id=\"p0325b14\"></span><p class=\"lg\">成就無礙智，<caesura/>明了一切法。</p>\r\n<span class=\"lb\" id=\"p0325b15\"></span><p class=\"lg\">善逝威神力，<caesura/>為眾轉法輪，</p>\r\n<span class=\"lb\" id=\"p0325b16\"></span><p class=\"lg\">神變普充滿，<caesura/>令世皆清淨。</p>\r\n<span class=\"lb\" id=\"p0325b17\"></span><p class=\"lg\">如來智圓滿，<caesura/>境界亦清淨；</p>\r\n<span class=\"lb\" id=\"p0325b18\"></span><p class=\"lg\">譬如大龍王，<caesura/>普濟諸群生。」</p></lg>\r\n<span class=\"lb\" id=\"p0325b19\"></span><p>爾時，法慧光焰王菩薩，承佛神力，觀察十方\r\n<span class=\"lb\" id=\"p0325b20\"></span>而說頌言：</p>\r\n<span class=\"lb\" id=\"p0325b21\"></span><p class=\"lg\"><p class=\"lg\">「三世諸如來，<caesura/>聲聞大弟子，</p>\r\n<span class=\"lb\" id=\"p0325b22\"></span><p class=\"lg\">悉不能知佛，<caesura/>舉足下足事。</p>\r\n<span class=\"lb\" id=\"p0325b23\"></span><p class=\"lg\">去來現在世，<caesura/>一切諸緣覺，</p>\r\n<span class=\"lb\" id=\"p0325b24\"></span><p class=\"lg\">亦不知如來，<caesura/>舉足下足事。</p>\r\n<span class=\"lb\" id=\"p0325b25\"></span><p class=\"lg\">況復諸凡夫，<caesura/>結使所纏縛，</p>\r\n<span class=\"lb\" id=\"p0325b26\"></span><p class=\"lg\">無明覆心識，<caesura/>而能知導師！</p>\r\n<span class=\"lb\" id=\"p0325b27\"></span><p class=\"lg\">正覺無礙智，<caesura/>超過語言道，</p>\r\n<span class=\"lb\" id=\"p0325b28\"></span><p class=\"lg\">其量不可測，<caesura/>孰有能知見！</p>\r\n<span class=\"lb\" id=\"p0325b29\"></span><p class=\"lg\">譬如明月光，<caesura/>無能測邊際；</p>\r\n\r\n<span class=\"lb\" id=\"p0325c01\"></span><p class=\"lg\">佛神通亦爾，<caesura/>莫見其終盡。</p>\r\n<span class=\"lb\" id=\"p0325c02\"></span><p class=\"lg\">一一諸方便，<caesura/>念念所變化，</p>\r\n<span class=\"lb\" id=\"p0325c03\"></span><p class=\"lg\">盡於無量劫，<caesura/>思惟不能了。</p>\r\n<span class=\"lb\" id=\"p0325c04\"></span><p class=\"lg\">思惟一切智，<caesura/>不可思議法，</p>\r\n<span class=\"lb\" id=\"p0325c05\"></span><p class=\"lg\">一一方便門，<caesura/>邊際不可得。</p>\r\n<span class=\"lb\" id=\"p0325c06\"></span><p class=\"lg\">若有於此法，<caesura/>而興廣大願；</p>\r\n<span class=\"lb\" id=\"p0325c07\"></span><p class=\"lg\">彼於此境界，<caesura/>知見不為難。</p>\r\n<span class=\"lb\" id=\"p0325c08\"></span><p class=\"lg\">勇猛勤修習，<caesura/>難思大法海；</p>\r\n<span class=\"lb\" id=\"p0325c09\"></span><p class=\"lg\">其心無障礙，<caesura/>入此方便門。</p>\r\n<span class=\"lb\" id=\"p0325c10\"></span><p class=\"lg\">心意已調伏，<caesura/>志願亦寬廣，</p>\r\n<span class=\"lb\" id=\"p0325c11\"></span><p class=\"lg\">當獲大菩提，<caesura/>最勝之境界。」</p></lg>\r\n<span class=\"lb\" id=\"p0325c12\"></span><p>爾時，破一切魔軍智幢王菩薩，承佛神力，觀\r\n<span class=\"lb\" id=\"p0325c13\"></span>察十方而說頌言：</p>\r\n<span class=\"lb\" id=\"p0325c14\"></span><p class=\"lg\"><p class=\"lg\">「智身非是身，<caesura/>無礙難思議；</p>\r\n<span class=\"lb\" id=\"p0325c15\"></span><p class=\"lg\">設有思議者，<caesura/>一切無能及。</p>\r\n<span class=\"lb\" id=\"p0325c16\"></span><p class=\"lg\">從不思議業，<caesura/>起此清淨身，</p>\r\n<span class=\"lb\" id=\"p0325c17\"></span><p class=\"lg\">殊特妙莊嚴，<caesura/>不著於三界。</p>\r\n<span class=\"lb\" id=\"p0325c18\"></span><p class=\"lg\">光明照一切，<caesura/>法界悉清淨，</p>\r\n<span class=\"lb\" id=\"p0325c19\"></span><p class=\"lg\">開佛菩提門，<caesura/>出生眾智慧。</p>\r\n<span class=\"lb\" id=\"p0325c20\"></span><p class=\"lg\">譬如世間日，<caesura/>普放慧光明，</p>\r\n<span class=\"lb\" id=\"p0325c21\"></span><p class=\"lg\">遠離諸塵垢，<caesura/>滅除一切障，</p>\r\n<span class=\"lb\" id=\"p0325c22\"></span><p class=\"lg\">普淨三有處，<caesura/>永絕生死流，</p>\r\n<span class=\"lb\" id=\"p0325c23\"></span><p class=\"lg\">成就菩薩道，<caesura/>出生無上覺。</p>\r\n<span class=\"lb\" id=\"p0325c24\"></span><p class=\"lg\">示現無邊色，<caesura/>此色無依處；</p>\r\n<span class=\"lb\" id=\"p0325c25\"></span><p class=\"lg\">所現雖無量，<caesura/>一切不思議。</p>\r\n<span class=\"lb\" id=\"p0325c26\"></span><p class=\"lg\">菩提一念頃，<caesura/>能覺一切法；</p>\r\n<span class=\"lb\" id=\"p0325c27\"></span><p class=\"lg\">云何欲測量，<caesura/>如來智邊際？</p>\r\n<span class=\"lb\" id=\"p0325c28\"></span><p class=\"lg\">一念悉明達，<caesura/>一切三世法；</p>\r\n<span class=\"lb\" id=\"p0325c29\"></span><p class=\"lg\">故說佛智慧，<caesura/>無盡無能壞。</p>\r\n\r\n<span class=\"lb\" id=\"p0326a01\"></span><p class=\"lg\">智者應如是，<caesura/>專思佛菩提；</p>\r\n<span class=\"lb\" id=\"p0326a02\"></span><p class=\"lg\">此思難思議，<caesura/>思之不可得。</p>\r\n<span class=\"lb\" id=\"p0326a03\"></span><p class=\"lg\">菩提不可說，<caesura/>超過語言路；</p>\r\n<span class=\"lb\" id=\"p0326a04\"></span><p class=\"lg\">諸佛從此生，<caesura/>是法難思議。」</p></lg>\r\n<span class=\"lb\" id=\"p0326a05\"></span><p>爾時，願智光明幢王菩薩，承佛神力，觀察十\r\n<span class=\"lb\" id=\"p0326a06\"></span>方而說頌言：</p>\r\n<span class=\"lb\" id=\"p0326a07\"></span><p class=\"lg\"><p class=\"lg\">「若能善觀察，<caesura/>菩提無盡海，</p>\r\n<span class=\"lb\" id=\"p0326a08\"></span><p class=\"lg\">則得離癡念，<caesura/>決定受持法。</p>\r\n<span class=\"lb\" id=\"p0326a09\"></span><p class=\"lg\">若得決定心，<caesura/>則能修妙行，</p>\r\n<span class=\"lb\" id=\"p0326a10\"></span><p class=\"lg\">禪寂自思慮，<caesura/>永斷諸疑惑。</p>\r\n<span class=\"lb\" id=\"p0326a11\"></span><p class=\"lg\">其心不疲倦，<caesura/>亦復無懈怠，</p>\r\n<span class=\"lb\" id=\"p0326a12\"></span><p class=\"lg\">展轉增進修，<caesura/>究竟諸佛法。</p>\r\n<span class=\"lb\" id=\"p0326a13\"></span><p class=\"lg\">信智已成就，<caesura/>念念令增長，</p>\r\n<span class=\"lb\" id=\"p0326a14\"></span><p class=\"lg\">常樂常觀察，<caesura/>無得無依法。</p>\r\n<span class=\"lb\" id=\"p0326a15\"></span><p class=\"lg\">無量億千劫，<caesura/>所修功德行；</p>\r\n<span class=\"lb\" id=\"p0326a16\"></span><p class=\"lg\">一切悉迴向，<caesura/>諸佛所求道。</p>\r\n<span class=\"lb\" id=\"p0326a17\"></span><p class=\"lg\">雖在於生死，<caesura/>而心無染著，</p>\r\n<span class=\"lb\" id=\"p0326a18\"></span><p class=\"lg\">安住諸佛法，<caesura/>常樂如來行。</p>\r\n<span class=\"lb\" id=\"p0326a19\"></span><p class=\"lg\">世間之所有，<caesura/>蘊界等諸法；</p>\r\n<span class=\"lb\" id=\"p0326a20\"></span><p class=\"lg\">一切皆捨離，<caesura/>專求佛功德。</p>\r\n<span class=\"lb\" id=\"p0326a21\"></span><p class=\"lg\">凡夫嬰妄惑，<caesura/>於世常流轉；</p>\r\n<span class=\"lb\" id=\"p0326a22\"></span><p class=\"lg\">菩薩心無礙，<caesura/>救之令解脫。</p>\r\n<span class=\"lb\" id=\"p0326a23\"></span><p class=\"lg\">菩薩行難稱，<caesura/>舉世莫能思，</p>\r\n<span class=\"lb\" id=\"p0326a24\"></span><p class=\"lg\">遍除一切苦，<caesura/>普與群生樂。</p>\r\n<span class=\"lb\" id=\"p0326a25\"></span><p class=\"lg\">已獲菩提智，<caesura/>復愍諸群生，</p>\r\n<span class=\"lb\" id=\"p0326a26\"></span><p class=\"lg\">光明照世間，<caesura/>度脫一切眾。」</p></lg>\r\n<span class=\"lb\" id=\"p0326a27\"></span><p>爾時，破一切障勇猛智王菩薩，承佛神力，觀\r\n<span class=\"lb\" id=\"p0326a28\"></span>察十方而說頌言：</p>\r\n<span class=\"lb\" id=\"p0326a29\"></span><p class=\"lg\"><p class=\"lg\">「無量億千劫，<caesura/>佛名難可聞；</p>\r\n\r\n<span class=\"lb\" id=\"p0326b01\"></span><p class=\"lg\">況復得親近，<caesura/>永斷諸疑惑！</p>\r\n<span class=\"lb\" id=\"p0326b02\"></span><p class=\"lg\">如來世間燈，<caesura/>通達一切法，</p>\r\n<span class=\"lb\" id=\"p0326b03\"></span><p class=\"lg\">普生三世福，<caesura/>令眾悉清淨。</p>\r\n<span class=\"lb\" id=\"p0326b04\"></span><p class=\"lg\">如來妙色身，<caesura/>一切所欽歎，</p>\r\n<span class=\"lb\" id=\"p0326b05\"></span><p class=\"lg\">億劫常瞻仰，<caesura/>其心無厭足。</p>\r\n<span class=\"lb\" id=\"p0326b06\"></span><p class=\"lg\">若有諸佛子，<caesura/>觀佛妙色身，</p>\r\n<span class=\"lb\" id=\"p0326b07\"></span><p class=\"lg\">必捨諸有著，<caesura/>迴向菩提道。</p>\r\n<span class=\"lb\" id=\"p0326b08\"></span><p class=\"lg\">如來妙色身，<caesura/>恒演廣大音，</p>\r\n<span class=\"lb\" id=\"p0326b09\"></span><p class=\"lg\">辯才無障礙，<caesura/>開佛菩提門；</p>\r\n<span class=\"lb\" id=\"p0326b10\"></span><p class=\"lg\">曉悟諸眾生，<caesura/>無量不思議，</p>\r\n<span class=\"lb\" id=\"p0326b11\"></span><p class=\"lg\">令入智慧門，<caesura/>授以菩提記。</p>\r\n<span class=\"lb\" id=\"p0326b12\"></span><p class=\"lg\">如來出世間，<caesura/>為世大福田，</p>\r\n<span class=\"lb\" id=\"p0326b13\"></span><p class=\"lg\">普導諸含識，<caesura/>令其集福行。</p>\r\n<span class=\"lb\" id=\"p0326b14\"></span><p class=\"lg\">若有供養佛，<caesura/>永除惡道畏，</p>\r\n<span class=\"lb\" id=\"p0326b15\"></span><p class=\"lg\">消滅一切苦，<caesura/>成就智慧身。</p>\r\n<span class=\"lb\" id=\"p0326b16\"></span><p class=\"lg\">若見兩足尊，<caesura/>能發廣大心；</p>\r\n<span class=\"lb\" id=\"p0326b17\"></span><p class=\"lg\">是人恒值佛，<caesura/>增長智慧力。</p>\r\n<span class=\"lb\" id=\"p0326b18\"></span><p class=\"lg\">若見人中勝，<caesura/>決意向菩提；</p>\r\n<span class=\"lb\" id=\"p0326b19\"></span><p class=\"lg\">是人能自知，<caesura/>必當成正覺。」</p></lg>\r\n<span class=\"lb\" id=\"p0326b20\"></span><p>爾時，法界差別願智神通王菩薩，承佛神力，\r\n<span class=\"lb\" id=\"p0326b21\"></span>觀察十方而說頌言：</p>\r\n<span class=\"lb\" id=\"p0326b22\"></span><p class=\"lg\"><p class=\"lg\">「釋迦無上尊，<caesura/>具一切功德；</p>\r\n<span class=\"lb\" id=\"p0326b23\"></span><p class=\"lg\">見者心清淨，<caesura/>迴向大智慧。</p>\r\n<span class=\"lb\" id=\"p0326b24\"></span><p class=\"lg\">如來大慈悲，<caesura/>出現於世間，</p>\r\n<span class=\"lb\" id=\"p0326b25\"></span><p class=\"lg\">普為諸群生，<caesura/>轉無上法輪。</p>\r\n<span class=\"lb\" id=\"p0326b26\"></span><p class=\"lg\">如來無數劫，<caesura/>勤苦為眾生；</p>\r\n<span class=\"lb\" id=\"p0326b27\"></span><p class=\"lg\">云何諸世間，<caesura/>能報大師恩？</p>\r\n<span class=\"lb\" id=\"p0326b28\"></span><p class=\"lg\">寧於無量劫，<caesura/>受諸惡道苦；</p>\r\n<span class=\"lb\" id=\"p0326b29\"></span><p class=\"lg\">終不捨如來，<caesura/>而求於出離。</p>\r\n\r\n<span class=\"lb\" id=\"p0326c01\"></span><p class=\"lg\">寧代諸眾生，<caesura/>備受一切苦；</p>\r\n<span class=\"lb\" id=\"p0326c02\"></span><p class=\"lg\">終不捨於佛，<caesura/>而求得安樂。</p>\r\n<span class=\"lb\" id=\"p0326c03\"></span><p class=\"lg\">寧在諸惡趣，<caesura/>恒得聞佛名；</p>\r\n<span class=\"lb\" id=\"p0326c04\"></span><p class=\"lg\">不願生善道，<caesura/>暫時不聞佛。</p>\r\n<span class=\"lb\" id=\"p0326c05\"></span><p class=\"lg\">寧生諸地獄，<caesura/>一一無數劫；</p>\r\n<span class=\"lb\" id=\"p0326c06\"></span><p class=\"lg\">終不遠離佛，<caesura/>而求出惡趣。</p>\r\n<span class=\"lb\" id=\"p0326c07\"></span><p class=\"lg\">何故願久住，<caesura/>一切諸惡道？</p>\r\n<span class=\"lb\" id=\"p0326c08\"></span><p class=\"lg\">以得見如來，<caesura/>增長智慧故。</p>\r\n<span class=\"lb\" id=\"p0326c09\"></span><p class=\"lg\">若得見於佛，<caesura/>除滅一切苦；</p>\r\n<span class=\"lb\" id=\"p0326c10\"></span><p class=\"lg\">能入諸如來，<caesura/>大智之境界。</p>\r\n<span class=\"lb\" id=\"p0326c11\"></span><p class=\"lg\">若得見於佛，<caesura/>捨離一切障；</p>\r\n<span class=\"lb\" id=\"p0326c12\"></span><p class=\"lg\">長養無盡福，<caesura/>成就菩提道。</p>\r\n<span class=\"lb\" id=\"p0326c13\"></span><p class=\"lg\">如來能永斷，<caesura/>一切眾生疑，</p>\r\n<span class=\"lb\" id=\"p0326c14\"></span><p class=\"lg\">隨其心所樂，<caesura/>普皆令滿足。」</p></lg></cb:div>\r\n<span class=\"lb\" id=\"p0326c15\"></span><cb:juan n=\"060\" fun=\"close\"><cb:jhead><title>大方廣佛華嚴經</title>卷第六十</cb:jhead></cb:juan>\r\n</cb:div></body><div id=\"footnotes\"><div class=\"note-text\" id=\"note_0319001\">（唐）＋于【明】</div><div class=\"note-text\" id=\"note_0319001\">于【大】，唐于【明】</div><div class=\"note-text\" id=\"note_0319002\">〔一切〕－【三】【宮】</div><div class=\"note-text\" id=\"note_0319002\">一切【大】，〔－〕【宋】【元】【明】【宮】</div><div class=\"note-text\" id=\"note_0319003\">明註曰音南藏作智</div><div class=\"note-text\" id=\"note_0319b1001\">悲【CB】【麗-CB】，慈【大】</div><div class=\"note-text\" id=\"note_0320001\">頻＝顰【明】＊</div><div class=\"note-text\" id=\"note_0320001\">頻【大】＊，顰【明】＊</div><div class=\"note-text\" id=\"note_0320002\">逈＝迴【明】</div><div class=\"note-text\" id=\"note_0320002\">逈【大】，迴【明】</div><div class=\"note-text\" id=\"note_0320003\">氛＝𣱦【宮】</div><div class=\"note-text\" id=\"note_0320003\">氛【大】，𣱦【宮】</div><div class=\"note-text\" id=\"note_0320b0501\">衣【CB】【麗-CB】【磧-CB】，表【大】</div><div class=\"note-text\" id=\"note_0320004\">跏＝加【宮】</div><div class=\"note-text\" id=\"note_0320004\">跏【大】，加【宮】</div><div class=\"note-text\" id=\"note_0321001\">跏＝加【宋】【元】【宮】下同</div><div class=\"note-text\" id=\"note_0321001\">跏【大】下同，加【宋】【元】【宮】下同</div><div class=\"note-text\" id=\"note_0322a0101\">禮【CB】【麗-CB】【磧-CB】，理【大】</div><div class=\"note-text\" id=\"note_0322a1501\">往【CB】【麗-CB】【磧-CB】，住【大】</div><div class=\"note-text\" id=\"note_0322001\">肢＝支【三】【宮】＊</div><div class=\"note-text\" id=\"note_0322001\">肢【大】＊，支【宋】【元】【明】【宮】＊</div><div class=\"note-text\" id=\"note_0322002\">熟＝就【三】【宮】</div><div class=\"note-text\" id=\"note_0322002\">熟【大】，就【宋】【元】【明】【宮】</div><div class=\"note-text\" id=\"note_0323001\">瞖＝翳【宮】</div><div class=\"note-text\" id=\"note_0323001\">瞖【大】，翳【宮】</div><div class=\"note-text\" id=\"note_0323002\">采＝婇【明】【宮】</div><div class=\"note-text\" id=\"note_0323002\">采【大】，婇【明】【宮】</div><div class=\"note-text\" id=\"note_0323c0401\">見【CB】【麗-CB】【磧-CB】，具【大】</div><div class=\"note-text\" id=\"note_0324a0301\">青【CB】【麗-CB】【磧-CB】，清【大】</div></div>"
+    }
+  ],
+  "toc": {
+    "mulu": [
+      {
+        "title": "大周新譯序",
+        "lb": "p0001a03",
+        "juan": 1,
+        "type": "品"
+      },
+      {
+        "title": "1 世主妙嚴品",
+        "lb": "p0001b25",
+        "juan": 1,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0001b25",
+            "juan": 1,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0005b23",
+            "juan": 2,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0010c05",
+            "juan": 3,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0015c27",
+            "juan": 4,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0021c05",
+            "juan": 5,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "2 如來現相品",
+        "lb": "p0026a19",
+        "juan": 6,
+        "type": "品"
+      },
+      {
+        "title": "3 普賢三昧品",
+        "lb": "p0032c25",
+        "juan": 7,
+        "type": "品"
+      },
+      {
+        "title": "4 世界成就品",
+        "lb": "p0034b09",
+        "juan": 7,
+        "type": "品"
+      },
+      {
+        "title": "5 華藏世界品",
+        "lb": "p0039a15",
+        "juan": 8,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0039a15",
+            "juan": 8,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0044a08",
+            "juan": 9,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0048c23",
+            "juan": 10,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "6 毘盧遮那品",
+        "lb": "p0053c20",
+        "juan": 11,
+        "type": "品"
+      },
+      {
+        "title": "7 如來名號品",
+        "lb": "p0057c22",
+        "juan": 12,
+        "type": "品"
+      },
+      {
+        "title": "8 四聖諦品",
+        "lb": "p0060a13",
+        "juan": 12,
+        "type": "品"
+      },
+      {
+        "title": "9 光明覺品",
+        "lb": "p0062b15",
+        "juan": 13,
+        "type": "品"
+      },
+      {
+        "title": "10 菩薩問明品",
+        "lb": "p0066a26",
+        "juan": 13,
+        "type": "品"
+      },
+      {
+        "title": "11 淨行品",
+        "lb": "p0069b19",
+        "juan": 14,
+        "type": "品"
+      },
+      {
+        "title": "12 賢首品",
+        "lb": "p0072a22",
+        "juan": 14,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0072a22",
+            "juan": 14,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0075b23",
+            "juan": 15,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "13 昇須彌山頂品",
+        "lb": "p0080c07",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "14 須彌頂上偈讚品",
+        "lb": "p0081a22",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "15 十住品",
+        "lb": "p0083c29",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "16 梵行品",
+        "lb": "p0088b05",
+        "juan": 17,
+        "type": "品"
+      },
+      {
+        "title": "17 初發心功德品",
+        "lb": "p0089a04",
+        "juan": 17,
+        "type": "品"
+      },
+      {
+        "title": "18 明法品",
+        "lb": "p0095a21",
+        "juan": 18,
+        "type": "品"
+      },
+      {
+        "title": "19 昇夜摩天宮品",
+        "lb": "p0099a19",
+        "juan": 19,
+        "type": "品"
+      },
+      {
+        "title": "20 夜摩宮中偈讚品",
+        "lb": "p0099c13",
+        "juan": 19,
+        "type": "品"
+      },
+      {
+        "title": "21 十行品",
+        "lb": "p0102b24",
+        "juan": 19,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0102b24",
+            "juan": 19,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0105c15",
+            "juan": 20,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "22 十無盡藏品",
+        "lb": "p0111a27",
+        "juan": 21,
+        "type": "品"
+      },
+      {
+        "title": "23 昇兜率天宮品",
+        "lb": "p0115a12",
+        "juan": 22,
+        "type": "品"
+      },
+      {
+        "title": "24 兜率宮中偈讚品",
+        "lb": "p0121a12",
+        "juan": 23,
+        "type": "品"
+      },
+      {
+        "title": "25 十迴向品",
+        "lb": "p0124a24",
+        "juan": 23,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0124a24",
+            "juan": 23,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0127b17",
+            "juan": 24,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0133a05",
+            "juan": 25,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0139a05",
+            "juan": 26,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0144b05",
+            "juan": 27,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0150a19",
+            "juan": 28,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0156c27",
+            "juan": 29,
+            "type": "品"
+          },
+          {
+            "title": "之八",
+            "lb": "p0160c24",
+            "juan": 30,
+            "type": "品"
+          },
+          {
+            "title": "之九",
+            "lb": "p0165b05",
+            "juan": 31,
+            "type": "品"
+          },
+          {
+            "title": "之十",
+            "lb": "p0171a05",
+            "juan": 32,
+            "type": "品"
+          },
+          {
+            "title": "之十一",
+            "lb": "p0174c05",
+            "juan": 33,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "26 十地品",
+        "lb": "p0178b28",
+        "juan": 34,
+        "type": "品"
+      },
+      {
+        "title": "27 十定品",
+        "lb": "p0211a05",
+        "juan": 40,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0211a05",
+            "juan": 40,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0215a05",
+            "juan": 41,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0218c26",
+            "juan": 42,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0223c05",
+            "juan": 43,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "28 十通品",
+        "lb": "p0229c16",
+        "juan": 44,
+        "type": "品"
+      },
+      {
+        "title": "29 十忍品",
+        "lb": "p0232b05",
+        "juan": 44,
+        "type": "品"
+      },
+      {
+        "title": "30 阿僧祇品",
+        "lb": "p0237b07",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "31 壽量品",
+        "lb": "p0241a16",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "32 諸菩薩住處品",
+        "lb": "p0241b06",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "33 佛不思議法品",
+        "lb": "p0242a05",
+        "juan": 46,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0242a05",
+            "juan": 46,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0246b14",
+            "juan": 47,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "34 如來十身相海品",
+        "lb": "p0251b24",
+        "juan": 48,
+        "type": "品"
+      },
+      {
+        "title": "35 如來隨好光明功德品",
+        "lb": "p0255c11",
+        "juan": 48,
+        "type": "品"
+      },
+      {
+        "title": "36 普賢行品",
+        "lb": "p0257c09",
+        "juan": 49,
+        "type": "品"
+      },
+      {
+        "title": "37 如來出現品",
+        "lb": "p0262a15",
+        "juan": 50,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0262a15",
+            "juan": 50,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0268a23",
+            "juan": 51,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0273c05",
+            "juan": 52,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "38 離世間品",
+        "lb": "p0279a05",
+        "juan": 53,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0279a05",
+            "juan": 53,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0284a05",
+            "juan": 54,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0288c22",
+            "juan": 55,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0293c10",
+            "juan": 56,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0299b11",
+            "juan": 57,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0304c21",
+            "juan": 58,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0310c26",
+            "juan": 59,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "39 入法界品",
+        "lb": "p0319a05",
+        "juan": 60,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0319a05",
+            "juan": 60,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0326c21",
+            "juan": 61,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0331c27",
+            "juan": 62,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0337b22",
+            "juan": 63,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0343a08",
+            "juan": 64,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0348a25",
+            "juan": 65,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0353c05",
+            "juan": 66,
+            "type": "品"
+          },
+          {
+            "title": "之八",
+            "lb": "p0360a05",
+            "juan": 67,
+            "type": "品"
+          },
+          {
+            "title": "之九",
+            "lb": "p0365a27",
+            "juan": 68,
+            "type": "品"
+          },
+          {
+            "title": "之十",
+            "lb": "p0372a09",
+            "juan": 69,
+            "type": "品"
+          },
+          {
+            "title": "之十一",
+            "lb": "p0378a24",
+            "juan": 70,
+            "type": "品"
+          },
+          {
+            "title": "之十二",
+            "lb": "p0384a18",
+            "juan": 71,
+            "type": "品"
+          },
+          {
+            "title": "之十三",
+            "lb": "p0391a05",
+            "juan": 72,
+            "type": "品"
+          },
+          {
+            "title": "之十四",
+            "lb": "p0396b12",
+            "juan": 73,
+            "type": "品"
+          },
+          {
+            "title": "之十五",
+            "lb": "p0401c15",
+            "juan": 74,
+            "type": "品"
+          },
+          {
+            "title": "之十六",
+            "lb": "p0405c05",
+            "juan": 75,
+            "type": "品"
+          },
+          {
+            "title": "之十七",
+            "lb": "p0413c08",
+            "juan": 76,
+            "type": "品"
+          },
+          {
+            "title": "之十八",
+            "lb": "p0419c13",
+            "juan": 77,
+            "type": "品"
+          },
+          {
+            "title": "之十九",
+            "lb": "p0428b05",
+            "juan": 78,
+            "type": "品"
+          },
+          {
+            "title": "之二十",
+            "lb": "p0434c28",
+            "juan": 79,
+            "type": "品"
+          },
+          {
+            "title": "之二十一",
+            "lb": "p0439b05",
+            "juan": 80,
+            "type": "品"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "CBReader 2X v0.9.9 2026-01-21"
+}

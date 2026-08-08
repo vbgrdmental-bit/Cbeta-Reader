@@ -1,0 +1,634 @@
+{
+  "workId": "T0279",
+  "juan": 9,
+  "results": [
+    {
+      "html": "<body>\r\n<div class=\"cb-mulu\" data-level=\"1\" data-n=\"5\" data-type=\"品\">5 華藏世界品</div><div class=\"cb-mulu\" data-level=\"2\" data-n=\"1\" data-type=\"品\">之一</div><cb:div type=\"pin\">\r\n\r\n<span class=\"lb\" id=\"p0044a03\"></span>\r\n<span class=\"lb\" id=\"p0044a04\"></span>\r\n<span class=\"lb\" id=\"p0044a05\"></span><cb:juan n=\"009\" fun=\"open\"><div class=\"cb-mulu\"></div><cb:jhead><title>大方廣佛華嚴經</title>卷第九</cb:jhead></cb:juan>\r\n<span class=\"lb\" id=\"p0044a06\"></span>\r\n<span class=\"lb\" id=\"p0044a07\"></span><byline><anchor xml:id=\"fxT10p0044a01\"/>于闐國三<anchor xml:id=\"fxT10p0044a02\"/>藏實叉難陀<anchor xml:id=\"fxT10p0044a03\"/>奉　制譯</byline>\r\n<span class=\"lb\" id=\"p0044a08\"></span><cb:div><div class=\"cb-mulu\" data-level=\"2\" data-n=\"2\" data-type=\"品\">之二</div><h2 class=\"head\">華藏世界品第五之二</h2>\r\n<span class=\"lb\" id=\"p0044a09\"></span><p>爾時，普賢菩薩復告大眾言：</p><p>「諸佛子！此無邊\r\n<span class=\"lb\" id=\"p0044a10\"></span>妙華光香水海東，次有香水海，名：離垢焰藏；\r\n<span class=\"lb\" id=\"p0044a11\"></span>出大蓮華，名：一切香摩尼王妙莊嚴；有世界\r\n<span class=\"lb\" id=\"p0044a12\"></span>種而住其上，名：遍照剎旋，以菩薩行吼音為\r\n<span class=\"lb\" id=\"p0044a13\"></span>體。此中最下方，有世界，名：宮殿莊嚴幢；其形\r\n<span class=\"lb\" id=\"p0044a14\"></span>四方，依一切寶莊嚴海住，蓮華光網雲彌覆\r\n<span class=\"lb\" id=\"p0044a15\"></span>其上，佛剎微塵數世界圍遶，純一清淨，佛號：\r\n<span class=\"lb\" id=\"p0044a16\"></span>眉間光遍照。此上過佛剎微塵數世界，有世\r\n<span class=\"lb\" id=\"p0044a17\"></span>界，名：德華藏；其形周圓，依一切寶華蘂海\r\n<span class=\"lb\" id=\"p0044a18\"></span>住，真珠幢師子座雲彌覆其上，二佛剎微塵\r\n<span class=\"lb\" id=\"p0044a19\"></span>數世界圍遶，佛號：一切無邊法海慧。此上過\r\n<span class=\"lb\" id=\"p0044a20\"></span>佛剎微塵數世界，有世界，名：善變化妙香輪；\r\n<span class=\"lb\" id=\"p0044a21\"></span>形如金剛，依一切寶莊嚴鈴網海住，種種莊\r\n<span class=\"lb\" id=\"p0044a22\"></span>嚴圓光雲彌覆其上，三佛剎微塵數世界圍\r\n<span class=\"lb\" id=\"p0044a23\"></span>遶，佛號：功德相光明普照。此上過佛剎微塵\r\n<span class=\"lb\" id=\"p0044a24\"></span>數世界，有世界，名：妙色光明；其狀猶如摩尼\r\n<span class=\"lb\" id=\"p0044a25\"></span>寶輪，依無邊色寶香水海住，普光明真珠樓\r\n<span class=\"lb\" id=\"p0044a26\"></span>閣雲彌覆其上，四佛剎微塵數世界圍遶，純\r\n<span class=\"lb\" id=\"p0044a27\"></span>一清淨，佛號：善眷屬出興遍照。此上過佛剎\r\n<span class=\"lb\" id=\"p0044a28\"></span>微塵數世界，有世界，名：善蓋覆；狀如蓮華，\r\n<span class=\"lb\" id=\"p0044a29\"></span>依金剛香水海住，離塵光明香水雲彌覆其\r\n\r\n<span class=\"lb\" id=\"p0044b01\"></span>上，五佛剎微塵數世界圍遶，佛號：法喜無\r\n<span class=\"lb\" id=\"p0044b02\"></span>盡慧。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0044b03\"></span>尸利華光輪；其形三角，依一切堅固寶莊嚴\r\n<span class=\"lb\" id=\"p0044b04\"></span>海住，菩薩摩尼冠光明雲彌覆其上，六佛剎微\r\n<span class=\"lb\" id=\"p0044b05\"></span>塵數世界圍遶，佛號：清淨普光明雲。此上過\r\n<span class=\"lb\" id=\"p0044b06\"></span>佛剎微塵數世界，有世界，名：寶蓮華莊嚴；形\r\n<span class=\"lb\" id=\"p0044b07\"></span>如半月，依一切蓮華莊嚴海住，一切寶華雲\r\n<span class=\"lb\" id=\"p0044b08\"></span>彌覆其上，七佛剎微塵數世界圍遶，純一清\r\n<span class=\"lb\" id=\"p0044b09\"></span>淨，佛號：功德華清淨眼。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0044b10\"></span>世界，有世界，名：無垢焰莊嚴；其狀猶如寶燈\r\n<span class=\"lb\" id=\"p0044b11\"></span>行列，依寶焰藏海住，常雨香水種種身雲彌\r\n<span class=\"lb\" id=\"p0044b12\"></span>覆其上，八佛剎微塵數世界圍遶，佛號：慧力\r\n<span class=\"lb\" id=\"p0044b13\"></span>無能勝。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0044b14\"></span>妙梵音；形如卐字，依寶衣幢海住，一切華\r\n<span class=\"lb\" id=\"p0044b15\"></span>莊嚴帳雲彌覆其上，九佛剎微塵數世界圍\r\n<span class=\"lb\" id=\"p0044b16\"></span>遶，佛號：廣大目如空中淨月。此上過佛剎微\r\n<span class=\"lb\" id=\"p0044b17\"></span>塵數世界，有世界，名：微塵數音聲；其狀猶如\r\n<span class=\"lb\" id=\"p0044b18\"></span>因陀羅網，依一切寶水海住，一切樂音寶蓋\r\n<span class=\"lb\" id=\"p0044b19\"></span>雲彌覆其上，十佛剎微塵數世界圍遶，純一\r\n<span class=\"lb\" id=\"p0044b20\"></span>清淨，佛號：金色須彌燈。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0044b21\"></span>世界，有世界，名：寶色莊嚴；形如卐字，依帝\r\n<span class=\"lb\" id=\"p0044b22\"></span>釋形寶王海住，日光明華雲彌覆其上，十一\r\n<span class=\"lb\" id=\"p0044b23\"></span>佛剎微塵數世界圍遶，佛號：迥照法界光明\r\n<span class=\"lb\" id=\"p0044b24\"></span>智。此上過佛剎微塵數世界，有世界，名：金色\r\n<span class=\"lb\" id=\"p0044b25\"></span>妙光；其狀猶如廣大城廓，依一切寶莊嚴海\r\n<span class=\"lb\" id=\"p0044b26\"></span>住，道場寶華雲彌覆其上，十二佛剎微塵數\r\n<span class=\"lb\" id=\"p0044b27\"></span>世界圍遶，佛號：寶燈普照幢。此上過佛剎\r\n<span class=\"lb\" id=\"p0044b28\"></span>微塵數世界，有世界，名：遍照光明輪；狀如華\r\n<span class=\"lb\" id=\"p0044b29\"></span>旋，依寶衣旋海住，佛音聲寶王樓閣雲彌覆\r\n\r\n<span class=\"lb\" id=\"p0044c01\"></span>其上，十三佛剎微塵數世界圍遶，純一清淨，\r\n<span class=\"lb\" id=\"p0044c02\"></span>佛號：蓮華焰遍照。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0044c03\"></span>有世界，名：寶藏莊嚴；狀如四洲，依寶瓔珞須\r\n<span class=\"lb\" id=\"p0044c04\"></span>彌住，寶焰摩尼雲彌覆其上，十四佛剎微塵\r\n<span class=\"lb\" id=\"p0044c05\"></span>數世界圍遶，佛號：無盡福開敷華。此上過佛\r\n<span class=\"lb\" id=\"p0044c06\"></span>剎微塵數世界，有世界，名：如鏡像普現；其狀\r\n<span class=\"lb\" id=\"p0044c07\"></span>猶如阿脩羅身，依金剛蓮華海住，寶冠光影\r\n<span class=\"lb\" id=\"p0044c08\"></span>雲彌覆其上，十五佛剎微塵數世界圍遶，\r\n<span class=\"lb\" id=\"p0044c09\"></span>佛號：甘露音。此上過佛剎微塵數世界，有世\r\n<span class=\"lb\" id=\"p0044c10\"></span>界，名：栴檀月；其形八隅，依金剛栴檀寶海住，\r\n<span class=\"lb\" id=\"p0044c11\"></span>真珠華摩尼雲彌覆其上，十六佛剎微塵數\r\n<span class=\"lb\" id=\"p0044c12\"></span>世界圍遶，純一清淨，佛號：最勝法無等智。\r\n<span class=\"lb\" id=\"p0044c13\"></span>此上過佛剎微塵數世界，有世界，名：離垢光\r\n<span class=\"lb\" id=\"p0044c14\"></span>明；其狀猶如香水漩流，依無邊色寶光海\r\n<span class=\"lb\" id=\"p0044c15\"></span>住，妙香光明雲彌覆其上，十七佛剎微塵數\r\n<span class=\"lb\" id=\"p0044c16\"></span>世界圍遶，佛號：遍照虛空光明音。此上過佛\r\n<span class=\"lb\" id=\"p0044c17\"></span>剎微塵數世界，有世界，名：妙華莊嚴；其狀猶\r\n<span class=\"lb\" id=\"p0044c18\"></span>如旋遶之形，依一切華海住，一切樂音摩尼\r\n<span class=\"lb\" id=\"p0044c19\"></span>雲彌覆其上，十八佛剎微塵數世界圍遶，\r\n<span class=\"lb\" id=\"p0044c20\"></span>佛號：普現勝光明。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0044c21\"></span>有世界，名：勝音莊嚴；其狀猶如師子之座，依\r\n<span class=\"lb\" id=\"p0044c22\"></span>金師子座海住，眾色蓮華藏師子座雲彌\r\n<span class=\"lb\" id=\"p0044c23\"></span>覆其上，十九佛剎微塵數世界圍遶，佛號：無\r\n<span class=\"lb\" id=\"p0044c24\"></span>邊功德稱普光明。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0044c25\"></span>有世界，名：高勝燈；狀如佛掌，依寶衣服香幢\r\n<span class=\"lb\" id=\"p0044c26\"></span>海住，日輪普照寶王樓閣雲彌覆其上，二十\r\n<span class=\"lb\" id=\"p0044c27\"></span>佛剎微塵數世界圍遶，純一清淨，佛號：普照\r\n<span class=\"lb\" id=\"p0044c28\"></span>虛空燈。</p>\r\n<span class=\"lb\" id=\"p0044c29\"></span><p>「諸佛子！此離垢焰藏香水海南，次有香水海，\r\n\r\n<span class=\"lb\" id=\"p0045a01\"></span>名：無盡光明輪；世界種，名：佛幢莊嚴；以一切\r\n<span class=\"lb\" id=\"p0045a02\"></span>佛功德海音聲為體。此中最下方，有世界，名：\r\n<span class=\"lb\" id=\"p0045a03\"></span>愛見華；狀如寶輪，依摩尼樹藏寶王海住，化\r\n<span class=\"lb\" id=\"p0045a04\"></span>現菩薩形寶藏雲彌覆其上，佛剎微塵數\r\n<span class=\"lb\" id=\"p0045a05\"></span>世界圍遶，純一清淨，佛號：蓮華光歡喜面。此\r\n<span class=\"lb\" id=\"p0045a06\"></span>上過佛剎微塵數世界，有世界，名：妙音；佛號：\r\n<span class=\"lb\" id=\"p0045a07\"></span>須彌寶燈。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0045a08\"></span>名：眾寶莊嚴光；佛號：法界音聲幢。此上過佛\r\n<span class=\"lb\" id=\"p0045a09\"></span>剎微塵數世界，有世界，名：香藏金剛；佛號：光\r\n<span class=\"lb\" id=\"p0045a10\"></span>明音。此上過佛剎微塵數世界，有世界，名：淨\r\n<span class=\"lb\" id=\"p0045a11\"></span>妙音；佛號：最勝精進力。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0045a12\"></span>世界，有世界，名：寶蓮華莊嚴；佛號：法城雲雷\r\n<span class=\"lb\" id=\"p0045a13\"></span>音。此上過佛剎微塵數世界，有世界，名：與安\r\n<span class=\"lb\" id=\"p0045a14\"></span>樂；佛號：大名稱智慧燈。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0045a15\"></span>世界，有世界，名：無垢網；佛號：師子光功德海。\r\n<span class=\"lb\" id=\"p0045a16\"></span>此上過佛剎微塵數世界，有世界，名：華林幢\r\n<span class=\"lb\" id=\"p0045a17\"></span>遍照；佛號：大智蓮華光。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0045a18\"></span>世界，有世界，名：無量莊嚴；佛號：普眼法界幢。\r\n<span class=\"lb\" id=\"p0045a19\"></span>此上過佛剎微塵數世界，有世界，名：普光寶\r\n<span class=\"lb\" id=\"p0045a20\"></span>莊嚴；佛號：勝智大商主。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0045a21\"></span>世界，有世界，名：華王；佛號：月光幢。此上過佛\r\n<span class=\"lb\" id=\"p0045a22\"></span>剎微塵數世界，有世界，名：離垢藏；佛號：清淨\r\n<span class=\"lb\" id=\"p0045a23\"></span>覺。此上過佛剎微塵數世界，有世界，名：寶光\r\n<span class=\"lb\" id=\"p0045a24\"></span>明；佛號：一切智虛空燈。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0045a25\"></span>世界，有世界，名：出生寶瓔珞；佛號：諸度福海\r\n<span class=\"lb\" id=\"p0045a26\"></span>相光明。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0045a27\"></span>妙輪遍覆；佛號：調伏一切染著心令歡喜。此\r\n<span class=\"lb\" id=\"p0045a28\"></span>上過佛剎微塵數世界，有世界，名：寶華幢；佛\r\n<span class=\"lb\" id=\"p0045a29\"></span>號：廣博功德音大名稱。此上過佛剎微塵數\r\n\r\n<span class=\"lb\" id=\"p0045b01\"></span>世界，有世界，名：無量莊嚴；佛號：平等智光明\r\n<span class=\"lb\" id=\"p0045b02\"></span>功德海。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0045b03\"></span>無盡光莊嚴幢；狀如蓮華，依一切寶網海住，\r\n<span class=\"lb\" id=\"p0045b04\"></span>蓮華光摩尼網彌覆其上，二十佛剎微塵\r\n<span class=\"lb\" id=\"p0045b05\"></span>數世界圍遶，純一清淨，佛號：法界淨光明。</p>\r\n<span class=\"lb\" id=\"p0045b06\"></span><p>「諸佛子！此無盡光明輪香水海右旋，次有香\r\n<span class=\"lb\" id=\"p0045b07\"></span>水海，名：金剛寶焰光；世界種，名：佛光莊嚴藏，\r\n<span class=\"lb\" id=\"p0045b08\"></span>以稱說一切如來名音聲為體。此中最下方，\r\n<span class=\"lb\" id=\"p0045b09\"></span>有世界，名：寶焰蓮華；其狀猶如摩尼色眉\r\n<span class=\"lb\" id=\"p0045b10\"></span>間毫相，依一切寶色水漩海住，一切莊嚴\r\n<span class=\"lb\" id=\"p0045b11\"></span>樓閣雲彌覆其上，佛剎微塵數世界圍遶，純\r\n<span class=\"lb\" id=\"p0045b12\"></span>一清淨，佛號：無垢寶光明。此上過佛剎微\r\n<span class=\"lb\" id=\"p0045b13\"></span>塵數世界，有世界，名：光焰藏；佛號：無礙自\r\n<span class=\"lb\" id=\"p0045b14\"></span>在智慧光。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0045b15\"></span>名：寶輪妙莊嚴；佛號：一切寶光明。此上過佛\r\n<span class=\"lb\" id=\"p0045b16\"></span>剎微塵數世界，有世界，名：栴檀樹華幢；佛號：\r\n<span class=\"lb\" id=\"p0045b17\"></span>清淨智光明。此上過佛剎微塵數世界，有世\r\n<span class=\"lb\" id=\"p0045b18\"></span>界，名：佛剎妙莊嚴；佛號：廣大歡喜音。此上\r\n<span class=\"lb\" id=\"p0045b19\"></span>過佛剎微塵數世界，有世界，名：妙光莊嚴；佛\r\n<span class=\"lb\" id=\"p0045b20\"></span>號：法界自在智。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0045b21\"></span>有世界，名：無邊相；佛號：無礙智。此上過佛剎\r\n<span class=\"lb\" id=\"p0045b22\"></span>微塵數世界，有世界，名：焰雲幢；佛號：演說不\r\n<span class=\"lb\" id=\"p0045b23\"></span>退輪。此上過佛剎微塵數世界，有世界，名：眾\r\n<span class=\"lb\" id=\"p0045b24\"></span>寶莊嚴清淨輪；佛號：離垢華光明。此上過佛\r\n<span class=\"lb\" id=\"p0045b25\"></span>剎微塵數世界，有世界，名：廣大出離；佛號：無\r\n<span class=\"lb\" id=\"p0045b26\"></span>礙智日眼。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0045b27\"></span>名：妙莊嚴金剛座；佛號：法界智大光明。此上\r\n<span class=\"lb\" id=\"p0045b28\"></span>過佛剎微塵數世界，有世界，名：智慧普莊\r\n<span class=\"lb\" id=\"p0045b29\"></span>嚴；佛號：智炬光明王。此上過佛剎微塵數\r\n\r\n<span class=\"lb\" id=\"p0045c01\"></span>世界，有世界，名：蓮華池深妙音；佛號：一切\r\n<span class=\"lb\" id=\"p0045c02\"></span>智普照。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0045c03\"></span>種種色光明；佛號：普光華王雲。此上過佛剎\r\n<span class=\"lb\" id=\"p0045c04\"></span>微塵數世界，有世界，名：妙寶幢；佛號：功德光。\r\n<span class=\"lb\" id=\"p0045c05\"></span>此上過佛剎微塵數世界，有世界，名：摩尼華\r\n<span class=\"lb\" id=\"p0045c06\"></span>毫相光；佛號：普音雲。此上過佛剎微塵數世\r\n<span class=\"lb\" id=\"p0045c07\"></span>界，有世界，名：甚深海；佛號：十方眾生主。\r\n<span class=\"lb\" id=\"p0045c08\"></span>此上過佛剎微塵數世界，有世界，名：須彌光；\r\n<span class=\"lb\" id=\"p0045c09\"></span>佛號：法界普智音。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0045c10\"></span>有世界，名：金蓮華；佛號：福德藏普光明。此上\r\n<span class=\"lb\" id=\"p0045c11\"></span>過佛剎微塵數世界，有世界，名：寶莊嚴藏；形\r\n<span class=\"lb\" id=\"p0045c12\"></span>如卐字，依一切香摩尼莊嚴樹海住，清淨\r\n<span class=\"lb\" id=\"p0045c13\"></span>光明雲彌覆其上，二十佛剎微塵數世界圍\r\n<span class=\"lb\" id=\"p0045c14\"></span>遶，純一清淨，佛號：大變化光明網。</p>\r\n<span class=\"lb\" id=\"p0045c15\"></span><p>「諸佛子！此金剛寶焰香水海右旋，次有香水\r\n<span class=\"lb\" id=\"p0045c16\"></span>海，名：帝青寶莊嚴；世界種，名：光照十方，依一\r\n<span class=\"lb\" id=\"p0045c17\"></span>切妙莊嚴蓮華香雲住，無邊佛音聲為體。\r\n<span class=\"lb\" id=\"p0045c18\"></span>於此最下方，有世界，名：十方無盡色藏輪；其\r\n<span class=\"lb\" id=\"p0045c19\"></span>狀周迴，有無量角，依無邊色一切寶藏海住，\r\n<span class=\"lb\" id=\"p0045c20\"></span>因陀羅網而覆其上，佛剎微塵數世界圍\r\n<span class=\"lb\" id=\"p0045c21\"></span>遶，純一清淨，佛號：蓮華眼光明遍照。此上\r\n<span class=\"lb\" id=\"p0045c22\"></span>過佛剎微塵數世界，有世界，名：淨妙莊嚴藏；\r\n<span class=\"lb\" id=\"p0045c23\"></span>佛號：無上慧大師子。此上過佛剎微塵數世\r\n<span class=\"lb\" id=\"p0045c24\"></span>界，有世界，名：出現蓮華座；佛號：遍照法界光\r\n<span class=\"lb\" id=\"p0045c25\"></span>明王。此上過佛剎微塵數世界，有世界，名：寶\r\n<span class=\"lb\" id=\"p0045c26\"></span>幢音；佛號：大功德普名稱。此上過佛剎微塵\r\n<span class=\"lb\" id=\"p0045c27\"></span>數世界，有世界，名：金剛寶莊嚴藏；佛號：蓮華\r\n<span class=\"lb\" id=\"p0045c28\"></span>日光明。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0045c29\"></span>因陀羅華月；佛號：法自在智慧幢。此上過佛\r\n\r\n<span class=\"lb\" id=\"p0046a01\"></span>剎微塵數世界，有世界，名：妙輪藏；佛號：大喜\r\n<span class=\"lb\" id=\"p0046a02\"></span>清淨音。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0046a03\"></span>名：妙音藏；佛號：大力善商主。此上過佛剎微\r\n<span class=\"lb\" id=\"p0046a04\"></span>塵數世界，有世界，名：清淨月；佛號：須彌光智\r\n<span class=\"lb\" id=\"p0046a05\"></span>慧力。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0046a06\"></span>名：無邊莊嚴相；佛號：方便願淨月光。此上過\r\n<span class=\"lb\" id=\"p0046a07\"></span>佛剎微塵數世界，有世界，名：妙華音；佛號：法\r\n<span class=\"lb\" id=\"p0046a08\"></span>海大願音。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0046a09\"></span>名：一切寶莊嚴；佛號：功德寶光明相。此上過\r\n<span class=\"lb\" id=\"p0046a10\"></span>佛剎微塵數世界，有世界，名：堅固地；佛號：\r\n<span class=\"lb\" id=\"p0046a11\"></span>美音最勝天。此上過佛剎微塵數世界，有\r\n<span class=\"lb\" id=\"p0046a12\"></span>世界，名：普光善化；佛號：大精進寂靜慧。此\r\n<span class=\"lb\" id=\"p0046a13\"></span>上過佛剎微塵數世界，有世界，名：善守護莊\r\n<span class=\"lb\" id=\"p0046a14\"></span>嚴行；佛號：見者生歡喜。此上過佛剎微塵\r\n<span class=\"lb\" id=\"p0046a15\"></span>數世界，有世界，名：栴檀寶華藏；佛號：甚深不\r\n<span class=\"lb\" id=\"p0046a16\"></span>可動智慧光遍照。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0046a17\"></span>有世界，名：現種種色相海；佛號：普放不思議\r\n<span class=\"lb\" id=\"p0046a18\"></span>勝義王光明。此上過佛剎微塵數世界，有\r\n<span class=\"lb\" id=\"p0046a19\"></span>世界，名：化現十方大光明；佛號：勝功德威光\r\n<span class=\"lb\" id=\"p0046a20\"></span>無與等。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0046a21\"></span>須彌雲幢；佛號：極淨光明眼。此上過佛剎\r\n<span class=\"lb\" id=\"p0046a22\"></span>微塵數世界，有世界，名：蓮華遍照；其狀周圓，\r\n<span class=\"lb\" id=\"p0046a23\"></span>依無邊色眾妙香摩尼海住，一切乘莊嚴雲\r\n<span class=\"lb\" id=\"p0046a24\"></span>彌覆其上，二十佛剎微塵數世界圍遶，純\r\n<span class=\"lb\" id=\"p0046a25\"></span>一清淨，佛號：解脫精進日。</p>\r\n<span class=\"lb\" id=\"p0046a26\"></span><p>「諸佛子！此帝青寶莊嚴香水海右旋，次有\r\n<span class=\"lb\" id=\"p0046a27\"></span>香水海，名：金剛輪莊嚴底；世界種，名：妙寶\r\n<span class=\"lb\" id=\"p0046a28\"></span>間錯因陀羅網，普賢智所生音聲為體。此中\r\n<span class=\"lb\" id=\"p0046a29\"></span>最下方，有世界，名：蓮華網；其狀猶如須彌山\r\n\r\n<span class=\"lb\" id=\"p0046b01\"></span>形，依眾妙華山幢海住，佛境界摩尼王帝\r\n<span class=\"lb\" id=\"p0046b02\"></span>網雲而覆其上，佛剎微塵數世界圍遶，純一\r\n<span class=\"lb\" id=\"p0046b03\"></span>清淨，佛號：法身普覺慧。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0046b04\"></span>世界，有世界，名：無盡日光明；佛號：最勝大覺\r\n<span class=\"lb\" id=\"p0046b05\"></span>慧。此上過佛剎微塵數世界，有世界，名：普放\r\n<span class=\"lb\" id=\"p0046b06\"></span>妙光明；佛號：大福雲無盡力。此上過佛剎微\r\n<span class=\"lb\" id=\"p0046b07\"></span>塵數世界，有世界，名：樹華幢；佛號：無邊智法\r\n<span class=\"lb\" id=\"p0046b08\"></span>界音。此上過佛剎微塵數世界，有世界，名：真\r\n<span class=\"lb\" id=\"p0046b09\"></span>珠蓋；佛號：波羅蜜師子頻申。此上過佛剎\r\n<span class=\"lb\" id=\"p0046b10\"></span>微塵數世界，有世界，名：無邊音；佛號：一切智\r\n<span class=\"lb\" id=\"p0046b11\"></span>妙覺慧。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0046b12\"></span>普見樹峯；佛號：普現眾生前。此上過佛剎\r\n<span class=\"lb\" id=\"p0046b13\"></span>微塵數世界，有世界，名：師子帝網光；佛號：無\r\n<span class=\"lb\" id=\"p0046b14\"></span>垢日金色光焰雲。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0046b15\"></span>有世界，名：眾寶間錯；佛號：帝幢最勝慧。此上\r\n<span class=\"lb\" id=\"p0046b16\"></span>過佛剎微塵數世界，有世界，名：無垢光明地；\r\n<span class=\"lb\" id=\"p0046b17\"></span>佛號：一切力清淨月。此上過佛剎微塵數世\r\n<span class=\"lb\" id=\"p0046b18\"></span>界，有世界，名：恒出歎佛功德音；佛號：如虛空\r\n<span class=\"lb\" id=\"p0046b19\"></span>普覺慧。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0046b20\"></span>高焰藏；佛號：化現十方大雲幢。此上過佛剎\r\n<span class=\"lb\" id=\"p0046b21\"></span>微塵數世界，有世界，名：光嚴道場；佛號：無等\r\n<span class=\"lb\" id=\"p0046b22\"></span>智遍照。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0046b23\"></span>出生一切寶莊嚴；佛號：廣度眾生神通王。此\r\n<span class=\"lb\" id=\"p0046b24\"></span>上過佛剎微塵數世界，有世界，名：光嚴妙宮\r\n<span class=\"lb\" id=\"p0046b25\"></span>殿；佛號：一切義成廣大慧。此上過佛剎微\r\n<span class=\"lb\" id=\"p0046b26\"></span>塵數世界，有世界，名：離塵寂靜；佛號：不唐現。\r\n<span class=\"lb\" id=\"p0046b27\"></span>此上過佛剎微塵數世界，有世界，名：摩尼華\r\n<span class=\"lb\" id=\"p0046b28\"></span>幢；佛號：悅意吉祥音。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0046b29\"></span>世界，有世界，名：普雲藏；其狀猶如樓閣之\r\n\r\n<span class=\"lb\" id=\"p0046c01\"></span>形，依種種宮殿香水海住，一切寶燈雲彌\r\n<span class=\"lb\" id=\"p0046c02\"></span>覆其上，二十佛剎微塵數世界圍遶，純一清\r\n<span class=\"lb\" id=\"p0046c03\"></span>淨，佛號：最勝覺神通王。</p><p>「諸佛子！此金剛輪\r\n<span class=\"lb\" id=\"p0046c04\"></span>莊嚴底香水海右旋，次有香水海，名：蓮華\r\n<span class=\"lb\" id=\"p0046c05\"></span>因陀羅網；世界種，名：普現十方影，依一切香\r\n<span class=\"lb\" id=\"p0046c06\"></span>摩尼莊嚴蓮華住，一切佛智光音聲為體。此\r\n<span class=\"lb\" id=\"p0046c07\"></span>中最下方，有世界，名：眾生海寶光明；其狀猶\r\n<span class=\"lb\" id=\"p0046c08\"></span>如真珠之藏，依一切摩尼瓔珞海漩住，水\r\n<span class=\"lb\" id=\"p0046c09\"></span>光明摩尼雲而覆其上，佛剎微塵數世界\r\n<span class=\"lb\" id=\"p0046c10\"></span>圍遶，純一清淨，佛號：不思議功德遍照月。此\r\n<span class=\"lb\" id=\"p0046c11\"></span>上過佛剎微塵數世界，有世界，名：妙香輪；\r\n<span class=\"lb\" id=\"p0046c12\"></span>佛號：無量力幢。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0046c13\"></span>有世界，名：妙光輪；佛號：法界光音覺悟慧。此\r\n<span class=\"lb\" id=\"p0046c14\"></span>上過佛剎微塵數世界，有世界，名：吼聲摩尼\r\n<span class=\"lb\" id=\"p0046c15\"></span>幢；佛號：蓮華光恒垂妙臂。此上過佛剎微塵\r\n<span class=\"lb\" id=\"p0046c16\"></span>數世界，有世界，名：極堅固輪；佛號：不退轉功\r\n<span class=\"lb\" id=\"p0046c17\"></span>德海光明。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0046c18\"></span>名：眾行光莊嚴；佛號：一切智普勝尊。此上過\r\n<span class=\"lb\" id=\"p0046c19\"></span>佛剎微塵數世界，有世界，名：師子座遍照；\r\n<span class=\"lb\" id=\"p0046c20\"></span>佛號：師子光無量力覺慧。此上過佛剎微塵\r\n<span class=\"lb\" id=\"p0046c21\"></span>數世界，有世界，名：寶焰莊嚴；佛號：一切法清\r\n<span class=\"lb\" id=\"p0046c22\"></span>淨智。此上過佛剎微塵數世界，有世界，名：無\r\n<span class=\"lb\" id=\"p0046c23\"></span>量燈；佛號：無憂相。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0046c24\"></span>有世界，名：常聞佛音；佛號：自然勝威光。此上\r\n<span class=\"lb\" id=\"p0046c25\"></span>過佛剎微塵數世界，有世界，名：清淨變化；佛\r\n<span class=\"lb\" id=\"p0046c26\"></span>號：金蓮華光明。此上過佛剎微塵數世界，有\r\n<span class=\"lb\" id=\"p0046c27\"></span>世界，名：普入十方；佛號：觀法界頻申慧。此上\r\n<span class=\"lb\" id=\"p0046c28\"></span>過佛剎微塵數世界，有世界，名：熾然焰；佛號：\r\n<span class=\"lb\" id=\"p0046c29\"></span>光焰樹緊那羅王。此上過佛剎微塵數世界，\r\n\r\n<span class=\"lb\" id=\"p0047a01\"></span>有世界，名：香光遍照；佛號：香燈善化王。此上\r\n<span class=\"lb\" id=\"p0047a02\"></span>過佛剎微塵數世界，有世界，名：無量華聚輪；\r\n<span class=\"lb\" id=\"p0047a03\"></span>佛號：普現佛功德。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0047a04\"></span>有世界，名：眾妙普清淨；佛號：一切法平等神\r\n<span class=\"lb\" id=\"p0047a05\"></span>通王。此上過佛剎微塵數世界，有世界，名：金\r\n<span class=\"lb\" id=\"p0047a06\"></span>光海；佛號：十方自在大變化。此上過佛剎微\r\n<span class=\"lb\" id=\"p0047a07\"></span>塵數世界，有世界，名：真珠華藏；佛號：法界寶\r\n<span class=\"lb\" id=\"p0047a08\"></span>光明不可思議慧。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0047a09\"></span>有世界，名：帝釋須彌師子座；佛號：勝力光。\r\n<span class=\"lb\" id=\"p0047a10\"></span>此上過佛剎微塵數世界，有世界，名：無邊寶\r\n<span class=\"lb\" id=\"p0047a11\"></span>普照；其形四方，依華林海住，普雨無邊色摩\r\n<span class=\"lb\" id=\"p0047a12\"></span>尼王帝網彌覆其上，二十佛剎微塵數世\r\n<span class=\"lb\" id=\"p0047a13\"></span>界圍遶，純一清淨，佛號：遍照世間最勝音。</p>\r\n<span class=\"lb\" id=\"p0047a14\"></span><p>「諸佛子！此蓮華因陀羅網香水海右旋，次有\r\n<span class=\"lb\" id=\"p0047a15\"></span>香水海，名：積集寶香藏；世界種，名：一切威德\r\n<span class=\"lb\" id=\"p0047a16\"></span>莊嚴，以一切佛法輪音聲為體。此中最下方，\r\n<span class=\"lb\" id=\"p0047a17\"></span>有世界，名：種種出生；形如金剛，依種種金剛\r\n<span class=\"lb\" id=\"p0047a18\"></span>山幢住，金剛寶光雲而覆其上，佛剎微塵\r\n<span class=\"lb\" id=\"p0047a19\"></span>數世界圍遶，純一清淨，佛號：蓮華眼。此上過\r\n<span class=\"lb\" id=\"p0047a20\"></span>佛剎微塵數世界，有世界，名：喜見音；佛號：生\r\n<span class=\"lb\" id=\"p0047a21\"></span>喜樂。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0047a22\"></span>名：寶莊嚴幢；佛號：一切智。此上過佛剎微塵\r\n<span class=\"lb\" id=\"p0047a23\"></span>數世界，有世界，名：多羅華普照；佛號：無垢寂\r\n<span class=\"lb\" id=\"p0047a24\"></span>妙音。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0047a25\"></span>變化光；佛號：清淨空智慧月。此上過佛剎微\r\n<span class=\"lb\" id=\"p0047a26\"></span>塵數世界，有世界，名：眾妙間錯；佛號：開示福\r\n<span class=\"lb\" id=\"p0047a27\"></span>德海密雲相。此上過佛剎微塵數世界，有\r\n<span class=\"lb\" id=\"p0047a28\"></span>世界，名：一切莊嚴具妙音聲；佛號：歡喜雲。此\r\n<span class=\"lb\" id=\"p0047a29\"></span>上過佛剎微塵數世界，有世界，名：蓮華池；佛\r\n\r\n<span class=\"lb\" id=\"p0047b01\"></span>號：名稱幢。此上過佛剎微塵數世界，有世\r\n<span class=\"lb\" id=\"p0047b02\"></span>界，名：一切寶莊嚴；佛號：頻申觀察眼。此上過\r\n<span class=\"lb\" id=\"p0047b03\"></span>佛剎微塵數世界，有世界，名：淨妙華；佛號：無\r\n<span class=\"lb\" id=\"p0047b04\"></span>盡金剛智。此上過佛剎微塵數世界，有世\r\n<span class=\"lb\" id=\"p0047b05\"></span>界，名：蓮華莊嚴城；佛號：日藏眼普光明。此上\r\n<span class=\"lb\" id=\"p0047b06\"></span>過佛剎微塵數世界，有世界，名：無量樹峯；佛\r\n<span class=\"lb\" id=\"p0047b07\"></span>號：一切法雷音。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0047b08\"></span>有世界，名：日光明；佛號：開示無量智。此上過\r\n<span class=\"lb\" id=\"p0047b09\"></span>佛剎微塵數世界，有世界，名：依止蓮華葉；佛\r\n<span class=\"lb\" id=\"p0047b10\"></span>號：一切福德山。此上過佛剎微塵數世界，有\r\n<span class=\"lb\" id=\"p0047b11\"></span>世界，名：風普持；佛號：日曜根。此上過佛剎微\r\n<span class=\"lb\" id=\"p0047b12\"></span>塵數世界，有世界，名：光明顯現；佛號：身光普\r\n<span class=\"lb\" id=\"p0047b13\"></span>照。此上過佛剎微塵數世界，有世界，名：香雷\r\n<span class=\"lb\" id=\"p0047b14\"></span>音金剛寶普照；佛號：最勝華開敷相。此上過\r\n<span class=\"lb\" id=\"p0047b15\"></span>佛剎微塵數世界，有世界，名：帝網莊嚴；形\r\n<span class=\"lb\" id=\"p0047b16\"></span>如欄楯，依一切莊嚴海住，光焰樓閣雲彌覆\r\n<span class=\"lb\" id=\"p0047b17\"></span>其上，二十佛剎微塵數世界圍遶，純一清\r\n<span class=\"lb\" id=\"p0047b18\"></span>淨，佛號：示現無畏雲。</p>\r\n<span class=\"lb\" id=\"p0047b19\"></span><p>「諸佛子！此積集寶香藏香水海右旋，次有香\r\n<span class=\"lb\" id=\"p0047b20\"></span>水海，名：寶莊嚴；世界種，名：普無垢，以一切微\r\n<span class=\"lb\" id=\"p0047b21\"></span>塵中佛剎神變聲為體。此中最下方，有世\r\n<span class=\"lb\" id=\"p0047b22\"></span>界，名：淨妙平坦；形如寶身，依一切寶光輪海\r\n<span class=\"lb\" id=\"p0047b23\"></span>住，種種栴檀摩尼真珠雲而覆其上，佛剎\r\n<span class=\"lb\" id=\"p0047b24\"></span>微塵數世界圍遶，純一清淨，佛號：難摧伏無\r\n<span class=\"lb\" id=\"p0047b25\"></span>等幢。此上過佛剎微塵數世界，有世界，名：熾\r\n<span class=\"lb\" id=\"p0047b26\"></span>然妙莊嚴；佛號：蓮華慧神通王。此上過佛剎\r\n<span class=\"lb\" id=\"p0047b27\"></span>微塵數世界，有世界，名：微妙相輪幢；佛號：十\r\n<span class=\"lb\" id=\"p0047b28\"></span>方大名稱無盡光。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0047b29\"></span>有世界，名：焰藏摩尼妙莊嚴；佛號：大智慧見\r\n\r\n<span class=\"lb\" id=\"p0047c01\"></span>聞皆歡喜。此上過佛剎微塵數世界，有世\r\n<span class=\"lb\" id=\"p0047c02\"></span>界，名：妙華莊嚴；佛號：無量力最勝智。此上過\r\n<span class=\"lb\" id=\"p0047c03\"></span>佛剎微塵數世界，有世界，名：出生淨微塵；佛\r\n<span class=\"lb\" id=\"p0047c04\"></span>號：超勝梵。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0047c05\"></span>名：普光明變化香；佛號：香象金剛大力勢。此\r\n<span class=\"lb\" id=\"p0047c06\"></span>上過佛剎微塵數世界，有世界，名：光明旋；\r\n<span class=\"lb\" id=\"p0047c07\"></span>佛號：義成善名稱。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0047c08\"></span>有世界，名：寶瓔珞海；佛號：無比光遍照。此\r\n<span class=\"lb\" id=\"p0047c09\"></span>上過佛剎微塵數世界，有世界，名：妙華燈\r\n<span class=\"lb\" id=\"p0047c10\"></span>幢；佛號：究竟功德無礙慧燈。此上過佛剎\r\n<span class=\"lb\" id=\"p0047c11\"></span>微塵數世界，有世界，名：善巧莊嚴；佛號：慧日\r\n<span class=\"lb\" id=\"p0047c12\"></span>波羅蜜。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0047c13\"></span>栴檀華普光明；佛號：無邊慧法界音。此上過\r\n<span class=\"lb\" id=\"p0047c14\"></span>佛剎微塵數世界，有世界，名：帝網幢；佛號：燈\r\n<span class=\"lb\" id=\"p0047c15\"></span>光逈照。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0047c16\"></span>淨華輪；佛號：法界日光明。此上過佛剎微塵\r\n<span class=\"lb\" id=\"p0047c17\"></span>數世界，有世界，名：大威耀；佛號：無邊功德\r\n<span class=\"lb\" id=\"p0047c18\"></span>海法輪音。此上過佛剎微塵數世界，有世\r\n<span class=\"lb\" id=\"p0047c19\"></span>界，名：同安住寶蓮華池；佛號：開示入不可\r\n<span class=\"lb\" id=\"p0047c20\"></span>思議智。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0047c21\"></span>名：平坦地；佛號：功德寶光明王。此上過佛剎\r\n<span class=\"lb\" id=\"p0047c22\"></span>微塵數世界，有世界，名：香摩尼聚：佛號：無盡\r\n<span class=\"lb\" id=\"p0047c23\"></span>福德海妙莊嚴。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0047c24\"></span>有世界，名：微妙光明：佛號：無等力普遍音。此\r\n<span class=\"lb\" id=\"p0047c25\"></span>上過佛剎微塵數世界，有世界，名：十方普堅\r\n<span class=\"lb\" id=\"p0047c26\"></span>固莊嚴照耀；其形八隅，依心王摩尼輪海\r\n<span class=\"lb\" id=\"p0047c27\"></span>住，一切寶莊嚴帳雲彌覆其上，二十佛剎微\r\n<span class=\"lb\" id=\"p0047c28\"></span>塵數世界圍遶，純一清淨，佛號：普眼大明\r\n<span class=\"lb\" id=\"p0047c29\"></span>燈。</p>\r\n\r\n<span class=\"lb\" id=\"p0048a01\"></span><p>「諸佛子！此寶莊嚴香水海右旋，次有香水海，\r\n<span class=\"lb\" id=\"p0048a02\"></span>名：金剛寶聚；世界種，名：法界行，以一切菩薩\r\n<span class=\"lb\" id=\"p0048a03\"></span>地方便法音聲為體。此中最下方，有世界，名：\r\n<span class=\"lb\" id=\"p0048a04\"></span>淨光照耀；形如珠貫，依一切寶色珠瓔海住，\r\n<span class=\"lb\" id=\"p0048a05\"></span>菩薩珠髻光明摩尼雲而覆其上，佛剎微塵\r\n<span class=\"lb\" id=\"p0048a06\"></span>數世界圍遶，純一清淨，佛號：最勝功德光。此\r\n<span class=\"lb\" id=\"p0048a07\"></span>上過佛剎微塵數世界，有世界，名：妙蓋；佛號：\r\n<span class=\"lb\" id=\"p0048a08\"></span>法自在慧。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0048a09\"></span>名：寶莊嚴師子座；佛號：大龍淵。此上過佛剎\r\n<span class=\"lb\" id=\"p0048a10\"></span>微塵數世界，有世界，名：出現金剛座：佛號：\r\n<span class=\"lb\" id=\"p0048a11\"></span>昇師子座蓮華臺；此上過佛剎微塵數世\r\n<span class=\"lb\" id=\"p0048a12\"></span>界，有世界，名：蓮華勝音：佛號：智光普開悟。此\r\n<span class=\"lb\" id=\"p0048a13\"></span>上過佛剎微塵數世界，有世界，名：善慣習；佛\r\n<span class=\"lb\" id=\"p0048a14\"></span>號：持地妙光王。此上過佛剎微塵數世界，有\r\n<span class=\"lb\" id=\"p0048a15\"></span>世界，名：喜樂音；佛號：法燈王。此上過佛剎微\r\n<span class=\"lb\" id=\"p0048a16\"></span>塵數世界，有世界，名：摩尼藏因陀羅網；佛號：\r\n<span class=\"lb\" id=\"p0048a17\"></span>不空見。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0048a18\"></span>眾妙地藏：佛號：焰身幢。此上過佛剎微塵數\r\n<span class=\"lb\" id=\"p0048a19\"></span>世界，有世界，名：金光輪；佛號：淨治眾生行。此\r\n<span class=\"lb\" id=\"p0048a20\"></span>上過佛剎微塵數世界，有世界，名：須彌山莊\r\n<span class=\"lb\" id=\"p0048a21\"></span>嚴；佛號：一切功德雲普照。此上過佛剎微塵\r\n<span class=\"lb\" id=\"p0048a22\"></span>數世界，有世界，名：眾樹形；佛號：寶華相淨月\r\n<span class=\"lb\" id=\"p0048a23\"></span>覺。此上過佛剎微塵數世界，有世界，名：無怖\r\n<span class=\"lb\" id=\"p0048a24\"></span>畏；佛號：最勝金光炬。此上過佛剎微塵數世\r\n<span class=\"lb\" id=\"p0048a25\"></span>界，有世界，名：大名稱龍王幢；佛號：觀等一切\r\n<span class=\"lb\" id=\"p0048a26\"></span>法。此上過佛剎微塵數世界，有世界，名：示現\r\n<span class=\"lb\" id=\"p0048a27\"></span>摩尼色；佛號：變化日。此上過佛剎微塵數世\r\n<span class=\"lb\" id=\"p0048a28\"></span>界，有世界，名：光焰燈莊嚴：佛號：寶蓋光遍照。\r\n<span class=\"lb\" id=\"p0048a29\"></span>此上過佛剎微塵數世界，有世界，名：香光\r\n\r\n<span class=\"lb\" id=\"p0048b01\"></span>雲：佛號：思惟慧。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0048b02\"></span>有世界，名：無怨讎；佛號：精進勝慧海。此上\r\n<span class=\"lb\" id=\"p0048b03\"></span>過佛剎微塵數世界，有世界，名：一切莊嚴具\r\n<span class=\"lb\" id=\"p0048b04\"></span>光明幢；佛號：普現悅意蓮華自在王。此上過\r\n<span class=\"lb\" id=\"p0048b05\"></span>佛剎微塵數世界，有世界，名：毫相莊嚴；形如\r\n<span class=\"lb\" id=\"p0048b06\"></span>半月，依須彌山摩尼華海住，一切莊嚴熾盛\r\n<span class=\"lb\" id=\"p0048b07\"></span>光摩尼王雲彌覆其上，二十佛剎微塵數\r\n<span class=\"lb\" id=\"p0048b08\"></span>世界圍遶，純一清淨，佛號：清淨眼。</p>\r\n<span class=\"lb\" id=\"p0048b09\"></span><p>「諸佛子！此金剛寶聚香水海右旋，次有香水\r\n<span class=\"lb\" id=\"p0048b10\"></span>海，名：天城寶堞；世界種，名：燈焰光明，以普\r\n<span class=\"lb\" id=\"p0048b11\"></span>示一切平等法輪音為體。此中最下方，有\r\n<span class=\"lb\" id=\"p0048b12\"></span>世界，名：寶月光焰輪；形如一切莊嚴具，依一\r\n<span class=\"lb\" id=\"p0048b13\"></span>切寶莊嚴華海住，瑠璃色師子座雲而覆其\r\n<span class=\"lb\" id=\"p0048b14\"></span>上。佛剎微塵數世界圍遶，純一清淨，佛號：日\r\n<span class=\"lb\" id=\"p0048b15\"></span>月自在光。此上過佛剎微塵數世界，有世界，\r\n<span class=\"lb\" id=\"p0048b16\"></span>名：須彌寶光；佛號：無盡法寶幢。此上過佛剎\r\n<span class=\"lb\" id=\"p0048b17\"></span>微塵數世界，有世界，名：眾妙光明幢；佛號：\r\n<span class=\"lb\" id=\"p0048b18\"></span>大華聚。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0048b19\"></span>摩尼光明華；佛號：人中最自在。此上過佛\r\n<span class=\"lb\" id=\"p0048b20\"></span>剎微塵數世界，有世界，名：普音；佛號：一切智\r\n<span class=\"lb\" id=\"p0048b21\"></span>遍照。此上過佛剎微塵數世界，有世界，名：大\r\n<span class=\"lb\" id=\"p0048b22\"></span>樹緊那羅音；佛號：無量福德自在龍。此上過\r\n<span class=\"lb\" id=\"p0048b23\"></span>佛剎微塵數世界，有世界，名：無邊淨光明；佛\r\n<span class=\"lb\" id=\"p0048b24\"></span>號：功德寶華光。此上過佛剎微塵數世界，有\r\n<span class=\"lb\" id=\"p0048b25\"></span>世界，名：最勝音；佛號：一切智莊嚴。此上過\r\n<span class=\"lb\" id=\"p0048b26\"></span>佛剎微塵數世界，有世界，名：眾寶間飾；佛號：\r\n<span class=\"lb\" id=\"p0048b27\"></span>寶焰須彌山。此上過佛剎微塵數世界，有\r\n<span class=\"lb\" id=\"p0048b28\"></span>世界，名：清淨須彌音；佛號：出現一切行光明。\r\n<span class=\"lb\" id=\"p0048b29\"></span>此上過佛剎微塵數世界，有世界，名：香水\r\n\r\n<span class=\"lb\" id=\"p0048c01\"></span>蓋；佛號：一切波羅蜜無礙海。此上過佛剎\r\n<span class=\"lb\" id=\"p0048c02\"></span>微塵數世界，有世界，名：師子華網；佛號：寶焰\r\n<span class=\"lb\" id=\"p0048c03\"></span>幢。此上過佛剎微塵數世界，有世界，名：金剛\r\n<span class=\"lb\" id=\"p0048c04\"></span>妙華燈；佛號：一切大願光。此上過佛剎微\r\n<span class=\"lb\" id=\"p0048c05\"></span>塵數世界，有世界，名：一切法光明地；佛號：\r\n<span class=\"lb\" id=\"p0048c06\"></span>一切法廣大真實義。此上過佛剎微塵數世\r\n<span class=\"lb\" id=\"p0048c07\"></span>界，有世界，名：真珠末平坦莊嚴；佛號：勝慧光\r\n<span class=\"lb\" id=\"p0048c08\"></span>明網。此上過佛剎微塵數世界，有世界，名：瑠\r\n<span class=\"lb\" id=\"p0048c09\"></span>璃華；佛號：寶積幢。此上過佛剎微塵數世界，\r\n<span class=\"lb\" id=\"p0048c10\"></span>有世界，名：無量妙光輪；佛號：大威力智海\r\n<span class=\"lb\" id=\"p0048c11\"></span>藏。此上過佛剎微塵數世界，有世界，名：\r\n<span class=\"lb\" id=\"p0048c12\"></span>明見十方；佛號：淨修一切功德幢。此上過佛\r\n<span class=\"lb\" id=\"p0048c13\"></span>剎微塵數世界，有世界，名：可愛樂梵音；形如\r\n<span class=\"lb\" id=\"p0048c14\"></span>佛手，依寶光網海住，菩薩身一切莊嚴雲\r\n<span class=\"lb\" id=\"p0048c15\"></span>彌覆其上，二十佛剎微塵數世界圍遶，純\r\n<span class=\"lb\" id=\"p0048c16\"></span>一清淨，佛號：普照法界無礙光。」</p></cb:div>\r\n<span class=\"lb\" id=\"p0048c17\"></span><cb:juan n=\"009\" fun=\"close\"><cb:jhead><title>大方廣佛華嚴經</title>卷第九</cb:jhead></cb:juan>\r\n</cb:div></body><div id=\"footnotes\"><div class=\"note-text\" id=\"note_0044001\">離塵＝離苦【宮】</div><div class=\"note-text\" id=\"note_0044001\">離塵【大】，離苦【宮】</div><div class=\"note-text\" id=\"note_0044002\">明註曰喜南藏作廣</div><div class=\"note-text\" id=\"note_0044b0401\">雲【CB】，［－］【大】</div><div class=\"note-text\" id=\"note_0044003\">〔雲〕－【三】【宮】</div><div class=\"note-text\" id=\"note_0044003\">雲【大】，〔－〕【宋】【元】【明】【宮】</div><div class=\"note-text\" id=\"note_0044004\">卐＝卍【三】【宮】＊</div><div class=\"note-text\" id=\"note_0044004\">卐【大】＊，卍【宋】【元】【明】【宮】＊</div><div class=\"note-text\" id=\"note_0044b2301\">迥【CB】【麗-CB】，迴【大】</div><div class=\"note-text\" id=\"note_0044005\">漩＝旋【三】【宮】＊</div><div class=\"note-text\" id=\"note_0044005\">漩【大】＊，旋【宋】【元】【明】【宮】＊</div><div class=\"note-text\" id=\"note_0044006\">彌＝而【元】【明】【宮】＊</div><div class=\"note-text\" id=\"note_0044006\">彌【大】＊，而【元】【明】【宮】＊</div><div class=\"note-text\" id=\"note_0045001\">普光寶＝普光明【明】，普光明寶【宮】</div><div class=\"note-text\" id=\"note_0045001\">普光寶【大】，普光明【明】，普光明寶【宮】</div><div class=\"note-text\" id=\"note_0045002\">王＝人【宋】</div><div class=\"note-text\" id=\"note_0045002\">王【大】，人【宋】</div><div class=\"note-text\" id=\"note_0045003\">（以）＋無【明】</div><div class=\"note-text\" id=\"note_0045003\">無【大】，以無【明】</div><div class=\"note-text\" id=\"note_0046a1501\">佛號【CB】【麗-CB】【磧-CB】，號佛【大】</div><div class=\"note-text\" id=\"note_0046a1701\">佛號【CB】【麗-CB】【磧-CB】，號佛【大】</div><div class=\"note-text\" id=\"note_0046001\">彌＝而【三】【宮】＊</div><div class=\"note-text\" id=\"note_0046001\">彌【大】＊，而【宋】【元】【明】【宮】＊</div><div class=\"note-text\" id=\"note_0046002\">〔寶〕－【三】【宮】</div><div class=\"note-text\" id=\"note_0046002\">寶【大】，〔－〕【宋】【元】【明】【宮】</div><div class=\"note-text\" id=\"note_0046b1801\">恒【CB】【麗-CB】，恆【大】</div><div class=\"note-text\" id=\"note_0047001\">此＝世【明】</div><div class=\"note-text\" id=\"note_0047001\">此【大】，世【明】</div><div class=\"note-text\" id=\"note_0047002\">而＝彌【宮】</div><div class=\"note-text\" id=\"note_0047002\">而【大】，彌【宮】</div><div class=\"note-text\" id=\"note_0047003\">瓔珞＝纓珞【宋】</div><div class=\"note-text\" id=\"note_0047003\">瓔珞【大】，纓珞【宋】</div><div class=\"note-text\" id=\"note_0047004\">耀＝曜【宋】</div><div class=\"note-text\" id=\"note_0047004\">耀【大】，曜【宋】</div><div class=\"note-text\" id=\"note_0048001\">昇＝升【三】＊</div><div class=\"note-text\" id=\"note_0048001\">昇【大】＊，升【宋】＊【元】＊【明】＊</div><div class=\"note-text\" id=\"note_0048b0201\">讎【CB】【麗-CB】，讐【大】</div><div class=\"note-text\" id=\"note_0048b1001\">堞【CB】【麗-CB】【磧-CB】，蝶【大】</div></div>"
+    }
+  ],
+  "toc": {
+    "mulu": [
+      {
+        "title": "大周新譯序",
+        "lb": "p0001a03",
+        "juan": 1,
+        "type": "品"
+      },
+      {
+        "title": "1 世主妙嚴品",
+        "lb": "p0001b25",
+        "juan": 1,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0001b25",
+            "juan": 1,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0005b23",
+            "juan": 2,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0010c05",
+            "juan": 3,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0015c27",
+            "juan": 4,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0021c05",
+            "juan": 5,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "2 如來現相品",
+        "lb": "p0026a19",
+        "juan": 6,
+        "type": "品"
+      },
+      {
+        "title": "3 普賢三昧品",
+        "lb": "p0032c25",
+        "juan": 7,
+        "type": "品"
+      },
+      {
+        "title": "4 世界成就品",
+        "lb": "p0034b09",
+        "juan": 7,
+        "type": "品"
+      },
+      {
+        "title": "5 華藏世界品",
+        "lb": "p0039a15",
+        "juan": 8,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0039a15",
+            "juan": 8,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0044a08",
+            "juan": 9,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0048c23",
+            "juan": 10,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "6 毘盧遮那品",
+        "lb": "p0053c20",
+        "juan": 11,
+        "type": "品"
+      },
+      {
+        "title": "7 如來名號品",
+        "lb": "p0057c22",
+        "juan": 12,
+        "type": "品"
+      },
+      {
+        "title": "8 四聖諦品",
+        "lb": "p0060a13",
+        "juan": 12,
+        "type": "品"
+      },
+      {
+        "title": "9 光明覺品",
+        "lb": "p0062b15",
+        "juan": 13,
+        "type": "品"
+      },
+      {
+        "title": "10 菩薩問明品",
+        "lb": "p0066a26",
+        "juan": 13,
+        "type": "品"
+      },
+      {
+        "title": "11 淨行品",
+        "lb": "p0069b19",
+        "juan": 14,
+        "type": "品"
+      },
+      {
+        "title": "12 賢首品",
+        "lb": "p0072a22",
+        "juan": 14,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0072a22",
+            "juan": 14,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0075b23",
+            "juan": 15,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "13 昇須彌山頂品",
+        "lb": "p0080c07",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "14 須彌頂上偈讚品",
+        "lb": "p0081a22",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "15 十住品",
+        "lb": "p0083c29",
+        "juan": 16,
+        "type": "品"
+      },
+      {
+        "title": "16 梵行品",
+        "lb": "p0088b05",
+        "juan": 17,
+        "type": "品"
+      },
+      {
+        "title": "17 初發心功德品",
+        "lb": "p0089a04",
+        "juan": 17,
+        "type": "品"
+      },
+      {
+        "title": "18 明法品",
+        "lb": "p0095a21",
+        "juan": 18,
+        "type": "品"
+      },
+      {
+        "title": "19 昇夜摩天宮品",
+        "lb": "p0099a19",
+        "juan": 19,
+        "type": "品"
+      },
+      {
+        "title": "20 夜摩宮中偈讚品",
+        "lb": "p0099c13",
+        "juan": 19,
+        "type": "品"
+      },
+      {
+        "title": "21 十行品",
+        "lb": "p0102b24",
+        "juan": 19,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0102b24",
+            "juan": 19,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0105c15",
+            "juan": 20,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "22 十無盡藏品",
+        "lb": "p0111a27",
+        "juan": 21,
+        "type": "品"
+      },
+      {
+        "title": "23 昇兜率天宮品",
+        "lb": "p0115a12",
+        "juan": 22,
+        "type": "品"
+      },
+      {
+        "title": "24 兜率宮中偈讚品",
+        "lb": "p0121a12",
+        "juan": 23,
+        "type": "品"
+      },
+      {
+        "title": "25 十迴向品",
+        "lb": "p0124a24",
+        "juan": 23,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0124a24",
+            "juan": 23,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0127b17",
+            "juan": 24,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0133a05",
+            "juan": 25,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0139a05",
+            "juan": 26,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0144b05",
+            "juan": 27,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0150a19",
+            "juan": 28,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0156c27",
+            "juan": 29,
+            "type": "品"
+          },
+          {
+            "title": "之八",
+            "lb": "p0160c24",
+            "juan": 30,
+            "type": "品"
+          },
+          {
+            "title": "之九",
+            "lb": "p0165b05",
+            "juan": 31,
+            "type": "品"
+          },
+          {
+            "title": "之十",
+            "lb": "p0171a05",
+            "juan": 32,
+            "type": "品"
+          },
+          {
+            "title": "之十一",
+            "lb": "p0174c05",
+            "juan": 33,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "26 十地品",
+        "lb": "p0178b28",
+        "juan": 34,
+        "type": "品"
+      },
+      {
+        "title": "27 十定品",
+        "lb": "p0211a05",
+        "juan": 40,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0211a05",
+            "juan": 40,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0215a05",
+            "juan": 41,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0218c26",
+            "juan": 42,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0223c05",
+            "juan": 43,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "28 十通品",
+        "lb": "p0229c16",
+        "juan": 44,
+        "type": "品"
+      },
+      {
+        "title": "29 十忍品",
+        "lb": "p0232b05",
+        "juan": 44,
+        "type": "品"
+      },
+      {
+        "title": "30 阿僧祇品",
+        "lb": "p0237b07",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "31 壽量品",
+        "lb": "p0241a16",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "32 諸菩薩住處品",
+        "lb": "p0241b06",
+        "juan": 45,
+        "type": "品"
+      },
+      {
+        "title": "33 佛不思議法品",
+        "lb": "p0242a05",
+        "juan": 46,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0242a05",
+            "juan": 46,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0246b14",
+            "juan": 47,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "34 如來十身相海品",
+        "lb": "p0251b24",
+        "juan": 48,
+        "type": "品"
+      },
+      {
+        "title": "35 如來隨好光明功德品",
+        "lb": "p0255c11",
+        "juan": 48,
+        "type": "品"
+      },
+      {
+        "title": "36 普賢行品",
+        "lb": "p0257c09",
+        "juan": 49,
+        "type": "品"
+      },
+      {
+        "title": "37 如來出現品",
+        "lb": "p0262a15",
+        "juan": 50,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0262a15",
+            "juan": 50,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0268a23",
+            "juan": 51,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0273c05",
+            "juan": 52,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "38 離世間品",
+        "lb": "p0279a05",
+        "juan": 53,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0279a05",
+            "juan": 53,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0284a05",
+            "juan": 54,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0288c22",
+            "juan": 55,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0293c10",
+            "juan": 56,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0299b11",
+            "juan": 57,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0304c21",
+            "juan": 58,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0310c26",
+            "juan": 59,
+            "type": "品"
+          }
+        ]
+      },
+      {
+        "title": "39 入法界品",
+        "lb": "p0319a05",
+        "juan": 60,
+        "type": "品",
+        "children": [
+          {
+            "title": "之一",
+            "lb": "p0319a05",
+            "juan": 60,
+            "type": "品"
+          },
+          {
+            "title": "之二",
+            "lb": "p0326c21",
+            "juan": 61,
+            "type": "品"
+          },
+          {
+            "title": "之三",
+            "lb": "p0331c27",
+            "juan": 62,
+            "type": "品"
+          },
+          {
+            "title": "之四",
+            "lb": "p0337b22",
+            "juan": 63,
+            "type": "品"
+          },
+          {
+            "title": "之五",
+            "lb": "p0343a08",
+            "juan": 64,
+            "type": "品"
+          },
+          {
+            "title": "之六",
+            "lb": "p0348a25",
+            "juan": 65,
+            "type": "品"
+          },
+          {
+            "title": "之七",
+            "lb": "p0353c05",
+            "juan": 66,
+            "type": "品"
+          },
+          {
+            "title": "之八",
+            "lb": "p0360a05",
+            "juan": 67,
+            "type": "品"
+          },
+          {
+            "title": "之九",
+            "lb": "p0365a27",
+            "juan": 68,
+            "type": "品"
+          },
+          {
+            "title": "之十",
+            "lb": "p0372a09",
+            "juan": 69,
+            "type": "品"
+          },
+          {
+            "title": "之十一",
+            "lb": "p0378a24",
+            "juan": 70,
+            "type": "品"
+          },
+          {
+            "title": "之十二",
+            "lb": "p0384a18",
+            "juan": 71,
+            "type": "品"
+          },
+          {
+            "title": "之十三",
+            "lb": "p0391a05",
+            "juan": 72,
+            "type": "品"
+          },
+          {
+            "title": "之十四",
+            "lb": "p0396b12",
+            "juan": 73,
+            "type": "品"
+          },
+          {
+            "title": "之十五",
+            "lb": "p0401c15",
+            "juan": 74,
+            "type": "品"
+          },
+          {
+            "title": "之十六",
+            "lb": "p0405c05",
+            "juan": 75,
+            "type": "品"
+          },
+          {
+            "title": "之十七",
+            "lb": "p0413c08",
+            "juan": 76,
+            "type": "品"
+          },
+          {
+            "title": "之十八",
+            "lb": "p0419c13",
+            "juan": 77,
+            "type": "品"
+          },
+          {
+            "title": "之十九",
+            "lb": "p0428b05",
+            "juan": 78,
+            "type": "品"
+          },
+          {
+            "title": "之二十",
+            "lb": "p0434c28",
+            "juan": 79,
+            "type": "品"
+          },
+          {
+            "title": "之二十一",
+            "lb": "p0439b05",
+            "juan": 80,
+            "type": "品"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "CBReader 2X v0.9.9 2026-01-21"
+}
