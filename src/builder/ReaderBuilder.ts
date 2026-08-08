@@ -1,5 +1,7 @@
 import type { BookContent, JuanData, TextSegment } from '../types/book';
 import { getApiUrl } from './IndexBuilder';
+import { getSourceMode } from '../utils/sourceMode';
+import type { SourceMode } from '../utils/sourceMode';
 
 export class ReaderBuilder {
   /**
@@ -7,15 +9,51 @@ export class ReaderBuilder {
    * @param workId 經典ID (例如 T0412)
    * @param juansCount 總卷數
    * @param onProgress 進度回報 callback (0 到 100)
+   * @param options 可選配置 (包含 sourceMode 檢索下載模式)
    */
   static async buildContent(
     workId: string, 
     juansCount: number,
-    onProgress?: (progress: number) => void
+    onProgress?: (progress: number) => void,
+    options?: { sourceMode?: SourceMode }
   ): Promise<{ content: BookContent; rawToc: any[] }> {
-    
+    const activeMode = options?.sourceMode || getSourceMode();
     const juans: JuanData[] = [];
     let allRawTocs: any[] = [];
+
+    // 💡 備源專用模式 (Backup Source Mode): 100% 透過備用鏡像庫 (Local Backup CDN) 載入
+    if (activeMode === 'backup') {
+      console.log(`⚡ [ReaderBuilder] Running in Backup Source Mode for ${workId} (${juansCount} juans)`);
+      try {
+        for (let j = 1; j <= juansCount; j++) {
+          if (onProgress) {
+            onProgress(Math.floor(((j - 1) / juansCount) * 90));
+          }
+          const backupUrl = `/backup/${workId}/${j}.json`;
+          const res = await fetch(backupUrl);
+          if (!res.ok) {
+            throw new Error(`Backup mirror file not found: ${backupUrl}`);
+          }
+          const data = await res.json();
+          if (data && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0 && allRawTocs.length === 0) {
+            allRawTocs = data.toc.mulu;
+          }
+          if (data && Array.isArray(data.results) && data.results.length > 0) {
+            const rawResult = data.results[0];
+            const html = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
+            const segments = this.parseHtmlToSegments(html, workId, j, allRawTocs.length > 0 ? undefined : allRawTocs);
+            juans.push({ juan: j, segments });
+          } else {
+            throw new Error(`Invalid backup JSON structure for ${workId} juan ${j}`);
+          }
+        }
+
+        if (onProgress) onProgress(100);
+        return { content: { workId, juans }, rawToc: allRawTocs };
+      } catch (backupErr) {
+        console.warn(`[ReaderBuilder] Backup source fetch failed for ${workId}:`, backupErr);
+      }
+    }
 
     try {
       // 優先從線上 API 獲取全文

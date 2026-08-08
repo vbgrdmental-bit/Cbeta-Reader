@@ -1,5 +1,7 @@
 import type { BookMetadata } from '../types/book';
 import { BUILDER_VERSION } from './version';
+import { getSourceMode } from '../utils/sourceMode';
+import type { SourceMode } from '../utils/sourceMode';
 
 // 輔助函數：處理開發環境與生產環境的 API 請求路由，繞過 CORS 限制
 export const getApiUrl = (path: string): string => {
@@ -14,6 +16,7 @@ export interface SearchResult {
   category: string;
   vol?: string; // 冊別 e.g. T09
   cjkChars?: number; // 字數 e.g. 60222
+  isBackupSource?: boolean; // 標示是否來自備用鏡像源
 }
 
 // 內建的重點經典靜態資訊，作為預設或 Fallback
@@ -56,9 +59,11 @@ export class IndexBuilder {
   /**
    * 搜尋經典名稱
    */
-  static async searchTitle(query: string): Promise<SearchResult[]> {
+  static async searchTitle(query: string, options?: { sourceMode?: SourceMode }): Promise<SearchResult[]> {
+    const activeMode = options?.sourceMode || getSourceMode();
+
     if (!query || query.trim() === '') {
-      return FEATURED_BOOKS;
+      return FEATURED_BOOKS.map(b => ({ ...b, isBackupSource: activeMode === 'backup' }));
     }
 
     const trimmedQuery = query.trim();
@@ -69,7 +74,13 @@ export class IndexBuilder {
         book.title.includes(trimmedQuery) || 
         book.workId.toLowerCase().includes(trimmedQuery.toLowerCase()) ||
         book.creators.includes(trimmedQuery)
-    );
+    ).map(b => ({ ...b, isBackupSource: activeMode === 'backup' }));
+
+    // 💡 若當前為備源專用模式 (backup)，不請求 CBETA 官方 API，直接傳回備源檢索結果
+    if (activeMode === 'backup') {
+      console.log(`⚡ [IndexBuilder] Running search under Backup Source Mode for query: "${trimmedQuery}"`);
+      return matchedFeatured;
+    }
 
     try {
       // 同時向經名/編號 API（search/title）與譯作者 API（works?creator=）發出高並行請求

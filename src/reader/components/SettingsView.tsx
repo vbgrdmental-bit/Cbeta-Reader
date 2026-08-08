@@ -3,6 +3,7 @@ import { X, Database, FileText, Upload } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
 import { exportUserData, importUserData } from '../../utils/backup';
+import { getSourceMode, setSourceMode } from '../../utils/sourceMode';
 import '../styles/settings.css';
 
 interface SettingsViewProps {
@@ -465,6 +466,50 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {backupMsg}
               </div>
             )}
+          </div>
+
+          {/* 4.5. 下載與檢索模式 (Source Mode) */}
+          <div className="settings-section">
+            <div className="settings-section-title">下載與檢索來源模式 (Source Mode)</div>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+              <button
+                type="button"
+                onClick={() => setSourceMode('primary', true)}
+                style={{
+                  flex: 1,
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  border: getSourceMode() === 'primary' ? '2px solid #2b6cb0' : '1px solid #ccc',
+                  background: getSourceMode() === 'primary' ? 'var(--bg-paper-comfort, #eef6ff)' : 'transparent',
+                  color: getSourceMode() === 'primary' ? '#2b6cb0' : 'inherit',
+                  fontWeight: getSourceMode() === 'primary' ? 600 : 400,
+                  cursor: 'pointer',
+                  fontSize: '0.82rem'
+                }}
+              >
+                CBETA 官方主源 (?source=primary)
+              </button>
+              <button
+                type="button"
+                onClick={() => setSourceMode('backup', true)}
+                style={{
+                  flex: 1,
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  border: getSourceMode() === 'backup' ? '2px solid #c05621' : '1px solid #ccc',
+                  background: getSourceMode() === 'backup' ? '#fff5f5' : 'transparent',
+                  color: getSourceMode() === 'backup' ? '#c05621' : 'inherit',
+                  fontWeight: getSourceMode() === 'backup' ? 600 : 400,
+                  cursor: 'pointer',
+                  fontSize: '0.82rem'
+                }}
+              >
+                ⚡ 備源檢索與下載專用 (?source=backup)
+              </button>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--reader-text-muted, #777)', marginTop: '6px', lineHeight: 1.5 }}>
+              專用檢視網址：<code>/?source=backup</code> 可直接檢視並下載由備用鏡像庫提供之經典。
+            </div>
           </div>
 
           {/* 5. 版本資訊與說明 */}

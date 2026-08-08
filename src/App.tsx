@@ -4,6 +4,8 @@ import { ReaderView } from './reader/components/ReaderView';
 import { SettingsView } from './reader/components/SettingsView';
 import { getSettings, saveSettings } from './utils/db';
 import type { AppSettings } from './utils/db';
+import { getSourceMode, setSourceMode, subscribeSourceMode } from './utils/sourceMode';
+import type { SourceMode } from './utils/sourceMode';
 import './App.css';
 
 export function App() {
@@ -11,11 +13,18 @@ export function App() {
   const [activeBookId, setActiveBookId] = useState<string | null>(null);
   const [activeSegmentId, setActiveSegmentId] = useState<string | undefined>(undefined);
   const [lastSearchQuery, setLastSearchQuery] = useState<string | undefined>(undefined);
+  const [sourceMode, setSourceModeState] = useState<SourceMode>(getSourceMode());
   
   // 設定狀態
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [booksUpdatedTrigger, setBooksUpdatedTrigger] = useState(0);
+
+  // 監聽模式變更
+  useEffect(() => {
+    const unsub = subscribeSourceMode(setSourceModeState);
+    return unsub;
+  }, []);
 
   // 初始化載入偏好設定
   useEffect(() => {
@@ -83,30 +92,68 @@ export function App() {
   }
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      {/* 💡 使用 CSS display 來控制 Library 顯示/隱藏，避免組件銷毀丟失當前資料夾路徑狀態 */}
-      <div style={{ display: view === 'library' ? 'block' : 'none', width: '100%', height: '100%' }}>
-        <Library 
-          onSelectBook={handleSelectBook} 
-          booksUpdatedTrigger={booksUpdatedTrigger}
-          settings={settings}
-
-          initialSearchQuery={lastSearchQuery}
-          resetFolderTrigger={resetFolderTrigger}
-          onOpenSettings={() => setShowSettings(true)}
-        />
-      </div>
-
-      {view === 'reader' && activeBookId && (
-        <ReaderView 
-          workId={activeBookId}
-          initialSegmentId={activeSegmentId}
-          settings={settings}
-          onBackToLibrary={handleBackToLibrary}
-          onSaveSettings={handleSaveSettings}
-          searchQuery={lastSearchQuery}
-        />
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* 💡 備源專用模式醒目提示橫幅 */}
+      {sourceMode === 'backup' && (
+        <div style={{
+          background: 'linear-gradient(90deg, #7c2d12, #9a3412)',
+          color: '#ffedd5',
+          padding: '8px 16px',
+          fontSize: '0.85rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+          zIndex: 9999,
+          flexShrink: 0
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>⚡ <strong>備源檢索與下載專用模式</strong> (URL: ?source=backup) — 檢索與下載 100% 由備用鏡像庫提供</span>
+          </div>
+          <button 
+            onClick={() => setSourceMode('primary', true)}
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              border: '1px solid rgba(255,255,255,0.4)',
+              color: '#fff',
+              padding: '4px 10px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              transition: 'background 0.2s'
+            }}
+          >
+            切換回 CBETA 官方主源 (?source=primary)
+          </button>
+        </div>
       )}
+
+      <div style={{ flex: 1, width: '100%', height: '100%', overflow: 'hidden' }}>
+        {/* 💡 使用 CSS display 來控制 Library 顯示/隱藏，避免組件銷毀丟失當前資料夾路徑狀態 */}
+        <div style={{ display: view === 'library' ? 'block' : 'none', width: '100%', height: '100%' }}>
+          <Library 
+            onSelectBook={handleSelectBook} 
+            booksUpdatedTrigger={booksUpdatedTrigger}
+            settings={settings}
+
+            initialSearchQuery={lastSearchQuery}
+            resetFolderTrigger={resetFolderTrigger}
+            onOpenSettings={() => setShowSettings(true)}
+          />
+        </div>
+
+        {view === 'reader' && activeBookId && (
+          <ReaderView 
+            workId={activeBookId}
+            initialSegmentId={activeSegmentId}
+            settings={settings}
+            onBackToLibrary={handleBackToLibrary}
+            onSaveSettings={handleSaveSettings}
+            searchQuery={lastSearchQuery}
+          />
+        )}
+      </div>
 
       {/* 全域設定對話框 */}
       {showSettings && (
