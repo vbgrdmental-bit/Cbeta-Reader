@@ -121,11 +121,114 @@ function packageWork(workId) {
   console.log(`Successfully packaged ${workId} (${matchedFiles.length} juans).`);
 }
 
+// 常用與大部頭熱門經典對照表
+const POPULAR_WORKS = [
+  'T0251', // 般若波羅蜜多心經
+  'T0235', // 金剛般若波羅蜜經
+  'T0412', // 地藏菩薩本願經
+  'T0262', // 妙法蓮華經
+  'T0366', // 佛說阿彌陀經
+  'T0360', // 佛說無量壽經
+  'T0665', // 藥師琉璃光如來本願功德經
+  'T0279', // 大方廣佛華嚴經 (八十華嚴)
+  'T0310', // 大寶積經
+  'T0374', // 大般涅槃經
+  'T0220', // 大般若波羅蜜多經 (六百卷)
+  'Y0001', // 太虛大師年譜
+  'Y0003', // 勝鬘經講記
+  'Y0004', // 藥師經講記
+  'Y0005', // 淨土與禪
+  'Y0014'  // 妙雲集
+];
+
+/**
+ * 遍歷並自動打包 XML 資料夾下的全藏經
+ */
+function packageAll() {
+  const xmlBaseDir = path.join(CBETA_BASE_DIR, 'XML');
+  if (!fs.existsSync(xmlBaseDir)) {
+    console.error(`[Error] Directory not found: ${xmlBaseDir}`);
+    return;
+  }
+
+  const canons = fs.readdirSync(xmlBaseDir);
+  let totalWorksCount = 0;
+  let totalFilesCount = 0;
+
+  console.log(`Starting full CBETA XML scan across ${canons.length} canons...`);
+
+  for (const canon of canons) {
+    const canonDir = path.join(xmlBaseDir, canon);
+    if (!fs.statSync(canonDir).isDirectory()) continue;
+
+    const vols = fs.readdirSync(canonDir);
+    for (const vol of vols) {
+      const volDir = path.join(canonDir, vol);
+      if (!fs.statSync(volDir).isDirectory()) continue;
+
+      const files = fs.readdirSync(volDir).filter(f => f.endsWith('.xml'));
+      const workMap = new Map();
+
+      files.forEach(file => {
+        // 例: T13n0412_001.xml => canon: T, workNo: 0412
+        const match = file.match(/^([A-Z]+)\d+n([A-Z0-9]+)_(\d+)\.xml$/i);
+        if (match) {
+          const canonPrefix = match[1].toUpperCase();
+          const workNo = match[2];
+          const workId = `${canonPrefix}${workNo}`;
+          if (!workMap.has(workId)) workMap.set(workId, []);
+          workMap.get(workId).push({ file, filePath: path.join(volDir, file) });
+        }
+      });
+
+      for (const [workId, fileList] of workMap.entries()) {
+        fileList.sort((a, b) => a.file.localeCompare(b.file));
+        const targetWorkDir = path.join(OUTPUT_DIR, workId);
+        ensureDirSync(targetWorkDir);
+
+        fileList.forEach((item, index) => {
+          const juanNum = index + 1;
+          const xmlContent = fs.readFileSync(item.filePath, 'utf8');
+          const html = convertXmlToHtml(xmlContent);
+
+          const payload = {
+            workId: workId,
+            juan: juanNum,
+            results: [{ html }],
+            version: 'CBReader 2X v0.9.9 2026-01-21'
+          };
+
+          fs.writeFileSync(path.join(targetWorkDir, `${juanNum}.json`), JSON.stringify(payload, null, 2), 'utf8');
+          totalFilesCount++;
+        });
+
+        totalWorksCount++;
+        if (totalWorksCount % 50 === 0) {
+          console.log(`[Progress] Packaged ${totalWorksCount} works (${totalFilesCount} juan files)...`);
+        }
+      }
+    }
+  }
+
+  console.log(`🎉 [Completed] All CBETA works packaged! Total works: ${totalWorksCount}, total juans: ${totalFilesCount}.`);
+}
+
 // 主執行入口
-const arg = process.argv[2] || 'T0412';
+const arg = (process.argv[2] || 'POPULAR').toUpperCase();
 console.log(`=== CBETA R2 Backup Packager ===`);
 console.log(`Source: ${CBETA_BASE_DIR}`);
 console.log(`Output: ${OUTPUT_DIR}`);
+console.log(`Mode: ${arg}`);
 
 ensureDirSync(OUTPUT_DIR);
-packageWork(arg);
+
+if (arg === 'ALL') {
+  packageAll();
+} else if (arg === 'POPULAR') {
+  console.log(`Packaging ${POPULAR_WORKS.length} popular core scriptures...`);
+  POPULAR_WORKS.forEach(w => packageWork(w));
+  console.log(`🎉 [Completed] All ${POPULAR_WORKS.length} popular core scriptures packaged.`);
+} else {
+  packageWork(arg);
+}
+
