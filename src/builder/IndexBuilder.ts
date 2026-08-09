@@ -186,6 +186,7 @@ export class IndexBuilder {
       const allBackupWorks = await loadFullWorksIndex();
       const lowerQuery = trimmedQuery.toLowerCase();
       const matched = allBackupWorks.filter(b => 
+        b.title.includes(trimmedQuery) ||
         isFuzzyTitleMatch(b.title, trimmedQuery) ||
         b.workId.toLowerCase().includes(lowerQuery) ||
         (b.creators && b.creators.includes(trimmedQuery)) ||
