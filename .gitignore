@@ -29,6 +29,7 @@ public/backup/*
 !public/backup/Y0014/
 dist-ssr
 dist-r2-backup
+dist-release-assets
 *.local
 
 # Editor directories and files
