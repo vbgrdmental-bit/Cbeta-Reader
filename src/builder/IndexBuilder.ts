@@ -132,6 +132,35 @@ const CATEGORY_KEYWORDS_MAP: Record<string, string> = {
 };
 
 const searchCacheMap = new Map<string, SearchResult[]>();
+let fullWorksIndexCache: SearchResult[] | null = null;
+
+async function loadFullWorksIndex(): Promise<SearchResult[]> {
+  if (fullWorksIndexCache) return fullWorksIndexCache;
+  try {
+    const urls = [
+      '/cbeta-works-index.json',
+      '/backup/works-index.json',
+      'https://github.com/vbgrdmental-bit/Cbeta-Reader/releases/download/v1.0.0-database/cbeta-works-index.json',
+      'https://raw.githubusercontent.com/vbgrdmental-bit/Cbeta-Reader/main/public/cbeta-works-index.json'
+    ];
+    for (const url of urls) {
+      const res = await fetchWithTimeout(url, {}, 3500);
+      if (res && res.ok) {
+        const data = await res.json().catch(() => null);
+        if (data && Array.isArray(data.works) && data.works.length > 0) {
+          fullWorksIndexCache = data.works.map((w: any) => ({
+            ...w,
+            isBackupSource: true
+          }));
+          return fullWorksIndexCache!;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to fetch cbeta-works-index.json:', e);
+  }
+  return FEATURED_BOOKS.map(b => ({ ...b, isBackupSource: true }));
+}
 
 export class IndexBuilder {
   /**
@@ -152,13 +181,29 @@ export class IndexBuilder {
       return searchCacheMap.get(cacheKey)!;
     }
 
+    // 💡 1. 備援模式 (Backup Mode)：絕對不向 cbdata.dila.edu.tw 發送任何請求，100% 純淨讀取備援藏經索引庫
+    if (activeMode === 'backup') {
+      const allBackupWorks = await loadFullWorksIndex();
+      const lowerQuery = trimmedQuery.toLowerCase();
+      const matched = allBackupWorks.filter(b => 
+        isFuzzyTitleMatch(b.title, trimmedQuery) ||
+        b.workId.toLowerCase().includes(lowerQuery) ||
+        (b.creators && b.creators.includes(trimmedQuery)) ||
+        (b.category && b.category.includes(trimmedQuery)) ||
+        (b.vol && b.vol.toLowerCase().includes(lowerQuery))
+      ).map(b => ({ ...b, isBackupSource: true }));
+
+      searchCacheMap.set(cacheKey, matched);
+      return matched;
+    }
+
     // 優先匹配內建經典（本地模糊比對，精確支援簡稱如「大般若經」、「地藏經」、「華嚴經」）
     const matchedFeatured = FEATURED_BOOKS.filter(
       book => 
         isFuzzyTitleMatch(book.title, trimmedQuery) || 
         book.workId.toLowerCase().includes(trimmedQuery.toLowerCase()) ||
         book.creators.includes(trimmedQuery)
-    ).map(b => ({ ...b, isBackupSource: activeMode === 'backup' }));
+    ).map(b => ({ ...b, isBackupSource: false }));
 
     try {
       const queriesToSearch = new Set<string>([trimmedQuery]);
@@ -272,14 +317,14 @@ export class IndexBuilder {
         if (b.workId) {
           const existing = resultsMap.get(b.workId);
           if (!existing || existing.title === '未命名經典') {
-            resultsMap.set(b.workId, { ...b, isBackupSource: activeMode === 'backup' });
+            resultsMap.set(b.workId, { ...b, isBackupSource: (activeMode as string) === 'backup' });
           }
         }
       });
 
       const finalResults = Array.from(resultsMap.values()).map(b => ({
         ...b,
-        isBackupSource: activeMode === 'backup'
+        isBackupSource: (activeMode as string) === 'backup'
       }));
       if (finalResults.length > 0) {
         searchCacheMap.set(cacheKey, finalResults);

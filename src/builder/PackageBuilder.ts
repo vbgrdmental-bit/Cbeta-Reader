@@ -8,6 +8,7 @@ import { SearchIndexBuilder } from './SearchIndexBuilder';
 import { AIIndexBuilder } from './AIIndexBuilder';
 import { saveBook } from '../utils/db';
 import { BUILDER_VERSION } from './version';
+import { getSourceMode } from '../utils/sourceMode';
 export { BUILDER_VERSION };
 
 export type BuildStep = 
@@ -38,53 +39,81 @@ export class PackageBuilder {
   ): Promise<ReaderPackage> {
     const workId = searchResult.workId;
     let actualJuansCount = (searchResult.juansCount && searchResult.juansCount > 0) ? searchResult.juansCount : 1;
+    const isBackup = getSourceMode() === 'backup';
     
     try {
-      // 1. Metadata 階段 (加入 3.5 秒超時保護，防範 CBETA API 伺服器掛起)
-      onProgress({ step: 'metadata', percent: 3, message: `正在向 CBETA 獲取《${searchResult.title}》最新元資料...` });
-      try {
-        const relativeMetaUrl = getApiUrl(`/stable/works?work=${workId}`);
-        const directMetaUrl = `https://cbdata.dila.edu.tw/stable/works?work=${workId}`;
-        let response = await fetchWithTimeout(relativeMetaUrl, { headers: { 'Accept': 'application/json' } }, 3500);
-        if (!response || !response.ok) {
-          response = await fetchWithTimeout(directMetaUrl, { headers: { 'Accept': 'application/json' } }, 5000);
-        }
-        if (response && response.ok) {
-          const data = await response.json().catch(() => null);
-          if (data && Array.isArray(data.results) && data.results.length > 0) {
-            const workInfo = data.results[0];
-            if (workInfo.juan && typeof workInfo.juan === 'number') {
-              actualJuansCount = workInfo.juan;
-              console.log(`Successfully fetched true juansCount for ${workId}: ${actualJuansCount}`);
-            }
-            if (workInfo.category) {
-              searchResult.category = workInfo.category;
-            }
-            // 💡 規範譯者姓名 (朝代 + creators，例如：西晉 竺法護)
-            if (workInfo.creators) {
-              const dynasty = workInfo.time_dynasty ? `${workInfo.time_dynasty} ` : '';
-              const creatorName = workInfo.creators.replace(/\(.*\)/, '').trim();
-              searchResult.creators = creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`;
-            } else if (workInfo.byline) {
-              searchResult.creators = workInfo.byline;
-            }
-            // 💡 冊別：優先讀取 CBETA API 的 vol 欄位 (例如 T12)
-            if (workInfo.vol) {
-              searchResult.vol = workInfo.vol;
-            } else if (workInfo.file) {
-              const match = workInfo.file.match(/^([A-Z]\d+)/i);
-              if (match) searchResult.vol = match[1].toUpperCase();
-            } else if (workInfo.n != null) {
-              const volNum = String(workInfo.n).padStart(2, '0');
-              searchResult.vol = `${searchResult.workId.charAt(0)}${volNum}`;
-            }
-            if (workInfo.cjk_chars != null && typeof workInfo.cjk_chars === 'number') {
-              searchResult.cjkChars = workInfo.cjk_chars;
+      // 1. Metadata 階段
+      if (isBackup) {
+        onProgress({ step: 'metadata', percent: 3, message: `正在從備援資料庫讀取《${searchResult.title}》元資料...` });
+        try {
+          const localMetaUrl = `/backup/${workId}/1.json`;
+          const ghMetaUrl = `https://github.com/vbgrdmental-bit/Cbeta-Reader/releases/download/v1.0.0-database/${workId}_1.json`;
+          const rawCdnUrl = `https://raw.githubusercontent.com/vbgrdmental-bit/Cbeta-Reader/main/public/backup/${workId}/1.json`;
+
+          let mRes = await fetchWithTimeout(localMetaUrl, {}, 2500);
+          if (!mRes || !mRes.ok) {
+            mRes = await fetchWithTimeout(ghMetaUrl, {}, 3000);
+          }
+          if (!mRes || !mRes.ok) {
+            mRes = await fetchWithTimeout(rawCdnUrl, {}, 3500);
+          }
+
+          if (mRes && mRes.ok) {
+            const mData = await mRes.json().catch(() => null);
+            if (mData) {
+              const meta = mData.metadata || {};
+              if (meta.juansCount && typeof meta.juansCount === 'number') {
+                actualJuansCount = meta.juansCount;
+              }
+              if (meta.creators) searchResult.creators = meta.creators;
+              if (meta.category) searchResult.category = meta.category;
+              if (meta.vol) searchResult.vol = meta.vol;
             }
           }
+        } catch (bMetaErr) {
+          console.warn(`[Backup Mode] Metadata fetch fallback for ${workId}:`, bMetaErr);
         }
-      } catch (metaErr) {
-        console.warn('Failed to fetch online metadata for juansCount, fallback to searchResult count:', metaErr);
+      } else {
+        // 主源 (Primary Source): 向 CBETA 官方 API 請求 (加入 3.5 秒超時保護，防範 CBETA API 伺服器掛起)
+        onProgress({ step: 'metadata', percent: 3, message: `正在向 CBETA 獲取《${searchResult.title}》最新元資料...` });
+        try {
+          const relativeMetaUrl = getApiUrl(`/stable/works?work=${workId}`);
+          const directMetaUrl = `https://cbdata.dila.edu.tw/stable/works?work=${workId}`;
+          let response = await fetchWithTimeout(relativeMetaUrl, { headers: { 'Accept': 'application/json' } }, 3500);
+          if (!response || !response.ok) {
+            response = await fetchWithTimeout(directMetaUrl, { headers: { 'Accept': 'application/json' } }, 5000);
+          }
+          if (response && response.ok) {
+            const data = await response.json().catch(() => null);
+            if (data && Array.isArray(data.results) && data.results.length > 0) {
+              const workInfo = data.results[0];
+              if (workInfo.juan && typeof workInfo.juan === 'number') {
+                actualJuansCount = workInfo.juan;
+              }
+              if (workInfo.category) {
+                searchResult.category = workInfo.category;
+              }
+              if (workInfo.creators) {
+                const dynasty = workInfo.time_dynasty ? `${workInfo.time_dynasty} ` : '';
+                const creatorName = workInfo.creators.replace(/\(.*\)/, '').trim();
+                searchResult.creators = creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`;
+              } else if (workInfo.byline) {
+                searchResult.creators = workInfo.byline;
+              }
+              if (workInfo.vol) {
+                searchResult.vol = workInfo.vol;
+              } else if (workInfo.file) {
+                const match = workInfo.file.match(/^([A-Z]\d+)/i);
+                if (match) searchResult.vol = match[1].toUpperCase();
+              } else if (workInfo.n != null) {
+                const volNum = String(workInfo.n).padStart(2, '0');
+                searchResult.vol = `${searchResult.workId.charAt(0)}${volNum}`;
+              }
+            }
+          }
+        } catch (err) {
+          console.warn('Failed to fetch official work metadata, falling back to basic info:', err);
+        }
       }
 
       onProgress({ step: 'metadata', percent: 5, message: '正在建立書籍元資料...' });

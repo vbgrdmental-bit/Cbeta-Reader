@@ -30,6 +30,7 @@ public/backup/*
 dist-ssr
 dist-r2-backup
 dist-release-assets
+public/release-zips
 *.local
 
 # Editor directories and files
