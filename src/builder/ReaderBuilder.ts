@@ -1,5 +1,6 @@
 import type { BookContent, JuanData, TextSegment } from '../types/book';
 import { getApiUrl, fetchWithTimeout } from './IndexBuilder';
+import { getSourceMode } from '../utils/sourceMode';
 
 export function formatTimeRemaining(seconds: number): string {
   if (seconds <= 0) return '即將完成';
@@ -78,10 +79,53 @@ export class ReaderBuilder {
 
           let success = false;
 
-          // 1. 向 CBETA 官方 API 請求 (最多重試 2 次，防範無效等待)
-          const cleanPath = `/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1`;
-          const relativeUrl = getApiUrl(cleanPath);
-          const directUrl = `https://cbdata.dila.edu.tw${cleanPath}`;
+          // 1. 檢查是否處於備援模式或優先嘗試備援鏡像庫
+          const isBackup = getSourceMode() === 'backup';
+
+          if (isBackup) {
+            try {
+              const localBackupUrl = `/backup/${workId}/${j}.json`;
+              const ghCdnUrl = `https://raw.githubusercontent.com/vbgrdmental-bit/Cbeta-Reader/main/public/backup/${workId}/${j}.json`;
+              const jsdelivrUrl = `https://cdn.jsdelivr.net/gh/vbgrdmental-bit/Cbeta-Reader@main/public/backup/${workId}/${j}.json`;
+              const r2Url = `https://cbeta-r2-backup.cbeta-reader.workers.dev/${workId}/${j}.json`;
+
+              let backupRes = await fetchWithTimeout(localBackupUrl, {}, 2500);
+              if (!backupRes || !backupRes.ok) {
+                backupRes = await fetchWithTimeout(ghCdnUrl, {}, 3500);
+              }
+              if (!backupRes || !backupRes.ok) {
+                backupRes = await fetchWithTimeout(jsdelivrUrl, {}, 3500);
+              }
+              if (!backupRes || !backupRes.ok) {
+                backupRes = await fetchWithTimeout(r2Url, {}, 4000);
+              }
+
+              if (backupRes && backupRes.ok) {
+                const bData = await backupRes.json().catch(() => null);
+                if (bData) {
+                  if (bData.toc && Array.isArray(bData.toc) && bData.toc.length > 0 && allRawTocs.length === 0) {
+                    allRawTocs = bData.toc;
+                  }
+                  const html = typeof bData.html === 'string' ? bData.html : (bData.results && bData.results[0] ? (bData.results[0].html || bData.results[0]) : '');
+                  if (html) {
+                    const segments = this.parseHtmlToSegments(html, workId, j, allRawTocs);
+                    if (segments && segments.length > 0) {
+                      juansMap.set(j, segments);
+                      success = true;
+                    }
+                  }
+                }
+              }
+            } catch (bErr) {
+              console.warn(`[Juan ${j}] Backup fetch attempt failed:`, bErr);
+            }
+          }
+
+          if (!success) {
+            // 2. 向 CBETA 官方 API 請求 (最多重試 2 次，防範無效等待)
+            const cleanPath = `/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1`;
+            const relativeUrl = getApiUrl(cleanPath);
+            const directUrl = `https://cbdata.dila.edu.tw${cleanPath}`;
 
             for (let attempt = 1; attempt <= 2; attempt++) {
               try {
@@ -131,6 +175,40 @@ export class ReaderBuilder {
               }
               await new Promise(r => setTimeout(r, 150));
             }
+          }
+
+          // 3. 若主源失敗，再嘗試離線備援鏡像 (Secondary Backup Fallback)
+          if (!success && !isBackup) {
+            try {
+              const localBackupUrl = `/backup/${workId}/${j}.json`;
+              const ghCdnUrl = `https://raw.githubusercontent.com/vbgrdmental-bit/Cbeta-Reader/main/public/backup/${workId}/${j}.json`;
+              const r2Url = `https://cbeta-r2-backup.cbeta-reader.workers.dev/${workId}/${j}.json`;
+
+              let backupRes = await fetchWithTimeout(localBackupUrl, {}, 2500);
+              if (!backupRes || !backupRes.ok) {
+                backupRes = await fetchWithTimeout(ghCdnUrl, {}, 3500);
+              }
+              if (!backupRes || !backupRes.ok) {
+                backupRes = await fetchWithTimeout(r2Url, {}, 4000);
+              }
+
+              if (backupRes && backupRes.ok) {
+                const bData = await backupRes.json().catch(() => null);
+                if (bData) {
+                  const html = typeof bData.html === 'string' ? bData.html : (bData.results && bData.results[0] ? (bData.results[0].html || bData.results[0]) : '');
+                  if (html) {
+                    const segments = this.parseHtmlToSegments(html, workId, j, allRawTocs);
+                    if (segments && segments.length > 0) {
+                      juansMap.set(j, segments);
+                      success = true;
+                    }
+                  }
+                }
+              }
+            } catch (fbErr) {
+              console.warn(`[Juan ${j}] Secondary backup fallback attempt failed:`, fbErr);
+            }
+          }
 
           if (!success) {
             console.error(`[Juan ${j}] All attempts (Official API + R2 Backup) failed to fetch.`);
