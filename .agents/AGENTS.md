@@ -50,6 +50,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ backup App: v1.0.3 / Builder: v1.0.3** (2026-08-10) [Backup Mode]
+  - 停用備援模式下 `FEATURED_BOOKS` 硬編碼常用經典後備機制，搜尋與目錄 100% 讀取真實離線備援藏經庫。
+  - 支援零補償真實校驗，精確揭露離線備援資料庫經文完整性，便於精準驗證每部經典。
 - **⭐ v4.0.1** (2026-08-08) [CBETA 官方主源純淨穩定基線 Checkpoint Tag: `checkpoint-v4.0.1-cbeta-primary-stable`]
   - 確保 Vercel 主站 100% 直連 CBETA 官方 API (`cbdata.dila.edu.tw`)，零離線快取無感偷換污染。
   - 修復 `<p class="lg">` 散文段落被誤判為偈頌體導致短句折行排版 Bug，還原完整連貫段落。

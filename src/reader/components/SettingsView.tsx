@@ -905,7 +905,7 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
           <div className="settings-version-row">
             <div className="settings-version-info">
               {isBackupMode() ? (
-                <span>backup App: v1.0.2 <span className="version-divider">|</span> Builder: v1.0.2</span>
+                <span>backup App: v1.0.3 <span className="version-divider">|</span> Builder: v1.0.3</span>
               ) : (
                 <span>App: v{APP_VERSION} <span className="version-divider">|</span> Builder: v{BUILDER_VERSION}</span>
               )}
@@ -1047,7 +1047,18 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
 
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <span>⭐ backup App: v1.0.2</span>
+                        <span>⭐ backup App: v1.0.3</span>
+                        <span className="changelog-date">(2026-08-10)</span>
+                      </div>
+                      <ul className="changelog-list">
+                        <li>• 移除備援模式內建預設熱門經典，完全依賴真實備援資料庫檢索。</li>
+                        <li>• 確保備援庫檔完整度精確呈現，利於精準驗證每部經典。</li>
+                      </ul>
+                    </div>
+
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">
+                        <span>backup App: v1.0.2</span>
                         <span className="changelog-date">(2026-08-09)</span>
                       </div>
                       <ul className="changelog-list">
@@ -1088,7 +1099,18 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
 
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <span>⭐ backup Builder: v1.0.2</span>
+                        <span>⭐ backup Builder: v1.0.3</span>
+                        <span className="changelog-date">(2026-08-10)</span>
+                      </div>
+                      <ul className="changelog-list">
+                        <li>• 停用備援模式 `FEATURED_BOOKS` 後備機制，100% 直連備援索引庫 (`cbeta-works-index.json` / GitHub Releases 資產)。</li>
+                        <li>• 支援零補償真實校驗，精確揭露離線備援資料庫經文完整性。</li>
+                      </ul>
+                    </div>
+
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">
+                        <span>backup Builder: v1.0.2</span>
                         <span className="changelog-date">(2026-08-09)</span>
                       </div>
                       <ul className="changelog-list">

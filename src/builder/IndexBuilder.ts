@@ -159,7 +159,7 @@ async function loadFullWorksIndex(): Promise<SearchResult[]> {
   } catch (e) {
     console.warn('Failed to fetch cbeta-works-index.json:', e);
   }
-  return FEATURED_BOOKS.map(b => ({ ...b, isBackupSource: true }));
+  return [];
 }
 
 export class IndexBuilder {
@@ -169,21 +169,20 @@ export class IndexBuilder {
   static async searchTitle(query: string, options?: { sourceMode?: SourceMode }): Promise<SearchResult[]> {
     const activeMode = options?.sourceMode || getSourceMode();
 
-    if (!query || query.trim() === '') {
-      return FEATURED_BOOKS.map(b => ({ ...b, isBackupSource: activeMode === 'backup' }));
-    }
-
-    const trimmedQuery = query.trim();
-    const cacheKey = `${activeMode}_${trimmedQuery.toLowerCase()}`;
-
-    // 💡 0. 記憶體快取：若曾搜尋過該關鍵字，立場秒回結果
-    if (searchCacheMap.has(cacheKey)) {
-      return searchCacheMap.get(cacheKey)!;
-    }
-
-    // 💡 1. 備援模式 (Backup Mode)：絕對不向 cbdata.dila.edu.tw 發送任何請求，100% 純淨讀取備援藏經索引庫
+    // 💡 1. 備援模式 (Backup Mode)：絕對不使用硬編碼 FEATURED_BOOKS，100% 純淨讀取真實備援藏經庫
     if (activeMode === 'backup') {
       const allBackupWorks = await loadFullWorksIndex();
+      if (!query || query.trim() === '') {
+        return allBackupWorks.slice(0, 35);
+      }
+
+      const trimmedQuery = query.trim();
+      const cacheKey = `${activeMode}_${trimmedQuery.toLowerCase()}`;
+
+      if (searchCacheMap.has(cacheKey)) {
+        return searchCacheMap.get(cacheKey)!;
+      }
+
       const lowerQuery = trimmedQuery.toLowerCase();
       const matched = allBackupWorks.filter(b => 
         b.title.includes(trimmedQuery) ||
@@ -196,6 +195,18 @@ export class IndexBuilder {
 
       searchCacheMap.set(cacheKey, matched);
       return matched;
+    }
+
+    if (!query || query.trim() === '') {
+      return FEATURED_BOOKS.map(b => ({ ...b, isBackupSource: false }));
+    }
+
+    const trimmedQuery = query.trim();
+    const cacheKey = `${activeMode}_${trimmedQuery.toLowerCase()}`;
+
+    // 💡 0. 記憶體快取：若曾搜尋過該關鍵字，立場秒回結果
+    if (searchCacheMap.has(cacheKey)) {
+      return searchCacheMap.get(cacheKey)!;
     }
 
     // 優先匹配內建經典（本地模糊比對，精確支援簡稱如「大般若經」、「地藏經」、「華嚴經」）
