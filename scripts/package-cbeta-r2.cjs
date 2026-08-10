@@ -97,6 +97,12 @@ function convertXmlToHtml(xmlStr) {
   // 4. 移除出處/參考對照標籤 <note type="cf1">, <note type="cf2">
   html = html.replace(/<note\s+[^>]*type="cf\d+"[^>]*>[\s\S]*?<\/note>/gi, '');
 
+  // 4.5 處理小註/雙行註 <note place="inline">：轉為行內小註 <span class="inline-note">（...）</span>，保留為經文內文
+  html = html.replace(/<note[^>]*place="inline"[^>]*>([\s\S]*?)<\/note>/gi, (match, inner) => {
+    const clean = inner.replace(/<[^>]+>/g, '').trim();
+    return `<span class="inline-note">（${clean}）</span>`;
+  });
+
   // 5. 處理一般校勘與原註 <note n="...">：從正文中完全移出，集中置於頁尾 <div id="footnotes"> 容器中
   const notes = [];
   html = html.replace(/<note\s+[^>]*n="([^"]+)"[^>]*>([\s\S]*?)<\/note>/gi, (match, n, content) => {
@@ -107,6 +113,9 @@ function convertXmlToHtml(xmlStr) {
 
   // 移除其餘無 n 屬性的雜項 <note>
   html = html.replace(/<note[^>]*>[\s\S]*?<\/note>/gi, '');
+
+  // 5.5 處理偈頌體間隔標籤 <caesura/> 轉為對齊全形空格
+  html = html.replace(/<caesura\s*\/?>/gi, '　');
 
   // 6. 處理紙本頁碼分頁標籤 <pb> 與 <milestone>：轉為內聯行內空標籤，防範斷開 <p> 段落造成不當換行！
   html = html.replace(/<pb\s+[^>]*\/>/gi, '');

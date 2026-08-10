@@ -535,13 +535,14 @@ export class ReaderBuilder {
           });
           
           // 💡 線上小註/雙行小註轉換：將其文字內容加上全形括號，防止被後續 footnote 清除，並便於 Reader 渲染與搜尋
-          cleanClone.querySelectorAll('small, .inline-note, [class*="inline-note"]').forEach(noteEl => {
+          cleanClone.querySelectorAll('small, .inline-note, [class*="inline-note"], [place="inline"]').forEach(noteEl => {
             // 先清除小註內部可能夾帶的行號（.lb）與錨點（a），防範行號文字（例如 T19n0945_p0106b04）混入小註內容中
             noteEl.querySelectorAll('a, .lb, [class*="lb"]').forEach(child => child.remove());
             
             const noteText = noteEl.textContent?.trim() || '';
             if (noteText) {
-              const textNode = doc.createTextNode(`（${noteText}）`);
+              const cleanNote = noteText.replace(/^[（(]\s*/, '').replace(/\s*[）)]$/, '').trim();
+              const textNode = doc.createTextNode(`（${cleanNote}）`);
               noteEl.parentNode?.replaceChild(textNode, noteEl);
             } else {
               noteEl.remove();

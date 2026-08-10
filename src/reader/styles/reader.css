@@ -91,15 +91,25 @@
   z-index: 1000;
 }
 
-/* 偈頌 (韻文) 排版美化 (固定使用圓體，維持閱讀層次感) */
+/* 偈頌 (韻文) 排版美化：黑體 / 加粗 / 置中 (Sans-serif / Bold / Center) */
 .reader-paragraph.verse {
-  font-weight: bold;
-  font-family: "圓體-繁", "華康圓體", "DFYuan-Medium", "DFYuan", "YuanTi", "Yu Gothic", "Hiragino Maru Gothic ProN", "HGMaruGothicMPRO", "PingFang TC", "Microsoft JhengHei", sans-serif !important;
-  text-align: left; /* 💡 將偈頌改為置左對齊，便於換行閱讀 */
-  padding-left: 2em; /* 💡 左側縮排 2 字符，維持詩歌體排版質感 */
-  margin-top: 0.15rem;
-  margin-bottom: 0.15rem;
-  line-height: calc(var(--reader-line-height, 2.0) * 0.85);
+  font-weight: 700 !important;
+  font-family: "PingFang TC", "Microsoft JhengHei", "Heiti TC", "STHeiti", "Noto Sans TC", "CBETASupplement", sans-serif !important;
+  text-align: center !important;
+  padding-left: 0 !important;
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+  line-height: calc(var(--reader-line-height, 2.0) * 0.9);
+}
+
+/* 經文內聯備註 / 小註 (Inline Note) 樣式 */
+.inline-note,
+.reader-inline-note {
+  font-size: 0.88em;
+  opacity: 0.75;
+  color: var(--reader-text-muted, #7c7267);
+  font-weight: normal;
+  display: inline;
 }
 
 /* 羊皮紙與舒服模式下，偈頌文字改為質感灰色 (烏木模式不變色) */
