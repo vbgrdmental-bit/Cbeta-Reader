@@ -182,8 +182,10 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
           {item.title}
         </span>
 
-        {isMultiJuan && !workId.startsWith('Y') && (
-          <span style={{ fontSize: '0.75rem', opacity: 0.6, flexShrink: 0 }}>卷 {item.juan}</span>
+        {isMultiJuan && (
+          <span style={{ fontSize: '0.75rem', opacity: 0.6, flexShrink: 0 }}>
+            {workId.startsWith('Y') ? `部分 ${item.juan}` : `卷 ${item.juan}`}
+          </span>
         )}
       </div>
 
@@ -572,14 +574,24 @@ export function ReaderView({
   const segmentsMapRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const pendingScrollSegmentIdRef = useRef<string | null>(null);
 
-  // 跨卷目次跳轉：在卷數切換且 DOM 渲染完成後自動滾動到該品起點
+  // 跨卷目次跳轉：在卷數切換且 DOM 渲染完成後自動滾動到該品起點 (加入 retry 重試機制防範 DOM 未掛載)
   useEffect(() => {
     if (pendingScrollSegmentIdRef.current) {
       const targetId = pendingScrollSegmentIdRef.current;
-      setTimeout(() => {
-        scrollToSegment(targetId);
-      }, 150);
       pendingScrollSegmentIdRef.current = null;
+
+      let attempts = 0;
+      const tryScroll = () => {
+        const el = segmentsMapRef.current[targetId];
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setActiveSegmentId(targetId);
+        } else if (attempts < 15) {
+          attempts++;
+          setTimeout(tryScroll, 60);
+        }
+      };
+      setTimeout(tryScroll, 40);
     }
   }, [currentJuanNum]);
   // 💡 自動儲存點選段落與卷次進度
@@ -1281,10 +1293,17 @@ export function ReaderView({
     if (!targetJuan) targetJuan = currentJuanNum;
 
     if (targetJuan === currentJuanNum) {
-      // 同一卷：使用 setTimeout 確保 50ms 後平滑滾動至中央
-      setTimeout(() => {
-        scrollToSegment(targetSegId);
-      }, 50);
+      let attempts = 0;
+      const tryScroll = () => {
+        const el = segmentsMapRef.current[targetSegId];
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (attempts < 10) {
+          attempts++;
+          setTimeout(tryScroll, 50);
+        }
+      };
+      setTimeout(tryScroll, 30);
     } else {
       // 跨卷：記錄待跳轉段落 ID，切換卷數，由 useEffect 處理自動滾動
       pendingScrollSegmentIdRef.current = targetSegId;
