@@ -3,11 +3,12 @@ import {
   Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Paintbrush, Search, Clock, ArrowLeft, Edit3, Trash2, FileText, AlertCircle
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment, BookContent, JuanData } from '../../types/book';
-import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
+import { getBook, saveBook, deleteBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
 import { BUILDER_VERSION } from '../../builder/version';
-import { IndexBuilder, FEATURED_BOOKS } from '../../builder/IndexBuilder';
+import { IndexBuilder } from '../../builder/IndexBuilder';
+import { PackageBuilder } from '../../builder/PackageBuilder';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
@@ -220,39 +221,9 @@ export function ReaderView({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [currentJuanNum, setCurrentJuanNum] = useState<number>(1);
   const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null);
-  const [displayCjkChars, setDisplayCjkChars] = useState<number | undefined>(undefined);
   
   // 💡 閱讀時間倒數計時狀態
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
-
-  // 💡 經典權威字數自動補齊 (點讀離線藏經庫與 Core Fallback)
-  useEffect(() => {
-    if (!book) return;
-    if (book.metadata.cjkChars) {
-      setDisplayCjkChars(book.metadata.cjkChars);
-      return;
-    }
-    if (book.metadata.workId === 'T1944') {
-      setDisplayCjkChars(470);
-      return;
-    }
-    const featured = FEATURED_BOOKS.find((b: any) => b.workId === book.metadata.workId);
-    if (featured && featured.cjkChars) {
-      setDisplayCjkChars(featured.cjkChars);
-      return;
-    }
-    fetch('/cbeta-works-index.json')
-      .then(res => res.json())
-      .then(data => {
-        if (data && Array.isArray(data.works)) {
-          const found = data.works.find((w: any) => w.workId === book.metadata.workId);
-          if (found && found.cjkChars) {
-            setDisplayCjkChars(found.cjkChars);
-          }
-        }
-      })
-      .catch(() => {});
-  }, [book]);
 
   // 💡 按需動態加載教育部標楷體 (Lazy-Load WOFF2)
   useEffect(() => {
@@ -650,6 +621,19 @@ export function ReaderView({
   useEffect(() => {
     const loadBookData = async () => {
       try {
+        if (isBackupMode()) {
+          // 💡 備援模式下 100% 讀取實時離線鏡像 JSON，不使用與刪除 IndexedDB 舊快取，避免讀者/開發者測試誤判
+          deleteBook(workId).catch(() => {});
+          const freshBook = await PackageBuilder.downloadAndPackage(
+            { workId, title: '', creators: '', juansCount: 1, category: '' },
+            (progress: any) => console.log(`[Backup Progress] ${progress.message}`)
+          );
+          if (freshBook) {
+            setBook(freshBook);
+            return;
+          }
+        }
+
         let bookData = await getBook(workId);
         if (bookData) {
           // 💡 已知內建經典 Metadata 自動修正
@@ -2125,11 +2109,26 @@ export function ReaderView({
                   <div className="info-item"><strong>冊別：</strong>{book.metadata.vol}</div>
                 )}
                 {(() => {
-                  const chars = displayCjkChars || book.metadata.cjkChars || book.content.juans.reduce((sum, j) => 
-                    sum + j.segments.reduce((sSum, seg) => 
-                      sSum + seg.content.replace(/（[^）]*）|\([^)]*\)|[ \t\r\n]+/g, '').length, 0), 0);
-                  return chars > 0 ? (
-                    <div className="info-item"><strong>字數：</strong>{chars.toLocaleString()}</div>
+                  // 💡 通用 CBETA 漢字 (CJK Ideographs) 權威字數計算公式：
+                  // 若元資料有預錄 cjkChars 則優先採用；否則遍歷所有段落，統計 CJK 漢字總數 (絕不硬編碼個案)
+                  if (book.metadata.cjkChars && typeof book.metadata.cjkChars === 'number' && book.metadata.cjkChars > 0) {
+                    return (
+                      <div className="info-item"><strong>字數：</strong>{book.metadata.cjkChars.toLocaleString()}</div>
+                    );
+                  }
+                  let totalCjkCount = 0;
+                  book.content.juans.forEach(j => {
+                    j.segments.forEach(seg => {
+                      // 排除經號標頭中的 No. 1944 等英數詮釋標記
+                      const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
+                      const matches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
+                      if (matches) {
+                        totalCjkCount += matches.length;
+                      }
+                    });
+                  });
+                  return totalCjkCount > 0 ? (
+                    <div className="info-item"><strong>字數：</strong>{totalCjkCount.toLocaleString()}</div>
                   ) : null;
                 })()}
                 <div className="copyright-text">
