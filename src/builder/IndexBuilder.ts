@@ -207,15 +207,66 @@ export class IndexBuilder {
         return searchCacheMap.get(cacheKey)!;
       }
 
-      const lowerQuery = trimmedQuery.toLowerCase();
-      const matched = allBackupWorks.filter(b => 
-        b.title.includes(trimmedQuery) ||
-        isFuzzyTitleMatch(b.title, trimmedQuery) ||
-        b.workId.toLowerCase().includes(lowerQuery) ||
-        (b.creators && b.creators.includes(trimmedQuery)) ||
-        (b.category && b.category.includes(trimmedQuery)) ||
-        (b.vol && b.vol.toLowerCase().includes(lowerQuery))
-      ).map(b => ({ ...b, isBackupSource: true }));
+      const lower = trimmedQuery.toLowerCase();
+      const stems = new Set<string>([lower]);
+
+      // 雙向詞幹與助詞拆解 (Bidirectional stemming & particles removal)
+      if (lower.endsWith('之道') && lower.length > 2) stems.add(lower.slice(0, -2));
+      if (lower.includes('之道')) stems.add(lower.replace(/之道/g, ''));
+      if (lower.endsWith('經') && lower.length > 1) stems.add(lower.slice(0, -1));
+      else if (!lower.endsWith('經') && lower.length >= 2) stems.add(lower + '經');
+
+      const stemList = Array.from(stems).filter(s => s.length >= 2);
+
+      const matched = allBackupWorks.filter(b => {
+        const t = b.title.toLowerCase();
+        const c = (b.creators || '').toLowerCase();
+        const v = (b.vol || '').toLowerCase();
+        const id = (b.workId || (b as any).work || '').toLowerCase();
+
+        if (
+          t.includes(lower) ||
+          isFuzzyTitleMatch(b.title, trimmedQuery) ||
+          id.includes(lower) ||
+          c.includes(lower) ||
+          (b.category && b.category.toLowerCase().includes(lower)) ||
+          v.includes(lower)
+        ) {
+          return true;
+        }
+
+        return stemList.some(s => t.includes(s) || c.includes(s));
+      }).map(b => ({ ...b, isBackupSource: true }));
+
+      // 💡 權重與精確度排序 (Relevance & Priority Ranking)
+      const getScore = (b: SearchResult) => {
+        const t = b.title.toLowerCase();
+        if (t === lower) return 100;
+        if (lower.endsWith('經') && t.includes(lower.slice(0, -1)) && !t.includes('疏') && !t.includes('記') && !t.includes('科')) return 95;
+        if (t.startsWith(lower)) return 90;
+        if (t.includes(lower)) return 85;
+        for (const s of stemList) {
+          if (t === s) return 80;
+          if (t.startsWith(s)) return 75;
+          if (t.includes(s)) return 70;
+        }
+        return 50;
+      };
+
+      matched.sort((a, b) => {
+        const scoreA = getScore(a);
+        const scoreB = getScore(b);
+        if (scoreA !== scoreB) return scoreB - scoreA;
+
+        const idA = a.workId || '';
+        const idB = b.workId || '';
+        const isPrimaryA = idA.startsWith('T0') || idA.startsWith('Y0');
+        const isPrimaryB = idB.startsWith('T0') || idB.startsWith('Y0');
+        if (isPrimaryA && !isPrimaryB) return -1;
+        if (!isPrimaryA && isPrimaryB) return 1;
+
+        return 0;
+      });
 
       searchCacheMap.set(cacheKey, matched);
       return matched;
@@ -245,11 +296,12 @@ export class IndexBuilder {
       const queriesToSearch = new Set<string>([trimmedQuery]);
 
       // 雙向詞幹自動衍生 (Bidirectional Stemming):
-      // 1. 若查詢以「經」結尾 (如 勝鬘經)，加入去尾字「勝鬘」
+      if (trimmedQuery.endsWith('之道') && trimmedQuery.length > 2) {
+        queriesToSearch.add(trimmedQuery.slice(0, -2));
+      }
       if (trimmedQuery.endsWith('經') && trimmedQuery.length > 1) {
         queriesToSearch.add(trimmedQuery.slice(0, -1));
       }
-      // 2. 若查詢不以「經」結尾 (如 勝鬘)，自動補「經」 (如 勝鬘經) 並行檢索
       else if (!trimmedQuery.endsWith('經') && trimmedQuery.length >= 2) {
         queriesToSearch.add(`${trimmedQuery}經`);
       }
@@ -362,6 +414,25 @@ export class IndexBuilder {
         ...b,
         isBackupSource: (activeMode as string) === 'backup'
       }));
+
+      // 精確度與關聯度排序
+      const lower = trimmedQuery.toLowerCase();
+      const getScore = (b: SearchResult) => {
+        const t = b.title.toLowerCase();
+        if (t === lower) return 100;
+        if (lower.endsWith('經') && t.includes(lower.slice(0, -1)) && !t.includes('疏') && !t.includes('記') && !t.includes('科')) return 95;
+        if (t.startsWith(lower)) return 90;
+        if (t.includes(lower)) return 85;
+        return 50;
+      };
+
+      finalResults.sort((a, b) => {
+        const scoreA = getScore(a);
+        const scoreB = getScore(b);
+        if (scoreA !== scoreB) return scoreB - scoreA;
+        return 0;
+      });
+
       if (finalResults.length > 0) {
         searchCacheMap.set(cacheKey, finalResults);
       }
