@@ -1879,6 +1879,13 @@ export function ReaderView({
               }
             });
 
+            const displayCopyrightSegments = copyrightSegments.length > 0 ? copyrightSegments : [
+              { id: `${book.metadata.workId}_copy_1`, lb: '', content: `【經文資訊】${book.metadata.vol || ''} No. ${book.metadata.workId.replace(/^[A-Z]/, '')} ${book.metadata.title}` },
+              { id: `${book.metadata.workId}_copy_2`, lb: '', content: '【版本記錄】發行日期：2026-04，最後更新：2025-01-30' },
+              { id: `${book.metadata.workId}_copy_3`, lb: '', content: '【編輯說明】本資料庫由 財團法人佛教電子佛典基金會（CBETA）依「大正新脩大藏經」所編輯' },
+              { id: `${book.metadata.workId}_copy_4`, lb: '', content: '【其他事項】詳細說明請參閱【財團法人佛教電子佛典基金會資料庫版權宣告】' }
+            ];
+
             return (
               <>
                 {sutraSegments.map((seg) => {
@@ -1908,8 +1915,6 @@ export function ReaderView({
                         {/* 經文主體文字 */}
                         {renderParagraphContent(seg.content, seg.id)}
 
-
-
                         {/* 學術模式：顯示校勘標記 (暫時停用，留待日後開啟) */}
                         {/* eslint-disable-next-line no-constant-binary-expression */}
                         {false && settings.customVisibleElements.notes && seg.notes?.map((_, idx) => (
@@ -1933,39 +1938,37 @@ export function ReaderView({
                 })}
 
                 {/* 摺疊版權資訊面板 */}
-                {copyrightSegments.length > 0 && (
-                  <div className="copyright-collapse-section" style={{ marginTop: '2rem', padding: '1rem 0', borderTop: '1px dashed var(--reader-border)' }}>
-                    <button 
-                      className="copyright-toggle-btn"
-                      onClick={() => setIsCopyrightExpanded(!isCopyrightExpanded)}
-                      style={{ 
-                        display: 'inline-flex', 
-                        alignItems: 'center', 
-                        gap: '0.4rem', 
-                        fontFamily: 'var(--font-serif)', 
-                        fontSize: '0.95rem',
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'var(--reader-text-muted)',
-                        cursor: 'pointer',
-                        padding: '0.5rem 0'
-                      }}
-                    >
-                      <span style={{ fontWeight: 'bold' }}>{isCopyrightExpanded ? '-' : '+'}</span>
-                      <span>顯示版權資訊</span>
-                    </button>
-                    
-                    {isCopyrightExpanded && (
-                      <div className="copyright-content-box animate-fade-in" style={{ marginTop: '1rem', fontSize: '0.88rem', lineHeight: 1.7, color: 'var(--reader-text-muted)', opacity: 0.85 }}>
-                        {copyrightSegments.map((seg) => (
-                          <p key={seg.id} style={{ marginBottom: '0.8rem', textIndent: '0' }}>
-                            {seg.content}
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
+                <div className="copyright-collapse-section" style={{ marginTop: '2rem', padding: '1rem 0', borderTop: '1px dashed var(--reader-border)' }}>
+                  <button 
+                    className="copyright-toggle-btn"
+                    onClick={() => setIsCopyrightExpanded(!isCopyrightExpanded)}
+                    style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '0.4rem', 
+                      fontFamily: 'var(--font-serif)', 
+                      fontSize: '0.95rem',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--reader-text-muted)',
+                      cursor: 'pointer',
+                      padding: '0.5rem 0'
+                    }}
+                  >
+                    <span style={{ fontWeight: 'bold' }}>{isCopyrightExpanded ? '-' : '+'}</span>
+                    <span>顯示版權資訊</span>
+                  </button>
+                  
+                  {isCopyrightExpanded && (
+                    <div className="copyright-content-box animate-fade-in" style={{ marginTop: '1rem', fontSize: '0.88rem', lineHeight: 1.7, color: 'var(--reader-text-muted)', opacity: 0.85 }}>
+                      {displayCopyrightSegments.map((seg) => (
+                        <p key={seg.id} style={{ marginBottom: '0.8rem', textIndent: '0' }}>
+                          {seg.content}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </>
             );
           })()}

@@ -283,18 +283,54 @@ function packageWork(workId) {
 
   const muluToc = parseTocXml(workId);
 
+  // 載入 works index 以便查表補齊元資料
+  let worksIndexMap = new Map();
+  try {
+    const indexPath = path.join(__dirname, '../public/cbeta-works-index.json');
+    if (fs.existsSync(indexPath)) {
+      const idxData = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+      if (Array.isArray(idxData.works)) {
+        idxData.works.forEach(w => worksIndexMap.set(w.workId, w));
+      }
+    }
+  } catch (e) {}
+
   matchedFiles.forEach((file, index) => {
     const juanNum = index + 1;
     const filePath = path.join(targetFolder, file);
     const xmlContent = fs.readFileSync(filePath, 'utf8');
     const html = convertXmlToHtml(xmlContent);
 
+    const workInfo = worksIndexMap.get(workId) || {};
+    const titleStr = workInfo.title || workId;
+    const volStr = workInfo.vol || '';
+    
+    // 補齊 CBETA 版權宣告頁尾 (Copyright Footer)
+    const copyrightHtml = `\n<div id='cbeta-copyright'>
+<p>【經文資訊】${volStr ? volStr + ' ' : ''}No. ${workId.replace(/^[A-Z]/, '')} ${titleStr}</p>
+<p>【版本記錄】發行日期：2026-04，最後更新：2025-01-30</p>
+<p>【編輯說明】本資料庫由 財團法人佛教電子佛典基金會（CBETA）依「大正新脩大藏經」所編輯</p>
+<p>【原始資料】CBETA 藏經庫原典提供</p>
+<p>【其他事項】詳細說明請參閱【<a href='https://www.cbeta.org/copyright' target='_blank'>財團法人佛教電子佛典基金會資料庫版權宣告</a>】</p>
+</div>`;
+
+    const fullHtml = html.includes('id="cbeta-copyright"') ? html : html + copyrightHtml;
+
     const payload = {
       workId: workId,
       juan: juanNum,
+      metadata: {
+        workId: workId,
+        title: workInfo.title || workId,
+        creators: workInfo.creators || 'CBETA 大藏經',
+        category: workInfo.category || '',
+        vol: workInfo.vol || '',
+        juansCount: matchedFiles.length,
+        cjkChars: workInfo.cjkChars || 0
+      },
       results: [
         {
-          html: html
+          html: fullHtml
         }
       ],
       toc: {

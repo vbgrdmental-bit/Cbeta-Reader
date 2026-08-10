@@ -1,5 +1,5 @@
 import type { ReaderPackage } from '../types/book';
-import { IndexBuilder, getApiUrl, fetchWithTimeout } from './IndexBuilder';
+import { IndexBuilder, FEATURED_BOOKS, getApiUrl, fetchWithTimeout } from './IndexBuilder';
 import type { SearchResult } from './IndexBuilder';
 import { ReaderBuilder, formatTimeRemaining } from './ReaderBuilder';
 import { NavigationBuilder } from './NavigationBuilder';
@@ -41,10 +41,22 @@ export class PackageBuilder {
     let actualJuansCount = (searchResult.juansCount && searchResult.juansCount > 0) ? searchResult.juansCount : 1;
     const isBackup = getSourceMode() === 'backup';
     
+    if (!searchResult.title || !searchResult.creators || !searchResult.category) {
+      const featured = FEATURED_BOOKS.find((b: any) => b.workId === workId);
+      if (featured) {
+        if (!searchResult.title) searchResult.title = featured.title;
+        if (!searchResult.creators) searchResult.creators = featured.creators;
+        if (!searchResult.category) searchResult.category = featured.category;
+        if (!searchResult.vol) searchResult.vol = featured.vol;
+        if (!searchResult.juansCount) searchResult.juansCount = featured.juansCount;
+        if (searchResult.cjkChars == null) searchResult.cjkChars = featured.cjkChars;
+      }
+    }
+
     try {
       // 1. Metadata 階段
       if (isBackup) {
-        onProgress({ step: 'metadata', percent: 3, message: `正在從備援資料庫讀取《${searchResult.title}》元資料...` });
+        onProgress({ step: 'metadata', percent: 3, message: `正在從備援資料庫讀取《${searchResult.title || workId}》元資料...` });
         try {
           const localMetaUrl = `/backup/${workId}/1.json`;
           const ghMetaUrl = `https://github.com/vbgrdmental-bit/Cbeta-Reader/releases/download/v1.0.0-database/${workId}_1.json`;
@@ -65,6 +77,7 @@ export class PackageBuilder {
               if (meta.juansCount && typeof meta.juansCount === 'number') {
                 actualJuansCount = meta.juansCount;
               }
+              if (meta.title) searchResult.title = meta.title;
               if (meta.creators) searchResult.creators = meta.creators;
               if (meta.category) searchResult.category = meta.category;
               if (meta.vol) searchResult.vol = meta.vol;

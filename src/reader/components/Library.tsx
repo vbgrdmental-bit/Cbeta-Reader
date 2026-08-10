@@ -7,7 +7,7 @@ import {
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
-import { IndexBuilder } from '../../builder/IndexBuilder';
+import { IndexBuilder, FEATURED_BOOKS } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress, BuildStep } from '../../builder/PackageBuilder';
@@ -1848,8 +1848,8 @@ export function Library({
                       </div>
 
                       {/* 💡 正中央：經名標題 (如「般若波羅蜜多心經」) */}
-                      <div className="grid-book-title" title={book.title}>
-                        {book.title}
+                      <div className="grid-book-title" title={book.title || FEATURED_BOOKS.find((b: any) => b.workId === book.workId)?.title || book.workId}>
+                        {book.title || FEATURED_BOOKS.find((b: any) => b.workId === book.workId)?.title || book.workId}
                       </div>
                     </div>
                   );
