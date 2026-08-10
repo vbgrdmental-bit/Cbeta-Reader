@@ -7,7 +7,7 @@ import { getBook, saveBook, listHighlights, saveHighlight, deleteHighlight } fro
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
 import { BUILDER_VERSION } from '../../builder/version';
-import { IndexBuilder } from '../../builder/IndexBuilder';
+import { IndexBuilder, FEATURED_BOOKS } from '../../builder/IndexBuilder';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
@@ -220,9 +220,39 @@ export function ReaderView({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [currentJuanNum, setCurrentJuanNum] = useState<number>(1);
   const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null);
+  const [displayCjkChars, setDisplayCjkChars] = useState<number | undefined>(undefined);
   
   // 💡 閱讀時間倒數計時狀態
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
+
+  // 💡 經典權威字數自動補齊 (點讀離線藏經庫與 Core Fallback)
+  useEffect(() => {
+    if (!book) return;
+    if (book.metadata.cjkChars) {
+      setDisplayCjkChars(book.metadata.cjkChars);
+      return;
+    }
+    if (book.metadata.workId === 'T1944') {
+      setDisplayCjkChars(470);
+      return;
+    }
+    const featured = FEATURED_BOOKS.find((b: any) => b.workId === book.metadata.workId);
+    if (featured && featured.cjkChars) {
+      setDisplayCjkChars(featured.cjkChars);
+      return;
+    }
+    fetch('/cbeta-works-index.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data && Array.isArray(data.works)) {
+          const found = data.works.find((w: any) => w.workId === book.metadata.workId);
+          if (found && found.cjkChars) {
+            setDisplayCjkChars(found.cjkChars);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [book]);
 
   // 💡 按需動態加載教育部標楷體 (Lazy-Load WOFF2)
   useEffect(() => {
@@ -2095,7 +2125,7 @@ export function ReaderView({
                   <div className="info-item"><strong>冊別：</strong>{book.metadata.vol}</div>
                 )}
                 {(() => {
-                  const chars = book.metadata.cjkChars || book.content.juans.reduce((sum, j) => 
+                  const chars = displayCjkChars || book.metadata.cjkChars || book.content.juans.reduce((sum, j) => 
                     sum + j.segments.reduce((sSum, seg) => 
                       sSum + seg.content.replace(/（[^）]*）|\([^)]*\)|[ \t\r\n]+/g, '').length, 0), 0);
                   return chars > 0 ? (
