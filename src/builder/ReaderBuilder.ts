@@ -178,7 +178,7 @@ export class ReaderBuilder {
                       html, 
                       workId, 
                       j, 
-                      allRawTocs.length > 0 ? undefined : allRawTocs
+                      allRawTocs
                     );
                     if (segments && segments.length > 0) {
                       juansMap.set(j, segments);

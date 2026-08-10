@@ -12,6 +12,7 @@ export class NavigationBuilder {
     const treeItems: TOCItem[] = [];
     const allFlatItems: TOCItem[] = [];
     let idCounter = 0;
+    const usedSegmentIds = new Set<string>();
 
     // 遞迴映射 mulu 節點成帶有 children 的 TOCItem 樹
     const processMuluNode = (mulu: any): TOCItem => {
@@ -22,6 +23,23 @@ export class NavigationBuilder {
 
       let juanData = content.juans.find(j => j.juan === targetJuan);
       let startSegmentId = mulu.startSegmentId || '';
+
+      // 0. 優先使用 HTML 解析階段所紀錄的精確 seg.muluTitles 文字順序比對 (順序排重防誤判)
+      if (!startSegmentId && juanData) {
+        const cleanTitle = title.replace(/[\s\u3000]/g, '');
+        const segWithMuluTitle = juanData.segments.find(seg => {
+          if (!seg.muluTitles || seg.muluTitles.length === 0) return false;
+          if (usedSegmentIds.has(seg.id)) return false;
+          return seg.muluTitles.some(t => {
+            const cleanT = t.replace(/[\s\u3000]/g, '');
+            return cleanT === cleanTitle || cleanT.includes(cleanTitle) || cleanTitle.includes(cleanT);
+          });
+        });
+        if (segWithMuluTitle) {
+          startSegmentId = segWithMuluTitle.id;
+          usedSegmentIds.add(segWithMuluTitle.id);
+        }
+      }
 
       // 1. 優先在目標卷中透過 lb 比對
       if (!startSegmentId && mulu.lb && juanData) {
