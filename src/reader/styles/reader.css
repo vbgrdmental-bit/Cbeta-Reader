@@ -112,6 +112,23 @@
   display: inline;
 }
 
+/* CBETA 經號 (No. 1944) 與 卷名 (禮法華經儀式) 標題樣式 */
+.docnumber, p.docnumber {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--reader-text-muted, #7c7267);
+  margin-top: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.juan, p.juan {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-top: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
 /* 羊皮紙與舒服模式下，偈頌文字改為質感灰色 (烏木模式不變色) */
 .theme-parchment .reader-paragraph.verse {
   color: #7d6c5a; /* 暖灰褐色 */

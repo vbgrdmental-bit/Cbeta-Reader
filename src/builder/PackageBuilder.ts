@@ -68,6 +68,7 @@ export class PackageBuilder {
               if (meta.creators) searchResult.creators = meta.creators;
               if (meta.category) searchResult.category = meta.category;
               if (meta.vol) searchResult.vol = meta.vol;
+              if (meta.cjkChars != null && typeof meta.cjkChars === 'number') searchResult.cjkChars = meta.cjkChars;
             }
           }
         } catch (bMetaErr) {

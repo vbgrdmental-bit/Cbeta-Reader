@@ -117,6 +117,18 @@ function convertXmlToHtml(xmlStr) {
   // 5.5 處理偈頌體間隔標籤 <caesura/> 轉為對齊全形空格
   html = html.replace(/<caesura\s*\/?>/gi, '　');
 
+  // 5.8 處理 CBETA 經號標籤 <cb:docNumber> 與 卷名/標題標籤 <cb:juan>
+  html = html.replace(/<cb:docNumber[^>]*>([\s\S]*?)<\/cb:docNumber>/gi, (match, content) => {
+    const clean = content.replace(/<[^>]+>/g, '').trim();
+    const matchNo = clean.match(/^No\.\s*\d+[a-z]?/i);
+    const docStr = matchNo ? matchNo[0] : clean;
+    return `<p class="docnumber">${docStr}</p>`;
+  });
+  html = html.replace(/<cb:juan[^>]*>([\s\S]*?)<\/cb:juan>/gi, (match, content) => {
+    const clean = content.replace(/<cb:mulu[^>]*>[\s\S]*?<\/cb:mulu>/gi, '').replace(/<[^>]+>/g, '').trim();
+    return `<p class="juan">${clean}</p>`;
+  });
+
   // 6. 處理紙本頁碼分頁標籤 <pb> 與 <milestone>：轉為內聯行內空標籤，防範斷開 <p> 段落造成不當換行！
   html = html.replace(/<pb\s+[^>]*\/>/gi, '');
   html = html.replace(/<pb\s+[^>]*>[\s\S]*?<\/pb>/gi, '');

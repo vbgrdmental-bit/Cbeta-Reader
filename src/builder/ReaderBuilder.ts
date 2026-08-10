@@ -476,6 +476,8 @@ export class ReaderBuilder {
         el.classList.contains('p') ||
         el.classList.contains('head') ||
         el.classList.contains('lg') ||
+        el.classList.contains('juan') ||
+        el.classList.contains('docnumber') ||
         isBareTextSpan ||
         isVerseLine ||
         isListItem ||
@@ -549,15 +551,15 @@ export class ReaderBuilder {
             }
           });
 
-          // 💡 1. 移除所有行號標籤 (.lb, [class*="lb"]) 與 目錄/經號中詮釋標籤 (docnumber, mulu)
-          cleanClone.querySelectorAll('.lb, [class*="lb"], docnumber, cb\\:docnumber, .docnumber, .cb-docnumber, mulu, cb\\:mulu, .cb-mulu').forEach(lbEl => {
+          // 💡 1. 移除所有行號標籤 (.lb, [class*="lb"]) 與 目錄標籤 (mulu)
+          cleanClone.querySelectorAll('.lb, [class*="lb"], mulu, cb\\:mulu, .cb-mulu').forEach(lbEl => {
             if (!lbEl.classList.contains('gaiji') && !lbEl.classList.contains('gaijiAnchor') && !lbEl.classList.contains('gaiji_note')) {
               lbEl.remove();
             }
           });
           cleanClone.querySelectorAll('*').forEach(child => {
             const tName = child.tagName.toLowerCase();
-            if (tName.includes('docnumber') || tName.includes('mulu') || child.classList.contains('cb-mulu')) {
+            if (tName.includes('mulu') || child.classList.contains('cb-mulu')) {
               child.remove();
             }
           });
