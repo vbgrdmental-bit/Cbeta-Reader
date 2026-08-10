@@ -2095,7 +2095,9 @@ export function ReaderView({
                   <div className="info-item"><strong>冊別：</strong>{book.metadata.vol}</div>
                 )}
                 {(() => {
-                  const chars = book.metadata.cjkChars || book.content.juans.reduce((sum, j) => sum + j.segments.reduce((sSum, seg) => sSum + seg.content.replace(/\s+/g, '').length, 0), 0);
+                  const chars = book.metadata.cjkChars || book.content.juans.reduce((sum, j) => 
+                    sum + j.segments.reduce((sSum, seg) => 
+                      sSum + seg.content.replace(/（[^）]*）|\([^)]*\)|[ \t\r\n]+/g, '').length, 0), 0);
                   return chars > 0 ? (
                     <div className="info-item"><strong>字數：</strong>{chars.toLocaleString()}</div>
                   ) : null;
