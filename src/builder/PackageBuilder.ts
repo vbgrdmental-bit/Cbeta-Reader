@@ -76,6 +76,25 @@ export class PackageBuilder {
               const meta = mData.metadata || {};
               if (meta.juansCount && typeof meta.juansCount === 'number') {
                 actualJuansCount = meta.juansCount;
+              } else {
+                // 💡 通用保險機制：若備援 JSON 無 metadata.juansCount，
+                // 從目錄樹 (mulu) 的最大 juan 值自動推導，防範多卷著作被誤判為單卷
+                const rawTocList: any[] = Array.isArray(mData.toc)
+                  ? mData.toc
+                  : (mData.toc?.mulu && Array.isArray(mData.toc.mulu) ? mData.toc.mulu : []);
+                if (rawTocList.length > 0) {
+                  const getMaxJuan = (nodes: any[]): number =>
+                    nodes.reduce((max, n) => {
+                      const self = n.juan || 0;
+                      const childMax = n.children && Array.isArray(n.children) ? getMaxJuan(n.children) : 0;
+                      return Math.max(max, self, childMax);
+                    }, 0);
+                  const muluMaxJuan = getMaxJuan(rawTocList);
+                  if (muluMaxJuan > actualJuansCount) {
+                    actualJuansCount = muluMaxJuan;
+                    console.info(`[Backup Mode] juansCount auto-derived from mulu: ${actualJuansCount} (${workId})`);
+                  }
+                }
               }
               if (meta.title) searchResult.title = meta.title;
               if (meta.creators) searchResult.creators = meta.creators;

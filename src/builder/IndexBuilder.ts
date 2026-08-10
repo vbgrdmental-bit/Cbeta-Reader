@@ -86,7 +86,7 @@ export const FEATURED_BOOKS: SearchResult[] = [
   { workId: 'Y0001', title: '印度之佛教', creators: '印順法師著', juansCount: 1, category: '新編部類', vol: 'Y01' },
   { workId: 'Y0002', title: '印度佛教思想史', creators: '印順法師著', juansCount: 1, category: '新編部類', vol: 'Y01' },
   { workId: 'Y0003', title: '勝鬘經講記', creators: '印順法師著', juansCount: 1, category: '新編部類', vol: 'Y01' },
-  { workId: 'Y0040', title: '成佛之道（增注本）', creators: '釋印順著', juansCount: 1, category: '新編部類', vol: 'Y01' }
+  { workId: 'Y0040', title: '成佛之道（增注本）', creators: '釋印順著', juansCount: 5, category: '新編部類', vol: 'Y01' }
 ];
 
 export function isFuzzyTitleMatch(title: string, query: string): boolean {
