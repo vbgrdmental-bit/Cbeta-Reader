@@ -41,15 +41,17 @@ export class NavigationBuilder {
         }
       }
 
-      // 1. 優先在目標卷中透過 lb 比對
+      // 1. 優先在目標卷中透過 lb 比對（跳過已用過的段落）
       if (!startSegmentId && mulu.lb && juanData) {
         const cleanMuluLb = mulu.lb.replace(/[^a-zA-Z0-9]/g, '');
         const segWithLb = juanData.segments.find(seg => {
+          if (usedSegmentIds.has(seg.id)) return false;
           const cleanSegLb = seg.lb ? seg.lb.replace(/[^a-zA-Z0-9]/g, '') : '';
-          return cleanSegLb.endsWith(cleanMuluLb) || cleanSegLb.includes(cleanMuluLb);
+          return cleanSegLb === cleanMuluLb || cleanSegLb.endsWith(cleanMuluLb);
         });
         if (segWithLb) {
           startSegmentId = segWithLb.id;
+          usedSegmentIds.add(segWithLb.id);
         }
       }
 
@@ -58,13 +60,15 @@ export class NavigationBuilder {
         const cleanMuluLb = mulu.lb.replace(/[^a-zA-Z0-9]/g, '');
         for (const jData of content.juans) {
           const segWithLb = jData.segments.find(seg => {
+            if (usedSegmentIds.has(seg.id)) return false;
             const cleanSegLb = seg.lb ? seg.lb.replace(/[^a-zA-Z0-9]/g, '') : '';
-            return cleanSegLb.endsWith(cleanMuluLb) || cleanSegLb.includes(cleanMuluLb);
+            return cleanSegLb === cleanMuluLb || cleanSegLb.endsWith(cleanMuluLb);
           });
           if (segWithLb) {
             startSegmentId = segWithLb.id;
             targetJuan = jData.juan;
             juanData = jData;
+            usedSegmentIds.add(segWithLb.id);
             break;
           }
         }

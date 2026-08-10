@@ -292,7 +292,7 @@ export class ReaderBuilder {
     html: string, 
     workId: string, 
     juan: number,
-    allRawTocs?: any[]
+    _allRawTocs?: any[]
   ): TextSegment[] {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
@@ -425,29 +425,35 @@ export class ReaderBuilder {
       }
 
       // 1. 遇到行頭標籤，更新當前最鄰近的行號
-      if (tagName === 'SPAN' && (el.classList.contains('lb') || el.id.includes('p') || el.id.includes('lb'))) {
-        activeLb = el.id || el.getAttribute('data-lb') || activeLb;
+      // 💡 只採用 p-開頭 lb (如 p0001a01)，忽略 pb-開頭 (紙本頁碼) 避免錯誤 lb 覆蓋
+      if (tagName === 'SPAN' && el.classList.contains('lb')) {
+        const lbId = el.id || el.getAttribute('data-lb') || '';
+        if (lbId && /^p[0-9]/.test(lbId)) {
+          activeLb = lbId;
+        } else if (lbId && !lbId.startsWith('pb') && !activeLb) {
+          activeLb = lbId;
+        }
       }
 
-      // 2. 遇到目錄品名標籤 (相容自訂 <mulu> 標籤或 class="mulu" 的 HTML 元素)
-      if (tagName === 'MULU' || el.classList.contains('mulu')) {
+      // 2. 遇到目錄品名標籤，相容：
+      //    a) 自訂 <mulu> 標籤
+      //    b) class="mulu" 的 HTML 元素
+      //    c) class="cb-mulu" 的 div (CBETA 官方 HTML 格式)
+      const isMuluEl = tagName === 'MULU' || el.classList.contains('mulu') || el.classList.contains('cb-mulu');
+      if (isMuluEl) {
         const titleAttr = el.getAttribute('s') || el.getAttribute('data-mulu') || el.textContent || '';
         const title = titleAttr.trim();
         if (title) {
-          // 💡 防重機制：如果與上一個收集到的 TOC 品名相同，則忽略（防範 span.mulu 與其內嵌 a.mulu 重複觸發）
-          const isDuplicate = allRawTocs && allRawTocs.length > 0 && 
-                              allRawTocs[allRawTocs.length - 1].title === title &&
-                              allRawTocs[allRawTocs.length - 1].juan === juan;
+          // 💡 防重機制：如果與上一個 unlinkedTocs 品名相同，則忽略（防範重複觸發）
+          const lastUnlinked = unlinkedTocs.length > 0 ? unlinkedTocs[unlinkedTocs.length - 1] : null;
+          const isDuplicate = lastUnlinked && lastUnlinked.title === title && lastUnlinked.juan === juan;
           
           if (!isDuplicate) {
             const tocItem = {
               title,
               juan,
-              startSegmentId: '' // 預設為空，如果之後沒遇到段落就保持空
+              startSegmentId: '' // 預設為空，由後續段落來填入
             };
-            if (allRawTocs) {
-              allRawTocs.push(tocItem);
-            }
             unlinkedTocs.push(tocItem);
           }
         }
