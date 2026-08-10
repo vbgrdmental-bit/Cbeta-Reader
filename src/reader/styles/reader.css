@@ -52,9 +52,9 @@
   margin-bottom: 1.5rem;
 }
 
-/* 💡 偈頌行與行之間的上下間距與一般內文段落完全相同 (1.5rem) */
+/* 💡 偈頌體行與行之間緊湊排版 (如圖 2)，不拉大間距 */
 .reader-paragraph-wrapper.verse-wrapper {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.35rem !important;
 }
 
 .reader-paragraph {
@@ -91,15 +91,15 @@
   z-index: 1000;
 }
 
-/* 偈頌 (韻文) 排版美化：正黑體 / 高對比加粗 / 置中對齊 */
+/* 偈頌 (韻文) 排版美化：正黑體 / 高對比加粗 / 置中對齊 / 緊湊行距 (如圖 2) */
 .reader-paragraph.verse {
   font-weight: 700 !important;
   font-family: "PingFang TC", "Microsoft JhengHei", "Heiti TC", "STHeiti", "Noto Sans TC", "CBETASupplement", sans-serif !important;
   text-align: center !important;
   padding-left: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  line-height: var(--reader-line-height, 2.0) !important;
+  margin-top: 0.1rem !important;
+  margin-bottom: 0.1rem !important;
+  line-height: calc(var(--reader-line-height, 2.0) * 0.85) !important;
 }
 
 /* 經文內聯備註 / 小註 (Inline Note) 樣式 */
