@@ -445,9 +445,9 @@ export class ReaderBuilder {
       //   - <lg> 若有 <l> 子行 → 跳過容器本身，讓 <l> 各自生成段落（與 CBETA 分行顯示一致）
       //   - <lg> 無 <l> 子行 → 維持原本整塊處理（向下相容）
       //   - <l> 元素 → 各自建立 isVerse 段落
-      const isVerseContainer = el.classList.contains('lg');
-      const hasVerseLineChildren = isVerseContainer && (!!el.querySelector('l, .l') || !!el.querySelector('.lg-row'));
-      const isVerseLine = tagName === 'L' || (el.classList.contains('l') && !el.classList.contains('lb') && !el.classList.contains('lb-line')) || el.classList.contains('lg-row');
+      const isVerseContainer = el.classList.contains('lg') || tagName === 'LG';
+      const hasVerseLineChildren = isVerseContainer && (!!el.querySelector('l, .l') || !!el.querySelector('.lg-row') || (el.querySelectorAll('p.lg, .lg').length > 1));
+      const isVerseLine = tagName === 'L' || (el.classList.contains('l') && !el.classList.contains('lb') && !el.classList.contains('lb-line')) || el.classList.contains('lg-row') || el.classList.contains('lg') || el.parentElement?.classList.contains('lg');
 
       // 列表 (UL/OL/LI) 處理原則：
       //   - <ul/ol> 若有 <li> 子行 → 跳過容器本身，讓 <li> 各自生成段落
@@ -648,7 +648,7 @@ export class ReaderBuilder {
           }
 
           const isHead = el.tagName.toUpperCase() === 'HEAD' || el.classList.contains('head') || el.hasAttribute('data-head-level');
-          const isVerse = (el.tagName.toUpperCase() === 'LG' && !hasVerseLineChildren) || isVerseLine;
+          const isVerse = (el.tagName.toUpperCase() === 'LG' && !hasVerseLineChildren) || isVerseLine || el.classList.contains('lg') || el.parentElement?.classList.contains('lg');
           const isByline = el.classList.contains('byline') || el.tagName.toUpperCase() === 'BYLINE';
 
           // 💡 經文引文/粗體經文判斷 (div-orig, p.bold, orig 等標籤，表示為金剛經等論典中所引用的原始經文)
