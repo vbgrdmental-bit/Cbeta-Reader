@@ -107,8 +107,21 @@ export class ReaderBuilder {
               if (backupRes && backupRes.ok) {
                 const bData = await backupRes.json().catch(() => null);
                 if (bData) {
-                  if (bData.toc && Array.isArray(bData.toc) && bData.toc.length > 0 && allRawTocs.length === 0) {
-                    allRawTocs = bData.toc;
+                  const rawTocList = Array.isArray(bData.toc)
+                    ? bData.toc
+                    : (bData.toc?.mulu && Array.isArray(bData.toc.mulu) ? bData.toc.mulu : []);
+
+                  if (rawTocList.length > 0 && allRawTocs.length === 0) {
+                    const cleanMuluTree = (nodes: any[]): any[] => {
+                      return nodes.map(n => {
+                        const nodeCopy = { ...n };
+                        if (n.children && Array.isArray(n.children) && n.children.length > 0) {
+                          nodeCopy.children = cleanMuluTree(n.children);
+                        }
+                        return nodeCopy;
+                      });
+                    };
+                    allRawTocs = cleanMuluTree(rawTocList);
                   }
                   const html = typeof bData.html === 'string' ? bData.html : (bData.results && bData.results[0] ? (bData.results[0].html || bData.results[0]) : '');
                   if (html) {

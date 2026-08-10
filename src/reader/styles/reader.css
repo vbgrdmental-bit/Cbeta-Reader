@@ -91,15 +91,21 @@
   z-index: 1000;
 }
 
-/* 偈頌 (韻文) 排版美化：正黑體 / 高對比加粗 / 置中對齊 / 緊湊行距 (如圖 2) */
+/* 偈頌 (韻文) 排版美化：正黑體 / 高對比加粗 / 靠左對齊向右縮排 / 緊湊行距 (如圖 4) */
 .reader-paragraph.verse {
   font-weight: 700 !important;
   font-family: "PingFang TC", "Microsoft JhengHei", "Heiti TC", "STHeiti", "Noto Sans TC", "CBETASupplement", sans-serif !important;
-  text-align: center !important;
-  padding-left: 0 !important;
+  text-align: left !important;
+  padding-left: 2.5rem !important;
   margin-top: 0.1rem !important;
   margin-bottom: 0.1rem !important;
   line-height: calc(var(--reader-line-height, 2.0) * 0.85) !important;
+}
+
+@media (max-width: 480px) {
+  .reader-paragraph.verse {
+    padding-left: 1.5rem !important;
+  }
 }
 
 /* 經文內聯備註 / 小註 (Inline Note) 樣式 */
