@@ -52,8 +52,8 @@ export interface SearchResult {
 // 內建核心經典靜態庫 (做為極速備用 Fallback，確保 100% 搜尋零卡死)
 export const FEATURED_BOOKS: SearchResult[] = [
   { workId: 'T0220', title: '大般若波羅蜜多經', creators: '唐 玄奘譯', juansCount: 600, category: '般若部類', vol: 'T05', cjkChars: 4850000 },
-  { workId: 'T0221', title: '光讚般若波羅蜜經', creators: '西晉 竺法護譯', juansCount: 10, category: '般若部類', vol: 'T08' },
-  { workId: 'T0222', title: '放光般若波羅蜜經', creators: '西晉 無羅叉譯', juansCount: 20, category: '般若部類', vol: 'T08' },
+  { workId: 'T0221', title: '光讚般若波羅蜜經', creators: '西晉 竺法護譯', juansCount: 20, category: '般若部類', vol: 'T08' },
+  { workId: 'T0222', title: '放光般若波羅蜜經', creators: '西晉 無羅叉譯', juansCount: 10, category: '般若部類', vol: 'T08' },
   { workId: 'T0223', title: '摩訶般若波羅蜜經', creators: '姚秦 鳩摩羅什譯', juansCount: 27, category: '般若部類', vol: 'T08' },
   { workId: 'T0227', title: '小品般若波羅蜜經', creators: '姚秦 鳩摩羅什譯', juansCount: 10, category: '般若部類', vol: 'T08' },
   { workId: 'T0235', title: '金剛般若波羅蜜經', creators: '姚秦 鳩摩羅什譯', juansCount: 1, category: '般若部類', vol: 'T08', cjkChars: 5165 },
@@ -83,10 +83,9 @@ export const FEATURED_BOOKS: SearchResult[] = [
   { workId: 'T1586', title: '唯識三十論頌', creators: '世親菩薩造 唐 玄奘譯', juansCount: 1, category: '瑜伽部類', vol: 'T31' },
   { workId: 'T1666', title: '大乘起信論', creators: '馬鳴菩薩造 梁 真諦譯', juansCount: 1, category: '論集部類', vol: 'T32' },
   { workId: 'T2005', title: '六祖大師法寶壇經', creators: '唐 釋法海集', juansCount: 1, category: '禪宗部類', vol: 'T48', cjkChars: 20400 },
-  { workId: 'Y0001', title: '印度之佛教', creators: '印順法師著', juansCount: 1, category: '新編部類', vol: 'Y01' },
-  { workId: 'Y0002', title: '印度佛教思想史', creators: '印順法師著', juansCount: 1, category: '新編部類', vol: 'Y01' },
-  { workId: 'Y0003', title: '勝鬘經講記', creators: '印順法師著', juansCount: 1, category: '新編部類', vol: 'Y01' },
-  { workId: 'Y0040', title: '成佛之道（增注本）', creators: '釋印順著', juansCount: 5, category: '新編部類', vol: 'Y01' }
+  { workId: 'Y0001', title: '印度之佛教', creators: '印順法師著', juansCount: 3, category: '新編部類', vol: 'Y01' },
+  { workId: 'Y0002', title: '印度佛教思想史', creators: '印順法師著', juansCount: 2, category: '新編部類', vol: 'Y01' },
+  { workId: 'Y0003', title: '勝鬘經講記', creators: '印順法師著', juansCount: 2, category: '新編部類', vol: 'Y01' },
 ];
 
 export function isFuzzyTitleMatch(title: string, query: string): boolean {
@@ -164,6 +163,30 @@ async function loadFullWorksIndex(): Promise<SearchResult[]> {
 }
 
 export class IndexBuilder {
+  /**
+   * 從藏經總目 (cbeta-works-index.json / FEATURED_BOOKS) 中取得指定經典的權威 Metadata 與真實總卷數
+   */
+  static async getWorkMetaFromIndex(workId: string): Promise<SearchResult | null> {
+    if (!workId) return null;
+    const cleanId = workId.trim().toUpperCase();
+    
+    // 1. 優先從 fullWorksIndex 中尋找 (涵蓋 CBETA 全部 4,882 部經典)
+    const fullIndex = await loadFullWorksIndex();
+    if (fullIndex && fullIndex.length > 0) {
+      const found = fullIndex.find(w => 
+        (w.workId && w.workId.toUpperCase() === cleanId) || 
+        ((w as any).work && String((w as any).work).toUpperCase() === cleanId)
+      );
+      if (found && found.juansCount) {
+        return found;
+      }
+    }
+
+    // 2. 備用：從 FEATURED_BOOKS 尋找
+    const featured = FEATURED_BOOKS.find(b => b.workId.toUpperCase() === cleanId);
+    return featured || null;
+  }
+
   /**
    * 搜尋經典名稱 (高效快取 + 模糊比對 + 4.5秒強效超時保護)
    */

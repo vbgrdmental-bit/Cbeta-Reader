@@ -1,5 +1,5 @@
 import type { ReaderPackage } from '../types/book';
-import { IndexBuilder, FEATURED_BOOKS, getApiUrl, fetchWithTimeout } from './IndexBuilder';
+import { IndexBuilder, getApiUrl, fetchWithTimeout } from './IndexBuilder';
 import type { SearchResult } from './IndexBuilder';
 import { ReaderBuilder, formatTimeRemaining } from './ReaderBuilder';
 import { NavigationBuilder } from './NavigationBuilder';
@@ -38,20 +38,21 @@ export class PackageBuilder {
     onProgress: (progress: BuildProgress) => void
   ): Promise<ReaderPackage> {
     const workId = searchResult.workId;
-    let actualJuansCount = (searchResult.juansCount && searchResult.juansCount > 0) ? searchResult.juansCount : 1;
-    const isBackup = getSourceMode() === 'backup';
     
-    if (!searchResult.title || !searchResult.creators || !searchResult.category) {
-      const featured = FEATURED_BOOKS.find((b: any) => b.workId === workId);
-      if (featured) {
-        if (!searchResult.title) searchResult.title = featured.title;
-        if (!searchResult.creators) searchResult.creators = featured.creators;
-        if (!searchResult.category) searchResult.category = featured.category;
-        if (!searchResult.vol) searchResult.vol = featured.vol;
-        if (!searchResult.juansCount) searchResult.juansCount = featured.juansCount;
-        if (searchResult.cjkChars == null) searchResult.cjkChars = featured.cjkChars;
+    // 💡 0. 全局權威總目自動校正：先從藏經總目 (cbeta-works-index.json / FEATURED_BOOKS) 補充/校正真實總卷數與元資料
+    const indexMeta = await IndexBuilder.getWorkMetaFromIndex(workId);
+    if (indexMeta) {
+      if (!searchResult.title || searchResult.title === workId) searchResult.title = indexMeta.title;
+      if (!searchResult.creators || searchResult.creators === 'CBETA' || searchResult.creators === 'CBETA 電子佛典') searchResult.creators = indexMeta.creators;
+      if (!searchResult.category || searchResult.category === 'CBETA' || searchResult.category === '未分類') searchResult.category = indexMeta.category;
+      if (!searchResult.vol) searchResult.vol = indexMeta.vol;
+      if (indexMeta.juansCount && indexMeta.juansCount > 0) {
+        searchResult.juansCount = indexMeta.juansCount;
       }
     }
+
+    let actualJuansCount = (searchResult.juansCount && searchResult.juansCount > 0) ? searchResult.juansCount : 1;
+    const isBackup = getSourceMode() === 'backup';
 
     try {
       // 1. Metadata 階段

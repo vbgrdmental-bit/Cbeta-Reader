@@ -1223,7 +1223,7 @@ export function CbetaCatalogView({
         workId: item.workId || item.id,
         title: item.label,
         creators: item.creators || 'CBETA',
-        juansCount: item.juanStart || 1,
+        juansCount: item.juansCount || item.juanStart || 1,
         category: item.category || 'CBETA'
       }))
     ];
