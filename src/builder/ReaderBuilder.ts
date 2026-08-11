@@ -113,35 +113,28 @@ export class ReaderBuilder {
 
                   const juanHtml = typeof bData.html === 'string' ? bData.html : (bData.results && bData.results[0] ? (bData.results[0].html || bData.results[0]) : '');
 
-                  // 💡 嘗試從 HTML 提取豐富的 cb:div 嵌套 TOC 樹（適用於印順導師講記等深層目錄）
-                  // 若 toc.mulu 只有扁平節點（無 children），優先使用 HTML 提取的豐富層次
-                  if (juanHtml && allRawTocs.length === 0) {
-                    const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
-                    const flatMuluHasChildren = rawTocList.some((n: any) => n.children && n.children.length > 0);
+                  // 💡 TOC 建構策略：
+                  // 第一步：如果 allRawTocs 還是空的，用 toc.mulu 建立全書項層骨架（包含全部卷次的頂層目錄）
+                  if (allRawTocs.length === 0 && rawTocList.length > 0) {
+                    allRawTocs = rawTocList.map((n: any) => ({ ...n }));
+                  }
 
-                    if (htmlTocTree.length > 0 && !flatMuluHasChildren) {
-                      // HTML 提取的樹更豐富：標記頂層節點的 juan 並使用
-                      allRawTocs = htmlTocTree.map((n: any) => ({ ...n, juan: j }));
-                    } else if (rawTocList.length > 0) {
-                      const cleanMuluTree = (nodes: any[]): any[] => {
-                        return nodes.map(n => {
-                          const nodeCopy = { ...n };
-                          if (n.children && Array.isArray(n.children) && n.children.length > 0) {
-                            nodeCopy.children = cleanMuluTree(n.children);
-                          }
-                          return nodeCopy;
-                        });
-                      };
-                      allRawTocs = cleanMuluTree(rawTocList);
-                    }
-                  } else if (juanHtml && allRawTocs.length > 0) {
-                    // 後續 juan：嘗試從 HTML 提取此 juan 的 TOC 並追加至 allRawTocs
+                  // 第二步：對此 juan 的 HTML 提取深層次子節點，補充到對應的頂層骨架節點
+                  if (juanHtml) {
                     const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
-                    // 找到對應此 juan 的 toc.mulu 頂層節點（依 juan 欄位比對）
-                    const juanMuluNode = allRawTocs.find((n: any) => n.juan === j);
-                    if (juanMuluNode && htmlTocTree.length > 0 && !(juanMuluNode.children && juanMuluNode.children.length > 0)) {
-                      // 把 HTML 提取的子層次補充到對應頂層節點的 children
-                      juanMuluNode.children = htmlTocTree;
+                    if (htmlTocTree.length > 0) {
+                      // 找到對應此 juan 的頂層骨架節點並補充 children
+                      const juanMuluNode = allRawTocs.find((n: any) => n.juan === j);
+                      if (juanMuluNode && !(juanMuluNode.children && juanMuluNode.children.length > 0)) {
+                        // HTML 提取的子層次：如果只有 1 個頂層節點且標題與骨架頂層相同，則展開其 children
+                        const singleTopNode = htmlTocTree.length === 1 ? htmlTocTree[0] : null;
+                        if (singleTopNode && singleTopNode.children && singleTopNode.children.length > 0) {
+                          juanMuluNode.children = singleTopNode.children;
+                        } else if (htmlTocTree.length > 1) {
+                          // 多個頂層節點：直接將 HTML 提取的子層次加入
+                          juanMuluNode.children = htmlTocTree;
+                        }
+                      }
                     }
                   }
 
@@ -184,33 +177,24 @@ export class ReaderBuilder {
                     const rawResult = data.results[0];
                     const juanHtml = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
 
-                    // 💡 主線模式：同樣嘗試從 HTML 提取豐富的 cb:div 嵌套 TOC 樹
-                    if (juanHtml && data.toc && Array.isArray(data.toc.mulu)) {
-                      const rawTocList = data.toc.mulu;
-                      if (allRawTocs.length === 0) {
-                        const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
-                        const flatMuluHasChildren = rawTocList.some((n: any) => n.children && n.children.length > 0);
+                    // 💡 主線模式：
+                    // 第一步：如果 allRawTocs 還是空的，用 toc.mulu 建立全書項層骨架
+                    if (allRawTocs.length === 0 && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0) {
+                      allRawTocs = data.toc.mulu.map((n: any) => ({ ...n }));
+                    }
 
-                        if (htmlTocTree.length > 0 && !flatMuluHasChildren) {
-                          allRawTocs = htmlTocTree.map((n: any) => ({ ...n, juan: j }));
-                        } else if (rawTocList.length > 0) {
-                          const cleanMuluTree = (nodes: any[]): any[] => {
-                            return nodes.map(n => {
-                              const nodeCopy = { ...n };
-                              if (n.children && Array.isArray(n.children) && n.children.length > 0) {
-                                nodeCopy.children = cleanMuluTree(n.children);
-                              }
-                              return nodeCopy;
-                            });
-                          };
-                          allRawTocs = cleanMuluTree(rawTocList);
-                        }
-                      } else {
-                        // 後續 juan：嘗試補充此 juan 的 HTML TOC 到對應頂層節點
-                        const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
+                    // 第二步：對此 juan 的 HTML 提取深層次子節點，補充到對應頂層骨架節點
+                    if (juanHtml) {
+                      const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
+                      if (htmlTocTree.length > 0) {
                         const juanMuluNode = allRawTocs.find((n: any) => n.juan === j);
-                        if (juanMuluNode && htmlTocTree.length > 0 && !(juanMuluNode.children && juanMuluNode.children.length > 0)) {
-                          juanMuluNode.children = htmlTocTree;
+                        if (juanMuluNode && !(juanMuluNode.children && juanMuluNode.children.length > 0)) {
+                          const singleTopNode = htmlTocTree.length === 1 ? htmlTocTree[0] : null;
+                          if (singleTopNode && singleTopNode.children && singleTopNode.children.length > 0) {
+                            juanMuluNode.children = singleTopNode.children;
+                          } else if (htmlTocTree.length > 1) {
+                            juanMuluNode.children = htmlTocTree;
+                          }
                         }
                       }
                     }
