@@ -916,10 +916,10 @@ body.theme-ebony .resume-dialog-btn-secondary:hover {
   min-height: 34px;
 }
 
-/* 💡 經典原始經文引用/粗體經文 (如論典中說明的金剛經原文，採用圓體粗體與解說正文優雅區隔) */
+/* 💡 經典原始經文引用/粗體經文 (如論典/講記中說明的原始經文，採用正黑體粗體與解說正文區隔) */
 .reader-paragraph.is-orig {
   font-weight: 800 !important;
-  font-family: "圓體-繁", "華康圓體", "DFYuan-Medium", "DFYuan", "YuanTi", "Yu Gothic", "Hiragino Maru Gothic ProN", "HGMaruGothicMPRO", "PingFang TC", "Microsoft JhengHei", sans-serif !important;
+  font-family: "PingFang TC", "Microsoft JhengHei", "Heiti TC", "STHeiti", "Noto Sans TC", "CBETASupplement", sans-serif !important;
   letter-spacing: 0.05em !important;
   opacity: 0.98;
 }

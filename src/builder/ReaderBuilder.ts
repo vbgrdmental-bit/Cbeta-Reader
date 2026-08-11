@@ -682,6 +682,19 @@ export class ReaderBuilder {
             }
           });
 
+          // 💡 1.0 展平 CBETA 書名號標記 <title level="m"> 標籤：
+          // HTML5 DOMParser 將 <title> 視為 <head> 的 title，導致內部 HTML 標籤（如 span.lb）以純文字外漏
+          // 解決：取其 textContent 並以文字節點替換整個 title 元素
+          cleanClone.querySelectorAll('title').forEach(titleEl => {
+            const text = titleEl.textContent || '';
+            if (text.trim()) {
+              const textNode = doc.createTextNode(text);
+              titleEl.parentNode?.replaceChild(textNode, titleEl);
+            } else {
+              titleEl.remove();
+            }
+          });
+
           // 💡 1. 移除所有行號標籤 (.lb, [class*="lb"]) 與 目錄標籤 (mulu)
           cleanClone.querySelectorAll('.lb, [class*="lb"], mulu, cb\\:mulu, .cb-mulu').forEach(lbEl => {
             if (!lbEl.classList.contains('gaiji') && !lbEl.classList.contains('gaijiAnchor') && !lbEl.classList.contains('gaiji_note')) {
@@ -762,6 +775,9 @@ export class ReaderBuilder {
           // 💡 經文中途多餘空格清理、完全抹除殘留行號標籤 (如 T05n0220_p0001a07) 與缺字自動對照轉換
           cleanContent = cleanContent.replace(/[A-Za-z0-9]+_p\d+[a-z]?\d*/gi, '');
           cleanContent = cleanContent.replace(/[ \t\r\n]+/g, '');
+          // 💡 清除因 CBETA <title level="m"> 書名號標記在 HTML5 DOMParser 解析後殘留的 HTML 標籤字符串
+          // (如 <spanclass="lb" id="p0168a08"></span>)，這是 RCDATA 元素內部標籤以純文字保留的副作用
+          cleanContent = cleanContent.replace(/<[^>]{1,200}>/g, '');
           cleanContent = resolveCbetaGaijiAssembly(cleanContent);
 
           // 💡 取得當前元素前面兄弟節點中的縮排尺寸，並補上全形空格
