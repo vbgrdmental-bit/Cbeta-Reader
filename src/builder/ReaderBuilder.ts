@@ -111,21 +111,42 @@ export class ReaderBuilder {
                     ? bData.toc
                     : (bData.toc?.mulu && Array.isArray(bData.toc.mulu) ? bData.toc.mulu : []);
 
-                  if (rawTocList.length > 0 && allRawTocs.length === 0) {
-                    const cleanMuluTree = (nodes: any[]): any[] => {
-                      return nodes.map(n => {
-                        const nodeCopy = { ...n };
-                        if (n.children && Array.isArray(n.children) && n.children.length > 0) {
-                          nodeCopy.children = cleanMuluTree(n.children);
-                        }
-                        return nodeCopy;
-                      });
-                    };
-                    allRawTocs = cleanMuluTree(rawTocList);
+                  const juanHtml = typeof bData.html === 'string' ? bData.html : (bData.results && bData.results[0] ? (bData.results[0].html || bData.results[0]) : '');
+
+                  // 💡 嘗試從 HTML 提取豐富的 cb:div 嵌套 TOC 樹（適用於印順導師講記等深層目錄）
+                  // 若 toc.mulu 只有扁平節點（無 children），優先使用 HTML 提取的豐富層次
+                  if (juanHtml && allRawTocs.length === 0) {
+                    const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
+                    const flatMuluHasChildren = rawTocList.some((n: any) => n.children && n.children.length > 0);
+
+                    if (htmlTocTree.length > 0 && !flatMuluHasChildren) {
+                      // HTML 提取的樹更豐富：標記頂層節點的 juan 並使用
+                      allRawTocs = htmlTocTree.map((n: any) => ({ ...n, juan: j }));
+                    } else if (rawTocList.length > 0) {
+                      const cleanMuluTree = (nodes: any[]): any[] => {
+                        return nodes.map(n => {
+                          const nodeCopy = { ...n };
+                          if (n.children && Array.isArray(n.children) && n.children.length > 0) {
+                            nodeCopy.children = cleanMuluTree(n.children);
+                          }
+                          return nodeCopy;
+                        });
+                      };
+                      allRawTocs = cleanMuluTree(rawTocList);
+                    }
+                  } else if (juanHtml && allRawTocs.length > 0) {
+                    // 後續 juan：嘗試從 HTML 提取此 juan 的 TOC 並追加至 allRawTocs
+                    const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
+                    // 找到對應此 juan 的 toc.mulu 頂層節點（依 juan 欄位比對）
+                    const juanMuluNode = allRawTocs.find((n: any) => n.juan === j);
+                    if (juanMuluNode && htmlTocTree.length > 0 && !(juanMuluNode.children && juanMuluNode.children.length > 0)) {
+                      // 把 HTML 提取的子層次補充到對應頂層節點的 children
+                      juanMuluNode.children = htmlTocTree;
+                    }
                   }
-                  const html = typeof bData.html === 'string' ? bData.html : (bData.results && bData.results[0] ? (bData.results[0].html || bData.results[0]) : '');
-                  if (html) {
-                    const segments = this.parseHtmlToSegments(html, workId, j, allRawTocs);
+
+                  if (juanHtml) {
+                    const segments = this.parseHtmlToSegments(juanHtml, workId, j, allRawTocs);
                     if (segments && segments.length > 0) {
                       juansMap.set(j, segments);
                       success = true;
@@ -158,24 +179,44 @@ export class ReaderBuilder {
 
                 if (response && response.ok) {
                   const data = await response.json().catch(() => null);
-                  if (data && data.toc && Array.isArray(data.toc.mulu) && data.toc.mulu.length > 0 && allRawTocs.length === 0) {
-                    const cleanMuluTree = (nodes: any[]): any[] => {
-                      return nodes.map(n => {
-                        const nodeCopy = { ...n };
-                        if (n.children && Array.isArray(n.children) && n.children.length > 0) {
-                          nodeCopy.children = cleanMuluTree(n.children);
-                        }
-                        return nodeCopy;
-                      });
-                    };
-                    allRawTocs = cleanMuluTree(data.toc.mulu);
-                  }
 
                   if (data && Array.isArray(data.results) && data.results.length > 0) {
                     const rawResult = data.results[0];
-                    const html = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
+                    const juanHtml = typeof rawResult === 'string' ? rawResult : (rawResult.html || '');
+
+                    // 💡 主線模式：同樣嘗試從 HTML 提取豐富的 cb:div 嵌套 TOC 樹
+                    if (juanHtml && data.toc && Array.isArray(data.toc.mulu)) {
+                      const rawTocList = data.toc.mulu;
+                      if (allRawTocs.length === 0) {
+                        const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
+                        const flatMuluHasChildren = rawTocList.some((n: any) => n.children && n.children.length > 0);
+
+                        if (htmlTocTree.length > 0 && !flatMuluHasChildren) {
+                          allRawTocs = htmlTocTree.map((n: any) => ({ ...n, juan: j }));
+                        } else if (rawTocList.length > 0) {
+                          const cleanMuluTree = (nodes: any[]): any[] => {
+                            return nodes.map(n => {
+                              const nodeCopy = { ...n };
+                              if (n.children && Array.isArray(n.children) && n.children.length > 0) {
+                                nodeCopy.children = cleanMuluTree(n.children);
+                              }
+                              return nodeCopy;
+                            });
+                          };
+                          allRawTocs = cleanMuluTree(rawTocList);
+                        }
+                      } else {
+                        // 後續 juan：嘗試補充此 juan 的 HTML TOC 到對應頂層節點
+                        const htmlTocTree = ReaderBuilder.extractTocTreeFromHtml(juanHtml, j);
+                        const juanMuluNode = allRawTocs.find((n: any) => n.juan === j);
+                        if (juanMuluNode && htmlTocTree.length > 0 && !(juanMuluNode.children && juanMuluNode.children.length > 0)) {
+                          juanMuluNode.children = htmlTocTree;
+                        }
+                      }
+                    }
+
                     const segments = this.parseHtmlToSegments(
-                      html, 
+                      juanHtml, 
                       workId, 
                       j, 
                       allRawTocs
@@ -282,6 +323,93 @@ export class ReaderBuilder {
       // 寧可跳出網路連線超時提示，也絕對不提供任何非 CBETA 官方原版的文字內容。
       throw new Error(`無法連線至 CBETA 伺服器獲取《${workId}》正統經文。本 App 堅持 100% CBETA 原版原汁原味，絕不提供任何簡化、摘要或替代文字。請檢查網路連線後重試。`);
     }
+  }
+
+  /**
+   * 從 CBETA HTML 中以 cb:div 嵌套結構提取完整的多層次 TOC 樹。
+   * 適用於備援 JSON 的 toc.mulu 只有扁平頂層節點，但 HTML 內有豐富嵌套目錄的書籍
+   * （例如印順導師講記 Y 系列，如 Y0001 般若經講記，最深可達 11 層）。
+   * 提取的每個節點包含：title（品名）、lb（行號定位）、juan（卷次）、children（子節點陣列）。
+   */
+  static extractTocTreeFromHtml(
+    html: string,
+    juanNum: number
+  ): any[] {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // 改用更可靠的遞迴建樹方式
+    const buildTree = (el: Element): any[] => {
+      const children: any[] = [];
+      for (const child of Array.from(el.children)) {
+        const childTag = child.tagName ? child.tagName.toLowerCase() : '';
+        if (childTag === 'cb:div') {
+          const subtree = buildCbDivNode(child as Element);
+          if (subtree) children.push(subtree);
+        } else {
+          // 找非 cb:div 元素裡的 cb:div 子孫
+          const nested = buildTree(child as Element);
+          children.push(...nested);
+        }
+      }
+      return children;
+    };
+
+    const buildCbDivNode = (cbDivEl: Element): any | null => {
+      // 先掃描此 cb:div 內的 lb 和 cb-mulu（只取直接子節點）
+      let title = '';
+      let lb = '';
+      const childNodes = Array.from(cbDivEl.childNodes);
+
+      for (const child of childNodes) {
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          const childEl = child as Element;
+          const cTag = childEl.tagName ? childEl.tagName.toLowerCase() : '';
+
+          // 取第一個 lb（位於此 cb:div 開始位置的行號）
+          if (!lb && cTag === 'span' && childEl.classList.contains('lb')) {
+            const lbId = childEl.id || '';
+            if (lbId && /^p[0-9]/.test(lbId)) lb = lbId;
+          }
+
+          // 取第一個 cb-mulu 標題
+          if (!title && childEl.classList.contains('cb-mulu')) {
+            title = childEl.textContent?.trim() || '';
+          }
+
+          // 如果兩者都找到，可提前結束
+          if (title && lb) break;
+        }
+      }
+
+      if (!title) return null; // 沒有品名的 cb:div 忽略
+
+      // 遞迴收集子 cb:div
+      const childCbDivs: any[] = [];
+      for (const child of Array.from(cbDivEl.children)) {
+        const cTag = child.tagName ? child.tagName.toLowerCase() : '';
+        if (cTag === 'cb:div') {
+          const sub = buildCbDivNode(child as Element);
+          if (sub) childCbDivs.push(sub);
+        } else {
+          // 找嵌套在非 cb:div 元素中的 cb:div
+          for (const grandchild of Array.from(child.children)) {
+            if (grandchild.tagName && grandchild.tagName.toLowerCase() === 'cb:div') {
+              const sub = buildCbDivNode(grandchild as Element);
+              if (sub) childCbDivs.push(sub);
+            }
+          }
+        }
+      }
+
+      const treeNode: any = { title, lb, juan: juanNum };
+      if (childCbDivs.length > 0) treeNode.children = childCbDivs;
+      return treeNode;
+    };
+
+    const body = doc.body || doc.documentElement;
+    const result = buildTree(body);
+    return result;
   }
 
   /**
