@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.0.1` (App: v4.0.1 / Builder: v2.9.0)
+- **Current Version**: `v4.0.1` (App: v4.0.1 / Builder: v2.9.1)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ Builder: v2.9.1** (2026-08-11) [Builder Only]
+  - 新增 `extractTocTreeFromHtml` 引擎，從 HTML `cb:div` 嵌套結構提取完整多層次目錄樹（最深可達 11 層），解決印順導師講記（Y 系列，如 Y0001 般若經講記）目次顯示扁平無層次的問題。
+  - 採用「toc.mulu 頂層骨架 + HTML 子層次補充」雙階策略，確保多卷書目次骨架（全書頂層節點）與深層次細節（各卷內嵌嵌套）同時正確。
 - **⭐ backup App: v1.0.3 / Builder: v1.0.3** (2026-08-10) [Backup Mode]
   - 停用備援模式下 `FEATURED_BOOKS` 硬編碼常用經典後備機制，搜尋與目錄 100% 讀取真實離線備援藏經庫。
   - 支援零補償真實校驗，精確揭露離線備援資料庫經文完整性，便於精準驗證每部經典。
