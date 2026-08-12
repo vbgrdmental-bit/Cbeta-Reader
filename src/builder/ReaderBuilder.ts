@@ -88,7 +88,7 @@ export class ReaderBuilder {
               const ghReleaseUrl = `https://github.com/vbgrdmental-bit/Cbeta-Reader/releases/download/v1.0.0-database/${workId}_${j}.json`;
               const ghCdnUrl = `https://raw.githubusercontent.com/vbgrdmental-bit/Cbeta-Reader/main/public/backup/${workId}/${j}.json`;
               const jsdelivrUrl = `https://cdn.jsdelivr.net/gh/vbgrdmental-bit/Cbeta-Reader@main/public/backup/${workId}/${j}.json`;
-              const r2Url = `https://cbeta-r2-backup.cbeta-reader.workers.dev/${workId}/${j}.json`;
+              const r2Url = `https://pub-e2ea6fc068554e16b348032c3d5c10cd.r2.dev/${workId}/${j}.json`;
 
               let backupRes = await fetchWithTimeout(localBackupUrl, {}, 2500);
               if (!backupRes || !backupRes.ok) {
@@ -225,7 +225,7 @@ export class ReaderBuilder {
               const localBackupUrl = `/backup/${workId}/${j}.json`;
               const ghReleaseUrl = `https://github.com/vbgrdmental-bit/Cbeta-Reader/releases/download/v1.0.0-database/${workId}_${j}.json`;
               const ghCdnUrl = `https://raw.githubusercontent.com/vbgrdmental-bit/Cbeta-Reader/main/public/backup/${workId}/${j}.json`;
-              const r2Url = `https://cbeta-r2-backup.cbeta-reader.workers.dev/${workId}/${j}.json`;
+              const r2Url = `https://pub-e2ea6fc068554e16b348032c3d5c10cd.r2.dev/${workId}/${j}.json`;
 
               let backupRes = await fetchWithTimeout(localBackupUrl, {}, 2500);
               if (!backupRes || !backupRes.ok) {
