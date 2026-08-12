@@ -8,6 +8,9 @@ export default defineConfig({
     port: 5188,
     strictPort: false,
     host: true,
+    watch: {
+      ignored: ['**/dist-r2-backup/**', '**/public/backup/**']
+    },
     proxy: {
       '/api-cbeta': {
         target: 'https://cbdata.dila.edu.tw',

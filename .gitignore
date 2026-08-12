@@ -31,6 +31,8 @@ dist-ssr
 dist-r2-backup
 dist-release-assets
 public/release-zips
+.wrangler
+scratch/
 *.local
 
 # Editor directories and files
