@@ -267,18 +267,18 @@ body.theme-ebony .library-title-area {
   display: grid;
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 0.6rem;
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
-  width: 92%;
+  width: 100%;
   box-sizing: border-box;
 }
 
 .folders-grid-container.system-grid {
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 0.45rem;
-  margin: 0 auto;
+  margin: 0;
   padding: 0 0 0.75rem 0;
-  width: 92%;
+  width: 100%;
   border-bottom: 1px solid rgba(140, 75, 39, 0.12);
 }
 
@@ -305,10 +305,10 @@ body.theme-ebony .folders-grid-container.system-grid {
 .books-list-cards-container {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  width: 92%;
-  max-width: 850px;
-  margin: 0.4rem auto 0 auto;
+  gap: 0.75rem;
+  width: 82%;
+  max-width: 620px;
+  margin: 0.8rem auto 0 auto;
   box-sizing: border-box;
 }
 
@@ -3027,6 +3027,10 @@ body.theme-dark .horizontal-book-more-btn:hover {
 
 /* 📱 手機端響應式微調 */
 @media (max-width: 600px) {
+  .books-list-cards-container {
+    width: 92% !important;
+  }
+
   .horizontal-book-card {
     padding: 0.6rem 0.75rem !important;
     border-radius: 8px !important;
