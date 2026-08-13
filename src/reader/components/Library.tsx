@@ -1791,9 +1791,6 @@ export function Library({
               <div className="books-grid-container">
                 {displayBooks.map((book) => {
                   const isSelected = selectedBookIds.includes(book.workId);
-                  const featuredBook = FEATURED_BOOKS.find((b: any) => b.workId === book.workId);
-                  const titleText = book.title || featuredBook?.title || book.workId;
-                  const creatorText = book.creators || featuredBook?.creators || 'CBETA 電子佛典';
 
                   return (
                     <div 
@@ -1833,24 +1830,9 @@ export function Library({
                         </div>
                       )}
 
-                      {/* 💡 1. 頂部：CBETA 經號橫條 Badge (如 T0801, Y0040) */}
-                      <div className="grid-book-badge-bar" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
-                        {book.workId}
-                      </div>
-
-                      {/* 💡 2. 中間：朝代/作譯者小灰字 (如「唐 義淨」、「民國 釋印順」) */}
-                      <div className="grid-book-author" title={creatorText}>
-                        {creatorText}
-                      </div>
-
-                      {/* 💡 3. 下部：經文名標題 (如「佛說無常經」) */}
-                      <div className="grid-book-title" title={titleText}>
-                        {titleText}
-                      </div>
-
-                      {/* 💡 4. 右下角：「...」選項按鈕 */}
+                      {/* 💡 右上角：統一置於右上角的「...」選項按鈕 */}
                       <button 
-                        className="book-more-btn-bottomright"
+                        className="book-more-btn-topright"
                         onClick={(e) => {
                           e.stopPropagation();
                           setMenuTargetBook(book);
@@ -1859,6 +1841,16 @@ export function Library({
                       >
                         <MoreVertical size={14} />
                       </button>
+
+                      {/* 💡 正中央頂部：經典編號顏色底座 Badge (如 T0251) */}
+                      <div className="grid-book-badge-icon" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
+                        {book.workId}
+                      </div>
+
+                      {/* 💡 正中央：經名標題 (如「般若波羅蜜多心經」) */}
+                      <div className="grid-book-title" title={book.title || FEATURED_BOOKS.find((b: any) => b.workId === book.workId)?.title || book.workId}>
+                        {book.title || FEATURED_BOOKS.find((b: any) => b.workId === book.workId)?.title || book.workId}
+                      </div>
                     </div>
                   );
                 })}
