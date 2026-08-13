@@ -580,11 +580,11 @@ export class ReaderBuilder {
       const hasVerseLineChildren = isVerseContainer && (!!el.querySelector('l, .l') || !!el.querySelector('.lg-row') || (el.querySelectorAll('p.lg, .lg').length > 1));
       const isVerseLine = tagName === 'L' || (el.classList.contains('l') && !el.classList.contains('lb') && !el.classList.contains('lb-line')) || el.classList.contains('lg-row') || el.classList.contains('lg') || el.parentElement?.classList.contains('lg');
 
-      // 列表 (UL/OL/LI) 處理原則：
-      //   - <ul/ol> 若有 <li> 子行 → 跳過容器本身，讓 <li> 各自生成段落
-      //   - <li> 元素 → 各自建立獨立的清單段落，完整保留內嵌註解與標籤
-      const isListContainer = tagName === 'UL' || tagName === 'OL';
-      const hasListItemChildren = isListContainer && (!!el.querySelector('li, .li') || !!el.querySelector('item, .item'));
+      // 列表 (UL/OL/LI/ITEM/P.lg) 處理原則：
+      //   - <ul/ol/p.lg> 若有 <li>/<item>/<p.lg> 子行 → 跳過容器本身，讓子項目各自生成段落
+      //   - <li>/<item> 元素 → 各自建立獨立的清單段落，完整保留內嵌註解與標籤
+      const isListContainer = tagName === 'UL' || tagName === 'OL' || tagName === 'LIST' || (tagName === 'P' && el.classList.contains('lg')) || (tagName === 'DIV' && el.classList.contains('lg'));
+      const hasListItemChildren = isListContainer && (!!el.querySelector('li, .li, item, .item') || (el.querySelectorAll('p.lg, .lg').length > 0));
       const isListItem = tagName === 'LI' || el.classList.contains('li') || tagName === 'ITEM' || el.classList.contains('item');
 
       // 附圖/圖表/雜項 (div-figure, figure, div-other) 處理原則：
@@ -786,13 +786,32 @@ export class ReaderBuilder {
             cleanContent = '　'.repeat(precedingIndentSize) + cleanContent;
           }
 
-          // 💡 清單 (LI) 項目縮排與 bullet 標籤樣式優化
+          // 💡 清單 (LI/ITEM) 項目縮排與標籤樣式優化 (層級遞進全形空格縮排)
           if (isListItem) {
             const trimmed = cleanContent.replace(/^[ 　\t]+/, '');
-            if (trimmed && !trimmed.startsWith('•') && !trimmed.startsWith('◦') && !trimmed.startsWith('－') && !trimmed.startsWith('-')) {
-              cleanContent = `　　• ${trimmed}`;
+            
+            // 計算當前 <item>/<li> 在 HTML 結構中的嵌套層級 depth
+            let depth = 0;
+            let curr = el.parentElement;
+            while (curr && curr.tagName.toUpperCase() !== 'BODY') {
+              const tag = curr.tagName.toUpperCase();
+              if (tag === 'UL' || tag === 'OL' || tag === 'LIST' || tag === 'ITEM' || (tag === 'P' && curr.classList.contains('lg')) || curr.classList.contains('lg')) {
+                depth++;
+              }
+              curr = curr.parentElement;
+            }
+
+            const indentLevel = Math.max(0, depth - 1);
+            const baseIndent = '　　'.repeat(indentLevel);
+
+            // 判斷是否自帶中文/阿拉伯數字或特定標題標頭 (如 "一　般若經講記", "1　金剛般若波羅蜜經講記", "上　編" 等)
+            const hasNumeralOrHeader = /^[一二三四五六七八九十百千萬0-9１２３４５６７８９０上下中第]+/.test(trimmed) || 
+                                       /^[•◦\-－(（]/.test(trimmed);
+
+            if (hasNumeralOrHeader) {
+              cleanContent = `${baseIndent}${trimmed}`;
             } else if (trimmed) {
-              cleanContent = `　　${trimmed}`;
+              cleanContent = `${baseIndent}• ${trimmed}`;
             }
           }
 

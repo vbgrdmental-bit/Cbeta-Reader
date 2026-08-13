@@ -2061,39 +2061,35 @@ export function ReaderView({
       {/* 雙導航目錄 Drawer */}
       {showNavDrawer && (
         <div className="reader-nav-drawer">
-          <div className="drawer-tab-header">
-            <div 
-              className={`drawer-tab ${navTab === 'toc' ? 'active' : ''}`}
-              onClick={() => setNavTab('toc')}
-            >
-              目次
+          {/* 💡 當無多卷數或為印順導師 Y 系列等不分卷圖書時，隱藏頂部「卷/篇章」Tab 選項與無卷/篇章提示 */}
+          {book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y') && (
+            <div className="drawer-tab-header">
+              <div 
+                className={`drawer-tab ${navTab === 'toc' ? 'active' : ''}`}
+                onClick={() => setNavTab('toc')}
+              >
+                目次
+              </div>
+              <div 
+                className={`drawer-tab ${navTab === 'juan' ? 'active' : ''}`}
+                onClick={() => setNavTab('juan')}
+              >
+                卷/篇章
+              </div>
             </div>
-            <div 
-              className={`drawer-tab ${navTab === 'juan' ? 'active' : ''}`}
-              onClick={() => setNavTab('juan')}
-            >
-              卷/篇章
-            </div>
-          </div>
+          )}
 
           <div className="drawer-list custom-scrollbar">
-            {navTab === 'juan' ? (
-              /* 按卷目錄 (若為 Y 藏等不分卷著述則顯示為空以吻合 CBETA) */
-              book.metadata.workId.startsWith('Y') ? (
-                <div style={{ padding: '2rem 1rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--reader-text-muted)', fontFamily: 'var(--font-serif)', opacity: 0.7 }}>
-                  無卷/篇章
+            {navTab === 'juan' && book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y') ? (
+              Array.from({ length: book.metadata.juansCount }).map((_, idx) => (
+                <div 
+                  key={`juan-${idx + 1}`} 
+                  className={`drawer-item ${currentJuanNum === idx + 1 ? 'active' : ''}`}
+                  onClick={() => handleSelectJuan(idx + 1)}
+                >
+                  <span>第 {idx + 1} 卷</span>
                 </div>
-              ) : (
-                Array.from({ length: book.metadata.juansCount }).map((_, idx) => (
-                  <div 
-                    key={`juan-${idx + 1}`} 
-                    className={`drawer-item ${currentJuanNum === idx + 1 ? 'active' : ''}`}
-                    onClick={() => handleSelectJuan(idx + 1)}
-                  >
-                    <span>第 {idx + 1} 卷</span>
-                  </div>
-                ))
-              )
+              ))
             ) : (
               /* 按品目錄 (目次 - 支援多層級樹狀 Collapsible Tree) */
               book.toc.items.map((item) => (
@@ -2104,7 +2100,7 @@ export function ReaderView({
                   activeSegmentId={activeSegmentId}
                   currentJuanNum={currentJuanNum}
                   workId={book.metadata.workId}
-                  isMultiJuan={book.metadata.juansCount > 1}
+                  isMultiJuan={book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y')}
                   onSelectTOC={handleSelectTOC}
                 />
               ))
