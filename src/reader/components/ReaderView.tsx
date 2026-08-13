@@ -184,7 +184,7 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
 
         {isMultiJuan && (
           <span style={{ fontSize: '0.75rem', opacity: 0.6, flexShrink: 0 }}>
-            {workId.startsWith('Y') ? `部分 ${item.juan}` : `卷 ${item.juan}`}
+            卷 {item.juan}
           </span>
         )}
       </div>
@@ -1881,7 +1881,7 @@ export function ReaderView({
 
           {book.metadata.juansCount > 1 && (
             <div style={{ textAlign: 'center', marginBottom: '2rem', fontFamily: 'var(--font-serif)', color: 'var(--reader-text-muted)', fontSize: '1.1rem' }}>
-              —— {book.metadata.workId.startsWith('Y') ? `第 ${currentJuanNum} 部分` : `第 ${currentJuanNum} 卷`} ——
+              —— 第 {currentJuanNum} 卷 ——
             </div>
           )}
 
@@ -2009,17 +2009,17 @@ export function ReaderView({
                 onClick={() => currentJuanNum > 1 && handleSelectJuan(currentJuanNum - 1)}
                 disabled={currentJuanNum <= 1}
               >
-                {book.metadata.workId.startsWith('Y') ? '◀ 上一部分' : '◀ 上一卷'}
+                ◀ 上一卷
               </button>
               <span style={{ fontSize: '0.85rem', color: 'var(--reader-text-muted)' }}>
-                {book.metadata.workId.startsWith('Y') ? `部分 ${currentJuanNum}` : `卷 ${currentJuanNum}`} / {book.metadata.juansCount}
+                卷 {currentJuanNum} / {book.metadata.juansCount}
               </span>
               <button 
                 style={{ fontFamily: 'var(--font-serif)', color: currentJuanNum < book.metadata.juansCount ? 'var(--reader-text)' : 'var(--reader-text-muted)', cursor: currentJuanNum < book.metadata.juansCount ? 'pointer' : 'default' }}
                 onClick={() => currentJuanNum < book.metadata.juansCount && handleSelectJuan(currentJuanNum + 1)}
                 disabled={currentJuanNum >= book.metadata.juansCount}
               >
-                {book.metadata.workId.startsWith('Y') ? '下一部分 ▶' : '下一卷 ▶'}
+                下一卷 ▶
               </button>
             </div>
           )}
@@ -2083,7 +2083,7 @@ export function ReaderView({
                 className={`drawer-tab ${navTab === 'juan' ? 'active' : ''}`}
                 onClick={() => setNavTab('juan')}
               >
-                {book.metadata.workId.startsWith('Y') ? '部分' : '卷/篇章'}
+                卷/篇章
               </div>
             </div>
           )}
@@ -2096,7 +2096,7 @@ export function ReaderView({
                   className={`drawer-item ${currentJuanNum === idx + 1 ? 'active' : ''}`}
                   onClick={() => handleSelectJuan(idx + 1)}
                 >
-                  <span>{book.metadata.workId.startsWith('Y') ? `部分 ${idx + 1}` : `第 ${idx + 1} 卷`}</span>
+                  <span>第 {idx + 1} 卷</span>
                 </div>
               ))
             ) : (
