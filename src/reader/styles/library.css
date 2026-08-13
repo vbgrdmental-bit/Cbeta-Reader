@@ -2872,10 +2872,10 @@ body.theme-ebony .batch-btn-secondary:hover {
 .books-list-cards-container {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.75rem;
   width: 100%;
   box-sizing: border-box;
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
 }
 
 .horizontal-book-card {
@@ -2886,9 +2886,9 @@ body.theme-ebony .batch-btn-secondary:hover {
   justify-content: space-between;
   background: var(--bg-card, #ffffff);
   border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
-  border-radius: 10px;
-  padding: 0.75rem 0.9rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  padding: 1.05rem 1.15rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
   box-sizing: border-box;
   cursor: pointer;
@@ -2923,16 +2923,16 @@ body.theme-dark .horizontal-book-card:hover {
 
 /* 左側經典編號顏色方塊 Badge (如 T0801, Y0040) */
 .horizontal-book-badge {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
   flex-shrink: 0;
   letter-spacing: 0.02em;
   font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
@@ -2942,7 +2942,7 @@ body.theme-dark .horizontal-book-card:hover {
 .horizontal-book-info {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
   flex-grow: 1;
   min-width: 0;
   margin-left: 0.9rem;

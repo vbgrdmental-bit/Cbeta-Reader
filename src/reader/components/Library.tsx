@@ -1797,7 +1797,12 @@ export function Library({
                   const isSelected = selectedBookIds.includes(book.workId);
                   const featuredBook = FEATURED_BOOKS.find((b: any) => b.workId === book.workId);
                   const titleText = book.title || featuredBook?.title || book.workId;
-                  const creatorText = book.creators || featuredBook?.creators || 'CBETA 電子佛典';
+                  let creatorText = book.creators || featuredBook?.creators || 'CBETA 電子佛典';
+
+                  // 💡 印順導師著作 (Y 系列) 作譯者名稱統一規範顯示為「民國 釋印順著」
+                  if (book.workId.startsWith('Y') || creatorText.includes('印順')) {
+                    creatorText = '民國 釋印順著';
+                  }
 
                   return (
                     <div 

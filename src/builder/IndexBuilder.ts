@@ -83,10 +83,10 @@ export const FEATURED_BOOKS: SearchResult[] = [
   { workId: 'T1586', title: '唯識三十論頌', creators: '世親菩薩造 唐 玄奘譯', juansCount: 1, category: '瑜伽部類', vol: 'T31' },
   { workId: 'T1666', title: '大乘起信論', creators: '馬鳴菩薩造 梁 真諦譯', juansCount: 1, category: '論集部類', vol: 'T32' },
   { workId: 'T2005', title: '六祖大師法寶壇經', creators: '唐 釋法海集', juansCount: 1, category: '禪宗部類', vol: 'T48', cjkChars: 20400 },
-  { workId: 'Y0001', title: '般若經講記', creators: '釋印順著', juansCount: 3, category: '新編部類', vol: 'Y01' },
-  { workId: 'Y0002', title: '寶積經講記', creators: '釋印順著', juansCount: 2, category: '新編部類', vol: 'Y02' },
-  { workId: 'Y0003', title: '勝鬘經講記', creators: '釋印順著', juansCount: 2, category: '新編部類', vol: 'Y03' },
-  { workId: 'Y0040', title: '成佛之道（增注本）', creators: '釋印順著', juansCount: 5, category: '新編部類', vol: 'Y01' }
+  { workId: 'Y0001', title: '般若經講記', creators: '民國 釋印順著', juansCount: 3, category: '新編部類', vol: 'Y01' },
+  { workId: 'Y0002', title: '寶積經講記', creators: '民國 釋印順著', juansCount: 2, category: '新編部類', vol: 'Y02' },
+  { workId: 'Y0003', title: '勝鬘經講記', creators: '民國 釋印順著', juansCount: 2, category: '新編部類', vol: 'Y03' },
+  { workId: 'Y0040', title: '成佛之道（增注本）', creators: '民國 釋印順著', juansCount: 5, category: '新編部類', vol: 'Y01' }
 ];
 
 export function isFuzzyTitleMatch(title: string, query: string): boolean {
