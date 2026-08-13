@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, AlertCircle, X, Download,
   Home, Search,
@@ -1242,8 +1243,8 @@ export function Library({
       onTouchMove={handleGlobalTouchMove}
       onTouchEnd={handleGlobalTouchEnd}
     >
-      {/* 💡 長按觸發編輯模式：懸浮批量工具列 (5 個 1:1:1:1:1 等寬按鈕，圖示在上、文字在下) */}
-      {isEditMode && activeTab === 'shelf' && (
+      {/* 💡 長按觸發編輯模式：懸浮批量工具列 (5 個 1:1:1:1:1 等寬按鈕，透過 Portal 渲染至 body 避免父容器位移) */}
+      {isEditMode && activeTab === 'shelf' && createPortal(
         <div className="batch-action-bar pure-floating-overlay animate-slide-up">
           <div className="batch-grid-5">
             {/* 按鈕 1: 已選 X 本 */}
@@ -1298,7 +1299,8 @@ export function Library({
               <span>取消退出</span>
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
       
       {/* 首頁一致控制列 */}
