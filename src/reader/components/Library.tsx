@@ -284,6 +284,7 @@ export function Library({
     const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (
+        !target.closest('.horizontal-book-card') &&
         !target.closest('.grid-book-card') &&
         !target.closest('.list-book-item') &&
         !target.closest('.batch-checkbox') &&
@@ -295,6 +296,7 @@ export function Library({
         !target.closest('.batch-action-bar') &&
         !target.closest('.search-dialog-card') &&
         !target.closest('.search-dialog-overlay') &&
+        !target.closest('.horizontal-book-more-btn') &&
         !target.closest('.book-more-btn-topright')
       ) {
         setIsEditMode(false);
@@ -317,6 +319,8 @@ export function Library({
   const handleShelfBackgroundClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     if (
+      !target.closest('.horizontal-book-card') &&
+      !target.closest('.grid-book-card') &&
       !target.closest('.list-book-item') && 
       !target.closest('.square-btn') && 
       !target.closest('.library-header-btn') &&

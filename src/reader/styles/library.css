@@ -267,17 +267,18 @@ body.theme-ebony .library-title-area {
   display: grid;
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 0.6rem;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
-  width: 100%;
+  width: 92%;
   box-sizing: border-box;
 }
 
 .folders-grid-container.system-grid {
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 0.45rem;
-  margin: 0;
+  margin: 0 auto;
   padding: 0 0 0.75rem 0;
+  width: 92%;
   border-bottom: 1px solid rgba(140, 75, 39, 0.12);
 }
 
@@ -296,6 +297,19 @@ body.theme-ebony .library-title-area {
 body.theme-dark .folders-grid-container.system-grid,
 body.theme-ebony .folders-grid-container.system-grid {
   border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================================================
+   單欄橫排經典卡片列表佈局 (如圖：左側經號方塊 Badge + 中間經名與朝代作譯者 + 右側圓形 ... 按鈕)
+   ========================================================================== */
+.books-list-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 92%;
+  max-width: 850px;
+  margin: 0.4rem auto 0 auto;
+  box-sizing: border-box;
 }
 
 /* 💡 烏木黑 (夜間) 主題下，重點與筆記卡片無底色，僅有灰白細邊框 */
