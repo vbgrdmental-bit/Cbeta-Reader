@@ -1215,6 +1215,11 @@ export function ReaderView({
 
   // 點擊空白處切換工具列，防範文字或註解點擊干擾
   const handleContentAreaClick = (e: React.MouseEvent) => {
+    // 💡 點擊內文任意段落或空白處時，若側邊欄抽屜開啟，自動收合隱藏
+    if (showNavDrawer) {
+      setShowNavDrawer(false);
+      return;
+    }
     const target = e.target as HTMLElement;
     if (
       target.tagName === 'P' || 
@@ -1343,6 +1348,10 @@ export function ReaderView({
   };
 
   const handleScroll = () => {
+    // 💡 滑動或滾動內文時，若側邊欄抽屜開啟，自動收合隱藏
+    if (showNavDrawer) {
+      setShowNavDrawer(false);
+    }
     const el = contentAreaRef.current;
     if (!el) return;
     const totalHeight = el.scrollHeight - el.clientHeight;
