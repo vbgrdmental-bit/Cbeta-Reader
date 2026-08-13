@@ -2984,39 +2984,109 @@ body.theme-dark .horizontal-book-author {
   color: rgba(255, 255, 255, 0.55) !important;
 }
 
-/* 右側「...」選項按鈕 */
-.horizontal-book-more-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.06);
-  border: none;
-  color: var(--text-muted, #555555);
-  cursor: pointer;
+/* 右側動作與「...」按鈕區域 */
+.horizontal-book-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* 長按/編輯模式下 ↑ ↓ 順序微調按鈕組 */
+.book-reorder-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.book-reorder-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--text-primary, #333333);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  cursor: pointer;
   padding: 0;
-  transition: background-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.horizontal-book-more-btn:hover {
-  background: rgba(0, 0, 0, 0.12);
-  color: var(--text-primary, #111111);
-  transform: scale(1.05);
+.book-reorder-btn:hover:not(:disabled) {
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.12));
+  border-color: var(--theme-accent, #8c4b27);
+  color: var(--theme-accent, #8c4b27);
 }
 
-body.theme-ebony .horizontal-book-more-btn,
-body.theme-dark .horizontal-book-more-btn {
-  background: rgba(255, 255, 255, 0.12) !important;
-  color: rgba(255, 255, 255, 0.75) !important;
+.book-reorder-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
 }
 
-body.theme-ebony .horizontal-book-more-btn:hover,
-body.theme-dark .horizontal-book-more-btn:hover {
-  background: rgba(255, 255, 255, 0.25) !important;
+body.theme-ebony .book-reorder-btn,
+body.theme-dark .book-reorder-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
   color: #ffffff !important;
+}
+
+body.theme-ebony .book-reorder-btn:hover:not(:disabled),
+body.theme-dark .book-reorder-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* 經典 Modal 1 列 4 個圖示功能按鈕 Grid (移至資料夾 | 加入我的最愛 | 更新經文 | 刪除經文) */
+.action-buttons-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.45rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.action-grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.7rem 0.2rem;
+  background: var(--bg-paper, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--text-primary, #2d3748);
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+  user-select: none;
+}
+
+.action-grid-btn span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+}
+
+.action-grid-btn:hover {
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.08));
+  border-color: var(--theme-accent, #8c4b27);
+  transform: translateY(-1px);
+}
+
+body.theme-ebony .action-grid-btn,
+body.theme-dark .action-grid-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #f0f4f8 !important;
+}
+
+body.theme-ebony .action-grid-btn:hover,
+body.theme-dark .action-grid-btn:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* 編輯模式下左側勾選框 */
