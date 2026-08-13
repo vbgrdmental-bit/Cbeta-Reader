@@ -2804,6 +2804,114 @@ body.theme-ebony .batch-btn-secondary:hover {
   display: block !important;
 }
 
+.horizontal-book-card {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: var(--bg-card, #ffffff) !important;
+  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12)) !important;
+  border-radius: 10px !important;
+  padding: 0.65rem 0.85rem !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  width: 100% !important;
+}
+
+.horizontal-book-card:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  border-color: var(--theme-accent, #8c4b27) !important;
+}
+
+.horizontal-book-card.selected-for-batch {
+  border: 2px solid var(--theme-accent) !important;
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.08)) !important;
+}
+
+/* 烏木與深色主題特化 */
+body.theme-ebony .horizontal-book-card,
+body.theme-dark .horizontal-book-card {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.theme-ebony .horizontal-book-card:hover,
+body.theme-dark .horizontal-book-card:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* 左側經典編號顏色方塊 Badge (如 T0801, Y0040) */
+.horizontal-book-badge {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 800 !important;
+  font-size: 0.86rem !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16) !important;
+  flex-shrink: 0 !important;
+  letter-spacing: 0.02em !important;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif) !important;
+}
+
+/* 中間經文資訊區 */
+.horizontal-book-info {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.2rem !important;
+  flex-grow: 1 !important;
+  min-width: 0 !important;
+  margin-left: 0.85rem !important;
+  margin-right: 0.6rem !important;
+  text-align: left !important;
+}
+
+/* 經文名標題 */
+.horizontal-book-title {
+  font-family: var(--font-serif, serif) !important;
+  font-size: 1.02rem !important;
+  font-weight: 700 !important;
+  color: #1a202c !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+  line-height: 1.25 !important;
+}
+
+body.theme-ebony .horizontal-book-title,
+body.theme-dark .horizontal-book-title {
+  color: #f0f4f8 !important;
+}
+
+/* 朝代 / 作譯者小灰字 */
+.horizontal-book-author {
+  font-size: 0.78rem !important;
+  color: #666666 !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+}
+
+body.theme-ebony .horizontal-book-author,
+body.theme-dark .horizontal-book-author {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
 /* 確保 dragging 時的樣式更為醒目 */
 .list-book-item.dragging {
   opacity: 0.3;
@@ -2880,31 +2988,6 @@ body.theme-ebony .batch-btn-secondary:hover {
   padding-bottom: 95px !important;
 }
 
-.horizontal-book-card {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--bg-card, #ffffff);
-  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
-  border-radius: 10px;
-  padding: 0.65rem 0.85rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
-  box-sizing: border-box;
-  cursor: pointer;
-  user-select: none;
-  width: 100%;
-}
-
-.horizontal-book-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-color: var(--theme-accent, #8c4b27);
-}
-
-.horizontal-book-card.selected-for-batch {
   border: 2px solid var(--theme-accent) !important;
   background: var(--theme-accent-light, rgba(140, 75, 39, 0.08)) !important;
 }
