@@ -2791,10 +2791,6 @@ body.theme-ebony .batch-btn-secondary:hover {
 
 /* 垃圾桶獨立紅色警告底色 */
 .edit-action-btn.edit-delete-btn {
-  background: rgba(189, 58, 58, 0.12) !important;
-  color: #bd3a3a !important;
-}
-
 .edit-action-btn.edit-delete-btn:hover {
   background: #bd3a3a !important;
   color: #ffffff !important;
@@ -2872,10 +2868,16 @@ body.theme-ebony .batch-btn-secondary:hover {
 .books-list-cards-container {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  width: 100%;
+  gap: 0.5rem;
+  width: 82%;
+  max-width: 620px;
+  margin: 0.8rem auto 0 auto;
   box-sizing: border-box;
-  margin-top: 0.5rem;
+}
+
+/* 編輯模式開啟時，底部增加 Padding 以免懸浮工具列遮擋最後一本書 */
+.books-list-cards-container.edit-mode-active {
+  padding-bottom: 95px !important;
 }
 
 .horizontal-book-card {
@@ -2886,9 +2888,9 @@ body.theme-ebony .batch-btn-secondary:hover {
   justify-content: space-between;
   background: var(--bg-card, #ffffff);
   border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
-  border-radius: 14px;
-  padding: 1.05rem 1.15rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
   box-sizing: border-box;
   cursor: pointer;
@@ -2923,9 +2925,9 @@ body.theme-dark .horizontal-book-card:hover {
 
 /* 左側經典編號顏色方塊 Badge (如 T0801, Y0040) */
 .horizontal-book-badge {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2990,6 +2992,128 @@ body.theme-dark .horizontal-book-author {
   align-items: center;
   gap: 0.4rem;
   flex-shrink: 0;
+}
+
+/* 經典卡片右側「...」選項按鈕 */
+.horizontal-book-more-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  border: none;
+  color: var(--text-primary, #333333);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.horizontal-book-more-btn:hover {
+  background: rgba(0, 0, 0, 0.14);
+  color: var(--theme-accent, #8c4b27);
+  transform: scale(1.05);
+}
+
+body.theme-ebony .horizontal-book-more-btn,
+body.theme-dark .horizontal-book-more-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+body.theme-ebony .horizontal-book-more-btn:hover,
+body.theme-dark .horizontal-book-more-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+/* 💡 懸浮批量工具列：5 個 1:1:1:1:1 等寬按鈕單行佈局 (圖示在上、文字在下) */
+.batch-action-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 460px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.18));
+  border-radius: 16px;
+  padding: 0.55rem 0.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.batch-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+  width: 100%;
+  align-items: center;
+}
+
+.batch-grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.55rem 0.1rem;
+  background: var(--bg-paper, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.06));
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text-primary, #2d3748);
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+  user-select: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.batch-grid-btn span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.batch-grid-btn:hover:not(:disabled) {
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.12));
+  border-color: var(--theme-accent, #8c4b27);
+  transform: translateY(-1px);
+}
+
+.batch-grid-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.batch-grid-btn.danger-btn {
+  color: #bd3a3a !important;
+}
+
+body.theme-ebony .batch-action-bar,
+body.theme-dark .batch-action-bar {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.theme-ebony .batch-grid-btn,
+body.theme-dark .batch-grid-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+body.theme-ebony .batch-grid-btn:hover:not(:disabled),
+body.theme-dark .batch-grid-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* 長按/編輯模式下 ↑ ↓ 順序微調按鈕組 */

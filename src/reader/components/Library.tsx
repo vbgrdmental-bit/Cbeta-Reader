@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
-  Plus, Check, AlertCircle, X, Download,
+  Plus, Check, CheckSquare, CheckCircle2, AlertCircle, X, Download,
   Home, Search,
   Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, FileText, Play, RotateCcw, RefreshCw
 } from 'lucide-react';
@@ -1242,43 +1242,60 @@ export function Library({
       onTouchMove={handleGlobalTouchMove}
       onTouchEnd={handleGlobalTouchEnd}
     >
-      {/* 💡 長按觸發編輯模式：純 Absolute Overlay 懸浮工具列（不佔空間，首頁畫面完全不下移） */}
+      {/* 💡 長按觸發編輯模式：懸浮批量工具列 (5 個 1:1:1:1:1 等寬按鈕，圖示在上、文字在下) */}
       {isEditMode && activeTab === 'shelf' && (
         <div className="batch-action-bar pure-floating-overlay animate-slide-up">
-          <div className="batch-action-left">
-            <span className="batch-select-count">
-              已選擇 <strong style={{ color: 'var(--theme-accent)' }}>{selectedBookIds.length}</strong> 本經典
-            </span>
-          </div>
-          <div className="batch-action-right">
+          <div className="batch-grid-5">
+            {/* 按鈕 1: 已選 X 本 */}
             <button 
-              className="batch-btn batch-btn-secondary"
+              className="batch-grid-btn"
               onClick={selectedBookIds.length === displayBooks.length ? handleDeselectAllBooks : handleSelectAllBooks}
+              title="已選擇數量"
             >
-              {selectedBookIds.length === displayBooks.length ? '取消全選' : '全選'}
+              <CheckSquare size={17} style={{ color: selectedBookIds.length > 0 ? 'var(--theme-accent)' : 'inherit' }} />
+              <span>已選 {selectedBookIds.length} 本</span>
             </button>
+
+            {/* 按鈕 2: 全選 / 取消全選 */}
             <button 
-              className="batch-btn batch-btn-primary"
+              className="batch-grid-btn"
+              onClick={selectedBookIds.length === displayBooks.length ? handleDeselectAllBooks : handleSelectAllBooks}
+              title={selectedBookIds.length === displayBooks.length ? '取消全選' : '全選經書'}
+            >
+              <CheckCircle2 size={17} />
+              <span>{selectedBookIds.length === displayBooks.length ? '取消全選' : '全選經書'}</span>
+            </button>
+
+            {/* 按鈕 3: 移至資料夾 */}
+            <button 
+              className="batch-grid-btn"
               disabled={selectedBookIds.length === 0}
               onClick={() => setShowBatchMoveDialog(true)}
+              title="移至資料夾"
             >
-              <FolderPlus size={15} style={{ marginRight: 4 }} />
-              批量移動至資料夾
+              <FolderInput size={17} />
+              <span>移至資料夾</span>
             </button>
+
+            {/* 按鈕 4: 刪除書籍 */}
             <button 
-              className="batch-btn batch-btn-danger"
-              style={{ backgroundColor: '#bd3a3a', color: '#ffffff' }}
+              className="batch-grid-btn danger-btn"
               disabled={selectedBookIds.length === 0}
               onClick={handleBatchDeleteBooks}
+              title="刪除書籍"
             >
-              <Trash2 size={15} style={{ marginRight: 4 }} />
-              批次刪除書籍
+              <Trash2 size={17} />
+              <span>刪除書籍</span>
             </button>
+
+            {/* 按鈕 5: 取消退出 */}
             <button 
-              className="batch-btn batch-btn-done"
+              className="batch-grid-btn"
               onClick={() => setIsEditMode(false)}
+              title="取消退出編輯模式"
             >
-              完成
+              <X size={17} />
+              <span>取消退出</span>
             </button>
           </div>
         </div>
@@ -1790,9 +1807,9 @@ export function Library({
               </div>
             )}
 
-            {/* === B. 渲染 3 欄經典網格清單 (同一行三本書，從左至右、從上至下) === */}
+            {/* === B. 渲染經典列表卡片清單 === */}
             {displayBooks.length > 0 && (
-              <div className="books-list-cards-container">
+              <div className={`books-list-cards-container ${isEditMode ? 'edit-mode-active' : ''}`}>
                 {displayBooks.map((book) => {
                   const isSelected = selectedBookIds.includes(book.workId);
                   const featuredBook = FEATURED_BOOKS.find((b: any) => b.workId === book.workId);
