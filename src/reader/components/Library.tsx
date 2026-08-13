@@ -1788,14 +1788,17 @@ export function Library({
 
             {/* === B. 渲染 3 欄經典網格清單 (同一行三本書，從左至右、從上至下) === */}
             {displayBooks.length > 0 && (
-              <div className="books-grid-container">
+              <div className="books-list-cards-container">
                 {displayBooks.map((book) => {
                   const isSelected = selectedBookIds.includes(book.workId);
+                  const featuredBook = FEATURED_BOOKS.find((b: any) => b.workId === book.workId);
+                  const titleText = book.title || featuredBook?.title || book.workId;
+                  const creatorText = book.creators || featuredBook?.creators || 'CBETA 電子佛典';
 
                   return (
                     <div 
                       key={book.workId}
-                      className={`grid-book-card ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''}`}
+                      className={`horizontal-book-card ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''}`}
                       onClick={(e) => { 
                         if (isLongPressTriggeredRef.current) {
                           isLongPressTriggeredRef.current = false;
@@ -1803,7 +1806,7 @@ export function Library({
                         }
                         if (isEditMode) {
                           e.stopPropagation();
-                          if ((e.target as HTMLElement).closest('.grid-card-checkbox')) return;
+                          if ((e.target as HTMLElement).closest('.horizontal-card-checkbox')) return;
                           toggleSelectBook(book.workId, e);
                         } else {
                           onSelectBook(book.workId); 
@@ -1816,10 +1819,10 @@ export function Library({
                       onTouchMove={handleTouchMove}
                       onTouchEnd={cancelLongPress}
                     >
-                      {/* 💡 左上角：長按/編輯模式下顯示勾選框 (Checkbox) */}
+                      {/* 💡 左側：編輯模式下勾選框 (Checkbox) */}
                       {isEditMode && (
                         <div 
-                          className={`batch-checkbox grid-card-checkbox ${isSelected ? 'checked' : ''}`}
+                          className={`batch-checkbox horizontal-card-checkbox ${isSelected ? 'checked' : ''}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleSelectBook(book.workId, e);
@@ -1830,27 +1833,32 @@ export function Library({
                         </div>
                       )}
 
-                      {/* 💡 右上角：統一置於右上角的「...」選項按鈕 */}
+                      {/* 💡 左側：經典編號顏色方塊 Badge (如 T0801, Y0040) */}
+                      <div className="horizontal-book-badge" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
+                        {book.workId}
+                      </div>
+
+                      {/* 💡 中間：經名與朝代/作譯者小灰字 */}
+                      <div className="horizontal-book-info">
+                        <div className="horizontal-book-title" title={titleText}>
+                          {titleText}
+                        </div>
+                        <div className="horizontal-book-author" title={creatorText}>
+                          {creatorText}
+                        </div>
+                      </div>
+
+                      {/* 💡 右側：「...」選項按鈕 */}
                       <button 
-                        className="book-more-btn-topright"
+                        className="horizontal-book-more-btn"
                         onClick={(e) => {
                           e.stopPropagation();
                           setMenuTargetBook(book);
                         }}
                         title="經典選項"
                       >
-                        <MoreVertical size={14} />
+                        <MoreVertical size={16} />
                       </button>
-
-                      {/* 💡 正中央頂部：經典編號顏色底座 Badge (如 T0251) */}
-                      <div className="grid-book-badge-icon" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
-                        {book.workId}
-                      </div>
-
-                      {/* 💡 正中央：經名標題 (如「般若波羅蜜多心經」) */}
-                      <div className="grid-book-title" title={book.title || FEATURED_BOOKS.find((b: any) => b.workId === book.workId)?.title || book.workId}>
-                        {book.title || FEATURED_BOOKS.find((b: any) => b.workId === book.workId)?.title || book.workId}
-                      </div>
                     </div>
                   );
                 })}

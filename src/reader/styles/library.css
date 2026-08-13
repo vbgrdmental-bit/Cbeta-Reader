@@ -2853,21 +2853,195 @@ body.theme-ebony .batch-btn-secondary:hover {
 }
 
 /* ==========================================================================
-   3 欄經典網格卡片佈局 (同一行三本書，從左至右、從上至下，極簡正方形卡片)
+   單欄橫排經典卡片列表佈局 (如圖：左側經號方塊 Badge + 中間經名與朝代作譯者 + 右側圓形 ... 按鈕)
    ========================================================================== */
-.books-grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: start;
-  gap: 0.75rem 0.55rem;
+.books-list-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
   width: 100%;
   box-sizing: border-box;
   margin-top: 0.4rem;
 }
 
-@media (max-width: 360px) {
-  .books-grid-container {
-    gap: 0.6rem 0.4rem;
+.horizontal-book-card {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+}
+
+.horizontal-book-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--theme-accent, #8c4b27);
+}
+
+.horizontal-book-card.selected-for-batch {
+  border: 2px solid var(--theme-accent) !important;
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.08)) !important;
+}
+
+/* 烏木與深色主題特化 */
+body.theme-ebony .horizontal-book-card,
+body.theme-dark .horizontal-book-card {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.theme-ebony .horizontal-book-card:hover,
+body.theme-dark .horizontal-book-card:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* 左側經典編號顏色方塊 Badge (如 T0801, Y0040) */
+.horizontal-book-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+}
+
+/* 中間經文資訊區 */
+.horizontal-book-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-grow: 1;
+  min-width: 0;
+  margin-left: 0.9rem;
+  margin-right: 0.7rem;
+  text-align: left;
+}
+
+/* 經文名標題 */
+.horizontal-book-title {
+  font-family: var(--font-serif, serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a202c);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  line-height: 1.25;
+}
+
+body.theme-ebony .horizontal-book-title,
+body.theme-dark .horizontal-book-title {
+  color: #f0f4f8 !important;
+}
+
+/* 朝代 / 作譯者小灰字 */
+.horizontal-book-author {
+  font-size: 0.8rem;
+  color: var(--text-muted, #718096);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+body.theme-ebony .horizontal-book-author,
+body.theme-dark .horizontal-book-author {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* 右側「...」選項按鈕 */
+.horizontal-book-more-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  border: none;
+  color: var(--text-muted, #555555);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.horizontal-book-more-btn:hover {
+  background: rgba(0, 0, 0, 0.12);
+  color: var(--text-primary, #111111);
+  transform: scale(1.05);
+}
+
+body.theme-ebony .horizontal-book-more-btn,
+body.theme-dark .horizontal-book-more-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+body.theme-ebony .horizontal-book-more-btn:hover,
+body.theme-dark .horizontal-book-more-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+/* 編輯模式下左側勾選框 */
+.horizontal-card-checkbox {
+  margin-right: 0.6rem !important;
+  flex-shrink: 0;
+}
+
+/* 📱 手機端響應式微調 */
+@media (max-width: 600px) {
+  .horizontal-book-card {
+    padding: 0.6rem 0.75rem !important;
+    border-radius: 8px !important;
+  }
+
+  .horizontal-book-badge {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 0.82rem !important;
+    border-radius: 8px !important;
+  }
+
+  .horizontal-book-info {
+    margin-left: 0.7rem !important;
+    margin-right: 0.4rem !important;
+    gap: 0.15rem !important;
+  }
+
+  .horizontal-book-title {
+    font-size: 0.95rem !important;
+  }
+
+  .horizontal-book-author {
+    font-size: 0.74rem !important;
+  }
+
+  .horizontal-book-more-btn {
+    width: 28px !important;
+    height: 28px !important;
   }
 }
 
