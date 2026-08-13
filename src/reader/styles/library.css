@@ -2875,13 +2875,13 @@ body.theme-ebony .batch-btn-secondary:hover {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: var(--bg-card, rgba(255, 255, 255, 0.75));
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
   border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
-  border-radius: 14px;
-  padding: 0.65rem 0.4rem;
+  border-radius: 12px;
+  padding: 0.5rem 0.5rem 0.4rem 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
   box-sizing: border-box;
@@ -2889,6 +2889,7 @@ body.theme-ebony .batch-btn-secondary:hover {
   user-select: none;
   aspect-ratio: 1 / 1 !important;
   width: 100% !important;
+  overflow: hidden;
 }
 
 .grid-book-card:hover {
@@ -2902,7 +2903,7 @@ body.theme-ebony .batch-btn-secondary:hover {
   background: var(--theme-accent-light, rgba(140, 75, 39, 0.08)) !important;
 }
 
-/* 烏木與深色主題下 .grid-book-card 特化 (取消白底，改為與深色背景融為一體的半透明底 + 簡潔白/淺邊框) */
+/* 烏木與深色主題下 .grid-book-card 特化 */
 body.theme-ebony .grid-book-card,
 body.theme-dark .grid-book-card {
   background: rgba(255, 255, 255, 0.05) !important;
@@ -2921,40 +2922,21 @@ body.theme-dark .grid-book-title {
   color: #f0f4f8 !important;
 }
 
-body.theme-ebony .book-more-btn-topright,
-body.theme-dark .book-more-btn-topright {
-  color: rgba(255, 255, 255, 0.65) !important;
+body.theme-ebony .grid-book-author,
+body.theme-dark .grid-book-author {
+  color: rgba(255, 255, 255, 0.55) !important;
 }
 
-body.theme-ebony .book-more-btn-topright:hover,
-body.theme-dark .book-more-btn-topright:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
+body.theme-ebony .book-more-btn-bottomright,
+body.theme-dark .book-more-btn-bottomright {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+body.theme-ebony .book-more-btn-bottomright:hover,
+body.theme-dark .book-more-btn-bottomright:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
   color: #ffffff !important;
-}
-
-/* 經典右上角「...」選項按鈕 */
-.book-more-btn-topright {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  color: var(--text-muted, #888);
-  cursor: pointer;
-  padding: 0;
-  border-radius: 50%;
-  z-index: 10;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.book-more-btn-topright:hover {
-  background: var(--theme-accent-light, rgba(0, 0, 0, 0.05));
-  color: var(--text-primary);
 }
 
 /* 編輯模式下左上角 Checkbox 特化 */
@@ -2966,64 +2948,116 @@ body.theme-dark .book-more-btn-topright:hover {
   z-index: 15 !important;
 }
 
-/* 經典正中央頂部編號 Badge (如 T0251) */
-.grid-book-badge-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+/* 經典頂部橫條 Badge (如 T0801, Y0040) */
+.grid-book-badge-bar {
+  width: 100%;
+  height: 38px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 0.8rem;
+  font-weight: 800;
+  font-size: 1.1rem;
   color: #ffffff;
-  margin-top: 0.2rem;
-  margin-bottom: 0.4rem;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
+  margin-bottom: 0.35rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
 }
 
-/* 經典正中央經名標題 (極簡經典卡片) */
+/* 朝代 / 作譯者小灰字 */
+.grid-book-author {
+  font-size: 0.76rem;
+  color: var(--text-muted, #888888);
+  font-weight: 400;
+  margin-bottom: 0.15rem;
+  padding-left: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* 經典經名標題 (極簡經典卡片) */
 .grid-book-title {
   writing-mode: horizontal-tb !important;
   text-orientation: mixed !important;
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 0.95rem !important;
-  color: var(--text-primary);
+  font-size: 0.92rem !important;
+  color: var(--text-primary, #1a202c);
   line-height: 1.3;
   margin: 0;
-  padding: 0 0.1rem;
+  padding: 0 1.5rem 0 0.2rem;
   word-break: break-word;
-  text-align: center;
+  text-align: left;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+  box-sizing: border-box;
+}
+
+/* 右下角「...」選項按鈕 */
+.book-more-btn-bottomright {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  color: var(--text-muted, #666666);
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  z-index: 10;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.book-more-btn-bottomright:hover {
+  background: rgba(0, 0, 0, 0.12);
+  color: var(--text-primary, #111111);
+  transform: scale(1.05);
 }
 
 /* 📱 手機端 (max-width: 600px) 特化響應式微調 */
 @media (max-width: 600px) {
   .grid-book-card {
-    padding: 0.45rem 0.25rem !important;
+    padding: 0.4rem 0.35rem !important;
     aspect-ratio: 1 / 1 !important;
   }
 
-  .grid-book-badge-icon {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 0.72rem !important;
-    margin-top: 0.1rem !important;
+  .grid-book-badge-bar {
+    height: 32px !important;
+    font-size: 0.95rem !important;
+    border-radius: 6px !important;
     margin-bottom: 0.25rem !important;
-    border-radius: 8px !important;
+  }
+
+  .grid-book-author {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.12rem !important;
   }
 
   .grid-book-title {
-    font-size: 0.85rem !important;
+    font-size: 0.82rem !important;
     line-height: 1.25 !important;
+  }
+
+  .book-more-btn-bottomright {
+    width: 22px !important;
+    height: 22px !important;
+    bottom: 4px !important;
+    right: 4px !important;
   }
 }
 
