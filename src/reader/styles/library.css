@@ -2811,9 +2811,10 @@ body.theme-ebony .batch-btn-secondary:hover {
   justify-content: space-between !important;
   background: var(--bg-card, #ffffff) !important;
   border: 1.5px solid var(--border-color, rgba(140, 75, 39, 0.15)) !important;
-  border-radius: 12px !important;
-  padding: 0.8rem 1rem !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  border-radius: 14px !important;
+  padding: 1.05rem 1.15rem !important;
+  min-height: 72px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
   box-sizing: border-box !important;
   cursor: pointer !important;
@@ -2912,12 +2913,22 @@ body.theme-dark .horizontal-book-author {
   color: rgba(255, 255, 255, 0.6) !important;
 }
 
-/* 經典卡片右側「...」選項按鈕 (比照圖1對齊獨立底座方塊，淺色模式絕對清晰可見) */
+/* 經典卡片右側「...」與排序按鈕區域：平齊單行橫排 */
+.horizontal-book-right-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.35rem !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
 .horizontal-book-more-btn {
-  width: 34px !important;
-  height: 34px !important;
-  border-radius: 8px !important;
-  background: rgba(0, 0, 0, 0.04) !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.05) !important;
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   color: var(--text-primary, #333333) !important;
   cursor: pointer !important;
@@ -2933,7 +2944,7 @@ body.theme-dark .horizontal-book-author {
   background: rgba(140, 75, 39, 0.12) !important;
   border-color: var(--theme-accent, #8c4b27) !important;
   color: var(--theme-accent, #8c4b27) !important;
-  transform: scale(1.04) !important;
+  transform: scale(1.05) !important;
 }
 
 body.theme-ebony .horizontal-book-more-btn,
@@ -3113,49 +3124,53 @@ body.theme-dark .batch-grid-btn:hover:not(:disabled) {
   border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-/* 長按/編輯模式下 ↑ ↓ 順序微調按鈕組 */
+/* 長按/編輯模式下 ↑ ↓ 順序微調按鈕組 (圓形底框) */
 .book-reorder-btn-group {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
 }
 
 .book-reorder-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  color: var(--text-primary, #333333);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: var(--text-primary, #333333) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease !important;
 }
 
 .book-reorder-btn:hover:not(:disabled) {
-  background: var(--theme-accent-light, rgba(140, 75, 39, 0.12));
-  border-color: var(--theme-accent, #8c4b27);
-  color: var(--theme-accent, #8c4b27);
+  background: rgba(140, 75, 39, 0.12) !important;
+  border-color: var(--theme-accent, #8c4b27) !important;
+  color: var(--theme-accent, #8c4b27) !important;
+  transform: scale(1.05) !important;
 }
 
 .book-reorder-btn:disabled {
-  opacity: 0.25;
-  cursor: not-allowed;
+  opacity: 0.25 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
 }
 
 body.theme-ebony .book-reorder-btn,
 body.theme-dark .book-reorder-btn {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
   color: #ffffff !important;
 }
 
 body.theme-ebony .book-reorder-btn:hover:not(:disabled),
 body.theme-dark .book-reorder-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.22) !important;
   border-color: rgba(255, 255, 255, 0.4) !important;
 }
 

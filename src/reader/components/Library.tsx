@@ -268,6 +268,11 @@ export function Library({
     return count;
   };
 
+  const handleExitEditMode = () => {
+    setIsEditMode(false);
+    setSelectedBookIds([]);
+  };
+
   // 💡 同經典劃線重點折疊狀態 (Record<workId, boolean>)
   const [collapsedBookGroups, setCollapsedBookGroups] = useState<Record<string, boolean>>({});
 
@@ -282,7 +287,7 @@ export function Library({
   useEffect(() => {
     if (!isEditMode) return;
 
-    const handleGlobalClick = (e: MouseEvent) => {
+    const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement;
       if (
         !target.closest('.horizontal-book-card') &&
@@ -300,7 +305,7 @@ export function Library({
         !target.closest('.horizontal-book-more-btn') &&
         !target.closest('.book-more-btn-topright')
       ) {
-        setIsEditMode(false);
+        handleExitEditMode();
       }
     };
 
@@ -329,7 +334,7 @@ export function Library({
       // 💡 懸浮批量工具列的所有按鈕不得觸發退出編輯模式
       !target.closest('.batch-action-bar')
     ) {
-      setIsEditMode(false);
+      handleExitEditMode();
     }
   };
 
@@ -1292,7 +1297,7 @@ export function Library({
             {/* 按鈕 5: 取消退出 */}
             <button 
               className="batch-grid-btn"
-              onClick={() => setIsEditMode(false)}
+              onClick={handleExitEditMode}
               title="取消退出編輯模式"
             >
               <X size={17} />
