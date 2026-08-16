@@ -581,9 +581,9 @@ export class ReaderBuilder {
       const isVerseLine = tagName === 'L' || (el.classList.contains('l') && !el.classList.contains('lb') && !el.classList.contains('lb-line')) || el.classList.contains('lg-row') || el.classList.contains('lg') || el.parentElement?.classList.contains('lg');
 
       // 列表 (UL/OL/LI/ITEM/P.lg) 處理原則：
-      //   - <ul/ol/p.lg/item> 若有 <li>/<item>/<p.lg> 子行 → 跳過容器本身，讓子項目各自生成段落
+      //   - <ul/ol/p.lg> 若有 <li>/<item>/<p.lg> 子行 → 跳過容器本身，讓子項目各自生成段落
       //   - <li>/<item> 元素 → 各自建立獨立的清單段落，完整保留內嵌註解與標籤
-      const isListContainer = tagName === 'UL' || tagName === 'OL' || tagName === 'LIST' || (tagName === 'P' && el.classList.contains('lg')) || (tagName === 'DIV' && el.classList.contains('lg')) || ((tagName === 'ITEM' || el.classList.contains('item')) && !!el.querySelector('item, .item, p.lg, .lg, list, ul, ol'));
+      const isListContainer = tagName === 'UL' || tagName === 'OL' || tagName === 'LIST' || (tagName === 'P' && el.classList.contains('lg')) || (tagName === 'DIV' && el.classList.contains('lg'));
       const hasListItemChildren = isListContainer && (!!el.querySelector('li, .li, item, .item') || (el.querySelectorAll('p.lg, .lg').length > 0));
       const isListItem = tagName === 'LI' || el.classList.contains('li') || tagName === 'ITEM' || el.classList.contains('item');
 
@@ -652,8 +652,8 @@ export class ReaderBuilder {
 
           // 💡 如果本 <item> 內部還嵌套有子項 <item> 或 <p.lg>，必須將子項容器從 cleanClone 中移除
           // 否則父項 <item> 會一口氣包含底下所有子項文字的大合集，導致文字重複並全擠在同一段落
-          if (tagName === 'ITEM' || el.classList.contains('item')) {
-            cleanClone.querySelectorAll('item, .item, p.lg, .lg, list, ul, ol').forEach(child => child.remove());
+          if (tagName === 'ITEM' || el.classList.contains('item') || tagName === 'LI' || el.classList.contains('li')) {
+            cleanClone.querySelectorAll('item, .item, p.lg, .lg, list, ul, ol, li, .li').forEach(child => child.remove());
           }
 
           // 💡 解析縮排標籤：將 <span class='line_space' data-size='X'> 替換成對應數量的全形空格，以保留印順導師著作中的層級縮排

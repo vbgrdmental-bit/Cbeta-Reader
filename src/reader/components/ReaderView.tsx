@@ -584,14 +584,14 @@ export function ReaderView({
       const tryScroll = () => {
         const el = segmentsMapRef.current[targetId];
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
           setActiveSegmentId(targetId);
-        } else if (attempts < 15) {
+        } else if (attempts < 20) {
           attempts++;
-          setTimeout(tryScroll, 60);
+          setTimeout(tryScroll, 50);
         }
       };
-      setTimeout(tryScroll, 40);
+      setTimeout(tryScroll, 30);
     }
   }, [currentJuanNum]);
   // 💡 自動儲存點選段落與卷次進度
@@ -1302,15 +1302,18 @@ export function ReaderView({
       const tryScroll = () => {
         const el = segmentsMapRef.current[targetSegId];
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else if (attempts < 10) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else if (attempts < 15) {
           attempts++;
-          setTimeout(tryScroll, 50);
+          setTimeout(tryScroll, 40);
         }
       };
       setTimeout(tryScroll, 30);
     } else {
-      // 跨卷：記錄待跳轉段落 ID，切換卷數，由 useEffect 處理自動滾動
+      // 跨卷：記錄待跳轉段落 ID，重置滾動位置，切換卷數，由 useEffect 處理自動滾動
+      if (contentAreaRef.current) {
+        contentAreaRef.current.scrollTop = 0;
+      }
       pendingScrollSegmentIdRef.current = targetSegId;
       setCurrentJuanNum(targetJuan);
     }
@@ -2070,8 +2073,8 @@ export function ReaderView({
       {/* 雙導航目錄 Drawer */}
       {showNavDrawer && (
         <div className="reader-nav-drawer">
-          {/* 💡 當卷數 > 1 且非 Y 系列書籍時，顯示頂部「卷/篇章」Tab 選項 */}
-          {book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y') && (
+          {/* 💡 當卷數 > 1 時，顯示頂部「目次」與「卷/篇章」Tab 選項 */}
+          {book.metadata.juansCount > 1 && (
             <div className="drawer-tab-header">
               <div 
                 className={`drawer-tab ${navTab === 'toc' ? 'active' : ''}`}
@@ -2138,26 +2141,30 @@ export function ReaderView({
                   <div className="info-item"><strong>冊別：</strong>{book.metadata.vol}</div>
                 )}
                 {(() => {
-                  // 💡 通用 CBETA 漢字 (CJK Ideographs) 權威字數計算公式：
-                  // 若元資料有預錄 cjkChars 則優先採用；否則遍歷所有段落，統計 CJK 漢字總數 (絕不硬編碼個案)
+                  // 💡 通用 CBETA 漢字與字數 (CJK Ideographs + en_words) 權威字數計算公式：
+                  // 若元資料有預錄 cjkChars 則優先採用；否則遍歷所有段落，統計 CJK 漢字與英數總字數
                   if (book.metadata.cjkChars && typeof book.metadata.cjkChars === 'number' && book.metadata.cjkChars > 0) {
                     return (
                       <div className="info-item"><strong>字數：</strong>{book.metadata.cjkChars.toLocaleString()}</div>
                     );
                   }
-                  let totalCjkCount = 0;
+                  let totalCount = 0;
                   book.content.juans.forEach(j => {
                     j.segments.forEach(seg => {
                       // 排除經號標頭中的 No. 1944 等英數詮釋標記
                       const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
-                      const matches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
-                      if (matches) {
-                        totalCjkCount += matches.length;
+                      const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
+                      const enMatches = cleanContent.match(/[a-zA-Z0-9]+/g);
+                      if (cjkMatches) {
+                        totalCount += cjkMatches.length;
+                      }
+                      if (enMatches) {
+                        totalCount += enMatches.length;
                       }
                     });
                   });
-                  return totalCjkCount > 0 ? (
-                    <div className="info-item"><strong>字數：</strong>{totalCjkCount.toLocaleString()}</div>
+                  return totalCount > 0 ? (
+                    <div className="info-item"><strong>字數：</strong>{totalCount.toLocaleString()}</div>
                   ) : null;
                 })()}
                 <div className="copyright-text">

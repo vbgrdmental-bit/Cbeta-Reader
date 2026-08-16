@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.0.4` (App: v4.0.4 / Builder: v2.9.4)
+- **Current Version**: `v4.0.5` (App: v4.0.5 / Builder: v2.9.5)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.0.5 / Builder: v2.9.5** (2026-08-16)
+  - [App] 目次全面支援跨卷平滑定位，精確導航至章節起點。
+  - [App] 完善 CBETA 權威字數計算標準（包含中英數詞）。
+  - [Builder] 修正巢狀目錄列表文字重複問題，精確保留項目獨立段落。
+  - [Builder] 擴充經文段落標籤解析與目錄索引映射。
 - **⭐ App: v4.0.4 / Builder: v2.9.4** (2026-08-14)
   - [App] 優化現代經典目錄 (Y系列)，隱藏空白卷頁標籤。
   - [App] 修正目錄樹跨卷定位跳轉，使其能精確導航至起點。

@@ -1152,15 +1152,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.0.4) 直接顯示 */}
+                {/* 最新 App 版本 (v4.0.5) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ App: v4.0.4</span>
-                    <span className="changelog-date">(2026-08-14)</span>
+                    <span>⭐ App: v4.0.5</span>
+                    <span className="changelog-date">(2026-08-16)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 優化現代經典目錄 (Y系列)，隱藏空白卷頁標籤。</li>
-                    <li>• 修正目錄樹跨卷定位跳轉，使其能精確導航至起點。</li>
+                    <li>• 目次全面支援跨卷平滑定位，精確導航至章節起點。</li>
+                    <li>• 完善 CBETA 權威字數計算標準（包含中英數詞）。</li>
                   </ul>
                 </div>
 
@@ -1317,15 +1317,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.9.4) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.9.5) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ Builder: v2.9.4</span>
-                    <span className="changelog-date">(2026-08-14)</span>
+                    <span>⭐ Builder: v2.9.5</span>
+                    <span className="changelog-date">(2026-08-16)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 修正現代經典 HTML 嵌套目錄列表的分行與文字重複問題。</li>
-                    <li>• 擴充 HTML 段落解析，支援 byline 與 speaker 標籤。</li>
+                    <li>• 修正巢狀目錄列表文字重複問題，精確保留項目獨立段落。</li>
+                    <li>• 擴充經文段落標籤解析與目錄索引映射。</li>
                   </ul>
                 </div>
 

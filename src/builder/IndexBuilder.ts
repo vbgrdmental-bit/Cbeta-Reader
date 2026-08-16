@@ -468,7 +468,8 @@ export class IndexBuilder {
                   if (match) res.vol = match[1].toUpperCase();
                 }
                 if (workInfo.cjk_chars != null && typeof workInfo.cjk_chars === 'number') {
-                  res.cjkChars = workInfo.cjk_chars;
+                  const enWords = (workInfo.en_words != null && typeof workInfo.en_words === 'number') ? workInfo.en_words : 0;
+                  res.cjkChars = workInfo.cjk_chars + enWords;
                 }
               }
             }
