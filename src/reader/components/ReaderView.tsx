@@ -2154,12 +2154,8 @@ export function ReaderView({
                       // 排除經號標頭中的 No. 1944 等英數詮釋標記
                       const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
                       const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
-                      const enMatches = cleanContent.match(/[a-zA-Z0-9]+/g);
                       if (cjkMatches) {
                         totalCount += cjkMatches.length;
-                      }
-                      if (enMatches) {
-                        totalCount += enMatches.length;
                       }
                     });
                   });

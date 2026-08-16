@@ -24,15 +24,18 @@ export class NavigationBuilder {
       let juanData = content.juans.find(j => j.juan === targetJuan);
       let startSegmentId = mulu.startSegmentId || '';
 
+      const cleanTitle = title.replace(/[\s\u3000]/g, '');
+      const strippedTitle = cleanTitle.replace(/^[一二三四五六七八九十百千萬0-9１２３４５６７８９０上下中第]+[、.．\s\u3000]*/, '');
+
       // 0. 優先使用 HTML 解析階段所紀錄的精確 seg.muluTitles 文字順序比對 (順序排重防誤判)
       if (!startSegmentId && juanData) {
-        const cleanTitle = title.replace(/[\s\u3000]/g, '');
         const segWithMuluTitle = juanData.segments.find(seg => {
           if (!seg.muluTitles || seg.muluTitles.length === 0) return false;
           if (usedSegmentIds.has(seg.id)) return false;
           return seg.muluTitles.some(t => {
             const cleanT = t.replace(/[\s\u3000]/g, '');
-            return cleanT === cleanTitle || cleanT.includes(cleanTitle) || cleanTitle.includes(cleanT);
+            const strippedT = cleanT.replace(/^[一二三四五六七八九十百千萬0-9１２３４５６７８９０上下中第]+[、.．\s\u3000]*/, '');
+            return cleanT === cleanTitle || (strippedTitle && strippedT === strippedTitle);
           });
         });
         if (segWithMuluTitle) {
@@ -74,31 +77,18 @@ export class NavigationBuilder {
         }
       }
 
-      // 2.5. 高精度標題文字比對：優先在目標卷及全卷段落中搜尋與品名 (mulu.title) 相符的標題段落
+      // 2.5. 高精度標題文字比對：優先在目標卷中搜尋與品名相符的標題段落 (isHead)
       if (!startSegmentId && juanData) {
-        const cleanTitle = title.replace(/[\s\u3000]/g, '');
-        const segByTitle = juanData.segments.find(seg => {
+        const headSeg = juanData.segments.find(seg => {
+          if (!seg.isHead) return false;
+          if (usedSegmentIds.has(seg.id)) return false;
           const cleanSeg = seg.content.replace(/[\s\u3000]/g, '');
-          return cleanSeg.includes(cleanTitle) || (cleanTitle.length >= 4 && cleanSeg.startsWith(cleanTitle.substring(0, 4)));
+          const strippedSeg = cleanSeg.replace(/^[一二三四五六七八九十百千萬0-9１２３４５６７８９０上下中第]+[、.．\s\u3000]*/, '');
+          return cleanSeg === cleanTitle || (strippedTitle && strippedSeg === strippedTitle) || cleanSeg.includes(strippedTitle);
         });
-        if (segByTitle) {
-          startSegmentId = segByTitle.id;
-        }
-      }
-
-      if (!startSegmentId) {
-        const cleanTitle = title.replace(/[\s\u3000]/g, '');
-        for (const jData of content.juans) {
-          const segByTitle = jData.segments.find(seg => {
-            const cleanSeg = seg.content.replace(/[\s\u3000]/g, '');
-            return cleanSeg.includes(cleanTitle) || (cleanTitle.length >= 4 && cleanSeg.startsWith(cleanTitle.substring(0, 4)));
-          });
-          if (segByTitle) {
-            startSegmentId = segByTitle.id;
-            targetJuan = jData.juan;
-            juanData = jData;
-            break;
-          }
+        if (headSeg) {
+          startSegmentId = headSeg.id;
+          usedSegmentIds.add(headSeg.id);
         }
       }
 

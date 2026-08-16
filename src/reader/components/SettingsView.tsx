@@ -1152,15 +1152,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.0.5) 直接顯示 */}
+                {/* 最新 App 版本 (v4.0.6) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ App: v4.0.5</span>
+                    <span>⭐ App: v4.0.6</span>
                     <span className="changelog-date">(2026-08-16)</span>
                   </div>
                   <ul className="changelog-list">
                     <li>• 目次全面支援跨卷平滑定位，精確導航至章節起點。</li>
-                    <li>• 完善 CBETA 權威字數計算標準（包含中英數詞）。</li>
+                    <li>• 完善 CBETA 權威字數計算標準。</li>
                   </ul>
                 </div>
 
@@ -1317,15 +1317,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.9.5) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.9.6) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ Builder: v2.9.5</span>
+                    <span>⭐ Builder: v2.9.6</span>
                     <span className="changelog-date">(2026-08-16)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 修正巢狀目錄列表文字重複問題，精確保留項目獨立段落。</li>
-                    <li>• 擴充經文段落標籤解析與目錄索引映射。</li>
+                    <li>• 修正目錄段落標題索引，精準錨定經文起始節點。</li>
+                    <li>• 修正巢狀目錄列表文字重複，保留項目獨立段落。</li>
                   </ul>
                 </div>
 
