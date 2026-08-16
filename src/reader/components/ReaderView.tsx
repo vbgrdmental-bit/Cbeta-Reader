@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Search, Clock, ArrowLeft, Edit3, Trash2, FileText, AlertCircle
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Search, Clock, ArrowLeft, Edit3, Trash2, FileText, AlertCircle, Paintbrush
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment, BookContent, JuanData } from '../../types/book';
 import { getBook, saveBook, deleteBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
@@ -256,9 +256,8 @@ export function ReaderView({
   const [activeHighlightForDelete, setActiveHighlightForDelete] = useState<BookHighlight | null>(null);
   const [deleteMenuPosition, setDeleteMenuPosition] = useState<{ top: number; left: number } | null>(null);
   
-  // 💡 控制列：筆刷顏色與粗細標註模式浮動選單
-  const [showColorPopover, setShowColorPopover] = useState(false);
-  const [showStylePopover, setShowStylePopover] = useState(false);
+  // 💡 控制列：畫重點設定浮動選單 (整合筆刷顏色與粗細標註模式)
+  const [showHighlightPopover, setShowHighlightPopover] = useState(false);
 
   // 💡 心得筆記編輯 Modal 狀態
   const [editingNoteHighlight, setEditingNoteHighlight] = useState<BookHighlight | null>(null);
@@ -1054,16 +1053,72 @@ export function ReaderView({
 
 
 
-  // 監聽全局點擊事件，點擊空白處時隱藏重點顏色/模式浮動選單與刪除選單
+  // 💡 監聽內文框選文字手勢結束動作 (pointerup/mouseup/touchend)，自動套用設定好的筆刷模式劃線！
+  useEffect(() => {
+    let timer: any = null;
+    const handleGestureEnd = (e: Event) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target?.closest('.reader-overlay-bar') ||
+        target?.closest('.reader-popover') ||
+        target?.closest('.highlight-popover-container') ||
+        target?.closest('.highlight-delete-menu') ||
+        target?.closest('.notes-floating-toolbar') ||
+        target?.closest('.note-edit-modal-card') ||
+        target?.closest('.inbook-search-modal-card')
+      ) {
+        return;
+      }
+
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed) return;
+
+        const selectedText = selection.toString().trim();
+        if (!selectedText) return;
+
+        const range = selection.getRangeAt(0);
+        const hls = calculateHighlightsFromRange(range);
+
+        if (hls.length > 0) {
+          try {
+            for (const newHl of hls) {
+              await saveHighlight({
+                ...newHl,
+                color: settings.highlightColor || 'yellow',
+                style: settings.highlightStyle || 'bottom-half',
+                createdAt: Date.now()
+              });
+            }
+            window.getSelection()?.removeAllRanges();
+            setPendingHighlights([]);
+            await loadBookHighlights();
+          } catch (err) {
+            console.error('Failed to auto create highlight on selection end:', err);
+          }
+        }
+      }, 120);
+    };
+
+    document.addEventListener('pointerup', handleGestureEnd);
+    document.addEventListener('mouseup', handleGestureEnd);
+    document.addEventListener('touchend', handleGestureEnd);
+    return () => {
+      if (timer) clearTimeout(timer);
+      document.removeEventListener('pointerup', handleGestureEnd);
+      document.removeEventListener('mouseup', handleGestureEnd);
+      document.removeEventListener('touchend', handleGestureEnd);
+    };
+  }, [workId, currentJuanNum, settings.highlightColor, settings.highlightStyle]);
+
+  // 監聽全局點擊事件，點擊空白處時隱藏畫重點選單與刪除選單
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
-      if (!target.closest('.highlight-color-popover-container')) {
-        setShowColorPopover(false);
-      }
-      if (!target.closest('.highlight-style-popover-container')) {
-        setShowStylePopover(false);
+      if (!target.closest('.highlight-popover-container')) {
+        setShowHighlightPopover(false);
       }
       if (!target.closest('.reader-text-highlight') && !target.closest('.highlight-delete-menu')) {
         setActiveHighlightForDelete(null);
@@ -1131,14 +1186,12 @@ export function ReaderView({
   const handleSelectHighlightColor = async (color: 'yellow' | 'red' | 'blue' | 'gray') => {
     const newSettings = { ...settings, highlightColor: color };
     onSaveSettings(newSettings);
-    setShowColorPopover(false);
     await applyHighlightToCurrentSelection(color, settings.highlightStyle || 'bottom-half');
   };
 
   const handleSelectHighlightStyle = async (style: 'underline' | 'bottom-half' | 'full' | 'border') => {
     const newSettings = { ...settings, highlightStyle: style };
     onSaveSettings(newSettings);
-    setShowStylePopover(false);
     await applyHighlightToCurrentSelection(settings.highlightColor || 'yellow', style);
   };
 
@@ -1641,119 +1694,7 @@ export function ReaderView({
           }}>A</span>
         </button>
 
-        {/* 💡 筆刷顏色按鈕與 4 色浮動選單 */}
-        {(() => {
-          const colorHex = 
-            settings.highlightColor === 'yellow' ? '#fbbf24' :
-            settings.highlightColor === 'red' ? '#f87171' :
-            settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
-
-          const colorLabel = 
-            settings.highlightColor === 'yellow' ? '淺黃' :
-            settings.highlightColor === 'red' ? '淺紅' :
-            settings.highlightColor === 'gray' ? '淺灰' : '淺藍';
-
-          return (
-            <div className="highlight-color-popover-container" style={{ position: 'relative' }}>
-              <button 
-                className={`reader-text-btn ${showColorPopover ? 'active' : ''}`}
-                onClick={() => {
-                  setShowColorPopover(prev => !prev);
-                  setShowStylePopover(false);
-                }}
-                title={`筆刷顏色 (${colorLabel})`}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0 0.35rem',
-                  borderRadius: '6px',
-                  border: showColorPopover ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
-                  background: showColorPopover ? 'rgba(0,0,0,0.06)' : 'transparent',
-                  height: '32px'
-                }}
-              >
-                <div 
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    backgroundColor: colorHex,
-                    border: '1.5px solid var(--reader-border, rgba(0,0,0,0.25))',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                />
-              </button>
-
-              {showColorPopover && (
-                <div 
-                  className="reader-popover animate-fade-in"
-                  style={{
-                    position: 'absolute',
-                    top: 'calc(100% + 6px)',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    backgroundColor: 'var(--card-bg, #ffffff)',
-                    border: '1px solid var(--border-color, rgba(140, 75, 39, 0.2))',
-                    borderRadius: '10px',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-                    padding: '0.45rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.25rem',
-                    minWidth: '115px',
-                    zIndex: 1000
-                  }}
-                >
-                  {(['yellow', 'red', 'blue', 'gray'] as const).map(c => {
-                    const cHex = c === 'yellow' ? '#fbbf24' : c === 'red' ? '#f87171' : c === 'blue' ? '#60a5fa' : '#9ca3af';
-                    const cName = c === 'yellow' ? '淺黃' : c === 'red' ? '淺紅' : c === 'blue' ? '淺藍' : '淺灰';
-                    const isSelected = settings.highlightColor === c;
-
-                    return (
-                      <div
-                        key={c}
-                        onClick={() => handleSelectHighlightColor(c)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          gap: '8px',
-                          padding: '0.35rem 0.5rem',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          backgroundColor: isSelected ? 'var(--theme-accent-light, rgba(140, 75, 39, 0.12))' : 'transparent',
-                          transition: 'background-color 0.15s'
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span 
-                            style={{ 
-                              width: '15px', 
-                              height: '15px', 
-                              borderRadius: '50%', 
-                              backgroundColor: cHex,
-                              border: '1px solid rgba(0,0,0,0.15)'
-                            }} 
-                          />
-                          <span style={{ fontSize: '0.84rem', color: 'var(--text-primary)', fontWeight: isSelected ? 'bold' : 'normal' }}>
-                            {cName}
-                          </span>
-                        </div>
-                        {isSelected && <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--theme-accent, #8c4b27)' }}>✓</span>}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })()}
-
-        {/* 💡 粗細與標註模式按鈕與 4 模式浮動選單 */}
+        {/* 💡 畫重點設定按鈕 (整合筆刷顏色與粗細標註模式為單一按鍵) */}
         {(() => {
           const colorHex = 
             settings.highlightColor === 'yellow' ? '#fbbf24' :
@@ -1765,64 +1706,90 @@ export function ReaderView({
             settings.highlightColor === 'red' ? 'rgba(248, 113, 113, 0.65)' :
             settings.highlightColor === 'gray' ? 'rgba(156, 163, 175, 0.65)' : 'rgba(96, 165, 250, 0.65)';
 
-          const styleLabel = 
-            settings.highlightStyle === 'underline' ? '底線' :
-            settings.highlightStyle === 'bottom-half' ? '半塗' :
-            settings.highlightStyle === 'full' ? '全塗' : '方框';
-
-          const getStyleBtnPreview = () => {
+          const getIndicatorStyle = (): React.CSSProperties => {
             const currentStyle = settings.highlightStyle || 'bottom-half';
             switch (currentStyle) {
               case 'underline':
-                return { borderBottom: `2.5px solid ${colorHex}`, background: 'transparent' };
+                return {
+                  position: 'absolute',
+                  bottom: '2px',
+                  width: '14px',
+                  height: '3px',
+                  borderRadius: '1.5px',
+                  backgroundColor: colorHex,
+                  boxSizing: 'border-box'
+                };
               case 'bottom-half':
-                return { background: `linear-gradient(180deg, transparent 55%, ${currentRgba} 55%)` };
+                return {
+                  position: 'absolute',
+                  bottom: '2px',
+                  width: '16px',
+                  height: '7px',
+                  borderRadius: '2px',
+                  backgroundColor: colorHex,
+                  opacity: 0.85,
+                  boxSizing: 'border-box'
+                };
               case 'full':
-                return { backgroundColor: currentRgba, borderRadius: '3px' };
+                return {
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '5px',
+                  backgroundColor: colorHex,
+                  opacity: 0.45,
+                  boxSizing: 'border-box',
+                  zIndex: 1
+                };
               case 'border':
-                return { border: `2px solid ${colorHex}`, borderRadius: '3px', padding: '0 2px' };
+                return {
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '5px',
+                  border: `2.2px solid ${colorHex}`,
+                  backgroundColor: 'transparent',
+                  boxSizing: 'border-box',
+                  zIndex: 1
+                };
             }
           };
 
           return (
-            <div className="highlight-style-popover-container" style={{ position: 'relative' }}>
+            <div className="highlight-popover-container" style={{ position: 'relative' }}>
               <button 
-                className={`reader-text-btn ${showStylePopover ? 'active' : ''}`}
-                onClick={() => {
-                  setShowStylePopover(prev => !prev);
-                  setShowColorPopover(false);
-                }}
-                title={`粗細與標註模式 (${styleLabel})`}
+                className={`reader-text-btn ${showHighlightPopover ? 'active' : ''}`}
+                onClick={() => setShowHighlightPopover(prev => !prev)}
+                title="畫重點設定 (筆刷顏色與粗細標註模式)"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '0 0.35rem',
+                  padding: '0 0.4rem',
+                  position: 'relative',
                   borderRadius: '6px',
-                  border: showStylePopover ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
-                  background: showStylePopover ? 'rgba(0,0,0,0.06)' : 'transparent',
+                  border: showHighlightPopover ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
+                  background: showHighlightPopover ? 'rgba(0,0,0,0.06)' : 'transparent',
                   height: '32px'
                 }}
               >
-                <div 
+                <Paintbrush 
+                  size={20} 
                   style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '1px 3px',
-                    fontSize: '0.85rem',
-                    fontWeight: 'bold',
-                    fontFamily: 'var(--font-serif)',
-                    color: 'var(--text-primary)',
-                    borderRadius: '2px',
-                    ...getStyleBtnPreview()
+                    color: 'currentColor',
+                    zIndex: 2
                   }}
-                >
-                  筆
-                </div>
+                />
+                <div className="brush-color-indicator" style={getIndicatorStyle()} />
               </button>
 
-              {showStylePopover && (
+              {showHighlightPopover && (
                 <div 
                   className="reader-popover animate-fade-in"
                   style={{
@@ -1832,69 +1799,107 @@ export function ReaderView({
                     transform: 'translateX(-50%)',
                     backgroundColor: 'var(--card-bg, #ffffff)',
                     border: '1px solid var(--border-color, rgba(140, 75, 39, 0.2))',
-                    borderRadius: '10px',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-                    padding: '0.45rem',
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                    padding: '0.6rem 0.7rem',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '0.25rem',
-                    minWidth: '130px',
-                    zIndex: 1000
+                    gap: '0.5rem',
+                    zIndex: 1000,
+                    userSelect: 'none'
                   }}
                 >
-                  {(['full', 'bottom-half', 'underline', 'border'] as const).map(s => {
-                    const sName = s === 'full' ? '全塗' : s === 'bottom-half' ? '半塗' : s === 'underline' ? '底線' : '方框';
-                    const isSelected = (settings.highlightStyle || 'bottom-half') === s;
+                  {/* 第 1 排：4 個筆刷顏色 (純圖示色塊) */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                    {(['yellow', 'red', 'blue', 'gray'] as const).map(c => {
+                      const cHex = c === 'yellow' ? '#fbbf24' : c === 'red' ? '#f87171' : c === 'blue' ? '#60a5fa' : '#9ca3af';
+                      const isSelected = settings.highlightColor === c;
 
-                    const getStyleItemPreview = () => {
-                      switch (s) {
-                        case 'underline':
-                          return { borderBottom: `2.5px solid ${colorHex}`, background: 'transparent' };
-                        case 'bottom-half':
-                          return { background: `linear-gradient(180deg, transparent 55%, ${currentRgba} 55%)` };
-                        case 'full':
-                          return { backgroundColor: currentRgba, borderRadius: '3px' };
-                        case 'border':
-                          return { border: `2px solid ${colorHex}`, borderRadius: '3px', padding: '0 2px' };
-                      }
-                    };
+                      return (
+                        <div
+                          key={c}
+                          onClick={() => handleSelectHighlightColor(c)}
+                          title={c === 'yellow' ? '淺黃' : c === 'red' ? '淺紅' : c === 'blue' ? '淺藍' : '淺灰'}
+                          style={{
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '50%',
+                            backgroundColor: cHex,
+                            border: isSelected ? '2px solid var(--theme-accent, #8c4b27)' : '1px solid rgba(0,0,0,0.2)',
+                            boxShadow: isSelected ? '0 0 0 2px rgba(140, 75, 39, 0.25)' : 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'transform 0.15s, box-shadow 0.15s',
+                            transform: isSelected ? 'scale(1.1)' : 'scale(1)'
+                          }}
+                        >
+                          {isSelected && (
+                            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+                              ✓
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
 
-                    return (
-                      <div
-                        key={s}
-                        onClick={() => handleSelectHighlightStyle(s)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          gap: '8px',
-                          padding: '0.35rem 0.5rem',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          backgroundColor: isSelected ? 'var(--theme-accent-light, rgba(140, 75, 39, 0.12))' : 'transparent',
-                          transition: 'background-color 0.15s'
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {/* 細微橫線分隔 */}
+                  <div style={{ height: '1px', backgroundColor: 'var(--border-color, rgba(0,0,0,0.08))', width: '100%' }} />
+
+                  {/* 第 2 排：4 個粗細與標註模式 (純圖示預覽) */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                    {(['full', 'bottom-half', 'underline', 'border'] as const).map(s => {
+                      const isSelected = (settings.highlightStyle || 'bottom-half') === s;
+
+                      const getStyleItemPreview = () => {
+                        switch (s) {
+                          case 'underline':
+                            return { borderBottom: `2.5px solid ${colorHex}`, background: 'transparent' };
+                          case 'bottom-half':
+                            return { background: `linear-gradient(180deg, transparent 55%, ${currentRgba} 55%)` };
+                          case 'full':
+                            return { backgroundColor: currentRgba, borderRadius: '3px' };
+                          case 'border':
+                            return { border: `2px solid ${colorHex}`, borderRadius: '3px', padding: '0 2px' };
+                        }
+                      };
+
+                      return (
+                        <div
+                          key={s}
+                          onClick={() => handleSelectHighlightStyle(s)}
+                          title={s === 'full' ? '全塗' : s === 'bottom-half' ? '半塗' : s === 'underline' ? '底線' : '方框'}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '3px 6px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            border: isSelected ? '1.5px solid var(--theme-accent, #8c4b27)' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+                            backgroundColor: isSelected ? 'var(--theme-accent-light, rgba(140, 75, 39, 0.1))' : 'var(--input-bg, rgba(0,0,0,0.02))',
+                            transition: 'all 0.15s',
+                            transform: isSelected ? 'scale(1.05)' : 'scale(1)'
+                          }}
+                        >
                           <span 
                             style={{ 
-                              fontSize: '0.78rem',
+                              fontSize: '0.8rem',
                               fontFamily: 'var(--font-serif)',
+                              fontWeight: 'bold',
                               color: 'var(--text-primary)',
-                              padding: '1px 3px',
+                              padding: '1px 2px',
                               ...getStyleItemPreview()
                             }}
                           >
                             經文
                           </span>
-                          <span style={{ fontSize: '0.84rem', color: 'var(--text-primary)', fontWeight: isSelected ? 'bold' : 'normal' }}>
-                            {sName}
-                          </span>
                         </div>
-                        {isSelected && <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--theme-accent, #8c4b27)' }}>✓</span>}
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
