@@ -1152,16 +1152,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.0.0) 直接顯示 */}
+                {/* 最新 App 版本 (v4.0.4) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ App: v4.0.0 Major Release</span>
-                    <span className="changelog-date">(2026-08-06)</span>
+                    <span>⭐ App: v4.0.4</span>
+                    <span className="changelog-date">(2026-08-14)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 新增文章「重點與筆記」功能，並可於資料夾內複習。</li>
-                    <li>• 調整分頁切換方式，可手動左右滑動絲滑換頁。</li>
-                    <li>• 調整首頁編排版，固定為四大資料夾。使版面更簡潔。</li>
+                    <li>• 優化現代經典目錄 (Y系列)，隱藏空白卷頁標籤。</li>
+                    <li>• 修正目錄樹跨卷定位跳轉，使其能精確導航至起點。</li>
                   </ul>
                 </div>
 
@@ -1184,6 +1183,19 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.0.1 <span className="changelog-date">(2026-08-08)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 修復散文段落偈頌體誤判折行問題，抹除不必要之經號雜質。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.0.0 Major Release <span className="changelog-date">(2026-08-06)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 新增文章「重點與筆記」與資料夾集中複習、編輯與導航。</li>
+                        <li>• 覆盤手勢與點擊雙向絲滑切換過渡，重構簡潔首頁。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v3.2.0 <span className="changelog-date">(2026-08-02)</span></div>
                       <ul className="changelog-list">
@@ -1305,16 +1317,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.4.0 重大更新) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.9.4) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>Builder: v2.4.0</span>
-                    <span className="changelog-date">(2026-07-31)</span>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--theme-accent, #8c4b27)', fontWeight: 700, border: '1px solid var(--theme-accent, #8c4b27)', padding: '1px 5px', borderRadius: '4px', marginLeft: '4px' }}>重大更新</span>
+                    <span>⭐ Builder: v2.9.4</span>
+                    <span className="changelog-date">(2026-08-14)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 全面升級 6 線程防限流下載串流池與自動修復引擎 (Auto-Healing Engine)，保證正文 100% 完整零丟包。</li>
-                    <li>• 導入部類關鍵字智慧自動關聯 (Category Keyword Auto-Mapping)，解決大範圍檢索伺服器斷線難題。</li>
+                    <li>• 修正現代經典 HTML 嵌套目錄列表的分行與文字重複問題。</li>
+                    <li>• 擴充 HTML 段落解析，支援 byline 與 speaker 標籤。</li>
                   </ul>
                 </div>
 
@@ -1338,6 +1349,18 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {/* 展開的 Builder 歷史版本 */}
                 {showBuilderHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.9.1 <span className="changelog-date">(2026-08-11)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 新增從 HTML cb:div 結構提取多層層次目錄樹引擎，解決目次扁平無層次問題。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.4.0 <span className="changelog-date">(2026-07-31)</span> <span style={{ fontSize: '0.72rem', color: 'var(--theme-accent, #8c4b27)', fontWeight: 700, border: '1px solid var(--theme-accent, #8c4b27)', padding: '1px 5px', borderRadius: '4px', marginLeft: '4px' }}>重大更新</span></div>
+                      <ul className="changelog-list">
+                        <li>• 升級 6 線程防限流下載與自動修復，智慧部類關鍵字智慧自動關聯。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">Builder: v2.2.0 <span className="changelog-date">(2026-07-28)</span></div>
                       <ul className="changelog-list">

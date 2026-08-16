@@ -604,6 +604,8 @@ export class ReaderBuilder {
 
       if (
         tagName === 'P' ||
+        tagName === 'BYLINE' ||
+        tagName === 'SPEAKER' ||
         el.classList.contains('p') ||
         el.classList.contains('head') ||
         el.classList.contains('lg') ||

@@ -2070,8 +2070,8 @@ export function ReaderView({
       {/* 雙導航目錄 Drawer */}
       {showNavDrawer && (
         <div className="reader-nav-drawer">
-          {/* 💡 當卷數 > 1 時，顯示頂部「卷/篇章」Tab 選項 */}
-          {book.metadata.juansCount > 1 && (
+          {/* 💡 當卷數 > 1 且非 Y 系列書籍時，顯示頂部「卷/篇章」Tab 選項 */}
+          {book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y') && (
             <div className="drawer-tab-header">
               <div 
                 className={`drawer-tab ${navTab === 'toc' ? 'active' : ''}`}
@@ -2090,15 +2090,17 @@ export function ReaderView({
 
           <div className="drawer-list custom-scrollbar">
             {navTab === 'juan' && book.metadata.juansCount > 1 ? (
-              Array.from({ length: book.metadata.juansCount }).map((_, idx) => (
-                <div 
-                  key={`juan-${idx + 1}`} 
-                  className={`drawer-item ${currentJuanNum === idx + 1 ? 'active' : ''}`}
-                  onClick={() => handleSelectJuan(idx + 1)}
-                >
-                  <span>第 {idx + 1} 卷</span>
-                </div>
-              ))
+              book.metadata.workId.startsWith('Y') ? null : (
+                Array.from({ length: book.metadata.juansCount }).map((_, idx) => (
+                  <div 
+                    key={`juan-${idx + 1}`} 
+                    className={`drawer-item ${currentJuanNum === idx + 1 ? 'active' : ''}`}
+                    onClick={() => handleSelectJuan(idx + 1)}
+                  >
+                    <span>第 {idx + 1} 卷</span>
+                  </div>
+                ))
+              )
             ) : (
               /* 按品目錄 (目次 - 支援多層級樹狀 Collapsible Tree) */
               book.toc.items.map((item) => (
@@ -2109,7 +2111,7 @@ export function ReaderView({
                   activeSegmentId={activeSegmentId}
                   currentJuanNum={currentJuanNum}
                   workId={book.metadata.workId}
-                  isMultiJuan={book.metadata.juansCount > 1}
+                  isMultiJuan={book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y')}
                   onSelectTOC={handleSelectTOC}
                 />
               ))
