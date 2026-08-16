@@ -1809,96 +1809,104 @@ export function ReaderView({
                     userSelect: 'none'
                   }}
                 >
-                  {/* 第 1 排：4 個筆刷顏色 (純圖示色塊) */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-                    {(['yellow', 'red', 'blue', 'gray'] as const).map(c => {
-                      const cHex = c === 'yellow' ? '#fbbf24' : c === 'red' ? '#f87171' : c === 'blue' ? '#60a5fa' : '#9ca3af';
-                      const isSelected = settings.highlightColor === c;
+                  {/* 左右兩欄佈局：左欄顏色、右欄標註模式 */}
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'stretch' }}>
 
-                      return (
-                        <div
-                          key={c}
-                          onClick={() => handleSelectHighlightColor(c)}
-                          title={c === 'yellow' ? '淺黃' : c === 'red' ? '淺紅' : c === 'blue' ? '淺藍' : '淺灰'}
-                          style={{
-                            width: '24px',
-                            height: '24px',
-                            borderRadius: '50%',
-                            backgroundColor: cHex,
-                            border: isSelected ? '2px solid var(--theme-accent, #8c4b27)' : '1px solid rgba(0,0,0,0.2)',
-                            boxShadow: isSelected ? '0 0 0 2px rgba(140, 75, 39, 0.25)' : 'none',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            transition: 'transform 0.15s, box-shadow 0.15s',
-                            transform: isSelected ? 'scale(1.1)' : 'scale(1)'
-                          }}
-                        >
-                          {isSelected && (
-                            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-                              ✓
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                    {/* 左欄：4 個筆刷顏色 (縱向排列) */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                      {(['yellow', 'red', 'blue', 'gray'] as const).map(c => {
+                        const cHex = c === 'yellow' ? '#fbbf24' : c === 'red' ? '#f87171' : c === 'blue' ? '#60a5fa' : '#9ca3af';
+                        const isSelected = settings.highlightColor === c;
 
-                  {/* 細微橫線分隔 */}
-                  <div style={{ height: '1px', backgroundColor: 'var(--border-color, rgba(0,0,0,0.08))', width: '100%' }} />
-
-                  {/* 第 2 排：4 個粗細與標註模式 (純圖示預覽) */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                    {(['full', 'bottom-half', 'underline', 'border'] as const).map(s => {
-                      const isSelected = (settings.highlightStyle || 'bottom-half') === s;
-
-                      const getStyleItemPreview = () => {
-                        switch (s) {
-                          case 'underline':
-                            return { borderBottom: `2.5px solid ${colorHex}`, background: 'transparent' };
-                          case 'bottom-half':
-                            return { background: `linear-gradient(180deg, transparent 55%, ${currentRgba} 55%)` };
-                          case 'full':
-                            return { backgroundColor: currentRgba, borderRadius: '3px' };
-                          case 'border':
-                            return { border: `2px solid ${colorHex}`, borderRadius: '3px', padding: '0 2px' };
-                        }
-                      };
-
-                      return (
-                        <div
-                          key={s}
-                          onClick={() => handleSelectHighlightStyle(s)}
-                          title={s === 'full' ? '全塗' : s === 'bottom-half' ? '半塗' : s === 'underline' ? '底線' : '方框'}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '3px 6px',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            border: isSelected ? '1.5px solid var(--theme-accent, #8c4b27)' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
-                            backgroundColor: isSelected ? 'var(--theme-accent-light, rgba(140, 75, 39, 0.1))' : 'var(--input-bg, rgba(0,0,0,0.02))',
-                            transition: 'all 0.15s',
-                            transform: isSelected ? 'scale(1.05)' : 'scale(1)'
-                          }}
-                        >
-                          <span 
-                            style={{ 
-                              fontSize: '0.8rem',
-                              fontFamily: 'var(--font-serif)',
-                              fontWeight: 'bold',
-                              color: 'var(--text-primary)',
-                              padding: '1px 2px',
-                              ...getStyleItemPreview()
+                        return (
+                          <div
+                            key={c}
+                            onClick={() => handleSelectHighlightColor(c)}
+                            title={c === 'yellow' ? '淺黃' : c === 'red' ? '淺紅' : c === 'blue' ? '淺藍' : '淺灰'}
+                            style={{
+                              width: '26px',
+                              height: '26px',
+                              borderRadius: '50%',
+                              backgroundColor: cHex,
+                              border: isSelected ? '2px solid var(--theme-accent, #8c4b27)' : '1.5px solid rgba(0,0,0,0.15)',
+                              boxShadow: isSelected ? '0 0 0 2.5px rgba(140, 75, 39, 0.25)' : 'none',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                              flexShrink: 0,
+                              transition: 'transform 0.15s, box-shadow 0.15s',
+                              transform: isSelected ? 'scale(1.1)' : 'scale(1)'
                             }}
                           >
-                            經文
-                          </span>
-                        </div>
-                      );
-                    })}
+                            {isSelected && (
+                              <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+                                ✓
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* 垂直分隔線 */}
+                    <div style={{ width: '1px', backgroundColor: 'var(--border-color, rgba(0,0,0,0.08))', alignSelf: 'stretch' }} />
+
+                    {/* 右欄：4 個粗細與標註模式 (縱向排列) */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                      {(['full', 'bottom-half', 'underline', 'border'] as const).map(s => {
+                        const isSelected = (settings.highlightStyle || 'bottom-half') === s;
+
+                        const getStyleItemPreview = () => {
+                          switch (s) {
+                            case 'underline':
+                              return { borderBottom: `2.5px solid ${colorHex}`, background: 'transparent' };
+                            case 'bottom-half':
+                              return { background: `linear-gradient(180deg, transparent 55%, ${currentRgba} 55%)` };
+                            case 'full':
+                              return { backgroundColor: currentRgba, borderRadius: '3px' };
+                            case 'border':
+                              return { border: `2px solid ${colorHex}`, borderRadius: '3px', padding: '0 2px' };
+                          }
+                        };
+
+                        return (
+                          <div
+                            key={s}
+                            onClick={() => handleSelectHighlightStyle(s)}
+                            title={s === 'full' ? '全塗' : s === 'bottom-half' ? '半塗' : s === 'underline' ? '底線' : '方框'}
+                            style={{
+                              width: '40px',
+                              height: '26px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              flexShrink: 0,
+                              border: isSelected ? '1.5px solid var(--theme-accent, #8c4b27)' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+                              backgroundColor: isSelected ? 'var(--theme-accent-light, rgba(140, 75, 39, 0.1))' : 'var(--input-bg, rgba(0,0,0,0.02))',
+                              transition: 'all 0.15s',
+                              transform: isSelected ? 'scale(1.05)' : 'scale(1)'
+                            }}
+                          >
+                            <span 
+                              style={{ 
+                                fontSize: '0.78rem',
+                                fontFamily: 'var(--font-serif)',
+                                fontWeight: 'bold',
+                                color: 'var(--text-primary)',
+                                padding: '1px 2px',
+                                ...getStyleItemPreview()
+                              }}
+                            >
+                              經文
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
                   </div>
                 </div>
               )}
@@ -2474,63 +2482,75 @@ export function ReaderView({
           className="highlight-delete-menu"
           style={{
             position: 'fixed',
-            top: `${deleteMenuPosition.top}px`,
-            left: `${deleteMenuPosition.left}px`,
+            top: `${Math.max(10, deleteMenuPosition.top)}px`,
+            left: `${Math.min(
+              Math.max(70, deleteMenuPosition.left),
+              window.innerWidth - 70
+            )}px`,
             transform: 'translateX(-50%)',
             zIndex: 3000,
             display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
+            alignItems: 'stretch',
             background: 'var(--reader-bg)',
             border: '1px solid var(--theme-accent-border, var(--reader-border))',
             boxShadow: '0 6px 20px rgba(0, 0, 0, 0.25)',
-            borderRadius: '20px',
-            padding: '4px 12px',
-            fontSize: '0.82rem',
-            fontWeight: 'bold',
-            fontFamily: 'var(--font-serif)',
+            borderRadius: '14px',
+            overflow: 'hidden',
             animation: 'fadeIn 0.15s ease-out',
             userSelect: 'none',
             WebkitUserSelect: 'none'
           }}
           onClick={(e) => e.stopPropagation()}
         >
+          {/* 寫筆記按鈕：圖示在上、文字在下 */}
           <button
             type="button"
             style={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              gap: '4px',
+              justifyContent: 'center',
+              gap: '3px',
               border: 'none',
               background: 'transparent',
               color: 'var(--text-primary)',
               cursor: 'pointer',
-              padding: '4px 6px'
+              padding: '8px 14px',
+              minWidth: '60px',
+              flex: '1 1 0'
             }}
             onClick={() => handleOpenNoteEditor(activeHighlightForDelete)}
           >
-            <Edit3 size={13} />
-            <span>{activeHighlightForDelete.note ? '編輯筆記' : '寫筆記'}</span>
+            <Edit3 size={15} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: 'var(--font-serif)', whiteSpace: 'nowrap' }}>
+              {activeHighlightForDelete.note ? '編輯筆記' : '寫筆記'}
+            </span>
           </button>
 
-          <span style={{ opacity: 0.3 }}>|</span>
+          {/* 分隔線 */}
+          <div style={{ width: '1px', backgroundColor: 'var(--reader-border, rgba(0,0,0,0.12))', margin: '6px 0' }} />
 
+          {/* 刪除按鈕：圖示在上、文字在下 */}
           <button
             type="button"
             style={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              gap: '4px',
+              justifyContent: 'center',
+              gap: '3px',
               border: 'none',
               background: 'transparent',
               color: '#bd3a3a',
               cursor: 'pointer',
-              padding: '4px 6px'
+              padding: '8px 14px',
+              minWidth: '60px',
+              flex: '1 1 0'
             }}
             onClick={() => handleDeleteHighlight()}
           >
-            <Trash2 size={13} />
-            <span>刪除</span>
+            <Trash2 size={15} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: 'var(--font-serif)', whiteSpace: 'nowrap' }}>刪除</span>
           </button>
         </div>
       )}
