@@ -273,11 +273,11 @@ export function Library({
     setSelectedBookIds([]);
   };
 
-  // 💡 同經典劃線重點折疊狀態 (Record<workId, boolean>)
-  const [collapsedBookGroups, setCollapsedBookGroups] = useState<Record<string, boolean>>({});
+  // 💡 同經典劃線重點開合狀態 (Record<workId, boolean>，預設全部收合)
+  const [expandedBookGroups, setExpandedBookGroups] = useState<Record<string, boolean>>({});
 
   const toggleBookGroup = (workId: string) => {
-    setCollapsedBookGroups(prev => ({
+    setExpandedBookGroups(prev => ({
       ...prev,
       [workId]: !prev[workId]
     }));
@@ -1106,7 +1106,28 @@ export function Library({
       }
       map.get(hl.workId)!.list.push(hl);
     });
-    return Array.from(map.values());
+
+    const groups = Array.from(map.values());
+
+    // 💡 排序規則：每本經典內部的重點，100% 依據經文內文的先後次序排列 (卷次 -> 段落編號 -> 起始字元 offset)
+    groups.forEach(group => {
+      group.list.sort((a, b) => {
+        if (a.juan !== b.juan) {
+          return a.juan - b.juan;
+        }
+        const segIdxA = parseInt(a.segmentId.match(/seg(\d+)/)?.[1] || '0', 10);
+        const segIdxB = parseInt(b.segmentId.match(/seg(\d+)/)?.[1] || '0', 10);
+        if (segIdxA !== segIdxB) {
+          return segIdxA - segIdxB;
+        }
+        if (a.startOffset !== b.startOffset) {
+          return a.startOffset - b.startOffset;
+        }
+        return a.endOffset - b.endOffset;
+      });
+    });
+
+    return groups;
   }, [allHighlights, downloadedBooks]);
 
   const loadAllHighlights = async () => {
@@ -1558,7 +1579,9 @@ export function Library({
                   </div>
                 ) : (
                   groupedHighlights.map((group) => {
-                    const isCollapsed = !!collapsedBookGroups[group.workId];
+                    const isExpanded = !!expandedBookGroups[group.workId];
+                    const isCollapsed = !isExpanded;
+                    const cleanTitle = (group.title || group.workId).replace(/[《》]/g, '').trim();
 
                     return (
                       <div 
@@ -1601,10 +1624,10 @@ export function Library({
                                 fontWeight: 'bold'
                               }}
                             >
-                              {isCollapsed ? '+' : '-'}
+                              {isCollapsed ? '+' : '−'}
                             </span>
                             <BookOpen size={15} style={{ opacity: 0.75 }} />
-                            <span>《{group.title}》</span>
+                            <span>{cleanTitle}，{group.workId}</span>
                           </div>
                           <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', opacity: 0.8 }}>
                             {group.list.length} 條重點

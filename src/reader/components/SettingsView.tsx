@@ -1152,15 +1152,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.0.6) 直接顯示 */}
+                {/* 最新 App 版本 (v4.0.7) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ App: v4.0.6</span>
+                    <span>⭐ App: v4.0.7</span>
                     <span className="changelog-date">(2026-08-16)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 目次全面支援跨卷平滑定位，精確導航至章節起點。</li>
-                    <li>• 完善 CBETA 權威字數計算標準。</li>
+                    <li>• 「重點與筆記」預設全收合，標題格式對齊「書名，經號」。</li>
+                    <li>• 重點依經文內文先後順序排列，提升筆記複習連續性。</li>
                   </ul>
                 </div>
 
