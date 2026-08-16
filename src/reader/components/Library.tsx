@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, AlertCircle, X, Download,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, FileText, Play, RotateCcw, RefreshCw
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw, RefreshCw
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
@@ -1626,7 +1626,6 @@ export function Library({
                             >
                               {isCollapsed ? '+' : '−'}
                             </span>
-                            <BookOpen size={15} style={{ opacity: 0.75 }} />
                             <span>{cleanTitle}，{group.workId}</span>
                           </div>
                           <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', opacity: 0.8 }}>
@@ -1680,27 +1679,23 @@ export function Library({
                                   「{hl.text}」
                                 </div>
 
-                                {/* 筆記隨筆卡片 (圓體，無筆記二字) */}
+                                {/* 筆記隨筆卡片 (標楷體，無圖示) */}
                                 {hl.note && (
                                   <div 
                                     style={{
-                                      fontSize: '0.85rem',
+                                      fontSize: '0.95rem',
+                                      lineHeight: 1.6,
                                       color: 'var(--text-primary)',
                                       backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.08))',
                                       borderLeft: '3px solid var(--color-gold-500, #c07d2a)',
                                       padding: '0.45rem 0.7rem',
                                       borderRadius: '4px',
-                                      fontFamily: '"Yuanti SC", "YouYuan", "圓體", "Quicksand", sans-serif',
+                                      fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
                                       whiteSpace: 'pre-wrap',
-                                      display: 'flex',
-                                      alignItems: 'flex-start',
-                                      gap: '4px'
+                                      wordBreak: 'break-word'
                                     }}
                                   >
-                                    <FileText size={13} style={{ marginTop: '3px', flexShrink: 0, opacity: 0.7 }} />
-                                    <div>
-                                      {hl.note}
-                                    </div>
+                                    {hl.note}
                                   </div>
                                 )}
 
@@ -2790,8 +2785,9 @@ export function Library({
                   border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
                   backgroundColor: 'var(--input-bg, rgba(255,255,255,0.8))',
                   color: 'var(--text-primary)',
-                  fontSize: '0.92rem',
-                  fontFamily: 'var(--font-serif)',
+                  fontSize: '0.95rem',
+                  lineHeight: 1.6,
+                  fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
                   resize: 'vertical',
                   boxSizing: 'border-box'
                 }}
