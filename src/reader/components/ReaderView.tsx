@@ -1824,26 +1824,34 @@ export function ReaderView({
                             onClick={() => handleSelectHighlightColor(c)}
                             title={c === 'yellow' ? '淺黃' : c === 'red' ? '淺紅' : c === 'blue' ? '淺藍' : '淺灰'}
                             style={{
-                              width: '26px',
+                              width: '40px',
                               height: '26px',
-                              borderRadius: '50%',
-                              backgroundColor: cHex,
-                              border: isSelected ? '2px solid var(--theme-accent, #8c4b27)' : '1.5px solid rgba(0,0,0,0.15)',
-                              boxShadow: isSelected ? '0 0 0 2.5px rgba(140, 75, 39, 0.25)' : 'none',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               cursor: 'pointer',
-                              flexShrink: 0,
-                              transition: 'transform 0.15s, box-shadow 0.15s',
-                              transform: isSelected ? 'scale(1.1)' : 'scale(1)'
+                              flexShrink: 0
                             }}
                           >
-                            {isSelected && (
-                              <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-                                ✓
-                              </span>
-                            )}
+                            <div style={{
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              backgroundColor: cHex,
+                              border: isSelected ? '2px solid var(--theme-accent, #8c4b27)' : '1.5px solid rgba(0,0,0,0.18)',
+                              boxShadow: isSelected ? '0 0 0 2.5px rgba(140, 75, 39, 0.25)' : 'none',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'transform 0.15s, box-shadow 0.15s',
+                              transform: isSelected ? 'scale(1.15)' : 'scale(1)'
+                            }}>
+                              {isSelected && (
+                                <span style={{ fontSize: '0.6rem', fontWeight: 'bold', color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.5)', lineHeight: 1 }}>
+                                  ✓
+                                </span>
+                              )}
+                            </div>
                           </div>
                         );
                       })}
@@ -1853,7 +1861,7 @@ export function ReaderView({
                     <div style={{ width: '1px', backgroundColor: 'var(--border-color, rgba(0,0,0,0.08))', alignSelf: 'stretch' }} />
 
                     {/* 右欄：4 個粗細與標註模式 (縱向排列) */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                       {(['full', 'bottom-half', 'underline', 'border'] as const).map(s => {
                         const isSelected = (settings.highlightStyle || 'bottom-half') === s;
 
