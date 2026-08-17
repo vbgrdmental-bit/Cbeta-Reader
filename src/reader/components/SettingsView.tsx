@@ -1156,11 +1156,11 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <span>⭐ App: v4.0.7</span>
-                    <span className="changelog-date">(2026-08-16)</span>
+                    <span className="changelog-date">(2026-08-17)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 「重點與筆記」預設全收合，標題格式對齊「書名，經號」。</li>
-                    <li>• 重點依經文內文先後順序排列，提升筆記複習連續性。</li>
+                    <li>• 「重點與筆記」收合設定，依內文順序排列。</li>
+                    <li>• 調整閱讀頁面上方控制列的「文字大小」、「畫重點」設定。</li>
                   </ul>
                 </div>
 
@@ -1186,68 +1186,74 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.0.1 <span className="changelog-date">(2026-08-08)</span></div>
                       <ul className="changelog-list">
-                        <li>• 修復散文段落偈頌體誤判折行問題，抹除不必要之經號雜質。</li>
+                        <li>• 修復散文段落偈頌體誤判折行問題。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
-                      <div className="changelog-version-title">App: v4.0.0 Major Release <span className="changelog-date">(2026-08-06)</span></div>
+                      <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                        <span>App: v4.0.0</span>
+                        <span className="changelog-date">(2026-08-06)</span>
+                        <span style={{ fontSize: '0.72rem', padding: '1px 5px', borderRadius: '4px', border: '1px solid var(--theme-accent, #8c4b27)', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold', marginLeft: '2px' }}>重大更新</span>
+                      </div>
                       <ul className="changelog-list">
-                        <li>• 新增文章「重點與筆記」與資料夾集中複習、編輯與導航。</li>
-                        <li>• 覆盤手勢與點擊雙向絲滑切換過渡，重構簡潔首頁。</li>
+                        <li>• 在首頁新增「重點與筆記」頁面。</li>
+                        <li>• 手機不同頁面可用手勢左滑/右滑切換。</li>
+                        <li>• 重新調整簡潔首頁，將四大資料夾放在主標之下。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v3.2.0 <span className="changelog-date">(2026-08-02)</span></div>
                       <ul className="changelog-list">
-                        <li>• 調整首頁版面，新增「近期閱讀」與「我的最愛」系統資料夾。</li>
-                        <li>• 調整書籍、資料夾移動與刪除設定。</li>
+                        <li>• 微調首頁版面，新增「近期閱讀」與「我的最愛」系統資料夾。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v3.1.0 <span className="changelog-date">(2026-08-01)</span></div>
                       <ul className="changelog-list">
-                        <li>• 「畫重點設定」直覺設定。</li>
+                        <li>• 閱讀設定中「畫重點設定」直覺設定。</li>
                         <li>• 新增「設定閱讀時間 (護眼模式)」，時間到了溫馨提醒。</li>
                         <li>• 主頁更名為「CBETA Reader 淨心小角落．閱讀大藏經」。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
-                      <div className="changelog-version-title">App: v2.3.0 <span className="changelog-date">(2026-07-29)</span></div>
+                      <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                        <span>App: v2.3.0</span>
+                        <span className="changelog-date">(2026-07-29)</span>
+                        <span style={{ fontSize: '0.72rem', padding: '1px 5px', borderRadius: '4px', border: '1px solid var(--theme-accent, #8c4b27)', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold', marginLeft: '2px' }}>重大更新</span>
+                      </div>
                       <ul className="changelog-list">
-                        <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型。</li>
-                        <li>• 新增「儲存空間與全集壓縮管理」，支援高動態 Gzip 壓縮，全集經文節省 80% 本地容量。</li>
+                        <li>• 新增「儲存空間與全集壓縮管理」，支援高動態 Gzip 壓縮，大大節省 80% 本地容量。</li>
                         <li>• 新增一鍵「清理 HTTP 網路快取」與動態容量儀表板，輕鬆釋放手機暫存空間。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v2.2.0 <span className="changelog-date">(2026-07-28)</span></div>
                       <ul className="changelog-list">
-                        <li>• 閱讀設定新增「| 內文字體」選擇，提供宋/明體、正黑體、芫荽體與芫荽體(粗) 4 種開放字型。</li>
-                        <li>• 內文字體切換僅影響經典正文段落，保持篇章節段與書名標題字體不變。</li>
-                        <li>• 修復「烏木」模式劃線高對比字體與 iOS 點擊輸入框自動放大防跑版機制。</li>
+                        <li>• 新增「內文字體」選擇，提供宋/明體、正黑體、芫荽體與教育部標楷體等四種開放字型。</li>
+                        <li>• 修復「烏木」模式畫重點顯示方式</li>
+                        <li>• 修復 iOS 閱讀頁面防跑機制。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v2.1.0 <span className="changelog-date">(2026-07-28)</span></div>
                       <ul className="changelog-list">
-                        <li>• 支援線上搜尋「整批勾選經典與一鍵批量下載」。</li>
-                        <li>• 批量下載自動帶出關鍵字作為資料夾名稱，支援自訂修改。</li>
+                        <li>• 支援搜尋經書「整批勾選經典」與「批量下載」。</li>
+                        <li>• 批量下載時可自動帶出關鍵字作為資料夾名稱並支援自訂修改。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v2.0.0 <span className="changelog-date">(2026-07-27)</span></div>
                       <ul className="changelog-list">
-                        <li>• 配置 PWA / iOS「加入主畫面」蓮花經典桌面圖示。</li>
-                        <li>• 首頁新增經書批量勾選與一鍵「批量移動至資料夾」功能。</li>
-                        <li>• 優化編輯模式卡片寬度、灰色豎條手把與 6 色主題資料夾。</li>
+                        <li>• 設定 PWA / iOS「加入主畫面」的桌面圖示。</li>
+                        <li>• 首頁新增經書「批量移動至資料夾」功能。</li>
+                        <li>• 調整經書卡片寬度。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v1.8.0 <span className="changelog-date">(2026-07-25)</span></div>
                       <ul className="changelog-list">
-                        <li>• 縮減偈頌體（韻文）段落上下間距與行高，閱讀更緊湊。</li>
+                        <li>• 微調偈頌體段落行距。</li>
                         <li>• 大藏經經號依 A~Z 自動分配 26 套典雅經典封面色系。</li>
-                        <li>• 優化手機版編輯模式排版，限制標題單行省略。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
@@ -1260,28 +1266,27 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v1.6.0 <span className="changelog-date">(2026-07-23)</span></div>
                       <ul className="changelog-list">
-                        <li>• 強化原始經文「圓體粗體」跨平台高對比排版。</li>
-                        <li>• 隱藏閱讀器底部百分比進度，專注目前品名與閱讀狀態。</li>
+                        <li>•微調經文內排版方式。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v1.4.0 <span className="changelog-date">(2026-07-23)</span></div>
                       <ul className="changelog-list">
-                        <li>• 閱讀器側邊欄目錄升級為可展開/折疊的多層級樹狀選單。</li>
-                        <li>• 新增劃線重點筆刷按鈕與個人劃線標註功能。</li>
+                        <li>• 閱讀頁目次調整為可展開/折疊的多層級樹狀選單。</li>
+                        <li>• 新增畫重點筆刷功能。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v1.1.0 <span className="changelog-date">(2026-07-20)</span></div>
                       <ul className="changelog-list">
-                        <li>• 下載後保持線上搜尋對話框開啟，便利連續下載操作。</li>
-                        <li>• 統一閱讀頁面頂部控制列高度為 56px 視覺基準。</li>
+                        <li>• 調整經書下載停留在原頁面。</li>
+                        <li>• 統一APP上方控制列高度。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v1.0.0 <span className="changelog-date">(2026-07-15)</span></div>
                       <ul className="changelog-list">
-                        <li>• 釋出初始核心經典閱讀、搜尋與劃線標籤功能。</li>
+                        <li>• 建置初始首頁設定、閱讀頁設定、經書內文搜尋設定、經書下載設定。</li>
                       </ul>
                     </div>
 

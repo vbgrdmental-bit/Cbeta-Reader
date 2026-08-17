@@ -50,9 +50,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
-- **⭐ App: v4.0.7 / Builder: v2.9.6** (2026-08-16)
-  - [App] 「重點與筆記」預設全收合，標題格式對齊「書名，經號」。
-  - [App] 重點清單依經文內文先後次序嚴格排列，提升筆記複習連續性。
+- **⭐ App: v4.0.7 / Builder: v2.9.6** (2026-08-17)
+  - [App] 「重點與筆記」收合設定，依內文順序排列。
+  - [App] 調整閱讀頁面上方控制列的「文字大小」、「畫重點」設定。
 - **⭐ App: v4.0.6 / Builder: v2.9.6** (2026-08-16)
   - [App] 目次全面支援跨卷平滑定位，精確導航至章節起點。
   - [App] 完善 CBETA 權威字數計算標準。
