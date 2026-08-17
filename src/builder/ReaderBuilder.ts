@@ -537,13 +537,11 @@ export class ReaderBuilder {
       }
 
       // 1. 遇到行頭標籤，更新當前最鄰近的行號
-      // 💡 只採用 p-開頭 lb (如 p0001a01)，忽略 pb-開頭 (紙本頁碼) 避免錯誤 lb 覆蓋
-      if (tagName === 'SPAN' && el.classList.contains('lb')) {
-        const lbId = el.id || el.getAttribute('data-lb') || '';
-        if (lbId && /^p[0-9]/.test(lbId)) {
-          activeLb = lbId;
-        } else if (lbId && !lbId.startsWith('pb') && !activeLb) {
-          activeLb = lbId;
+      // 💡 忽略 pb-開頭 (紙本頁碼) 避免錯誤覆蓋，相容各類 lb 格式 (如 T03n0152_p0001a21, p0001a21, 0001a21)
+      if (tagName === 'SPAN' && (el.classList.contains('lb') || el.classList.contains('lineInfo') || el.hasAttribute('line'))) {
+        const rawLb = el.getAttribute('line') || el.id || el.getAttribute('data-lb') || el.textContent?.trim() || '';
+        if (rawLb && !rawLb.startsWith('pb')) {
+          activeLb = rawLb;
         }
       }
 
@@ -622,9 +620,12 @@ export class ReaderBuilder {
         if (textContent || unlinkedTocs.length > 0) {
           // 優先提取段落內部的 lb。只有當它位於段落起點時才採用，防範跨行段落的後半行行號誤覆蓋起點行號
           let lb = activeLb;
-          const lbEl = el.querySelector('[id*="p"], [class*="lb"]') as HTMLElement | null;
+          const lbEl = el.querySelector('[id*="p"], [class*="lb"], [class*="lineInfo"], [line]') as HTMLElement | null;
           if (lbEl && isAtStartOfContainer(el, lbEl)) {
-            lb = lbEl.id || lbEl.getAttribute('data-lb') || lb;
+            const innerLb = lbEl.getAttribute('line') || lbEl.id || lbEl.getAttribute('data-lb') || lbEl.textContent?.trim() || '';
+            if (innerLb && !innerLb.startsWith('pb')) {
+              lb = innerLb;
+            }
           }
 
           const segmentId = `${workId}_${juan.toString().padStart(2, '0')}_seg${segmentIndex.toString().padStart(4, '0')}`;

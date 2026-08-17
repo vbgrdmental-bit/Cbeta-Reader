@@ -111,14 +111,7 @@ const TocTreeNode: React.FC<TocTreeNodeProps> = ({
     return false;
   };
 
-  const isSubtreeActive = containsActiveSegment(item);
-  const [isExpanded, setIsExpanded] = useState<boolean>(level < 1 || isSubtreeActive);
-
-  useEffect(() => {
-    if (isSubtreeActive) {
-      setIsExpanded(true);
-    }
-  }, [isSubtreeActive]);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const isSelfActive = activeSegmentId === item.startSegmentId;
 
@@ -1692,27 +1685,18 @@ export function ReaderView({
             <div 
               className="reader-popover animate-fade-in"
               style={{
-                position: 'absolute',
-                top: 'calc(100% + 6px)',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                backgroundColor: 'var(--card-bg, #ffffff)',
-                border: '1px solid var(--border-color, rgba(140, 75, 39, 0.2))',
-                borderRadius: '12px',
-                boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
                 padding: '0.65rem 0.4rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: '0.5rem',
-                zIndex: 1000,
-                userSelect: 'none',
                 width: '46px'
               }}
             >
               {/* 最上方：最小字體圖示 A (16px) */}
               <button
                 type="button"
+                className="popover-font-btn-min"
                 onClick={() => {
                   const newSize = Math.max(16, settings.fontSize - 2);
                   onSaveSettings({ ...settings, fontSize: newSize });
@@ -1768,6 +1752,7 @@ export function ReaderView({
               {/* 最下方：最大字體圖示 A (40px) */}
               <button
                 type="button"
+                className="popover-font-btn-max"
                 onClick={() => {
                   const newSize = Math.min(40, settings.fontSize + 2);
                   onSaveSettings({ ...settings, fontSize: newSize });
@@ -1799,7 +1784,7 @@ export function ReaderView({
               </button>
 
               {/* 當前字級數值 */}
-              <span style={{ 
+              <span className="popover-fontsize-val" style={{ 
                 fontSize: '0.68rem', 
                 fontWeight: 'bold',
                 fontFamily: 'sans-serif',
@@ -1882,7 +1867,7 @@ export function ReaderView({
           return (
             <div className="highlight-popover-container" style={{ position: 'relative' }}>
               <button 
-                className={`reader-text-btn ${showHighlightPopover ? 'active' : ''}`}
+                className={`reader-text-btn highlight-btn ${showHighlightPopover ? 'active' : ''}`}
                 onClick={() => setShowHighlightPopover(prev => !prev)}
                 title="畫重點設定 (筆刷顏色與粗細標註模式)"
                 style={{
@@ -1911,20 +1896,10 @@ export function ReaderView({
                 <div 
                   className="reader-popover animate-fade-in"
                   style={{
-                    position: 'absolute',
-                    top: 'calc(100% + 6px)',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    backgroundColor: 'var(--card-bg, #ffffff)',
-                    border: '1px solid var(--border-color, rgba(140, 75, 39, 0.2))',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
                     padding: '0.6rem 0.7rem',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '0.5rem',
-                    zIndex: 1000,
-                    userSelect: 'none'
+                    gap: '0.5rem'
                   }}
                 >
                   {/* 左右兩欄佈局：左欄顏色、右欄標註模式 */}
@@ -1951,19 +1926,22 @@ export function ReaderView({
                               flexShrink: 0
                             }}
                           >
-                            <div style={{
-                              width: '18px',
-                              height: '18px',
-                              borderRadius: '50%',
-                              backgroundColor: cHex,
-                              border: isSelected ? '2px solid var(--theme-accent, #8c4b27)' : '1.5px solid rgba(0,0,0,0.18)',
-                              boxShadow: isSelected ? '0 0 0 2.5px rgba(140, 75, 39, 0.25)' : 'none',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              transition: 'transform 0.15s, box-shadow 0.15s',
-                              transform: isSelected ? 'scale(1.15)' : 'scale(1)'
-                            }}>
+                            <div 
+                              className={`popover-color-dot ${isSelected ? 'selected' : ''}`}
+                              style={{
+                                width: '18px',
+                                height: '18px',
+                                borderRadius: '50%',
+                                backgroundColor: cHex,
+                                border: isSelected ? '2px solid var(--theme-accent, #8c4b27)' : '1.5px solid rgba(0,0,0,0.18)',
+                                boxShadow: isSelected ? '0 0 0 2.5px rgba(140, 75, 39, 0.25)' : 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'transform 0.15s, box-shadow 0.15s',
+                                transform: isSelected ? 'scale(1.15)' : 'scale(1)'
+                              }}
+                            >
                               {isSelected && (
                                 <span style={{ fontSize: '0.6rem', fontWeight: 'bold', color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.5)', lineHeight: 1 }}>
                                   ✓
@@ -1976,7 +1954,7 @@ export function ReaderView({
                     </div>
 
                     {/* 垂直分隔線 */}
-                    <div style={{ width: '1px', backgroundColor: 'var(--border-color, rgba(0,0,0,0.08))', alignSelf: 'stretch' }} />
+                    <div className="popover-divider-v" style={{ width: '1px', backgroundColor: 'var(--border-color, rgba(0,0,0,0.08))', alignSelf: 'stretch' }} />
 
                     {/* 右欄：4 個粗細與標註模式 (縱向排列) */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
@@ -1999,6 +1977,7 @@ export function ReaderView({
                         return (
                           <div
                             key={s}
+                            className={`popover-style-option ${isSelected ? 'selected' : ''}`}
                             onClick={() => handleSelectHighlightStyle(s)}
                             title={s === 'full' ? '全塗' : s === 'bottom-half' ? '半塗' : s === 'underline' ? '底線' : '方框'}
                             style={{

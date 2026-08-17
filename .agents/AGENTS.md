@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.0.7` (App: v4.0.7 / Builder: v2.9.6)
+- **Current Version**: `v4.0.8` (App: v4.0.8 / Builder: v2.9.7)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.0.8 / Builder: v2.9.7** (2026-08-17)
+  - [App] 目次選單帶有折疊項目者預設一律收合，避免版面過長。
+  - [App] 烏木模式適配字體大小與劃重點快選彈窗之深色底色與灰白細框。
+  - [Builder] 系統性修復全藏經帶有前綴之 `lb` 行號識別，修正目次小節精確錨定。
 - **⭐ App: v4.0.7 / Builder: v2.9.6** (2026-08-17)
   - [App] 「重點與筆記」收合設定，依內文順序排列。
   - [App] 調整閱讀頁面上方控制列的「文字大小」、「畫重點」設定。
@@ -228,5 +232,22 @@ When comparing imported book segments with original CBETA documents to fix error
   - 當觸發備援機制切換至離線備用鏡像源時，系統**必須主動向讀者顯示溫馨提示 Toast 或標籤**：
     > *「💡 CBETA 官方伺服器連線繁忙，已自動切換至離線版本（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）。」*
   - 確保讀者充分知情資料來源與版本狀態，兼顧高可用性下載體驗與資訊透明度。
+
+---
+
+## 7. Four Color Themes Adaptability Doctrine (四大配色主題全域適配原則)
+
+> [!IMPORTANT]
+> **四大配色主題全域適配原則 (Four Themes UI/UX Protocol)**：
+> 未來在修改或新增 App 任何功能、版面介面、按鈕、圖示、彈窗、選單、背景、色塊或劃線重點時，**一律必須同步考量並完整適配本 App 的四大配色模式**：
+> 1. **象牙白 (Ivory / Default)**：經典米白紙質底色 (`#fefcf8` / `--bg-paper-ivory`)，深褐色文字 (`#2c2016`) 與木質金褐色邊框/按鈕。
+> 2. **羊皮紙 (Parchment)**：古雅暖黃牛皮紙底色 (`#f5eee0` / `--bg-paper-parchment`)，暖棕色文字 (`#3c2a1a`) 與羊皮金邊框。
+> 3. **舒服護眼 (Comfort)**：柔和淡青草木綠底色 (`#ecf3e2` / `--bg-paper-comfort`)，深黛綠文字 (`#23351d`) 與淡青草綠邊框。
+> 4. **烏木暗色 (Ebony)**：深沉純黑/黑藍夜間底色 (`#12161a` / `--bg-paper-ebony`)，柔和灰白文字 (`#d8dec9` / `#e0dcd3`)，彈窗/色塊/輸入框/卡片一律採用**深色底色 (`#181d22` 或半透明深黑) 佐以灰白色細框 (`1px solid rgba(255, 255, 255, 0.18~0.25)`)**。
+>
+> **開發守則**：
+> - **嚴禁在 UI 元件中寫死單一白底 (`#ffffff`) 或黑字 (`#000000`)**，必須使用 CSS 變數（如 `var(--card-bg)`, `var(--text-primary)`, `var(--border-color)`）或在對應 CSS 檔案中編寫 `.theme-ebony` / `body.theme-ebony` 覆寫規則。
+> - 任何新 UI 元素（按鈕、選單、Popover、Dialog、Tooltip、SVG 圖標等）於開發完成後，皆需逐一確認在四種模式下的文字對比度、背景融合度與邊框辨識度。
+
 
 
