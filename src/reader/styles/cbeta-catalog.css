@@ -411,8 +411,11 @@ body.theme-dark .cbeta-green-brand {
   transition: all 0.2s ease;
 }
 
-.theme-ebony .cbeta-folder-card {
+.theme-ebony .cbeta-folder-card,
+body.theme-ebony .cbeta-folder-card,
+body.theme-dark .cbeta-folder-card {
   background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .cbeta-folder-card:hover {
@@ -446,8 +449,11 @@ body.theme-dark .cbeta-green-brand {
   position: relative;
 }
 
-.theme-ebony .cbeta-work-card {
-  background-color: rgba(30, 36, 42, 0.9);
+.theme-ebony .cbeta-work-card,
+body.theme-ebony .cbeta-work-card,
+body.theme-dark .cbeta-work-card {
+  background-color: rgba(24, 29, 34, 0.92);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .cbeta-work-card:hover {

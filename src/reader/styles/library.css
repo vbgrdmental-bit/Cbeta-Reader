@@ -3174,13 +3174,32 @@ body.theme-dark .book-reorder-btn:hover:not(:disabled) {
   border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-/* 經典 Modal 1 列 4 個圖示功能按鈕 Grid (移至資料夾 | 加入我的最愛 | 更新經文 | 刪除經文) */
+/* 經典 Modal 1 列 3 個圖示功能按鈕 (移至資料夾 | 加入我的最愛 | 刪除經文)，大小比 1:1:1 佐以細分隔線 */
+.action-buttons-grid-3,
 .action-buttons-grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 0.2rem;
   margin-bottom: 0.4rem;
+}
+
+.action-buttons-grid-3 .action-grid-btn,
+.action-buttons-grid-4 .action-grid-btn {
+  flex: 1;
+  min-width: 0;
+}
+
+.action-grid-divider {
+  width: 1px;
+  height: 32px;
+  background-color: var(--border-color, rgba(0, 0, 0, 0.12));
+  flex-shrink: 0;
+}
+
+body.theme-ebony .action-grid-divider,
+body.theme-dark .action-grid-divider {
+  background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .action-grid-btn {
@@ -3200,7 +3219,7 @@ body.theme-dark .book-reorder-btn:hover:not(:disabled) {
 }
 
 .action-grid-btn span {
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 600;
   white-space: nowrap;
   letter-spacing: -0.02em;

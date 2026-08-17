@@ -40,11 +40,11 @@ interface CatalogItem {
   timeTo?: number;
 }
 
-// CBETA 官方筆劃分類標籤與代表字 (對齊圖 1、圖 2、圖 3、圖 4)
+// CBETA 官方筆劃分類標籤與代表字 (1~29 劃)
 export const CREATOR_STROKE_CATEGORIES = [
   { stroke: 1, label: '1 劃', sample: '一' },
   { stroke: 2, label: '2 劃', sample: '丁, 九, 了, 力, 十' },
-  { stroke: 3, label: '3 劃', sample: '三, 上, 久, 于, 及, 土, 大, 子, 尸, 工, 才' },
+  { stroke: 3, label: '3 劃', sample: '三, 上, 久, 于, 及, 士, 大, 子, 尸, 工, 才, 山' },
   { stroke: 4, label: '4 劃', sample: '不, 中, 仁, 今, 介, 允, 勿, 天, 太, 巨, 巴, 幻, 式, 心, 支, 文, 方, 日, 月, 木, 毛, 水, 王' },
   { stroke: 5, label: '5 劃', sample: '世, 丘, 功, 印, 古, 可, 平, 弗, 弘, 朱, 本, 札, 正, 永, 玄, 用, 白, 目, 矢, 石' },
   { stroke: 6, label: '6 劃', sample: '仲, 任, 伊, 先, 光, 全, 沖, 合, 吉, 地, 多, 如, 守, 安, 屾, 延, 廷, 成, 有, 朱, 朴, 汝, 江, 牟, 祁, 自, 至, 芝, 行, 衣, 西, 那' },
@@ -69,310 +69,55 @@ export const CREATOR_STROKE_CATEGORIES = [
   { stroke: 29, label: '29 劃', sample: '鬱' }
 ];
 
-// CBETA 官方作譯者筆劃對照字典 (帶有 CBETA 官方權威 Creator ID 唯一編號，確保 100% 精確檢索)
-export const CBETA_CREATORS_BY_STROKE: Record<number, { name: string; creatorId: string; query: string }[]> = {
-  1: [
-    { name: '一如 (A000007)', creatorId: 'A000007', query: '一如' },
-    { name: '一志 (A000009)', creatorId: 'A000009', query: '一志' },
-    { name: '一念居士 (A000011)', creatorId: 'A000011', query: '一念' },
-    { name: '一松 (A000012)', creatorId: 'A000012', query: '一松' },
-    { name: '一然 (A000014)', creatorId: 'A000014', query: '一然' },
-    { name: '一行 (A000008)', creatorId: 'A000008', query: '一行' },
-    { name: '一見 (A000010)', creatorId: 'A000010', query: '一見' }
-  ],
-  2: [
-    { name: '丁丙 (A003576)', creatorId: 'A003576', query: '丁丙' },
-    { name: '丁福保 (A007851)', creatorId: 'A007851', query: '丁福保' },
-    { name: '九師 (A000018)', creatorId: 'A000018', query: '九師' },
-    { name: '了亮 (A000023)', creatorId: 'A000023', query: '了亮' },
-    { name: '了元 (A000019)', creatorId: 'A000019', query: '了元' },
-    { name: '了南 (A000024)', creatorId: 'A000024', query: '了南' },
-    { name: '了因 (A000021)', creatorId: 'A000021', query: '了因' },
-    { name: '了圓 (A000038)', creatorId: 'A000038', query: '了圓' },
-    { name: '了垠 (A000025)', creatorId: 'A000025', query: '了垠' },
-    { name: '了廣 (A000039)', creatorId: 'A000039', query: '了廣' },
-    { name: '了彙 (A011343)', creatorId: 'A011343', query: '了彙' },
-    { name: '了心 (A000020)', creatorId: 'A000020', query: '了心' },
-    { name: '了悟 (A000027)', creatorId: 'A000027', query: '了悟' },
-    { name: '了根 (A000028)', creatorId: 'A000028', query: '了根' },
-    { name: '了然 (A000035)', creatorId: 'A000035', query: '了然' },
-    { name: '了禪 (A000040)', creatorId: 'A000040', query: '了禪' },
-    { name: '了童 (A000036)', creatorId: 'A000036', query: '了童' },
-    { name: '了能 (A000031)', creatorId: 'A000031', query: '了能' },
-    { name: '了舜 (A000037)', creatorId: 'A000037', query: '了舜' },
-    { name: '了見 (A000022)', creatorId: 'A000022', query: '了見' },
-    { name: '了覺 (A000041)', creatorId: 'A000041', query: '了覺' },
-    { name: '了貞 (A000026)', creatorId: 'A000026', query: '了貞' },
-    { name: '力廣 (A037623)', creatorId: 'A037623', query: '力廣' },
-    { name: '力端 (A037558)', creatorId: 'A037558', query: '力端' },
-    { name: '十身覺 (A022466)', creatorId: 'A022466', query: '十身覺' }
-  ],
-  3: [
-    { name: '三家 (A000045)', creatorId: 'A000045', query: '三家' },
-    { name: '三藏 (A000044)', creatorId: 'A000044', query: '三藏' },
-    { name: '上田 (A000050)', creatorId: 'A000050', query: '上田' },
-    { name: '于陵 (A000055)', creatorId: 'A000055', query: '于陵' },
-    { name: '及時 (A000060)', creatorId: 'A000060', query: '及時' },
-    { name: '土井 (A000065)', creatorId: 'A000065', query: '土井' },
-    { name: '大千 (A000070)', creatorId: 'A000070', query: '大千' },
-    { name: '大仙 (A000072)', creatorId: 'A000072', query: '大仙' },
-    { name: '大谷 (A000075)', creatorId: 'A000075', query: '大谷' },
-    { name: '子平 (A000080)', creatorId: 'A000080', query: '子平' }
-  ],
-  4: [
-    { name: '不空 (A000102)', creatorId: 'A000102', query: '不空' },
-    { name: '支樓迦讖 (A000135)', creatorId: 'A000135', query: '支樓迦讖' },
-    { name: '支謙 (A000140)', creatorId: 'A000140', query: '支謙' },
-    { name: '天息災 (A000125)', creatorId: 'A000125', query: '天息災' },
-    { name: '太虛 (A001050)', creatorId: 'A001050', query: '太虛' },
-    { name: '中川 (A000100)', creatorId: 'A000100', query: '中川' },
-    { name: '仁井 (A000105)', creatorId: 'A000105', query: '仁井' },
-    { name: '今井 (A000110)', creatorId: 'A000110', query: '今井' },
-    { name: '介宗 (A000115)', creatorId: 'A000115', query: '介宗' },
-    { name: '允宗 (A000120)', creatorId: 'A000120', query: '允宗' },
-    { name: '王日休 (A000150)', creatorId: 'A000150', query: '王日休' }
-  ],
-  5: [
-    { name: '玄奘 (A000294)', creatorId: 'A000294', query: '玄奘' },
-    { name: '玄覺 (A000200)', creatorId: 'A000200', query: '玄覺' },
-    { name: '弘一 (A001055)', creatorId: 'A001055', query: '弘一' },
-    { name: '世親 (A000155)', creatorId: 'A000155', query: '世親' },
-    { name: '丘山 (A000160)', creatorId: 'A000160', query: '丘山' },
-    { name: '古川 (A000170)', creatorId: 'A000170', query: '古川' },
-    { name: '平川 (A000180)', creatorId: 'A000180', query: '平川' },
-    { name: '弗若多羅 (A000190)', creatorId: 'A000190', query: '弗若多羅' },
-    { name: '正受 (A000195)', creatorId: 'A000195', query: '正受' },
-    { name: '白居易 (A000205)', creatorId: 'A000205', query: '白居易' }
-  ],
-  6: [
-    { name: '安世高 (A000230)', creatorId: 'A000230', query: '安世高' },
-    { name: '地婆訶羅 (A000215)', creatorId: 'A000215', query: '地婆訶羅' },
-    { name: '吉藏 (A000210)', creatorId: 'A000210', query: '吉藏' },
-    { name: '如本 (A000220)', creatorId: 'A000220', query: '如本' },
-    { name: '守培 (A000225)', creatorId: 'A000225', query: '守培' },
-    { name: '成觀 (A000235)', creatorId: 'A000235', query: '成觀' },
-    { name: '江味農 (A000240)', creatorId: 'A000240', query: '江味農' },
-    { name: '牟子 (A000245)', creatorId: 'A000245', query: '牟子' },
-    { name: '自覺 (A000255)', creatorId: 'A000255', query: '自覺' },
-    { name: '行策 (A000260)', creatorId: 'A000260', query: '行策' },
-    { name: '那連提耶舍 (A000265)', creatorId: 'A000265', query: '那連提耶舍' }
-  ],
-  7: [
-    { name: '求那跋陀羅 (A000280)', creatorId: 'A000280', query: '求那跋陀羅' },
-    { name: '佛陀跋陀羅 (A000270)', creatorId: 'A000270', query: '佛陀跋陀羅' },
-    { name: '佛陀什 (A000275)', creatorId: 'A000275', query: '佛陀什' },
-    { name: '沙羅巴 (A000282)', creatorId: 'A000282', query: '沙羅巴' },
-    { name: '伽梵達摩 (A000272)', creatorId: 'A000272', query: '伽梵達摩' },
-    { name: '克勤 (A000276)', creatorId: 'A000276', query: '克勤' },
-    { name: '吳應熊 (A000277)', creatorId: 'A000277', query: '吳應熊' },
-    { name: '呂澂 (A000278)', creatorId: 'A000278', query: '呂澂' },
-    { name: '宏智 (A000279)', creatorId: 'A000279', query: '宏智' },
-    { name: '希運 (A000281)', creatorId: 'A000281', query: '希運' },
-    { name: '志磐 (A000283)', creatorId: 'A000283', query: '志磐' },
-    { name: '戒賢 (A000284)', creatorId: 'A000284', query: '戒賢' },
-    { name: '李世民 (A000286)', creatorId: 'A000286', query: '李世民' },
-    { name: '沈家楨 (A000287)', creatorId: 'A000287', query: '沈家楨' },
-    { name: '良价 (A000288)', creatorId: 'A000288', query: '良价' },
-    { name: '阿底峽 (A000289)', creatorId: 'A000289', query: '阿底峽' }
-  ],
-  8: [
-    { name: '竺法護 (A000290)', creatorId: 'A000290', query: '竺法護' },
-    { name: '曇摩羅剎 (A000291)', creatorId: 'A000291', query: '曇摩羅剎' },
-    { name: '帛尸梨蜜多羅 (A000292)', creatorId: 'A000292', query: '帛尸梨蜜多羅' },
-    { name: '金剛智 (A000293)', creatorId: 'A000293', query: '金剛智' },
-    { name: '法天 (A000295)', creatorId: 'A000295', query: '法天' },
-    { name: '法藏 (A000296)', creatorId: 'A000296', query: '法藏' },
-    { name: '沮渠京聲 (A000297)', creatorId: 'A000297', query: '沮渠京聲' },
-    { name: '其廣 (A000305)', creatorId: 'A000305', query: '其廣' },
-    { name: '周叔迦 (A000310)', creatorId: 'A000310', query: '周叔迦' },
-    { name: '宗密 (A000320)', creatorId: 'A000320', query: '宗密' },
-    { name: '居士 (A000325)', creatorId: 'A000325', query: '居士' },
-    { name: '念常 (A000330)', creatorId: 'A000330', query: '念常' },
-    { name: '明本 (A000335)', creatorId: 'A000335', query: '明本' },
-    { name: '武則天 (A000340)', creatorId: 'A000340', query: '武則天' },
-    { name: '波羅頗蜜多羅 (A000345)', creatorId: 'A000345', query: '波羅頗蜜多羅' },
-    { name: '知禮 (A000350)', creatorId: 'A000350', query: '知禮' },
-    { name: '空海 (A000355)', creatorId: 'A000355', query: '空海' },
-    { name: '舍利弗 (A000360)', creatorId: 'A000360', query: '舍利弗' },
-    { name: '攝摩騰 (A000365)', creatorId: 'A000365', query: '攝摩騰' },
-    { name: '青原 (A000370)', creatorId: 'A000370', query: '青原' }
-  ],
-  9: [
-    { name: '毗目智仙 (A000375)', creatorId: 'A000375', query: '毗目智仙' },
-    { name: '彥琮 (A000380)', creatorId: 'A000380', query: '彥琮' },
-    { name: '施護 (A000390)', creatorId: 'A000390', query: '施護' },
-    { name: '姚興 (A000395)', creatorId: 'A000395', query: '姚興' },
-    { name: '彥思 (A000385)', creatorId: 'A000385', query: '彥思' },
-    { name: '昭明 (A000400)', creatorId: 'A000400', query: '昭明' },
-    { name: '洛陽 (A000405)', creatorId: 'A000405', query: '洛陽' },
-    { name: '神秀 (A000410)', creatorId: 'A000410', query: '神秀' },
-    { name: '神會 (A000415)', creatorId: 'A000415', query: '神會' },
-    { name: '重遠 (A000425)', creatorId: 'A000425', query: '重遠' }
-  ],
-  10: [
-    { name: '真諦 (A000430)', creatorId: 'A000430', query: '真諦' },
-    { name: '般若 (A000435)', creatorId: 'A000435', query: '般若' },
-    { name: '馬鳴 (A000440)', creatorId: 'A000440', query: '馬鳴' },
-    { name: '陳那 (A000445)', creatorId: 'A000445', query: '陳那' },
-    { name: '玄宗 (A000450)', creatorId: 'A000450', query: '玄宗' },
-    { name: '徐陵 (A000452)', creatorId: 'A000452', query: '徐陵' },
-    { name: '悟真 (A000455)', creatorId: 'A000455', query: '悟真' },
-    { name: '晃耀 (A000460)', creatorId: 'A000460', query: '晃耀' },
-    { name: '真觀 (A000465)', creatorId: 'A000465', query: '真觀' },
-    { name: '莊子 (A000470)', creatorId: 'A000470', query: '莊子' },
-    { name: '郭朋 (A000480)', creatorId: 'A000480', query: '郭朋' },
-    { name: '陸波 (A000495)', creatorId: 'A000495', query: '陸波' }
-  ],
-  11: [
-    { name: '康僧會 (A000500)', creatorId: 'A000500', query: '康僧會' },
-    { name: '曼陀羅仙 (A000505)', creatorId: 'A000505', query: '曼陀羅仙' },
-    { name: '菩提流支 (A000515)', creatorId: 'A000515', query: '菩提流支' },
-    { name: '勒那摩提 (A000520)', creatorId: 'A000520', query: '勒那摩提' },
-    { name: '菩提流志 (A000525)', creatorId: 'A000525', query: '菩提流志' },
-    { name: '惟淨 (A000530)', creatorId: 'A000530', query: '惟淨' },
-    { name: '達摩 (A000535)', creatorId: 'A000535', query: '達摩' },
-    { name: '寂天 (A000540)', creatorId: 'A000540', query: '寂天' },
-    { name: '唯識 (A000510)', creatorId: 'A000510', query: '唯識' },
-    { name: '張商英 (A000545)', creatorId: 'A000545', query: '張商英' },
-    { name: '澄觀 (A000550)', creatorId: 'A000550', query: '澄觀' },
-    { name: '梵琦 (A000555)', creatorId: 'A000555', query: '梵琦' },
-    { name: '淨嚴 (A000560)', creatorId: 'A000560', query: '淨嚴' },
-    { name: '清珙 (A000565)', creatorId: 'A000565', query: '清珙' },
-    { name: '章嘉 (A000570)', creatorId: 'A000570', query: '章嘉' },
-    { name: '野澤 (A000575)', creatorId: 'A000575', query: '野澤' }
-  ],
-  12: [
-    { name: '達摩笈多 (A000580)', creatorId: 'A000580', query: '達摩笈多' },
-    { name: '善無畏 (A000585)', creatorId: 'A000585', query: '善無畏' },
-    { name: '智通 (A000590)', creatorId: 'A000590', query: '智通' },
-    { name: '智吉祥 (A000595)', creatorId: 'A000595', query: '智吉祥' },
-    { name: '智顗 (A000605)', creatorId: 'A000605', query: '智顗' },
-    { name: '湛然 (A000610)', creatorId: 'A000610', query: '湛然' },
-    { name: '智旭 (A000620)', creatorId: 'A000620', query: '智旭' },
-    { name: '虛雲 (A001060)', creatorId: 'A001060', query: '虛雲' },
-    { name: '提婆 (A000625)', creatorId: 'A000625', query: '提婆' },
-    { name: '無著 (A000630)', creatorId: 'A000630', query: '無著' },
-    { name: '訶梨跋摩 (A000635)', creatorId: 'A000635', query: '訶梨跋摩' },
-    { name: '傅大士 (A000640)', creatorId: 'A000640', query: '傅大士' }
-  ],
-  13: [
-    { name: '鳩摩羅什 (A000285)', creatorId: 'A000285', query: '鳩摩羅什' },
-    { name: '義淨 (A000650)', creatorId: 'A000650', query: '義淨' },
-    { name: '傳燈 (A000645)', creatorId: 'A000645', query: '傳燈' },
-    { name: '圓測 (A000655)', creatorId: 'A000655', query: '圓測' },
-    { name: '圓悟 (A000660)', creatorId: 'A000660', query: '圓悟' },
-    { name: '慈舟 (A000665)', creatorId: 'A000665', query: '慈舟' },
-    { name: '楊仁山 (A000670)', creatorId: 'A000670', query: '楊仁山' },
-    { name: '照靈 (A000675)', creatorId: 'A000675', query: '照靈' },
-    { name: '瑞白 (A000685)', creatorId: 'A000685', query: '瑞白' },
-    { name: '解脫 (A000690)', creatorId: 'A000690', query: '解脫' },
-    { name: '鳩摩羅多 (A000695)', creatorId: 'A000695', query: '鳩摩羅多' }
-  ],
-  14: [
-    { name: '實叉難陀 (A000700)', creatorId: 'A000700', query: '實叉難陀' },
-    { name: '僧伽婆羅 (A000705)', creatorId: 'A000705', query: '僧伽婆羅' },
-    { name: '管主八 (A000710)', creatorId: 'A000710', query: '管主八' },
-    { name: '僧肇 (A000715)', creatorId: 'A000715', query: '僧肇' },
-    { name: '僧祐 (A000720)', creatorId: 'A000720', query: '僧祐' },
-    { name: '僧璨 (A000730)', creatorId: 'A000730', query: '僧璨' },
-    { name: '省庵 (A000735)', creatorId: 'A000735', query: '省庵' },
-    { name: '寬量 (A000725)', creatorId: 'A000725', query: '寬量' },
-    { name: '廣欽 (A001065)', creatorId: 'A001065', query: '廣欽' },
-    { name: '裴休 (A000740)', creatorId: 'A000740', query: '裴休' },
-    { name: '趙州 (A000745)', creatorId: 'A000745', query: '趙州' }
-  ],
-  15: [
-    { name: '袾宏 (A000750)', creatorId: 'A000750', query: '袾宏' },
-    { name: '德清 (A000755)', creatorId: 'A000755', query: '德清' },
-    { name: '德韶 (A000760)', creatorId: 'A000760', query: '德韶' },
-    { name: '慧遠 (A000765)', creatorId: 'A000765', query: '慧遠' },
-    { name: '慧能 (A000770)', creatorId: 'A000770', query: '慧能' },
-    { name: '慶喜 (A000775)', creatorId: 'A000775', query: '慶喜' },
-    { name: '摩訶迦葉 (A000780)', creatorId: 'A000780', query: '摩訶迦葉' },
-    { name: '潤清 (A000790)', creatorId: 'A000790', query: '潤清' },
-    { name: '潭州 (A000795)', creatorId: 'A000795', query: '潭州' },
-    { name: '澄觀 (A000800)', creatorId: 'A000800', query: '澄觀' },
-    { name: '遵式 (A000805)', creatorId: 'A000805', query: '遵式' }
-  ],
-  16: [
-    { name: '曇無讖 (A000810)', creatorId: 'A000810', query: '曇無讖' },
-    { name: '龍樹 (A000815)', creatorId: 'A000815', query: '龍樹' },
-    { name: '曇鸞 (A000820)', creatorId: 'A000820', query: '曇鸞' },
-    { name: '曉月 (A000830)', creatorId: 'A000830', query: '曉月' },
-    { name: '燈霞 (A000840)', creatorId: 'A000840', query: '燈霞' },
-    { name: '禪宗 (A000845)', creatorId: 'A000845', query: '禪宗' },
-    { name: '窺基 (A000850)', creatorId: 'A000850', query: '窺基' },
-    { name: '蘊空 (A000865)', creatorId: 'A000865', query: '蘊空' },
-    { name: '諦閑 (A000870)', creatorId: 'A000870', query: '諦閑' },
-    { name: '靜泰 (A000885)', creatorId: 'A000885', query: '靜泰' }
-  ],
-  17: [
-    { name: '闍那崛多 (A000890)', creatorId: 'A000890', query: '闍那崛多' },
-    { name: '闍那多羅 (A000895)', creatorId: 'A000895', query: '闍那多羅' },
-    { name: '優波離 (A000900)', creatorId: 'A000900', query: '優波離' },
-    { name: '彌勒 (A000905)', creatorId: 'A000905', query: '彌勒' },
-    { name: '應真 (A000910)', creatorId: 'A000910', query: '應真' },
-    { name: '道濟 (A000915)', creatorId: 'A000915', query: '道濟' },
-    { name: '禮讚 (A000925)', creatorId: 'A000925', query: '禮讚' },
-    { name: '藏川 (A000940)', creatorId: 'A000940', query: '藏川' },
-    { name: '謝靈運 (A000945)', creatorId: 'A000945', query: '謝靈運' },
-    { name: '鍾倫 (A000955)', creatorId: 'A000955', query: '鍾倫' }
-  ],
-  18: [
-    { name: '瞿曇般若流支 (A000960)', creatorId: 'A000960', query: '瞿曇般若流支' },
-    { name: '僧伽提婆 (A000965)', creatorId: 'A000965', query: '僧伽提婆' },
-    { name: '豐干 (A000975)', creatorId: 'A000975', query: '豐干' },
-    { name: '雙林 (A000985)', creatorId: 'A000985', query: '雙林' },
-    { name: '顏真卿 (A000990)', creatorId: 'A000990', query: '顏真卿' }
-  ],
-  19: [
-    { name: '嚴浮調 (A000995)', creatorId: 'A000995', query: '嚴浮調' },
-    { name: '懷素 (A001000)', creatorId: 'A001000', query: '懷素' },
-    { name: '懷感 (A001005)', creatorId: 'A001005', query: '懷感' },
-    { name: '羅什 (A000285)', creatorId: 'A000285', query: '羅什' },
-    { name: '蘇軾 (A001015)', creatorId: 'A001015', query: '蘇軾' },
-    { name: '譚嗣同 (A001020)', creatorId: 'A001020', query: '譚嗣同' },
-    { name: '讚寧 (A001025)', creatorId: 'A001025', query: '讚寧' }
-  ],
-  20: [
-    { name: '印順 (A001040)', creatorId: 'A001040', query: '印順' },
-    { name: '智顗 (A000605)', creatorId: 'A000605', query: '智顗' },
-    { name: '慧能 (A000770)', creatorId: 'A000770', query: '慧能' },
-    { name: '窺基 (A000850)', creatorId: 'A000850', query: '窺基' },
-    { name: '宗密 (A000320)', creatorId: 'A000320', query: '宗密' },
-    { name: '延壽 (A001030)', creatorId: 'A001030', query: '延壽' },
-    { name: '真可 (A001035)', creatorId: 'A001035', query: '真可' },
-    { name: '續法 (A001070)', creatorId: 'A001070', query: '續法' },
-    { name: '太虛 (A001050)', creatorId: 'A001050', query: '太虛' },
-    { name: '弘一 (A001055)', creatorId: 'A001055', query: '弘一' },
-    { name: '虛雲 (A001060)', creatorId: 'A001060', query: '虛雲' },
-    { name: '護法 (A001045)', creatorId: 'A001045', query: '護法' },
-    { name: '寶誌 (A001048)', creatorId: 'A001048', query: '寶誌' },
-    { name: '灌頂 (A001049)', creatorId: 'A001049', query: '灌頂' }
-  ],
-  21: [
-    { name: '攝摩騰 (A000365)', creatorId: 'A000365', query: '攝摩騰' },
-    { name: '續法 (A001070)', creatorId: 'A001070', query: '續法' },
-    { name: '辯機 (A001075)', creatorId: 'A001075', query: '辯機' }
-  ],
-  22: [
-    { name: '讀體 (A001080)', creatorId: 'A001080', query: '讀體' },
-    { name: '鑑真 (A001082)', creatorId: 'A001082', query: '鑑真' },
-    { name: '體空 (A001085)', creatorId: 'A001085', query: '體空' }
-  ],
-  23: [
-    { name: '顯懿 (A001095)', creatorId: 'A001095', query: '顯懿' },
-    { name: '顯潤 (A001100)', creatorId: 'A001100', query: '顯潤' }
-  ],
-  24: [
-    { name: '觀頂 (A001105)', creatorId: 'A001105', query: '觀頂' },
-    { name: '觀空 (A001110)', creatorId: 'A001110', query: '觀空' },
-    { name: '靈潤 (A001120)', creatorId: 'A001120', query: '靈潤' }
-  ],
-  29: [
-    { name: '鬱多羅 (A001140)', creatorId: 'A001140', query: '鬱多羅' }
-  ]
-};
+// CBETA 官方作譯者權威資料庫結構 (1~29 筆劃、首字分組、作譯者、經典清單)
+export interface CreatorWork {
+  workId: string;
+  title: string;
+  juansCount: number;
+  byline: string;
+  rawTitle: string;
+}
+
+export interface CreatorPerson {
+  creatorId: string;
+  name: string;
+  displayName: string;
+  worksCount: number;
+  works: CreatorWork[];
+}
+
+export interface CreatorFirstCharGroup {
+  firstChar: string;
+  creatorsCount: number;
+  creators: CreatorPerson[];
+}
+
+export interface CreatorStrokeCategory {
+  stroke: number;
+  label: string;
+  groupsCount: number;
+  creatorsCount: number;
+  worksCount: number;
+  groups: CreatorFirstCharGroup[];
+}
+
+let cachedCreatorsData: CreatorStrokeCategory[] | null = null;
+
+export async function fetchCreatorsData(): Promise<CreatorStrokeCategory[]> {
+  if (cachedCreatorsData && cachedCreatorsData.length > 0) {
+    return cachedCreatorsData;
+  }
+  try {
+    const res = await fetch('/data/cbeta-creators.json');
+    if (res.ok) {
+      cachedCreatorsData = await res.json();
+      return cachedCreatorsData || [];
+    }
+  } catch (err) {
+    console.error('Failed to fetch cbeta-creators.json:', err);
+  }
+  return [];
+}
 
 // CBETA 官方權威 37 個歷史時間與朝代完整列表 (包含「金 (7)」項目)
 const HISTORICAL_DYNASTIES = [
@@ -784,10 +529,19 @@ export function CbetaCatalogView({
 
     // 3. 依作譯者根目錄 (Level 1: 靜態 25 筆劃資料夾，0 延遲秒開)
     if (queryId === 'creator_root') {
-      const items: CatalogItem[] = CREATOR_STROKE_CATEGORIES.map(s => ({
+      const creatorsData = await fetchCreatorsData();
+      const strokeList = creatorsData.length > 0 ? creatorsData : CREATOR_STROKE_CATEGORIES.map(s => ({
+        stroke: s.stroke,
+        label: s.label,
+        groupsCount: 0,
+        creatorsCount: 0,
+        worksCount: 0,
+        groups: []
+      }));
+      const items: CatalogItem[] = strokeList.map(s => ({
         id: `creator_stroke_${s.stroke}`,
         label: s.label,
-        subLabel: s.sample,
+        subLabel: s.groupsCount > 0 ? `${s.groupsCount} 首字, ${s.creatorsCount} 位作譯者` : (CREATOR_STROKE_CATEGORIES.find(c => c.stroke === s.stroke)?.sample || ''),
         nodeType: 'category'
       }));
       catalogCacheRef.current.set(queryId, items);
@@ -796,21 +550,49 @@ export function CbetaCatalogView({
       return;
     }
 
-    // 4. 點選特定筆劃數資料夾 (Level 2: 靜態筆劃大師名單，0 延遲秒開)
+    // 4. 點選特定筆劃數資料夾 (Level 2: 首字群組分類，如 3 劃 -> 三、大、子、久、上...)
     if (queryId.startsWith('creator_stroke_')) {
       const strokeNum = parseInt(queryId.replace(/^creator_stroke_/, ''), 10);
-      const creatorsInStroke = CBETA_CREATORS_BY_STROKE[strokeNum] || [];
-      
-      const items: CatalogItem[] = creatorsInStroke.map(c => ({
-        id: `creator_search_${c.creatorId || c.query}`,
-        label: c.name,
-        nodeType: 'category',
-        queryParam: c.creatorId || c.query
-      }));
-      catalogCacheRef.current.set(queryId, items);
-      setCatalogItems(items);
-      setIsLoadingCatalog(false);
-      return;
+      const creatorsData = await fetchCreatorsData();
+      const strokeCat = creatorsData.find(s => s.stroke === strokeNum);
+
+      if (strokeCat && strokeCat.groups && strokeCat.groups.length > 0) {
+        const items: CatalogItem[] = strokeCat.groups.map(g => ({
+          id: `creator_group_${strokeNum}_${g.firstChar}`,
+          label: g.firstChar,
+          subLabel: `${g.creatorsCount} 位作譯者`,
+          nodeType: 'category'
+        }));
+        catalogCacheRef.current.set(queryId, items);
+        setCatalogItems(items);
+        setIsLoadingCatalog(false);
+        return;
+      }
+    }
+
+    // 4.5. 點選特定首字群組資料夾 (Level 3: 該首字底下的所有權威作譯者清單)
+    if (queryId.startsWith('creator_group_')) {
+      const parts = queryId.split('_'); // ['creator', 'group', '3', '大']
+      const strokeNum = parseInt(parts[2], 10);
+      const firstChar = parts.slice(3).join('_');
+
+      const creatorsData = await fetchCreatorsData();
+      const strokeCat = creatorsData.find(s => s.stroke === strokeNum);
+      const group = strokeCat?.groups.find(g => g.firstChar === firstChar);
+
+      if (group && group.creators && group.creators.length > 0) {
+        const items: CatalogItem[] = group.creators.map(c => ({
+          id: `creator_person_${c.creatorId}`,
+          label: c.displayName,
+          subLabel: `${c.worksCount} 部作品`,
+          nodeType: 'category',
+          queryParam: c.creatorId
+        }));
+        catalogCacheRef.current.set(queryId, items);
+        setCatalogItems(items);
+        setIsLoadingCatalog(false);
+        return;
+      }
     }
 
     // 5. 依據朝代根目錄 (Level 1: 靜態 37 朝代，0 延遲秒開)
@@ -828,28 +610,57 @@ export function CbetaCatalogView({
       return;
     }
 
-    // 6. 需要發送網路 API 的深層子層級 (經典列表 / 深層目錄) -> 顯示加載動畫並快取結果
+    // 6. 需要發送網路 API 或查找作譯者經典清單的深層子層級
     setIsLoadingCatalog(true);
     try {
-      // 點選大師名字資料夾 (Level 3: 使用 creator_id 檢索專屬經典清單)
-      if (queryId.startsWith('creator_search_')) {
-        const targetIdOrQuery = queryId.replace(/^creator_search_/, '');
+      // 點選大師名字資料夾 (Level 4: 取得專屬經典作品清單)
+      if (queryId.startsWith('creator_person_') || queryId.startsWith('creator_search_')) {
+        const creatorId = queryId.replace(/^creator_person_/, '').replace(/^creator_search_/, '');
 
-        let works: any[] = [];
-        let endpoint = '';
-
-        if (/^A\d+$/i.test(targetIdOrQuery)) {
-          endpoint = `/stable/works?creator_id=${targetIdOrQuery}`;
-        } else {
-          endpoint = `/stable/works?creator=${encodeURIComponent(targetIdOrQuery)}`;
+        // 優先從本地權威資料庫中尋找該作譯者的作品清單 (0 秒瞬開)
+        const creatorsData = await fetchCreatorsData();
+        let foundPerson: CreatorPerson | undefined;
+        for (const strokeCat of creatorsData) {
+          for (const group of strokeCat.groups) {
+            const p = group.creators.find(c => c.creatorId === creatorId || c.name === creatorId);
+            if (p) {
+              foundPerson = p;
+              break;
+            }
+          }
+          if (foundPerson) break;
         }
+
+        if (foundPerson && foundPerson.works && foundPerson.works.length > 0) {
+          const items: CatalogItem[] = foundPerson.works.map(w => ({
+            id: w.workId,
+            label: w.title,
+            subLabel: `${w.juansCount} 卷`,
+            nodeType: 'work',
+            workId: w.workId,
+            creators: w.byline || foundPerson!.name,
+            category: 'CBETA',
+            juansCount: w.juansCount,
+            juanStart: w.juansCount
+          }));
+          catalogCacheRef.current.set(queryId, items);
+          setCatalogItems(items);
+          setIsLoadingCatalog(false);
+          return;
+        }
+
+        // 若本地無作品則線上 fallback 查詢 CBETA API
+        let works: any[] = [];
+        let endpoint = /^A\d+$/i.test(creatorId)
+          ? `/stable/works?creator_id=${creatorId}`
+          : `/stable/works?creator=${encodeURIComponent(creatorId)}`;
 
         let relativeUrl = getApiUrl(endpoint);
         let res = await fetch(relativeUrl, { headers: { 'Accept': 'application/json' }, cache: 'reload' }).catch(() => null);
 
         if (!res || !res.ok) {
           const directUrl = `https://cbdata.dila.edu.tw${endpoint}`;
-          res = await fetch(directUrl, { headers: { 'Accept': 'application/json' }, cache: 'reload' });
+          res = await fetch(directUrl, { headers: { 'Accept': 'application/json' }, cache: 'reload' }).catch(() => null);
         }
 
         if (res && res.ok) {
@@ -861,7 +672,7 @@ export function CbetaCatalogView({
 
         // 若 API 查無結果，備用關鍵字搜尋
         if (works.length === 0) {
-          const searchRes = await IndexBuilder.searchTitle(targetIdOrQuery);
+          const searchRes = await IndexBuilder.searchTitle(creatorId);
           works = searchRes.map(r => ({
             work: r.workId,
             title: r.title,
@@ -878,7 +689,8 @@ export function CbetaCatalogView({
           workId: r.work || r.workId,
           creators: r.byline || r.creators || r.lead_creator || 'CBETA 電子佛典',
           category: r.category || r.orig_category || 'CBETA',
-          juanStart: r.juan || r.juansCount || 1
+          juanStart: r.juan || r.juansCount || 1,
+          juansCount: r.juan || r.juansCount || 1
         }));
 
         catalogCacheRef.current.set(queryId, items);
@@ -1012,12 +824,28 @@ export function CbetaCatalogView({
         break;
       case 'creator':
         rootNode = { id: 'creator_root', label: '依作譯者' };
-        setCatalogItems(CREATOR_STROKE_CATEGORIES.map(s => ({
-          id: `creator_stroke_${s.stroke}`,
-          label: s.label,
-          subLabel: s.sample,
-          nodeType: 'category'
-        })));
+        if (catalogCacheRef.current.has('creator_root')) {
+          setCatalogItems(catalogCacheRef.current.get('creator_root')!);
+        } else {
+          setCatalogItems(CREATOR_STROKE_CATEGORIES.map(s => ({
+            id: `creator_stroke_${s.stroke}`,
+            label: s.label,
+            subLabel: s.sample,
+            nodeType: 'category'
+          })));
+          fetchCreatorsData().then(creatorsData => {
+            if (creatorsData.length > 0) {
+              const items: CatalogItem[] = creatorsData.map(s => ({
+                id: `creator_stroke_${s.stroke}`,
+                label: s.label,
+                subLabel: `${s.groupsCount} 首字, ${s.creatorsCount} 位作譯者`,
+                nodeType: 'category'
+              }));
+              catalogCacheRef.current.set('creator_root', items);
+              setCatalogItems(items);
+            }
+          });
+        }
         break;
       case 'time':
         rootNode = { id: 'time_root', label: '依朝代' };

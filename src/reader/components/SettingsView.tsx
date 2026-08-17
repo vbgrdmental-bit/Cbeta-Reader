@@ -1152,15 +1152,17 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.0.7) 直接顯示 */}
+                {/* 最新 App 版本 (v4.1.0) 直接顯示 */}
                 <div className="changelog-version-section">
-                  <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ App: v4.0.7</span>
+                  <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                    <span>⭐ App: v4.1.0</span>
                     <span className="changelog-date">(2026-08-17)</span>
+                    <span style={{ fontSize: '0.72rem', padding: '1px 5px', borderRadius: '4px', border: '1px solid var(--theme-accent, #8c4b27)', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold', marginLeft: '2px' }}>重大更新</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 「重點與筆記」收合設定，依內文順序排列。</li>
-                    <li>• 調整閱讀頁面上方控制列的「文字大小」、「畫重點」設定。</li>
+                    <li>• 全面升級「依作譯者」查詢，100% 對齊 CBETA 官方 1~29 筆劃、首字分組與 2,000+ 位權威作譯者作品目錄。</li>
+                    <li>• 經書管理對話框調整為「移至資料夾 | 加入我的最愛 | 刪除經文」等寬三欄配置。</li>
+                    <li>• 目次選單帶有折疊項目者預設一律收合。</li>
                   </ul>
                 </div>
 
@@ -1183,6 +1185,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.0.7 <span className="changelog-date">(2026-08-17)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 「重點與筆記」收合設定，依內文順序排列。</li>
+                        <li>• 調整閱讀頁面上方控制列的「文字大小」、「畫重點」設定。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.0.1 <span className="changelog-date">(2026-08-08)</span></div>
                       <ul className="changelog-list">
@@ -1322,15 +1331,14 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.9.6) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.9.7) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ Builder: v2.9.6</span>
-                    <span className="changelog-date">(2026-08-16)</span>
+                    <span>⭐ Builder: v2.9.7</span>
+                    <span className="changelog-date">(2026-08-17)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 修正目錄段落標題索引，精準錨定經文起始節點。</li>
-                    <li>• 修正巢狀目錄列表文字重複，保留項目獨立段落。</li>
+                    <li>• 系統性修復全藏經帶有前綴之 lb 行號識別，修正目次小節精確錨定。</li>
                   </ul>
                 </div>
 
@@ -1354,6 +1362,13 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {/* 展開的 Builder 歷史版本 */}
                 {showBuilderHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.9.6 <span className="changelog-date">(2026-08-16)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 修正目錄段落標題索引，精準錨定經文起始節點。</li>
+                        <li>• 修正巢狀目錄列表文字重複，保留項目獨立段落。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">Builder: v2.9.1 <span className="changelog-date">(2026-08-11)</span></div>
                       <ul className="changelog-list">

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, AlertCircle, X, Download,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw, RefreshCw
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
@@ -2618,8 +2618,8 @@ export function Library({
                 </button>
               )}
 
-              {/* 1 列 4 個按鈕：移至資料夾 | 加入我的最愛 | 更新經文 | 刪除經文 */}
-              <div className="action-buttons-grid-4">
+              {/* 1 列 3 個按鈕：移至資料夾 | 加入我的最愛 | 刪除經文 (等寬 1:1:1 佐以細分隔線) */}
+              <div className="action-buttons-grid-3">
                 {/* 1. 移至資料夾 */}
                 <button 
                   className="action-grid-btn"
@@ -2634,6 +2634,9 @@ export function Library({
                   <FolderInput size={20} />
                   <span>移至資料夾</span>
                 </button>
+
+                {/* 分隔線 1 */}
+                <div className="action-grid-divider" />
 
                 {/* 2. 加入我的最愛 */}
                 <button 
@@ -2651,46 +2654,10 @@ export function Library({
                   <span>{favoriteWorkIds.includes(menuTargetBook.workId) ? '取消最愛' : '加入我的最愛'}</span>
                 </button>
 
-                {/* 3. 更新經文 */}
-                <button 
-                  className="action-grid-btn"
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    const b = menuTargetBook;
-                    setMenuTargetBook(null);
-                    if (!b) return;
-                    try {
-                      setBuildProgress({
-                        step: 'metadata',
-                        percent: 5,
-                        message: `正在準備更新《${b.title}》最新經文...`
-                      });
-                      await PackageBuilder.downloadAndPackage(
-                        {
-                          workId: b.workId,
-                          title: b.title,
-                          category: b.category,
-                          juansCount: b.juansCount,
-                          creators: b.creators,
-                          vol: b.vol
-                        },
-                        (p) => setBuildProgress(p)
-                      );
-                      await loadLocalBooks();
-                      setBuildProgress(null);
-                      alert(`《${b.title}》已成功更新至最新校勘經文！`);
-                    } catch (err: any) {
-                      setBuildProgress(null);
-                      alert(`更新《${b.title}》失敗：${err.message || err}`);
-                    }
-                  }}
-                  title="更新經文"
-                >
-                  <RefreshCw size={20} />
-                  <span>更新經文</span>
-                </button>
+                {/* 分隔線 2 */}
+                <div className="action-grid-divider" />
 
-                {/* 4. 刪除經文 */}
+                {/* 3. 刪除經文 */}
                 <button 
                   className="action-grid-btn delete-action"
                   onClick={(e) => {

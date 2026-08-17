@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.0.8` (App: v4.0.8 / Builder: v2.9.7)
+- **Current Version**: `v4.1.0` (App: v4.1.0 / Builder: v2.9.7)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,7 +50,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
-- **⭐ App: v4.0.8 / Builder: v2.9.7** (2026-08-17)
+- **⭐ App: v4.1.0 / Builder: v2.9.7** (2026-08-17) [Major Release 重大更新]
+  - [App] 全面升級「依作譯者」查詢，100% 對齊 CBETA 官方 1~29 筆劃、首字分組與 2,000+ 位權威作譯者作品目錄。
+  - [App] 經書管理對話框移除「更新經文」，調整為「移至資料夾 | 加入我的最愛 | 刪除經文」等寬三欄配置佐以細間隔線。
   - [App] 目次選單帶有折疊項目者預設一律收合，避免版面過長。
   - [App] 烏木模式適配字體大小與劃重點快選彈窗之深色底色與灰白細框。
   - [Builder] 系統性修復全藏經帶有前綴之 `lb` 行號識別，修正目次小節精確錨定。
