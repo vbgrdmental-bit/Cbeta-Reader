@@ -258,6 +258,8 @@ export function ReaderView({
   
   // 💡 控制列：畫重點設定浮動選單 (整合筆刷顏色與粗細標註模式)
   const [showHighlightPopover, setShowHighlightPopover] = useState(false);
+  // 💡 控制列：字型大小拉 bar 浮動選單
+  const [showFontSizePopover, setShowFontSizePopover] = useState(false);
 
   // 💡 心得筆記編輯 Modal 狀態
   const [editingNoteHighlight, setEditingNoteHighlight] = useState<BookHighlight | null>(null);
@@ -1120,6 +1122,9 @@ export function ReaderView({
       if (!target.closest('.highlight-popover-container')) {
         setShowHighlightPopover(false);
       }
+      if (!target.closest('.fontsize-popover-container')) {
+        setShowFontSizePopover(false);
+      }
       if (!target.closest('.reader-text-highlight') && !target.closest('.highlight-delete-menu')) {
         setActiveHighlightForDelete(null);
         setDeleteMenuPosition(null);
@@ -1649,50 +1654,163 @@ export function ReaderView({
 
 
 
-        <button 
-          className="reader-text-btn font-size-btn" 
-          onClick={() => {
-            const newSize = Math.max(16, settings.fontSize - 2);
-            onSaveSettings({ ...settings, fontSize: newSize });
-          }}
-          title="縮小字型"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 0.2rem' }}
-        >
-          <span style={{ 
-            fontSize: '0.72rem', 
-            fontWeight: 'bold', 
-            border: '1.2px solid currentColor', 
-            borderRadius: '4px', 
-            width: '18px', 
-            height: '18px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            lineHeight: 1
-          }}>A</span>
-        </button>
-        <button 
-          className="reader-text-btn font-size-btn" 
-          onClick={() => {
-            const newSize = Math.min(40, settings.fontSize + 2);
-            onSaveSettings({ ...settings, fontSize: newSize });
-          }}
-          title="放大字型"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 0.2rem' }}
-        >
-          <span style={{ 
-            fontSize: '1.05rem', 
-            fontWeight: 'bold', 
-            border: '1.2px solid currentColor', 
-            borderRadius: '4px', 
-            width: '23px', 
-            height: '23px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            lineHeight: 1
-          }}>A</span>
-        </button>
+        {/* 💡 調整字型大小按鈕 (單一大 A 方框鍵 + 縱向拉 bar) */}
+        <div className="fontsize-popover-container" style={{ position: 'relative' }}>
+          <button 
+            className={`reader-text-btn font-size-btn ${showFontSizePopover ? 'active' : ''}`}
+            onClick={() => {
+              setShowFontSizePopover(prev => !prev);
+              setShowHighlightPopover(false);
+            }}
+            title={`調整字型大小 (${settings.fontSize}px)`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0 0.35rem',
+              borderRadius: '6px',
+              border: showFontSizePopover ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
+              background: showFontSizePopover ? 'rgba(0,0,0,0.06)' : 'transparent',
+              height: '32px'
+            }}
+          >
+            <span style={{ 
+              fontSize: '1.05rem', 
+              fontWeight: 'bold', 
+              border: '1.2px solid currentColor', 
+              borderRadius: '4px', 
+              width: '23px', 
+              height: '23px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              lineHeight: 1
+            }}>A</span>
+          </button>
+
+          {showFontSizePopover && (
+            <div 
+              className="reader-popover animate-fade-in"
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 6px)',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                backgroundColor: 'var(--card-bg, #ffffff)',
+                border: '1px solid var(--border-color, rgba(140, 75, 39, 0.2))',
+                borderRadius: '12px',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                padding: '0.65rem 0.4rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.5rem',
+                zIndex: 1000,
+                userSelect: 'none',
+                width: '46px'
+              }}
+            >
+              {/* 最上方：最小字體圖示 A (16px) */}
+              <button
+                type="button"
+                onClick={() => {
+                  const newSize = Math.max(16, settings.fontSize - 2);
+                  onSaveSettings({ ...settings, fontSize: newSize });
+                }}
+                title="縮小 (最小 16px)"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--text-secondary, #666)'
+                }}
+              >
+                <span style={{ 
+                  fontSize: '0.72rem', 
+                  fontWeight: 'bold', 
+                  border: '1px solid currentColor', 
+                  borderRadius: '3px', 
+                  width: '16px', 
+                  height: '16px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  lineHeight: 1
+                }}>A</span>
+              </button>
+
+              {/* 縱向拉 bar 容器 (上為最小 16px、下為最大 40px) */}
+              <div style={{ height: '130px', width: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                <input 
+                  type="range"
+                  min="16"
+                  max="40"
+                  step="1"
+                  value={settings.fontSize}
+                  onChange={(e) => {
+                    const newSize = parseInt(e.target.value, 10);
+                    onSaveSettings({ ...settings, fontSize: newSize });
+                  }}
+                  style={{
+                    transform: 'rotate(90deg)',
+                    width: '120px',
+                    height: '6px',
+                    cursor: 'pointer',
+                    accentColor: 'var(--theme-accent, #8c4b27)'
+                  }}
+                />
+              </div>
+
+              {/* 最下方：最大字體圖示 A (40px) */}
+              <button
+                type="button"
+                onClick={() => {
+                  const newSize = Math.min(40, settings.fontSize + 2);
+                  onSaveSettings({ ...settings, fontSize: newSize });
+                }}
+                title="放大 (最大 40px)"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--text-primary)'
+                }}
+              >
+                <span style={{ 
+                  fontSize: '1.05rem', 
+                  fontWeight: 'bold', 
+                  border: '1.4px solid currentColor', 
+                  borderRadius: '4px', 
+                  width: '23px', 
+                  height: '23px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  lineHeight: 1
+                }}>A</span>
+              </button>
+
+              {/* 當前字級數值 */}
+              <span style={{ 
+                fontSize: '0.68rem', 
+                fontWeight: 'bold',
+                fontFamily: 'sans-serif',
+                color: 'var(--theme-accent, #8c4b27)',
+                whiteSpace: 'nowrap'
+              }}>
+                {settings.fontSize}px
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* 💡 畫重點設定按鈕 (整合筆刷顏色與粗細標註模式為單一按鍵) */}
         {(() => {
