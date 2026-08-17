@@ -386,7 +386,7 @@ export function Library({
     if (Math.abs(deltaX) > 28 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && deltaTime < 550) {
       const SHELF_NAV_CHAIN: (string | null)[] = [
         null, // 首頁
-        'virtual_my_folders', // 我的資料夾
+        'virtual_my_folders', // 我的書櫃
         'virtual_recent_reads', // 近期閱讀
         'virtual_favorites', // 我的最愛
         'virtual_highlights' // 重點與筆記
@@ -602,7 +602,7 @@ export function Library({
   const handleCreateFolder = () => {
     if (!newFolderName.trim()) return;
     
-    // 如果在「我的資料夾」專區，parentId 設為 null，屬於頂層自訂資料夾
+    // 如果在「我的書櫃」專區，parentId 設為 null，屬於頂層自訂資料夾
     const targetParentId = currentFolderId === 'virtual_my_folders' ? null : currentFolderId;
 
     const newFolder: BookFolder = {
@@ -1383,7 +1383,7 @@ export function Library({
                   <ChevronRight size={20} />
                 </button>
 
-                {/* 💡 在「我的資料夾」或自訂子資料夾內，頂部控制列放回原「新建資料夾 (+)」圖示按鈕 */}
+                {/* 💡 在「我的書櫃」或自訂子資料夾內，頂部控制列放回原「新建資料夾 (+)」圖示按鈕 */}
                 {(currentFolderId === 'virtual_my_folders' || (currentFolderId && !currentFolderId.startsWith('virtual_'))) && (
                   <button
                     className="library-header-btn"
@@ -1757,7 +1757,7 @@ export function Library({
               </div>
             )}
 
-            {/* === A. 渲染使用者自訂資料夾清單 (僅在「我的資料夾」或自訂子資料夾專區內才渲染) === */}
+            {/* === A. 渲染使用者自訂資料夾清單 (僅在「我的書櫃」或自訂子資料夾專區內才渲染) === */}
             {(currentFolderId === 'virtual_my_folders' || (!isSystemFolder && currentFolderId)) && (
               <div className="folders-grid-container">
                 {displayFolders.map((folder) => (
@@ -2523,7 +2523,7 @@ export function Library({
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {/* 💡 僅在自訂子資料夾（非我的資料夾頂層）內，才顯示「移出至上一層資料夾」 */}
+              {/* 💡 僅在自訂子資料夾（非我的書櫃頂層）內，才顯示「移出至上一層資料夾」 */}
               {currentFolderId && currentFolderId !== 'virtual_my_folders' && (
                 <button 
                   className="action-menu-item-btn"

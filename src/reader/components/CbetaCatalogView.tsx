@@ -1811,7 +1811,7 @@ export function CbetaCatalogView({
 
                 {batchFolderMode === 'new' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginLeft: '1.6rem' }}>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>資料夾名稱（預設於「我的資料夾」）：</span>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>資料夾名稱（預設於「我的書櫃」）：</span>
                     <input 
                       type="text" 
                       className="settings-select"
@@ -1831,7 +1831,7 @@ export function CbetaCatalogView({
                     onChange={() => setBatchFolderMode('existing')}
                     style={{ accentColor: 'var(--theme-accent)' }}
                   />
-                  放入我的資料夾
+                  放入我的書櫃
                 </label>
 
                 {batchFolderMode === 'existing' && (
