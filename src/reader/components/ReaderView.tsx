@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Search, Clock, ArrowLeft, Edit3, Trash2, FileText, AlertCircle, Paintbrush
+  Home, Menu, Settings, Volume2, Square, ExternalLink, X, ChevronLeft, ChevronRight, Search, Clock, ArrowLeft, Edit3, Trash2, FileText, AlertCircle, Paintbrush, Check
 } from 'lucide-react';
 import type { ReaderPackage, TextSegment, BookContent, JuanData } from '../../types/book';
 import { getBook, saveBook, deleteBook, listHighlights, saveHighlight, deleteHighlight } from '../../utils/db';
@@ -2305,10 +2305,23 @@ export function ReaderView({
         </div>
       </div>
 
-      {/* 底部工具列 */}
+      {/* 底部工具列：左側 4 色模式切換，右側字體大小調整器 (如圖 2) */}
       <div className={`reader-overlay-bar reader-bottom-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-        <div className="bar-left-controls">
-          <span>{currentMuluTitle}</span>
+        {/* 左側：4 種顏色模式 (象牙白, 羊皮紙, 護眼綠, 烏木黑) */}
+        <div className="bar-left-controls bottom-theme-switch-group">
+          {(['ivory', 'parchment', 'comfort', 'ebony'] as const).map((t) => {
+            const isSelected = settings.theme === t;
+            return (
+              <div
+                key={t}
+                className={`bottom-theme-circle ${t} ${isSelected ? 'active' : ''}`}
+                onClick={() => onSaveSettings({ ...settings, theme: t })}
+                title={t === 'ivory' ? '象牙白' : t === 'parchment' ? '羊皮紙' : t === 'comfort' ? '舒服護眼' : '烏木暗色'}
+              >
+                {isSelected && <Check size={12} strokeWidth={3} className="theme-check-icon" />}
+              </div>
+            );
+          })}
         </div>
 
         {/* ⏱️ 閱讀時間倒數計時 (下方控制列中間 / 小字 / 淺灰 / 顯示分和秒倒數) */}
@@ -2339,9 +2352,24 @@ export function ReaderView({
           </div>
         )}
 
-        <div className="bar-right-controls">
-          <button className="icon-button" onClick={handleToggleTTS} title={isPlaying ? "停止朗讀" : "語音朗讀"}>
-            {isPlaying ? <Square size={20} /> : <Volume2 size={20} />}
+        {/* 右側：字體大小調整器 [A-] 16px [A+] */}
+        <div className="bar-right-controls bottom-font-stepper-group">
+          <button 
+            type="button" 
+            className="bottom-font-btn" 
+            onClick={() => onSaveSettings({ ...settings, fontSize: Math.max(12, settings.fontSize - 1) })}
+            title="縮小字體 (A-)"
+          >
+            A-
+          </button>
+          <span className="bottom-font-val">{settings.fontSize}px</span>
+          <button 
+            type="button" 
+            className="bottom-font-btn" 
+            onClick={() => onSaveSettings({ ...settings, fontSize: Math.min(36, settings.fontSize + 1) })}
+            title="放大字體 (A+)"
+          >
+            A+
           </button>
         </div>
       </div>
