@@ -172,7 +172,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
   };
 
   const paddings = [5, 10, 15, 20];
-  const speeds = [0.5, 1.0, 1.5, 2.0];
+  // const speeds = [0.5, 1.0, 1.5, 2.0];
 
   return (
     <div className="settings-panel-overlay" onClick={onClose}>
@@ -545,33 +545,8 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
             </div>
           </div>
 
-          {/* 6. 朗讀速度 */}
-          <div className="settings-section">
-            <div className="settings-section-title">朗讀速度</div>
-            <div className="visual-options-row">
-              {speeds.map((s) => {
-                const needleX = s === 0.5 ? 11 : s === 1.0 ? 18 : s === 1.5 ? 25 : 28;
-                const needleY = s === 0.5 ? 15 : s === 1.0 ? 10 : s === 1.5 ? 15 : 22;
-                return (
-                  <div
-                    key={`speed-${s}`}
-                    className={`visual-option-card ${settings.ttsSpeed === s ? 'active' : ''}`}
-                    onClick={() => onSave({ ...settings, ttsSpeed: s })}
-                  >
-                    <svg className="speed-svg" viewBox="0 0 36 36">
-                      <path d="M 8 26 A 12 12 0 1 1 28 26" className="svg-arc" />
-                      <line x1="8" y1="26" x2="10" y2="24" />
-                      <line x1="18" y1="6" x2="18" y2="9" />
-                      <line x1="28" y1="26" x2="26" y2="24" />
-                      <circle cx="18" cy="22" r="2.5" className="svg-center" />
-                      <line x1="18" y1="22" x2={needleX} y2={needleY} className="svg-needle" />
-                    </svg>
-                    <span className="visual-option-label">{s.toFixed(1)}x</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          {/* 6. 朗讀速度 (暫時隱藏) */}
+          {/* <div className="settings-section"> ... </div> */}
 
           {/* 7. 資料備份與還原 */}
           <div className="settings-section">
@@ -885,10 +860,10 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
               <label className="checkbox-item">
                 <input 
                   type="checkbox" 
-                  checked={settings.customVisibleElements?.ttsHighlight ?? true} 
-                  onChange={() => handleCheckboxChange('ttsHighlight')}
+                  checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
+                  onChange={() => handleCheckboxChange('autoResumeProgress')}
                 />
-                語音朗讀時高亮顯示當前段落
+                開啟經文時自動回到上次閱讀位置 (未勾選則從頭開始閱讀)
               </label>
 
               <label className="checkbox-item">
@@ -898,15 +873,6 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   onChange={() => handleCheckboxChange('showNoteInText')}
                 />
                 顯示筆記內容
-              </label>
-
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
-                  onChange={() => handleCheckboxChange('autoResumeProgress')}
-                />
-                開啟經文時自動回到上次閱讀位置 (未勾選則從頭開始閱讀)
               </label>
             </div>
 
