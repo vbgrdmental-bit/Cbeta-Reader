@@ -17,9 +17,9 @@ interface OnboardingStep {
 }
 
 /**
- * 點擊手勢圖標 (對齊用戶提供之深色圓潤粗邊線 + 指尖 5 道點擊光芒短線)
+ * 點擊手勢圖標 (對齊用戶提供之簡潔立體白底粗黑邊直立手勢)
  */
-function TouchHandPointerIcon({ size = 42 }: { size?: number }) {
+function TouchHandPointerIcon({ size = 38 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -29,28 +29,19 @@ function TouchHandPointerIcon({ size = 42 }: { size?: number }) {
       xmlns="http://www.w3.org/2000/svg"
       className="custom-pointer-svg"
     >
-      {/* 5 道點擊放射光芒 (Click Radiance Burst Lines) */}
-      <g className="click-rays" stroke="currentColor" strokeWidth="5.2" strokeLinecap="round">
-        <line x1="20" y1="29" x2="28" y2="29" />
-        <line x1="25" y1="16" x2="32" y2="23" />
-        <line x1="39" y1="10" x2="39" y2="19" />
-        <line x1="53" y1="16" x2="46" y2="23" />
-        <line x1="58" y1="29" x2="50" y2="29" />
-      </g>
-
-      {/* 手勢主體 (白底 + 圓潤黑色粗描邊) */}
+      {/* 簡潔直立手指手掌輪廓 (白底 + 圓潤深色描邊) */}
       <path
-        d="M 34 32 C 34 26 44 26 44 32 L 44 42 C 44 39 52 39 52 44 L 52 48 C 52 45 60 45 60 50 L 60 54 C 60 51 68 51 68 56 C 68 70 63 80 52 83 L 45 83 C 36 83 31 78 28 72 L 23 65 C 19 60 23 53 29 57 L 34 61 Z"
+        d="M 43 20 C 43 14 53 14 53 20 L 53 36 C 53 32 62 32 62 37 L 62 40 C 62 36 71 36 71 41 L 71 44 C 71 40 80 41 80 46 C 80 62 76 75 66 80 L 50 80 C 40 80 34 74 30 67 L 22 60 C 17 55 22 47 28 51 L 34 55 L 43 55 Z"
         fill="#ffffff"
-        stroke="currentColor"
-        strokeWidth="5.5"
+        stroke="#1a1a1a"
+        strokeWidth="6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* 手指蜷縮關節線 */}
-      <path d="M 44 42 L 44 54" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-      <path d="M 52 48 L 52 58" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-      <path d="M 60 54 L 60 62" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+      {/* 手指縫隙分離線 */}
+      <path d="M 53 36 L 53 52" stroke="#1a1a1a" strokeWidth="5.5" strokeLinecap="round" />
+      <path d="M 62 40 L 62 54" stroke="#1a1a1a" strokeWidth="5.5" strokeLinecap="round" />
+      <path d="M 71 44 L 71 56" stroke="#1a1a1a" strokeWidth="5.5" strokeLinecap="round" />
     </svg>
   );
 }
@@ -699,6 +690,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step1CursorState === 'on-download-btn' ? 'pos-step1-download-btn' : ''} 
                 ${step1CursorState === 'idle' || step1CursorState === 'done' ? 'hidden' : ''}`
               }>
+                <div className="hand-halo-circle" />
                 <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
@@ -854,6 +846,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step2CursorTab === 'dynasty' ? 'pos-cat-tab-5' : ''} 
                 ${step2CursorTab === 'done' ? 'hidden' : ''}`
               }>
+                <div className="hand-halo-circle" />
                 <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
@@ -910,6 +903,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step3CursorPos === 'btn-plus' ? 'pos-font-plus' : ''} 
                 ${step3CursorPos === 'done' ? 'hidden' : ''}`
               }>
+                <div className="hand-halo-circle" />
                 <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
@@ -1010,6 +1004,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step4CursorPos === 'btn-save' ? 'pos-step4-save' : ''} 
                 ${step4CursorPos === 'idle' || step4CursorPos === 'typing' || step4CursorPos === 'done' ? 'hidden' : ''}`
               }>
+                <div className="hand-halo-circle" />
                 <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
@@ -1145,6 +1140,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step5CursorPos === 'on-magnifier' ? 'pos-step5-magnifier' : ''} 
                 ${step5CursorPos === 'idle' || step5CursorPos === 'done' ? 'hidden' : ''}`
               }>
+                <div className="hand-halo-circle" />
                 <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
