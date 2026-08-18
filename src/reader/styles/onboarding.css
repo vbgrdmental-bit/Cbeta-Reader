@@ -1,0 +1,1351 @@
+/* Onboarding Zen Styles with High-Precision Cursor Coordinates for CBETA Reader */
+
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--reader-bg, #fbf8f3);
+  color: var(--text-primary, #2c2016);
+  padding: 1.2rem 1rem;
+  box-sizing: border-box;
+  user-select: none;
+  overflow: hidden;
+  touch-action: pan-y pinch-zoom;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 頂部跳過按鈕 */
+.onboarding-skip-btn {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  right: 1.25rem;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted, #718096);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.onboarding-skip-btn:hover {
+  color: var(--text-primary, #2c2016);
+  border-color: var(--theme-accent, #8c4b27);
+  background-color: var(--theme-accent-light, rgba(140, 75, 39, 0.1));
+}
+
+/* 內容卡片容器 */
+.onboarding-content-card {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: auto 0;
+  padding: 0.2rem 0;
+}
+
+/* 標題與 CBETA Reader 品牌字樣 */
+.onboarding-title {
+  font-family: var(--font-serif, 'Noto Serif TC', serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary, #2c2016);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.onboarding-cbeta-brand {
+  color: #1ea98c !important;
+  font-family: var(--font-rounded, system-ui, sans-serif);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.onboarding-reader-brand {
+  font-family: var(--font-rounded, system-ui, sans-serif);
+  font-weight: 800;
+  color: var(--text-primary, #2c2016);
+}
+
+.onboarding-desc {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text-primary, #3c2a1a);
+  opacity: 0.88;
+  min-height: 52px;
+  padding: 0 0.6rem;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.2rem;
+}
+
+/* =========================================================================
+   真機卡片展示外框 (Device Mockup Frame)
+   ========================================================================= */
+.onboarding-device-mockup {
+  width: 100%;
+  max-width: 365px;
+  height: 250px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-paper-ivory, #fefcf8);
+  border: 1.5px solid var(--border-color, rgba(140, 75, 39, 0.18));
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.onboarding-device-inner {
+  width: 100%;
+  height: 100%;
+  padding: 0.65rem 0.75rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.35rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================================================================
+   手部虛擬游標 (Touch Hand Cursor + 圓形淺灰標靶 Halo)
+   ========================================================================= */
+.touch-hand-cursor {
+  position: absolute;
+  z-index: 999;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translate(-50%, -50%);
+}
+
+.touch-hand-cursor.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* 圓形淺灰色底圈標靶 (精準定位目標) */
+.hand-halo-circle {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.12);
+  border: 1.5px solid rgba(0, 0, 0, 0.22);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.hand-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+  transition: transform 0.15s ease;
+  user-select: none;
+  position: relative;
+  z-index: 2;
+  margin-top: 3px;
+  margin-left: 3px;
+}
+
+.tap-ripple {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(30, 169, 140, 0.35);
+  border: 2px solid rgba(30, 169, 140, 0.8);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 游標特定位置精確像素百分比定位 */
+/* Step 1 */
+.pos-step1-bar { top: 88%; left: 50%; }
+.pos-step1-input { top: 48%; left: 45%; }
+.pos-step1-search-btn { top: 48%; left: 88%; }
+.pos-step1-download-btn { top: 66%; left: 90%; }
+
+/* Step 2 (五大等寬 1:1:1:1:1 分類 Tab，下移對齊文字中心) */
+.pos-cat-tab-1 { top: 47%; left: 10%; }
+.pos-cat-tab-2 { top: 47%; left: 30%; }
+.pos-cat-tab-3 { top: 47%; left: 50%; }
+.pos-cat-tab-4 { top: 47%; left: 70%; }
+.pos-cat-tab-5 { top: 47%; left: 90%; }
+
+/* Step 3 主題與字體 */
+.pos-theme-ivory { top: 93%; left: 8%; }
+.pos-theme-parchment { top: 93%; left: 16%; }
+.pos-theme-comfort { top: 93%; left: 24%; }
+.pos-theme-ebony { top: 93%; left: 32%; }
+.pos-font-minus { top: 93%; left: 74%; }
+.pos-font-plus { top: 93%; left: 91%; }
+
+/* Step 4 編輯與儲存 (精準點擊「編輯」與「儲存修改」) */
+.pos-step4-edit { top: 76%; left: 82%; }
+.pos-step4-save { top: 83%; left: 28%; }
+
+/* Step 5 站內搜尋 */
+.pos-top-search-btn { top: 16%; left: 85%; }
+.pos-step5-input { top: 36%; left: 45%; }
+.pos-step5-magnifier { top: 36%; left: 88%; }
+
+/* =========================================================================
+   通用元件與頂部控制列
+   ========================================================================= */
+.mock-topbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mock-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.mock-home-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+}
+
+.mock-home-btn.active {
+  background: rgba(140, 75, 39, 0.12);
+  color: var(--theme-accent, #8c4b27);
+}
+
+.mock-v-line {
+  width: 1px;
+  height: 13px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.mock-plus-btn {
+  color: #1ea98c;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mock-nav-arrow {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.mock-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+.mock-home-view-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.15rem;
+  width: 100%;
+}
+
+.mock-catalog-view-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+  width: 100%;
+}
+
+.mock-header-center {
+  text-align: center;
+  margin: 0.05rem 0;
+}
+
+.mock-brand-title {
+  font-size: 1.18rem;
+  font-family: var(--font-rounded, sans-serif);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.mock-brand-sub {
+  font-size: 0.65rem;
+  color: var(--text-muted, #718096);
+  font-family: var(--font-serif, serif);
+  margin-top: 1px;
+}
+
+/* 4 大系統資料夾 */
+.mock-system-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mock-sys-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  padding: 0.38rem 0.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.mock-sys-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.mock-sys-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-primary, #2c2016);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.mock-sys-count {
+  font-size: 0.52rem;
+  color: var(--text-muted, #888);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* 「+ 點此下載佛典」長條 */
+.mock-download-wide-bar {
+  width: 100%;
+  border: 1.2px dashed rgba(140, 75, 39, 0.45);
+  border-radius: 10px;
+  background: rgba(140, 75, 39, 0.04);
+  color: var(--theme-accent, #8c4b27);
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: var(--font-serif, serif);
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+}
+
+.mock-download-wide-bar.highlight-active {
+  border-color: #1ea98c;
+  background: rgba(30, 169, 140, 0.14);
+  color: #1ea98c;
+}
+
+/* =========================================================================
+   Step 1: 閱讀經文正文畫面 (圖 1)
+   ========================================================================= */
+.mock-reader-topbar {
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.mock-tag-icon-btn {
+  font-size: 0.72rem;
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mock-tag-icon-btn.highlight-gold {
+  background: #fdf3d8;
+  border-color: #d4a359;
+  color: #8c5b13;
+}
+
+.mock-scripture-reader-body {
+  text-align: left;
+  padding: 0.3rem 0.2rem;
+  overflow: hidden;
+}
+
+.mock-reader-scripture-header {
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+
+.mock-scripture-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-family: var(--font-serif, serif);
+  margin: 0;
+  color: #2c2016;
+  letter-spacing: 0.04em;
+}
+
+.mock-scripture-author {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.mock-scripture-no {
+  font-size: 0.68rem;
+  font-family: monospace;
+  color: #3c2a1a;
+  margin: 0.3rem 0;
+}
+
+.mock-scripture-preface-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  font-family: var(--font-serif, serif);
+  color: #2c2016;
+  margin-bottom: 0.3rem;
+}
+
+.mock-scripture-text {
+  font-size: 0.73rem;
+  line-height: 1.6;
+  font-family: var(--font-serif, serif);
+  color: #2c2016;
+  margin: 0;
+  text-align: justify;
+}
+
+/* =========================================================================
+   Step 2: 依類別查詢 5 個 Tab (圖 2)
+   ========================================================================= */
+.mock-collapsed-header-row {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: left;
+  padding: 0.2rem 0;
+}
+
+.mock-category-main-view {
+  text-align: left;
+  width: 100%;
+}
+
+.mock-category-tab-strip-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
+  width: 100%;
+}
+
+.mock-cat-tab {
+  font-size: 0.6rem;
+  padding: 3px 2px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  border-right: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.mock-cat-tab:last-child {
+  border-right: none;
+}
+
+.mock-cat-tab.active {
+  background: #ffffff;
+  border: 1px solid rgba(140, 75, 39, 0.2);
+  border-bottom: 2px solid var(--theme-accent, #8c4b27);
+  color: var(--theme-accent, #8c4b27);
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.mock-category-body-container {
+  min-height: 120px;
+}
+
+.mock-cat-sub-header {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.mock-batch-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.batch-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.batch-select-all {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.batch-btn {
+  font-size: 0.58rem;
+  background: rgba(0, 0, 0, 0.08);
+  border: none;
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mock-book-list-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.mock-cbeta-book-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  padding: 0.25rem 0.4rem;
+}
+
+.mock-checkbox-box {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.mock-row-download-btn {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.mock-category-item-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  padding-top: 0.3rem;
+}
+
+.mock-cat-pill {
+  font-size: 0.68rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* =========================================================================
+   Step 5: 站內書籍關鍵字搜尋 (圖 4 & 圖 5)
+   ========================================================================= */
+.mock-top-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.mock-top-search-btn.active-tap {
+  background: rgba(140, 75, 39, 0.15);
+  color: var(--theme-accent, #8c4b27);
+  transform: scale(1.1);
+}
+
+.mock-internal-search-input-view {
+  width: 100%;
+  text-align: center;
+  margin-top: 1.2rem;
+  margin-bottom: auto;
+}
+
+.mock-internal-input-box {
+  width: 100%;
+  border: 1.2px dashed rgba(140, 75, 39, 0.45);
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 0.4rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.mock-internal-search-icon {
+  color: #8c4b27;
+}
+
+.mock-internal-sub-hint {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+  text-align: left;
+  padding-left: 0.5rem;
+}
+
+.mock-internal-results-view {
+  width: 100%;
+  text-align: left;
+}
+
+.mock-results-summary-line {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.mock-results-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.mock-result-chip {
+  font-size: 0.58rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.mock-result-chip.active {
+  background: #6b4320;
+  color: #ffffff;
+  font-weight: 700;
+  border-color: #6b4320;
+}
+
+.mock-search-snippets-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  overflow: hidden;
+}
+
+.mock-snippet-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  box-sizing: border-box;
+}
+
+.snippet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.2rem;
+}
+
+.snippet-work-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.snippet-vol-badge {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.snippet-text {
+  font-size: 0.65rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+}
+
+.match-highlight {
+  background-color: #fde047;
+  color: #2c2016;
+  padding: 0 1px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+/* =========================================================================
+   搜尋、字體、筆記通用樣式 (Step 1-4)
+   ========================================================================= */
+.mock-feature-box {
+  width: 100%;
+  border-radius: 10px;
+  padding: 0.35rem 0.5rem;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.mock-box-header {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mock-search-input-wrapper {
+  width: 100%;
+  border: 1.2px dashed rgba(30, 169, 140, 0.65);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 0.35rem 0.65rem 0.35rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.mock-search-text-val {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.mock-placeholder-text {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.mock-search-icon-btn-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.mock-search-icon-btn-wrap.btn-active-search {
+  background: rgba(30, 169, 140, 0.2);
+  transform: scale(1.15);
+}
+
+.mock-search-icon-btn {
+  color: #1ea98c;
+}
+
+.mock-recent-search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  padding-left: 0.2rem;
+}
+
+.recent-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.search-tag-chip {
+  font-size: 0.65rem;
+  padding: 1px 7px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+.mock-cbeta-book-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  box-sizing: border-box;
+}
+
+.mock-book-tag {
+  background: #2b5680;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.mock-book-meta {
+  flex: 1;
+}
+
+.mock-book-name {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+}
+
+.mock-book-byline {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.mock-download-icon-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mock-download-icon-btn.success {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+/* Step 3 閱讀設定 */
+.mock-reader-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s ease;
+}
+
+.mock-reader-frame.theme-ivory { background-color: #fefcf8; color: #2c2016; }
+.mock-reader-frame.theme-parchment { background-color: #f5eee0; color: #3c2a1a; }
+.mock-reader-frame.theme-comfort { background-color: #ecf3e2; color: #23351d; }
+.mock-reader-frame.theme-ebony { background-color: #12161a; color: #e0dcd3; }
+
+.mock-reader-para {
+  margin: 0;
+  line-height: 1.65;
+  font-family: var(--font-serif, 'Noto Serif TC', serif);
+  font-weight: 500;
+  text-align: left;
+  letter-spacing: 0.02em;
+}
+
+.mock-reader-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.mock-theme-swatches {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.mock-theme-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mock-theme-dot.active {
+  border: 2px solid var(--theme-accent, #8c4b27);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+}
+
+.mock-font-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mock-font-controls button {
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  color: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.mock-font-controls button.btn-active-tap {
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+}
+
+.mock-font-size-text {
+  font-size: 0.72rem;
+  font-weight: 600;
+  opacity: 0.85;
+  min-width: 28px;
+  text-align: center;
+}
+
+/* Step 4 筆記樣式 */
+.mock-notes-container-view {
+  width: 100%;
+  text-align: left;
+}
+
+.mock-notes-folder-banner {
+  background: #fdfaf3;
+  border: 1px solid rgba(192, 125, 42, 0.25);
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+
+.mock-note-entry-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 0.5rem 0.6rem;
+  box-sizing: border-box;
+}
+
+.mock-entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.entry-title-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.minus-icon {
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.work-name {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.count-label {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.mock-entry-body {
+  padding-top: 0.35rem;
+}
+
+.entry-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.entry-quote-text {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mock-saved-note-callout {
+  background: #fdfaf3;
+  border-left: 3px solid #c07d2a;
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.note-body-text {
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  font-family: '"CBETASupplement", "標楷體", serif';
+}
+
+.entry-action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+  font-size: 0.66rem;
+  color: var(--text-muted);
+}
+
+.action-link {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.action-link.highlight-active {
+  color: #1ea98c;
+  font-weight: 700;
+}
+
+/* 編輯彈窗 Overlay */
+.mock-dialog-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 0.6rem;
+  box-sizing: border-box;
+}
+
+.mock-note-dialog-box {
+  width: 100%;
+  background: #fcf9f2;
+  border-radius: 12px;
+  border: 1px solid rgba(140, 75, 39, 0.2);
+  padding: 0.6rem 0.7rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.mock-dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.dialog-close-x {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.mock-dialog-quote {
+  background: rgba(140, 75, 39, 0.05);
+  border-left: 2px solid #8c4b27;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+  border-radius: 4px;
+  margin-bottom: 0.45rem;
+}
+
+.mock-dialog-textarea-box {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  padding: 0.35rem 0.45rem;
+  min-height: 48px;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+}
+
+.dialog-placeholder-text {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.dialog-entered-text {
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--text-primary);
+  font-family: '"CBETASupplement", "標楷體", serif';
+}
+
+.typing-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 12px;
+  background: #2c2016;
+  margin-left: 2px;
+  animation: blink-caret 0.8s infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.mock-dialog-actions-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.dialog-save-btn {
+  flex: 1;
+  padding: 0.35rem 0;
+  border-radius: 6px;
+  border: 1px solid rgba(140, 75, 39, 0.2);
+  background: #ece4d7;
+  color: #6b4320;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dialog-save-btn.active-tap {
+  background: #8c4b27;
+  color: #ffffff;
+}
+
+.dialog-cancel-btn {
+  flex: 1;
+  padding: 0.35rem 0;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+/* =========================================================================
+   5 步驟進度膠囊指示器 & 控制按鈕
+   ========================================================================= */
+.onboarding-indicators {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+  margin-bottom: 1.3rem;
+}
+
+.onboarding-dot {
+  height: 6px;
+  border-radius: 3px;
+  background-color: var(--border-color, rgba(0, 0, 0, 0.15));
+  transition: width 0.25s ease, background-color 0.25s ease;
+  cursor: pointer;
+}
+
+.onboarding-dot.active {
+  width: 26px;
+  background-color: var(--theme-accent, #8c4b27);
+}
+
+.onboarding-dot.inactive {
+  width: 6px;
+}
+
+.onboarding-actions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.onboarding-btn {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  user-select: none;
+}
+
+.onboarding-btn-prev {
+  background: transparent;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  color: var(--text-muted, #718096);
+}
+
+.onboarding-btn-prev:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  color: var(--text-primary, #2c2016);
+}
+
+.onboarding-btn-next {
+  background: var(--theme-accent, #8c4b27);
+  border: 1px solid transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(140, 75, 39, 0.25);
+}
+
+.onboarding-btn-next:hover {
+  background: #753d1e;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(140, 75, 39, 0.35);
+}
+
+/* 動畫效果 */
+.onboarding-step-fade {
+  animation: onboarding-step-appear 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes onboarding-step-appear {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.22s ease-out forwards;
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-scale-up {
+  animation: scale-up 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes scale-up {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 烏木模式適配 */
+body.theme-ebony .onboarding-overlay {
+  background-color: #12161a !important;
+  color: #e0dcd3 !important;
+}
+
+body.theme-ebony .onboarding-device-mockup {
+  background: #181d22 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+body.theme-ebony .mock-sys-card,
+body.theme-ebony .mock-cbeta-book-card,
+body.theme-ebony .mock-cbeta-book-row,
+body.theme-ebony .mock-cat-pill,
+body.theme-ebony .mock-search-input-wrapper,
+body.theme-ebony .mock-internal-input-box,
+body.theme-ebony .mock-snippet-card,
+body.theme-ebony .mock-note-entry-card,
+body.theme-ebony .mock-note-dialog-box {
+  background: #20262d !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body.theme-ebony .mock-cat-tab.active {
+  background: #20262d !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+body.theme-ebony .mock-scripture-title,
+body.theme-ebony .mock-scripture-preface-title,
+body.theme-ebony .mock-scripture-text {
+  color: #e0dcd3 !important;
+}
+
+body.theme-ebony .onboarding-reader-brand {
+  color: #e0dcd3 !important;
+}
+
+body.theme-ebony .onboarding-dot.active {
+  background-color: #cf9f60 !important;
+}
+
+body.theme-ebony .onboarding-btn-next {
+  background: #b58342 !important;
+  color: #12161a !important;
+  font-weight: 700;
+}

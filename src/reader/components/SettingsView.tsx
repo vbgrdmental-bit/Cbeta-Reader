@@ -14,9 +14,10 @@ interface SettingsViewProps {
   settings: AppSettings;
   onSave: (settings: AppSettings) => void;
   onClose: () => void;
+  onReplayOnboarding?: () => void;
 }
 
-export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
+export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: SettingsViewProps) {
   const [showChangelog, setShowChangelog] = useState(false);
   const [showBackupConfirm, setShowBackupConfirm] = useState(false);
   const [showAppHistory, setShowAppHistory] = useState(false);
@@ -899,6 +900,34 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 顯示筆記內容
               </label>
             </div>
+
+            {/* Cbeta Reader 簡易功能導覽 按鈕 */}
+            {onReplayOnboarding && (
+              <div style={{ marginTop: '0.75rem', width: '100%' }}>
+                <button
+                  type="button"
+                  onClick={onReplayOnboarding}
+                  style={{
+                    width: '100%',
+                    padding: '0.6rem 0.8rem',
+                    borderRadius: '8px',
+                    border: '1.2px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
+                    backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.05))',
+                    color: 'var(--theme-accent, #8c4b27)',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.45rem',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <span>📖 Cbeta Reader 簡易功能導覽</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 5. 版本資訊與說明列 */}
@@ -1152,17 +1181,15 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.1.0) 直接顯示 */}
+                {/* 最新 App 版本 (v4.1.1) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.1.0</span>
-                    <span className="changelog-date">(2026-08-17)</span>
-                    <span style={{ fontSize: '0.72rem', padding: '1px 5px', borderRadius: '4px', border: '1px solid var(--theme-accent, #8c4b27)', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold', marginLeft: '2px' }}>重大更新</span>
+                    <span>⭐ App: v4.1.1</span>
+                    <span className="changelog-date">(2026-08-19)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 全面升級「依作譯者」查詢，100% 對齊 CBETA 官方 1~29 筆劃、首字分組與 2,000+ 位權威作譯者作品目錄。</li>
-                    <li>• 經書管理對話框調整為「移至資料夾 | 加入我的最愛 | 刪除經文」等寬三欄配置。</li>
-                    <li>• 目次選單帶有折疊項目者預設一律收合。</li>
+                    <li>• 新增「Cbeta Reader 簡易功能導覽」生動互動演示（支援 5 步驟操作教學與手機左右滑動翻頁）。</li>
+                    <li>• 於閱讀設定之「其他設定」新增導覽快捷重播按鈕，方便隨時複習上手。</li>
                   </ul>
                 </div>
 
@@ -1185,6 +1212,18 @@ export function SettingsView({ settings, onSave, onClose }: SettingsViewProps) {
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                        <span>App: v4.1.0</span>
+                        <span className="changelog-date">(2026-08-17)</span>
+                        <span style={{ fontSize: '0.72rem', padding: '1px 5px', borderRadius: '4px', border: '1px solid var(--theme-accent, #8c4b27)', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold', marginLeft: '2px' }}>重大更新</span>
+                      </div>
+                      <ul className="changelog-list">
+                        <li>• 全面升級「依作譯者」查詢，100% 對齊 CBETA 官方 1~29 筆劃、首字分組與 2,000+ 位權威作譯者作品目錄。</li>
+                        <li>• 經書管理對話框調整為「移至資料夾 | 加入我的最愛 | 刪除經文」等寬三欄配置。</li>
+                        <li>• 目次選單帶有折疊項目者預設一律收合。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.0.7 <span className="changelog-date">(2026-08-17)</span></div>
                       <ul className="changelog-list">

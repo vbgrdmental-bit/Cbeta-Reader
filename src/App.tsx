@@ -3,6 +3,7 @@ import { Library } from './reader/components/Library';
 import { ReaderView } from './reader/components/ReaderView';
 import { CbetaCatalogView } from './reader/components/CbetaCatalogView';
 import { SettingsView } from './reader/components/SettingsView';
+import { OnboardingView } from './reader/components/OnboardingView';
 import { getSettings, saveSettings } from './utils/db';
 import type { AppSettings } from './utils/db';
 import { readingTimer, formatTimerMMSS } from './utils/readingTimer';
@@ -15,6 +16,15 @@ export function App() {
   const [activeSegmentId, setActiveSegmentId] = useState<string | undefined>(undefined);
   const [lastSearchQuery, setLastSearchQuery] = useState<string | undefined>(undefined);
   
+  // 開場導覽狀態 (若尚未完成則自動呈現)
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
+    try {
+      return !localStorage.getItem('cbeta_onboarding_completed');
+    } catch {
+      return false;
+    }
+  });
+
   // 設定狀態
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -88,6 +98,20 @@ export function App() {
     }
   };
 
+  const handleCompleteOnboarding = () => {
+    try {
+      localStorage.setItem('cbeta_onboarding_completed', 'true');
+    } catch {
+      // ignore
+    }
+    setShowOnboarding(false);
+  };
+
+  const handleReplayOnboarding = () => {
+    setShowSettings(false);
+    setShowOnboarding(true);
+  };
+
   if (!settings) {
     return (
       <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#fff', background: '#150906' }}>
@@ -98,6 +122,11 @@ export function App() {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
+      {/* 5 頁式開場導覽 */}
+      {showOnboarding && (
+        <OnboardingView onComplete={handleCompleteOnboarding} />
+      )}
+
       {/* 💡 使用 CSS display 來控制 Library 顯示/隱藏，避免組件銷毀丟失當前資料夾路徑狀態 */}
       <div style={{ display: view === 'library' ? 'block' : 'none', width: '100%', height: '100%' }}>
         <Library 
@@ -125,6 +154,7 @@ export function App() {
 
       {view === 'reader' && activeBookId && (
         <ReaderView 
+          key={activeBookId}
           workId={activeBookId}
           initialSegmentId={activeSegmentId}
           autoResumeMode={autoResumeMode}
@@ -141,6 +171,7 @@ export function App() {
           settings={settings}
           onSave={handleSaveSettings}
           onClose={() => setShowSettings(false)}
+          onReplayOnboarding={handleReplayOnboarding}
         />
       )}
 
