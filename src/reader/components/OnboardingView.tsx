@@ -112,42 +112,58 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
 
     const runStep2 = () => {
       if (!isActive) return;
+      // 初始：停留在常用經典
       setStep2ActiveTab('featured');
       setStep2CursorTab('featured');
 
-      // 1. 點常用經典
+      // 1. 停留在「常用經典」1 秒後，游標滑向「依部類」
       setTimeout(() => {
         if (!isActive) return;
-        setStep2ActiveTab('bu');
-        setStep2CursorTab('bu');
-        // 2. 點依部類
+        setStep2CursorTab('bu'); // 游標先移動 (0.45s 位移)
         setTimeout(() => {
           if (!isActive) return;
-          setStep2ActiveTab('ce');
-          setStep2CursorTab('ce');
-          // 3. 點依冊別
+          setStep2ActiveTab('bu'); // 游標到位後點擊，切換並展開「依部類」內容
+          
+          // 2. 停留在「依部類」1 秒後，游標滑向「依冊別」
           setTimeout(() => {
             if (!isActive) return;
-            setStep2ActiveTab('author');
-            setStep2CursorTab('author');
-            // 4. 點依作譯者
+            setStep2CursorTab('ce'); // 游標先移動
             setTimeout(() => {
               if (!isActive) return;
-              setStep2ActiveTab('dynasty');
-              setStep2CursorTab('dynasty');
-              // 5. 點依朝代
+              setStep2ActiveTab('ce'); // 游標到位後點擊，切換並展開「依冊別」內容
+
+              // 3. 停留在「依冊別」1 秒後，游標滑向「依作譯者」
               setTimeout(() => {
                 if (!isActive) return;
-                setStep2ActiveTab('featured');
-                setStep2CursorTab('done');
-                if (cycle < 1) {
-                  cycle++;
-                  setTimeout(runStep2, 2000);
-                }
-              }, 1200);
-            }, 1000);
+                setStep2CursorTab('author'); // 游標先移動
+                setTimeout(() => {
+                  if (!isActive) return;
+                  setStep2ActiveTab('author'); // 游標到位後點擊，切換並展開「依作譯者」內容
+
+                  // 4. 停留在「依作譯者」1 秒後，游標滑向「依朝代」
+                  setTimeout(() => {
+                    if (!isActive) return;
+                    setStep2CursorTab('dynasty'); // 游標先移動
+                    setTimeout(() => {
+                      if (!isActive) return;
+                      setStep2ActiveTab('dynasty'); // 游標到位後點擊，切換並展開「依朝代」內容
+
+                      // 5. 停留在「依朝代」1.2 秒後結束或重播
+                      setTimeout(() => {
+                        if (!isActive) return;
+                        setStep2CursorTab('done');
+                        if (cycle < 1) {
+                          cycle++;
+                          setTimeout(runStep2, 1800);
+                        }
+                      }, 1200);
+                    }, 450);
+                  }, 1000);
+                }, 450);
+              }, 1000);
+            }, 450);
           }, 1000);
-        }, 1000);
+        }, 450);
       }, 1000);
     };
 
@@ -173,60 +189,75 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
       setDemoFontSize(16);
       setStep3CursorPos('c-ivory');
 
-      // 1. 點象牙白 (停1秒)
+      // 1. 停留在象牙白 1 秒後，游標滑向「羊皮紙」
       setTimeout(() => {
         if (!isActive) return;
         setStep3CursorPos('c-parchment');
-        setDemoTheme('parchment');
-        // 2. 點羊皮紙 (停1秒)
         setTimeout(() => {
           if (!isActive) return;
-          setStep3CursorPos('c-comfort');
-          setDemoTheme('comfort');
-          // 3. 點護眼綠 (停1秒)
+          setDemoTheme('parchment');
+          // 2. 停留在羊皮紙 1 秒後，游標滑向「護眼綠」
           setTimeout(() => {
             if (!isActive) return;
-            setStep3CursorPos('c-ebony');
-            setDemoTheme('ebony');
-            // 4. 點烏木黑後，直接點 A- 第1次 (停1秒)
+            setStep3CursorPos('c-comfort');
             setTimeout(() => {
               if (!isActive) return;
-              setStep3CursorPos('btn-minus');
-              setDemoFontSize(15);
-              // 5. 點 A- 第2次 (停1秒)
+              setDemoTheme('comfort');
+              // 3. 停留在護眼綠 1 秒後，游標滑向「烏木黑」
               setTimeout(() => {
                 if (!isActive) return;
-                setDemoFontSize(14);
-                // 6. 點 A+ 第1次 (停1秒)
+                setStep3CursorPos('c-ebony');
                 setTimeout(() => {
                   if (!isActive) return;
-                  setStep3CursorPos('btn-plus');
-                  setDemoFontSize(15);
-                  // 7. 點 A+ 第2次 (停1秒)
+                  setDemoTheme('ebony');
+                  // 4. 停留在烏木黑 1 秒後，游標滑向「A-」
                   setTimeout(() => {
                     if (!isActive) return;
-                    setDemoFontSize(16);
-                    // 8. 點 A+ 第3次 (停1秒)
+                    setStep3CursorPos('btn-minus');
                     setTimeout(() => {
                       if (!isActive) return;
-                      setDemoFontSize(17);
-                      // 9. 點 A+ 第4次 (停1秒)
+                      setDemoFontSize(15);
+                      // 5. 點 A- 第2次 (停1秒)
                       setTimeout(() => {
                         if (!isActive) return;
-                        setDemoFontSize(18);
-                        setStep3CursorPos('done');
-                        if (cycle < 1) {
-                          cycle++;
-                          setTimeout(runStep3, 2200);
-                        }
+                        setDemoFontSize(14);
+                        // 6. 游標滑向「A+」並點第1次
+                        setTimeout(() => {
+                          if (!isActive) return;
+                          setStep3CursorPos('btn-plus');
+                          setTimeout(() => {
+                            if (!isActive) return;
+                            setDemoFontSize(15);
+                            // 7. 點 A+ 第2次 (停1秒)
+                            setTimeout(() => {
+                              if (!isActive) return;
+                              setDemoFontSize(16);
+                              // 8. 點 A+ 第3次 (停1秒)
+                              setTimeout(() => {
+                                if (!isActive) return;
+                                setDemoFontSize(17);
+                                // 9. 點 A+ 第4次 (停1秒)
+                                setTimeout(() => {
+                                  if (!isActive) return;
+                                  setDemoFontSize(18);
+                                  setStep3CursorPos('done');
+                                  if (cycle < 1) {
+                                    cycle++;
+                                    setTimeout(runStep3, 2200);
+                                  }
+                                }, 1000);
+                              }, 1000);
+                            }, 1000);
+                          }, 400);
+                        }, 1000);
                       }, 1000);
-                    }, 1000);
+                    }, 400);
                   }, 1000);
-                }, 1000);
+                }, 400);
               }, 1000);
-            }, 1000);
+            }, 400);
           }, 1000);
-        }, 1000);
+        }, 400);
       }, 1000);
     };
 
