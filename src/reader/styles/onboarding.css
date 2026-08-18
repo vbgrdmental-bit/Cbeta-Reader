@@ -123,7 +123,7 @@
 }
 
 /* =========================================================================
-   手部虛擬游標 (Touch Hand Cursor + 圓形淺灰標靶 Halo)
+   手部虛擬游標 (Custom Hand Click Pointer SVG)
    ========================================================================= */
 .touch-hand-cursor {
   position: absolute;
@@ -132,8 +132,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-  transform: translate(-50%, -50%);
+  transition: all 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translate(-39%, -28%);
+  color: #2c2016;
 }
 
 .touch-hand-cursor.hidden {
@@ -141,33 +142,26 @@
   visibility: hidden;
 }
 
-/* 圓形淺灰色底圈標靶 (精準定位目標) */
-.hand-halo-circle {
-  position: absolute;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.12);
-  border: 1.5px solid rgba(0, 0, 0, 0.22);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.hand-icon {
-  font-size: 1.5rem;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+.custom-pointer-svg {
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.22));
   transition: transform 0.15s ease;
   user-select: none;
-  position: relative;
-  z-index: 2;
-  margin-top: 3px;
-  margin-left: 3px;
+}
+
+.custom-pointer-svg .click-rays {
+  opacity: 0.9;
+  animation: pulse-radiance 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-radiance {
+  0%, 100% { opacity: 0.65; transform-origin: 39px 28px; transform: scale(0.96); }
+  50% { opacity: 1; transform-origin: 39px 28px; transform: scale(1.06); }
 }
 
 .tap-ripple {
   position: absolute;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: rgba(30, 169, 140, 0.35);
   border: 2px solid rgba(30, 169, 140, 0.8);

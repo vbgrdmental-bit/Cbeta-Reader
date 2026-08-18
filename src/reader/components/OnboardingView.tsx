@@ -16,6 +16,45 @@ interface OnboardingStep {
   desc: string;
 }
 
+/**
+ * 點擊手勢圖標 (對齊用戶提供之深色圓潤粗邊線 + 指尖 5 道點擊光芒短線)
+ */
+function TouchHandPointerIcon({ size = 42 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="custom-pointer-svg"
+    >
+      {/* 5 道點擊放射光芒 (Click Radiance Burst Lines) */}
+      <g className="click-rays" stroke="currentColor" strokeWidth="5.2" strokeLinecap="round">
+        <line x1="20" y1="29" x2="28" y2="29" />
+        <line x1="25" y1="16" x2="32" y2="23" />
+        <line x1="39" y1="10" x2="39" y2="19" />
+        <line x1="53" y1="16" x2="46" y2="23" />
+        <line x1="58" y1="29" x2="50" y2="29" />
+      </g>
+
+      {/* 手勢主體 (白底 + 圓潤黑色粗描邊) */}
+      <path
+        d="M 34 32 C 34 26 44 26 44 32 L 44 42 C 44 39 52 39 52 44 L 52 48 C 52 45 60 45 60 50 L 60 54 C 60 51 68 51 68 56 C 68 70 63 80 52 83 L 45 83 C 36 83 31 78 28 72 L 23 65 C 19 60 23 53 29 57 L 34 61 Z"
+        fill="#ffffff"
+        stroke="currentColor"
+        strokeWidth="5.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* 手指蜷縮關節線 */}
+      <path d="M 44 42 L 44 54" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+      <path d="M 52 48 L 52 58" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+      <path d="M 60 54 L 60 62" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function OnboardingView({ onComplete }: OnboardingViewProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const touchStartXRef = useRef<number | null>(null);
@@ -660,8 +699,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step1CursorState === 'on-download-btn' ? 'pos-step1-download-btn' : ''} 
                 ${step1CursorState === 'idle' || step1CursorState === 'done' ? 'hidden' : ''}`
               }>
-                <div className="hand-halo-circle" />
-                <span className="hand-icon">👆</span>
+                <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
             </div>
@@ -816,8 +854,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step2CursorTab === 'dynasty' ? 'pos-cat-tab-5' : ''} 
                 ${step2CursorTab === 'done' ? 'hidden' : ''}`
               }>
-                <div className="hand-halo-circle" />
-                <span className="hand-icon">👆</span>
+                <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
             </div>
@@ -873,8 +910,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step3CursorPos === 'btn-plus' ? 'pos-font-plus' : ''} 
                 ${step3CursorPos === 'done' ? 'hidden' : ''}`
               }>
-                <div className="hand-halo-circle" />
-                <span className="hand-icon">👆</span>
+                <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
             </div>
@@ -974,8 +1010,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step4CursorPos === 'btn-save' ? 'pos-step4-save' : ''} 
                 ${step4CursorPos === 'idle' || step4CursorPos === 'typing' || step4CursorPos === 'done' ? 'hidden' : ''}`
               }>
-                <div className="hand-halo-circle" />
-                <span className="hand-icon">👆</span>
+                <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
             </div>
@@ -1110,8 +1145,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                 ${step5CursorPos === 'on-magnifier' ? 'pos-step5-magnifier' : ''} 
                 ${step5CursorPos === 'idle' || step5CursorPos === 'done' ? 'hidden' : ''}`
               }>
-                <div className="hand-halo-circle" />
-                <span className="hand-icon">👆</span>
+                <TouchHandPointerIcon />
                 <span className="tap-ripple" />
               </div>
             </div>
