@@ -433,28 +433,6 @@ export function ReaderView({
   const [matchedSegments, setMatchedSegments] = useState<Array<{ segmentId: string; juan: number }>>([]);
   const [currentMatchIndex, setCurrentMatchIndex] = useState<number>(-1);
 
-  // 💡 歷史進度接續閱讀 Dialog 狀態
-  const [showResumeDialog, setShowResumeDialog] = useState(false);
-  const [pendingProgress, setPendingProgress] = useState<{ juan: number; segmentId: string; displayTitle: string; percent: number } | null>(null);
-
-  const handleConfirmResume = () => {
-    if (pendingProgress) {
-      setCurrentJuanNum(pendingProgress.juan);
-      setTimeout(() => {
-        if (pendingProgress.segmentId) {
-          scrollToSegment(pendingProgress.segmentId);
-          setActiveSegmentId(pendingProgress.segmentId);
-        }
-      }, 300);
-    }
-    setShowResumeDialog(false);
-  };
-
-  const handleDeclineResume = () => {
-    setCurrentJuanNum(1);
-    setShowResumeDialog(false);
-  };
-
   useEffect(() => {
     if (!book || !activeSearchQuery) {
       setMatchedSegments([]);
@@ -770,52 +748,33 @@ export function ReaderView({
               scrollToSegment(initialSegmentId);
               setActiveSegmentId(initialSegmentId);
             }, 300);
-          } else if (autoResumeMode === 'restart') {
-            // 💡 使用者於選單中明確點擊「從頭開始閱讀」：直接載入第 1 卷，免跳出確認彈窗
-            setCurrentJuanNum(1);
-          } else if (autoResumeMode === 'resume') {
-            // 💡 使用者於選單中明確點擊「接續閱讀」：直接載入歷史進度並自動跳轉，免跳出確認彈窗
-            const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
-            if (savedProgressStr) {
-              try {
-                const progress = JSON.parse(savedProgressStr);
-                const targetJuan = progress.juan || 1;
-                setCurrentJuanNum(targetJuan);
-                if (progress.segmentId) {
-                  setTimeout(() => {
-                    scrollToSegment(progress.segmentId);
-                    setActiveSegmentId(progress.segmentId);
-                  }, 350);
-                }
-              } catch (err) {
-                console.warn('Failed to parse saved progress for auto resume:', err);
-                setCurrentJuanNum(1);
-              }
-            } else {
-              setCurrentJuanNum(1);
-            }
           } else {
-            // 💡 嘗試從 localStorage 載入此書的歷史閱讀進度
-            const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
-            if (savedProgressStr) {
-              try {
-                const progress = JSON.parse(savedProgressStr);
-                if (progress.juan || progress.segmentId) {
-                  const displayTitle = getMuluTitleForSegment(bookData, progress.juan || 1, progress.segmentId || '');
-                  setPendingProgress({
-                    juan: progress.juan || 1,
-                    segmentId: progress.segmentId || '',
-                    displayTitle: displayTitle,
-                    percent: progress.percent !== undefined ? progress.percent : 0
-                  });
-                  setShowResumeDialog(true);
+            // 💡 依據「每次經文開啟時自動回到上次閱讀位置」設定進行無感自動導航 (免彈窗打擾)
+            const shouldAutoResume = (autoResumeMode === 'resume') || 
+              (autoResumeMode !== 'restart' && (settings.customVisibleElements?.autoResumeProgress ?? true));
+
+            if (shouldAutoResume) {
+              const savedProgressStr = localStorage.getItem(`reader_progress_${workId}`);
+              if (savedProgressStr) {
+                try {
+                  const progress = JSON.parse(savedProgressStr);
+                  const targetJuan = progress.juan || 1;
+                  setCurrentJuanNum(targetJuan);
+                  if (progress.segmentId) {
+                    setTimeout(() => {
+                      scrollToSegment(progress.segmentId);
+                      setActiveSegmentId(progress.segmentId);
+                    }, 350);
+                  }
+                } catch (err) {
+                  console.warn('Failed to parse saved progress for auto resume:', err);
+                  setCurrentJuanNum(1);
                 }
-                setCurrentJuanNum(1);
-              } catch (err) {
-                console.warn('Failed to parse saved progress, fallback to juan 1:', err);
+              } else {
                 setCurrentJuanNum(1);
               }
             } else {
+              // 💡 未勾選或手動選擇從頭開始：直接從第 1 卷開頭閱讀
               setCurrentJuanNum(1);
             }
           }
@@ -2523,91 +2482,6 @@ export function ReaderView({
           onClose={() => setShowSettingsView(false)}
         />
       )}
-
-      {/* 💡 歷史進度接續閱讀詢問 Dialog */}
-      {showResumeDialog && pendingProgress && (
-        <div 
-          className="reader-dialog-overlay"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.4)',
-            backdropFilter: 'blur(4px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 3000,
-            animation: 'fadeIn 0.25s ease-out'
-          }}
-        >
-          <div 
-            className="reader-dialog-box"
-            style={{
-              background: 'var(--reader-bg)',
-              color: 'var(--reader-text)',
-              border: '1px solid var(--theme-accent-border, rgba(242, 163, 27, 0.2))',
-              borderRadius: '16px',
-              padding: '2rem',
-              width: '90%',
-              maxWidth: '420px',
-              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.25)',
-              textAlign: 'center',
-              fontFamily: 'var(--font-serif)',
-              animation: 'scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
-            }}
-          >
-            <div style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', color: 'var(--theme-accent)' }}>
-              偵測到歷史閱讀進度
-            </div>
-            <p style={{ fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2rem', opacity: 0.9 }}>
-              您上次閱讀至<strong>《{book.metadata.title}》</strong>的<br />
-              <strong>「{pendingProgress.displayTitle} ({pendingProgress.percent}%)」</strong>，是否要接續閱讀？
-            </p>
-            <div style={{ display: 'flex', gap: '0.8rem' }}>
-              <button 
-                onClick={handleDeclineResume}
-                style={{
-                  flex: 1,
-                  padding: '0.65rem',
-                  borderRadius: '8px',
-                  border: '1px solid var(--text-muted, #ccc)',
-                  background: 'transparent',
-                  color: 'var(--reader-text)',
-                  fontSize: '0.9rem',
-                  cursor: 'pointer',
-                  transition: 'background 0.2s'
-                }}
-                className="resume-dialog-btn-secondary"
-              >
-                從頭開始
-              </button>
-              <button 
-                onClick={handleConfirmResume}
-                style={{
-                  flex: 1,
-                  padding: '0.65rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: 'var(--theme-accent)',
-                  color: settings.theme === 'ebony' ? '#000' : '#fff',
-                  fontSize: '0.9rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  transition: 'opacity 0.2s'
-                }}
-                className="resume-dialog-btn-primary"
-              >
-                接續閱讀
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-
 
       {/* 💡 劃線懸浮操作工具列（寫心得 + 刪除重點） */}
       {activeHighlightForDelete && deleteMenuPosition && (

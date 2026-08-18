@@ -249,6 +249,7 @@ export interface AppSettings {
     pageNumber: boolean;   // 顯示頁碼
     ttsHighlight: boolean; // 朗讀時 Highlight
     showNoteInText?: boolean; // 顯示筆記內容 (經文中顯示 (筆記：xxx))
+    autoResumeProgress?: boolean; // 開啟經文時自動回到上次閱讀位置 (預設 true)
   };
   ttsVoice: string; // 選定的 Voice Name
   ttsSpeed: number; // 播放速度 0.5 ~ 2
@@ -272,7 +273,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
     notes: true,                 // 預設顯示校勘
     pageNumber: true,            // 預設顯示頁碼
     ttsHighlight: true,
-    showNoteInText: false        // 預設關閉「顯示筆記內容」
+    showNoteInText: false,       // 預設關閉「顯示筆記內容」
+    autoResumeProgress: true     // 預設開啟「自動回到上次閱讀位置」
   },
   ttsVoice: '',
   ttsSpeed: 1.0,

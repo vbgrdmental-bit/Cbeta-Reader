@@ -899,6 +899,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 />
                 顯示筆記內容
               </label>
+
+              <label className="checkbox-item">
+                <input 
+                  type="checkbox" 
+                  checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
+                  onChange={() => handleCheckboxChange('autoResumeProgress')}
+                />
+                開啟經文時自動回到上次閱讀位置 (未勾選則從頭開始閱讀)
+              </label>
             </div>
 
             {/* Cbeta Reader 簡易功能導覽 按鈕 */}
@@ -1181,15 +1190,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.1.1) 直接顯示 */}
+                {/* 最新 App 版本 (v4.1.2) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.1.1</span>
+                    <span>⭐ App: v4.1.2</span>
                     <span className="changelog-date">(2026-08-19)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 新增「Cbeta Reader 簡易功能導覽」生動互動演示（支援 5 步驟操作教學與手機左右滑動翻頁）。</li>
-                    <li>• 於閱讀設定之「其他設定」新增導覽快捷重播按鈕，方便隨時複習上手。</li>
+                    <li>• 閱讀頁下方控制列升級為「4 色背景快捷切換」與「字體大小 A-/A+ 調整器」。</li>
+                    <li>• 新增「開啟經文時自動回到上次閱讀位置」設定，免去每次進入經文時的詢問彈窗。</li>
                   </ul>
                 </div>
 
@@ -1212,6 +1221,13 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.1.1 <span className="changelog-date">(2026-08-19)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 新增「Cbeta Reader 簡易功能導覽」生動互動演示（支援 5 步驟操作教學與手機左右滑動翻頁）。</li>
+                        <li>• 於閱讀設定之「其他設定」新增導覽快捷重播按鈕，方便隨時複習上手。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                         <span>App: v4.1.0</span>

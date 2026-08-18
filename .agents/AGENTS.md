@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.1.1` (App: v4.1.1 / Builder: v2.9.7)
+- **Current Version**: `v4.1.2` (App: v4.1.2 / Builder: v2.9.7)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,7 +50,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
-- **⭐ App: v4.1.1 / Builder: v2.9.7** (2026-08-19)
+- **⭐ App: v4.1.2 / Builder: v2.9.7** (2026-08-19)
+  - [App] 閱讀頁下方控制列升級為「4 色背景快捷切換」與「字體大小 A-/A+ 調整器」。
+  - [App] 新增「開啟經文時自動回到上次閱讀位置」偏好設定，免去每次進入經文時的詢問彈窗打擾。
+- **App: v4.1.1 / Builder: v2.9.7** (2026-08-19)
   - [App] 新增「Cbeta Reader 簡易功能導覽」生動互動演示（支援 5 步驟手勢操作教學與手機左右滑動翻頁）。
   - [App] 閱讀設定「其他設定」新增導覽快捷重播按鈕，方便隨時複習上手。
 - **⭐ App: v4.1.0 / Builder: v2.9.7** (2026-08-17) [Major Release 重大更新]
