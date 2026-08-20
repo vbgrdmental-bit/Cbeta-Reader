@@ -161,9 +161,34 @@ export function Library({
     localStorage.setItem('cbeta_my_bookshelf_book_ids', JSON.stringify(ids));
   };
 
+  const getBookCjkChars = (book: BookMetadata): number => {
+    if (book.cjkChars && typeof book.cjkChars === 'number' && book.cjkChars > 0) {
+      return book.cjkChars;
+    }
+    const feat = FEATURED_BOOKS.find(b => b.workId === book.workId);
+    if (feat?.cjkChars && feat.cjkChars > 0) {
+      return feat.cjkChars;
+    }
+    const pkg = downloadedPackages.find(p => p.metadata.workId === book.workId);
+    if (pkg && pkg.content?.juans) {
+      let count = 0;
+      pkg.content.juans.forEach(j => {
+        j.segments?.forEach(seg => {
+          const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
+          const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
+          if (cjkMatches) count += cjkMatches.length;
+        });
+      });
+      if (count > 0) return count;
+    }
+    return 0;
+  };
+
   const formatEstimatedReadingTime = (cjkChars?: number) => {
-    const chars = cjkChars || 2000;
-    const totalMins = Math.max(1, Math.round(chars / 200));
+    if (!cjkChars || cjkChars <= 0) {
+      return '10 分鐘';
+    }
+    const totalMins = Math.max(1, Math.round(cjkChars / 200));
     if (totalMins < 60) {
       return `${totalMins} 分鐘`;
     }
@@ -822,16 +847,42 @@ export function Library({
         });
       }
 
-      setDownloadedBooks(booksMeta);
-
-      // 同步讀取 package，以供本地檢索使用
-      const { getBook } = await import('../../utils/db');
+      // 同步讀取 package，以供本地檢索使用與缺失字數自動修復
+      const { getBook, saveBook } = await import('../../utils/db');
       const pkgs: ReaderPackage[] = [];
+      let hasHealedAny = false;
+
       for (const meta of booksMeta) {
         const pkg = await getBook(meta.workId);
-        if (pkg) pkgs.push(pkg);
+        if (pkg) {
+          pkgs.push(pkg);
+          // 自動修復缺失之 cjkChars (Auto-Heal)
+          if (!pkg.metadata.cjkChars || pkg.metadata.cjkChars === 0) {
+            let count = 0;
+            pkg.content?.juans?.forEach(j => {
+              j.segments?.forEach(seg => {
+                const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
+                const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
+                if (cjkMatches) count += cjkMatches.length;
+              });
+            });
+            if (count === 0) {
+              const feat = FEATURED_BOOKS.find(b => b.workId === meta.workId);
+              if (feat?.cjkChars) count = feat.cjkChars;
+            }
+            if (count > 0) {
+              pkg.metadata.cjkChars = count;
+              meta.cjkChars = count;
+              hasHealedAny = true;
+              await saveBook(pkg);
+            }
+          }
+        }
       }
       setDownloadedPackages(pkgs);
+      if (hasHealedAny) {
+        setDownloadedBooks([...booksMeta]);
+      }
     } catch (e) {
       console.error('Failed to load local books from IndexedDB:', e);
     }
@@ -2627,8 +2678,15 @@ export function Library({
                 <div><span style={{ color: 'var(--text-muted)' }}>經號 : </span>CBETA No. {menuTargetBook.workId}</div>
                 <div><span style={{ color: 'var(--text-muted)' }}>部類 : </span>{menuTargetBook.category || '大藏經部類'}</div>
                 <div><span style={{ color: 'var(--text-muted)' }}>冊別 : </span>{menuTargetBook.vol || menuTargetBook.canon || 'CBETA 典籍'}</div>
-                <div><span style={{ color: 'var(--text-muted)' }}>字數 : </span>{(menuTargetBook.cjkChars || 0).toLocaleString()} 字</div>
-                <div><span style={{ color: 'var(--text-muted)' }}>預計閱讀時間 : </span>{formatEstimatedReadingTime(menuTargetBook.cjkChars)}</div>
+                {(() => {
+                  const count = getBookCjkChars(menuTargetBook);
+                  return (
+                    <>
+                      <div><span style={{ color: 'var(--text-muted)' }}>字數 : </span>{count > 0 ? `${count.toLocaleString()} 字` : '—'}</div>
+                      <div><span style={{ color: 'var(--text-muted)' }}>預計閱讀時間 : </span>{formatEstimatedReadingTime(count)}</div>
+                    </>
+                  );
+                })()}
               </div>
             </div>
 

@@ -1156,14 +1156,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.1.4) 直接顯示 */}
+                {/* 最新 App 版本 (v4.1.5) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.1.4</span>
+                    <span>⭐ App: v4.1.5</span>
                     <span className="changelog-date">(2026-08-20)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 批量下載經書至指定資料夾完成後，即時同步資料夾與經書歸類，免手動重新整理。</li>
+                    <li>• 經書管理對話框支援動態即時計算與自動補齊字數與預計閱讀時間。</li>
                   </ul>
                 </div>
 
@@ -1186,6 +1186,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.1.4 <span className="changelog-date">(2026-08-20)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 批量下載經書至指定資料夾完成後，即時同步資料夾與經書歸類，免手動重新整理。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.1.3 <span className="changelog-date">(2026-08-20)</span></div>
                       <ul className="changelog-list">
@@ -1364,14 +1370,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.9.8) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.9.9) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ Builder: v2.9.8</span>
+                    <span>⭐ Builder: v2.9.9</span>
                     <span className="changelog-date">(2026-08-20)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 修正無標明作譯者之經典（如 T1910、T1944 等），作譯者欄位忠實保持為空。</li>
+                    <li>• 完善經文書籍打包引擎，全面自動提取並計算 CJK 漢字與英數總字數。</li>
                   </ul>
                 </div>
 
@@ -1395,6 +1401,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 Builder 歷史版本 */}
                 {showBuilderHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.9.8 <span className="changelog-date">(2026-08-20)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 修正無標明作譯者之經典（如 T1910、T1944 等），作譯者欄位忠實保持為空。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">Builder: v2.9.7 <span className="changelog-date">(2026-08-17)</span></div>
                       <ul className="changelog-list">

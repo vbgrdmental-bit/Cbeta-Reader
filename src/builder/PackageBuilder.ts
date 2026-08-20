@@ -49,6 +49,9 @@ export class PackageBuilder {
       if (indexMeta.juansCount && indexMeta.juansCount > 0) {
         searchResult.juansCount = indexMeta.juansCount;
       }
+      if (indexMeta.cjkChars && !searchResult.cjkChars) {
+        searchResult.cjkChars = indexMeta.cjkChars;
+      }
     } else {
       searchResult.creators = sanitizeCreators(searchResult.creators);
     }
@@ -147,6 +150,10 @@ export class PackageBuilder {
                 const volNum = String(workInfo.n).padStart(2, '0');
                 searchResult.vol = `${searchResult.workId.charAt(0)}${volNum}`;
               }
+              if (workInfo.cjk_chars != null && typeof workInfo.cjk_chars === 'number') {
+                const enWords = (workInfo.en_words != null && typeof workInfo.en_words === 'number') ? workInfo.en_words : 0;
+                searchResult.cjkChars = workInfo.cjk_chars + enWords;
+              }
             }
           }
         } catch (err) {
@@ -227,6 +234,21 @@ export class PackageBuilder {
       // 7. 儲存階段 (IndexedDB)
       onProgress({ step: 'saving', percent: 96, message: '正在包裝為 .book 格式並存入離線書庫 (IndexedDB)...' });
       
+      // 💡 字數自動統計與保險校驗：若 API 或元資料未能提供 cjkChars，直接遍歷內文所有段落精確計算 CJK 漢字與英數總字數
+      if (!metadata.cjkChars || metadata.cjkChars <= 0) {
+        let calculatedChars = 0;
+        content.juans.forEach(j => {
+          j.segments.forEach(seg => {
+            const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
+            const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
+            if (cjkMatches) calculatedChars += cjkMatches.length;
+          });
+        });
+        if (calculatedChars > 0) {
+          metadata.cjkChars = calculatedChars;
+        }
+      }
+
       const bookPackage: ReaderPackage = {
         metadata,
         content,
