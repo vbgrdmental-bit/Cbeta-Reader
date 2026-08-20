@@ -1330,4 +1330,52 @@ body.theme-ebony .highlight-btn.active,
   border-color: var(--theme-accent, #cf9f60) !important;
 }
 
+/* ==========================================================================
+   💡 手機版專屬：浮動膠囊控制列再貼近底部、上下再加厚（厚胖可愛感）
+   ========================================================================== */
+@media (max-width: 768px) {
+  .reader-floating-bottom-bar {
+    bottom: calc(4px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 0.72rem 1.15rem !important;
+    gap: 0.9rem !important;
+    border-radius: 9999px !important;
+    box-shadow: 0 16px 44px rgba(70, 45, 20, 0.22), 0 5px 14px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .floating-bar-theme-group {
+    gap: 11px !important;
+  }
+
+  .floating-theme-circle {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .floating-bar-divider {
+    height: 26px !important;
+    margin: 0 3px !important;
+  }
+
+  .floating-bar-font-group {
+    gap: 7px !important;
+  }
+
+  .floating-font-btn {
+    font-size: 0.92rem !important;
+    padding: 7px 15px !important;
+    min-height: 34px !important;
+    border-radius: 9999px !important;
+  }
+
+  .floating-font-val {
+    font-size: 0.9rem !important;
+    min-width: 44px !important;
+  }
+
+  .floating-bar-timer {
+    font-size: 0.85rem !important;
+    padding: 5px 12px !important;
+  }
+}
+
 
