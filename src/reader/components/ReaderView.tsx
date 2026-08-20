@@ -2126,67 +2126,57 @@ export function ReaderView({
         </div>
       </div>
 
-      {/* 底部工具列：左側 4 色模式切換，右側字體大小調整器 (如圖 2) */}
-      <div className={`reader-overlay-bar reader-bottom-bar ${showToolbar ? 'visible' : 'hidden'}`}>
+      {/* 💡 浮動膠囊控制列 (Floating Capsule Bottom Bar) */}
+      <div className={`reader-floating-bottom-bar ${showToolbar ? 'visible' : 'hidden'}`}>
         {/* 左側：4 種顏色模式 (象牙白, 羊皮紙, 護眼綠, 烏木黑) */}
-        <div className="bar-left-controls bottom-theme-switch-group">
+        <div className="floating-bar-theme-group">
           {(['ivory', 'parchment', 'comfort', 'ebony'] as const).map((t) => {
             const isSelected = settings.theme === t;
             return (
               <div
                 key={t}
-                className={`bottom-theme-circle ${t} ${isSelected ? 'active' : ''}`}
+                className={`floating-theme-circle ${t} ${isSelected ? 'active' : ''}`}
                 onClick={() => onSaveSettings({ ...settings, theme: t })}
                 title={t === 'ivory' ? '象牙白' : t === 'parchment' ? '羊皮紙' : t === 'comfort' ? '舒服護眼' : '烏木暗色'}
               >
-                {isSelected && <Check size={12} strokeWidth={3} className="theme-check-icon" />}
+                {isSelected && <Check size={12} strokeWidth={3.2} className="theme-check-icon" />}
               </div>
             );
           })}
         </div>
 
-        {/* ⏱️ 閱讀時間倒數計時 (下方控制列中間 / 小字 / 淺灰 / 顯示分和秒倒數) */}
+        {/* ⏱️ 閱讀時間倒數計時 (若有設定閱讀時間) */}
         {timerState.duration && timerState.remainingSeconds > 0 && (
-          <div 
-            className="bar-center-timer"
-            onClick={() => setShowSettingsView(true)}
-            title="閱讀時間倒數中 (點擊開啟設定)"
-            style={{
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '0.78rem',
-              color: 'var(--reader-text-muted, #888)',
-              fontFamily: 'var(--font-rounded)',
-              cursor: 'pointer',
-              opacity: 0.9,
-              padding: '2px 8px',
-              borderRadius: '4px',
-              userSelect: 'none'
-            }}
-          >
-            <Clock size={13} style={{ strokeWidth: 2, opacity: 0.85 }} />
-            <span>{formatTimerMMSS(timerState.remainingSeconds)}</span>
-          </div>
+          <>
+            <div className="floating-bar-divider" />
+            <div 
+              className="floating-bar-timer"
+              onClick={() => setShowSettingsView(true)}
+              title="閱讀時間倒數中 (點擊開啟設定)"
+            >
+              <Clock size={13} style={{ strokeWidth: 2.2 }} />
+              <span>{formatTimerMMSS(timerState.remainingSeconds)}</span>
+            </div>
+          </>
         )}
 
-        {/* 右側：字體大小調整器 [A-] 16px [A+] */}
-        <div className="bar-right-controls bottom-font-stepper-group">
+        {/* 細細豎線垂直分隔線 */}
+        <div className="floating-bar-divider" />
+
+        {/* 右側：字體大小調整器 [A-] 22px [A+] */}
+        <div className="floating-bar-font-group">
           <button 
             type="button" 
-            className="bottom-font-btn" 
+            className="floating-font-btn" 
             onClick={() => onSaveSettings({ ...settings, fontSize: Math.max(12, settings.fontSize - 1) })}
             title="縮小字體 (A-)"
           >
             A-
           </button>
-          <span className="bottom-font-val">{settings.fontSize}px</span>
+          <span className="floating-font-val">{settings.fontSize}px</span>
           <button 
             type="button" 
-            className="bottom-font-btn" 
+            className="floating-font-btn" 
             onClick={() => onSaveSettings({ ...settings, fontSize: Math.min(36, settings.fontSize + 1) })}
             title="放大字體 (A+)"
           >

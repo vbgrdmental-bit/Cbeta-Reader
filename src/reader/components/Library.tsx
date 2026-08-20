@@ -857,6 +857,8 @@ export function Library({
         });
       }
 
+      setDownloadedBooks([...booksMeta]);
+
       // 同步讀取 package，以供本地檢索使用與缺失字數自動修復
       const { getBook, saveBook } = await import('../../utils/db');
       const pkgs: ReaderPackage[] = [];
