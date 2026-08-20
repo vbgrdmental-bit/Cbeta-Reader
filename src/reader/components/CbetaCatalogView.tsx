@@ -200,152 +200,20 @@ export const STATIC_VOL_CATEGORIES: CatalogItem[] = [
   { id: 'orig.006', label: '近代新編文獻', nodeType: 'category' }
 ];
 
-// 常用經典 12 本熱門經典常數 (快速連結，點擊即可下載/閱讀)
+// 常用經典 12 本熱門經典常數 (在本地僅保留經名與經號，下載時 100% 重新抓取 CBETA 官方最新內容)
 export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
-  {
-    id: 'T0779',
-    label: '佛說八大人覺經',
-    nodeType: 'work',
-    workId: 'T0779',
-    creators: '東漢 安清',
-    category: '經集部類',
-    vol: 'T17',
-    cjkChars: 397,
-    juansCount: 1,
-    juanStart: 1
-  },
-  {
-    id: 'T0784',
-    label: '四十二章經',
-    nodeType: 'work',
-    workId: 'T0784',
-    creators: '東漢 攝摩騰,竺法蘭',
-    category: '經集部類',
-    vol: 'T17',
-    cjkChars: 2495,
-    juansCount: 1,
-    juanStart: 1
-  },
-  {
-    id: 'T0801',
-    label: '佛說無常經',
-    nodeType: 'work',
-    workId: 'T0801',
-    creators: '唐 義淨',
-    category: '經集部類',
-    vol: 'T17',
-    cjkChars: 2096,
-    juansCount: 1,
-    juanStart: 1
-  },
-  {
-    id: 'T0251',
-    label: '般若波羅蜜多心經',
-    nodeType: 'work',
-    workId: 'T0251',
-    creators: '唐 玄奘',
-    category: '般若部類',
-    vol: 'T08',
-    cjkChars: 1097,
-    juansCount: 1,
-    juanStart: 1
-  },
-  {
-    id: 'T0235',
-    label: '金剛般若波羅蜜經',
-    nodeType: 'work',
-    workId: 'T0235',
-    creators: '後秦 鳩摩羅什',
-    category: '般若部類',
-    vol: 'T08',
-    cjkChars: 5191,
-    juansCount: 1,
-    juanStart: 1
-  },
-  {
-    id: 'T0366',
-    label: '佛說阿彌陀經',
-    nodeType: 'work',
-    workId: 'T0366',
-    creators: '姚秦 鳩摩羅什',
-    category: '寶積部類,淨土宗部類',
-    vol: 'T12',
-    cjkChars: 2109,
-    juansCount: 1,
-    juanStart: 1
-  },
-  {
-    id: 'T0450',
-    label: '藥師琉璃光如來本願功德經',
-    nodeType: 'work',
-    workId: 'T0450',
-    creators: '唐 玄奘',
-    category: '經集部類',
-    vol: 'T14',
-    cjkChars: 4972,
-    juansCount: 1,
-    juanStart: 1
-  },
-  {
-    id: 'T0276',
-    label: '無量義經',
-    nodeType: 'work',
-    workId: 'T0276',
-    creators: '蕭齊 曇摩迦陀耶舍',
-    category: '法華部類',
-    vol: 'T09',
-    cjkChars: 8571,
-    juansCount: 1,
-    juanStart: 1
-  },
-  {
-    id: 'T0262',
-    label: '妙法蓮華經',
-    nodeType: 'work',
-    workId: 'T0262',
-    creators: '姚秦 鳩摩羅什',
-    category: '法華部類',
-    vol: 'T09',
-    cjkChars: 72072,
-    juansCount: 7,
-    juanStart: 7
-  },
-  {
-    id: 'T0412',
-    label: '地藏菩薩本願經',
-    nodeType: 'work',
-    workId: 'T0412',
-    creators: '唐 實叉難陀',
-    category: '大集部類',
-    vol: 'T13',
-    cjkChars: 17098,
-    juansCount: 2,
-    juanStart: 2
-  },
-  {
-    id: 'T0945',
-    label: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經',
-    nodeType: 'work',
-    workId: 'T0945',
-    creators: '唐 般剌蜜帝',
-    category: '密教部類',
-    vol: 'T19',
-    cjkChars: 70934,
-    juansCount: 10,
-    juanStart: 10
-  },
-  {
-    id: 'Y0040',
-    label: '成佛之道（增注本）',
-    nodeType: 'work',
-    workId: 'Y0040',
-    creators: '民國 釋印順',
-    category: '新編部類',
-    vol: 'Y42',
-    cjkChars: 146784,
-    juansCount: 5,
-    juanStart: 5
-  }
+  { id: 'T0779', label: '佛說八大人覺經', nodeType: 'work', workId: 'T0779' },
+  { id: 'T0784', label: '四十二章經', nodeType: 'work', workId: 'T0784' },
+  { id: 'T0801', label: '佛說無常經', nodeType: 'work', workId: 'T0801' },
+  { id: 'T0251', label: '般若波羅蜜多心經', nodeType: 'work', workId: 'T0251' },
+  { id: 'T0235', label: '金剛般若波羅蜜經', nodeType: 'work', workId: 'T0235' },
+  { id: 'T0366', label: '佛說阿彌陀經', nodeType: 'work', workId: 'T0366' },
+  { id: 'T0450', label: '藥師琉璃光如來本願功德經', nodeType: 'work', workId: 'T0450' },
+  { id: 'T0276', label: '無量義經', nodeType: 'work', workId: 'T0276' },
+  { id: 'T0262', label: '妙法蓮華經', nodeType: 'work', workId: 'T0262' },
+  { id: 'T0412', label: '地藏菩薩本願經', nodeType: 'work', workId: 'T0412' },
+  { id: 'T0945', label: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經', nodeType: 'work', workId: 'T0945' },
+  { id: 'Y0040', label: '成佛之道（增注本）', nodeType: 'work', workId: 'Y0040' }
 ];
 
 export function CbetaCatalogView({

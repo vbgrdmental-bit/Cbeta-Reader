@@ -113,19 +113,22 @@ export class PackageBuilder {
           console.warn(`[Backup Mode] Metadata fetch fallback for ${workId}:`, bMetaErr);
         }
       } else {
-        // 主源 (Primary Source): 向 CBETA 官方 API 請求 (加入 3.5 秒超時保護，防範 CBETA API 伺服器掛起)
-        onProgress({ step: 'metadata', percent: 3, message: `正在向 CBETA 獲取《${searchResult.title}》最新元資料...` });
+        // 主源 (Primary Source): 向 CBETA 官方 API 請求最新即時元資料 (加入 cache: reload 與時間戳記)
+        onProgress({ step: 'metadata', percent: 3, message: `正在向 CBETA 獲取《${searchResult.title}》最新即時元資料...` });
         try {
-          const relativeMetaUrl = getApiUrl(`/stable/works?work=${workId}`);
-          const directMetaUrl = `https://cbdata.dila.edu.tw/stable/works?work=${workId}`;
-          let response = await fetchWithTimeout(relativeMetaUrl, { headers: { 'Accept': 'application/json' } }, 3500);
+          const relativeMetaUrl = getApiUrl(`/stable/works?work=${workId}&_t=${Date.now()}`);
+          const directMetaUrl = `https://cbdata.dila.edu.tw/stable/works?work=${workId}&_t=${Date.now()}`;
+          let response = await fetchWithTimeout(relativeMetaUrl, { cache: 'reload', headers: { 'Accept': 'application/json' } }, 3500);
           if (!response || !response.ok) {
-            response = await fetchWithTimeout(directMetaUrl, { headers: { 'Accept': 'application/json' } }, 5000);
+            response = await fetchWithTimeout(directMetaUrl, { cache: 'reload', headers: { 'Accept': 'application/json' } }, 5000);
           }
           if (response && response.ok) {
             const data = await response.json().catch(() => null);
             if (data && Array.isArray(data.results) && data.results.length > 0) {
               const workInfo = data.results[0];
+              if (workInfo.title) {
+                searchResult.title = workInfo.title;
+              }
               if (workInfo.juan && typeof workInfo.juan === 'number') {
                 actualJuansCount = workInfo.juan;
               }
