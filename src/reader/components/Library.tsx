@@ -724,13 +724,17 @@ export function Library({
         }
         return f;
       });
+    } else {
+      // 💡 parentId 為 null 時，將內部經典移至「我的書櫃」頂層
+      const combinedMyBookshelf = Array.from(new Set([...myBookshelfBookIds, ...folderToDelete.bookIds]));
+      saveMyBookshelfBookIds(combinedMyBookshelf);
     }
     
     saveFolders(updatedFolders);
     
-    // 若當前身處被刪除的資料夾，退回上一層
+    // 若當前身處被刪除的資料夾，退回上一層（若無 parentId 則退回「我的書櫃」）
     if (currentFolderId === folderId) {
-      setCurrentFolderId(parentId);
+      setCurrentFolderId(parentId || 'virtual_my_folders');
     }
   };
 
@@ -758,7 +762,7 @@ export function Library({
   // 刪除經典暫存 ID
   const [bookToDelete, setBookToDelete] = useState<string | null>(null);
 
-  // 將經典移出資料夾至上一層 (parentId 代表的資料夾)
+  // 將經典移出資料夾至上一層 (parentId 代表的資料夾；若 parentId 為 null 則代表移至「我的書櫃」頂層)
   const handleRemoveFromFolder = (e: React.MouseEvent, bookId: string) => {
     e.stopPropagation();
     if (!currentFolderId) return;
@@ -767,6 +771,12 @@ export function Library({
     if (!currentFolder) return;
 
     const parentId = currentFolder.parentId;
+
+    if (!parentId) {
+      // 💡 上一層是「我的書櫃」頂層：加入我的書櫃 ID 清單
+      const updatedMyBookshelf = Array.from(new Set([...myBookshelfBookIds, bookId]));
+      saveMyBookshelfBookIds(updatedMyBookshelf);
+    }
 
     const updated = folders.map(f => {
       if (f.id === currentFolderId) {

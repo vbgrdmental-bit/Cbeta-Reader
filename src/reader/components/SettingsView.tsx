@@ -1156,14 +1156,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.1.5) 直接顯示 */}
+                {/* 最新 App 版本 (v4.1.6) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.1.5</span>
+                    <span>⭐ App: v4.1.6</span>
                     <span className="changelog-date">(2026-08-20)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 經書管理對話框支援動態即時計算與自動補齊字數與預計閱讀時間。</li>
+                    <li>• 修正子資料夾內經書點選「移出至上一層」時，精確退回上一層資料夾或「我的書櫃」。</li>
                   </ul>
                 </div>
 
@@ -1186,6 +1186,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.1.5 <span className="changelog-date">(2026-08-20)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 經書管理對話框支援動態即時計算與自動補齊字數與預計閱讀時間。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.1.4 <span className="changelog-date">(2026-08-20)</span></div>
                       <ul className="changelog-list">

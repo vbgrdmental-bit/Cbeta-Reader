@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.1.5` (App: v4.1.5 / Builder: v2.9.9)
+- **Current Version**: `v4.1.6` (App: v4.1.6 / Builder: v2.9.9)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,8 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.1.6 / Builder: v2.9.9** (2026-08-20)
+  - [App] 修正子資料夾內經書點選「移出至上一層」時，精確退回上一層資料夾或「我的書櫃」。
 - **⭐ App: v4.1.5 / Builder: v2.9.9** (2026-08-20)
   - [App] 經書管理對話框支援動態即時計算與自動補齊字數與預計閱讀時間。
   - [Builder] 完善經文書籍打包引擎，全面自動提取並計算 CJK 漢字與英數總字數。
