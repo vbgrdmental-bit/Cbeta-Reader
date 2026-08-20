@@ -575,7 +575,7 @@ export function Library({
   };
 
   // 載入資料夾設置並相容舊格式
-  useEffect(() => {
+  const loadLocalFolders = () => {
     const savedFolders = localStorage.getItem('cbeta_reader_folders');
     if (savedFolders) {
       try {
@@ -589,13 +589,44 @@ export function Library({
       } catch (e) {
         console.error('Failed to parse folders from localStorage:', e);
       }
+    } else {
+      setFolders([]);
     }
+
+    try {
+      const savedBookshelf = localStorage.getItem('cbeta_my_bookshelf_book_ids');
+      setMyBookshelfBookIds(savedBookshelf ? JSON.parse(savedBookshelf) : []);
+    } catch {
+      setMyBookshelfBookIds([]);
+    }
+
+    try {
+      const savedFavs = localStorage.getItem('favorite_work_ids');
+      setFavoriteWorkIds(savedFavs ? JSON.parse(savedFavs) : []);
+    } catch {
+      setFavoriteWorkIds([]);
+    }
+  };
+
+  useEffect(() => {
+    loadLocalFolders();
+    const handleStorageOrCustomEvent = () => {
+      loadLocalFolders();
+      loadLocalBooks();
+    };
+    window.addEventListener('storage', handleStorageOrCustomEvent);
+    window.addEventListener('cbeta_folders_updated', handleStorageOrCustomEvent);
+    return () => {
+      window.removeEventListener('storage', handleStorageOrCustomEvent);
+      window.removeEventListener('cbeta_folders_updated', handleStorageOrCustomEvent);
+    };
   }, []);
 
   // 儲存資料夾設定
   const saveFolders = (newFolders: BookFolder[]) => {
     setFolders(newFolders);
     localStorage.setItem('cbeta_reader_folders', JSON.stringify(newFolders));
+    window.dispatchEvent(new Event('cbeta_folders_updated'));
   };
 
   // 建立資料夾
@@ -906,9 +937,11 @@ export function Library({
       }
     }
 
-    // 3. 載入最新本地經書清單
+    // 3. 載入最新本地經書清單與資料夾
+    loadLocalFolders();
     await loadLocalBooks();
     setSelectedOnlineWorkIds([]);
+    window.dispatchEvent(new Event('cbeta_folders_updated'));
 
     setTimeout(() => {
       setBuildProgress(null);
@@ -1141,6 +1174,7 @@ export function Library({
   };
 
   useEffect(() => {
+    loadLocalFolders();
     loadLocalBooks();
     loadAllHighlights();
   }, [booksUpdatedTrigger]);

@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.1.3` (App: v4.1.3 / Builder: v2.9.8)
+- **Current Version**: `v4.1.4` (App: v4.1.4 / Builder: v2.9.8)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,8 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.1.4 / Builder: v2.9.8** (2026-08-20)
+  - [App] 批量下載經書至指定資料夾完成後，即時同步資料夾與經書歸類，免除手動重新整理。
 - **⭐ App: v4.1.3 / Builder: v2.9.8** (2026-08-20)
   - [App] 經典與版權資訊將「譯者」統一調整為「作譯者」，若無標明作譯者則保持為空。
   - [App] 經書管理對話框將「譯者」調整為「作譯者」，若無標明作譯者則保持為空。

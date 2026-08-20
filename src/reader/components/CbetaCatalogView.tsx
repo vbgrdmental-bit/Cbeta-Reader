@@ -1016,6 +1016,24 @@ export function CbetaCatalogView({
     }
   };
 
+  const openBatchDownloadModal = (defaultName: string) => {
+    const storedFolders = localStorage.getItem('cbeta_reader_folders');
+    if (storedFolders) {
+      try {
+        const parsed = JSON.parse(storedFolders);
+        setFolders(parsed);
+        if (parsed.length > 0 && !selectedExistingFolderId) {
+          setSelectedExistingFolderId(parsed[0].id);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    setBatchFolderName(defaultName);
+    setBatchFolderMode('new');
+    setShowBatchDownloadModal(true);
+  };
+
   // 執行批量下載
   const handleExecuteBatchDownload = async () => {
     if (selectedOnlineWorkIds.length === 0) return;
@@ -1025,18 +1043,21 @@ export function CbetaCatalogView({
 
     let targetFolderId: string | null = null;
     if (batchFolderMode === 'new') {
-      const newFId = `folder_${Date.now()}`;
+      const newFId = `folder-${Date.now()}`;
       const newFolder = {
         id: newFId,
         name: batchFolderName.trim() || '下載經典',
-        color: batchFolderColor,
+        color: batchFolderColor || '#8b7355',
         bookIds: [],
-        subFolderIds: []
+        parentId: null // 頂層自訂資料夾，位於「我的書櫃」內
       };
-      const updatedFolders = [...folders, newFolder];
+      const currentFoldersStr = localStorage.getItem('cbeta_reader_folders');
+      const currentFolders = currentFoldersStr ? JSON.parse(currentFoldersStr) : [...folders];
+      const updatedFolders = [...currentFolders, newFolder];
       localStorage.setItem('cbeta_reader_folders', JSON.stringify(updatedFolders));
       setFolders(updatedFolders);
       targetFolderId = newFId;
+      window.dispatchEvent(new Event('cbeta_folders_updated'));
     } else if (batchFolderMode === 'existing') {
       targetFolderId = selectedExistingFolderId;
     }
@@ -1103,6 +1124,8 @@ export function CbetaCatalogView({
     }
 
     setDownloadedWorkIds(prev => [...prev, ...newlyDownloaded]);
+    window.dispatchEvent(new Event('cbeta_folders_updated'));
+
     setBuildProgress({
       step: 'completed',
       message: `🎉 批量下載完成！成功匯入 ${newlyDownloaded.length} 本經典。`,
@@ -1373,9 +1396,7 @@ export function CbetaCatalogView({
                         className="batch-btn batch-btn-primary"
                         disabled={selectedOnlineWorkIds.length === 0}
                         onClick={() => {
-                          setBatchFolderName(onlineSearchQuery.trim() || '下載經典');
-                          setBatchFolderMode('new');
-                          setShowBatchDownloadModal(true);
+                          openBatchDownloadModal(onlineSearchQuery.trim() || '下載經典');
                         }}
                         style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-rounded)' }}
                       >
@@ -1497,9 +1518,7 @@ export function CbetaCatalogView({
                         disabled={selectedOnlineWorkIds.length === 0}
                         onClick={() => {
                           const currentNode = historyStack[historyIndex];
-                          setBatchFolderName(currentNode ? currentNode.label : '下載經典');
-                          setBatchFolderMode('new');
-                          setShowBatchDownloadModal(true);
+                          openBatchDownloadModal(currentNode ? currentNode.label : '下載經典');
                         }}
                         style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-rounded)' }}
                       >
