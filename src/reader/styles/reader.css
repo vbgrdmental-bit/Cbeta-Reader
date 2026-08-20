@@ -383,7 +383,7 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
    ========================================================================== */
 .reader-floating-bottom-bar {
   position: absolute;
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(0);
   z-index: 500;
@@ -391,13 +391,13 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
   align-items: center;
   justify-content: center;
   gap: 0.85rem;
-  padding: 0.52rem 1.05rem;
+  padding: 0.62rem 1.15rem;
   border-radius: 9999px;
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(140, 75, 39, 0.2);
-  background: rgba(254, 252, 248, 0.94);
-  box-shadow: 0 12px 36px rgba(70, 45, 20, 0.16), 0 3px 10px rgba(0, 0, 0, 0.08);
+  background: rgba(254, 252, 248, 0.95);
+  box-shadow: 0 14px 40px rgba(70, 45, 20, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease-out, background-color 0.2s ease, border-color 0.2s ease;
   width: max-content;
   max-width: calc(100vw - 28px);
@@ -409,27 +409,27 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
 
 /* 4 種主題配色適配 (4 Themes Adaptive Styling) */
 body.theme-ivory .reader-floating-bottom-bar {
-  background: rgba(254, 252, 248, 0.95);
+  background: rgba(254, 252, 248, 0.96);
   border-color: rgba(140, 75, 39, 0.24);
-  box-shadow: 0 12px 36px rgba(80, 50, 25, 0.16), 0 3px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 14px 40px rgba(80, 50, 25, 0.18), 0 4px 12px rgba(0, 0, 0, 0.07);
 }
 
 body.theme-parchment .reader-floating-bottom-bar {
-  background: rgba(245, 238, 224, 0.95);
+  background: rgba(245, 238, 224, 0.96);
   border-color: rgba(130, 80, 40, 0.26);
-  box-shadow: 0 12px 36px rgba(70, 45, 15, 0.18), 0 3px 10px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 14px 40px rgba(70, 45, 15, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 body.theme-comfort .reader-floating-bottom-bar {
-  background: rgba(236, 243, 226, 0.95);
+  background: rgba(236, 243, 226, 0.96);
   border-color: rgba(65, 95, 55, 0.26);
-  box-shadow: 0 12px 36px rgba(35, 60, 30, 0.15), 0 3px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 14px 40px rgba(35, 60, 30, 0.16), 0 4px 12px rgba(0, 0, 0, 0.07);
 }
 
 body.theme-ebony .reader-floating-bottom-bar {
-  background: rgba(20, 24, 30, 0.93);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7), 0 4px 12px rgba(0, 0, 0, 0.55);
+  background: rgba(20, 24, 30, 0.94);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75), 0 5px 14px rgba(0, 0, 0, 0.6);
 }
 
 /* 顯示 / 隱藏 過渡動畫 */
@@ -453,8 +453,8 @@ body.theme-ebony .reader-floating-bottom-bar {
 }
 
 .floating-theme-circle {
-  width: 29px;
-  height: 29px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -510,7 +510,7 @@ body.theme-ebony .floating-theme-circle.active {
 /* 垂直分隔線 */
 .floating-bar-divider {
   width: 1px;
-  height: 22px;
+  height: 24px;
   background-color: var(--reader-border, rgba(0, 0, 0, 0.15));
   opacity: 0.7;
   flex-shrink: 0;
@@ -526,9 +526,9 @@ body.theme-ebony .floating-bar-divider {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
+  padding: 5px 11px;
   border-radius: 9999px;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 600;
   color: var(--reader-text-muted, #7c7267);
   font-family: var(--font-rounded, var(--font-sans));
@@ -564,12 +564,12 @@ body.theme-ebony .floating-bar-timer:hover {
 .floating-font-btn {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.14);
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--reader-text, #2c2016);
   cursor: pointer;
-  padding: 5px 12px;
-  min-height: 28px;
+  padding: 6px 14px;
+  min-height: 32px;
   border-radius: 9999px;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
@@ -601,14 +601,18 @@ body.theme-ebony .floating-font-btn:hover {
 }
 
 .floating-font-val {
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--reader-text-muted, #7c7267);
-  min-width: 42px;
+  min-width: 44px;
   text-align: center;
   user-select: none;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-variant-numeric: tabular-nums;
+}
+
+body.theme-ebony .floating-font-val {
+  color: #c9d1d9;
 }
 
 body.theme-ebony .floating-font-val {
