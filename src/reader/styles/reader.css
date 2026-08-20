@@ -391,7 +391,7 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
   align-items: center;
   justify-content: center;
   gap: 0.85rem;
-  padding: 0.62rem 1.15rem;
+  padding: 0.62rem 1.4rem;
   border-radius: 9999px;
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -449,12 +449,12 @@ body.theme-ebony .reader-floating-bottom-bar {
 .floating-bar-theme-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
 .floating-theme-circle {
-  width: 30px;
-  height: 30px;
+  width: 27px;
+  height: 27px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -510,11 +510,11 @@ body.theme-ebony .floating-theme-circle.active {
 /* 垂直分隔線 */
 .floating-bar-divider {
   width: 1px;
-  height: 24px;
+  height: 20px;
   background-color: var(--reader-border, rgba(0, 0, 0, 0.15));
   opacity: 0.7;
   flex-shrink: 0;
-  margin: 0 2px;
+  margin: 0 3px;
 }
 
 body.theme-ebony .floating-bar-divider {
@@ -526,9 +526,9 @@ body.theme-ebony .floating-bar-divider {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 11px;
+  padding: 4px 10px;
   border-radius: 9999px;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--reader-text-muted, #7c7267);
   font-family: var(--font-rounded, var(--font-sans));
@@ -558,18 +558,18 @@ body.theme-ebony .floating-bar-timer:hover {
 .floating-bar-font-group {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .floating-font-btn {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.14);
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   font-weight: 700;
   color: var(--reader-text, #2c2016);
   cursor: pointer;
-  padding: 6px 14px;
-  min-height: 32px;
+  padding: 5px 12px;
+  min-height: 28px;
   border-radius: 9999px;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
@@ -601,18 +601,14 @@ body.theme-ebony .floating-font-btn:hover {
 }
 
 .floating-font-val {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--reader-text-muted, #7c7267);
-  min-width: 44px;
+  min-width: 40px;
   text-align: center;
   user-select: none;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-variant-numeric: tabular-nums;
-}
-
-body.theme-ebony .floating-font-val {
-  color: #c9d1d9;
 }
 
 body.theme-ebony .floating-font-val {
@@ -1321,60 +1317,74 @@ body.theme-ebony .popover-color-dot.selected,
   box-shadow: 0 0 0 2.5px rgba(207, 159, 96, 0.35) !important;
 }
 
-/* 烏木模式下頂部工具列按鈕 active 樣式 */
-body.theme-ebony .font-size-btn.active,
+/* 💡 畫重點筆刷按鈕在 active (開啟畫重點模式) 時的雅緻邊框樣式 */
+.reader-text-btn.highlight-btn.active,
+.highlight-btn.active {
+  border: 1.5px solid var(--theme-accent, #8c4b27) !important;
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.12)) !important;
+  border-radius: 8px !important;
+}
+
+body.theme-ebony .reader-text-btn.highlight-btn.active,
 body.theme-ebony .highlight-btn.active,
-.theme-ebony .font-size-btn.active,
 .theme-ebony .highlight-btn.active {
+  border: 1.5px solid #85bb65 !important;
+  background: rgba(133, 187, 101, 0.18) !important;
+}
+
+/* 烏木模式下頂部工具列字體大小按鈕 active 樣式 */
+body.theme-ebony .font-size-btn.active,
+.theme-ebony .font-size-btn.active {
   background: rgba(255, 255, 255, 0.12) !important;
   border-color: var(--theme-accent, #cf9f60) !important;
 }
 
 /* ==========================================================================
-   💡 手機版專屬：浮動膠囊控制列再貼近底部、上下再加厚（厚胖可愛感）
+   💡 手機版專屬：浮動膠囊控制列再貼近底部、上下再加厚（維持網頁版按鍵比例與左右寬裕留白）
    ========================================================================== */
 @media (max-width: 768px) {
   .reader-floating-bottom-bar {
-    bottom: calc(4px + env(safe-area-inset-bottom, 0px)) !important;
-    padding: 0.72rem 1.15rem !important;
-    gap: 0.9rem !important;
+    bottom: calc(0px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 0.68rem 1.45rem !important;
+    gap: 0.85rem !important;
     border-radius: 9999px !important;
     box-shadow: 0 16px 44px rgba(70, 45, 20, 0.22), 0 5px 14px rgba(0, 0, 0, 0.1) !important;
   }
 
+  /* 手機版按鍵維持與網頁版一致的精緻比列，不放大按鍵 */
   .floating-bar-theme-group {
-    gap: 11px !important;
+    gap: 9px !important;
   }
 
   .floating-theme-circle {
-    width: 32px !important;
-    height: 32px !important;
+    width: 27px !important;
+    height: 27px !important;
   }
 
   .floating-bar-divider {
-    height: 26px !important;
+    height: 20px !important;
     margin: 0 3px !important;
   }
 
   .floating-bar-font-group {
-    gap: 7px !important;
+    gap: 5px !important;
   }
 
   .floating-font-btn {
-    font-size: 0.92rem !important;
-    padding: 7px 15px !important;
-    min-height: 34px !important;
+    font-size: 0.86rem !important;
+    padding: 5px 12px !important;
+    min-height: 28px !important;
     border-radius: 9999px !important;
   }
 
   .floating-font-val {
-    font-size: 0.9rem !important;
-    min-width: 44px !important;
+    font-size: 0.85rem !important;
+    min-width: 40px !important;
   }
 
   .floating-bar-timer {
-    font-size: 0.85rem !important;
-    padding: 5px 12px !important;
+    font-size: 0.82rem !important;
+    padding: 4px 10px !important;
   }
 }
 

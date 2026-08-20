@@ -251,6 +251,8 @@ export function ReaderView({
   
   // 💡 控制列：畫重點設定浮動選單 (整合筆刷顏色與粗細標註模式)
   const [showHighlightPopover, setShowHighlightPopover] = useState(false);
+  // 💡 筆刷畫重點模式狀態 (點進選顏色/粗細時為 true 帶框，再點筆刷時為 false 解除框框可複製內文)
+  const [isHighlightMode, setIsHighlightMode] = useState(false);
 
   // 💡 心得筆記編輯 Modal 狀態
   const [editingNoteHighlight, setEditingNoteHighlight] = useState<BookHighlight | null>(null);
@@ -1043,6 +1045,12 @@ export function ReaderView({
         const selectedText = selection.toString().trim();
         if (!selectedText) return;
 
+        // 💡 只有在讀者開啟「筆刷畫重點模式 (isHighlightMode)」時，才自動儲存劃重點
+        // 若未開啟筆刷模式，則不劃重點、不清除選取狀態，讓讀者可以自由複製經文
+        if (!isHighlightMode) {
+          return;
+        }
+
         const range = selection.getRangeAt(0);
         const hls = calculateHighlightsFromRange(range);
 
@@ -1075,7 +1083,7 @@ export function ReaderView({
       document.removeEventListener('mouseup', handleGestureEnd);
       document.removeEventListener('touchend', handleGestureEnd);
     };
-  }, [workId, currentJuanNum, settings.highlightColor, settings.highlightStyle]);
+  }, [workId, currentJuanNum, settings.highlightColor, settings.highlightStyle, isHighlightMode]);
 
   // 監聽全局點擊事件，點擊空白處時隱藏畫重點選單與刪除選單
   useEffect(() => {
@@ -1238,6 +1246,13 @@ export function ReaderView({
 
   // 💡 點選經文排版內文區或全版面處（含段落文字與空白處）：切換上下控制列的顯示/隱藏 (若正在劃線選字則不切換)
   const handleContentAreaClick = (e: React.MouseEvent) => {
+    // 💡 勾選「顯示閱讀頁上下控制列」時，上下控制列始終保持顯示，點擊不隱藏
+    if (settings.customVisibleElements?.showReaderControls) {
+      if (showNavDrawer) setShowNavDrawer(false);
+      if (showHighlightPopover) setShowHighlightPopover(false);
+      return;
+    }
+
     // 💡 若側邊欄抽屜開啟，自動收合隱藏
     if (showNavDrawer) {
       setShowNavDrawer(false);
@@ -1682,9 +1697,19 @@ export function ReaderView({
           return (
             <div className="highlight-popover-container" style={{ position: 'relative' }}>
               <button 
-                className={`reader-text-btn highlight-btn ${showHighlightPopover ? 'active' : ''}`}
-                onClick={() => setShowHighlightPopover(prev => !prev)}
-                title="畫重點設定 (筆刷顏色與粗細標註模式)"
+                className={`reader-text-btn highlight-btn ${isHighlightMode ? 'active' : ''}`}
+                onClick={() => {
+                  if (isHighlightMode) {
+                    // 💡 當讀者再次點擊「筆刷」時，解除框框，關閉畫重點模式，此時可以自由複製內文
+                    setIsHighlightMode(false);
+                    setShowHighlightPopover(false);
+                  } else {
+                    // 💡 點擊「筆刷」開啟畫重點模式並彈出顏色/粗細選單
+                    setIsHighlightMode(true);
+                    setShowHighlightPopover(true);
+                  }
+                }}
+                title={isHighlightMode ? "畫重點模式中 (點擊解除框框，可複製內文)" : "開啟畫重點模式 (選顏色/粗細)"}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -1692,8 +1717,6 @@ export function ReaderView({
                   padding: '0 0.4rem',
                   position: 'relative',
                   borderRadius: '6px',
-                  border: showHighlightPopover ? '1px solid var(--theme-accent, var(--color-wood-700))' : '1px solid transparent',
-                  background: showHighlightPopover ? 'rgba(0,0,0,0.06)' : 'transparent',
                   height: '32px'
                 }}
               >
