@@ -1156,15 +1156,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.1.2) 直接顯示 */}
+                {/* 最新 App 版本 (v4.1.3) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.1.2</span>
-                    <span className="changelog-date">(2026-08-19)</span>
+                    <span>⭐ App: v4.1.3</span>
+                    <span className="changelog-date">(2026-08-20)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀頁下方控制列升級為「4 色背景快捷切換」與「字體大小 A-/A+ 調整器」。</li>
-                    <li>• 新增「開啟經文時自動回到上次閱讀位置」設定，免去每次進入經文時的詢問彈窗。</li>
+                    <li>• 經典與版權資訊將「譯者」統一調整為「作譯者」，並完善作譯者顯示。</li>
                   </ul>
                 </div>
 
@@ -1187,6 +1186,13 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.1.2 <span className="changelog-date">(2026-08-19)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 閱讀頁下方控制列升級為「4 色背景快捷切換」與「字體大小 A-/A+ 調整器」。</li>
+                        <li>• 新增「開啟經文時自動回到上次閱讀位置」設定，免去每次進入經文時的詢問彈窗。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.1.1 <span className="changelog-date">(2026-08-19)</span></div>
                       <ul className="changelog-list">
@@ -1352,14 +1358,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.9.7) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.9.8) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ Builder: v2.9.7</span>
-                    <span className="changelog-date">(2026-08-17)</span>
+                    <span>⭐ Builder: v2.9.8</span>
+                    <span className="changelog-date">(2026-08-20)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 系統性修復全藏經帶有前綴之 lb 行號識別，修正目次小節精確錨定。</li>
+                    <li>• 修正無標明作譯者之經典（如 T1910、T1944 等），作譯者欄位忠實保持為空。</li>
                   </ul>
                 </div>
 
@@ -1383,6 +1389,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 Builder 歷史版本 */}
                 {showBuilderHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.9.7 <span className="changelog-date">(2026-08-17)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 系統性修復全藏經帶有前綴之 lb 行號識別，修正目次小節精確錨定。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">Builder: v2.9.6 <span className="changelog-date">(2026-08-16)</span></div>
                       <ul className="changelog-list">

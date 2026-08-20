@@ -878,7 +878,7 @@
     {
       "workId": "B0088",
       "title": "古今圖書集成選輯（上）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 88,
       "category": "新編部類",
       "vol": "B15"
@@ -918,7 +918,7 @@
     {
       "workId": "B0091",
       "title": "正史選輯（晉書、宋書、梁書、魏書、隋書、舊唐書、元史、明史）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 10,
       "category": "新編部類",
       "vol": "B17"
@@ -926,7 +926,7 @@
     {
       "workId": "B0092",
       "title": "唐會要、五代會要、明書、明會典選輯",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 8,
       "category": "新編部類",
       "vol": "B17"
@@ -966,7 +966,7 @@
     {
       "workId": "B0096",
       "title": "佛教繪畫史料",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 6,
       "category": "新編部類",
       "vol": "B18"
@@ -1230,7 +1230,7 @@
     {
       "workId": "B0146",
       "title": "房山雲居寺石經──經文、題記、碑銘等拓片之選輯",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 5,
       "category": "新編部類",
       "vol": "B26"
@@ -1398,7 +1398,7 @@
     {
       "workId": "B0169",
       "title": "朝鮮寺剎史料",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "新編部類",
       "vol": "B31"
@@ -1478,7 +1478,7 @@
     {
       "workId": "B0178",
       "title": "東大寺六宗未決義",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "B32"
@@ -1646,7 +1646,7 @@
     {
       "workId": "B0196",
       "title": "大乘中宗見解",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "B35"
@@ -1710,7 +1710,7 @@
     {
       "workId": "C1666",
       "title": "梵本大悲神咒",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "C071"
@@ -1814,7 +1814,7 @@
     {
       "workId": "D8679",
       "title": "佛說佛名經（存卷四）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D01"
@@ -1822,7 +1822,7 @@
     {
       "workId": "D8680",
       "title": "佛說佛名經（存卷七）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D02"
@@ -1830,7 +1830,7 @@
     {
       "workId": "D8701",
       "title": "盂蘭盆經講經文（前殘）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D03"
@@ -1846,7 +1846,7 @@
     {
       "workId": "D8774",
       "title": "羯磨文（前殘）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D05"
@@ -1854,7 +1854,7 @@
     {
       "workId": "D8775",
       "title": "式叉摩那尼六法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D06"
@@ -1870,7 +1870,7 @@
     {
       "workId": "D8780",
       "title": "小鈔",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D08"
@@ -1878,7 +1878,7 @@
     {
       "workId": "D8790",
       "title": "佛性觀（前殘）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D09"
@@ -1886,7 +1886,7 @@
     {
       "workId": "D8814",
       "title": "佛頂尊勝陀羅尼等靈異神咒二十道",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D10"
@@ -1894,7 +1894,7 @@
     {
       "workId": "D8817",
       "title": "佛說觀世音三昧經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D11"
@@ -1902,7 +1902,7 @@
     {
       "workId": "D8820",
       "title": "新菩薩經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D12"
@@ -1926,7 +1926,7 @@
     {
       "workId": "D8853",
       "title": "梵網古跡抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 8,
       "category": "國圖善本部類",
       "vol": "D15"
@@ -1966,7 +1966,7 @@
     {
       "workId": "D8869",
       "title": "惟教三昧（存卷下　前殘）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D20"
@@ -1974,7 +1974,7 @@
     {
       "workId": "D8871",
       "title": "□者眷屬",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D21"
@@ -2022,7 +2022,7 @@
     {
       "workId": "D8883",
       "title": "百法問答聞書抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 6,
       "category": "國圖善本部類",
       "vol": "D27"
@@ -2086,7 +2086,7 @@
     {
       "workId": "D8894",
       "title": "頌義八拔萃",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 5,
       "category": "國圖善本部類",
       "vol": "D35"
@@ -2134,7 +2134,7 @@
     {
       "workId": "D8904",
       "title": "西谷名目句解",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 7,
       "category": "國圖善本部類",
       "vol": "D41"
@@ -2158,7 +2158,7 @@
     {
       "workId": "D8914",
       "title": "釋淨土群疑論探要記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 14,
       "category": "國圖善本部類",
       "vol": "D44"
@@ -2166,7 +2166,7 @@
     {
       "workId": "D8915",
       "title": "禪門偈（前殘）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D45"
@@ -2190,7 +2190,7 @@
     {
       "workId": "D8939",
       "title": "古尊宿語錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 33,
       "category": "國圖善本部類",
       "vol": "D48"
@@ -2230,7 +2230,7 @@
     {
       "workId": "D8952",
       "title": "為二太子中元盂蘭薦福文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D53"
@@ -2238,7 +2238,7 @@
     {
       "workId": "D8953",
       "title": "結壇散食迴向發願文（首尾殘缺）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D54"
@@ -2278,7 +2278,7 @@
     {
       "workId": "D9011",
       "title": "藏經值畫一目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D59"
@@ -2302,7 +2302,7 @@
     {
       "workId": "D9026",
       "title": "大悲觀世音菩薩至道禮文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D62"
@@ -2310,7 +2310,7 @@
     {
       "workId": "D9027",
       "title": "道安法師念佛讚文附入山讚文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "國圖善本部類",
       "vol": "D63"
@@ -2326,7 +2326,7 @@
     {
       "workId": "F0016",
       "title": "大王觀世音經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "F01"
@@ -2374,7 +2374,7 @@
     {
       "workId": "F0181",
       "title": "大般若關",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "般若部類",
       "vol": "F03"
@@ -2526,7 +2526,7 @@
     {
       "workId": "F1098",
       "title": "高上玉皇本行集經髓",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "F29"
@@ -2534,7 +2534,7 @@
     {
       "workId": "F1099",
       "title": "無上玉皇心印經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "F29"
@@ -7222,7 +7222,7 @@
     {
       "workId": "S0047",
       "title": "上生經疏隨新抄科文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "S06"
@@ -9342,7 +9342,7 @@
     {
       "workId": "T0256",
       "title": "唐梵翻對字音般若波羅蜜多心經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "般若部類",
       "vol": "T08"
@@ -10254,7 +10254,7 @@
     {
       "workId": "T0369",
       "title": "阿彌陀佛說呪",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "淨土宗部類",
       "vol": "T12"
@@ -10830,7 +10830,7 @@
     {
       "workId": "T0441",
       "title": "佛說佛名經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 30,
       "category": "經集部類",
       "vol": "T14"
@@ -10894,7 +10894,7 @@
     {
       "workId": "T0447b",
       "title": "現在賢劫千佛名經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "T14"
@@ -13830,7 +13830,7 @@
     {
       "workId": "T0806",
       "title": "佛說枯樹經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "T17"
@@ -14206,7 +14206,7 @@
     {
       "workId": "T0852b",
       "title": "大毘盧舍那成佛神變加持經蓮華胎藏悲生曼荼羅廣大成就儀軌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "密教部類",
       "vol": "T18"
@@ -14230,7 +14230,7 @@
     {
       "workId": "T0855",
       "title": "青龍寺軌記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14254,7 +14254,7 @@
     {
       "workId": "T0858",
       "title": "大毘盧遮那略要速疾門五支念誦法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14262,7 +14262,7 @@
     {
       "workId": "T0859",
       "title": "供養儀式",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14270,7 +14270,7 @@
     {
       "workId": "T0860",
       "title": "大日經持誦次第儀軌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14286,7 +14286,7 @@
     {
       "workId": "T0862",
       "title": "阿闍梨大曼荼攞灌頂儀軌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14302,7 +14302,7 @@
     {
       "workId": "T0864A",
       "title": "大日如來劍印",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14446,7 +14446,7 @@
     {
       "workId": "T0881",
       "title": "賢劫十六尊",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14614,7 +14614,7 @@
     {
       "workId": "T0898",
       "title": "佛說毘奈耶經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14622,7 +14622,7 @@
     {
       "workId": "T0899",
       "title": "清淨法身毘盧遮那心地法門成就一切陀羅尼三種悉地",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14710,7 +14710,7 @@
     {
       "workId": "T0910",
       "title": "梵天擇地法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14734,7 +14734,7 @@
     {
       "workId": "T0913",
       "title": "火𤙖供養儀軌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14742,7 +14742,7 @@
     {
       "workId": "T0914",
       "title": "火吽軌別錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14758,7 +14758,7 @@
     {
       "workId": "T0916",
       "title": "受五戒八戒文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T18"
@@ -14838,7 +14838,7 @@
     {
       "workId": "T0924C",
       "title": "藥師儀軌一具",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -14878,7 +14878,7 @@
     {
       "workId": "T0929",
       "title": "淨瑠璃淨土摽",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -14950,7 +14950,7 @@
     {
       "workId": "T0938",
       "title": "釋迦文尼佛金剛一乘修行儀軌法品",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -14974,7 +14974,7 @@
     {
       "workId": "T0941",
       "title": "釋迦牟尼佛成道在菩提樹降魔讚",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15006,7 +15006,7 @@
     {
       "workId": "T0944B",
       "title": "大佛頂大陀羅尼",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15022,7 +15022,7 @@
     {
       "workId": "T0946",
       "title": "大佛頂廣聚陀羅尼經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 4,
       "category": "密教部類",
       "vol": "T19"
@@ -15030,7 +15030,7 @@
     {
       "workId": "T0947",
       "title": "大佛頂如來放光悉怛多般怛羅大神力都攝一切呪王陀羅尼經大威德最勝金輪三昧呪品",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15046,7 +15046,7 @@
     {
       "workId": "T0949",
       "title": "奇特最勝金輪佛頂念誦儀軌法要",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15094,7 +15094,7 @@
     {
       "workId": "T0954B",
       "title": "一字頂輪王念誦儀軌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15262,7 +15262,7 @@
     {
       "workId": "T0974B",
       "title": "佛頂尊勝陀羅尼",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15286,7 +15286,7 @@
     {
       "workId": "T0974E",
       "title": "佛頂尊勝陀羅尼真言",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15302,7 +15302,7 @@
     {
       "workId": "T0975",
       "title": "白傘蓋大佛頂王最勝無比大威德金剛無礙大道場陀羅尼念誦法要",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15558,7 +15558,7 @@
     {
       "workId": "T1005B",
       "title": "寶樓閣經梵字真言",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15686,7 +15686,7 @@
     {
       "workId": "T1021",
       "title": "華嚴經心陀羅尼",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -15774,7 +15774,7 @@
     {
       "workId": "T1029",
       "title": "佛說安宅陀羅尼呪經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T19"
@@ -16062,7 +16062,7 @@
     {
       "workId": "T1062B",
       "title": "世尊聖者千眼千首千足千舌千臂觀自在菩提薩埵怛嚩廣大圓滿無礙大悲心陀羅尼",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16070,7 +16070,7 @@
     {
       "workId": "T1063",
       "title": "番大悲神呪",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16150,7 +16150,7 @@
     {
       "workId": "T1072B",
       "title": "馬頭觀音心陀羅尼",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16158,7 +16158,7 @@
     {
       "workId": "T1073",
       "title": "何耶揭唎婆像法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16166,7 +16166,7 @@
     {
       "workId": "T1074",
       "title": "何耶揭唎婆觀世音菩薩受法壇",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16278,7 +16278,7 @@
     {
       "workId": "T1088",
       "title": "如意輪菩薩觀門義注祕訣",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16454,7 +16454,7 @@
     {
       "workId": "T1108B",
       "title": "救度佛母二十一種禮讚經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16518,7 +16518,7 @@
     {
       "workId": "T1115",
       "title": "觀自在菩薩阿麼𪘨法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16574,7 +16574,7 @@
     {
       "workId": "T1121",
       "title": "金剛頂普賢瑜伽大教王經大樂不空金剛薩埵一切時方成就儀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16878,7 +16878,7 @@
     {
       "workId": "T1156B",
       "title": "宗叡僧正於唐國師所口受",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16902,7 +16902,7 @@
     {
       "workId": "T1159A",
       "title": "[峚-大+(企-止)]𡇪大道心驅策法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16910,7 +16910,7 @@
     {
       "workId": "T1159B",
       "title": "佛說地藏菩薩陀羅尼經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16918,7 +16918,7 @@
     {
       "workId": "T1160",
       "title": "日光菩薩月光菩薩陀羅尼",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -16990,7 +16990,7 @@
     {
       "workId": "T1168B",
       "title": "八曼荼羅經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -17078,7 +17078,7 @@
     {
       "workId": "T1178",
       "title": "文殊菩薩獻佛陀羅尼名烏蘇吒",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -17086,7 +17086,7 @@
     {
       "workId": "T1179",
       "title": "文殊師利菩薩六字呪功能法經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T20"
@@ -17286,7 +17286,7 @@
     {
       "workId": "T1203",
       "title": "聖無動尊安鎮家國等法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17294,7 +17294,7 @@
     {
       "workId": "T1204",
       "title": "聖無動尊一字出生八大童子祕要法品",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17310,7 +17310,7 @@
     {
       "workId": "T1206",
       "title": "佛說俱利伽羅大龍勝外道伏陀羅尼經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17318,7 +17318,7 @@
     {
       "workId": "T1207",
       "title": "說矩里迦龍王像法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17382,7 +17382,7 @@
     {
       "workId": "T1215",
       "title": "大乘方廣曼殊室利菩薩華嚴本教閻曼德迦忿怒王真言大威德儀軌品",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17390,7 +17390,7 @@
     {
       "workId": "T1216",
       "title": "大方廣曼殊室利童真菩薩華嚴本教讚閻曼德迦忿怒王真言阿毘遮嚕迦儀軌品",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17462,7 +17462,7 @@
     {
       "workId": "T1224",
       "title": "金剛童子持念經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17510,7 +17510,7 @@
     {
       "workId": "T1230",
       "title": "佛說大輪金剛總持陀羅尼經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17518,7 +17518,7 @@
     {
       "workId": "T1231",
       "title": "大輪金剛修行悉地成就及供養法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17526,7 +17526,7 @@
     {
       "workId": "T1232",
       "title": "播般曩結使波金剛念誦儀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17590,7 +17590,7 @@
     {
       "workId": "T1240",
       "title": "阿吒薄𤘽付囑呪",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17598,7 +17598,7 @@
     {
       "workId": "T1241",
       "title": "伽馱金剛真言",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17758,7 +17758,7 @@
     {
       "workId": "T1259",
       "title": "摩利支天一印法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17926,7 +17926,7 @@
     {
       "workId": "T1279",
       "title": "摩醯首羅天法要",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17934,7 +17934,7 @@
     {
       "workId": "T1280",
       "title": "摩醯首羅大自在天王神通化生伎藝天女念誦法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -17950,7 +17950,7 @@
     {
       "workId": "T1282",
       "title": "寶藏天女陀羅尼法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -18030,7 +18030,7 @@
     {
       "workId": "T1292",
       "title": "法華十羅剎法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -18046,7 +18046,7 @@
     {
       "workId": "T1294",
       "title": "施八方天儀則",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -18062,7 +18062,7 @@
     {
       "workId": "T1296",
       "title": "十天儀軌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -18078,7 +18078,7 @@
     {
       "workId": "T1298",
       "title": "十二天供儀軌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -18150,7 +18150,7 @@
     {
       "workId": "T1307",
       "title": "佛說北斗七星延命經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -18254,7 +18254,7 @@
     {
       "workId": "T1320",
       "title": "瑜伽集要焰口施食儀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -18958,7 +18958,7 @@
     {
       "workId": "T1406",
       "title": "佛說辟除賊害呪經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T21"
@@ -19070,7 +19070,7 @@
     {
       "workId": "T1420",
       "title": "龍樹五明論",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "密教部類",
       "vol": "T21"
@@ -19222,7 +19222,7 @@
     {
       "workId": "T1438",
       "title": "大沙門百一羯磨法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "律部類",
       "vol": "T23"
@@ -19462,7 +19462,7 @@
     {
       "workId": "T1467b",
       "title": "佛說犯戒罪報輕重經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "律部類",
       "vol": "T24"
@@ -20022,7 +20022,7 @@
     {
       "workId": "T1535",
       "title": "大乘四法經釋",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "T26"
@@ -22790,7 +22790,7 @@
     {
       "workId": "T1879b",
       "title": "華嚴關脈義記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "華嚴部類",
       "vol": "T45"
@@ -22862,7 +22862,7 @@
     {
       "workId": "T1887B",
       "title": "法界圖記叢髓錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "華嚴部類",
       "vol": "T45"
@@ -23046,7 +23046,7 @@
     {
       "workId": "T1910",
       "title": "慈悲水懺法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 3,
       "category": "律部類",
       "vol": "T45"
@@ -23310,7 +23310,7 @@
     {
       "workId": "T1943",
       "title": "略法華三昧補助儀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "T46"
@@ -23318,7 +23318,7 @@
     {
       "workId": "T1944",
       "title": "禮法華經儀式",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "T46",
@@ -23383,7 +23383,7 @@
     {
       "workId": "T1952",
       "title": "觀自在菩薩如意輪呪課法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T46"
@@ -23391,7 +23391,7 @@
     {
       "workId": "T1953",
       "title": "菩提心義",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "T46"
@@ -23751,7 +23751,7 @@
     {
       "workId": "T1994B",
       "title": "楊岐方會和尚後錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "T47"
@@ -23887,7 +23887,7 @@
     {
       "workId": "T2009",
       "title": "少室六門",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "T48"
@@ -24295,7 +24295,7 @@
     {
       "workId": "T2057",
       "title": "大唐青龍寺三朝供奉大德行狀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "T50"
@@ -24351,7 +24351,7 @@
     {
       "workId": "T2064",
       "title": "神僧傳",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 9,
       "category": "史傳部類",
       "vol": "T50"
@@ -24399,7 +24399,7 @@
     {
       "workId": "T2070",
       "title": "往生西方淨土瑞應傳",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "T51"
@@ -24439,7 +24439,7 @@
     {
       "workId": "T2075",
       "title": "曆代法寶記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "T51"
@@ -24527,7 +24527,7 @@
     {
       "workId": "T2086",
       "title": "北魏僧惠生使西域記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "T51"
@@ -24567,7 +24567,7 @@
     {
       "workId": "T2091",
       "title": "燉煌錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "T51"
@@ -24591,7 +24591,7 @@
     {
       "workId": "T2094",
       "title": "梁京寺記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "T51"
@@ -24791,7 +24791,7 @@
     {
       "workId": "T2119",
       "title": "寺沙門玄奘上表記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "T52"
@@ -24879,7 +24879,7 @@
     {
       "workId": "T2130",
       "title": "翻梵語",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 10,
       "category": "事彙部類",
       "vol": "T54"
@@ -24959,7 +24959,7 @@
     {
       "workId": "T2139",
       "title": "老子化胡經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "事彙部類",
       "vol": "T54"
@@ -24967,7 +24967,7 @@
     {
       "workId": "T2140",
       "title": "摩尼教下部讚",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "T54"
@@ -24983,7 +24983,7 @@
     {
       "workId": "T2141B",
       "title": "波斯教殘經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "T54"
@@ -24991,7 +24991,7 @@
     {
       "workId": "T2142",
       "title": "序聽迷詩所經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "T54"
@@ -24999,7 +24999,7 @@
     {
       "workId": "T2143",
       "title": "景教三威蒙度讚",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "T54"
@@ -25151,7 +25151,7 @@
     {
       "workId": "T2162",
       "title": "根本大和尚真跡策子等目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "T55"
@@ -25263,7 +25263,7 @@
     {
       "workId": "T2174B",
       "title": "禪林寺宗叡僧正目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "T55"
@@ -25271,7 +25271,7 @@
     {
       "workId": "T2175",
       "title": "錄外經等目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "事彙部類",
       "vol": "T55"
@@ -25351,7 +25351,7 @@
     {
       "workId": "T2732",
       "title": "梁朝傅大士頌金剛經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25391,7 +25391,7 @@
     {
       "workId": "T2737",
       "title": "金剛經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25399,7 +25399,7 @@
     {
       "workId": "T2738",
       "title": "金剛經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25407,7 +25407,7 @@
     {
       "workId": "T2739",
       "title": "金剛般若經挾註",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25415,7 +25415,7 @@
     {
       "workId": "T2740",
       "title": "金剛般若義記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25423,7 +25423,7 @@
     {
       "workId": "T2741",
       "title": "金剛般若經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25431,7 +25431,7 @@
     {
       "workId": "T2742",
       "title": "金剛般若波羅蜜經傳外傳卷下",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25439,7 +25439,7 @@
     {
       "workId": "T2743",
       "title": "持誦金剛經靈驗功德記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25447,7 +25447,7 @@
     {
       "workId": "T2744",
       "title": "仁王般若實相論卷第二",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25455,7 +25455,7 @@
     {
       "workId": "T2745",
       "title": "仁王經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25463,7 +25463,7 @@
     {
       "workId": "T2746",
       "title": "般若波羅蜜多心經還源述",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25471,7 +25471,7 @@
     {
       "workId": "T2747",
       "title": "挾註波羅蜜多心經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25479,7 +25479,7 @@
     {
       "workId": "T2748",
       "title": "法華義記卷第三",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25487,7 +25487,7 @@
     {
       "workId": "T2749",
       "title": "法華經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25495,7 +25495,7 @@
     {
       "workId": "T2750",
       "title": "法華經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25503,7 +25503,7 @@
     {
       "workId": "T2751",
       "title": "法華經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25511,7 +25511,7 @@
     {
       "workId": "T2752",
       "title": "法華問答",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25519,7 +25519,7 @@
     {
       "workId": "T2753",
       "title": "華嚴經章",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25527,7 +25527,7 @@
     {
       "workId": "T2754",
       "title": "華嚴略疏卷第三",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25535,7 +25535,7 @@
     {
       "workId": "T2755",
       "title": "華嚴經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25559,7 +25559,7 @@
     {
       "workId": "T2758",
       "title": "十地義記卷第一",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25567,7 +25567,7 @@
     {
       "workId": "T2759",
       "title": "無量壽經義記卷下",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25575,7 +25575,7 @@
     {
       "workId": "T2760",
       "title": "無量壽觀經義記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25583,7 +25583,7 @@
     {
       "workId": "T2761",
       "title": "勝鬘經記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25599,7 +25599,7 @@
     {
       "workId": "T2763",
       "title": "挾注勝鬘經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25607,7 +25607,7 @@
     {
       "workId": "T2764A",
       "title": "涅槃經義記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25615,7 +25615,7 @@
     {
       "workId": "T2764B",
       "title": "大涅槃經義記卷第四",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25623,7 +25623,7 @@
     {
       "workId": "T2765",
       "title": "涅槃經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25631,7 +25631,7 @@
     {
       "workId": "T2766",
       "title": "藥師經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25639,7 +25639,7 @@
     {
       "workId": "T2767",
       "title": "藥師經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25647,7 +25647,7 @@
     {
       "workId": "T2768",
       "title": "維摩義記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25655,7 +25655,7 @@
     {
       "workId": "T2769",
       "title": "維摩經義記卷第四",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25663,7 +25663,7 @@
     {
       "workId": "T2770",
       "title": "維摩經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25671,7 +25671,7 @@
     {
       "workId": "T2771",
       "title": "維摩經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25679,7 +25679,7 @@
     {
       "workId": "T2772",
       "title": "維摩經疏卷第三．第六",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25687,7 +25687,7 @@
     {
       "workId": "T2773",
       "title": "維摩經抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25695,7 +25695,7 @@
     {
       "workId": "T2774",
       "title": "維摩經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25703,7 +25703,7 @@
     {
       "workId": "T2775",
       "title": "維摩疏釋前小序抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25735,7 +25735,7 @@
     {
       "workId": "T2779",
       "title": "佛說楞伽經禪門悉談章",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25767,7 +25767,7 @@
     {
       "workId": "T2783",
       "title": "大乘稻芉經隨聽疏決",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "T85"
@@ -25775,7 +25775,7 @@
     {
       "workId": "T2784",
       "title": "大乘四法經釋抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25783,7 +25783,7 @@
     {
       "workId": "T2785",
       "title": "大乘四法經論廣釋開決記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25791,7 +25791,7 @@
     {
       "workId": "T2786",
       "title": "天請問經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25799,7 +25799,7 @@
     {
       "workId": "T2787",
       "title": "四分戒本疏卷第一．第二．第三",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 3,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25807,7 +25807,7 @@
     {
       "workId": "T2788",
       "title": "律戒本疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25815,7 +25815,7 @@
     {
       "workId": "T2789",
       "title": "律戒本疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25823,7 +25823,7 @@
     {
       "workId": "T2790",
       "title": "律雜抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25831,7 +25831,7 @@
     {
       "workId": "T2791",
       "title": "宗四分比丘隨門要略行儀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25839,7 +25839,7 @@
     {
       "workId": "T2792",
       "title": "毘尼心",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25847,7 +25847,7 @@
     {
       "workId": "T2793",
       "title": "三部律抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25855,7 +25855,7 @@
     {
       "workId": "T2794",
       "title": "律抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25863,7 +25863,7 @@
     {
       "workId": "T2795",
       "title": "四部律并論要用抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25871,7 +25871,7 @@
     {
       "workId": "T2796",
       "title": "律抄第三卷手決",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25879,7 +25879,7 @@
     {
       "workId": "T2797",
       "title": "梵網經述記卷第一",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25887,7 +25887,7 @@
     {
       "workId": "T2798",
       "title": "本業瓔珞經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25927,7 +25927,7 @@
     {
       "workId": "T2803",
       "title": "地持義記卷第四",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25935,7 +25935,7 @@
     {
       "workId": "T2804",
       "title": "唯識三十論要釋",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25943,7 +25943,7 @@
     {
       "workId": "T2805",
       "title": "攝大乘講疏卷第五．第七",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25951,7 +25951,7 @@
     {
       "workId": "T2806",
       "title": "攝大乘論抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25959,7 +25959,7 @@
     {
       "workId": "T2807",
       "title": "攝大乘論章卷第一",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25967,7 +25967,7 @@
     {
       "workId": "T2808",
       "title": "攝論章卷第一",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25975,7 +25975,7 @@
     {
       "workId": "T2809",
       "title": "攝大乘義章卷第四",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -25991,7 +25991,7 @@
     {
       "workId": "T2811",
       "title": "大乘百法明門論開宗義記序釋",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26023,7 +26023,7 @@
     {
       "workId": "T2815",
       "title": "起信論註",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26031,7 +26031,7 @@
     {
       "workId": "T2816",
       "title": "因緣心釋論開決記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26039,7 +26039,7 @@
     {
       "workId": "T2817",
       "title": "大乘經纂要義",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26047,7 +26047,7 @@
     {
       "workId": "T2818",
       "title": "大乘二十二問本",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26055,7 +26055,7 @@
     {
       "workId": "T2819",
       "title": "諸經要抄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26063,7 +26063,7 @@
     {
       "workId": "T2820",
       "title": "菩薩藏修道眾經抄卷第十二",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26071,7 +26071,7 @@
     {
       "workId": "T2821",
       "title": "諸經要略文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26079,7 +26079,7 @@
     {
       "workId": "T2822",
       "title": "大乘要語",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26095,7 +26095,7 @@
     {
       "workId": "T2824",
       "title": "天台分門圖",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26103,7 +26103,7 @@
     {
       "workId": "T2825",
       "title": "真言要決卷第一．第三",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26127,7 +26127,7 @@
     {
       "workId": "T2828",
       "title": "大乘淨土讚",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26135,7 +26135,7 @@
     {
       "workId": "T2829",
       "title": "持齋念佛懺悔禮文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26143,7 +26143,7 @@
     {
       "workId": "T2830A",
       "title": "道安法師念佛讚",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26151,7 +26151,7 @@
     {
       "workId": "T2830B",
       "title": "道安法師念佛讚文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26159,7 +26159,7 @@
     {
       "workId": "T2831",
       "title": "無心論",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26167,7 +26167,7 @@
     {
       "workId": "T2832",
       "title": "南天竺國菩提達摩禪師觀門",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26175,7 +26175,7 @@
     {
       "workId": "T2833",
       "title": "觀心論",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26183,7 +26183,7 @@
     {
       "workId": "T2834",
       "title": "大乘無生方便門",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26223,7 +26223,7 @@
     {
       "workId": "T2839",
       "title": "讚禪門詩",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26231,7 +26231,7 @@
     {
       "workId": "T2840",
       "title": "三界圖",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26239,7 +26239,7 @@
     {
       "workId": "T2841",
       "title": "大佛略懺",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26247,7 +26247,7 @@
     {
       "workId": "T2842",
       "title": "印沙佛文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26255,7 +26255,7 @@
     {
       "workId": "T2843",
       "title": "大悲啟請",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26263,7 +26263,7 @@
     {
       "workId": "T2844",
       "title": "文殊師利菩薩無相十禮",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26271,7 +26271,7 @@
     {
       "workId": "T2845",
       "title": "押座文類",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26279,7 +26279,7 @@
     {
       "workId": "T2846",
       "title": "祈願文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26287,7 +26287,7 @@
     {
       "workId": "T2847",
       "title": "祈願文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26295,7 +26295,7 @@
     {
       "workId": "T2848",
       "title": "迴向文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26303,7 +26303,7 @@
     {
       "workId": "T2849",
       "title": "大乘四齋日",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26311,7 +26311,7 @@
     {
       "workId": "T2850",
       "title": "地藏菩薩十齋日",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26319,7 +26319,7 @@
     {
       "workId": "T2851",
       "title": "和菩薩戒文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26327,7 +26327,7 @@
     {
       "workId": "T2852",
       "title": "入布薩堂說偈文等",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26335,7 +26335,7 @@
     {
       "workId": "T2853",
       "title": "布薩文等",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26343,7 +26343,7 @@
     {
       "workId": "T2854",
       "title": "禮懺文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26351,7 +26351,7 @@
     {
       "workId": "T2855",
       "title": "禮懺文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26359,7 +26359,7 @@
     {
       "workId": "T2856",
       "title": "禮懺文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26367,7 +26367,7 @@
     {
       "workId": "T2857",
       "title": "索法號義辯諷誦文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26375,7 +26375,7 @@
     {
       "workId": "T2858",
       "title": "大目乾連冥間救母變文并圖",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26383,7 +26383,7 @@
     {
       "workId": "T2859",
       "title": "惠遠外傳",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26391,7 +26391,7 @@
     {
       "workId": "T2860",
       "title": "府君存惠傳",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26399,7 +26399,7 @@
     {
       "workId": "T2861",
       "title": "泉州千佛新著諸祖師頌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26407,7 +26407,7 @@
     {
       "workId": "T2862",
       "title": "大蕃沙洲釋門教法和尚洪辯修功德記",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26415,7 +26415,7 @@
     {
       "workId": "T2863",
       "title": "王梵志詩集",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26423,7 +26423,7 @@
     {
       "workId": "T2864",
       "title": "進旨",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26439,7 +26439,7 @@
     {
       "workId": "T2866",
       "title": "護身命經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26447,7 +26447,7 @@
     {
       "workId": "T2867",
       "title": "慈仁問八十種好經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26455,7 +26455,7 @@
     {
       "workId": "T2868",
       "title": "決罪福經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26463,7 +26463,7 @@
     {
       "workId": "T2869",
       "title": "妙好寶車經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26471,7 +26471,7 @@
     {
       "workId": "T2870",
       "title": "像法決疑經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26479,7 +26479,7 @@
     {
       "workId": "T2871",
       "title": "大通方廣懺悔滅罪莊嚴成佛經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 3,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26487,7 +26487,7 @@
     {
       "workId": "T2872",
       "title": "妙法蓮華經度量天地品第二十九",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26495,7 +26495,7 @@
     {
       "workId": "T2873",
       "title": "首羅比丘經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26503,7 +26503,7 @@
     {
       "workId": "T2874",
       "title": "小法滅盡經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26511,7 +26511,7 @@
     {
       "workId": "T2875",
       "title": "大方廣華嚴十惡品經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26519,7 +26519,7 @@
     {
       "workId": "T2876",
       "title": "天公經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26527,7 +26527,7 @@
     {
       "workId": "T2877",
       "title": "如來在金棺囑累清淨莊嚴敬福經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26535,7 +26535,7 @@
     {
       "workId": "T2878",
       "title": "救疾經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26543,7 +26543,7 @@
     {
       "workId": "T2879",
       "title": "普賢菩薩說證明經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26551,7 +26551,7 @@
     {
       "workId": "T2880",
       "title": "究竟大悲經卷第二．三．四",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 3,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26559,7 +26559,7 @@
     {
       "workId": "T2881",
       "title": "善惡因果經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26567,7 +26567,7 @@
     {
       "workId": "T2882",
       "title": "呪魅經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26575,7 +26575,7 @@
     {
       "workId": "T2883",
       "title": "法王經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26583,7 +26583,7 @@
     {
       "workId": "T2884",
       "title": "大威儀請問",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26591,7 +26591,7 @@
     {
       "workId": "T2885",
       "title": "佛性海藏智慧解脫破心相經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26607,7 +26607,7 @@
     {
       "workId": "T2887",
       "title": "父母恩重經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26615,7 +26615,7 @@
     {
       "workId": "T2888",
       "title": "延壽命經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26623,7 +26623,7 @@
     {
       "workId": "T2889",
       "title": "續命經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26631,7 +26631,7 @@
     {
       "workId": "T2890",
       "title": "如來成道經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26639,7 +26639,7 @@
     {
       "workId": "T2891",
       "title": "山海慧菩薩經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26647,7 +26647,7 @@
     {
       "workId": "T2892",
       "title": "現報當受經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26655,7 +26655,7 @@
     {
       "workId": "T2893",
       "title": "大辯邪正經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26671,7 +26671,7 @@
     {
       "workId": "T2895",
       "title": "要行捨身經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26679,7 +26679,7 @@
     {
       "workId": "T2896",
       "title": "示所犯者瑜伽法鏡經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26695,7 +26695,7 @@
     {
       "workId": "T2898",
       "title": "高王觀世音經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26703,7 +26703,7 @@
     {
       "workId": "T2899",
       "title": "妙法蓮華經馬明菩薩品第三十",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26711,7 +26711,7 @@
     {
       "workId": "T2900",
       "title": "齋法清淨經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26719,7 +26719,7 @@
     {
       "workId": "T2901",
       "title": "法句經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26727,7 +26727,7 @@
     {
       "workId": "T2902",
       "title": "法句經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26735,7 +26735,7 @@
     {
       "workId": "T2903",
       "title": "無量大慈教經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26743,7 +26743,7 @@
     {
       "workId": "T2904",
       "title": "七千佛神符經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26751,7 +26751,7 @@
     {
       "workId": "T2905",
       "title": "現在十方千五百佛名並雜佛同號",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26759,7 +26759,7 @@
     {
       "workId": "T2906",
       "title": "三萬佛同根本神祕之印並法龍種上尊王佛法",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26767,7 +26767,7 @@
     {
       "workId": "T2907",
       "title": "普賢菩薩行願王經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26775,7 +26775,7 @@
     {
       "workId": "T2908",
       "title": "大方廣佛華嚴經普賢菩薩行願王品",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26783,7 +26783,7 @@
     {
       "workId": "T2909",
       "title": "地藏菩薩經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26791,7 +26791,7 @@
     {
       "workId": "T2910",
       "title": "金有陀羅尼經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26799,7 +26799,7 @@
     {
       "workId": "T2911",
       "title": "讚僧功德經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26807,7 +26807,7 @@
     {
       "workId": "T2912",
       "title": "無常三啟經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26815,7 +26815,7 @@
     {
       "workId": "T2913",
       "title": "七女觀經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26823,7 +26823,7 @@
     {
       "workId": "T2914",
       "title": "觀經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26831,7 +26831,7 @@
     {
       "workId": "T2915",
       "title": "救諸眾生一切苦難經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26839,7 +26839,7 @@
     {
       "workId": "T2916",
       "title": "勸善經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26847,7 +26847,7 @@
     {
       "workId": "T2917A",
       "title": "新菩薩經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26855,7 +26855,7 @@
     {
       "workId": "T2917B",
       "title": "新菩薩經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26863,7 +26863,7 @@
     {
       "workId": "T2918",
       "title": "釋家觀化還愚經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26871,7 +26871,7 @@
     {
       "workId": "T2919",
       "title": "佛母經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26879,7 +26879,7 @@
     {
       "workId": "T2920",
       "title": "僧伽和尚欲入涅槃說六度經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "敦煌寫本部類",
       "vol": "T85"
@@ -26887,7 +26887,7 @@
     {
       "workId": "TXa001",
       "title": "太虛大師全書．編纂說明",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "新編部類",
       "vol": "TX00"
@@ -27071,7 +27071,7 @@
     {
       "workId": "X0001",
       "title": "圓覺經佚文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X01"
@@ -27087,7 +27087,7 @@
     {
       "workId": "X0006",
       "title": "阿彌陀經異本",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "淨土宗部類",
       "vol": "X01"
@@ -27103,7 +27103,7 @@
     {
       "workId": "X0010",
       "title": "大明仁孝皇后夢感佛說第一希有大功德經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "經集部類",
       "vol": "X01"
@@ -27127,7 +27127,7 @@
     {
       "workId": "X0013",
       "title": "念佛超脫輪迴捷徑經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "淨土宗部類",
       "vol": "X01"
@@ -27143,7 +27143,7 @@
     {
       "workId": "X0015",
       "title": "淨度三昧經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X01"
@@ -27159,7 +27159,7 @@
     {
       "workId": "X0019",
       "title": "佛說斷溫經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X01"
@@ -27183,7 +27183,7 @@
     {
       "workId": "X0023",
       "title": "大藏正教血盆經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X01"
@@ -27191,7 +27191,7 @@
     {
       "workId": "X0024",
       "title": "壽生經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X01"
@@ -27199,7 +27199,7 @@
     {
       "workId": "X0025",
       "title": "化珠保命真經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X01"
@@ -27207,7 +27207,7 @@
     {
       "workId": "X0026",
       "title": "大梵天王問佛決疑經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "經集部類",
       "vol": "X01"
@@ -27215,7 +27215,7 @@
     {
       "workId": "X0027",
       "title": "大梵天王問佛決疑經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X01"
@@ -27231,7 +27231,7 @@
     {
       "workId": "X0034",
       "title": "觀世音菩薩救苦經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "X01"
@@ -27319,7 +27319,7 @@
     {
       "workId": "X0193",
       "title": "佛說却溫黃神咒經",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "X02"
@@ -27343,7 +27343,7 @@
     {
       "workId": "X0203",
       "title": "作世水宅心陀羅尼",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "X02"
@@ -27927,7 +27927,7 @@
     {
       "workId": "X0290",
       "title": "楞嚴經直指科文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "密教部類",
       "vol": "X14"
@@ -28167,7 +28167,7 @@
     {
       "workId": "X0322",
       "title": "楞伽經疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "經集部類",
       "vol": "X17"
@@ -28431,7 +28431,7 @@
     {
       "workId": "X0366",
       "title": "大乘本生心地觀經淺註科文",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "本緣部類",
       "vol": "X20"
@@ -28575,7 +28575,7 @@
     {
       "workId": "X0388",
       "title": "彌勒上生經述贊",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X21"
@@ -28583,7 +28583,7 @@
     {
       "workId": "X0389",
       "title": "彌勒下生經述贊",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "經集部類",
       "vol": "X21"
@@ -29799,7 +29799,7 @@
     {
       "workId": "X0575",
       "title": "般若心經註解",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "般若部類",
       "vol": "X26"
@@ -29975,7 +29975,7 @@
     {
       "workId": "X0601",
       "title": "法華經要解科",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "X30"
@@ -30263,7 +30263,7 @@
     {
       "workId": "X0639",
       "title": "法華經玄贊釋",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "X34"
@@ -30271,7 +30271,7 @@
     {
       "workId": "X0640",
       "title": "觀音經玄義記會本科",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "X35"
@@ -30279,7 +30279,7 @@
     {
       "workId": "X0641",
       "title": "觀音經玄義記條箇",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "X35"
@@ -30295,7 +30295,7 @@
     {
       "workId": "X0643",
       "title": "觀音經義疏記會本科",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "X35"
@@ -30303,7 +30303,7 @@
     {
       "workId": "X0644",
       "title": "觀音經義疏記條箇",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "X35"
@@ -30343,7 +30343,7 @@
     {
       "workId": "X0649",
       "title": "普賢觀經義疏科",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "法華部類",
       "vol": "X35"
@@ -30391,7 +30391,7 @@
     {
       "workId": "X0658",
       "title": "涅槃經會疏條箇",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 3,
       "category": "涅槃部類",
       "vol": "X36"
@@ -30655,7 +30655,7 @@
     {
       "workId": "X0698",
       "title": "梵網經直解事義",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "律部類",
       "vol": "X38"
@@ -31135,7 +31135,7 @@
     {
       "workId": "X0767",
       "title": "起信論疏記會閱卷首",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "論集部類",
       "vol": "X45"
@@ -31239,7 +31239,7 @@
     {
       "workId": "X0788",
       "title": "掌珍論疏",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "中觀部類",
       "vol": "X46"
@@ -31383,7 +31383,7 @@
     {
       "workId": "X0817",
       "title": "註成唯識論",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "瑜伽部類",
       "vol": "X50"
@@ -33287,7 +33287,7 @@
     {
       "workId": "X1145",
       "title": "西方要決科註",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "淨土宗部類",
       "vol": "X61"
@@ -34007,7 +34007,7 @@
     {
       "workId": "X1247",
       "title": "入眾須知",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X63"
@@ -34191,7 +34191,7 @@
     {
       "workId": "X1271",
       "title": "十牛圖和頌",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X64"
@@ -34519,7 +34519,7 @@
     {
       "workId": "X1320",
       "title": "四家語錄（序．引．跋）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34527,7 +34527,7 @@
     {
       "workId": "X1321",
       "title": "馬祖道一禪師廣錄（四家語錄卷一）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34535,7 +34535,7 @@
     {
       "workId": "X1322",
       "title": "百丈懷海禪師語錄（四家語錄卷二）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34543,7 +34543,7 @@
     {
       "workId": "X1323",
       "title": "百丈懷海禪師廣錄（四家語錄卷三）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34607,7 +34607,7 @@
     {
       "workId": "X1342",
       "title": "雲菴克文禪師語錄（敘．疏．附錄）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34623,7 +34623,7 @@
     {
       "workId": "X1344",
       "title": "死心悟新禪師語錄（黃龍四家錄第三）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34631,7 +34631,7 @@
     {
       "workId": "X1345",
       "title": "超宗慧方禪師語錄（黃龍四家錄第四）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34655,7 +34655,7 @@
     {
       "workId": "X1348",
       "title": "雪菴從瑾禪師頌古",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34671,7 +34671,7 @@
     {
       "workId": "X1351",
       "title": "白雲守端禪師語錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "禪宗部類",
       "vol": "X69"
@@ -34711,7 +34711,7 @@
     {
       "workId": "X1356",
       "title": "普菴印肅禪師語錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 3,
       "category": "禪宗部類",
       "vol": "X69"
@@ -35063,7 +35063,7 @@
     {
       "workId": "X1402",
       "title": "天目明本禪師雜錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 3,
       "category": "禪宗部類",
       "vol": "X70"
@@ -35095,7 +35095,7 @@
     {
       "workId": "X1406",
       "title": "石溪心月禪師雜錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "禪宗部類",
       "vol": "X71"
@@ -35535,7 +35535,7 @@
     {
       "workId": "X1469",
       "title": "華嚴經海印道場九會請佛儀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "華嚴部類",
       "vol": "X74"
@@ -35879,7 +35879,7 @@
     {
       "workId": "X1515",
       "title": "續佛祖統紀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "史傳部類",
       "vol": "X75"
@@ -35903,7 +35903,7 @@
     {
       "workId": "X1521",
       "title": "(古今圖書集成)釋教部彙考",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 7,
       "category": "史傳部類",
       "vol": "X77"
@@ -36023,7 +36023,7 @@
     {
       "workId": "X1543",
       "title": "東林十八高賢傳",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X78"
@@ -36231,7 +36231,7 @@
     {
       "workId": "X1572",
       "title": "續傳燈錄目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 3,
       "category": "史傳部類",
       "vol": "X83"
@@ -36311,7 +36311,7 @@
     {
       "workId": "X1584",
       "title": "續燈存稿目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X84"
@@ -36327,7 +36327,7 @@
     {
       "workId": "X1586",
       "title": "正源略集目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X85"
@@ -36423,7 +36423,7 @@
     {
       "workId": "X1598",
       "title": "曹溪大師別傳",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X86"
@@ -36559,7 +36559,7 @@
     {
       "workId": "X1615",
       "title": "禪苑蒙求拾遺",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X87"
@@ -36687,7 +36687,7 @@
     {
       "workId": "X1631",
       "title": "金剛經受持感應錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "史傳部類",
       "vol": "X87"
@@ -36695,7 +36695,7 @@
     {
       "workId": "X1632",
       "title": "金剛經感應傳",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X87"
@@ -36823,7 +36823,7 @@
     {
       "workId": "X1654",
       "title": "惠果和尚行狀",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X88"
@@ -36839,7 +36839,7 @@
     {
       "workId": "X1656",
       "title": "伯亭大師傳記總帙",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X88"
@@ -36863,7 +36863,7 @@
     {
       "workId": "X1660",
       "title": "(古今圖書集成)神異典二氏部彙考",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "史傳部類",
       "vol": "X88"
@@ -36871,7 +36871,7 @@
     {
       "workId": "X1661",
       "title": "(古今圖書集成)神異典釋教部紀事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 2,
       "category": "史傳部類",
       "vol": "X88"
@@ -36879,7 +36879,7 @@
     {
       "workId": "X1666",
       "title": "佛祖心燈",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X88"
@@ -36903,7 +36903,7 @@
     {
       "workId": "X1671",
       "title": "東國僧尼錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "史傳部類",
       "vol": "X88"
@@ -37463,7 +37463,7 @@
     {
       "workId": "ZWa003",
       "title": "藏外佛教文獻第一輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW01"
@@ -37471,7 +37471,7 @@
     {
       "workId": "ZWa004",
       "title": "藏外佛教文獻第一輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW01"
@@ -37647,7 +37647,7 @@
     {
       "workId": "ZWa005",
       "title": "藏外佛教文獻第一輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW01"
@@ -37655,7 +37655,7 @@
     {
       "workId": "ZWa006",
       "title": "《藏外佛教文獻》編委會啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW01"
@@ -37671,7 +37671,7 @@
     {
       "workId": "ZWa008",
       "title": "藏外佛教文獻第二輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW02"
@@ -37679,7 +37679,7 @@
     {
       "workId": "ZWa009",
       "title": "藏外佛教文獻第二輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW02"
@@ -37687,7 +37687,7 @@
     {
       "workId": "ZWa010",
       "title": "大藏經編纂及電腦化研討會論文特集",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 13,
       "category": "新編部類",
       "vol": "ZW02"
@@ -37751,7 +37751,7 @@
     {
       "workId": "ZWa011",
       "title": "藏外佛教文獻第二輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW02"
@@ -37759,7 +37759,7 @@
     {
       "workId": "ZWa012",
       "title": "藏外佛教文獻第二輯．徵訂啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW02"
@@ -37775,7 +37775,7 @@
     {
       "workId": "ZWa014",
       "title": "藏外佛教文獻第三輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW03"
@@ -37783,7 +37783,7 @@
     {
       "workId": "ZWa015",
       "title": "藏外佛教文獻第三輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW03"
@@ -37903,7 +37903,7 @@
     {
       "workId": "ZWa016",
       "title": "《藏外佛教文獻》第一輯、第二輯要目",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW03"
@@ -37911,7 +37911,7 @@
     {
       "workId": "ZWa017",
       "title": "藏外佛教文獻第三輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW03"
@@ -37919,7 +37919,7 @@
     {
       "workId": "ZWa018",
       "title": "藏外佛教文獻第三輯．編委會名單",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW03"
@@ -37927,7 +37927,7 @@
     {
       "workId": "ZWa019",
       "title": "藏外佛教文獻第三輯．鳴謝",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW03"
@@ -37943,7 +37943,7 @@
     {
       "workId": "ZWa021",
       "title": "藏外佛教文獻第四輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW04"
@@ -37951,7 +37951,7 @@
     {
       "workId": "ZWa022",
       "title": "藏外佛教文獻第四輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW04"
@@ -38063,7 +38063,7 @@
     {
       "workId": "ZWa023",
       "title": "「中國社會科學院佛教研究中心成立暨佛教研究與新時期的文化建設研討會」紀要",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW04"
@@ -38071,7 +38071,7 @@
     {
       "workId": "ZWa024",
       "title": "《藏外佛教文獻》第一～六輯要目",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW04"
@@ -38079,7 +38079,7 @@
     {
       "workId": "ZWa025",
       "title": "藏外佛教文獻第四輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW04"
@@ -38087,7 +38087,7 @@
     {
       "workId": "ZWa026",
       "title": "藏外佛教文獻第四輯．編委會名單",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW04"
@@ -38103,7 +38103,7 @@
     {
       "workId": "ZWa028",
       "title": "藏外佛教文獻第五輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW05"
@@ -38111,7 +38111,7 @@
     {
       "workId": "ZWa029",
       "title": "藏外佛教文獻第五輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW05"
@@ -38167,7 +38167,7 @@
     {
       "workId": "ZWa030",
       "title": "《藏外佛教文獻》第一～六輯要目",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW05"
@@ -38175,7 +38175,7 @@
     {
       "workId": "ZWa031",
       "title": "藏外佛教文獻第五輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW05"
@@ -38183,7 +38183,7 @@
     {
       "workId": "ZWa032",
       "title": "藏外佛教文獻第五輯．編委會名單",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW05"
@@ -38199,7 +38199,7 @@
     {
       "workId": "ZWa034",
       "title": "藏外佛教文獻第六輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW06"
@@ -38207,7 +38207,7 @@
     {
       "workId": "ZWa035",
       "title": "藏外佛教文獻第六輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW06"
@@ -38271,7 +38271,7 @@
     {
       "workId": "ZWa036",
       "title": "《藏外佛教文獻》第一～六輯要目",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW06"
@@ -38279,7 +38279,7 @@
     {
       "workId": "ZWa037",
       "title": "藏外佛教文獻第六輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW06"
@@ -38287,7 +38287,7 @@
     {
       "workId": "ZWa038",
       "title": "藏外佛教文獻第六輯．編委會名單",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW06"
@@ -38303,7 +38303,7 @@
     {
       "workId": "ZWa040",
       "title": "藏外佛教文獻第七輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW07"
@@ -38311,7 +38311,7 @@
     {
       "workId": "ZWa041",
       "title": "藏外佛教文獻第七輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW07"
@@ -38455,7 +38455,7 @@
     {
       "workId": "ZWa042",
       "title": "《藏外佛教文獻》第一～七輯要目",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW07"
@@ -38463,7 +38463,7 @@
     {
       "workId": "ZWa043",
       "title": "藏外佛教文獻第七輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW07"
@@ -38479,7 +38479,7 @@
     {
       "workId": "ZWa045",
       "title": "藏外佛教文獻第八輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW08"
@@ -38487,7 +38487,7 @@
     {
       "workId": "ZWa046",
       "title": "藏外佛教文獻第八輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW08"
@@ -38535,7 +38535,7 @@
     {
       "workId": "ZWa047",
       "title": "《藏外佛教文獻》第一～九輯要目",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW08"
@@ -38543,7 +38543,7 @@
     {
       "workId": "ZWa048",
       "title": "藏外佛教文獻第八輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW08"
@@ -38551,7 +38551,7 @@
     {
       "workId": "ZWa049",
       "title": "藏外佛教文獻第八輯．鳴謝",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW08"
@@ -38567,7 +38567,7 @@
     {
       "workId": "ZWa051",
       "title": "藏外佛教文獻第九輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW09"
@@ -38575,7 +38575,7 @@
     {
       "workId": "ZWa052",
       "title": "藏外佛教文獻第九輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW09"
@@ -38687,7 +38687,7 @@
     {
       "workId": "ZWa053",
       "title": "談當前數字圖書館的幾個問題",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW09"
@@ -38695,7 +38695,7 @@
     {
       "workId": "ZWa054",
       "title": "《藏外佛教文獻》第一～九輯要目",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW09"
@@ -38703,7 +38703,7 @@
     {
       "workId": "ZWa055",
       "title": "藏外佛教文獻第九輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW09"
@@ -38711,7 +38711,7 @@
     {
       "workId": "ZWa056",
       "title": "藏外佛教文獻第九輯．鳴謝",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW09"
@@ -38719,7 +38719,7 @@
     {
       "workId": "ZWa057",
       "title": "藏外佛教文獻第十輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW10"
@@ -38735,7 +38735,7 @@
     {
       "workId": "ZWa059",
       "title": "藏外佛教文獻第十輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW10"
@@ -38831,7 +38831,7 @@
     {
       "workId": "ZWa060",
       "title": "藏外佛教文獻第十輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW10"
@@ -38839,7 +38839,7 @@
     {
       "workId": "ZWa061",
       "title": "《藏外佛教文獻》總目錄（第一輯～第十二輯）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW10"
@@ -38847,7 +38847,7 @@
     {
       "workId": "ZWa062",
       "title": "藏外佛教文獻第十輯．鳴謝",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW10"
@@ -38855,7 +38855,7 @@
     {
       "workId": "ZWa063",
       "title": "藏外佛教文獻第十一輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW11"
@@ -38871,7 +38871,7 @@
     {
       "workId": "ZWa065",
       "title": "藏外佛教文獻第十一輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW11"
@@ -38943,7 +38943,7 @@
     {
       "workId": "ZWa066",
       "title": "藏外佛教文獻第十一輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW11"
@@ -38951,7 +38951,7 @@
     {
       "workId": "ZWa067",
       "title": "《藏外佛教文獻》總目錄（第一輯～第十二輯）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW11"
@@ -38959,7 +38959,7 @@
     {
       "workId": "ZWa068",
       "title": "藏外佛教文獻第十一輯．鳴謝",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW11"
@@ -38967,7 +38967,7 @@
     {
       "workId": "ZWa069",
       "title": "藏外佛教文獻第十二輯．目錄",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW12"
@@ -38983,7 +38983,7 @@
     {
       "workId": "ZWa071",
       "title": "藏外佛教文獻第十二輯．錄文校勘體例",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW12"
@@ -39047,7 +39047,7 @@
     {
       "workId": "ZWa072",
       "title": "藏外佛教文獻第十二輯．徵稿啟事",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW12"
@@ -39055,7 +39055,7 @@
     {
       "workId": "ZWa073",
       "title": "《藏外佛教文獻》總目錄（第一輯～第十二輯）",
-      "creators": "CBETA 大藏經",
+      "creators": "",
       "juansCount": 1,
       "category": "新編部類",
       "vol": "ZW12"

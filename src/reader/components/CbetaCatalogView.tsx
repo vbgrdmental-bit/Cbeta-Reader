@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
 import { listBooks } from '../../utils/db';
-import { IndexBuilder, getApiUrl } from '../../builder/IndexBuilder';
+import { IndexBuilder, getApiUrl, sanitizeCreators } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress } from '../../builder/PackageBuilder';
@@ -687,7 +687,7 @@ export function CbetaCatalogView({
           label: r.title,
           nodeType: 'work',
           workId: r.work || r.workId,
-          creators: r.byline || r.creators || r.lead_creator || 'CBETA 電子佛典',
+          creators: sanitizeCreators(r.byline || r.creators || r.lead_creator),
           category: r.category || r.orig_category || 'CBETA',
           juanStart: r.juan || r.juansCount || 1,
           juansCount: r.juan || r.juansCount || 1
@@ -741,12 +741,13 @@ export function CbetaCatalogView({
           const timeRangeStr = r.time_from 
             ? ` (${r.time_from}${r.time_to && r.time_to !== r.time_from ? ' ~ ' + r.time_to : ''}年)` 
             : '';
+          const cleanCreator = sanitizeCreators(r.byline || r.creators || r.lead_creator);
           return {
             id: r.work || r.workId,
             label: r.title,
             nodeType: 'work',
             workId: r.work || r.workId,
-            creators: (r.byline || r.creators || r.lead_creator || 'CBETA 電子佛典') + timeRangeStr,
+            creators: cleanCreator ? cleanCreator + timeRangeStr : (timeRangeStr ? timeRangeStr.trim() : ''),
             category: r.category || r.orig_category || 'CBETA',
             juanStart: r.juan || r.juansCount || 1,
             timeFrom: r.time_from,
@@ -878,7 +879,7 @@ export function CbetaCatalogView({
         handleDownloadSingleWork({
           workId: wId,
           title: item.label.replace(/^[A-Z]\d+\s*/, '').replace(/^[A-Z]\d+n\d+[A-Za-z]?\s*/, '').replace(/\s*\(\d+卷\)$/, ''),
-          creators: item.creators || 'CBETA 電子佛典',
+          creators: sanitizeCreators(item.creators),
           juansCount: item.juansCount || item.juanStart || 1,
           category: item.category || 'CBETA'
         });
@@ -1549,9 +1550,11 @@ export function CbetaCatalogView({
                           <div className="cbeta-work-badge">{wId}</div>
                           <div className="cbeta-work-info">
                             <div className="cbeta-work-title">{item.label}</div>
-                            <div className="cbeta-work-meta">
-                              {item.creators || 'CBETA 電子佛典'}
-                            </div>
+                            {sanitizeCreators(item.creators) && (
+                              <div className="cbeta-work-meta">
+                                {sanitizeCreators(item.creators)}
+                              </div>
+                            )}
                           </div>
 
                           {isDownloaded ? (

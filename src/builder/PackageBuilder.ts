@@ -1,5 +1,5 @@
 import type { ReaderPackage } from '../types/book';
-import { IndexBuilder, getApiUrl, fetchWithTimeout } from './IndexBuilder';
+import { IndexBuilder, getApiUrl, fetchWithTimeout, sanitizeCreators } from './IndexBuilder';
 import type { SearchResult } from './IndexBuilder';
 import { ReaderBuilder, formatTimeRemaining } from './ReaderBuilder';
 import { NavigationBuilder } from './NavigationBuilder';
@@ -43,12 +43,14 @@ export class PackageBuilder {
     const indexMeta = await IndexBuilder.getWorkMetaFromIndex(workId);
     if (indexMeta) {
       if (!searchResult.title || searchResult.title === workId) searchResult.title = indexMeta.title;
-      if (!searchResult.creators || searchResult.creators === 'CBETA' || searchResult.creators === 'CBETA 電子佛典') searchResult.creators = indexMeta.creators;
+      searchResult.creators = sanitizeCreators(searchResult.creators) || sanitizeCreators(indexMeta.creators);
       if (!searchResult.category || searchResult.category === 'CBETA' || searchResult.category === '未分類') searchResult.category = indexMeta.category;
       if (!searchResult.vol) searchResult.vol = indexMeta.vol;
       if (indexMeta.juansCount && indexMeta.juansCount > 0) {
         searchResult.juansCount = indexMeta.juansCount;
       }
+    } else {
+      searchResult.creators = sanitizeCreators(searchResult.creators);
     }
 
     let actualJuansCount = (searchResult.juansCount && searchResult.juansCount > 0) ? searchResult.juansCount : 1;
@@ -98,7 +100,7 @@ export class PackageBuilder {
                 }
               }
               if (meta.title) searchResult.title = meta.title;
-              if (meta.creators) searchResult.creators = meta.creators;
+              if (meta.creators) searchResult.creators = sanitizeCreators(meta.creators);
               if (meta.category) searchResult.category = meta.category;
               if (meta.vol) searchResult.vol = meta.vol;
               if (meta.cjkChars != null && typeof meta.cjkChars === 'number') searchResult.cjkChars = meta.cjkChars;
@@ -127,12 +129,14 @@ export class PackageBuilder {
               if (workInfo.category) {
                 searchResult.category = workInfo.category;
               }
-              if (workInfo.creators) {
-                const dynasty = workInfo.time_dynasty ? `${workInfo.time_dynasty} ` : '';
+              if (workInfo.creators && sanitizeCreators(workInfo.creators)) {
+                const dynasty = (workInfo.time_dynasty && workInfo.time_dynasty !== 'unknown') ? `${workInfo.time_dynasty} ` : '';
                 const creatorName = workInfo.creators.replace(/\(.*\)/, '').trim();
-                searchResult.creators = creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`;
-              } else if (workInfo.byline) {
-                searchResult.creators = workInfo.byline;
+                searchResult.creators = sanitizeCreators(creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`);
+              } else if (workInfo.byline && sanitizeCreators(workInfo.byline)) {
+                searchResult.creators = sanitizeCreators(workInfo.byline);
+              } else {
+                searchResult.creators = '';
               }
               if (workInfo.vol) {
                 searchResult.vol = workInfo.vol;
@@ -153,6 +157,7 @@ export class PackageBuilder {
       onProgress({ step: 'metadata', percent: 5, message: '正在建立書籍元資料...' });
       const metadata = IndexBuilder.buildMetadata({
         ...searchResult,
+        creators: sanitizeCreators(searchResult.creators),
         juansCount: actualJuansCount
       });
       await new Promise(resolve => setTimeout(resolve, 300));

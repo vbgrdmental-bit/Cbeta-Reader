@@ -7,7 +7,7 @@ import { getBook, saveBook, deleteBook, listHighlights, saveHighlight, deleteHig
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
 import { BUILDER_VERSION } from '../../builder/version';
-import { IndexBuilder } from '../../builder/IndexBuilder';
+import { IndexBuilder, sanitizeCreators } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
@@ -623,6 +623,15 @@ export function ReaderView({
 
         let bookData = await getBook(workId);
         if (bookData) {
+          // 💡 自動清理舊有快取的「CBETA 大藏經 / 電子佛典」作譯者佔位字樣
+          if (bookData.metadata) {
+            const sanitized = sanitizeCreators(bookData.metadata.creators);
+            if (bookData.metadata.creators !== sanitized) {
+              bookData.metadata.creators = sanitized;
+              await saveBook(bookData).catch(() => {});
+            }
+          }
+
           // 💡 已知內建經典 Metadata 自動修正
           const KNOWN_METADATA_FIXES: Record<string, Partial<typeof bookData.metadata>> = {
             'T0412': { category: '大集部類', creators: '唐 實叉難陀譯' },
@@ -792,7 +801,7 @@ export function ReaderView({
             const juansCount = targetMeta?.juansCount || 1;
             const title = targetMeta?.title || workId;
             bookTitle = title;
-            const creators = targetMeta?.creators || 'CBETA 電子佛典';
+            const creators = sanitizeCreators(targetMeta?.creators);
 
             const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
             const res = await ReaderBuilder.buildContent(workId, juansCount);
@@ -1962,7 +1971,9 @@ export function ReaderView({
                 </div>
               )}
               <h1 className="reader-book-title">{book.metadata.title}</h1>
-              <div className="reader-book-author">{book.metadata.creators}</div>
+              {sanitizeCreators(book.metadata.creators) && (
+                <div className="reader-book-author">{sanitizeCreators(book.metadata.creators)}</div>
+              )}
             </>
           )}
 
@@ -2246,7 +2257,7 @@ export function ReaderView({
             {isCopyrightExpanded && (
               <div className="drawer-footer-content animate-fade-in">
                 <div className="info-item"><strong>經名：</strong>{book.metadata.title}</div>
-                <div className="info-item"><strong>譯者：</strong>{book.metadata.creators}</div>
+                <div className="info-item"><strong>作譯者：</strong>{sanitizeCreators(book.metadata.creators)}</div>
                 <div className="info-item"><strong>經號：</strong>CBETA No. {book.metadata.workId}</div>
                 <div className="info-item"><strong>部類：</strong>{book.metadata.category}</div>
                 {book.metadata.vol && (

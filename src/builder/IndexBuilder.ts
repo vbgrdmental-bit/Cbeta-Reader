@@ -48,7 +48,21 @@ export interface SearchResult {
   isBackupSource?: boolean; // 標示是否來自備用鏡像源
 }
 
-// 內建核心經典靜態庫 (做為極速備用 Fallback，確保 100% 搜尋零卡死)
+export function sanitizeCreators(creators?: string | null): string {
+  if (!creators) return '';
+  const trimmed = creators.trim();
+  if (
+    trimmed === 'CBETA' ||
+    trimmed === 'CBETA 大藏經' ||
+    trimmed === 'CBETA 電子佛典' ||
+    trimmed === '未知' ||
+    trimmed === 'unknown'
+  ) {
+    return '';
+  }
+  return trimmed;
+}
+
 // 內建核心經典靜態庫 (做為極速備用 Fallback，確保 100% 搜尋零卡死)
 export const FEATURED_BOOKS: SearchResult[] = [
   { workId: 'T0220', title: '大般若波羅蜜多經', creators: '唐 玄奘譯', juansCount: 600, category: '般若部類', vol: 'T05', cjkChars: 4850000 },
@@ -67,7 +81,7 @@ export const FEATURED_BOOKS: SearchResult[] = [
   { workId: 'T0779', title: '佛說八大人覺經', creators: '後漢 安世高譯', juansCount: 1, category: '經集部類', vol: 'T17' },
   { workId: 'B0080', title: '大唐西域記（校文本）', creators: '唐 玄奘、辯機撰', juansCount: 12, category: '史傳部類', vol: 'B10' },
   { workId: 'T0262', title: '妙法蓮華經', creators: '姚秦 鳩摩羅什譯', juansCount: 7, category: '法華部類', vol: 'T09', cjkChars: 69400 },
-  { workId: 'T1944', title: '禮法華經儀式', creators: 'CBETA 大藏經', juansCount: 1, category: '法華部類', vol: 'T46', cjkChars: 470 },
+  { workId: 'T1944', title: '禮法華經儀式', creators: '', juansCount: 1, category: '法華部類', vol: 'T46', cjkChars: 470 },
   { workId: 'T0279', title: '大方廣佛華嚴經', creators: '唐 實叉難陀譯', juansCount: 80, category: '華嚴部類', vol: 'T10', cjkChars: 587000 },
   { workId: 'T0310', title: '大寶積經', creators: '唐 菩提流志譯', juansCount: 120, category: '寶積部類', vol: 'T11' },
   { workId: 'T0374', title: '大般涅槃經', creators: '北涼 曇無讖譯', juansCount: 40, category: '涅槃部類', vol: 'T12', cjkChars: 380000 },
@@ -390,7 +404,7 @@ export class IndexBuilder {
             apiResults.push({
               workId: r.work || r.file || r.work_info?.work || '',
               title: r.title || r.content || r.work_info?.title || '未命名經典',
-              creators: r.creators || r.byline || r.work_info?.byline || 'CBETA 電子佛典',
+              creators: sanitizeCreators(r.creators || r.byline || r.work_info?.byline),
               juansCount: r.juan || r.juans || r.work_info?.juans || 1,
               category: r.category || r.work_info?.category || (item.key === 'category' ? matchedCategoryName : '未分類')
             });
@@ -454,12 +468,14 @@ export class IndexBuilder {
                 if (workInfo.category) {
                   res.category = workInfo.category;
                 }
-                if (workInfo.creators) {
-                  const dynasty = workInfo.time_dynasty ? `${workInfo.time_dynasty} ` : '';
+                if (workInfo.creators && sanitizeCreators(workInfo.creators)) {
+                  const dynasty = (workInfo.time_dynasty && workInfo.time_dynasty !== 'unknown') ? `${workInfo.time_dynasty} ` : '';
                   const creatorName = workInfo.creators.replace(/\(.*\)/, '').trim();
-                  res.creators = creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`;
-                } else if (workInfo.byline) {
-                  res.creators = workInfo.byline;
+                  res.creators = sanitizeCreators(creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`);
+                } else if (workInfo.byline && sanitizeCreators(workInfo.byline)) {
+                  res.creators = sanitizeCreators(workInfo.byline);
+                } else {
+                  res.creators = '';
                 }
                 if (workInfo.vol) {
                   res.vol = workInfo.vol;
@@ -498,7 +514,7 @@ export class IndexBuilder {
       vol: searchResult.vol,
       cjkChars: searchResult.cjkChars,
       category: searchResult.category,
-      creators: searchResult.creators,
+      creators: sanitizeCreators(searchResult.creators),
       juansCount: searchResult.juansCount,
       packagedAt: new Date().toISOString(),
       version: BUILDER_VERSION

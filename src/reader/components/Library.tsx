@@ -8,7 +8,7 @@ import {
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
-import { IndexBuilder, FEATURED_BOOKS } from '../../builder/IndexBuilder';
+import { IndexBuilder, FEATURED_BOOKS, sanitizeCreators } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress, BuildStep } from '../../builder/PackageBuilder';
@@ -1839,10 +1839,10 @@ export function Library({
                   const isSelected = selectedBookIds.includes(book.workId);
                   const featuredBook = FEATURED_BOOKS.find((b: any) => b.workId === book.workId);
                   const titleText = book.title || featuredBook?.title || book.workId;
-                  let creatorText = book.creators || featuredBook?.creators || 'CBETA 電子佛典';
+                  let creatorText = sanitizeCreators(book.creators || featuredBook?.creators);
 
                   // 💡 印順導師著作 (Y 系列) 作譯者名稱統一規範顯示為「民國 釋印順著」
-                  if (book.workId.startsWith('Y') || creatorText.includes('印順')) {
+                  if (book.workId.startsWith('Y') || (creatorText && creatorText.includes('印順'))) {
                     creatorText = '民國 釋印順著';
                   }
 
@@ -2067,7 +2067,7 @@ export function Library({
                       <div className="result-info" style={{ flexGrow: 1 }}>
                         <span className="result-title">{res.title}</span>
                         <span className="result-meta">
-                          {res.workId} · {res.juansCount}卷 · {res.creators} · {res.category}
+                          {res.workId} · {res.juansCount}卷{sanitizeCreators(res.creators) ? ` · ${sanitizeCreators(res.creators)}` : ''} · {res.category}
                         </span>
                       </div>
                       
@@ -2589,7 +2589,7 @@ export function Library({
 
               {/* 詳細經文資訊 */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.86rem', color: 'var(--text-primary)', opacity: 0.9, padding: '0 0.2rem' }}>
-                <div><span style={{ color: 'var(--text-muted)' }}>譯者 : </span>{menuTargetBook.creators || '未知'}</div>
+                <div><span style={{ color: 'var(--text-muted)' }}>作譯者 : </span>{sanitizeCreators(menuTargetBook.creators)}</div>
                 <div><span style={{ color: 'var(--text-muted)' }}>經號 : </span>CBETA No. {menuTargetBook.workId}</div>
                 <div><span style={{ color: 'var(--text-muted)' }}>部類 : </span>{menuTargetBook.category || '大藏經部類'}</div>
                 <div><span style={{ color: 'var(--text-muted)' }}>冊別 : </span>{menuTargetBook.vol || menuTargetBook.canon || 'CBETA 典籍'}</div>
