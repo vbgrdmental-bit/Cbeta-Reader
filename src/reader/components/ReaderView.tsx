@@ -1236,34 +1236,39 @@ export function ReaderView({
   };
 
 
-  // 點擊空白處切換工具列，防範文字或註解點擊干擾
+  // 💡 點選經文排版內文區或全版面處（含段落文字與空白處）：切換上下控制列的顯示/隱藏 (若正在劃線選字則不切換)
   const handleContentAreaClick = (e: React.MouseEvent) => {
-    // 💡 點擊內文任意段落或空白處時，若側邊欄抽屜開啟，自動收合隱藏
+    // 💡 若側邊欄抽屜開啟，自動收合隱藏
     if (showNavDrawer) {
       setShowNavDrawer(false);
       return;
     }
+    // 若劃重點浮動選單開啟，點擊時關閉
+    if (showHighlightPopover) {
+      setShowHighlightPopover(false);
+    }
+    // 若點擊的是按鈕、輸入框、筆記或劃線刪除選單、浮動控制列等，不切換控制列
     const target = e.target as HTMLElement;
     if (
-      target.tagName === 'P' || 
-      target.closest('.reader-paragraph') ||
-      target.closest('.note-anchor') ||
-      target.closest('button') ||
-      target.closest('a')
+      target.closest('button') || 
+      target.closest('input') || 
+      target.closest('textarea') || 
+      target.closest('.highlight-delete-menu') || 
+      target.closest('.search-dialog-card') ||
+      target.closest('.reader-nav-drawer') ||
+      target.closest('.settings-dialog') ||
+      target.closest('.reader-floating-bottom-bar') ||
+      target.closest('.reader-top-bar')
     ) {
       return;
     }
-    
-    // 勾選「永遠顯示控制列」時，點擊不切換工具列
-    if (settings.customVisibleElements?.showReaderControls) {
-      setShowNavDrawer(false);
-      return;
-    }
-    
-    setShowToolbar(prev => !prev);
-    setShowNavDrawer(false); // 點擊空白處自動隱藏目次 Drawer 面板
-    if (!showToolbar) {
-      resetToolbarTimeout();
+    // 檢查是否有正在選取的文字（劃線中），若無選取文字，切換上下控制列顯示/隱藏
+    const selection = window.getSelection();
+    if (!selection || selection.toString().trim().length === 0) {
+      setShowToolbar(prev => !prev);
+      if (!showToolbar) {
+        resetToolbarTimeout();
+      }
     }
   };
 
@@ -1481,15 +1486,6 @@ export function ReaderView({
   // 點選經文段落（一般或學術模式）
   const handleSegmentClick = (seg: TextSegment) => {
     setActiveSegmentId(seg.id);
-    resetToolbarTimeout();
-
-    // 暫時關閉：段落有校勘註解時，點擊不再彈出校勘邊欄
-    /*
-    if (seg.notes && seg.notes.length > 0) {
-      setSelectedNotes(seg.notes);
-      setSelectedNotesTitle(seg.content.substring(0, 8) + '...');
-    }
-    */
   };
 
   if (!book) {
@@ -2139,7 +2135,7 @@ export function ReaderView({
                 onClick={() => onSaveSettings({ ...settings, theme: t })}
                 title={t === 'ivory' ? '象牙白' : t === 'parchment' ? '羊皮紙' : t === 'comfort' ? '舒服護眼' : '烏木暗色'}
               >
-                {isSelected && <Check size={12} strokeWidth={3.2} className="theme-check-icon" />}
+                {isSelected && <Check size={14} strokeWidth={3.5} className="theme-check-icon" />}
               </div>
             );
           })}
