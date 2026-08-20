@@ -7,7 +7,7 @@ import { getBook, saveBook, deleteBook, listHighlights, saveHighlight, deleteHig
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { NavigationBuilder } from '../../builder/NavigationBuilder';
 import { BUILDER_VERSION } from '../../builder/version';
-import { IndexBuilder, sanitizeCreators } from '../../builder/IndexBuilder';
+import { IndexBuilder, sanitizeCreators, FEATURED_BOOKS } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
@@ -632,22 +632,24 @@ export function ReaderView({
             }
           }
 
-          // 💡 已知內建經典 Metadata 自動修正
-          const KNOWN_METADATA_FIXES: Record<string, Partial<typeof bookData.metadata>> = {
-            'T0412': { category: '大集部類', creators: '唐 實叉難陀譯' },
-            'T0262': { category: '法華部類', creators: '姚秦 鳩摩羅什譯' }
-          };
-          const fix = KNOWN_METADATA_FIXES[workId];
-          if (fix) {
+          // 💡 權威字數、冊別與部類自動校勘 (全面對齊 CBETA 官方權威資料)
+          const featBook = FEATURED_BOOKS.find(b => b.workId === workId);
+          if (featBook) {
             let needsSave = false;
-            for (const [key, val] of Object.entries(fix) as [keyof typeof bookData.metadata, any][]) {
-              if (bookData.metadata[key] !== val) {
-                (bookData.metadata as any)[key] = val;
-                needsSave = true;
-              }
+            if (featBook.cjkChars && featBook.cjkChars > 0 && bookData.metadata.cjkChars !== featBook.cjkChars) {
+              bookData.metadata.cjkChars = featBook.cjkChars;
+              needsSave = true;
+            }
+            if (featBook.vol && !bookData.metadata.vol) {
+              bookData.metadata.vol = featBook.vol;
+              needsSave = true;
+            }
+            if (featBook.category && !bookData.metadata.category) {
+              bookData.metadata.category = featBook.category;
+              needsSave = true;
             }
             if (needsSave) {
-              await saveBook(bookData);
+              await saveBook(bookData).catch(() => {});
             }
           }
 
@@ -2264,11 +2266,14 @@ export function ReaderView({
                   <div className="info-item"><strong>冊別：</strong>{book.metadata.vol}</div>
                 )}
                 {(() => {
-                  // 💡 通用 CBETA 漢字與字數 (CJK Ideographs + en_words) 權威字數計算公式：
-                  // 若元資料有預錄 cjkChars 則優先採用；否則遍歷所有段落，統計 CJK 漢字與英數總字數
-                  if (book.metadata.cjkChars && typeof book.metadata.cjkChars === 'number' && book.metadata.cjkChars > 0) {
+                  const feat = FEATURED_BOOKS.find(b => b.workId === book.metadata.workId);
+                  const count = (feat?.cjkChars && feat.cjkChars > 0) 
+                    ? feat.cjkChars 
+                    : (book.metadata.cjkChars || 0);
+
+                  if (count > 0) {
                     return (
-                      <div className="info-item"><strong>字數：</strong>{book.metadata.cjkChars.toLocaleString()}</div>
+                      <div className="info-item"><strong>字數：</strong>{count.toLocaleString()}</div>
                     );
                   }
                   let totalCount = 0;

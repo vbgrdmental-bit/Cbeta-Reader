@@ -210,7 +210,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '東漢 安清',
     category: '經集部類',
     vol: 'T17',
-    cjkChars: 372,
+    cjkChars: 397,
     juansCount: 1,
     juanStart: 1
   },
@@ -222,7 +222,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '東漢 攝摩騰,竺法蘭',
     category: '經集部類',
     vol: 'T17',
-    cjkChars: 2382,
+    cjkChars: 2495,
     juansCount: 1,
     juanStart: 1
   },
@@ -234,7 +234,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '唐 義淨',
     category: '經集部類',
     vol: 'T17',
-    cjkChars: 884,
+    cjkChars: 2096,
     juansCount: 1,
     juanStart: 1
   },
@@ -246,7 +246,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '唐 玄奘',
     category: '般若部類',
     vol: 'T08',
-    cjkChars: 260,
+    cjkChars: 1097,
     juansCount: 1,
     juanStart: 1
   },
@@ -258,7 +258,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '後秦 鳩摩羅什',
     category: '般若部類',
     vol: 'T08',
-    cjkChars: 5165,
+    cjkChars: 5191,
     juansCount: 1,
     juanStart: 1
   },
@@ -270,7 +270,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '姚秦 鳩摩羅什',
     category: '寶積部類,淨土宗部類',
     vol: 'T12',
-    cjkChars: 1858,
+    cjkChars: 2109,
     juansCount: 1,
     juanStart: 1
   },
@@ -282,7 +282,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '唐 玄奘',
     category: '經集部類',
     vol: 'T14',
-    cjkChars: 5328,
+    cjkChars: 4972,
     juansCount: 1,
     juanStart: 1
   },
@@ -294,7 +294,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '蕭齊 曇摩迦陀耶舍',
     category: '法華部類',
     vol: 'T09',
-    cjkChars: 9800,
+    cjkChars: 8571,
     juansCount: 1,
     juanStart: 1
   },
@@ -306,7 +306,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '姚秦 鳩摩羅什',
     category: '法華部類',
     vol: 'T09',
-    cjkChars: 69400,
+    cjkChars: 72072,
     juansCount: 7,
     juanStart: 7
   },
@@ -318,7 +318,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '唐 實叉難陀',
     category: '大集部類',
     vol: 'T13',
-    cjkChars: 17926,
+    cjkChars: 17098,
     juansCount: 2,
     juanStart: 2
   },
@@ -330,7 +330,7 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     creators: '唐 般剌蜜帝',
     category: '密教部類',
     vol: 'T19',
-    cjkChars: 60222,
+    cjkChars: 70934,
     juansCount: 10,
     juanStart: 10
   },
@@ -341,8 +341,8 @@ export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
     workId: 'Y0040',
     creators: '民國 釋印順',
     category: '新編部類',
-    vol: 'Y01',
-    cjkChars: 148000,
+    vol: 'Y42',
+    cjkChars: 146784,
     juansCount: 5,
     juanStart: 5
   }

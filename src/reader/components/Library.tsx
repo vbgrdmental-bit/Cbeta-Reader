@@ -866,8 +866,18 @@ export function Library({
         const pkg = await getBook(meta.workId);
         if (pkg) {
           pkgs.push(pkg);
-          // 自動修復缺失之 cjkChars (Auto-Heal)
-          if (!pkg.metadata.cjkChars || pkg.metadata.cjkChars === 0) {
+          // 自動修復缺失或校勘 cjkChars (Auto-Heal 對齊 CBETA 權威字數)
+          const feat = FEATURED_BOOKS.find(b => b.workId === meta.workId);
+          if (feat?.cjkChars && feat.cjkChars > 0 && pkg.metadata.cjkChars !== feat.cjkChars) {
+            pkg.metadata.cjkChars = feat.cjkChars;
+            meta.cjkChars = feat.cjkChars;
+            if (feat.vol && !pkg.metadata.vol) {
+              pkg.metadata.vol = feat.vol;
+              meta.vol = feat.vol;
+            }
+            hasHealedAny = true;
+            await saveBook(pkg);
+          } else if (!pkg.metadata.cjkChars || pkg.metadata.cjkChars === 0) {
             let count = 0;
             pkg.content?.juans?.forEach(j => {
               j.segments?.forEach(seg => {
@@ -876,10 +886,6 @@ export function Library({
                 if (cjkMatches) count += cjkMatches.length;
               });
             });
-            if (count === 0) {
-              const feat = FEATURED_BOOKS.find(b => b.workId === meta.workId);
-              if (feat?.cjkChars) count = feat.cjkChars;
-            }
             if (count > 0) {
               pkg.metadata.cjkChars = count;
               meta.cjkChars = count;
