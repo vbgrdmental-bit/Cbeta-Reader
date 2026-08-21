@@ -827,6 +827,16 @@ body.theme-ebony .drawer-item.active {
   font-weight: 700;
 }
 
+.drawer-empty-hint {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  opacity: 0.75;
+  user-select: none;
+}
+
 /* TTS Floating / Bottom Overlay Panel */
 .tts-floating-panel {
   position: absolute;
