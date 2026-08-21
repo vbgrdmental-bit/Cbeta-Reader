@@ -1137,13 +1137,16 @@ export function ReaderView({
     };
   }, [workId, currentJuanNum, settings.highlightColor, settings.highlightStyle, isHighlightMode]);
 
-  // 監聽全局點擊事件，點擊空白處時隱藏畫重點選單與刪除選單
+  // 監聽全局點擊事件，點擊空白處時隱藏畫重點選單、目次抽屜與刪除選單
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
       if (!target.closest('.highlight-popover-container')) {
         setShowHighlightPopover(false);
+      }
+      if (!target.closest('.reader-nav-drawer') && !target.closest('.nav-menu-btn')) {
+        setShowNavDrawer(false);
       }
       if (!target.closest('.reader-text-highlight') && !target.closest('.highlight-delete-menu')) {
         setActiveHighlightForDelete(null);
@@ -1305,14 +1308,11 @@ export function ReaderView({
       return;
     }
 
-    // 💡 若側邊欄抽屜開啟，自動收合隱藏
-    if (showNavDrawer) {
-      setShowNavDrawer(false);
+    // 💡 若側邊欄抽屜或畫重點選單開啟，點擊螢幕時立即自動關閉
+    if (showNavDrawer || showHighlightPopover) {
+      if (showNavDrawer) setShowNavDrawer(false);
+      if (showHighlightPopover) setShowHighlightPopover(false);
       return;
-    }
-    // 若劃重點浮動選單開啟，點擊時關閉
-    if (showHighlightPopover) {
-      setShowHighlightPopover(false);
     }
     // 若點擊的是按鈕、輸入框、筆記或劃線刪除選單、浮動控制列等，不切換控制列
     const target = e.target as HTMLElement;
@@ -1435,9 +1435,16 @@ export function ReaderView({
   };
 
   const handleScroll = () => {
-    // 💡 滑動或滾動內文時，若側邊欄抽屜開啟，自動收合隱藏
+    // 💡 滑動或滾動內文時，若側邊欄抽屜或畫重點選單開啟，自動收合隱藏
     if (showNavDrawer) {
       setShowNavDrawer(false);
+    }
+    if (showHighlightPopover) {
+      setShowHighlightPopover(false);
+    }
+    if (activeHighlightForDelete) {
+      setActiveHighlightForDelete(null);
+      setDeleteMenuPosition(null);
     }
     const el = contentAreaRef.current;
     if (!el) return;
@@ -1691,13 +1698,29 @@ export function ReaderView({
       
       {/* 頂部工具列 */}
       <div className={`reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-        <button className="library-header-btn" onClick={() => onBackToLibrary(true)} title="首頁">
+        <button 
+          className="library-header-btn" 
+          onClick={() => {
+            setShowHighlightPopover(false);
+            setShowNavDrawer(false);
+            onBackToLibrary(true);
+          }} 
+          title="首頁"
+        >
           <Home size={20} />
         </button>
 
         <div className="control-divider" />
 
-        <button className="library-header-btn" onClick={() => onBackToLibrary(false)} title="返回上一頁">
+        <button 
+          className="library-header-btn" 
+          onClick={() => {
+            setShowHighlightPopover(false);
+            setShowNavDrawer(false);
+            onBackToLibrary(false);
+          }} 
+          title="返回上一頁"
+        >
           <ArrowLeft size={20} />
         </button>
 
@@ -1775,6 +1798,7 @@ export function ReaderView({
               <button 
                 className={`reader-text-btn highlight-btn ${isHighlightMode ? 'active' : ''}`}
                 onClick={() => {
+                  setShowNavDrawer(false);
                   if (isHighlightMode) {
                     // 💡 當讀者再次點擊「筆刷」時，解除框框，關閉畫重點模式，此時可以自由複製內文
                     setIsHighlightMode(false);
@@ -1939,6 +1963,8 @@ export function ReaderView({
           <button 
             className={`icon-button ${activeSearchQuery ? 'active' : ''}`} 
             onClick={() => {
+              setShowHighlightPopover(false);
+              setShowNavDrawer(false);
               setInBookSearchInput(activeSearchQuery);
               setShowInBookSearchModal(true);
             }} 
@@ -1946,10 +1972,25 @@ export function ReaderView({
           >
             <Search size={20} />
           </button>
-          <button className="icon-button" onClick={() => setShowNavDrawer(prev => !prev)} title="目次">
+          <button 
+            className="icon-button nav-menu-btn" 
+            onClick={() => {
+              setShowHighlightPopover(false);
+              setShowNavDrawer(prev => !prev);
+            }} 
+            title="目次"
+          >
             <Menu size={20} />
           </button>
-          <button className="icon-button" onClick={() => setShowSettingsView(true)} title="其他閱讀設定">
+          <button 
+            className="icon-button" 
+            onClick={() => {
+              setShowHighlightPopover(false);
+              setShowNavDrawer(false);
+              setShowSettingsView(true);
+            }} 
+            title="其他閱讀設定"
+          >
             <Settings size={20} />
           </button>
         </div>
@@ -2234,7 +2275,11 @@ export function ReaderView({
               <div
                 key={t}
                 className={`floating-theme-circle ${t} ${isSelected ? 'active' : ''}`}
-                onClick={() => onSaveSettings({ ...settings, theme: t })}
+                onClick={() => {
+                  setShowHighlightPopover(false);
+                  setShowNavDrawer(false);
+                  onSaveSettings({ ...settings, theme: t });
+                }}
                 title={t === 'ivory' ? '象牙白' : t === 'parchment' ? '羊皮紙' : t === 'comfort' ? '舒服護眼' : '烏木暗色'}
               >
                 {isSelected && <Check size={14} strokeWidth={3.5} className="theme-check-icon" />}
@@ -2249,7 +2294,11 @@ export function ReaderView({
             <div className="floating-bar-divider" />
             <div 
               className="floating-bar-timer"
-              onClick={() => setShowSettingsView(true)}
+              onClick={() => {
+                setShowHighlightPopover(false);
+                setShowNavDrawer(false);
+                setShowSettingsView(true);
+              }}
               title="閱讀時間倒數中 (點擊開啟設定)"
             >
               <Clock size={13} style={{ strokeWidth: 2.2 }} />
@@ -2266,7 +2315,11 @@ export function ReaderView({
           <button 
             type="button" 
             className="floating-font-btn" 
-            onClick={() => onSaveSettings({ ...settings, fontSize: Math.max(12, settings.fontSize - 1) })}
+            onClick={() => {
+              setShowHighlightPopover(false);
+              setShowNavDrawer(false);
+              onSaveSettings({ ...settings, fontSize: Math.max(12, settings.fontSize - 1) });
+            }}
             title="縮小字體 (A-)"
           >
             A-
@@ -2275,7 +2328,11 @@ export function ReaderView({
           <button 
             type="button" 
             className="floating-font-btn" 
-            onClick={() => onSaveSettings({ ...settings, fontSize: Math.min(36, settings.fontSize + 1) })}
+            onClick={() => {
+              setShowHighlightPopover(false);
+              setShowNavDrawer(false);
+              onSaveSettings({ ...settings, fontSize: Math.min(36, settings.fontSize + 1) });
+            }}
             title="放大字體 (A+)"
           >
             A+

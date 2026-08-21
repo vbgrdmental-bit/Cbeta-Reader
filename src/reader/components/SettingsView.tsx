@@ -1156,16 +1156,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.1.9) 直接顯示 */}
+                {/* 最新 App 版本 (v4.2.0) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.1.9</span>
+                    <span>⭐ App: v4.2.0</span>
                     <span className="changelog-date">(2026-08-21)</span>
                   </div>
                   <ul className="changelog-list">
+                    <li>• 手機版下方浮動膠囊列與護眼計時器緊湊自適應排版，防止超出邊緣。</li>
+                    <li>• 「畫重點」與「目次」選單支援滑動、點擊螢幕及按其他鍵時自動隱藏。</li>
                     <li>• 閱讀頁下方浮動膠囊列升級為 20% 半透明毛玻璃質感。</li>
-                    <li>• 下方浮動膠囊列厚度調整為 56px，與上方控制列高度一致。</li>
-                    <li>• 下方膠囊至手機底部過渡區間新增 50% 毛玻璃模糊漸變效果。</li>
                   </ul>
                 </div>
 

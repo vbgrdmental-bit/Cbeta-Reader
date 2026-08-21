@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.1.9` (App: v4.1.9 / Builder: v2.9.10)
+- **Current Version**: `v4.2.0` (App: v4.2.0 / Builder: v2.9.10)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.2.0 / Builder: v2.9.10** (2026-08-21)
+  - [App] 手機版下方浮動膠囊列與護眼計時器緊湊自適應排版，防止超出邊緣。
+  - [App] 「畫重點」與「目次」選單支援滑動、點擊螢幕及按其他鍵時自動隱藏。
+  - [App] 閱讀頁下方浮動膠囊列升級為 20% 半透明毛玻璃質感。
 - **⭐ App: v4.1.9 / Builder: v2.9.10** (2026-08-21)
   - [App] 閱讀頁下方浮動膠囊列升級為 20% 半透明毛玻璃質感（80% 不透明度），經文透光隱約可見。
   - [App] 下方浮動膠囊列高度厚度調整為 56px，與上方控制列高度完全一致。
