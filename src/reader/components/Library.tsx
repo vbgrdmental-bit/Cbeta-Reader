@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { 
-  Plus, Check, CheckSquare, CheckCircle2, AlertCircle, X, Download,
+  Plus, Check, CheckSquare, CheckCircle2, X, Download,
   Home, Search,
   Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw
 } from 'lucide-react';
@@ -11,7 +11,8 @@ import type { AppSettings, BookHighlight } from '../../utils/db';
 import { IndexBuilder, FEATURED_BOOKS, sanitizeCreators } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
-import type { BuildProgress, BuildStep } from '../../builder/PackageBuilder';
+import type { BuildProgress } from '../../builder/PackageBuilder';
+import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { SearchPanel } from './SearchPanel';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
 import '../styles/library.css';
@@ -45,7 +46,6 @@ export function Library({
   // Builder 進度與動畫
   const [buildProgress, setBuildProgress] = useState<BuildProgress | null>(null);
   const [activeTab, setActiveTab] = useState<'shelf' | 'search'>(initialSearchQuery ? 'search' : 'shelf');
-  const [loadingDots, setLoadingDots] = useState('...');
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
 
   const [isBackup, setIsBackup] = useState(isBackupMode());
@@ -55,22 +55,6 @@ export function Library({
   }, []);
 
   const isLongPressTriggeredRef = useRef(false);
-
-  useEffect(() => {
-    let interval: number;
-    if (buildProgress) {
-      interval = window.setInterval(() => {
-        setLoadingDots((prev) => {
-          if (prev === '.') return '..';
-          if (prev === '..') return '...';
-          return '.';
-        });
-      }, 500);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [buildProgress]);
 
   // === 資料夾系統結構與狀態 ===
   interface BookFolder {
@@ -983,7 +967,10 @@ export function Library({
         await PackageBuilder.downloadAndPackage(searchRes, (progress) => {
           setBuildProgress({
             ...progress,
-            message: `[批量下載 ${i + 1} / ${totalToDownload} 本：《${searchRes.title}》] ${progress.message}`
+            workTitle: searchRes.title,
+            workId: searchRes.workId,
+            batchInfo: { current: i + 1, total: totalToDownload },
+            message: `批量下載中 (${i + 1}/${totalToDownload})：${progress.message}`
           });
         });
 
@@ -1021,7 +1008,11 @@ export function Library({
   const handleDownloadBook = async (searchResult: SearchResult) => {
     try {
       await PackageBuilder.downloadAndPackage(searchResult, (progress) => {
-        setBuildProgress(progress);
+        setBuildProgress({
+          ...progress,
+          workTitle: searchResult.title,
+          workId: searchResult.workId
+        });
       });
       await loadLocalBooks();
       setTimeout(() => {
@@ -1071,24 +1062,7 @@ export function Library({
     }
   };
 
-  // 渲染下載步驟圖示
-  const renderStepIcon = (targetStep: BuildStep, itemIndex: number, currentProgressStep: BuildStep) => {
-    const stepsOrder: BuildStep[] = ['metadata', 'fetch_content', 'navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'];
-    const currentIndex = stepsOrder.indexOf(currentProgressStep);
-    const targetIndex = stepsOrder.indexOf(targetStep);
 
-    if (currentProgressStep === 'failed') {
-      return <AlertCircle size={14} style={{ color: '#bd3a3a' }} />;
-    }
-
-    if (currentIndex > targetIndex) {
-      return <Check size={16} style={{ color: '#2e7d32', strokeWidth: 2.5 }} />;
-    } else if (currentProgressStep === targetStep) {
-      return <div className="builder-step-icon animate-spin-slow">⏳</div>;
-    } else {
-      return <span style={{ opacity: 0.65, fontWeight: 'bold' }}>{itemIndex}</span>;
-    }
-  };
 
   // 本地搜尋結果點擊跳轉
   const handleSelectSearchResult = (workId: string, _juan: number, segmentId: string, query: string) => {
@@ -1992,13 +1966,19 @@ export function Library({
                         {book.workId}
                       </div>
 
-                      {/* 💡 中間：經名與朝代/作譯者小灰字 */}
+                      {/* 💡 中間：經名與朝代/作譯者小灰字 + 卷數 */}
                       <div className="horizontal-book-info">
                         <div className="horizontal-book-title" title={titleText}>
                           {titleText}
                         </div>
                         <div className="horizontal-book-author" title={creatorText}>
                           {creatorText}
+                          {/* 💡 卷數顯示：juansCount > 1 且非 Y 系列 (印順著作/近代編著無傳統卷數) */}
+                          {book.juansCount > 1 && !book.workId.startsWith('Y') && (
+                            <span className="horizontal-book-juans-badge">
+                              {book.juansCount}卷
+                            </span>
+                          )}
                         </div>
                       </div>
 
@@ -2328,64 +2308,12 @@ export function Library({
         </div>
       )}
 
-      {/* Builder 進度遮罩 (下載與建置時呈現) */}
+      {/* Builder 進度遮罩 (6 方塊現代質感) */}
       {buildProgress && (
-        <div className={`builder-progress-overlay theme-${settings.theme}`}>
-          {/* 1. 圓型圖案 (經典蓮花「淨心閱讀」標誌與旋轉外圈) */}
-          <div className="builder-animation-box">
-            <div 
-              className="builder-outer-ring" 
-              style={{ transform: `rotate(${buildProgress.percent * 3.6}deg)`, transition: 'transform 0.2s linear' }}
-            />
-            <div className={`builder-mandala ${buildProgress.percent === 100 ? 'is-completed' : ''}`}>
-              <img 
-                src="/apple-touch-icon.png" 
-                alt="CBETA Reader 淨心閱讀"
-                className="builder-logo-img"
-              />
-            </div>
-          </div>
-
-          {/* 2. 圓型圖案正下方的「批量下載 / 當前下載訊息」 (粗體、深色、醒目) */}
-          <div className="builder-header-message">
-            {buildProgress.message}
-          </div>
-
-          {/* 3. 詳細建置進度卡片 */}
-          <div className="builder-details-card animate-slide-up">
-            <div className="builder-title">下載中{loadingDots}</div>
-            <div className="builder-progress-bar-wrapper">
-              <div className="builder-progress-bar-fill" style={{ width: `${buildProgress.percent}%` }} />
-            </div>
-            
-            <div className="builder-step-status">
-              <div className={`builder-step-item ${buildProgress.step === 'metadata' ? 'active' : ''} ${['fetch_content', 'navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>1. 取得佛典詮釋資料(Index Builder)</span>
-                <span>{renderStepIcon('metadata', 1, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'fetch_content' ? 'active' : ''} ${['navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>2. 經典段落標記解析(Reader Builder)</span>
-                <span>{renderStepIcon('fetch_content', 2, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'navigation' ? 'active' : ''} ${['reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>3. 目錄結構與卷期編排(Navigation Builder)</span>
-                <span>{renderStepIcon('navigation', 3, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'reference' ? 'active' : ''} ${['search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>4. 校勘註解與學術比對(Reference Builder)</span>
-                <span>{renderStepIcon('reference', 4, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'search_index' ? 'active' : ''} ${['ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>5. 本地高速檢索索引建置(Search Index Builder)</span>
-                <span>{renderStepIcon('search_index', 5, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'ai_index' ? 'active' : ''} ${['saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>6. AI 輔助閱讀與語意索引(AI Indexer)</span>
-                <span>{renderStepIcon('ai_index', 6, buildProgress.step)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <BuilderProgressOverlay 
+          buildProgress={buildProgress} 
+          theme={settings.theme} 
+        />
       )}
 
       {/* 刪除經典確認視窗 */}
@@ -2895,63 +2823,6 @@ export function Library({
                 >
                   取消
                 </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 💡 Builder 更新 / 下載動態進度遮罩 */}
-      {buildProgress && (
-        <div className={`builder-progress-overlay theme-${settings.theme}`}>
-          <div className="builder-animation-box">
-            <div 
-              className="builder-outer-ring" 
-              style={{ transform: `rotate(${buildProgress.percent * 3.6}deg)`, transition: 'transform 0.2s linear' }}
-            />
-            <div className={`builder-mandala ${buildProgress.percent === 100 ? 'is-completed' : ''}`}>
-              <img 
-                src="/apple-touch-icon.png" 
-                alt="CBETA Reader 淨心閱讀"
-                className="builder-logo-img"
-              />
-            </div>
-          </div>
-
-          <div className="builder-header-message">
-            {buildProgress.message}
-          </div>
-
-          <div className="builder-details-card animate-slide-up">
-            <div className="builder-title">更新中{loadingDots}</div>
-            <div className="builder-progress-bar-wrapper">
-              <div className="builder-progress-bar-fill" style={{ width: `${buildProgress.percent}%` }} />
-            </div>
-            
-            <div className="builder-step-status">
-              <div className={`builder-step-item ${buildProgress.step === 'metadata' ? 'active' : ''} ${['fetch_content', 'navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>1. 取得佛典詮釋資料(Index Builder)</span>
-                <span>{renderStepIcon('metadata', 1, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'fetch_content' ? 'active' : ''} ${['navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>2. 經典段落標記解析(Reader Builder)</span>
-                <span>{renderStepIcon('fetch_content', 2, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'navigation' ? 'active' : ''} ${['reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>3. 目錄結構與卷期編排(Navigation Builder)</span>
-                <span>{renderStepIcon('navigation', 3, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'reference' ? 'active' : ''} ${['search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>4. 校勘註解與學術比對(Reference Builder)</span>
-                <span>{renderStepIcon('reference', 4, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'search_index' ? 'active' : ''} ${['ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>5. 本地高速檢索索引建置(Search Index Builder)</span>
-                <span>{renderStepIcon('search_index', 5, buildProgress.step)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'ai_index' ? 'active' : ''} ${['saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>6. AI 輔助閱讀與語意索引(AI Indexer)</span>
-                <span>{renderStepIcon('ai_index', 6, buildProgress.step)}</span>
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@ import { IndexBuilder, getApiUrl, sanitizeCreators } from '../../builder/IndexBu
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress } from '../../builder/PackageBuilder';
+import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { isBackupMode } from '../../utils/sourceMode';
 import '../styles/cbeta-catalog.css';
 
@@ -338,24 +339,6 @@ export function CbetaCatalogView({
 
   // Builder 建置進度與遮罩
   const [buildProgress, setBuildProgress] = useState<BuildProgress | null>(null);
-  const [loadingDots, setLoadingDots] = useState('...');
-
-  // 載入動畫點點
-  useEffect(() => {
-    let interval: number;
-    if (buildProgress) {
-      interval = window.setInterval(() => {
-        setLoadingDots((prev) => {
-          if (prev === '.') return '..';
-          if (prev === '..') return '...';
-          return '.';
-        });
-      }, 500);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [buildProgress]);
 
   // 載入已下載書籍與資料夾結構
   useEffect(() => {
@@ -811,18 +794,7 @@ export function CbetaCatalogView({
     if (canGoForward) setHistoryIndex(prev => prev + 1);
   };
 
-  const renderStepIcon = (targetStep: string, activeStep: string, percent: number) => {
-    const stepsOrder = ['metadata', 'fetch_content', 'navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'];
-    const targetIndex = stepsOrder.indexOf(targetStep);
-    const activeIndex = stepsOrder.indexOf(activeStep);
-    
-    if (activeIndex > targetIndex) {
-      return <Check size={14} style={{ color: '#2e7d32' }} />;
-    } else if (activeIndex === targetIndex) {
-      return <span style={{ fontSize: '0.75rem', color: 'var(--theme-accent)', fontWeight: 'bold' }}>進行中 ({percent}%)</span>;
-    }
-    return <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>等待中</span>;
-  };
+
 
   // 執行線上關鍵字搜尋
   const executeSearch = async (query: string) => {
@@ -872,9 +844,13 @@ export function CbetaCatalogView({
   // 實際執行單本經典下載
   const executeSingleWorkDownload = async (res: SearchResult) => {
     try {
-      setBuildProgress({ step: 'metadata', message: `正在準備下載《${res.title}》...`, percent: 3 });
+      setBuildProgress({ step: 'metadata', message: `正在準備下載《${res.title}》...`, workTitle: res.title, workId: res.workId, percent: 3 });
       const pkg = await PackageBuilder.downloadAndPackage(res, (prog: BuildProgress) => {
-        setBuildProgress(prog);
+        setBuildProgress({
+          ...prog,
+          workTitle: res.title,
+          workId: res.workId
+        });
       });
 
       if (pkg) {
@@ -990,6 +966,9 @@ export function CbetaCatalogView({
         setBuildProgress({
           step: 'metadata',
           message: `批量下載中 (${completedCount}/${totalCount})：正在建置《${res.title}》...`,
+          workTitle: res.title,
+          workId: res.workId,
+          batchInfo: { current: completedCount, total: totalCount },
           percent: Math.round(((completedCount - 1) / totalCount) * 100)
         });
 
@@ -997,6 +976,9 @@ export function CbetaCatalogView({
           const overallPercent = Math.round(((completedCount - 1) / totalCount) * 100 + (prog.percent / totalCount));
           setBuildProgress({
             ...prog,
+            workTitle: res.title,
+            workId: res.workId,
+            batchInfo: { current: completedCount, total: totalCount },
             message: `批量下載中 (${completedCount}/${totalCount})：${prog.message}`,
             percent: Math.min(99, overallPercent)
           });
@@ -1691,61 +1673,12 @@ export function CbetaCatalogView({
         </div>
       )}
 
-      {/* Builder 進度遮罩 */}
+      {/* Builder 進度遮罩 (6 方塊現代質感) */}
       {buildProgress && (
-        <div className={`builder-progress-overlay theme-${settings.theme}`}>
-          <div className="builder-animation-box">
-            <div 
-              className="builder-outer-ring" 
-              style={{ transform: `rotate(${buildProgress.percent * 3.6}deg)`, transition: 'transform 0.2s linear' }}
-            />
-            <div className={`builder-mandala ${buildProgress.percent === 100 ? 'is-completed' : ''}`}>
-              <img 
-                src="/apple-touch-icon.png" 
-                alt="CBETA Reader 淨心閱讀"
-                className="builder-logo-img"
-              />
-            </div>
-          </div>
-
-          <div className="builder-header-message">
-            {buildProgress.message}
-          </div>
-
-          <div className="builder-details-card animate-slide-up">
-            <div className="builder-title">下載中{loadingDots}</div>
-            <div className="builder-progress-bar-wrapper">
-              <div className="builder-progress-bar-fill" style={{ width: `${buildProgress.percent}%` }} />
-            </div>
-            
-            <div className="builder-step-status">
-              <div className={`builder-step-item ${buildProgress.step === 'metadata' ? 'active' : ''} ${['fetch_content', 'navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>1. 取得佛典詮釋資料(Index Builder)</span>
-                <span>{renderStepIcon('metadata', buildProgress.step, buildProgress.percent)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'fetch_content' ? 'active' : ''} ${['navigation', 'reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>2. 經典段落標記解析(Reader Builder)</span>
-                <span>{renderStepIcon('fetch_content', buildProgress.step, buildProgress.percent)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'navigation' ? 'active' : ''} ${['reference', 'search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>3. 目錄結構與卷期編排(Navigation Builder)</span>
-                <span>{renderStepIcon('navigation', buildProgress.step, buildProgress.percent)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'reference' ? 'active' : ''} ${['search_index', 'ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>4. 校勘註解與學術比對(Reference Builder)</span>
-                <span>{renderStepIcon('reference', buildProgress.step, buildProgress.percent)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'search_index' ? 'active' : ''} ${['ai_index', 'saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>5. 本地高速檢索索引建置(Search Index Builder)</span>
-                <span>{renderStepIcon('search_index', buildProgress.step, buildProgress.percent)}</span>
-              </div>
-              <div className={`builder-step-item ${buildProgress.step === 'ai_index' ? 'active' : ''} ${['saving', 'completed'].includes(buildProgress.step) ? 'completed' : ''}`}>
-                <span>6. AI 輔助閱讀與語意索引(AI Indexer)</span>
-                <span>{renderStepIcon('ai_index', buildProgress.step, buildProgress.percent)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <BuilderProgressOverlay 
+          buildProgress={buildProgress} 
+          theme={settings.theme} 
+        />
       )}
     </div>
   );

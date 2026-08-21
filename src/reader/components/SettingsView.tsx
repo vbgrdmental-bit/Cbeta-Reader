@@ -1156,16 +1156,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.2.0) 直接顯示 */}
+                {/* 最新 App 版本 (v4.2.1) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.2.0</span>
+                    <span>⭐ App: v4.2.1</span>
                     <span className="changelog-date">(2026-08-21)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 手機版下方浮動膠囊列與護眼計時器緊湊自適應排版，防止超出邊緣。</li>
-                    <li>• 「畫重點」與「目次」選單支援滑動、點擊螢幕及按其他鍵時自動隱藏。</li>
-                    <li>• 閱讀頁下方浮動膠囊列升級為 20% 半透明毛玻璃質感。</li>
+                    <li>• 首頁書架每本經典顯示「卷數」，印順導師著作/近代編著不顯示（依書目特性自動判斷）。</li>
+                    <li>• 下載進度顯示「共X卷，已完成X卷，剩X卷，約剩時間」，即時呈現下載進度。</li>
+                    <li>• 下載進度六格方塊調整為 1:1 正方形並新增中英雙語標籤，完整展示 Builder 建構引擎能力。</li>
                   </ul>
                 </div>
 
@@ -1188,6 +1188,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">⭐ App: v4.2.0 <span className="changelog-date">(2026-08-21)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 手機版下方浮動膠囊列與護眼計時器緊湊自適應排版，防止超出邊緣。</li>
+                        <li>• 「畫重點」與「目次」選單支援滑動、點擊螢幕及按其他鍵時自動隱藏。</li>
+                        <li>• 閱讀頁下方浮動膠囊列升級為 20% 半透明毛玻璃質感。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.1.8 <span className="changelog-date">(2026-08-21)</span></div>
                       <ul className="changelog-list">

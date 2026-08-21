@@ -27,6 +27,10 @@ export interface BuildProgress {
   step: BuildStep;
   percent: number;
   message: string;
+  workTitle?: string;
+  workId?: string;
+  batchInfo?: { current: number; total: number };
+  juanProgress?: { completed: number; total: number; remainingSeconds?: number };
 }
 
 export class PackageBuilder {
@@ -38,6 +42,15 @@ export class PackageBuilder {
     onProgress: (progress: BuildProgress) => void
   ): Promise<ReaderPackage> {
     const workId = searchResult.workId;
+    
+    // 💡 包裝 progress 回調，自動注入經書名稱與經號
+    const notifyProgress = (prog: BuildProgress) => {
+      onProgress({
+        ...prog,
+        workTitle: prog.workTitle || searchResult.title || workId,
+        workId: prog.workId || workId
+      });
+    };
     
     // 💡 0. 全局權威總目自動校正：先從藏經總目 (cbeta-works-index.json / FEATURED_BOOKS) 補充/校正真實總卷數與元資料
     const indexMeta = await IndexBuilder.getWorkMetaFromIndex(workId);
@@ -62,7 +75,7 @@ export class PackageBuilder {
     try {
       // 1. Metadata 階段
       if (isBackup) {
-        onProgress({ step: 'metadata', percent: 3, message: `正在從備援資料庫讀取《${searchResult.title || workId}》元資料...` });
+        notifyProgress({ step: 'metadata', percent: 3, message: `正在從備援資料庫讀取《${searchResult.title || workId}》元資料...` });
         try {
           const localMetaUrl = `/backup/${workId}/1.json`;
           const ghMetaUrl = `https://github.com/vbgrdmental-bit/Cbeta-Reader/releases/download/v1.0.0-database/${workId}_1.json`;
@@ -186,95 +199,100 @@ export class PackageBuilder {
           const backupNote = isBackup 
             ? ' 💡 CBETA 官方伺服器連線繁忙，已自動切換至離線版本（經文內容版本為 CBReader 2X v0.9.9 2026-01-21）。' 
             : '';
-          onProgress({ 
-            step: 'fetch_content', 
-            percent: 10 + Math.floor(p * 0.65), // 佔比 10% - 75%
-            message: `正在下載經典內文與標記 ${detail}${backupNote}` 
-          });
-        }
-      );
-
-      // 3. Navigation 階段 (建立品/卷對照)
-      onProgress({ step: 'navigation', percent: 75, message: '正在解析經典結構，建立品、卷雙導航系統...' });
-      const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
-      await new Promise(resolve => setTimeout(resolve, 400));
-
-      // 4. Reference 階段 (校勘與鏈結)
-      onProgress({ step: 'reference', percent: 80, message: '正在分離學術標記，建立校勘與大正藏影像引用...' });
-      const reference = ReferenceBuilder.buildReference(workId);
-      await new Promise(resolve => setTimeout(resolve, 400));
-
-      // 5. Search Index 階段 (全文搜尋索引)
-      onProgress({ step: 'search_index', percent: 85, message: '正在建立本地段落級全文檢索索引（支援 AND 多詞搜尋）...' });
-      const searchIndex = SearchIndexBuilder.buildSearchIndex(content, toc);
-      await new Promise(resolve => setTimeout(resolve, 400));
-
-      // 6. AI Index 預留結構階段
-      onProgress({ step: 'ai_index', percent: 90, message: '正在預置 AI Embedding 向量索引與 RAG 架構接口...' });
-      const embedding = await AIIndexBuilder.buildAIIndex(content);
-
-      // 6.5. 官方目錄雙向完整性與跳轉定位驗證 (Integrity Check)
-      onProgress({ step: 'saving', percent: 93, message: '正在進行目錄雙向完整性與定位比對驗證...' });
-      
-      const flattenToc = (items: any[]): any[] => {
-        const res: any[] = [];
-        for (const item of items) {
-          res.push(item);
-          if (item.children && Array.isArray(item.children)) {
-            res.push(...flattenToc(item.children));
-          }
-        }
-        return res;
-      };
-
-      const expectedTocs = rawToc || [];
-      const generatedTocs = flattenToc(toc.items || []);
-      
-      if (expectedTocs.length > 0 && generatedTocs.length === 0) {
-        console.warn(`[PackageBuilder] TOC Notice: Raw TOC has ${expectedTocs.length} items, but generated TOC is empty for ${workId}.`);
-      }
-
-      // 7. 儲存階段 (IndexedDB)
-      onProgress({ step: 'saving', percent: 96, message: '正在包裝為 .book 格式並存入離線書庫 (IndexedDB)...' });
-      
-      // 💡 字數自動統計與保險校驗：若 API 或元資料未能提供 cjkChars，直接遍歷內文所有段落精確計算 CJK 漢字與英數總字數
-      if (!metadata.cjkChars || metadata.cjkChars <= 0) {
-        let calculatedChars = 0;
-        content.juans.forEach(j => {
-          j.segments.forEach(seg => {
-            const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
-            const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
-            if (cjkMatches) calculatedChars += cjkMatches.length;
-          });
+        notifyProgress({ 
+          step: 'fetch_content', 
+          percent: 10 + Math.floor(p * 0.65), // 佔比 10% - 75%
+          message: `正在下載經典內文與標記 ${detail}${backupNote}`,
+          juanProgress: (currentJuan && totalJuans) ? {
+            completed: currentJuan,
+            total: totalJuans,
+            remainingSeconds: remSec
+          } : undefined
         });
-        if (calculatedChars > 0) {
-          metadata.cjkChars = calculatedChars;
+      }
+    );
+
+    // 3. Navigation 階段 (建立品/卷對照)
+    notifyProgress({ step: 'navigation', percent: 75, message: '正在解析經典結構，建立品、卷雙導航系統...' });
+    const { toc, navigation } = NavigationBuilder.buildNavigation(workId, content, rawToc);
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    // 4. Reference 階段 (校勘與鏈結)
+    notifyProgress({ step: 'reference', percent: 80, message: '正在分離學術標記，建立校勘與大正藏影像引用...' });
+    const reference = ReferenceBuilder.buildReference(workId);
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    // 5. Search Index 階段 (全文搜尋索引)
+    notifyProgress({ step: 'search_index', percent: 85, message: '正在建立本地段落級全文檢索索引（支援 AND 多詞搜尋）...' });
+    const searchIndex = SearchIndexBuilder.buildSearchIndex(content, toc);
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    // 6. AI Index 預留結構階段
+    notifyProgress({ step: 'ai_index', percent: 90, message: '正在預置 AI Embedding 向量索引與 RAG 架構接口...' });
+    const embedding = await AIIndexBuilder.buildAIIndex(content);
+
+    // 6.5. 官方目錄雙向完整性與跳轉定位驗證 (Integrity Check)
+    notifyProgress({ step: 'saving', percent: 93, message: '正在進行目錄雙向完整性與定位比對驗證...' });
+    
+    const flattenToc = (items: any[]): any[] => {
+      const res: any[] = [];
+      for (const item of items) {
+        res.push(item);
+        if (item.children && Array.isArray(item.children)) {
+          res.push(...flattenToc(item.children));
         }
       }
+      return res;
+    };
 
-      const bookPackage: ReaderPackage = {
-        metadata,
-        content,
-        toc,
-        navigation,
-        reference,
-        searchIndex,
-        embedding
-      };
+    const expectedTocs = rawToc || [];
+    const generatedTocs = flattenToc(toc.items || []);
+    
+    if (expectedTocs.length > 0 && generatedTocs.length === 0) {
+      console.warn(`[PackageBuilder] TOC Notice: Raw TOC has ${expectedTocs.length} items, but generated TOC is empty for ${workId}.`);
+    }
 
-      await saveBook(bookPackage);
-      await new Promise(resolve => setTimeout(resolve, 400));
-
-      // 完成
-      onProgress({ step: 'completed', percent: 100, message: `《${searchResult.title}》已成功下載並加入您的書庫！` });
-      return bookPackage;
-
-    } catch (error: any) {
-      onProgress({ 
-        step: 'failed', 
-        percent: 0, 
-        message: `建置書籍 Package 失敗: ${error.message || error}` 
+    // 7. 儲存階段 (IndexedDB)
+    notifyProgress({ step: 'saving', percent: 96, message: '正在包裝為 .book 格式並存入離線書庫 (IndexedDB)...' });
+    
+    // 💡 字數自動統計與保險校驗：若 API 或元資料未能提供 cjkChars，直接遍歷內文所有段落精確計算 CJK 漢字與英數總字數
+    if (!metadata.cjkChars || metadata.cjkChars <= 0) {
+      let calculatedChars = 0;
+      content.juans.forEach(j => {
+        j.segments.forEach(seg => {
+          const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
+          const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
+          if (cjkMatches) calculatedChars += cjkMatches.length;
+        });
       });
+      if (calculatedChars > 0) {
+        metadata.cjkChars = calculatedChars;
+      }
+    }
+
+    const bookPackage: ReaderPackage = {
+      metadata,
+      content,
+      toc,
+      navigation,
+      reference,
+      searchIndex,
+      embedding
+    };
+
+    await saveBook(bookPackage);
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    // 完成
+    notifyProgress({ step: 'completed', percent: 100, message: `《${searchResult.title}》已成功下載並加入您的書庫！` });
+    return bookPackage;
+
+  } catch (error: any) {
+    notifyProgress({ 
+      step: 'failed', 
+      percent: 0, 
+      message: `建置書籍 Package 失敗: ${error.message || error}` 
+    });
       throw error;
     }
   }

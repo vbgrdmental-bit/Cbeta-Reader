@@ -968,12 +968,14 @@ body.theme-ebony .download-status-square {
 
 /* Builder Progress Animation Modal */
 .builder-progress-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
-  background: var(--reader-bg);
+  background: var(--reader-bg, #fefcf8);
   color: var(--text-primary);
   display: flex;
   flex-direction: column;
@@ -981,15 +983,16 @@ body.theme-ebony .download-status-square {
   align-items: center;
   z-index: 2000;
   animation: fadeIn var(--transition-fast) forwards;
-  padding: 1.5rem;
+  padding: 1.2rem;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .builder-animation-box {
-  width: 150px;
-  height: 150px;
+  width: 124px;
+  height: 124px;
   position: relative;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.8rem;
   flex-shrink: 0;
 }
 
@@ -1006,10 +1009,10 @@ body.theme-ebony .download-status-square {
 
 .builder-mandala {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 126px;
-  height: 126px;
+  top: 10px;
+  left: 10px;
+  width: 104px;
+  height: 104px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
@@ -1028,46 +1031,78 @@ body.theme-ebony .download-status-square {
   border-radius: 50%;
 }
 
-/* 💡 圓型圖案正下方的「批量下載 / 當前下載訊息」 (粗體、深色、醒目) */
+/* 💡 圓型圖案正下方的二行簡潔資訊 (固定容器高度 3.2rem，防止排版上下晃動) */
 .builder-header-message {
   font-family: var(--font-serif);
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-primary, #2c1a0e);
   text-align: center;
-  margin-bottom: 1.2rem;
-  padding: 0.4rem 1rem;
-  max-width: 480px;
-  line-height: 1.5;
+  margin-bottom: 0.85rem;
+  padding: 0.2rem 0.8rem;
+  max-width: 440px;
+  width: 100%;
+  min-height: 3.2rem;
+  height: 3.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
   letter-spacing: 0.02em;
 }
 
-/* 淺色主題字體色彩加深高對比 */
-.theme-ivory .builder-header-message,
-.theme-parchment .builder-header-message,
-.theme-comfort .builder-header-message {
+.builder-header-line1 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary, #2c1a0e);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.builder-header-line2 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--theme-accent, #8c4b27);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  margin-top: 2px;
+}
+
+/* 淺色主題字體色彩高對比 */
+.theme-ivory .builder-header-line1,
+.theme-parchment .builder-header-line1,
+.theme-comfort .builder-header-line1 {
   color: #2c1a0e !important;
 }
 
-body.theme-comfort .builder-header-message {
-  color: #1a3318 !important;
+body.theme-comfort .builder-header-line2 {
+  color: #2b5e28 !important;
 }
 
-body.theme-ebony .builder-header-message {
+body.theme-ebony .builder-header-line1 {
   color: #f3f4f6 !important;
 }
 
+body.theme-ebony .builder-header-line2 {
+  color: #fbbf24 !important;
+}
+
+/* 💡 詳細建置進度卡片 */
 .builder-details-card {
   width: 100%;
-  max-width: 480px;
+  max-width: 400px;
   background: var(--bg-card, rgba(140, 75, 39, 0.04));
   border: 1px solid var(--reader-border, rgba(140, 75, 39, 0.18));
-  border-radius: var(--radius-lg, 12px);
-  padding: 1.4rem 1.5rem;
+  border-radius: var(--radius-lg, 14px);
+  padding: 1.1rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.85rem;
   box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
 }
 
 body.theme-ebony .builder-details-card {
@@ -1078,15 +1113,16 @@ body.theme-ebony .builder-details-card {
 .builder-title {
   text-align: center;
   font-family: var(--font-serif);
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .builder-progress-bar-wrapper {
   width: 100%;
-  height: 8px;
-  background: rgba(0, 0, 0, 0.1);
+  height: 7px;
+  background: rgba(0, 0, 0, 0.09);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -1107,75 +1143,180 @@ body.theme-ebony .builder-progress-bar-fill {
   box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
 }
 
-.builder-step-status {
+/* ==========================================================================
+   💡 6 個方塊網格 (上3個 1:1:1，下3個 1:1:1，每個固定比例 2:3)
+   ========================================================================== */
+.builder-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.55rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.builder-step-card {
+  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  font-size: 0.88rem;
-}
-
-.builder-step-item {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  color: var(--text-primary);
-  opacity: 0.78;
-  font-weight: 500;
+  justify-content: space-between;
+  padding: 0.55rem 0.3rem 0.5rem;
+  border-radius: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  user-select: none;
 }
 
-/* 淺色 3 種主題 (象牙白 / 羊皮紙 / 舒服) 的深色高對比適配 */
-.theme-ivory .builder-step-item,
-.theme-parchment .builder-step-item,
-.theme-comfort .builder-step-item {
-  color: #382717 !important;
-  opacity: 0.88;
+/* 1. 未下載前 (Pending)：淺灰色 */
+.builder-step-card.pending {
+  background: rgba(0, 0, 0, 0.035);
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  color: var(--text-muted, #8a8178);
+  opacity: 0.65;
 }
 
-.theme-comfort .builder-step-item {
-  color: #1f331d !important;
-}
-
-/* 進行中步驟 (Active Step) */
-.builder-step-item.active {
-  color: var(--theme-accent, #8c4b27) !important;
-  font-weight: 800 !important;
-  opacity: 1 !important;
-  font-size: 0.92rem;
-}
-
-.theme-ivory .builder-step-item.active,
-.theme-parchment .builder-step-item.active {
-  color: #8c4b27 !important;
-}
-
-.theme-comfort .builder-step-item.active {
-  color: #2b5e28 !important;
-}
-
-/* 已完成步驟 (Completed Step) */
-.builder-step-item.completed {
-  color: #2e7d32 !important;
-  font-weight: 600;
-  opacity: 0.95 !important;
-}
-
-.theme-ivory .builder-step-item.completed,
-.theme-parchment .builder-step-item.completed {
-  color: #2e7d32 !important;
-}
-
-.theme-comfort .builder-step-item.completed {
-  color: #1b5e20 !important;
-}
-
-body.theme-ebony .builder-step-item {
-  color: #a1a1aa !important;
-  opacity: 0.8;
-}
-
-body.theme-ebony .builder-step-item.active {
-  color: #fbbf24 !important;
+/* 2. 下載中 (Active)：亮主題色 */
+.builder-step-card.active {
+  background: rgba(140, 75, 39, 0.08);
+  border: 1.5px solid var(--theme-accent, #8c4b27);
+  color: var(--theme-accent, #8c4b27);
+  box-shadow: 0 4px 14px rgba(140, 75, 39, 0.18);
+  transform: translateY(-2px);
   opacity: 1;
+}
+
+/* 3. 下載完成 (Completed)：有顏色 + 綠色打勾圓框 */
+.builder-step-card.completed {
+  background: rgba(46, 125, 50, 0.08);
+  border: 1.3px solid rgba(46, 125, 50, 0.4);
+  color: #1e4620;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.1);
+  opacity: 1;
+}
+
+/* 烏木暗色主題 (Ebony) 適配 */
+body.theme-ebony .builder-step-card.pending {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.09);
+  color: #71717a;
+}
+
+body.theme-ebony .builder-step-card.active {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: #fbbf24;
+  color: #fbbf24;
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.25);
+}
+
+body.theme-ebony .builder-step-card.completed {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(74, 222, 128, 0.4);
+  color: #86efac;
+}
+
+/* 卡片上半部：badge + EN 短標題 */
+.builder-card-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+}
+
+/* 頂部圓型打勾/序號徽章 */
+.builder-card-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.builder-step-card.pending .builder-card-badge {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: var(--text-muted, #8a8178);
+}
+
+body.theme-ebony .builder-step-card.pending .builder-card-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #a1a1aa;
+}
+
+.builder-step-card.active .builder-card-badge {
+  background: rgba(140, 75, 39, 0.15);
+  border: 1.5px solid var(--theme-accent, #8c4b27);
+  color: var(--theme-accent, #8c4b27);
+  box-shadow: 0 0 0 2px rgba(140, 75, 39, 0.15);
+}
+
+body.theme-ebony .builder-step-card.active .builder-card-badge {
+  background: rgba(251, 191, 36, 0.18);
+  border-color: #fbbf24;
+  color: #fbbf24;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.25);
+}
+
+.builder-step-card.completed .builder-card-badge {
+  background: rgba(46, 125, 50, 0.14);
+  border: 1.5px solid #2e7d32;
+  color: #2e7d32;
+  box-shadow: 0 1px 4px rgba(46, 125, 50, 0.2);
+}
+
+body.theme-ebony .builder-step-card.completed .builder-card-badge {
+  background: rgba(74, 222, 128, 0.2);
+  border-color: #4ade80;
+  color: #4ade80;
+}
+
+/* 英文短標題（badge 下方） */
+.builder-card-en {
+  font-size: 0.58rem;
+  font-family: var(--font-sans, sans-serif);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.75;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* 標題與簡介 */
+.builder-card-title {
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.builder-card-desc {
+  font-size: 0.6rem;
+  line-height: 1.25;
+  opacity: 0.75;
+  width: 100%;
+}
+
+.builder-card-desc-en {
+  font-family: var(--font-sans, sans-serif);
+  font-size: 0.54rem;
+  opacity: 0.7;
+  margin-top: 1px;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 body.theme-ebony .builder-step-item.completed {
@@ -2911,6 +3052,29 @@ body.theme-dark .horizontal-book-title {
 body.theme-ebony .horizontal-book-author,
 body.theme-dark .horizontal-book-author {
   color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* 💡 卷數小標籤 (顯示在作譯者後) */
+.horizontal-book-juans-badge {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 0px 5px;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.07);
+  color: var(--text-muted, #718096);
+  font-size: 0.72rem !important;
+  font-family: var(--font-sans, sans-serif) !important;
+  font-weight: 500;
+  letter-spacing: 0;
+  vertical-align: middle;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+body.theme-ebony .horizontal-book-juans-badge,
+body.theme-dark .horizontal-book-juans-badge {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 /* 經典卡片右側「...」與排序按鈕區域：平齊單行橫排 */

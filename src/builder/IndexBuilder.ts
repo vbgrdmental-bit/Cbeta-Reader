@@ -181,6 +181,76 @@ async function loadFullWorksIndex(): Promise<SearchResult[]> {
   return [];
 }
 
+export function calculateSearchMatchScore(
+  w: { title?: string; creators?: string; byline?: string; workId?: string; work?: string; category?: string; vol?: string }, 
+  query: string
+): number {
+  if (!query) return 0;
+  const q = query.trim().toLowerCase();
+  const title = (w.title || '').toLowerCase();
+  const creator = (w.creators || (w as any).byline || '').toLowerCase();
+  const workId = (w.workId || (w as any).work || '').toLowerCase();
+  const category = (w.category || '').toLowerCase();
+  const vol = (w.vol || '').toLowerCase();
+  const fullText = `${title} ${creator} ${workId} ${category} ${vol}`.toLowerCase();
+
+  // 1. 完全或前綴吻合 (Exact / Prefix Match)
+  if (title === q || workId === q) return 100;
+  if (title.startsWith(q)) return 96;
+  if (title.includes(q)) return 94;
+  if (creator.includes(q) || workId.includes(q)) return 92;
+
+  // 2. 多關鍵字空白分隔 (Multi-word space separated AND search: 例如 "地藏 註"、"地藏 靈椉")
+  const tokens = q.split(/\s+/).filter(t => t.length > 0);
+  if (tokens.length > 1 && tokens.every(t => fullText.includes(t))) {
+    return 88;
+  }
+
+  // 3. 順序字元萬用匹配 (Characters sequential wildcard matching: 例如 "地藏經註" -> /地.*?藏.*?經.*?註/i)
+  const cleanQ = q.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '');
+  if (cleanQ.length >= 3) {
+    const chars = cleanQ.split('');
+    const pattern = new RegExp(chars.join('.*?'), 'i');
+    if (pattern.test(title)) return 85;
+  }
+
+  // 4. 佛典註疏與常見簡稱智慧關聯 (Commentaries & Abbreviations: 例如 "地藏經註" -> 關聯 "地藏本願經科註"、"地藏本願經科文")
+  const commentKeywords = ['註', '注', '科註', '疏', '科', '科文', '綸貫', '解', '記', '音義', '讚', '儀', '懺', '論'];
+  for (const ck of commentKeywords) {
+    if (q.includes(ck)) {
+      const base = q.replace(new RegExp(ck, 'g'), '').replace(/經$/, '');
+      if (base.length >= 2 && title.includes(base)) {
+        if (title.includes(ck) || title.includes('科註') || title.includes('科文') || title.includes('疏') || title.includes('註') || title.includes('注')) {
+          return 80;
+        }
+      }
+    }
+  }
+
+  // 5. 若查詢以「經」結尾，匹配核心經名 (例如 "地藏經" -> "地藏菩薩本願經")
+  if (q.endsWith('經') && q.length > 2) {
+    const base = q.slice(0, -1);
+    if (title.includes(base)) return 75;
+  }
+
+  // 6. 雙字分詞子字串交集 (Bigram Stem matching)
+  if (cleanQ.length >= 4) {
+    const subTokens: string[] = [];
+    for (let i = 0; i <= cleanQ.length - 2; i += 2) {
+      subTokens.push(cleanQ.slice(i, i + 2));
+    }
+    const matchedTokensCount = subTokens.filter(st => title.includes(st)).length;
+    if (subTokens.length >= 2 && matchedTokensCount === subTokens.length) {
+      return 70;
+    }
+  }
+
+  // 7. 其它欄位模糊匹配 (Category, vol, creators)
+  if (fullText.includes(q)) return 65;
+
+  return 0;
+}
+
 export class IndexBuilder {
   /**
    * 從藏經總目 (cbeta-works-index.json / FEATURED_BOOKS) 中取得指定經典的權威 Metadata 與真實總卷數
@@ -207,256 +277,180 @@ export class IndexBuilder {
   }
 
   /**
-   * 搜尋經典名稱 (高效快取 + 模糊比對 + 4.5秒強效超時保護)
+   * 搜尋經典名稱 (全藏 4,882 部經典本機極速索引 + 模糊註疏語意關聯 + 線上即時補充)
    */
   static async searchTitle(query: string, options?: { sourceMode?: SourceMode }): Promise<SearchResult[]> {
     const activeMode = options?.sourceMode || getSourceMode();
-
-    // 💡 1. 備援模式 (Backup Mode)：絕對不使用硬編碼 FEATURED_BOOKS，100% 純淨讀取真實備援藏經庫
-    if (activeMode === 'backup') {
-      const allBackupWorks = await loadFullWorksIndex();
-      if (!query || query.trim() === '') {
-        return allBackupWorks.slice(0, 35);
-      }
-
-      const trimmedQuery = query.trim();
-      const cacheKey = `${activeMode}_${trimmedQuery.toLowerCase()}`;
-
-      if (searchCacheMap.has(cacheKey)) {
-        return searchCacheMap.get(cacheKey)!;
-      }
-
-      const lower = trimmedQuery.toLowerCase();
-      const stems = new Set<string>([lower]);
-
-      // 雙向詞幹與助詞拆解 (Bidirectional stemming & particles removal)
-      if (lower.endsWith('之道') && lower.length > 2) stems.add(lower.slice(0, -2));
-      if (lower.includes('之道')) stems.add(lower.replace(/之道/g, ''));
-      if (lower.endsWith('經') && lower.length > 1) stems.add(lower.slice(0, -1));
-      else if (!lower.endsWith('經') && lower.length >= 2) stems.add(lower + '經');
-
-      const stemList = Array.from(stems).filter(s => s.length >= 2);
-
-      const matched = allBackupWorks.filter(b => {
-        const t = b.title.toLowerCase();
-        const c = (b.creators || '').toLowerCase();
-        const v = (b.vol || '').toLowerCase();
-        const id = (b.workId || (b as any).work || '').toLowerCase();
-
-        if (
-          t.includes(lower) ||
-          isFuzzyTitleMatch(b.title, trimmedQuery) ||
-          id.includes(lower) ||
-          c.includes(lower) ||
-          (b.category && b.category.toLowerCase().includes(lower)) ||
-          v.includes(lower)
-        ) {
-          return true;
-        }
-
-        return stemList.some(s => t.includes(s) || c.includes(s));
-      }).map(b => ({ ...b, isBackupSource: true }));
-
-      // 💡 權重與精確度排序 (Relevance & Priority Ranking)
-      const getScore = (b: SearchResult) => {
-        const t = b.title.toLowerCase();
-        if (t === lower) return 100;
-        if (lower.endsWith('經') && t.includes(lower.slice(0, -1)) && !t.includes('疏') && !t.includes('記') && !t.includes('科')) return 95;
-        if (t.startsWith(lower)) return 90;
-        if (t.includes(lower)) return 85;
-        for (const s of stemList) {
-          if (t === s) return 80;
-          if (t.startsWith(s)) return 75;
-          if (t.includes(s)) return 70;
-        }
-        return 50;
-      };
-
-      matched.sort((a, b) => {
-        const scoreA = getScore(a);
-        const scoreB = getScore(b);
-        if (scoreA !== scoreB) return scoreB - scoreA;
-
-        const idA = a.workId || '';
-        const idB = b.workId || '';
-        const isPrimaryA = idA.startsWith('T0') || idA.startsWith('Y0');
-        const isPrimaryB = idB.startsWith('T0') || idB.startsWith('Y0');
-        if (isPrimaryA && !isPrimaryB) return -1;
-        if (!isPrimaryA && isPrimaryB) return 1;
-
-        return 0;
-      });
-
-      searchCacheMap.set(cacheKey, matched);
-      return matched;
-    }
+    const isBackup = activeMode === 'backup';
 
     if (!query || query.trim() === '') {
+      if (isBackup) {
+        const allBackupWorks = await loadFullWorksIndex();
+        return allBackupWorks.slice(0, 35);
+      }
       return FEATURED_BOOKS.map(b => ({ ...b, isBackupSource: false }));
     }
 
     const trimmedQuery = query.trim();
     const cacheKey = `${activeMode}_${trimmedQuery.toLowerCase()}`;
 
-    // 💡 0. 記憶體快取：若曾搜尋過該關鍵字，立場秒回結果
+    // 💡 0. 記憶體快取：若曾搜尋過該關鍵字，即時秒回
     if (searchCacheMap.has(cacheKey)) {
       return searchCacheMap.get(cacheKey)!;
     }
 
-    // 優先匹配內建經典（本地模糊比對，精確支援簡稱如「大般若經」、「地藏經」、「華嚴經」）
-    const matchedFeatured = FEATURED_BOOKS.filter(
-      book => 
-        isFuzzyTitleMatch(book.title, trimmedQuery) || 
-        book.workId.toLowerCase().includes(trimmedQuery.toLowerCase()) ||
-        book.creators.includes(trimmedQuery)
-    ).map(b => ({ ...b, isBackupSource: false }));
+    // 💡 1. 載入全藏經 4,882 部完整總目進行智慧評分比對 (涵蓋全部大正藏、卍續藏、印順著作等)
+    const allWorks = await loadFullWorksIndex();
+    const localPool: SearchResult[] = (allWorks.length > 0 ? allWorks : FEATURED_BOOKS).map(b => ({
+      workId: b.workId || (b as any).work || '',
+      title: b.title || '',
+      creators: sanitizeCreators(b.creators || (b as any).byline),
+      juansCount: b.juansCount || 1,
+      category: b.category || 'CBETA',
+      vol: b.vol,
+      cjkChars: b.cjkChars,
+      isBackupSource: isBackup
+    }));
 
-    try {
-      const queriesToSearch = new Set<string>([trimmedQuery]);
+    // 本地 4,882 經典評分匹配
+    const scoredLocalResults = localPool
+      .map(b => ({ book: b, score: calculateSearchMatchScore(b, trimmedQuery) }))
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score);
 
-      // 雙向詞幹自動衍生 (Bidirectional Stemming):
-      if (trimmedQuery.endsWith('之道') && trimmedQuery.length > 2) {
-        queriesToSearch.add(trimmedQuery.slice(0, -2));
+    const resultsMap = new Map<string, { book: SearchResult; score: number }>();
+    scoredLocalResults.forEach(item => {
+      if (item.book.workId) {
+        resultsMap.set(item.book.workId, item);
       }
-      if (trimmedQuery.endsWith('經') && trimmedQuery.length > 1) {
-        queriesToSearch.add(trimmedQuery.slice(0, -1));
-      }
-      else if (!trimmedQuery.endsWith('經') && trimmedQuery.length >= 2) {
-        queriesToSearch.add(`${trimmedQuery}經`);
-      }
+    });
 
-      const promises: Array<{ key: string; promise: Promise<Response | null> }> = [];
-
-      for (const q of queriesToSearch) {
-        const titleUrl = getApiUrl(`/stable/search/title?q=${encodeURIComponent(q)}`);
-        const directTitleUrl = `https://cbdata.dila.edu.tw/stable/search/title?q=${encodeURIComponent(q)}`;
-
-        // 優先嘗試本地代理路由，失敗或逾時則自動降級直連 CBETA 官方伺服器 (6.5秒超時保護)
-        const fetchTitle = async () => {
-          let res = await fetchWithTimeout(titleUrl, { headers: { 'Accept': 'application/json' } }, 6500);
-          if (!res) {
-            res = await fetchWithTimeout(directTitleUrl, { headers: { 'Accept': 'application/json' } }, 6500);
-          }
-          return res;
-        };
-
-        promises.push({ key: `title_${q}`, promise: fetchTitle() });
-      }
-
-      const creatorUrl = getApiUrl(`/stable/works?creator=${encodeURIComponent(trimmedQuery)}`);
-      const directCreatorUrl = `https://cbdata.dila.edu.tw/stable/works?creator=${encodeURIComponent(trimmedQuery)}`;
-      const fetchCreator = async () => {
-        let res = await fetchWithTimeout(creatorUrl, { headers: { 'Accept': 'application/json' } }, 6500);
-        if (!res) {
-          res = await fetchWithTimeout(directCreatorUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+    // 💡 2. 主源模式 (Primary Source)：同時並行向 CBETA 官方 API 發起請求 (4.5秒超時保護)，補充最新線上收錄
+    if (!isBackup) {
+      try {
+        const queriesToSearch = new Set<string>([trimmedQuery]);
+        if (trimmedQuery.endsWith('經') && trimmedQuery.length > 1) {
+          queriesToSearch.add(trimmedQuery.slice(0, -1));
         }
-        return res;
-      };
-      promises.push({ key: 'creator', promise: fetchCreator() });
 
-      // 💡 部類關鍵字自動對應與 API 查詢 (例如: 「般若」-> 查詢 /stable/works?category=般若部類)
-      let matchedCategoryName = '';
-      for (const [kw, cat] of Object.entries(CATEGORY_KEYWORDS_MAP)) {
-        if (trimmedQuery.includes(kw)) {
-          matchedCategoryName = cat;
-          break;
+        const promises: Array<{ key: string; promise: Promise<Response | null> }> = [];
+
+        for (const q of queriesToSearch) {
+          const titleUrl = getApiUrl(`/stable/search/title?q=${encodeURIComponent(q)}`);
+          const directTitleUrl = `https://cbdata.dila.edu.tw/stable/search/title?q=${encodeURIComponent(q)}`;
+          const fetchTitle = async () => {
+            let res = await fetchWithTimeout(titleUrl, { headers: { 'Accept': 'application/json' } }, 4500);
+            if (!res) {
+              res = await fetchWithTimeout(directTitleUrl, { headers: { 'Accept': 'application/json' } }, 4500);
+            }
+            return res;
+          };
+          promises.push({ key: `title_${q}`, promise: fetchTitle() });
         }
-      }
 
-      if (matchedCategoryName) {
-        const catUrl = getApiUrl(`/stable/works?category=${encodeURIComponent(matchedCategoryName)}`);
-        const directCatUrl = `https://cbdata.dila.edu.tw/stable/works?category=${encodeURIComponent(matchedCategoryName)}`;
-        const fetchCat = async () => {
-          let res = await fetchWithTimeout(catUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+        const creatorUrl = getApiUrl(`/stable/works?creator=${encodeURIComponent(trimmedQuery)}`);
+        const directCreatorUrl = `https://cbdata.dila.edu.tw/stable/works?creator=${encodeURIComponent(trimmedQuery)}`;
+        const fetchCreator = async () => {
+          let res = await fetchWithTimeout(creatorUrl, { headers: { 'Accept': 'application/json' } }, 4500);
           if (!res) {
-            res = await fetchWithTimeout(directCatUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+            res = await fetchWithTimeout(directCreatorUrl, { headers: { 'Accept': 'application/json' } }, 4500);
           }
           return res;
         };
-        promises.push({ key: 'category', promise: fetchCat() });
-      }
+        promises.push({ key: 'creator', promise: fetchCreator() });
 
-      // 如果查詢字串符合經典編號格式 (例如 T0220)，額外查詢 works?work=
-      const isWorkId = /^[a-zA-Z]\d+/.test(trimmedQuery);
-      if (isWorkId) {
-        const workUrl = getApiUrl(`/stable/works?work=${trimmedQuery.toUpperCase()}`);
-        const directWorkUrl = `https://cbdata.dila.edu.tw/stable/works?work=${trimmedQuery.toUpperCase()}`;
-        const fetchWork = async () => {
-          let res = await fetchWithTimeout(workUrl, { headers: { 'Accept': 'application/json' } }, 6500);
-          if (!res) {
-            res = await fetchWithTimeout(directWorkUrl, { headers: { 'Accept': 'application/json' } }, 6500);
+        // 部類關鍵字自動對應
+        let matchedCategoryName = '';
+        for (const [kw, cat] of Object.entries(CATEGORY_KEYWORDS_MAP)) {
+          if (trimmedQuery.includes(kw)) {
+            matchedCategoryName = cat;
+            break;
           }
-          return res;
-        };
-        promises.push({ key: 'work', promise: fetchWork() });
-      }
+        }
+        if (matchedCategoryName) {
+          const catUrl = getApiUrl(`/stable/works?category=${encodeURIComponent(matchedCategoryName)}`);
+          const directCatUrl = `https://cbdata.dila.edu.tw/stable/works?category=${encodeURIComponent(matchedCategoryName)}`;
+          const fetchCat = async () => {
+            let res = await fetchWithTimeout(catUrl, { headers: { 'Accept': 'application/json' } }, 4500);
+            if (!res) {
+              res = await fetchWithTimeout(directCatUrl, { headers: { 'Accept': 'application/json' } }, 4500);
+            }
+            return res;
+          };
+          promises.push({ key: 'category', promise: fetchCat() });
+        }
 
-      const resultsList = await Promise.all(
-        promises.map(async p => {
-          const res = await p.promise;
-          if (!res) return { key: p.key, data: null };
-          const data = await res.json().catch(() => null);
-          return { key: p.key, data };
-        })
-      );
+        // 若為經號 (如 T0235)
+        if (/^[a-zA-Z]\d+/.test(trimmedQuery)) {
+          const workUrl = getApiUrl(`/stable/works?work=${trimmedQuery.toUpperCase()}`);
+          const directWorkUrl = `https://cbdata.dila.edu.tw/stable/works?work=${trimmedQuery.toUpperCase()}`;
+          const fetchWork = async () => {
+            let res = await fetchWithTimeout(workUrl, { headers: { 'Accept': 'application/json' } }, 4500);
+            if (!res) {
+              res = await fetchWithTimeout(directWorkUrl, { headers: { 'Accept': 'application/json' } }, 4500);
+            }
+            return res;
+          };
+          promises.push({ key: 'work', promise: fetchWork() });
+        }
 
-      const apiResults: SearchResult[] = [];
+        const resultsList = await Promise.all(
+          promises.map(async p => {
+            const res = await p.promise;
+            if (!res) return { key: p.key, data: null };
+            const data = await res.json().catch(() => null);
+            return { key: p.key, data };
+          })
+        );
 
-      resultsList.forEach(item => {
-        if (item.data && Array.isArray(item.data.results)) {
-          item.data.results.forEach((r: any) => {
-            apiResults.push({
-              workId: r.work || r.file || r.work_info?.work || '',
-              title: r.title || r.content || r.work_info?.title || '未命名經典',
-              creators: sanitizeCreators(r.creators || r.byline || r.work_info?.byline),
-              juansCount: r.juan || r.juans || r.work_info?.juans || 1,
-              category: r.category || r.work_info?.category || (item.key === 'category' ? matchedCategoryName : '未分類')
+        resultsList.forEach(item => {
+          if (item.data && Array.isArray(item.data.results)) {
+            item.data.results.forEach((r: any) => {
+              const wId = r.work || r.file || r.work_info?.work || '';
+              if (!wId) return;
+              const onlineBook: SearchResult = {
+                workId: wId,
+                title: r.title || r.content || r.work_info?.title || '未命名經典',
+                creators: sanitizeCreators(r.creators || r.byline || r.work_info?.byline),
+                juansCount: r.juan || r.juans || r.work_info?.juans || 1,
+                category: r.category || r.work_info?.category || (item.key === 'category' ? matchedCategoryName : '未分類'),
+                vol: r.vol,
+                cjkChars: r.cjk_chars,
+                isBackupSource: false
+              };
+              const score = calculateSearchMatchScore(onlineBook, trimmedQuery) || 75;
+              const existing = resultsMap.get(wId);
+              if (!existing || score > existing.score) {
+                resultsMap.set(wId, { book: onlineBook, score });
+              }
             });
-          });
-        }
-      });
-
-      // 合併本地與線上結果（進行去重）
-      const resultsMap = new Map<string, SearchResult>();
-      matchedFeatured.forEach(b => resultsMap.set(b.workId, b));
-      
-      apiResults.forEach((b: SearchResult) => {
-        if (b.workId) {
-          const existing = resultsMap.get(b.workId);
-          if (!existing || existing.title === '未命名經典') {
-            resultsMap.set(b.workId, { ...b, isBackupSource: (activeMode as string) === 'backup' });
           }
-        }
-      });
-
-      const finalResults = Array.from(resultsMap.values()).map(b => ({
-        ...b,
-        isBackupSource: (activeMode as string) === 'backup'
-      }));
-
-      // 精確度與關聯度排序
-      const lower = trimmedQuery.toLowerCase();
-      const getScore = (b: SearchResult) => {
-        const t = b.title.toLowerCase();
-        if (t === lower) return 100;
-        if (lower.endsWith('經') && t.includes(lower.slice(0, -1)) && !t.includes('疏') && !t.includes('記') && !t.includes('科')) return 95;
-        if (t.startsWith(lower)) return 90;
-        if (t.includes(lower)) return 85;
-        return 50;
-      };
-
-      finalResults.sort((a, b) => {
-        const scoreA = getScore(a);
-        const scoreB = getScore(b);
-        if (scoreA !== scoreB) return scoreB - scoreA;
-        return 0;
-      });
-
-      if (finalResults.length > 0) {
-        searchCacheMap.set(cacheKey, finalResults);
+        });
+      } catch (onlineErr) {
+        console.warn('[IndexBuilder] Online search query fallback to full works index:', onlineErr);
       }
+    }
 
-      // 非阻塞背景補全：非同步在背景完善前 15 筆結果的精確總卷數與作譯者細節
+    const finalResults = Array.from(resultsMap.values())
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        // 同分時優先顯示大正藏 (T) 與印順著作 (Y)
+        const idA = a.book.workId || '';
+        const idB = b.book.workId || '';
+        const isPriA = idA.startsWith('T0') || idA.startsWith('Y0');
+        const isPriB = idB.startsWith('T0') || idB.startsWith('Y0');
+        if (isPriA && !isPriB) return -1;
+        if (!isPriA && isPriB) return 1;
+        return idA.localeCompare(idB);
+      })
+      .map(item => item.book);
+
+    if (finalResults.length > 0) {
+      searchCacheMap.set(cacheKey, finalResults);
+    }
+
+    // 非阻塞背景補全：非同步在背景完善前 15 筆結果的精確總卷數與作譯者細節
+    if (!isBackup) {
       Promise.all(
         finalResults.slice(0, 15).map(async (res) => {
           try {
@@ -478,8 +472,6 @@ export class IndexBuilder {
                   res.creators = sanitizeCreators(creatorName.startsWith(dynasty.trim()) ? creatorName : `${dynasty}${creatorName}`);
                 } else if (workInfo.byline && sanitizeCreators(workInfo.byline)) {
                   res.creators = sanitizeCreators(workInfo.byline);
-                } else {
-                  res.creators = '';
                 }
                 if (workInfo.vol) {
                   res.vol = workInfo.vol;
@@ -498,13 +490,9 @@ export class IndexBuilder {
           }
         })
       ).catch(() => {});
-
-      return finalResults.length > 0 ? finalResults : matchedFeatured;
-    } catch (error) {
-      console.warn('IndexBuilder search online failed, fallback to local match:', error);
     }
 
-    return matchedFeatured;
+    return finalResults;
   }
 
   /**
