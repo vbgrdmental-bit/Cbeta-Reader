@@ -414,42 +414,99 @@ export function Library({
     const deltaTime = Date.now() - touchSwipeRef.current.time;
     touchSwipeRef.current = null;
 
-    if (swipeContainerRef.current) {
-      swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
-      swipeContainerRef.current.style.transform = 'translateX(0px)';
+    // 💡 靈敏觸發門檻：位移 > 28px, 時間 < 550ms, 水平角度寬容比 1.15
+    const isValidSwipe = Math.abs(deltaX) > 28 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && deltaTime < 550;
+
+    if (!isValidSwipe) {
+      // 無效滑動 → 彈回原位
+      if (swipeContainerRef.current) {
+        swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
+        swipeContainerRef.current.style.transform = 'translateX(0px)';
+        swipeContainerRef.current.style.opacity = '1';
+      }
+      return;
     }
 
-    // 💡 靈敏觸發門檻：位移 > 28px, 時間 < 550ms, 水平角度寬容比 1.15
-    if (Math.abs(deltaX) > 28 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && deltaTime < 550) {
-      const SHELF_NAV_CHAIN: (string | null)[] = [
-        null, // 首頁
-        'virtual_my_folders', // 我的書櫃
-        'virtual_recent_reads', // 近期閱讀
-        'virtual_favorites', // 我的最愛
-        'virtual_highlights' // 重點與筆記
-      ];
+    // 💡 有效滑動 → CBETA 式絲滑整頁飛出動畫
+    const SHELF_NAV_CHAIN: (string | null)[] = [
+      null,                    // 首頁
+      'virtual_my_folders',    // 我的書櫃
+      'virtual_recent_reads',  // 近期閱讀
+      'virtual_favorites',     // 我的最愛
+      'virtual_highlights'     // 重點與筆記
+    ];
 
-      if (deltaX < -28) {
-        // 👈 向左滑動 (推進)
-        if (activeTab === 'shelf') {
-          const currentIndex = SHELF_NAV_CHAIN.indexOf(currentFolderId);
-          if (currentIndex !== -1 && currentIndex < SHELF_NAV_CHAIN.length - 1) {
-            navigateToFolder(SHELF_NAV_CHAIN[currentIndex + 1]);
-          } else if (currentFolderId === 'virtual_highlights') {
-            setActiveTab('search');
+    const doSwipeNav = (goForward: boolean, performNav: () => void) => {
+      const container = swipeContainerRef.current;
+      if (!container) { performNav(); return; }
+
+      // 1. 整頁飛出（向觸發方向）
+      const exitX = goForward ? '-100%' : '100%';
+      const enterX = goForward ? '100%' : '-100%';
+      container.style.transition = 'transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out';
+      container.style.transform = `translateX(${exitX})`;
+      container.style.opacity = '0.15';
+
+      setTimeout(() => {
+        // 2. 換頁內容
+        performNav();
+
+        // 3. 從對側滑入
+        container.style.transition = 'none';
+        container.style.transform = `translateX(${enterX})`;
+        container.style.opacity = '0.7';
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease-out';
+            container.style.transform = 'translateX(0px)';
+            container.style.opacity = '1';
+          });
+        });
+      }, 210);
+    };
+
+    if (deltaX < -28) {
+      // 👈 向左滑動 (推進)
+      if (activeTab === 'shelf') {
+        const currentIndex = SHELF_NAV_CHAIN.indexOf(currentFolderId);
+        if (currentIndex !== -1 && currentIndex < SHELF_NAV_CHAIN.length - 1) {
+          doSwipeNav(true, () => navigateToFolder(SHELF_NAV_CHAIN[currentIndex + 1]));
+        } else if (currentFolderId === 'virtual_highlights') {
+          doSwipeNav(true, () => setActiveTab('search'));
+        } else {
+          // 無更多頁可進 → 彈回
+          if (swipeContainerRef.current) {
+            swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
+            swipeContainerRef.current.style.transform = 'translateX(0px)';
+            swipeContainerRef.current.style.opacity = '1';
           }
         }
-      } else if (deltaX > 28) {
-        // 👉 向右滑動 (返回 / 觸發 CBETA)
-        if (activeTab === 'search') {
-          setActiveTab('shelf');
-        } else if (activeTab === 'shelf') {
-          const currentIndex = SHELF_NAV_CHAIN.indexOf(currentFolderId);
-          if (currentIndex > 0) {
-            navigateToFolder(SHELF_NAV_CHAIN[currentIndex - 1]);
-          } else if (!currentFolderId) {
-            // 💡 在首頁向右滑 1 下：直接開啟 CBETA 藏經庫與下載
-            if (onOpenCbetaCatalog) onOpenCbetaCatalog();
+      } else {
+        // 彈回
+        if (swipeContainerRef.current) {
+          swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
+          swipeContainerRef.current.style.transform = 'translateX(0px)';
+          swipeContainerRef.current.style.opacity = '1';
+        }
+      }
+    } else if (deltaX > 28) {
+      // 👉 向右滑動 (返回 / 觸發 CBETA)
+      if (activeTab === 'search') {
+        doSwipeNav(false, () => setActiveTab('shelf'));
+      } else if (activeTab === 'shelf') {
+        const currentIndex = SHELF_NAV_CHAIN.indexOf(currentFolderId);
+        if (currentIndex > 0) {
+          doSwipeNav(false, () => navigateToFolder(SHELF_NAV_CHAIN[currentIndex - 1]));
+        } else if (!currentFolderId) {
+          // 💡 在首頁向右滑 1 下：直接開啟 CBETA 藏經庫與下載
+          doSwipeNav(false, () => { if (onOpenCbetaCatalog) onOpenCbetaCatalog(); });
+        } else {
+          // 彈回
+          if (swipeContainerRef.current) {
+            swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
+            swipeContainerRef.current.style.transform = 'translateX(0px)';
+            swipeContainerRef.current.style.opacity = '1';
           }
         }
       }
@@ -476,68 +533,71 @@ export function Library({
     setSelectedBookIds(currentBookIds);
   };
 
-  // 💡 點選進入專區/資料夾時的平滑推進動畫 (Forward Slide In)
+  // 💡 點選進入專區/資料夾時的平滑推進動畫 (CBETA 式整頁飛出)
   const navigateToFolderWithAnimation = (targetFolderId: string | null) => {
     if (currentFolderId === targetFolderId) return;
+    const goForward = true; // 點擊進入資料夾 = 向左推進
 
     if (swipeContainerRef.current) {
       const container = swipeContainerRef.current;
-      // 1. 當前首頁/舊視窗向左平滑流暢推走
-      container.style.transition = 'transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease-out';
-      container.style.transform = 'translateX(-80px)';
-      container.style.opacity = '0.3';
+      // 1. 整頁向左飛出
+      container.style.transition = 'transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out';
+      container.style.transform = goForward ? 'translateX(-100%)' : 'translateX(100%)';
+      container.style.opacity = '0.15';
 
       setTimeout(() => {
         // 2. 切換狀態至目標專區
         navigateToFolder(targetFolderId);
 
-        // 3. 新專區從右側 +40px 平滑流暢推入歸位
+        // 3. 新專區從右側全幅滑入歸位
         container.style.transition = 'none';
-        container.style.transform = 'translateX(40px)';
+        container.style.transform = goForward ? 'translateX(100%)' : 'translateX(-100%)';
         container.style.opacity = '0.7';
 
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease-out';
+            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease-out';
             container.style.transform = 'translateX(0px)';
             container.style.opacity = '1';
           });
         });
-      }, 200);
+      }, 210);
     } else {
       navigateToFolder(targetFolderId);
     }
   };
 
-  // 💡 點擊「+」開啟 CBETA 藏經庫時的平滑向右推進動畫 (Slide Right In)
+  // 💡 點擊「+」開啟 CBETA 藏經庫時的平滑向左推進動畫 (CBETA 式整頁飛出)
   const handleOpenCbetaCatalogWithAnimation = () => {
     if (!onOpenCbetaCatalog) return;
     if (swipeContainerRef.current) {
       const container = swipeContainerRef.current;
-      container.style.transition = 'transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease-out';
-      container.style.transform = 'translateX(80px)';
-      container.style.opacity = '0.3';
+      // 1. 整頁向右飛出（CBETA 在首頁左邊，向左滑進入 = 首頁向右飛出）
+      container.style.transition = 'transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out';
+      container.style.transform = 'translateX(100%)';
+      container.style.opacity = '0.15';
       setTimeout(() => {
         onOpenCbetaCatalog();
+        // CBETA 頁接管，不需要復位動畫
         container.style.transition = 'none';
         container.style.transform = 'translateX(0px)';
         container.style.opacity = '1';
-      }, 200);
+      }, 210);
     } else {
       onOpenCbetaCatalog();
     }
   };
 
-  // 💡 點擊「首頁」按鈕時的平滑倒滑往回動畫 (Smooth Reverse Slide back to Home)
+  // 💡 點擊「首頁」按鈕時的平滑倒滑往回動畫 (CBETA 式整頁飛出)
   const handleGoHomeWithAnimation = () => {
     if (activeTab === 'shelf' && !currentFolderId) return; // 本身就在首頁時不觸發
 
     if (swipeContainerRef.current) {
       const container = swipeContainerRef.current;
-      // 1. 當前頁面向右平滑流暢滑出
-      container.style.transition = 'transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease-out';
-      container.style.transform = 'translateX(80px)';
-      container.style.opacity = '0.3';
+      // 1. 整頁向右飛出（返回首頁 = 向後 = 右邊飛出）
+      container.style.transition = 'transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out';
+      container.style.transform = 'translateX(100%)';
+      container.style.opacity = '0.15';
 
       setTimeout(() => {
         // 2. 切換狀態回首頁
@@ -546,19 +606,19 @@ export function Library({
         setFolderHistory([null]);
         setHistoryIndex(0);
 
-        // 3. 從左側微幅滑入歸位
+        // 3. 從左側全幅滑入歸位
         container.style.transition = 'none';
-        container.style.transform = 'translateX(-40px)';
+        container.style.transform = 'translateX(-100%)';
         container.style.opacity = '0.7';
 
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease-out';
+            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease-out';
             container.style.transform = 'translateX(0px)';
             container.style.opacity = '1';
           });
         });
-      }, 200);
+      }, 210);
     } else {
       setActiveTab('shelf');
       setCurrentFolderId(null);
