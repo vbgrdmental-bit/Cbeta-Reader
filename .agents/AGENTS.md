@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.2.0` (App: v4.2.0 / Builder: v2.9.10)
+- **Current Version**: `v4.2.1` (App: v4.2.1 / Builder: v2.9.10)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.2.1 / Builder: v2.9.10** (2026-08-21)
+  - [App] 首頁書架每本經典顯示「卷數」，印順導師著作/近代編著不顯示（依書目特性自動判斷）。
+  - [App] 下載進度顯示「共X卷，已完成X卷，剩X卷，約剩時間」，即時呈現經文下載進度。
+  - [App] 下載進度六格方塊調整為 1:1 正方形並新增中英雙語標籤，完整展示 Builder 建構引擎能力。
 - **⭐ App: v4.2.0 / Builder: v2.9.10** (2026-08-21)
   - [App] 手機版下方浮動膠囊列與護眼計時器緊湊自適應排版，防止超出邊緣。
   - [App] 「畫重點」與「目次」選單支援滑動、點擊螢幕及按其他鍵時自動隱藏。
