@@ -2208,76 +2208,43 @@ export function ReaderView({
                     onClick={() => setIsCopyrightExpanded(!isCopyrightExpanded)}
                     style={{ 
                       display: 'inline-flex', 
-                      alignItems: 'c          {/* 💡 不論幾卷皆顯示頂部「目次」與「卷/篇章」 Tab */}
-          <div className="drawer-tab-header">
-            <div 
-              className={`drawer-tab ${navTab === 'toc' ? 'active' : ''}`}
-              onClick={() => setNavTab('toc')}
-            >
-              目次
-            </div>
-            <div 
-              className={`drawer-tab ${navTab === 'juan' ? 'active' : ''}`}
-              o          {/* 💡 不論幾卷皆顯示「目次」與「卷/篇章」兩個分頁 */}
-          <div className="drawer-tab-header">
-            <div 
-              className={`drawer-tab ${navTab === 'toc' ? 'active' : ''}`}
-              onClick={() => setNavTab('toc')}
-            >
-              目次
-            </div>
-            <div 
-              className={`drawer-tab ${navTab === 'juan' ? 'active' : ''}`}
-              onClick={() => setNavTab('juan')}
-            >
-              卷/篇章
-            </div>
-          </div>
+                      alignItems: 'center', 
+                      gap: '0.4rem', 
+                      fontFamily: 'var(--font-serif)', 
+                      fontSize: '0.95rem',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--reader-text-muted)',
+                      cursor: 'pointer',
+                      padding: '0.5rem 0'
+                    }}
+                  >
+                    <span style={{ fontWeight: 'bold' }}>{isCopyrightExpanded ? '-' : '+'}</span>
+                    <span>顯示版權資訊</span>
+                  </button>
+                  
+                  {isCopyrightExpanded && (
+                    <div className="copyright-content-box animate-fade-in" style={{ marginTop: '1rem', fontSize: '0.88rem', lineHeight: 1.7, color: 'var(--reader-text-muted)', opacity: 0.85 }}>
+                      {displayCopyrightSegments.map((seg) => (
+                        <p key={seg.id} style={{ marginBottom: '0.8rem', textIndent: '0' }}>
+                          {seg.content}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            );
+          })()}
 
-          <div className="drawer-list custom-scrollbar">
-            {navTab === 'juan' ? (
-              book.metadata.juansCount > 1
-                ? (
-                  book.metadata.workId.startsWith('Y') ? (
-                    <div className="drawer-empty-hint">此經典無分卷資料</div>
-                  ) : (
-                    Array.from({ length: book.metadata.juansCount }).map((_, idx) => (
-                      <div 
-                        key={`juan-${idx + 1}`} 
-                        className={`drawer-item ${currentJuanNum === idx + 1 ? 'active' : ''}`}
-                        onClick={() => handleSelectJuan(idx + 1)}
-                      >
-                        <span>第 {idx + 1} 卷</span>
-                      </div>
-                    ))
-                  )
-                ) : (
-                  <div className="drawer-empty-hint">此經典僅有一卷</div>
-                )
-            ) : (
-              /* 按品目錄 (目次 - 支援多層級樹狀 Collapsible Tree) */
-              book.toc.items.length > 0 ? (
-                book.toc.items.map((item) => (
-                  <TocTreeNode
-                    key={item.id}
-                    item={item}
-                    level={0}
-                    activeSegmentId={activeSegmentId}
-                    currentJuanNum={currentJuanNum}
-                    workId={book.metadata.workId}
-                    isMultiJuan={book.metadata.juansCount > 1 && !book.metadata.workId.startsWith('Y')}
-                    onSelectTOC={handleSelectTOC}
-                  />
-                ))
-              ) : (
-                <div className="drawer-empty-hint">此經典無目次資料</div>
-              )
-            )}
-          </div>        ) : (
-                <div className="drawer-empty-hint">此經典無目次資料</div>
-              )
-            )}
-          </div>      >
+          {/* 換卷提示 */}
+          {book.metadata.juansCount > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem', padding: '1rem 0', borderTop: '1px solid var(--reader-border)' }}>
+              <button 
+                style={{ fontFamily: 'var(--font-serif)', color: currentJuanNum > 1 ? 'var(--reader-text)' : 'var(--reader-text-muted)', cursor: currentJuanNum > 1 ? 'pointer' : 'default' }}
+                onClick={() => currentJuanNum > 1 && handleSelectJuan(currentJuanNum - 1)}
+                disabled={currentJuanNum <= 1}
+              >
                 ◀ 上一卷
               </button>
               <span style={{ fontSize: '0.85rem', color: 'var(--reader-text-muted)' }}>
