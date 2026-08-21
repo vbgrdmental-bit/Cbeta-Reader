@@ -350,6 +350,46 @@ export function Library({
   // 💡 全站 Swipe 左右手勢滑動導航系統 (含實時位移跟隨與彈性過渡)
   const touchSwipeRef = useRef<{ x: number; y: number; time: number } | null>(null);
   const swipeContainerRef = useRef<HTMLDivElement | null>(null);
+  // 💡 方向鎖定 Ref：'horizontal' | 'vertical' | null，一旦確認方向即鎖定至手勢結束
+  const swipeLockRef = useRef<'horizontal' | 'vertical' | null>(null);
+  // 💡 library-container 的 ref，用於掛載非被動 touchmove 原生事件
+  const libraryContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // 💡 用 useEffect 掛載 non-passive touchmove，才能在水平滑動時呼叫 preventDefault() 阻止垂直偏移
+  useEffect(() => {
+    const el = libraryContainerRef.current;
+    if (!el) return;
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!touchSwipeRef.current || isEditMode) return;
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchSwipeRef.current.x;
+      const deltaY = touch.clientY - touchSwipeRef.current.y;
+
+      // 尚未鎖定方向時，根據初始移動量判斷
+      if (!swipeLockRef.current) {
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 6) {
+          swipeLockRef.current = 'horizontal';
+        } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 6) {
+          swipeLockRef.current = 'vertical';
+        }
+      }
+
+      // 水平鎖定：阻止瀏覽器垂直捲動 + 跟隨手指位移
+      if (swipeLockRef.current === 'horizontal') {
+        e.preventDefault(); // ✅ 阻止垂直捲動偏移
+        if (swipeContainerRef.current) {
+          swipeContainerRef.current.style.transform = `translateX(${deltaX * 0.65}px)`;
+        }
+      }
+    };
+
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    return () => {
+      el.removeEventListener('touchmove', onTouchMove);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditMode]);
 
   const handleGlobalTouchStart = (e: React.TouchEvent) => {
     if (isEditMode) return;
@@ -359,21 +399,9 @@ export function Library({
       y: touch.clientY,
       time: Date.now()
     };
+    swipeLockRef.current = null; // 每次新手勢重置方向鎖定
     if (swipeContainerRef.current) {
       swipeContainerRef.current.style.transition = 'none';
-    }
-  };
-
-  const handleGlobalTouchMove = (e: React.TouchEvent) => {
-    if (!touchSwipeRef.current || isEditMode) return;
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - touchSwipeRef.current.x;
-    const deltaY = touch.clientY - touchSwipeRef.current.y;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 6) {
-      if (swipeContainerRef.current) {
-        swipeContainerRef.current.style.transform = `translateX(${deltaX * 0.65}px)`;
-      }
     }
   };
 
@@ -1342,8 +1370,8 @@ export function Library({
     <div 
       className="library-container" 
       style={{ position: 'relative' }}
+      ref={libraryContainerRef}
       onTouchStart={handleGlobalTouchStart}
-      onTouchMove={handleGlobalTouchMove}
       onTouchEnd={handleGlobalTouchEnd}
     >
       {/* 💡 長按觸發編輯模式：懸浮批量工具列 (5 個 1:1:1:1:1 等寬按鈕，透過 Portal 渲染至 body 避免父容器位移) */}
