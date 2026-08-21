@@ -34,7 +34,7 @@ export class NavigationBuilder {
           if (usedSegmentIds.has(seg.id)) return false;
           return seg.muluTitles.some(t => {
             const cleanT = t.replace(/[\s\u3000]/g, '');
-            const strippedT = cleanT.replace(/^[一二三四五六七八九十百千萬0-9１２３４５６７８９０上下中第]+[、.．\s\u3000]*/, '');
+            const strippedT = cleanT.replace(/^[一二三四五六七八九十百千萬0-9１２３４５６７８九０上下中第]+[、.．\s\u3000]*/, '');
             return cleanT === cleanTitle || (strippedTitle && strippedT === strippedTitle);
           });
         });
@@ -44,67 +44,111 @@ export class NavigationBuilder {
         }
       }
 
-      // 1. 優先在目標卷中透過 lb 比對（優先使用未佔用段落，若無則允許共用段落）
-      if (!startSegmentId && mulu.lb && juanData) {
-        const cleanMuluLb = mulu.lb.replace(/[^a-zA-Z0-9]/g, '');
-        let segWithLb = juanData.segments.find(seg => {
+      // 1. 高精確度標題全文字比對：優先在目標卷中搜尋文字完全吻合的章節標題段落 (如「忉利天宮神通品第一」、「觀眾生業緣品第三」)
+      if (!startSegmentId && juanData) {
+        const exactSeg = juanData.segments.find(seg => {
           if (usedSegmentIds.has(seg.id)) return false;
-          const cleanSegLb = seg.lb ? seg.lb.replace(/[^a-zA-Z0-9]/g, '') : '';
-          return cleanSegLb === cleanMuluLb || cleanSegLb.endsWith(cleanMuluLb) || cleanMuluLb.endsWith(cleanSegLb);
+          const cleanSeg = seg.content.replace(/[\s\u3000]/g, '');
+          return cleanSeg === cleanTitle || (strippedTitle.length >= 3 && cleanSeg === strippedTitle);
         });
-        if (!segWithLb) {
-          segWithLb = juanData.segments.find(seg => {
-            const cleanSegLb = seg.lb ? seg.lb.replace(/[^a-zA-Z0-9]/g, '') : '';
-            return cleanSegLb === cleanMuluLb || cleanSegLb.endsWith(cleanMuluLb) || cleanMuluLb.endsWith(cleanSegLb);
-          });
-        }
-        if (segWithLb) {
-          startSegmentId = segWithLb.id;
-          usedSegmentIds.add(segWithLb.id);
+        if (exactSeg) {
+          startSegmentId = exactSeg.id;
+          usedSegmentIds.add(exactSeg.id);
         }
       }
 
-      // 2. 如果目標卷沒搜到（或 mulu.juan 號碼標錯），跨所有卷全局比對 lb
+      // 2. Near-lb 範圍搜尋：若帶有 mulu.lb，找到該 lb 所在位置並向下探測 0..15 個段落，搜尋真實章節標題段
+      if (!startSegmentId && mulu.lb && juanData) {
+        const cleanMuluLb = mulu.lb.replace(/[^a-zA-Z0-9]/g, '');
+        const lbIdx = juanData.segments.findIndex(seg => {
+          const cleanSegLb = seg.lb ? seg.lb.replace(/[^a-zA-Z0-9]/g, '') : '';
+          return cleanSegLb === cleanMuluLb || cleanSegLb.endsWith(cleanMuluLb) || cleanMuluLb.endsWith(cleanSegLb);
+        });
+
+        if (lbIdx !== -1) {
+          // 向下探測 15 個段落尋找匹配標題的段落
+          for (let offset = 0; offset <= 15 && lbIdx + offset < juanData.segments.length; offset++) {
+            const seg = juanData.segments[lbIdx + offset];
+            if (usedSegmentIds.has(seg.id)) continue;
+            const cleanSeg = seg.content.replace(/[\s\u3000]/g, '');
+            if (
+              cleanSeg === cleanTitle || 
+              (cleanTitle.length >= 3 && (cleanSeg.startsWith(cleanTitle) || cleanSeg.includes(cleanTitle))) ||
+              (strippedTitle.length >= 3 && (cleanSeg.startsWith(strippedTitle) || cleanSeg.includes(strippedTitle)))
+            ) {
+              startSegmentId = seg.id;
+              usedSegmentIds.add(seg.id);
+              break;
+            }
+          }
+
+          // 若下游未探測到獨立標題段，退回使用 lb 所在段落
+          if (!startSegmentId) {
+            const segAtLb = juanData.segments[lbIdx];
+            if (!usedSegmentIds.has(segAtLb.id)) {
+              startSegmentId = segAtLb.id;
+              usedSegmentIds.add(segAtLb.id);
+            } else {
+              startSegmentId = segAtLb.id;
+            }
+          }
+        }
+      }
+
+      // 3. 跨所有卷全局比對 lb 與標題
       if (!startSegmentId && mulu.lb) {
         const cleanMuluLb = mulu.lb.replace(/[^a-zA-Z0-9]/g, '');
         for (const jData of content.juans) {
-          let segWithLb = jData.segments.find(seg => {
-            if (usedSegmentIds.has(seg.id)) return false;
+          const lbIdx = jData.segments.findIndex(seg => {
             const cleanSegLb = seg.lb ? seg.lb.replace(/[^a-zA-Z0-9]/g, '') : '';
             return cleanSegLb === cleanMuluLb || cleanSegLb.endsWith(cleanMuluLb) || cleanMuluLb.endsWith(cleanSegLb);
           });
-          if (!segWithLb) {
-            segWithLb = jData.segments.find(seg => {
-              const cleanSegLb = seg.lb ? seg.lb.replace(/[^a-zA-Z0-9]/g, '') : '';
-              return cleanSegLb === cleanMuluLb || cleanSegLb.endsWith(cleanMuluLb) || cleanMuluLb.endsWith(cleanSegLb);
-            });
-          }
-          if (segWithLb) {
-            startSegmentId = segWithLb.id;
-            targetJuan = jData.juan;
-            juanData = jData;
-            usedSegmentIds.add(segWithLb.id);
+          if (lbIdx !== -1) {
+            for (let offset = 0; offset <= 15 && lbIdx + offset < jData.segments.length; offset++) {
+              const seg = jData.segments[lbIdx + offset];
+              if (usedSegmentIds.has(seg.id)) continue;
+              const cleanSeg = seg.content.replace(/[\s\u3000]/g, '');
+              if (
+                cleanSeg === cleanTitle || 
+                (cleanTitle.length >= 3 && (cleanSeg.startsWith(cleanTitle) || cleanSeg.includes(cleanTitle))) ||
+                (strippedTitle.length >= 3 && (cleanSeg.startsWith(strippedTitle) || cleanSeg.includes(strippedTitle)))
+              ) {
+                startSegmentId = seg.id;
+                targetJuan = jData.juan;
+                juanData = jData;
+                usedSegmentIds.add(seg.id);
+                break;
+              }
+            }
+            if (!startSegmentId) {
+              const segAtLb = jData.segments[lbIdx];
+              startSegmentId = segAtLb.id;
+              targetJuan = jData.juan;
+              juanData = jData;
+              usedSegmentIds.add(segAtLb.id);
+            }
             break;
           }
         }
       }
 
-      // 2.5. 高精度標題文字比對：優先在目標卷中搜尋與品名相符的標題段落 (isHead)
+      // 4. 前綴與包含比對 (Prefix / Includes fallback)
       if (!startSegmentId && juanData) {
-        const headSeg = juanData.segments.find(seg => {
-          if (!seg.isHead) return false;
+        const prefixSeg = juanData.segments.find(seg => {
           if (usedSegmentIds.has(seg.id)) return false;
           const cleanSeg = seg.content.replace(/[\s\u3000]/g, '');
-          const strippedSeg = cleanSeg.replace(/^[一二三四五六七八九十百千萬0-9１２３４５６７８９０上下中第]+[、.．\s\u3000]*/, '');
-          return cleanSeg === cleanTitle || (strippedTitle && strippedSeg === strippedTitle) || cleanSeg.includes(strippedTitle);
+          return (
+            (cleanTitle.length >= 3 && (cleanSeg.startsWith(cleanTitle) || cleanSeg.includes(cleanTitle))) ||
+            (strippedTitle.length >= 3 && (cleanSeg.startsWith(strippedTitle) || cleanSeg.includes(strippedTitle)))
+          );
         });
-        if (headSeg) {
-          startSegmentId = headSeg.id;
-          usedSegmentIds.add(headSeg.id);
+        if (prefixSeg) {
+          startSegmentId = prefixSeg.id;
+          usedSegmentIds.add(prefixSeg.id);
         }
       }
 
-      // 3. 嘗試在目標卷中搜尋已標記此 tocId 的段落
+      // 5. 嘗試在目標卷中搜尋已標記此 tocId 的段落
       if (!startSegmentId && juanData && juanData.segments.length > 0) {
         const segWithTocId = juanData.segments.find(seg => seg.tocId === tocId);
         if (segWithTocId) {
@@ -112,7 +156,7 @@ export class NavigationBuilder {
         }
       }
 
-      // 4. 極致保險：若仍未找到，預設綁定該卷第一個段落，防止出現不可點擊的空項目
+      // 6. 極致保險：若仍未找到，預設綁定該卷第一個段落，防止出現不可點擊的空項目
       if (!startSegmentId) {
         const validJuanData = juanData || content.juans.find(j => j.juan === targetJuan) || content.juans[0];
         if (validJuanData && validJuanData.segments.length > 0) {

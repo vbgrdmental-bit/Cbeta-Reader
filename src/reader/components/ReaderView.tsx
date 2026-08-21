@@ -429,6 +429,53 @@ export function ReaderView({
   const [selectedNotes, setSelectedNotes] = useState<TextSegment['notes']>(undefined);
   const [selectedNotesTitle, setSelectedNotesTitle] = useState<string>('');
 
+  // 引用 DOM 節點用於自動滾動與事件偵測
+  const contentAreaRef = useRef<HTMLDivElement>(null);
+  const segmentsMapRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const pendingScrollSegmentIdRef = useRef<string | null>(null);
+  const isProgrammaticScrollRef = useRef<boolean>(false);
+  const programmaticScrollTimerRef = useRef<number | null>(null);
+
+  // 精確平滑滾動到目標段落或關鍵字（優先將搜尋關鍵字 mark 置於畫面中間偏上 45% 黃金視覺焦點處）
+  const scrollToSegmentOrMatch = (segmentId: string, preferKeyword: boolean = false) => {
+    let attempts = 0;
+    const executeScroll = () => {
+      const segEl = segmentsMapRef.current[segmentId];
+      const container = contentAreaRef.current;
+      if (segEl && container) {
+        let targetEl: HTMLElement = segEl;
+        if (preferKeyword) {
+          const markEl = segEl.querySelector('.search-highlight') as HTMLElement | null;
+          if (markEl) {
+            targetEl = markEl;
+          }
+        }
+
+        const containerRect = container.getBoundingClientRect();
+        const targetRect = targetEl.getBoundingClientRect();
+        const currentScroll = container.scrollTop;
+        // 💡 畫面中間偏上 (45%) 為黃金視覺焦點
+        const targetRatio = 0.45;
+        const targetOffsetTop = targetRect.top - containerRect.top;
+        const desiredScrollTop = currentScroll + targetOffsetTop - (containerRect.height * targetRatio) + (targetRect.height / 2);
+
+        container.scrollTo({
+          top: Math.max(0, desiredScrollTop),
+          behavior: 'smooth'
+        });
+      } else if (attempts < 15) {
+        attempts++;
+        setTimeout(executeScroll, 40);
+      }
+    };
+    setTimeout(executeScroll, 30);
+  };
+
+  // 滾動到特定經文段落 (兼容舊有調用)
+  const scrollToSegment = (segmentId: string) => {
+    scrollToSegmentOrMatch(segmentId, false);
+  };
+
   // 💡 同一經書內「上一個／下一個」檢索定位
   const [matchedSegments, setMatchedSegments] = useState<Array<{ segmentId: string; juan: number }>>([]);
   const [currentMatchIndex, setCurrentMatchIndex] = useState<number>(-1);
@@ -478,7 +525,12 @@ export function ReaderView({
           pendingScrollSegmentIdRef.current = firstTarget.segmentId;
           setCurrentJuanNum(firstTarget.juan);
         } else {
-          scrollToSegment(firstTarget.segmentId);
+          isProgrammaticScrollRef.current = true;
+          if (programmaticScrollTimerRef.current) clearTimeout(programmaticScrollTimerRef.current);
+          programmaticScrollTimerRef.current = window.setTimeout(() => {
+            isProgrammaticScrollRef.current = false;
+          }, 600);
+          scrollToSegmentOrMatch(firstTarget.segmentId, true);
           setActiveSegmentId(firstTarget.segmentId);
         }
       }
@@ -494,13 +546,21 @@ export function ReaderView({
     setCurrentMatchIndex(index);
     setActiveSegmentId(target.segmentId);
 
+    isProgrammaticScrollRef.current = true;
+    if (programmaticScrollTimerRef.current) {
+      clearTimeout(programmaticScrollTimerRef.current);
+    }
+    programmaticScrollTimerRef.current = window.setTimeout(() => {
+      isProgrammaticScrollRef.current = false;
+    }, 600);
+
     if (target.juan !== currentJuanNum) {
-      // 跨卷，由已有的 pendingScrollSegmentIdRef 處理自動滾動
+      // 跨卷，由 pendingScrollSegmentIdRef 處理自動滾動
       pendingScrollSegmentIdRef.current = target.segmentId;
       setCurrentJuanNum(target.juan);
     } else {
-      // 同一卷直接滾動
-      scrollToSegment(target.segmentId);
+      // 同一卷直接滾動至關鍵字 (畫面中間偏上 45%)
+      scrollToSegmentOrMatch(target.segmentId, true);
     }
   };
 
@@ -546,31 +606,15 @@ export function ReaderView({
     setIsCopyrightExpanded(false);
   }, [currentJuanNum, workId]);
 
-  // 引用 DOM 節點用於自動滾動與事件偵測
-  const contentAreaRef = useRef<HTMLDivElement>(null);
-  const segmentsMapRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
-  const pendingScrollSegmentIdRef = useRef<string | null>(null);
-
-  // 跨卷目次跳轉：在卷數切換且 DOM 渲染完成後自動滾動到該品起點 (加入 retry 重試機制防範 DOM 未掛載)
+  // 跨卷目次與關鍵字跳轉：在卷數切換且 DOM 渲染完成後自動滾動到該品/關鍵字起點
   useEffect(() => {
     if (pendingScrollSegmentIdRef.current) {
       const targetId = pendingScrollSegmentIdRef.current;
       pendingScrollSegmentIdRef.current = null;
-
-      let attempts = 0;
-      const tryScroll = () => {
-        const el = segmentsMapRef.current[targetId];
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          setActiveSegmentId(targetId);
-        } else if (attempts < 20) {
-          attempts++;
-          setTimeout(tryScroll, 50);
-        }
-      };
-      setTimeout(tryScroll, 30);
+      scrollToSegmentOrMatch(targetId, !!activeSearchQuery);
+      setActiveSegmentId(targetId);
     }
-  }, [currentJuanNum]);
+  }, [currentJuanNum, activeSearchQuery]);
   // 💡 自動儲存點選段落與卷次進度
   useEffect(() => {
     if (book) {
@@ -754,11 +798,19 @@ export function ReaderView({
             const parts = initialSegmentId.split('_');
             if (parts.length >= 2) {
               const juan = parseInt(parts[1], 10);
-              setCurrentJuanNum(juan);
+              if (!isNaN(juan) && juan > 0) {
+                setCurrentJuanNum(juan);
+              }
             }
-            // 延遲跳轉以確保 DOM 已經渲染完成
+            isProgrammaticScrollRef.current = true;
+            if (programmaticScrollTimerRef.current) clearTimeout(programmaticScrollTimerRef.current);
+            programmaticScrollTimerRef.current = window.setTimeout(() => {
+              isProgrammaticScrollRef.current = false;
+            }, 800);
+
+            // 延遲跳轉以確保 DOM 已經渲染完成，優先滾動至關鍵字 (畫面中間偏上 45%)
             setTimeout(() => {
-              scrollToSegment(initialSegmentId);
+              scrollToSegmentOrMatch(initialSegmentId, true);
               setActiveSegmentId(initialSegmentId);
             }, 300);
           } else {
@@ -1287,14 +1339,6 @@ export function ReaderView({
     }
   };
 
-  // 滾動到特定經文段落
-  const scrollToSegment = (segmentId: string) => {
-    const el = segmentsMapRef.current[segmentId];
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  };
-
   // 跳轉卷次
   const handleSelectJuan = (juanNum: number) => {
     setCurrentJuanNum(juanNum);
@@ -1341,17 +1385,12 @@ export function ReaderView({
     if (!targetJuan) targetJuan = currentJuanNum;
 
     if (targetJuan === currentJuanNum) {
-      let attempts = 0;
-      const tryScroll = () => {
-        const el = segmentsMapRef.current[targetSegId];
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else if (attempts < 15) {
-          attempts++;
-          setTimeout(tryScroll, 40);
-        }
-      };
-      setTimeout(tryScroll, 30);
+      isProgrammaticScrollRef.current = true;
+      if (programmaticScrollTimerRef.current) clearTimeout(programmaticScrollTimerRef.current);
+      programmaticScrollTimerRef.current = window.setTimeout(() => {
+        isProgrammaticScrollRef.current = false;
+      }, 600);
+      scrollToSegmentOrMatch(targetSegId, false);
     } else {
       // 跨卷：記錄待跳轉段落 ID，重置滾動位置，切換卷數，由 useEffect 處理自動滾動
       if (contentAreaRef.current) {
@@ -1408,13 +1447,50 @@ export function ReaderView({
       return;
     }
 
-    // 💡 滾動時靜默自動記錄當前最頂端可見的段落進度
+    const containerRect = el.getBoundingClientRect();
+    const triggerLine = containerRect.top + containerRect.height * 0.45; // 💡 畫面中間偏上 (45%) 焦點基準線
+
+    // 💡 1. 若處於檢索模式且讀者自行滑動頁面：動態同步搜尋 bar 中的當前匹配序號 (例如 6/13 -> 7/13)
+    if (activeSearchQuery && matchedSegments.length > 0 && !isProgrammaticScrollRef.current) {
+      let bestIndex = -1;
+      for (let i = 0; i < matchedSegments.length; i++) {
+        const m = matchedSegments[i];
+        if (m.juan < currentJuanNum) {
+          bestIndex = i;
+        } else if (m.juan === currentJuanNum) {
+          const segEl = segmentsMapRef.current[m.segmentId];
+          if (segEl) {
+            const markEl = (segEl.querySelector('.search-highlight') as HTMLElement) || segEl;
+            const rect = markEl.getBoundingClientRect();
+            const markY = rect.top + rect.height / 2;
+            if (markY <= triggerLine) {
+              bestIndex = i;
+            } else {
+              if (bestIndex === -1 && i === 0) {
+                bestIndex = 0;
+              }
+              break;
+            }
+          }
+        } else {
+          break;
+        }
+      }
+      if (bestIndex === -1 && matchedSegments.length > 0) {
+        bestIndex = 0;
+      }
+      if (bestIndex !== -1 && bestIndex !== currentMatchIndex) {
+        setCurrentMatchIndex(bestIndex);
+        setActiveSegmentId(matchedSegments[bestIndex].segmentId);
+      }
+    }
+
+    // 💡 2. 滾動時靜默自動記錄當前最頂端可見的段落進度
     if (book) {
       const juanData = book.content.juans.find(j => j.juan === currentJuanNum);
       if (juanData) {
-        const containerRect = el.getBoundingClientRect();
         // 💡 視線焦點基準線設定為螢幕上方 35% 處，當下一章節滾動越過此線時，進度條會立即切換品名，極度符合直覺
-        const triggerLine = containerRect.top + containerRect.height * 0.35;
+        const tocTriggerLine = containerRect.top + containerRect.height * 0.35;
         let visibleSegId = '';
         let visibleSegIdx = -1;
 
@@ -1423,7 +1499,7 @@ export function ReaderView({
           const segEl = segmentsMapRef.current[seg.id];
           if (segEl) {
             const rect = segEl.getBoundingClientRect();
-            if (rect.bottom > triggerLine) {
+            if (rect.bottom > tocTriggerLine) {
               visibleSegId = seg.id;
               visibleSegIdx = i;
               break;
@@ -2144,6 +2220,9 @@ export function ReaderView({
           )}
         </div>
       </div>
+
+      {/* 💡 底部過渡毛玻璃模糊漸變層 (Bottom Transition Blur Gradient) */}
+      <div className={`reader-bottom-blur-gradient ${showToolbar ? 'visible' : 'hidden'}`} />
 
       {/* 💡 浮動膠囊控制列 (Floating Capsule Bottom Bar) */}
       <div className={`reader-floating-bottom-bar ${showToolbar ? 'visible' : 'hidden'}`}>

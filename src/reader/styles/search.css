@@ -18,6 +18,30 @@
   justify-content: center;
 }
 
+/* 搜尋列與下方提示文字容器 */
+.search-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.search-info-tip {
+  font-size: 0.8rem;
+  color: var(--text-muted, #8d775f);
+  margin-top: 0.5rem;
+  text-align: left;
+  width: 100%;
+  max-width: 440px;
+  padding-left: 0.8rem;
+  box-sizing: border-box;
+  letter-spacing: 0.02em;
+}
+
+body.theme-ebony .search-info-tip {
+  color: rgba(255, 255, 255, 0.55);
+}
+
 /* 搜尋框比照「+ 線上下載匯入新佛經經典...」虛線卡片樣式 */
 .search-panel-bar {
   display: flex;

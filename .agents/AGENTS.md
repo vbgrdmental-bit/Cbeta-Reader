@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.1.6` (App: v4.1.6 / Builder: v2.9.9)
+- **Current Version**: `v4.1.9` (App: v4.1.9 / Builder: v2.9.10)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,17 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.1.9 / Builder: v2.9.10** (2026-08-21)
+  - [App] 閱讀頁下方浮動膠囊列升級為 20% 半透明毛玻璃質感（80% 不透明度），經文透光隱約可見。
+  - [App] 下方浮動膠囊列高度厚度調整為 56px，與上方控制列高度完全一致。
+  - [App] 下方膠囊至手機底部過渡區間新增 50% 毛玻璃模糊漸變效果（Bottom Blur Gradient）。
+- **⭐ App: v4.1.8 / Builder: v2.9.10** (2026-08-21)
+  - [App] 點選目次章節跳轉時，精確將該品章節標題置於畫面頂端第一行。
+  - [Builder] 系統性重構目錄導航精準度，優先匹配經文內真實標題段落與近鄰 lb 探測，精確錨定品名起點，解決科註/論疏經文跳轉落在科文前綴之問題。
+- **⭐ App: v4.1.7 / Builder: v2.9.9** (2026-08-21)
+  - [App] 經文檢索切換「< / >」或外部檢索跳轉時，精確將目標關鍵字置中偏上（45%）黃金閱讀視角對齊，徹底消除字句落在螢幕外之問題。
+  - [App] 閱讀滑動頁面時，動態即時同步檢索 Bar 序號（如 6/13 滑動超過中心線時自動推進至 7/13）。
+  - [App] 完善本地經典檢索淺色主題文字對比度，修復「站內已下載書籍檢索」提示文字清晰可讀。
 - **⭐ App: v4.1.6 / Builder: v2.9.9** (2026-08-20)
   - [App] 修正子資料夾內經書點選「移出至上一層」時，精確退回上一層資料夾或「我的書櫃」。
 - **⭐ App: v4.1.5 / Builder: v2.9.9** (2026-08-20)

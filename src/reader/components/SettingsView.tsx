@@ -1156,14 +1156,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.1.6) 直接顯示 */}
+                {/* 最新 App 版本 (v4.1.9) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.1.6</span>
-                    <span className="changelog-date">(2026-08-20)</span>
+                    <span>⭐ App: v4.1.9</span>
+                    <span className="changelog-date">(2026-08-21)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 修正子資料夾內經書點選「移出至上一層」時，精確退回上一層資料夾或「我的書櫃」。</li>
+                    <li>• 閱讀頁下方浮動膠囊列升級為 20% 半透明毛玻璃質感。</li>
+                    <li>• 下方浮動膠囊列厚度調整為 56px，與上方控制列高度一致。</li>
+                    <li>• 下方膠囊至手機底部過渡區間新增 50% 毛玻璃模糊漸變效果。</li>
                   </ul>
                 </div>
 
@@ -1186,6 +1188,26 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.1.8 <span className="changelog-date">(2026-08-21)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 點選目次章節跳轉時，精確將該品章節標題置於畫面頂端第一行。</li>
+                        <li>• 經文檢索切換時，精確將目標關鍵字置中偏上對齊，解決落在螢幕外之問題。</li>
+                        <li>• 閱讀滑動頁面時，動態即時同步檢索 Bar 序號與當前關鍵字位置。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.1.7 <span className="changelog-date">(2026-08-21)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 完善本地經典檢索淺色主題文字對比度，提示文字清晰呈現。</li>
+                      </ul>
+                    </div>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.1.6 <span className="changelog-date">(2026-08-20)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 修正子資料夾內經書點選「移出至上一層」時，精確退回上一層資料夾或「我的書櫃」。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.1.5 <span className="changelog-date">(2026-08-20)</span></div>
                       <ul className="changelog-list">
@@ -1376,14 +1398,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.9.9) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.9.10) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ Builder: v2.9.9</span>
-                    <span className="changelog-date">(2026-08-20)</span>
+                    <span>⭐ Builder: v2.9.10</span>
+                    <span className="changelog-date">(2026-08-21)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 完善經文書籍打包引擎，全面自動提取並計算 CJK 漢字與英數總字數。</li>
+                    <li>• 重構目錄導航精準度，優先匹配經文內真實標題段落與近鄰 lb 探測，精確錨定品名起點。</li>
                   </ul>
                 </div>
 
@@ -1408,9 +1430,9 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {showBuilderHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
-                      <div className="changelog-version-title">Builder: v2.9.8 <span className="changelog-date">(2026-08-20)</span></div>
+                      <div className="changelog-version-title">Builder: v2.9.9 <span className="changelog-date">(2026-08-20)</span></div>
                       <ul className="changelog-list">
-                        <li>• 修正無標明作譯者之經典（如 T1910、T1944 等），作譯者欄位忠實保持為空。</li>
+                        <li>• 完善經文書籍打包引擎，全面自動提取並計算 CJK 漢字與英數總字數。</li>
                       </ul>
                     </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>

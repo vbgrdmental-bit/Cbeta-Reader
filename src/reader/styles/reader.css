@@ -379,11 +379,59 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
 }
 
 /* ==========================================================================
+   💡 底部過渡毛玻璃模糊漸變層 (Bottom Transition Blur Gradient)
+   ========================================================================== */
+.reader-bottom-blur-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(88px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+  z-index: 450;
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 30%, rgba(0, 0, 0, 0.95) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 30%, rgba(0, 0, 0, 0.95) 100%);
+  background: linear-gradient(to bottom, transparent 0%, rgba(254, 252, 248, 0.5) 100%);
+  transition: opacity 0.28s ease, transform 0.28s ease, background 0.2s ease;
+}
+
+body.theme-ivory .reader-bottom-blur-gradient {
+  background: linear-gradient(to bottom, transparent 0%, rgba(254, 252, 248, 0.5) 100%);
+}
+
+body.theme-parchment .reader-bottom-blur-gradient {
+  background: linear-gradient(to bottom, transparent 0%, rgba(245, 238, 224, 0.5) 100%);
+}
+
+body.theme-comfort .reader-bottom-blur-gradient {
+  background: linear-gradient(to bottom, transparent 0%, rgba(236, 243, 226, 0.5) 100%);
+}
+
+body.theme-ebony .reader-bottom-blur-gradient {
+  background: linear-gradient(to bottom, transparent 0%, rgba(18, 22, 26, 0.6) 100%);
+}
+
+.reader-bottom-blur-gradient.hidden {
+  opacity: 0;
+  transform: translateY(15px);
+  pointer-events: none;
+}
+
+.reader-bottom-blur-gradient.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: none;
+}
+
+/* ==========================================================================
    💡 浮動膠囊控制列 (Floating Capsule Bottom Bar / Floating Pill Bar)
+   高度厚度 56px 與上方控制列一致，20% 半透明 (80% 不透明度)
    ========================================================================== */
 .reader-floating-bottom-bar {
   position: absolute;
-  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(0);
   z-index: 500;
@@ -391,13 +439,16 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
   align-items: center;
   justify-content: center;
   gap: 0.85rem;
-  padding: 0.62rem 1.4rem;
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  padding: 0 1.35rem;
   border-radius: 9999px;
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(140, 75, 39, 0.2);
-  background: rgba(254, 252, 248, 0.95);
-  box-shadow: 0 14px 40px rgba(70, 45, 20, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1.2px solid rgba(140, 75, 39, 0.22);
+  background: rgba(254, 252, 248, 0.80);
+  box-shadow: 0 12px 36px rgba(70, 45, 20, 0.14), 0 3px 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease-out, background-color 0.2s ease, border-color 0.2s ease;
   width: max-content;
   max-width: calc(100vw - 28px);
@@ -407,29 +458,29 @@ body.theme-ebony .reader-text-highlight.hl-style-full {
   text-size-adjust: 100%;
 }
 
-/* 4 種主題配色適配 (4 Themes Adaptive Styling) */
+/* 4 種主題配色適配 (20% 透明 / 80% 不透明度) */
 body.theme-ivory .reader-floating-bottom-bar {
-  background: rgba(254, 252, 248, 0.96);
-  border-color: rgba(140, 75, 39, 0.24);
-  box-shadow: 0 14px 40px rgba(80, 50, 25, 0.18), 0 4px 12px rgba(0, 0, 0, 0.07);
+  background: rgba(254, 252, 248, 0.80);
+  border-color: rgba(140, 75, 39, 0.22);
+  box-shadow: 0 12px 36px rgba(80, 50, 25, 0.14), 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 body.theme-parchment .reader-floating-bottom-bar {
-  background: rgba(245, 238, 224, 0.96);
-  border-color: rgba(130, 80, 40, 0.26);
-  box-shadow: 0 14px 40px rgba(70, 45, 15, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(245, 238, 224, 0.80);
+  border-color: rgba(130, 80, 40, 0.24);
+  box-shadow: 0 12px 36px rgba(70, 45, 15, 0.15), 0 3px 10px rgba(0, 0, 0, 0.06);
 }
 
 body.theme-comfort .reader-floating-bottom-bar {
-  background: rgba(236, 243, 226, 0.96);
-  border-color: rgba(65, 95, 55, 0.26);
-  box-shadow: 0 14px 40px rgba(35, 60, 30, 0.16), 0 4px 12px rgba(0, 0, 0, 0.07);
+  background: rgba(236, 243, 226, 0.80);
+  border-color: rgba(65, 95, 55, 0.24);
+  box-shadow: 0 12px 36px rgba(35, 60, 30, 0.13), 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 body.theme-ebony .reader-floating-bottom-bar {
-  background: rgba(20, 24, 30, 0.94);
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75), 0 5px 14px rgba(0, 0, 0, 0.6);
+  background: rgba(20, 24, 30, 0.80);
+  border-color: rgba(255, 255, 255, 0.20);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 /* 顯示 / 隱藏 過渡動畫 */
@@ -1340,18 +1391,21 @@ body.theme-ebony .font-size-btn.active,
 }
 
 /* ==========================================================================
-   💡 手機版專屬：浮動膠囊控制列再貼近底部、上下再加厚（維持網頁版按鍵比例與左右寬裕留白）
+   💡 手機版專屬：浮動膠囊控制列高度 56px 與上方一致、精確底邊距與底層模糊漸變適配
    ========================================================================== */
 @media (max-width: 768px) {
   .reader-floating-bottom-bar {
-    bottom: calc(0px + env(safe-area-inset-bottom, 0px)) !important;
-    padding: 0.68rem 1.45rem !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 0 1.25rem !important;
     gap: 0.85rem !important;
     border-radius: 9999px !important;
-    box-shadow: 0 16px 44px rgba(70, 45, 20, 0.22), 0 5px 14px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 12px 36px rgba(70, 45, 20, 0.16), 0 3px 10px rgba(0, 0, 0, 0.06) !important;
   }
 
-  /* 手機版按鍵維持與網頁版一致的精緻比列，不放大按鍵 */
+  /* 手機版按鍵維持與網頁版一致的精緻比列 */
   .floating-bar-theme-group {
     gap: 9px !important;
   }
@@ -1362,7 +1416,7 @@ body.theme-ebony .font-size-btn.active,
   }
 
   .floating-bar-divider {
-    height: 20px !important;
+    height: 22px !important;
     margin: 0 3px !important;
   }
 
@@ -1379,7 +1433,7 @@ body.theme-ebony .font-size-btn.active,
 
   .floating-font-val {
     font-size: 0.85rem !important;
-    min-width: 40px !important;
+    min-width: 38px !important;
   }
 
   .floating-bar-timer {
