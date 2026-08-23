@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.2.2` (App: v4.2.2 / Builder: v2.9.10)
+- **Current Version**: `v4.2.2` (App: v4.2.2 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ Builder: v2.9.11** (2026-08-23) [Builder Only]
+  - [Builder] 支援非連續卷數與跨冊分卷經典（如《華嚴經疏科》U1418，卷數清單為 1~5, 7~20 共 19 卷，無第 6 卷），智慧從 CBETA 官方 `juan_list` 提取真實卷次下載清單。
+  - [Builder] 升級官方 API 下載併行池與指數退避重試（Retry with Backoff），確保大篇幅及多卷經典下載 100% 穩定零中斷。
 - **⭐ App: v4.2.2 / Builder: v2.9.10** (2026-08-22)
   - [App] 閱讀頁上方控制列「三」目錄選單，全書目（不論單卷、多卷或現代著作）固定提供「目次」與「卷/篇章」雙分頁；若無分卷或無目次則適度留空並優雅提示。
   - [App] 首頁書架全站手勢左右滑動升級為整頁飛出式平滑切換，並加入方向鎖定防垂直位移。

@@ -58,10 +58,13 @@ export class ReaderBuilder {
    */
   static async buildContent(
     workId: string, 
-    juansCountInput: number,
+    juansCountInput: number | number[],
     onProgress?: (progress: number, currentJuan?: number, totalJuans?: number, remSec?: number, isBackup?: boolean) => void
   ): Promise<{ content: BookContent; rawToc: any[] }> {
-    const juansCount = (juansCountInput && juansCountInput > 0) ? juansCountInput : 1;
+    const juanNumbers: number[] = Array.isArray(juansCountInput) && juansCountInput.length > 0
+      ? [...juansCountInput]
+      : Array.from({ length: (typeof juansCountInput === 'number' && juansCountInput > 0) ? juansCountInput : 1 }, (_, idx) => idx + 1);
+    const juansCount = juanNumbers.length;
     const juans: JuanData[] = [];
     const juansMap = new Map<number, TextSegment[]>();
     let allRawTocs: any[] = [];
@@ -69,8 +72,8 @@ export class ReaderBuilder {
     const startTime = Date.now();
 
     try {
-      const CONCURRENCY = 6;
-      const queue = Array.from({ length: juansCount }, (_, idx) => idx + 1);
+      const CONCURRENCY = 4;
+      const queue = [...juanNumbers];
 
       const worker = async () => {
         while (queue.length > 0) {
@@ -153,14 +156,14 @@ export class ReaderBuilder {
           }
 
           if (!success) {
-            // 2. 向 CBETA 官方 API 請求 (最多重試 2 次，防範無效等待)
+            // 2. 向 CBETA 官方 API 請求 (最多重試 3 次，防範網路波動與 429 限流)
             const cleanPath = `/stable/juans?work=${workId}&juan=${j}&work_info=1&toc=1`;
             const relativeUrl = getApiUrl(cleanPath);
             const directUrl = `https://cbdata.dila.edu.tw${cleanPath}`;
 
-            for (let attempt = 1; attempt <= 2; attempt++) {
+            for (let attempt = 1; attempt <= 3; attempt++) {
               try {
-                const timeoutMs = attempt === 1 ? 2500 : 4000;
+                const timeoutMs = attempt === 1 ? 6000 : attempt === 2 ? 10000 : 15000;
                 const fetchOptions = attempt === 1 ? {} : { cache: 'reload' as RequestCache };
                 const currentRelUrl = attempt === 1 ? relativeUrl : `${relativeUrl}&_t=${Date.now()}`;
                 const currentDirUrl = attempt === 1 ? directUrl : `${directUrl}&_t=${Date.now()}`;
@@ -215,7 +218,7 @@ export class ReaderBuilder {
               } catch (e) {
                 console.warn(`[Juan ${j}] Fetch attempt ${attempt} failed:`, e);
               }
-              await new Promise(r => setTimeout(r, 150));
+              await new Promise(r => setTimeout(r, attempt * 400));
             }
           }
 
@@ -276,8 +279,8 @@ export class ReaderBuilder {
       // 併行啟動 6 個 worker 管道
       await Promise.all(Array.from({ length: CONCURRENCY }, () => worker()));
 
-      // 按卷數 1 ~ juansCount 正確順序排列
-      for (let j = 1; j <= juansCount; j++) {
+      // 按卷數清單順序排列
+      for (const j of juanNumbers) {
         const segs = juansMap.get(j);
         if (!segs || segs.length === 0) {
           throw new Error(`《${workId}》第 ${j} 卷經文內容為空，未能成功取得 CBETA 官方原版正文。`);

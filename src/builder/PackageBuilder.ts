@@ -70,6 +70,7 @@ export class PackageBuilder {
     }
 
     let actualJuansCount = (searchResult.juansCount && searchResult.juansCount > 0) ? searchResult.juansCount : 1;
+    let actualJuanList: number[] | null = searchResult.juanList || null;
     const isBackup = getSourceMode() === 'backup';
 
     try {
@@ -145,6 +146,17 @@ export class PackageBuilder {
               if (workInfo.juan && typeof workInfo.juan === 'number') {
                 actualJuansCount = workInfo.juan;
               }
+              if (workInfo.juan_list) {
+                const parsed = String(workInfo.juan_list)
+                  .split(',')
+                  .map(s => parseInt(s.trim(), 10))
+                  .filter(n => !isNaN(n) && n > 0);
+                if (parsed.length > 0) {
+                  actualJuanList = parsed;
+                  actualJuansCount = parsed.length;
+                  searchResult.juanList = parsed;
+                }
+              }
               if (workInfo.category) {
                 searchResult.category = workInfo.category;
               }
@@ -189,7 +201,7 @@ export class PackageBuilder {
       onProgress({ step: 'fetch_content', percent: 10, message: '正在從 CBETA 獲取經文內文與標記...' });
       const { content, rawToc } = await ReaderBuilder.buildContent(
         workId, 
-        actualJuansCount,
+        (actualJuanList && actualJuanList.length > 0) ? actualJuanList : actualJuansCount,
         (p: number, currentJuan?: number, totalJuans?: number, remSec?: number, isBackup?: boolean) => {
           let detail = `（卷次下載進度: ${Math.floor(p)}%）`;
           if (currentJuan && totalJuans) {

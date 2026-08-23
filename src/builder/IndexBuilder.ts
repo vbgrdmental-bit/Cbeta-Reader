@@ -5,6 +5,9 @@ import type { SourceMode } from '../utils/sourceMode';
 
 // 輔助函數：處理開發環境與生產環境的 API 請求路由，繞過 CORS 限制
 export const getApiUrl = (path: string): string => {
+  if (typeof window === 'undefined') {
+    return `https://cbdata.dila.edu.tw${path}`;
+  }
   return `/api-cbeta${path}`;
 };
 
@@ -45,6 +48,7 @@ export interface SearchResult {
   category: string;
   vol?: string; // 冊別 e.g. T09
   cjkChars?: number; // 字數 e.g. 60222
+  juanList?: number[]; // 特殊卷數列表 (例如 [1,2,3,4,5,7,8,...,20])
   isBackupSource?: boolean; // 標示是否來自備用鏡像源
 }
 

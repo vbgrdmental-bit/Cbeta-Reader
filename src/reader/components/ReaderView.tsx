@@ -755,7 +755,9 @@ export function ReaderView({
               // 2. 若無本地 mock 且需更新，向 CBETA 發起線上抓取
               if (!fetchedContent) {
                 const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
-                const { content, rawToc } = await ReaderBuilder.buildContent(workId, safeJuansCount);
+                const existingJuans = bookData.content?.juans?.map((j: JuanData) => j.juan);
+                const juansParam = (existingJuans && existingJuans.length > 0) ? existingJuans : safeJuansCount;
+                const { content, rawToc } = await ReaderBuilder.buildContent(workId, juansParam);
                 fetchedContent = content;
                 fetchedRawToc = rawToc;
               }
@@ -860,7 +862,8 @@ export function ReaderView({
             const creators = sanitizeCreators(targetMeta?.creators);
 
             const { ReaderBuilder } = await import('../../builder/ReaderBuilder');
-            const res = await ReaderBuilder.buildContent(workId, juansCount);
+            const juanListParam = (targetMeta?.juanList && targetMeta.juanList.length > 0) ? targetMeta.juanList : juansCount;
+            const res = await ReaderBuilder.buildContent(workId, juanListParam);
             const content = res.content;
             const rawToc = res.rawToc;
 
