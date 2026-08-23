@@ -721,6 +721,9 @@ export function ReaderView({
 
           // 💡 核心極速體驗：只要本地已有經書，立即 0 秒開書！絕不因版號更新或網路延遲阻斷開書
           setBook(bookData);
+          if ((!bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0) && bookData.content?.juans?.length > 1) {
+            setNavTab('juan');
+          }
 
           // 💡 全自動背景目次修復與經文修復邏輯
           const needsTocFix = !bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0 || 
@@ -2241,27 +2244,35 @@ export function ReaderView({
           })()}
 
           {/* 換卷提示 */}
-          {book.metadata.juansCount > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem', padding: '1rem 0', borderTop: '1px solid var(--reader-border)' }}>
-              <button 
-                style={{ fontFamily: 'var(--font-serif)', color: currentJuanNum > 1 ? 'var(--reader-text)' : 'var(--reader-text-muted)', cursor: currentJuanNum > 1 ? 'pointer' : 'default' }}
-                onClick={() => currentJuanNum > 1 && handleSelectJuan(currentJuanNum - 1)}
-                disabled={currentJuanNum <= 1}
-              >
-                ◀ 上一卷
-              </button>
-              <span style={{ fontSize: '0.85rem', color: 'var(--reader-text-muted)' }}>
-                卷 {currentJuanNum} / {book.metadata.juansCount}
-              </span>
-              <button 
-                style={{ fontFamily: 'var(--font-serif)', color: currentJuanNum < book.metadata.juansCount ? 'var(--reader-text)' : 'var(--reader-text-muted)', cursor: currentJuanNum < book.metadata.juansCount ? 'pointer' : 'default' }}
-                onClick={() => currentJuanNum < book.metadata.juansCount && handleSelectJuan(currentJuanNum + 1)}
-                disabled={currentJuanNum >= book.metadata.juansCount}
-              >
-                下一卷 ▶
-              </button>
-            </div>
-          )}
+          {book.content.juans.length > 1 && (() => {
+            const currentIdx = book.content.juans.findIndex(j => j.juan === currentJuanNum);
+            const prevJuan = currentIdx > 0 ? book.content.juans[currentIdx - 1].juan : null;
+            const nextJuan = currentIdx >= 0 && currentIdx < book.content.juans.length - 1 ? book.content.juans[currentIdx + 1].juan : null;
+            const totalJuans = book.content.juans.length;
+            const displayIndex = currentIdx >= 0 ? currentIdx + 1 : currentJuanNum;
+
+            return (
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem', padding: '1rem 0', borderTop: '1px solid var(--reader-border)' }}>
+                <button 
+                  style={{ fontFamily: 'var(--font-serif)', color: prevJuan != null ? 'var(--reader-text)' : 'var(--reader-text-muted)', cursor: prevJuan != null ? 'pointer' : 'default' }}
+                  onClick={() => prevJuan != null && handleSelectJuan(prevJuan)}
+                  disabled={prevJuan == null}
+                >
+                  ◀ 上一卷
+                </button>
+                <span style={{ fontSize: '0.85rem', color: 'var(--reader-text-muted)' }}>
+                  第 {currentJuanNum} 卷（{displayIndex} / {totalJuans}）
+                </span>
+                <button 
+                  style={{ fontFamily: 'var(--font-serif)', color: nextJuan != null ? 'var(--reader-text)' : 'var(--reader-text-muted)', cursor: nextJuan != null ? 'pointer' : 'default' }}
+                  onClick={() => nextJuan != null && handleSelectJuan(nextJuan)}
+                  disabled={nextJuan == null}
+                >
+                  下一卷 ▶
+                </button>
+              </div>
+            );
+          })()}
         </div>
       </div>
 
@@ -2364,18 +2375,18 @@ export function ReaderView({
 
           <div className="drawer-list custom-scrollbar">
             {navTab === 'juan' ? (
-              book.metadata.juansCount > 1
+              book.content.juans.length > 1
                 ? (
                   book.metadata.workId.startsWith('Y') ? (
                     <div className="drawer-empty-hint">此經典無分卷資料</div>
                   ) : (
-                    Array.from({ length: book.metadata.juansCount }).map((_, idx) => (
+                    book.content.juans.map((jData) => (
                       <div 
-                        key={`juan-${idx + 1}`} 
-                        className={`drawer-item ${currentJuanNum === idx + 1 ? 'active' : ''}`}
-                        onClick={() => handleSelectJuan(idx + 1)}
+                        key={`juan-${jData.juan}`} 
+                        className={`drawer-item ${currentJuanNum === jData.juan ? 'active' : ''}`}
+                        onClick={() => handleSelectJuan(jData.juan)}
                       >
-                        <span>第 {idx + 1} 卷</span>
+                        <span>第 {jData.juan} 卷</span>
                       </div>
                     ))
                   )
