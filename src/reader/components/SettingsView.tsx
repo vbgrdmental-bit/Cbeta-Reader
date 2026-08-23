@@ -1156,15 +1156,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.2.2) 直接顯示 */}
+                {/* 最新 App 版本 (v4.2.3) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.2.2</span>
-                    <span className="changelog-date">(2026-08-22)</span>
+                    <span>⭐ App: v4.2.3</span>
+                    <span className="changelog-date">(2026-08-23)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀頁上方控制列「三」選單，全書目固定提供「目次」與「卷/篇章」雙分頁。</li>
-                    <li>• 首頁書架全站手勢左右滑動升級為整頁飛出式平滑切換，並加入方向鎖定防垂直位移。</li>
+                    <li>• 修正手機版經文下載進度卡片 6 個方塊網格在窄螢幕寬度下超出邊界的問題，加入自適應防溢出縮放。</li>
                   </ul>
                 </div>
 
@@ -1187,6 +1186,13 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.2.2 <span className="changelog-date">(2026-08-22)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 閱讀頁上方控制列「三」選單，全書目固定提供「目次」與「卷/篇章」雙分頁。</li>
+                        <li>• 首頁書架全站手勢左右滑動升級為整頁飛出式平滑切換，並加入方向鎖定防垂直位移。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">⭐ App: v4.2.1 <span className="changelog-date">(2026-08-21)</span></div>
                       <ul className="changelog-list">

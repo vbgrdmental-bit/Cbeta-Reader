@@ -1144,11 +1144,11 @@ body.theme-ebony .builder-progress-bar-fill {
 }
 
 /* ==========================================================================
-   💡 6 個方塊網格 (上3個 1:1:1，下3個 1:1:1，每個固定比例 2:3)
+   💡 6 個方塊網格 (上3個 1:1:1，下3個 1:1:1，每個固定比例 1:1)
    ========================================================================== */
 .builder-steps-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.55rem;
   width: 100%;
   box-sizing: border-box;
@@ -1156,17 +1156,20 @@ body.theme-ebony .builder-progress-bar-fill {
 
 .builder-step-card {
   aspect-ratio: 1 / 1;
+  min-width: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 0.55rem 0.3rem 0.5rem;
+  padding: 0.5rem 0.25rem 0.45rem;
   border-radius: 10px;
   box-sizing: border-box;
   text-align: center;
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   user-select: none;
+  overflow: hidden;
 }
 
 /* 1. 未下載前 (Pending)：淺灰色 */
@@ -1223,6 +1226,7 @@ body.theme-ebony .builder-step-card.completed {
   align-items: center;
   gap: 2px;
   width: 100%;
+  min-width: 0;
 }
 
 /* 頂部圓型打勾/序號徽章 */
@@ -1290,6 +1294,8 @@ body.theme-ebony .builder-step-card.completed .builder-card-badge {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  width: 100%;
+  text-align: center;
 }
 
 /* 標題與簡介 */
@@ -1299,6 +1305,11 @@ body.theme-ebony .builder-step-card.completed .builder-card-badge {
   font-weight: 700;
   line-height: 1.2;
   margin: 0;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .builder-card-desc {
@@ -1306,6 +1317,10 @@ body.theme-ebony .builder-step-card.completed .builder-card-badge {
   line-height: 1.25;
   opacity: 0.75;
   width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .builder-card-desc-en {
@@ -1317,6 +1332,77 @@ body.theme-ebony .builder-step-card.completed .builder-card-badge {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+}
+
+/* 手機版緊湊自適應排版 (防超出螢幕與卡片邊界) */
+@media (max-width: 480px) {
+  .builder-progress-overlay {
+    padding: 0.8rem 0.6rem;
+  }
+  .builder-details-card {
+    padding: 0.95rem 0.75rem;
+    max-width: 100%;
+    gap: 0.65rem;
+  }
+  .builder-steps-grid {
+    gap: 0.35rem;
+  }
+  .builder-step-card {
+    padding: 0.4rem 0.18rem 0.35rem;
+    border-radius: 8px;
+  }
+  .builder-card-badge {
+    width: 18px;
+    height: 18px;
+    font-size: 0.64rem;
+  }
+  .builder-card-en {
+    font-size: 0.52rem;
+  }
+  .builder-card-title {
+    font-size: 0.72rem;
+  }
+  .builder-card-desc {
+    font-size: 0.54rem;
+  }
+  .builder-card-desc-en {
+    font-size: 0.46rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .builder-progress-overlay {
+    padding: 0.5rem 0.35rem;
+  }
+  .builder-details-card {
+    padding: 0.75rem 0.5rem;
+    gap: 0.5rem;
+  }
+  .builder-steps-grid {
+    gap: 0.25rem;
+  }
+  .builder-step-card {
+    padding: 0.3rem 0.12rem 0.25rem;
+  }
+  .builder-card-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 0.58rem;
+  }
+  .builder-card-en {
+    font-size: 0.46rem;
+  }
+  .builder-card-title {
+    font-size: 0.64rem;
+  }
+  .builder-card-desc {
+    font-size: 0.48rem;
+  }
+  .builder-card-desc-en {
+    font-size: 0.42rem;
+  }
 }
 
 body.theme-ebony .builder-step-item.completed {
