@@ -29,7 +29,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.2.3` (App: v4.2.3 / Builder: v2.9.11)
+- **Current Version**: `v4.2.4` (App: v4.2.4 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +50,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.2.4 / Builder: v2.9.11** (2026-08-23)
+  - [App] 閱讀頁上方「三」選單左右寬度再縮小窄化（230px），大幅減少版面遮擋，上下按鈕間距與字級舒適度維持不變。
+  - [App] 目次或卷次為空時，取消佔位文字（如「此經典無目次資料」、「此經典僅有一卷」），並僅保留單行空白。
 - **⭐ App: v4.2.3 / Builder: v2.9.11** (2026-08-23)
   - [App] 修正手機版經文下載進度卡片 6 個方塊網格在窄螢幕寬度下超出邊界的問題，加入 `minmax(0, 1fr)` 與自適應響應式防溢出縮放。
 - **⭐ Builder: v2.9.11** (2026-08-23) [Builder Only]

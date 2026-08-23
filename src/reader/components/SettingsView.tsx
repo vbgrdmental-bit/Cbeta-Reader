@@ -1156,14 +1156,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.2.3) 直接顯示 */}
+                {/* 最新 App 版本 (v4.2.4) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.2.3</span>
+                    <span>⭐ App: v4.2.4</span>
                     <span className="changelog-date">(2026-08-23)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 修正手機版經文下載進度卡片 6 個方塊網格在窄螢幕寬度下超出邊界的問題，加入自適應防溢出縮放。</li>
+                    <li>• 閱讀頁上方「三」選單左右寬度再縮小窄化，減少版面佔用。</li>
+                    <li>• 目次或卷次為空時，取消佔位提示文字並僅保留單行空白。</li>
                   </ul>
                 </div>
 
@@ -1186,6 +1187,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.2.3 <span className="changelog-date">(2026-08-23)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 修正手機版經文下載進度卡片 6 個方塊網格在窄螢幕寬度下超出邊界的問題，加入自適應防溢出縮放。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.2.2 <span className="changelog-date">(2026-08-22)</span></div>
                       <ul className="changelog-list">

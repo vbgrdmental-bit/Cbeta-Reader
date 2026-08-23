@@ -2378,7 +2378,7 @@ export function ReaderView({
               book.content.juans.length > 1
                 ? (
                   book.metadata.workId.startsWith('Y') ? (
-                    <div className="drawer-empty-hint">此經典無分卷資料</div>
+                    <div className="drawer-empty-blank" />
                   ) : (
                     book.content.juans.map((jData) => (
                       <div 
@@ -2391,7 +2391,7 @@ export function ReaderView({
                     ))
                   )
                 ) : (
-                  <div className="drawer-empty-hint">此經典僅有一卷</div>
+                  <div className="drawer-empty-blank" />
                 )
             ) : (
               /* 按品目錄 (目次 - 支援多層級樹狀 Collapsible Tree) */
@@ -2409,7 +2409,7 @@ export function ReaderView({
                   />
                 ))
               ) : (
-                <div className="drawer-empty-hint">此經典無目次資料</div>
+                <div className="drawer-empty-blank" />
               )
             )}
           </div>

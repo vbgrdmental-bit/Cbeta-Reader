@@ -732,7 +732,8 @@ body.theme-ebony .reader-text-btn:hover {
   position: absolute;
   top: 56px;
   right: 1.5rem;
-  width: 320px;
+  width: 230px;
+  max-width: calc(100vw - 2rem);
   max-height: 60vh;
   background: var(--reader-bg);
   border: 1px solid var(--reader-border);
@@ -835,6 +836,11 @@ body.theme-ebony .drawer-item.active {
   color: var(--text-muted);
   opacity: 0.75;
   user-select: none;
+}
+
+.drawer-empty-blank {
+  height: 38px;
+  min-height: 38px;
 }
 
 /* TTS Floating / Bottom Overlay Panel */
