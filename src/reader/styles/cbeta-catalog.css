@@ -13,6 +13,8 @@
   color: var(--text-primary, #2c2016);
   position: relative;
   overflow: hidden;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
 }
 
 /* 頂部固定控制列 (Header Bar) - 56pxBaseHeight 完全對齊首頁 */
@@ -384,6 +386,9 @@ body.theme-dark .cbeta-green-brand {
 .cbeta-items-scroll-area {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   padding-right: 0.65rem;
   min-height: 0;
 }

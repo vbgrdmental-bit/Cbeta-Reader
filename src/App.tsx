@@ -10,10 +10,61 @@ import { readingTimer, formatTimerMMSS } from './utils/readingTimer';
 import type { ReadingTimerState } from './utils/readingTimer';
 import './App.css';
 
+interface RouteState {
+  view: 'library' | 'cbeta' | 'reader';
+  workId?: string;
+  segmentId?: string;
+}
+
+const parseHashRoute = (): RouteState => {
+  if (typeof window === 'undefined') return { view: 'library' };
+  try {
+    const hash = window.location.hash.replace(/^#\/?/, '');
+    if (hash.startsWith('reader/')) {
+      const parts = hash.split('/');
+      const workId = parts[1]?.trim();
+      const segmentId = parts[2]?.trim();
+      if (workId) {
+        return { view: 'reader', workId, segmentId: segmentId || undefined };
+      }
+    } else if (hash === 'cbeta') {
+      return { view: 'cbeta' };
+    }
+  } catch (e) {
+    console.warn('Failed to parse hash route:', e);
+  }
+  return { view: 'library' };
+};
+
+const updateHashRoute = (targetView: 'library' | 'cbeta' | 'reader', workId?: string | null, segmentId?: string, replace = false) => {
+  if (typeof window === 'undefined') return;
+  try {
+    let targetHash = '#/';
+    if (targetView === 'cbeta') {
+      targetHash = '#/cbeta';
+    } else if (targetView === 'reader' && workId) {
+      targetHash = segmentId ? `#/reader/${workId}/${segmentId}` : `#/reader/${workId}`;
+    }
+
+    const currentHash = window.location.hash || '#/';
+    if (currentHash !== targetHash) {
+      const targetUrl = window.location.pathname + window.location.search + targetHash;
+      if (replace) {
+        window.history.replaceState({ view: targetView, workId, segmentId }, '', targetUrl);
+      } else {
+        window.history.pushState({ view: targetView, workId, segmentId }, '', targetUrl);
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to update route hash:', e);
+  }
+};
+
 export function App() {
-  const [view, setView] = useState<'library' | 'cbeta' | 'reader'>('library');
-  const [activeBookId, setActiveBookId] = useState<string | null>(null);
-  const [activeSegmentId, setActiveSegmentId] = useState<string | undefined>(undefined);
+  const initialRoute = parseHashRoute();
+  const [view, setView] = useState<'library' | 'cbeta' | 'reader'>(initialRoute.view);
+  const [activeBookId, setActiveBookId] = useState<string | null>(initialRoute.workId || null);
+  const [activeSegmentId, setActiveSegmentId] = useState<string | undefined>(initialRoute.segmentId);
   const [lastSearchQuery, setLastSearchQuery] = useState<string | undefined>(undefined);
   
   // 開場導覽狀態 (若尚未完成則自動呈現)
@@ -36,6 +87,34 @@ export function App() {
   useEffect(() => {
     const unsubscribe = readingTimer.subscribe(setTimerState);
     return unsubscribe;
+  }, []);
+
+  // 💡 監聽瀏覽器歷史前進/後退手勢（支援手機邊緣側滑返回）
+  useEffect(() => {
+    const handlePopStateOrHashChange = () => {
+      const route = parseHashRoute();
+      setView(route.view);
+      if (route.view === 'reader' && route.workId) {
+        setActiveBookId(route.workId);
+        setActiveSegmentId(route.segmentId);
+      } else if (route.view === 'cbeta') {
+        setActiveBookId(null);
+        setActiveSegmentId(undefined);
+        setAutoResumeMode(null);
+      } else {
+        setActiveBookId(null);
+        setActiveSegmentId(undefined);
+        setAutoResumeMode(null);
+        setBooksUpdatedTrigger(prev => prev + 1);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopStateOrHashChange);
+    window.addEventListener('hashchange', handlePopStateOrHashChange);
+    return () => {
+      window.removeEventListener('popstate', handlePopStateOrHashChange);
+      window.removeEventListener('hashchange', handlePopStateOrHashChange);
+    };
   }, []);
 
   // 初始化載入偏好設定
@@ -84,6 +163,7 @@ export function App() {
     setLastSearchQuery(searchQuery);
     setAutoResumeMode(autoResume || null);
     setView('reader');
+    updateHashRoute('reader', workId, segmentId);
   };
 
   const handleBackToLibrary = (resetToRoot = false) => {
@@ -96,6 +176,7 @@ export function App() {
     if (resetToRoot) {
       setResetFolderTrigger(prev => prev + 1);
     }
+    updateHashRoute('library');
   };
 
   const handleCompleteOnboarding = () => {
@@ -136,7 +217,10 @@ export function App() {
           initialSearchQuery={lastSearchQuery}
           resetFolderTrigger={resetFolderTrigger}
           onOpenSettings={() => setShowSettings(true)}
-          onOpenCbetaCatalog={() => setView('cbeta')}
+          onOpenCbetaCatalog={() => {
+            setView('cbeta');
+            updateHashRoute('cbeta');
+          }}
         />
       </div>
 
@@ -145,6 +229,7 @@ export function App() {
           onBackToLibrary={() => {
             setView('library');
             setBooksUpdatedTrigger(prev => prev + 1);
+            updateHashRoute('library');
           }}
           onOpenSettings={() => setShowSettings(true)}
           onSelectBook={handleSelectBook}

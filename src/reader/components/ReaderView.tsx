@@ -615,7 +615,7 @@ export function ReaderView({
       setActiveSegmentId(targetId);
     }
   }, [currentJuanNum, activeSearchQuery]);
-  // 💡 自動儲存點選段落與卷次進度
+  // 💡 自動儲存點選段落與卷次進度，並同步 URL Hash 路由
   useEffect(() => {
     if (book) {
       const progress = {
@@ -632,6 +632,20 @@ export function ReaderView({
         history = [workId, ...history.filter(id => id !== workId)].slice(0, 5);
         localStorage.setItem('recent_read_work_ids', JSON.stringify(history));
       } catch {}
+
+      // 💡 靜默同步 URL Hash，即使頁面因記憶體或手勢意外刷新，也能精確恢復閱讀位置
+      if (typeof window !== 'undefined') {
+        try {
+          const targetHash = activeSegmentId ? `#/reader/${workId}/${activeSegmentId}` : `#/reader/${workId}`;
+          if (window.location.hash !== targetHash) {
+            window.history.replaceState(
+              { view: 'reader', workId, segmentId: activeSegmentId },
+              '',
+              window.location.pathname + window.location.search + targetHash
+            );
+          }
+        } catch {}
+      }
     }
   }, [currentJuanNum, activeSegmentId, book, workId, scrollPercent]);
   const {

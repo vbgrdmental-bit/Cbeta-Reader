@@ -8,6 +8,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
@@ -20,6 +22,9 @@
 .reader-content-area {
   flex-grow: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 4rem var(--reader-padding, 10%) 6rem var(--reader-padding, 10%);
   display: flex;
   flex-direction: column;

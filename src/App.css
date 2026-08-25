@@ -5,6 +5,8 @@ html, body {
   height: 100%;
   background-color: #eae6db; /* 柔和溫馨的米灰色，襯托手機 App 的晨光木框 */
   overflow: hidden;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
   font-family: var(--font-sans);
   transition: background-color var(--transition-normal);
 }
@@ -23,6 +25,8 @@ body.theme-ebony { background-color: #0c0e11; }
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* 手機 App 框陰影 */
   background-color: var(--reader-bg);
   overflow: hidden;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
   display: flex;
   flex-direction: column;
 }

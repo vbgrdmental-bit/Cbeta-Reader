@@ -191,6 +191,8 @@ html, body, #root {
   height: 100%;
   width: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
   font-family: var(--font-sans);
   background-color: #150906;
   color: var(--text-light);
