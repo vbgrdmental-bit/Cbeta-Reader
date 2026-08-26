@@ -391,128 +391,7 @@ export function Library({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditMode]);
 
-  const handleGlobalTouchStart = (e: React.TouchEvent) => {
-    if (isEditMode) return;
-    const touch = e.touches[0];
-    touchSwipeRef.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now()
-    };
-    swipeLockRef.current = null; // 每次新手勢重置方向鎖定
-    if (swipeContainerRef.current) {
-      swipeContainerRef.current.style.transition = 'none';
-    }
-  };
-
-  const handleGlobalTouchEnd = (e: React.TouchEvent) => {
-    if (!touchSwipeRef.current || isEditMode) return;
-
-    const touch = e.changedTouches[0];
-    const deltaX = touch.clientX - touchSwipeRef.current.x;
-    const deltaY = touch.clientY - touchSwipeRef.current.y;
-    const deltaTime = Date.now() - touchSwipeRef.current.time;
-    touchSwipeRef.current = null;
-
-    // 💡 靈敏觸發門檻：位移 > 28px, 時間 < 550ms, 水平角度寬容比 1.15
-    const isValidSwipe = Math.abs(deltaX) > 28 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && deltaTime < 550;
-
-    if (!isValidSwipe) {
-      // 無效滑動 → 彈回原位
-      if (swipeContainerRef.current) {
-        swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
-        swipeContainerRef.current.style.transform = 'translateX(0px)';
-        swipeContainerRef.current.style.opacity = '1';
-      }
-      return;
-    }
-
-    // 💡 有效滑動 → CBETA 式絲滑整頁飛出動畫
-    const SHELF_NAV_CHAIN: (string | null)[] = [
-      null,                    // 首頁
-      'virtual_my_folders',    // 我的書櫃
-      'virtual_recent_reads',  // 近期閱讀
-      'virtual_favorites',     // 我的最愛
-      'virtual_highlights'     // 重點與筆記
-    ];
-
-    const doSwipeNav = (goForward: boolean, performNav: () => void) => {
-      const container = swipeContainerRef.current;
-      if (!container) { performNav(); return; }
-
-      // 1. 整頁飛出（向觸發方向）
-      const exitX = goForward ? '-100%' : '100%';
-      const enterX = goForward ? '100%' : '-100%';
-      container.style.transition = 'transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out';
-      container.style.transform = `translateX(${exitX})`;
-      container.style.opacity = '0.15';
-
-      setTimeout(() => {
-        // 2. 換頁內容
-        performNav();
-
-        // 3. 從對側滑入
-        container.style.transition = 'none';
-        container.style.transform = `translateX(${enterX})`;
-        container.style.opacity = '0.7';
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease-out';
-            container.style.transform = 'translateX(0px)';
-            container.style.opacity = '1';
-          });
-        });
-      }, 210);
-    };
-
-    if (deltaX < -28) {
-      // 👈 向左滑動 (推進)
-      if (activeTab === 'shelf') {
-        const currentIndex = SHELF_NAV_CHAIN.indexOf(currentFolderId);
-        if (currentIndex !== -1 && currentIndex < SHELF_NAV_CHAIN.length - 1) {
-          doSwipeNav(true, () => navigateToFolder(SHELF_NAV_CHAIN[currentIndex + 1]));
-        } else if (currentFolderId === 'virtual_highlights') {
-          doSwipeNav(true, () => setActiveTab('search'));
-        } else {
-          // 無更多頁可進 → 彈回
-          if (swipeContainerRef.current) {
-            swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
-            swipeContainerRef.current.style.transform = 'translateX(0px)';
-            swipeContainerRef.current.style.opacity = '1';
-          }
-        }
-      } else {
-        // 彈回
-        if (swipeContainerRef.current) {
-          swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
-          swipeContainerRef.current.style.transform = 'translateX(0px)';
-          swipeContainerRef.current.style.opacity = '1';
-        }
-      }
-    } else if (deltaX > 28) {
-      // 👉 向右滑動 (返回 / 觸發 CBETA)
-      if (activeTab === 'search') {
-        doSwipeNav(false, () => setActiveTab('shelf'));
-      } else if (activeTab === 'shelf') {
-        const currentIndex = SHELF_NAV_CHAIN.indexOf(currentFolderId);
-        if (currentIndex > 0) {
-          doSwipeNav(false, () => navigateToFolder(SHELF_NAV_CHAIN[currentIndex - 1]));
-        } else if (!currentFolderId) {
-          // 💡 在首頁向右滑 1 下：直接開啟 CBETA 藏經庫與下載
-          doSwipeNav(false, () => { if (onOpenCbetaCatalog) onOpenCbetaCatalog(); });
-        } else {
-          // 彈回
-          if (swipeContainerRef.current) {
-            swipeContainerRef.current.style.transition = 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1)';
-            swipeContainerRef.current.style.transform = 'translateX(0px)';
-            swipeContainerRef.current.style.opacity = '1';
-          }
-        }
-      }
-    }
-  };
-
+  // 💡 手機版手勢：停用首頁全幅左滑右滑換頁手勢，確保「我的書櫃」內經書左右橫向滾動 100% 順暢不衝突
   const [newFolderName, setNewFolderName] = useState('');
   const [newFolderColor, setNewFolderColor] = useState('#3d5a45');
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
@@ -1502,8 +1381,6 @@ export function Library({
       className="library-container" 
       style={{ position: 'relative' }}
       ref={libraryContainerRef}
-      onTouchStart={handleGlobalTouchStart}
-      onTouchEnd={handleGlobalTouchEnd}
     >
       {/* 💡 長按觸發編輯模式：懸浮批量工具列 (5 個 1:1:1:1:1 等寬按鈕，透過 Portal 渲染至 body 避免父容器位移) */}
       {isEditMode && activeTab === 'shelf' && createPortal(
