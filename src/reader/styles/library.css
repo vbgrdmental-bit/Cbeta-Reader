@@ -3036,7 +3036,6 @@ body.theme-ebony .batch-btn-secondary:hover {
 }
 
 .horizontal-book-card {
-  position: relative !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
@@ -3044,14 +3043,18 @@ body.theme-ebony .batch-btn-secondary:hover {
   background: var(--bg-card, #ffffff) !important;
   border: 1.5px solid var(--border-color, rgba(140, 75, 39, 0.15)) !important;
   border-radius: 14px !important;
-  padding: 1.05rem 1.15rem !important;
-  min-height: 72px !important;
+  padding: 0.75rem 1rem !important;
+  min-height: 68px !important;
+  height: 68px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
   box-sizing: border-box !important;
   cursor: pointer !important;
   user-select: none !important;
   width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
 }
 
 .horizontal-book-card:hover {
@@ -3102,12 +3105,14 @@ body.theme-dark .horizontal-book-card:hover {
 .horizontal-book-info {
   display: flex !important;
   flex-direction: column !important;
-  gap: 0.2rem !important;
-  flex-grow: 1 !important;
+  justify-content: center !important;
+  gap: 0.18rem !important;
+  flex: 1 1 0% !important;
   min-width: 0 !important;
   margin-left: 0.85rem !important;
   margin-right: 0.6rem !important;
   text-align: left !important;
+  overflow: hidden !important;
 }
 
 /* 經文名標題 */
@@ -3119,7 +3124,9 @@ body.theme-dark .horizontal-book-card:hover {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  display: block !important;
   width: 100% !important;
+  max-width: 100% !important;
   line-height: 1.25 !important;
 }
 
@@ -3137,7 +3144,9 @@ body.theme-dark .horizontal-book-title {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  display: block !important;
   width: 100% !important;
+  max-width: 100% !important;
 }
 
 body.theme-ebony .horizontal-book-author,
@@ -3980,8 +3989,10 @@ body.theme-ebony .folder-nav-more-btn:hover {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  flex: 0 0 calc(100% - 36px);
+  flex: 0 0 calc(100% - 24px);
+  width: calc(100% - 24px);
   max-width: 420px;
+  min-width: 0;
   scroll-snap-align: start;
   box-sizing: border-box;
 }
@@ -3989,6 +4000,8 @@ body.theme-ebony .folder-nav-more-btn:hover {
 .appstore-carousel-column .horizontal-book-card {
   margin-bottom: 0 !important;
   width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
 
 .appstore-empty-placeholder {
