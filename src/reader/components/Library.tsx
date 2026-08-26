@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, X, Download,
   Home, Search,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ArrowUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
@@ -681,36 +681,6 @@ export function Library({
 
   // 刪除經典暫存 ID
   const [bookToDelete, setBookToDelete] = useState<string | null>(null);
-
-  // 將經典移出資料夾至上一層 (parentId 代表的資料夾；若 parentId 為 null 則代表移至「我的書櫃」頂層)
-  const handleRemoveFromFolder = (e: React.MouseEvent, bookId: string) => {
-    e.stopPropagation();
-    if (!currentFolderId) return;
-
-    const currentFolder = folders.find(f => f.id === currentFolderId);
-    if (!currentFolder) return;
-
-    const parentId = currentFolder.parentId;
-
-    if (!parentId) {
-      // 💡 上一層是「我的書櫃」頂層：加入我的書櫃 ID 清單
-      const updatedMyBookshelf = Array.from(new Set([...myBookshelfBookIds, bookId]));
-      saveMyBookshelfBookIds(updatedMyBookshelf);
-    }
-
-    const updated = folders.map(f => {
-      if (f.id === currentFolderId) {
-        return { ...f, bookIds: f.bookIds.filter(id => id !== bookId) };
-      }
-      if (parentId && f.id === parentId) {
-        const bookIds = f.bookIds.includes(bookId) ? f.bookIds : [...f.bookIds, bookId];
-        return { ...f, bookIds };
-      }
-      return f;
-    });
-
-    saveFolders(updated);
-  };
 
   // 讀取本地已下載的經典
   const loadLocalBooks = async () => {
@@ -2766,22 +2736,8 @@ export function Library({
             {/* 💡 【細細分隔線】 */}
             <div style={{ margin: '0.9rem 0 0.7rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.12))' }} />
 
-            {/* 💡 【下半部份：功能鍵 (1 列 4 個圖示按鈕)】 */}
+            {/* 💡 【下半部份：功能鍵 (1 列 3 個圖示按鈕)】 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              {/* 若在子資料夾，顯示「移出至上一層」選項 */}
-              {currentFolderId && !currentFolderId.startsWith('virtual_') && (
-                <button 
-                  className="action-menu-item-btn"
-                  onClick={(e) => {
-                    handleRemoveFromFolder(e, menuTargetBook.workId);
-                    setMenuTargetBook(null);
-                  }}
-                  style={{ marginBottom: '0.2rem' }}
-                >
-                  <ArrowUp size={16} />
-                  <span>移出至上一層資料夾</span>
-                </button>
-              )}
 
               {/* 1 列 3 個按鈕：移至資料夾 | 加入我的最愛 | 刪除經文 (等寬 1:1:1 佐以細分隔線) */}
               {(() => {
