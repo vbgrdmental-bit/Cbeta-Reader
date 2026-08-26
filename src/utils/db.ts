@@ -223,12 +223,20 @@ export async function listBooks(): Promise<BookMetadata[]> {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(BOOKS_STORE, 'readonly');
     const store = transaction.objectStore(BOOKS_STORE);
-    const request = store.getAll();
+    const metadataList: BookMetadata[] = [];
+    const request = store.openCursor();
 
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
-      const books: ReaderPackage[] = request.result || [];
-      resolve(books.map(b => b.metadata));
+      const cursor = request.result;
+      if (cursor) {
+        if (cursor.value && cursor.value.metadata) {
+          metadataList.push(cursor.value.metadata);
+        }
+        cursor.continue();
+      } else {
+        resolve(metadataList);
+      }
     };
   });
 }

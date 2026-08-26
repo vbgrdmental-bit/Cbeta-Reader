@@ -153,19 +153,7 @@ export function Library({
     if (feat?.cjkChars && feat.cjkChars > 0) {
       return feat.cjkChars;
     }
-    const pkg = downloadedPackages.find(p => p.metadata.workId === book.workId);
-    if (pkg && pkg.content?.juans) {
-      let count = 0;
-      pkg.content.juans.forEach(j => {
-        j.segments?.forEach(seg => {
-          const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
-          const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
-          if (cjkMatches) count += cjkMatches.length;
-        });
-      });
-      if (count > 0) return count;
-    }
-    return 0;
+    return (book.juansCount || 1) * 8000;
   };
 
   const formatEstimatedReadingTime = (cjkChars?: number) => {
@@ -744,57 +732,35 @@ export function Library({
       }
 
       setDownloadedBooks([...booksMeta]);
-
-      // 同步讀取 package，以供本地檢索使用與缺失字數自動修復
-      const { getBook, saveBook } = await import('../../utils/db');
-      const pkgs: ReaderPackage[] = [];
-      let hasHealedAny = false;
-
-      for (const meta of booksMeta) {
-        const pkg = await getBook(meta.workId);
-        if (pkg) {
-          pkgs.push(pkg);
-          // 自動修復缺失或校勘 cjkChars (Auto-Heal 對齊 CBETA 權威字數)
-          const feat = FEATURED_BOOKS.find(b => b.workId === meta.workId);
-          if (feat?.cjkChars && feat.cjkChars > 0 && pkg.metadata.cjkChars !== feat.cjkChars) {
-            pkg.metadata.cjkChars = feat.cjkChars;
-            meta.cjkChars = feat.cjkChars;
-            if (feat.vol && !pkg.metadata.vol) {
-              pkg.metadata.vol = feat.vol;
-              meta.vol = feat.vol;
-            }
-            hasHealedAny = true;
-            await saveBook(pkg);
-          } else if (!pkg.metadata.cjkChars || pkg.metadata.cjkChars === 0) {
-            let count = 0;
-            pkg.content?.juans?.forEach(j => {
-              j.segments?.forEach(seg => {
-                const cleanContent = seg.content.replace(/^No\.\s*\d+[a-z]?/i, '');
-                const cjkMatches = cleanContent.match(/[\u4e00-\u9fa5\u3400-\u4dbf\u20000-\u2a6df]/g);
-                if (cjkMatches) count += cjkMatches.length;
-              });
-            });
-            if (count > 0) {
-              pkg.metadata.cjkChars = count;
-              meta.cjkChars = count;
-              hasHealedAny = true;
-              await saveBook(pkg);
-            }
-          }
-        }
-      }
-      setDownloadedPackages(pkgs);
-      if (hasHealedAny) {
-        setDownloadedBooks([...booksMeta]);
-      }
     } catch (e) {
       console.error('Failed to load local books from IndexedDB:', e);
     }
   };
 
+  // 💡 僅在使用者切換至「關鍵字搜尋」分頁時，才在背景輕量載入搜尋索引 (避免首頁啟動時載入大量經文造成手機 Safari 記憶體爆表閃退)
   useEffect(() => {
-    loadLocalBooks();
-  }, [booksUpdatedTrigger]);
+    if (activeTab === 'search' && downloadedPackages.length === 0 && downloadedBooks.length > 0) {
+      const loadSearchIndexes = async () => {
+        try {
+          const { getBook } = await import('../../utils/db');
+          const pkgs: ReaderPackage[] = [];
+          for (const meta of downloadedBooks) {
+            const pkg = await getBook(meta.workId);
+            if (pkg) {
+              pkgs.push({
+                metadata: pkg.metadata,
+                searchIndex: pkg.searchIndex
+              } as ReaderPackage);
+            }
+          }
+          setDownloadedPackages(pkgs);
+        } catch (e) {
+          console.warn('Failed to load search indexes:', e);
+        }
+      };
+      loadSearchIndexes();
+    }
+  }, [activeTab, downloadedBooks, downloadedPackages.length]);
 
   // 線上搜尋 CBETA 經典
   const handleOnlineSearch = async (e: React.FormEvent) => {
