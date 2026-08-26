@@ -116,12 +116,12 @@ export function Library({
   // 批量選擇經書狀態
   const [selectedBookIds, setSelectedBookIds] = useState<string[]>([]);
   const [showBatchMoveDialog, setShowBatchMoveDialog] = useState(false);
-  // 💡 movingFolderId：正在被移動的資料夾 ID（非 null 時，批量移動對話框改為「移動資料夾」模式）
-  const [movingFolderId, setMovingFolderId] = useState<string | null>(null);
 
   // 「...」選項 Modal 狀態
+  const [showFolderManagerModal, setShowFolderManagerModal] = useState(false);
   const [menuTargetFolder, setMenuTargetFolder] = useState<BookFolder | null>(null);
   const [menuTargetBook, setMenuTargetBook] = useState<BookMetadata | null>(null);
+  const [menuTargetBookSource, setMenuTargetBookSource] = useState<string | null>(null);
 
   const [selectedOnlineWorkIds, setSelectedOnlineWorkIds] = useState<string[]>([]);
   const [showBatchDownloadModal, setShowBatchDownloadModal] = useState(false);
@@ -747,23 +747,23 @@ export function Library({
     setShowNewFolderDialog(false);
   };
 
-  // 💡 資料夾順序前移 (<) / 後移 (>)
-  const handleSwapFolderOrder = (folderId: string, direction: 'left' | 'right') => {
-    const idx = displayFolders.findIndex(f => f.id === folderId);
+  // 💡 資料夾順序上移 / 下移
+  const handleSwapFolderOrder = (folderId: string, direction: 'up' | 'down' | 'left' | 'right') => {
+    const topFolders = folders.filter(f => !f.parentId);
+    const idx = topFolders.findIndex(f => f.id === folderId);
     if (idx === -1) return;
 
-    const targetIdx = direction === 'left' ? idx - 1 : idx + 1;
-    if (targetIdx < 0 || targetIdx >= displayFolders.length) return;
+    const isBackward = direction === 'up' || direction === 'left';
+    const targetIdx = isBackward ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= topFolders.length) return;
 
-    // 交換 displayFolders 中的資料夾位置
-    const newDisplayFolders = [...displayFolders];
-    const temp = newDisplayFolders[idx];
-    newDisplayFolders[idx] = newDisplayFolders[targetIdx];
-    newDisplayFolders[targetIdx] = temp;
+    const newTopFolders = [...topFolders];
+    const temp = newTopFolders[idx];
+    newTopFolders[idx] = newTopFolders[targetIdx];
+    newTopFolders[targetIdx] = temp;
 
-    // 保留非目前層級的資料夾，更新全域 folders
-    const otherFolders = folders.filter(f => !newDisplayFolders.some(df => df.id === f.id));
-    const updatedFolders = [...otherFolders, ...newDisplayFolders];
+    const subFolders = folders.filter(f => f.parentId);
+    const updatedFolders = [...newTopFolders, ...subFolders];
 
     saveFolders(updatedFolders);
   };
@@ -773,40 +773,21 @@ export function Library({
     e.stopPropagation();
     const folderToDelete = folders.find(f => f.id === folderId);
     if (!folderToDelete) return;
-    const confirm = window.confirm("確定要刪除此資料夾嗎？內部的子資料夾與經典將移至上一層。");
+    const confirm = window.confirm("確定要刪除此資料夾嗎？內部的經典將回到「近期下載」。");
     if (!confirm) return;
     
-    const parentId = folderToDelete.parentId;
-    let updatedFolders = folders.filter(f => f.id !== folderId);
+    // 1. 從 folders 清單移除此資料夾
+    const updatedFolders = folders.filter(f => f.id !== folderId);
     
-    // 1. 將子資料夾移至上一層 parentId
-    updatedFolders = updatedFolders.map(f => {
-      if (f.parentId === folderId) {
-        return { ...f, parentId };
-      }
-      return f;
-    });
-    
-    // 2. 將內部經典移至上一層
-    if (parentId) {
-      updatedFolders = updatedFolders.map(f => {
-        if (f.id === parentId) {
-          const combinedBooks = Array.from(new Set([...f.bookIds, ...folderToDelete.bookIds]));
-          return { ...f, bookIds: combinedBooks };
-        }
-        return f;
-      });
-    } else {
-      // 💡 parentId 為 null 時，將內部經典移至「我的書櫃」頂層
-      const combinedMyBookshelf = Array.from(new Set([...myBookshelfBookIds, ...folderToDelete.bookIds]));
-      saveMyBookshelfBookIds(combinedMyBookshelf);
-    }
+    // 2. 將內部經典自 myBookshelfBookIds 移除，使其回歸「近期下載」（未分類）
+    const folderBookIds = folderToDelete.bookIds;
+    saveMyBookshelfBookIds(myBookshelfBookIds.filter(id => !folderBookIds.includes(id)));
     
     saveFolders(updatedFolders);
     
-    // 若當前身處被刪除的資料夾，退回上一層（若無 parentId 則退回「我的書櫃」）
+    // 若當前身處被刪除的資料夾，退回「我的書櫃」
     if (currentFolderId === folderId) {
-      setCurrentFolderId(parentId || 'virtual_my_folders');
+      setCurrentFolderId('virtual_my_folders');
     }
   };
 
@@ -862,52 +843,6 @@ export function Library({
     });
 
     saveFolders(updated);
-  };
-
-  // 將子資料夾移出至上一層
-  const handleRemoveFolderFromFolder = (e: React.MouseEvent, folderId: string) => {
-    e.stopPropagation();
-    const folder = folders.find(f => f.id === folderId);
-    if (!folder || !folder.parentId) return;
-
-    const parentFolder = folders.find(f => f.id === folder.parentId);
-    const grandParentId = parentFolder ? parentFolder.parentId : null;
-
-    const updated = folders.map(f => {
-      if (f.id === folderId) {
-        return { ...f, parentId: grandParentId };
-      }
-      return f;
-    });
-
-    saveFolders(updated);
-  };
-
-  const openMoveFolderDialog = (folderId: string) => {
-    setSelectedBookIds([]);
-    setMovingFolderId(folderId);
-    setShowBatchMoveDialog(true);
-  };
-
-  // 💡 執行資料夾移動：更改 parentId（不能移入自身或其子孫資料夾）
-  const handleMoveFolder = (targetParentId: string | null) => {
-    if (!movingFolderId) return;
-    // 防止循環：檢查目標是否為被移動資料夾的後代
-    const isDescendant = (checkId: string | null): boolean => {
-      if (checkId === null) return false;
-      if (checkId === movingFolderId) return true;
-      const parent = folders.find(f => f.id === checkId);
-      return parent ? isDescendant(parent.parentId) : false;
-    };
-    if (targetParentId === movingFolderId || isDescendant(targetParentId)) return;
-
-    const updated = folders.map(f => {
-      if (f.id === movingFolderId) return { ...f, parentId: targetParentId };
-      return f;
-    });
-    saveFolders(updated);
-    setMovingFolderId(null);
-    setShowBatchMoveDialog(false);
   };
 
   // 讀取本地已下載的經典
@@ -1312,13 +1247,29 @@ export function Library({
 
   const subfolderBookIds = useMemo(() => folders.flatMap(f => f.bookIds), [folders]);
   const allBookshelfBookIds = useMemo(() => Array.from(new Set([...myBookshelfBookIds, ...subfolderBookIds])), [myBookshelfBookIds, subfolderBookIds]);
-  
-  // 近期閱讀（最多 10 本）與我的最愛經典列表
-  const recentReadsBooks = resumeBooks.slice(0, 10).map(item => item.book);
+  // 1. 近期閱讀（最多 9 本，即 3 欄 × 3 列）
+  const recentReadsBooks = resumeBooks.slice(0, 9).map(item => item.book);
+  // 2. 我的最愛
   const favoriteBooksList = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
+  // 3. 近期下載（未分類經典）
+  const unclassifiedBooks = downloadedBooks.filter(b => !allBookshelfBookIds.includes(b.workId));
+
+  // 💡 分割經書清單為 3 本一組的垂直欄 helper
+  const chunkBooksInto3 = (booksList: BookMetadata[]): BookMetadata[][] => {
+    const cols: BookMetadata[][] = [];
+    for (let i = 0; i < booksList.length; i += 3) {
+      cols.push(booksList.slice(i, i + 3));
+    }
+    return cols;
+  };
 
   // 如果是虛擬系統資料夾，不顯示任何一般子資料夾；首頁亦不直鋪自訂資料夾（統一收納於「我的書櫃」）
-  const isSystemFolder = currentFolderId === 'virtual_resume' || currentFolderId === 'virtual_recent_reads' || currentFolderId === 'virtual_favorites' || currentFolderId === 'virtual_highlights';
+  const isSystemFolder = currentFolderId === 'virtual_resume' || 
+                         currentFolderId === 'virtual_recent_reads' || 
+                         currentFolderId === 'virtual_favorites' || 
+                         currentFolderId === 'virtual_unclassified' || 
+                         currentFolderId === 'virtual_highlights';
+
   const displayFolders = isSystemFolder
     ? []
     : (currentFolderId === 'virtual_my_folders'
@@ -1370,18 +1321,20 @@ export function Library({
     ? recentReadsBooks
     : (currentFolderId === 'virtual_favorites'
         ? favoriteBooksList
-        : (currentFolderId === 'virtual_resume'
-            ? resumeBooks.map(item => item.book)
-            : sortBooksByWorkId(
-                currentFolderId && currentFolderId !== 'virtual_my_folders'
-                  ? downloadedBooks.filter(b => {
-                      const f = folders.find(folder => folder.id === currentFolderId);
-                      return f ? f.bookIds.includes(b.workId) : false;
-                    })
-                  : (currentFolderId === 'virtual_my_folders'
-                      ? downloadedBooks.filter(b => myBookshelfBookIds.includes(b.workId))
-                      : downloadedBooks.filter(b => !allBookshelfBookIds.includes(b.workId)))
-              )));
+        : (currentFolderId === 'virtual_unclassified'
+            ? unclassifiedBooks
+            : (currentFolderId === 'virtual_resume'
+                ? resumeBooks.map(item => item.book)
+                : sortBooksByWorkId(
+                    currentFolderId && currentFolderId !== 'virtual_my_folders'
+                      ? downloadedBooks.filter(b => {
+                          const f = folders.find(folder => folder.id === currentFolderId);
+                          return f ? f.bookIds.includes(b.workId) : false;
+                        })
+                      : (currentFolderId === 'virtual_my_folders'
+                          ? downloadedBooks.filter(b => myBookshelfBookIds.includes(b.workId))
+                          : unclassifiedBooks)
+                  ))));
 
   const displayBooks = useMemo(() => {
     const key = `book_order_${currentFolderId || 'root'}`;
@@ -1405,11 +1358,13 @@ export function Library({
 
   // 獲取當前資料夾路徑麵包屑
   const getFolderPath = (folderId: string | null): string => {
-    if (!folderId) return '首頁';
-    if (folderId === 'virtual_recent_reads') return '近期閱讀 (最多10本)';
+    if (!folderId) return '我的書櫃';
+    if (folderId === 'virtual_recent_reads') return '近期閱讀';
     if (folderId === 'virtual_favorites') return '我的最愛';
+    if (folderId === 'virtual_unclassified') return '近期下載';
     if (folderId === 'virtual_highlights') return '重點與筆記';
     if (folderId === 'virtual_resume') return '繼續閱讀';
+    if (folderId === 'virtual_my_folders') return '我的書櫃';
     const path: string[] = [];
     let currentId: string | null = folderId;
     let safetyCounter = 0;
@@ -1424,6 +1379,122 @@ export function Library({
       safetyCounter++;
     }
     return ['我的書櫃', ...path].join(' / ');
+  };
+
+  // 💡 經典橫向卡片組件 (支援單本、輪播欄位與詳細清單)
+  const renderBookCard = (book: BookMetadata, allowReorder = true, sourceContext?: string) => {
+    const isSelected = selectedBookIds.includes(book.workId);
+    const featuredBook = FEATURED_BOOKS.find((b: any) => b.workId === book.workId);
+    const titleText = book.title || featuredBook?.title || book.workId;
+    let creatorText = sanitizeCreators(book.creators || featuredBook?.creators);
+
+    // 💡 印順導師著作 (Y 系列) 作譯者名稱統一規範顯示為「民國 釋印順著」
+    if (book.workId.startsWith('Y') || (creatorText && creatorText.includes('印順'))) {
+      creatorText = '民國 釋印順著';
+    }
+
+    return (
+      <div 
+        key={book.workId}
+        className={`horizontal-book-card ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''}`}
+        onClick={(e) => { 
+          if (isLongPressTriggeredRef.current) {
+            isLongPressTriggeredRef.current = false;
+            return;
+          }
+          if (isEditMode) {
+            e.stopPropagation();
+            if ((e.target as HTMLElement).closest('.horizontal-card-checkbox')) return;
+            toggleSelectBook(book.workId, e);
+          } else {
+            onSelectBook(book.workId); 
+          }
+        }}
+        onMouseDown={startLongPress}
+        onMouseUp={cancelLongPress}
+        onMouseLeave={cancelLongPress}
+        onTouchStart={startLongPress}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={cancelLongPress}
+      >
+        {/* 💡 左側：編輯模式下勾選框 (Checkbox) */}
+        {isEditMode && (
+          <div 
+            className={`batch-checkbox horizontal-card-checkbox ${isSelected ? 'checked' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSelectBook(book.workId, e);
+            }}
+            title="勾選以進行批量移動或批次刪除"
+          >
+            {isSelected && <Check size={12} />}
+          </div>
+        )}
+
+        {/* 💡 左側：經典編號顏色方塊 Badge (如 T0801, Y0040) */}
+        <div className="horizontal-book-badge" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
+          {book.workId}
+        </div>
+
+        {/* 💡 中間：經名與朝代/作譯者小灰字 + 卷數 */}
+        <div className="horizontal-book-info">
+          <div className="horizontal-book-title" title={titleText}>
+            {titleText}
+          </div>
+          <div className="horizontal-book-author" title={creatorText}>
+            {creatorText}
+            {/* 💡 卷數顯示：juansCount > 1 且非 Y 系列 (印順著作/近代編著無傳統卷數) */}
+            {book.juansCount > 1 && !book.workId.startsWith('Y') && (
+              <span className="horizontal-book-juans-badge">
+                {book.juansCount}卷
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* 💡 右側：長按/編輯模式下顯示「↑」「↓」順序調整按鈕 + 「...」選項按鈕 */}
+        <div className="horizontal-book-right-actions">
+          {isEditMode && allowReorder && (
+            <div className="book-reorder-btn-group">
+              <button 
+                className="book-reorder-btn"
+                disabled={displayBooks.findIndex(b => b.workId === book.workId) <= 0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSwapBookOrder(book.workId, 'left');
+                }}
+                title="向上移動經典順序 (↑)"
+              >
+                <ChevronUp size={15} />
+              </button>
+              <button 
+                className="book-reorder-btn"
+                disabled={displayBooks.findIndex(b => b.workId === book.workId) >= displayBooks.length - 1}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSwapBookOrder(book.workId, 'right');
+                }}
+                title="向下移動經典順序 (↓)"
+              >
+                <ChevronDown size={15} />
+              </button>
+            </div>
+          )}
+
+          <button 
+            className="horizontal-book-more-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuTargetBook(book);
+              setMenuTargetBookSource(sourceContext || currentFolderId || null);
+            }}
+            title="經典選項"
+          >
+            <MoreVertical size={16} />
+          </button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -1515,17 +1586,14 @@ export function Library({
             <div className="control-divider" />
             
             {currentFolderId === null ? (
-              // 💡 1. 處於最外層首頁：顯示「下載新佛典（+）」與「新建資料夾」
-              <>
-                <button
-                  className="library-header-btn"
-                  onClick={handleOpenCbetaCatalogWithAnimation}
-                  title="進入 CBETA 藏經庫目錄下載佛典"
-                >
-                  <Plus size={22} style={{ strokeWidth: 2.5 }} />
-                </button>
-                {/* 💡 首頁頂部控制列：保留原「+」進入 CBETA 藏經庫目錄 */}
-              </>
+              // 💡 1. 處於最外層首頁：顯示「下載新佛典（+）」
+              <button
+                className="library-header-btn"
+                onClick={handleOpenCbetaCatalogWithAnimation}
+                title="進入 CBETA 藏經庫目錄下載佛典"
+              >
+                <Plus size={22} style={{ strokeWidth: 2.5 }} />
+              </button>
             ) : (
               // 💡 2. 處於資料夾內：將「<」和「>」整合到最上方控制列
               <>
@@ -1548,8 +1616,8 @@ export function Library({
                   <ChevronRight size={20} />
                 </button>
 
-                {/* 💡 在「我的書櫃」或自訂子資料夾內，頂部控制列放回原「新建資料夾 (+)」圖示按鈕 */}
-                {(currentFolderId === 'virtual_my_folders' || (currentFolderId && !currentFolderId.startsWith('virtual_'))) && (
+                {/* 💡 只有在「我的書櫃」（virtual_my_folders）頂部控制列才顯示「新建資料夾 (+)」圖示按鈕；進入子資料夾時隱藏 */}
+                {currentFolderId === 'virtual_my_folders' && (
                   <button
                     className="library-header-btn"
                     onClick={() => setShowNewFolderDialog(true)}
@@ -1569,7 +1637,7 @@ export function Library({
             <button 
               className="library-header-btn"
               onClick={() => setActiveTab('search')}
-              title="本地經典檢索"
+              title="關鍵字搜尋"
             >
               <Search size={20} />
             </button>
@@ -1630,18 +1698,38 @@ export function Library({
                      currentFolderId === 'virtual_my_folders' ? '我的書櫃' :
                      getFolderPath(currentFolderId)}
                   </span>
+
+                  {/* 💡 在「我的書櫃」時提供圓形「...」資料夾集中管理按鈕 */}
+                  {currentFolderId === 'virtual_my_folders' && folders.filter(f => !f.parentId).length > 0 && (
+                    <button
+                      className="appstore-section-circle-more-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowFolderManagerModal(true);
+                      }}
+                      title="管理所有資料夾（上移、下移、重新命名、刪除）"
+                      style={{ marginLeft: '4px' }}
+                    >
+                      <MoreVertical size={13} />
+                    </button>
+                  )}
                 </div>
-                {currentFolderId !== 'virtual_recent_reads' && currentFolderId !== 'virtual_favorites' && currentFolderId !== 'virtual_highlights' && currentFolderId !== 'virtual_my_folders' && (
-                  <div className="folder-nav-right">
-                    <span className="folder-book-count-badge" title="當前層級經典總數 (含子資料夾)">
-                      {currentFolderId === 'virtual_resume' ? displayBooks.length : getFolderTotalBookCount(currentFolderId)}
-                    </span>
-                  </div>
-                )}
+                <div className="folder-nav-right">
+                  <span className="folder-book-count-badge" title="當前層級數量">
+                    {currentFolderId === 'virtual_my_folders' ? `共${downloadedBooks.length}本` :
+                     currentFolderId === 'virtual_recent_reads' ? `共${recentReadsBooks.length}本` :
+                     currentFolderId === 'virtual_favorites' ? `共${favoriteBooksList.length}本` :
+                     currentFolderId === 'virtual_unclassified' ? `共${unclassifiedBooks.length}本` :
+                     currentFolderId === 'virtual_highlights' ? `共${allHighlights.length}則` :
+                     currentFolderId === 'virtual_resume' ? `共${displayBooks.length}本` :
+                     `共${getFolderTotalBookCount(currentFolderId)}本`}
+                  </span>
+                </div>
               </div>
             </div>
           )}
 
+          {/* === A. 最外層首頁：CBETA Reader 4 個系統資料夾方塊 === */}
           {!currentFolderId && (
             <>
               <div className="library-title-area">
@@ -1651,9 +1739,28 @@ export function Library({
                 <p>淨心小角落．閱讀大藏經</p>
               </div>
 
-              {/* 💡 首頁根目錄固定渲染 4 個系統固定資料夾（由左至右：我的書櫃、近期閱讀、我的最愛、重點與筆記） */}
+              {/* 💡 首頁根目錄固定渲染 4 個系統資料夾方塊 */}
               <div className="folders-grid-container system-grid">
-                {/* 1. 我的書櫃 - 經典深琥珀色 (#8c4b27) */}
+                {/* 1. 下載經典 - 主題綠色 (#1ea98c) */}
+                <div 
+                  className="list-book-item list-folder-item system-folder-item"
+                  onClick={handleOpenCbetaCatalogWithAnimation}
+                  title="進入 CBETA 藏經庫目錄下載經典"
+                >
+                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#1ea98c' }}>
+                    <Plus size={16} color="#ffffff" style={{ strokeWidth: 2.8 }} />
+                  </div>
+                  <div className="list-folder-info">
+                    <div className="list-folder-title" title="下載經典">
+                      下載經典
+                    </div>
+                    <div className="list-folder-count-text">
+                      從CBETA資料庫
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. 我的書櫃 - 經典深琥珀色 (#8c4b27) */}
                 <div 
                   className="list-book-item list-folder-item system-folder-item"
                   onClick={() => navigateToFolderWithAnimation('virtual_my_folders')}
@@ -1667,50 +1774,12 @@ export function Library({
                       我的書櫃
                     </div>
                     <div className="list-folder-count-text">
-                      {folders.filter(f => !f.parentId).length}個資料夾
+                      共{downloadedBooks.length}本書
                     </div>
                   </div>
                 </div>
 
-                {/* 2. 近期閱讀系統資料夾 - 深咖啡色 (#4a2c11) */}
-                <div 
-                  className="list-book-item list-folder-item system-folder-item"
-                  onClick={() => navigateToFolderWithAnimation('virtual_recent_reads')}
-                  title="點擊查看近期閱讀經典"
-                >
-                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#4a2c11' }}>
-                    <Clock size={15} color="#ffffff" />
-                  </div>
-                  <div className="list-folder-info">
-                    <div className="list-folder-title" title="近期閱讀">
-                      近期閱讀
-                    </div>
-                    <div className="list-folder-count-text">
-                      {recentReadsBooks.length}本經書
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. 我的最愛系統資料夾 */}
-                <div 
-                  className="list-book-item list-folder-item system-folder-item"
-                  onClick={() => navigateToFolderWithAnimation('virtual_favorites')}
-                  title="點擊查看我的最愛經典"
-                >
-                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#e53e3e' }}>
-                    <Heart size={14} fill="#ffffff" color="#ffffff" />
-                  </div>
-                  <div className="list-folder-info">
-                    <div className="list-folder-title" title="我的最愛">
-                      我的最愛
-                    </div>
-                    <div className="list-folder-count-text">
-                      {favoriteBooksList.length}本經書
-                    </div>
-                  </div>
-                </div>
-
-                {/* 4. 重點與筆記系統資料夾 - 琥珀金 (#c07d2a) */}
+                {/* 3. 重點與筆記 - 琥珀金 (#c07d2a) */}
                 <div 
                   className="list-book-item list-folder-item system-folder-item"
                   onClick={() => navigateToFolderWithAnimation('virtual_highlights')}
@@ -1724,7 +1793,26 @@ export function Library({
                       重點與筆記
                     </div>
                     <div className="list-folder-count-text">
-                      {allHighlights.length}條筆記
+                      共{allHighlights.length}則筆記
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. 關鍵字搜尋 - 典雅海軍藍 (#2b6cb0) */}
+                <div 
+                  className="list-book-item list-folder-item system-folder-item"
+                  onClick={() => setActiveTab('search')}
+                  title="點擊進行關鍵字搜尋"
+                >
+                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#2b6cb0' }}>
+                    <Search size={14} color="#ffffff" style={{ strokeWidth: 2.5 }} />
+                  </div>
+                  <div className="list-folder-info">
+                    <div className="list-folder-title" title="關鍵字搜尋">
+                      關鍵字搜尋
+                    </div>
+                    <div className="list-folder-count-text">
+                      站內已下載經典
                     </div>
                   </div>
                 </div>
@@ -1732,301 +1820,346 @@ export function Library({
             </>
           )}
 
-          <div className="shelf-list">
-            {/* 💡 溫習庫：專屬劃線與筆記清單 */}
-            {currentFolderId === 'virtual_highlights' && (
-              <div className="highlights-review-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%' }}>
-                {groupedHighlights.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
-                    <Notebook size={36} style={{ opacity: 0.4, marginBottom: '0.6rem' }} />
-                    <p>目前尚無任何劃線重點或感悟隨筆。</p>
-                    <p style={{ fontSize: '0.82rem', opacity: 0.7, marginTop: '0.3rem' }}>在閱讀經典時選取文字即可畫重點與寫心得筆記。</p>
+          {/* === B. 「我的書櫃」（virtual_my_folders）：iOS App Store 精選專區式排版 (3 本一組橫向輪播) === */}
+          {currentFolderId === 'virtual_my_folders' && (
+            <div className="appstore-bookshelf-container animate-slide-up">
+              {/* 1. 最上面：近期閱讀 (最多 9 本，即 3 欄 × 3 列) */}
+              {recentReadsBooks.length > 0 && (
+                <div className="appstore-section animate-fade-in">
+                  <div 
+                    className="appstore-section-header"
+                    onClick={() => navigateToFolderWithAnimation('virtual_recent_reads')}
+                    title="點擊查看所有近期閱讀經典"
+                  >
+                    <div className="appstore-section-title-wrap">
+                      <span className="appstore-section-title-capsule appstore-capsule-recent">
+                        <Clock size={15} style={{ strokeWidth: 2.2 }} />
+                        <span>近期閱讀</span>
+                      </span>
+                      <span className="appstore-section-arrow">
+                        <ChevronRight size={18} />
+                      </span>
+                      <span className="appstore-section-badge">
+                        {recentReadsBooks.length}
+                      </span>
+                    </div>
                   </div>
-                ) : (
-                  groupedHighlights.map((group) => {
-                    const isExpanded = !!expandedBookGroups[group.workId];
-                    const isCollapsed = !isExpanded;
-                    const cleanTitle = (group.title || group.workId).replace(/[《》]/g, '').trim();
+                  <div className="appstore-carousel-scroll custom-scrollbar">
+                    {chunkBooksInto3(recentReadsBooks).map((colBooks, colIdx) => (
+                      <div key={`recent-col-${colIdx}`} className="appstore-carousel-column">
+                        {colBooks.map(b => renderBookCard(b, false, 'virtual_recent_reads'))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-                    return (
-                      <div 
-                        key={group.workId}
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '0.6rem',
-                          width: '100%',
-                          border: '1px solid var(--border-color, rgba(140, 75, 39, 0.12))',
-                          borderRadius: '12px',
-                          padding: '0.75rem 0.9rem',
-                          backgroundColor: 'var(--input-bg, rgba(255, 255, 255, 0.02))'
-                        }}
-                      >
-                        {/* 經典分組開合標頭 ([+] / [-]) */}
+              {/* 2. 下一個：我的最愛 */}
+              {favoriteBooksList.length > 0 && (
+                <div className="appstore-section animate-fade-in">
+                  <div 
+                    className="appstore-section-header"
+                    onClick={() => navigateToFolderWithAnimation('virtual_favorites')}
+                    title="點擊查看所有我的最愛經典"
+                  >
+                    <div className="appstore-section-title-wrap">
+                      <span className="appstore-section-title-capsule appstore-capsule-favorites">
+                        <Heart size={14} fill="currentColor" />
+                        <span>我的最愛</span>
+                      </span>
+                      <span className="appstore-section-arrow">
+                        <ChevronRight size={18} />
+                      </span>
+                      <span className="appstore-section-badge">
+                        {favoriteBooksList.length}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="appstore-carousel-scroll custom-scrollbar">
+                    {chunkBooksInto3(favoriteBooksList).map((colBooks, colIdx) => (
+                      <div key={`fav-col-${colIdx}`} className="appstore-carousel-column">
+                        {colBooks.map(b => renderBookCard(b, false, 'virtual_favorites'))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 3. 下一個：近期下載 (未分類經書，一直都留著，若無書籍則為空) */}
+              <div className="appstore-section animate-fade-in">
+                <div 
+                  className="appstore-section-header"
+                  onClick={() => navigateToFolderWithAnimation('virtual_unclassified')}
+                  title="點擊查看所有近期下載經典"
+                >
+                  <div className="appstore-section-title-wrap">
+                    <span className="appstore-section-title-capsule appstore-capsule-unclassified">
+                      <Download size={14} style={{ strokeWidth: 2.2 }} />
+                      <span>近期下載</span>
+                    </span>
+                    <span className="appstore-section-arrow">
+                      <ChevronRight size={18} />
+                    </span>
+                    <span className="appstore-section-badge">
+                      {unclassifiedBooks.length}
+                    </span>
+                  </div>
+                </div>
+                {unclassifiedBooks.length > 0 && (
+                  <div className="appstore-carousel-scroll custom-scrollbar">
+                    {chunkBooksInto3(unclassifiedBooks).map((colBooks, colIdx) => (
+                      <div key={`unclassified-col-${colIdx}`} className="appstore-carousel-column">
+                        {colBooks.map(b => renderBookCard(b, false, 'virtual_unclassified'))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 4. 再來陸續是已分類的資料夾 */}
+              {folders.filter(f => !f.parentId).map((folder) => {
+                const folderBooks = downloadedBooks.filter(b => folder.bookIds.includes(b.workId));
+                const totalCount = getFolderTotalBookCount(folder.id);
+
+                return (
+                  <div key={folder.id} className="appstore-section animate-fade-in">
+                    <div 
+                      className="appstore-section-header"
+                      onClick={() => navigateToFolderWithAnimation(folder.id)}
+                      title={`點擊進入 ${folder.name}`}
+                    >
+                      <div className="appstore-section-title-wrap">
+                        {/* 1. 資料夾名稱（純文字無小圖無底色） */}
+                        <span className="appstore-section-title">
+                          {folder.name}
+                        </span>
+
+                        {/* 2. 數量徽章 */}
+                        <span className="appstore-section-badge">
+                          {totalCount}
+                        </span>
+
+                        {/* 3. 「>」箭頭 */}
+                        <span className="appstore-section-arrow">
+                          <ChevronRight size={18} />
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 💡 如資料夾內無書籍，暫時為空就好，不顯示佔位文字 */}
+                    {folderBooks.length > 0 && (
+                      <div className="appstore-carousel-scroll custom-scrollbar">
+                        {chunkBooksInto3(folderBooks).map((colBooks, colIdx) => (
+                          <div key={`${folder.id}-col-${colIdx}`} className="appstore-carousel-column">
+                            {colBooks.map(b => renderBookCard(b, false, folder.id))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* 若目前尚無任何經典與資料夾 */}
+              {downloadedBooks.length === 0 && (
+                <div 
+                  className="appstore-empty-placeholder"
+                  onClick={handleOpenCbetaCatalogWithAnimation}
+                  style={{ marginTop: '1.5rem', padding: '2rem 1rem' }}
+                >
+                  <Plus size={28} style={{ opacity: 0.6, marginBottom: '0.5rem' }} />
+                  <div>書櫃目前尚無經典</div>
+                  <div style={{ fontSize: '0.82rem', opacity: 0.7, marginTop: '0.3rem' }}>點此前往 CBETA 藏經庫下載經典</div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* === C. 進入特定資料夾/專區檢視 (非 virtual_my_folders)：垂直列表向下無限延伸 === */}
+          {currentFolderId && currentFolderId !== 'virtual_my_folders' && (
+            <div className="shelf-list">
+              {/* 💡 溫習庫：專屬劃線與筆記清單 */}
+              {currentFolderId === 'virtual_highlights' && (
+                <div className="highlights-review-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%' }}>
+                  {groupedHighlights.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
+                      <Notebook size={36} style={{ opacity: 0.4, marginBottom: '0.6rem' }} />
+                      <p>目前尚無任何劃線重點或感悟隨筆。</p>
+                      <p style={{ fontSize: '0.82rem', opacity: 0.7, marginTop: '0.3rem' }}>在閱讀經典時選取文字即可畫重點與寫心得筆記。</p>
+                    </div>
+                  ) : (
+                    groupedHighlights.map((group) => {
+                      const isExpanded = !!expandedBookGroups[group.workId];
+                      const isCollapsed = !isExpanded;
+                      const cleanTitle = (group.title || group.workId).replace(/[《》]/g, '').trim();
+
+                      return (
                         <div 
-                          onClick={() => toggleBookGroup(group.workId)}
+                          key={group.workId}
                           style={{
                             display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            cursor: 'pointer',
-                            userSelect: 'none',
-                            padding: '0.2rem 0'
-                          }}
+                            flexDirection: 'column',
+                            gap: '0.6rem',
+                            width: '100%',
+                            border: '1px solid var(--border-color, rgba(140, 75, 39, 0.12))',
+                            borderRadius: '12px',
+                            backgroundColor: 'var(--bg-card, #ffffff)',
+                            padding: '0.8rem 1rem',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                            boxBox: 'border-box'
+                          } as React.CSSProperties}
                         >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', fontSize: '0.92rem', color: 'var(--text-primary)' }}>
-                            <span 
-                              style={{ 
-                                display: 'inline-flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center', 
-                                width: '20px', 
-                                height: '20px', 
-                                borderRadius: '4px', 
-                                border: '1px solid var(--border-color, rgba(0,0,0,0.15))', 
-                                fontSize: '0.85rem',
-                                color: 'var(--text-muted)',
-                                fontWeight: 'bold'
-                              }}
-                            >
-                              {isCollapsed ? '+' : '−'}
-                            </span>
-                            <span>{cleanTitle}，{group.workId}</span>
-                          </div>
-                          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', opacity: 0.8 }}>
-                            {group.list.length} 條重點
-                          </span>
-                        </div>
-
-                        {/* 該經典下的劃線重點清單 */}
-                        {!isCollapsed && (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.2rem' }}>
-                            {group.list.map((hl) => (
+                          <div 
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'space-between',
+                              cursor: 'pointer',
+                              userSelect: 'none'
+                            }}
+                            onClick={() => toggleBookGroup(group.workId)}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexGrow: 1, minWidth: 0 }}>
                               <div 
-                                key={hl.id} 
-                                className="highlight-card animate-fade-in"
-                                style={{
-                                  backgroundColor: 'var(--card-bg, rgba(255, 255, 255, 0.4))',
-                                  border: '1px solid var(--border-color, rgba(140, 75, 39, 0.15))',
-                                  borderRadius: '10px',
-                                  padding: '0.85rem',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '0.5rem'
+                                className="horizontal-book-badge" 
+                                style={{ 
+                                  backgroundColor: getBookCoverColor(group.workId),
+                                  width: '32px',
+                                  height: '32px',
+                                  minWidth: '32px',
+                                  minHeight: '32px',
+                                  fontSize: '0.72rem',
+                                  borderRadius: '6px'
                                 }}
                               >
-                                {/* 標頭：卷次與日期 */}
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', opacity: 0.85 }}>
-                                    第 {hl.juan} 卷
-                                  </span>
-                                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', opacity: 0.7 }}>
-                                    {new Date(hl.createdAt).toLocaleDateString()}
-                                  </span>
+                                {group.workId}
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                                <div style={{ fontSize: '0.96rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                  {cleanTitle}
                                 </div>
-
-                                {/* 劃線重點片段 */}
-                                <div 
-                                  className="reader-text-highlight-preview"
-                                  style={{
-                                    fontSize: '1rem',
-                                    fontWeight: 'bold',
-                                    fontFamily: 'var(--font-serif)',
-                                    lineHeight: 1.6,
-                                    padding: '0.2rem 0.3rem',
-                                    cursor: 'pointer',
-                                    color: 'var(--text-primary)',
-                                    wordBreak: 'break-all'
-                                  }}
-                                  onClick={() => onSelectBook(hl.workId, hl.segmentId)}
-                                  title="點擊跳轉至經文處"
-                                >
-                                  「{hl.text}」
-                                </div>
-
-                                {/* 筆記隨筆卡片 (標楷體，無圖示) */}
-                                {hl.note && (
-                                  <div 
-                                    style={{
-                                      fontSize: '0.95rem',
-                                      lineHeight: 1.6,
-                                      color: 'var(--text-primary)',
-                                      backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.08))',
-                                      borderLeft: '3px solid var(--color-gold-500, #c07d2a)',
-                                      padding: '0.45rem 0.7rem',
-                                      borderRadius: '4px',
-                                      fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
-                                      whiteSpace: 'pre-wrap',
-                                      wordBreak: 'break-word'
-                                    }}
-                                  >
-                                    {hl.note}
-                                  </div>
-                                )}
-
-                                {/* 卡片動作按鈕 */}
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.2rem' }}>
-                                  <button
-                                    className="batch-btn batch-btn-secondary"
-                                    style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
-                                    onClick={() => onSelectBook(hl.workId, hl.segmentId)}
-                                  >
-                                    <Play size={10} fill="currentColor" /> 跳至經文
-                                  </button>
-                                  <button
-                                    className="batch-btn batch-btn-secondary"
-                                    style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
-                                    onClick={() => {
-                                      setEditingHighlightInLibrary(hl);
-                                      setEditingNoteTextInLibrary(hl.note || '');
-                                    }}
-                                  >
-                                    <Edit3 size={11} /> 編輯
-                                  </button>
-                                  <button
-                                    className="batch-btn batch-btn-secondary"
-                                    style={{ fontSize: '0.75rem', padding: '0.25rem 0.45rem', color: 'var(--text-muted)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                    title="刪除重點"
-                                    onClick={async () => {
-                                      if (window.confirm('確定要刪除這條劃線重點嗎？')) {
-                                        await deleteHighlight(hl.id);
-                                        await loadAllHighlights();
-                                      }
-                                    }}
-                                  >
-                                    <Trash2 size={12} />
-                                  </button>
+                                <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                                  共 {group.list.length} 條重點筆記
                                 </div>
                               </div>
-                            ))}
+                            </div>
+
+                            <button 
+                              type="button"
+                              style={{ 
+                                background: 'transparent', 
+                                border: 'none', 
+                                color: 'var(--text-muted)', 
+                                padding: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                            >
+                              {isCollapsed ? <ChevronRight size={18} /> : <ChevronDown size={18} />}
+                            </button>
                           </div>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            )}
 
-            {/* 💡 第一次進入且無經典時，顯示「+ 點此下載佛典」長 Bar 導引 */}
-            {!currentFolderId && downloadedBooks.length === 0 && (
-              <div 
-                className="empty-download-bar animate-pulse"
-                onClick={() => {
-                  if (onOpenCbetaCatalog) onOpenCbetaCatalog();
-                }}
-                title="進入 CBETA 藏經庫目錄"
-              >
-                <Plus size={20} style={{ marginRight: '6px' }} />
-                <span>點此下載佛典</span>
-              </div>
-            )}
+                          {/* 展開後的重點與筆記卡片清單 */}
+                          {!isCollapsed && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.4rem', borderTop: '1px dashed var(--border-color, rgba(140,75,39,0.1))', paddingTop: '0.6rem' }}>
+                              {group.list.map((hl) => (
+                                <div 
+                                  key={hl.id}
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.4rem',
+                                    padding: '0.6rem 0.8rem',
+                                    borderRadius: '8px',
+                                    backgroundColor: 'rgba(0,0,0,0.02)',
+                                    border: '1px solid rgba(0,0,0,0.04)'
+                                  }}
+                                >
+                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                    <span>第 {hl.juan} 卷</span>
+                                    <span>{new Date(hl.createdAt).toLocaleDateString()}</span>
+                                  </div>
 
-            {/* === A. 渲染使用者自訂資料夾清單 (僅在「我的書櫃」或自訂子資料夾專區內才渲染) === */}
-            {(currentFolderId === 'virtual_my_folders' || (!isSystemFolder && currentFolderId)) && (
-              <div className="folders-grid-container">
-                {displayFolders.map((folder) => (
-                  <div 
-                    key={folder.id}
-                    className={`list-book-item list-folder-item ${isEditMode ? 'edit-mode' : ''}`}
-                    onClick={() => {
-                      if (isLongPressTriggeredRef.current) {
-                        isLongPressTriggeredRef.current = false;
-                        return;
-                      }
-                      navigateToFolderWithAnimation(folder.id);
-                    }}
-                    onMouseDown={startLongPress}
-                    onMouseUp={cancelLongPress}
-                    onMouseLeave={cancelLongPress}
-                    onTouchStart={startLongPress}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={cancelLongPress}
-                  >
-                    {/* 💡 右上角 「...」按鈕 (僅長按/進入編輯模式後才顯現) */}
-                    {isEditMode && (
-                      <button 
-                        className="card-more-btn folder-top-right-more"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setMenuTargetFolder(folder);
-                        }}
-                        title="資料夾選項"
-                      >
-                        <MoreVertical size={14} />
-                      </button>
-                    )}
+                                  <div style={{ fontSize: '0.9rem', lineHeight: 1.5, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
+                                    「{hl.text}」
+                                  </div>
 
-                    {/* iOS 檔案風格：上方資料夾圖示 */}
-                    <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: '#8b7355' }}>
-                      <Folder size={15} className="theme-folder-icon" />
-                    </div>
+                                  {hl.note && (
+                                    <div 
+                                      style={{
+                                        fontSize: '0.95rem',
+                                        lineHeight: 1.6,
+                                        color: 'var(--text-primary)',
+                                        backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.08))',
+                                        borderLeft: '3px solid var(--color-gold-500, #c07d2a)',
+                                        padding: '0.45rem 0.7rem',
+                                        borderRadius: '4px',
+                                        fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
+                                        whiteSpace: 'pre-wrap',
+                                        wordBreak: 'break-word'
+                                      }}
+                                    >
+                                      {hl.note}
+                                    </div>
+                                  )}
 
-                    {/* iOS 檔案風格：中間標題與下方項目數 */}
-                    <div className="list-folder-info">
-                      <div className="list-folder-title" title={folder.name}>
-                        {folder.name}
-                      </div>
-                      <div className="list-folder-count-text">
-                        {getFolderTotalBookCount(folder.id)}本經書
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.2rem' }}>
+                                    <button
+                                      className="batch-btn batch-btn-secondary"
+                                      style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
+                                      onClick={() => onSelectBook(hl.workId, hl.segmentId)}
+                                    >
+                                      <Play size={10} fill="currentColor" /> 跳至經文
+                                    </button>
+                                    <button
+                                      className="batch-btn batch-btn-secondary"
+                                      style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
+                                      onClick={() => {
+                                        setEditingHighlightInLibrary(hl);
+                                        setEditingNoteTextInLibrary(hl.note || '');
+                                      }}
+                                    >
+                                      <Edit3 size={11} /> 編輯
+                                    </button>
+                                    <button
+                                      className="batch-btn batch-btn-secondary"
+                                      style={{ fontSize: '0.75rem', padding: '0.25rem 0.45rem', color: 'var(--text-muted)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                      title="刪除重點"
+                                      onClick={async () => {
+                                        if (window.confirm('確定要刪除這條劃線重點嗎？')) {
+                                          await deleteHighlight(hl.id);
+                                          await loadAllHighlights();
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 size={12} />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              )}
 
-                {/* 💡 虛線新建資料夾卡片：僅在資料夾內是「空的」（無任何子資料夾且無任何書籍）時才顯示 (圖2) */}
-                {displayFolders.length === 0 && displayBooks.length === 0 && (
-                  <div 
-                    className="list-book-item list-folder-item add-folder-dashed-card animate-fade-in"
-                    onClick={() => setShowNewFolderDialog(true)}
-                    title="點擊新建資料夾"
-                  >
-                    <div className="dashed-icon-box">
-                      <FolderPlus size={16} />
-                    </div>
-                    <div className="list-folder-info">
-                      <div className="list-folder-title" style={{ fontSize: '0.82rem', color: 'var(--reader-text-muted, #666)', fontWeight: 500 }}>
-                        + 新建資料夾
-                      </div>
-                      <div className="list-folder-count-text">
-                        按此建立
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* === B. 渲染經典列表卡片清單 === */}
-            {displayBooks.length > 0 && (
-              <div className={`books-list-cards-container ${isEditMode ? 'edit-mode-active' : ''}`}>
-                {displayBooks.map((book) => {
-                  const isSelected = selectedBookIds.includes(book.workId);
-                  const featuredBook = FEATURED_BOOKS.find((b: any) => b.workId === book.workId);
-                  const titleText = book.title || featuredBook?.title || book.workId;
-                  let creatorText = sanitizeCreators(book.creators || featuredBook?.creators);
-
-                  // 💡 印順導師著作 (Y 系列) 作譯者名稱統一規範顯示為「民國 釋印順著」
-                  if (book.workId.startsWith('Y') || (creatorText && creatorText.includes('印順'))) {
-                    creatorText = '民國 釋印順著';
-                  }
-
-                  return (
+              {/* === A. 渲染使用者自訂子資料夾清單 (若有子資料夾) === */}
+              {displayFolders.length > 0 && (
+                <div className="folders-grid-container">
+                  {displayFolders.map((folder) => (
                     <div 
-                      key={book.workId}
-                      className={`horizontal-book-card ${isEditMode ? 'edit-mode' : ''} ${isSelected ? 'selected-for-batch' : ''}`}
-                      onClick={(e) => { 
+                      key={folder.id}
+                      className={`list-book-item list-folder-item ${isEditMode ? 'edit-mode' : ''}`}
+                      onClick={() => {
                         if (isLongPressTriggeredRef.current) {
                           isLongPressTriggeredRef.current = false;
                           return;
                         }
-                        if (isEditMode) {
-                          e.stopPropagation();
-                          if ((e.target as HTMLElement).closest('.horizontal-card-checkbox')) return;
-                          toggleSelectBook(book.workId, e);
-                        } else {
-                          onSelectBook(book.workId); 
-                        }
+                        navigateToFolderWithAnimation(folder.id);
                       }}
                       onMouseDown={startLongPress}
                       onMouseUp={cancelLongPress}
@@ -2035,87 +2168,44 @@ export function Library({
                       onTouchMove={handleTouchMove}
                       onTouchEnd={cancelLongPress}
                     >
-                      {/* 💡 左側：編輯模式下勾選框 (Checkbox) */}
                       {isEditMode && (
-                        <div 
-                          className={`batch-checkbox horizontal-card-checkbox ${isSelected ? 'checked' : ''}`}
+                        <button 
+                          className="card-more-btn folder-top-right-more"
                           onClick={(e) => {
                             e.stopPropagation();
-                            toggleSelectBook(book.workId, e);
+                            setMenuTargetFolder(folder);
                           }}
-                          title="勾選以進行批量移動或批次刪除"
+                          title="資料夾選項"
                         >
-                          {isSelected && <Check size={12} />}
-                        </div>
+                          <MoreVertical size={14} />
+                        </button>
                       )}
 
-                      {/* 💡 左側：經典編號顏色方塊 Badge (如 T0801, Y0040) */}
-                      <div className="horizontal-book-badge" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
-                        {book.workId}
+                      <div className="list-folder-icon-wrapper theme-folder-wrapper" style={{ backgroundColor: '#8b7355' }}>
+                        <Folder size={15} className="theme-folder-icon" />
                       </div>
 
-                      {/* 💡 中間：經名與朝代/作譯者小灰字 + 卷數 */}
-                      <div className="horizontal-book-info">
-                        <div className="horizontal-book-title" title={titleText}>
-                          {titleText}
+                      <div className="list-folder-info">
+                        <div className="list-folder-title" title={folder.name}>
+                          {folder.name}
                         </div>
-                        <div className="horizontal-book-author" title={creatorText}>
-                          {creatorText}
-                          {/* 💡 卷數顯示：juansCount > 1 且非 Y 系列 (印順著作/近代編著無傳統卷數) */}
-                          {book.juansCount > 1 && !book.workId.startsWith('Y') && (
-                            <span className="horizontal-book-juans-badge">
-                              {book.juansCount}卷
-                            </span>
-                          )}
+                        <div className="list-folder-count-text">
+                          {getFolderTotalBookCount(folder.id)}本經書
                         </div>
-                      </div>
-
-                      {/* 💡 右側：長按/編輯模式下顯示「↑」「↓」順序調整按鈕 + 「...」選項按鈕 */}
-                      <div className="horizontal-book-right-actions">
-                        {isEditMode && (
-                          <div className="book-reorder-btn-group">
-                            <button 
-                              className="book-reorder-btn"
-                              disabled={displayBooks.findIndex(b => b.workId === book.workId) <= 0}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSwapBookOrder(book.workId, 'left');
-                              }}
-                              title="向上移動經典順序 (↑)"
-                            >
-                              <ChevronUp size={15} />
-                            </button>
-                            <button 
-                              className="book-reorder-btn"
-                              disabled={displayBooks.findIndex(b => b.workId === book.workId) >= displayBooks.length - 1}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSwapBookOrder(book.workId, 'right');
-                              }}
-                              title="向下移動經典順序 (↓)"
-                            >
-                              <ChevronDown size={15} />
-                            </button>
-                          </div>
-                        )}
-
-                        <button 
-                          className="horizontal-book-more-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setMenuTargetBook(book);
-                          }}
-                          title="經典選項"
-                        >
-                          <MoreVertical size={16} />
-                        </button>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+                  ))}
+                </div>
+              )}
+
+              {/* === B. 渲染經典列表卡片清單 (垂直向下無限延伸) === */}
+              {displayBooks.length > 0 && (
+                <div className={`books-list-cards-container ${isEditMode ? 'edit-mode-active' : ''}`}>
+                  {displayBooks.map(book => renderBookCard(book, true, currentFolderId || undefined))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         /* 本地檢索畫面 */
@@ -2396,6 +2486,72 @@ export function Library({
         </div>
       )}
 
+      {/* 批量移動至資料夾對話框 (雙模式：移動書籍 / 移動資料夾) */}
+      {/* 批量移動至資料夾對話框 */}
+      {showBatchMoveDialog && (
+        <div className="search-dialog-overlay" onClick={() => setShowBatchMoveDialog(false)}>
+          <div className="search-dialog-card animate-slide-up" style={{ maxWidth: '480px', width: '92%', borderRadius: '16px' }} onClick={e => e.stopPropagation()}>
+            <div className="dialog-header">
+              <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
+                移至目標資料夾 ({selectedBookIds.length}本)
+              </h3>
+              <button className="icon-button close-btn" onClick={() => setShowBatchMoveDialog(false)}>
+                <X size={18} />
+              </button>
+            </div>
+            <div className="dialog-body" style={{ gap: '0.75rem', padding: '1rem 1.2rem 1.4rem 1.2rem', maxHeight: '68vh', overflowY: 'auto' }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem' }}>
+                請點選要移入的目標資料夾：
+              </p>
+              
+              {/* 💡 一列 3 個資料夾九宮格呈現 */}
+              <div className="target-folders-grid-3">
+                {/* 1. 近期下載 (未分類經書) */}
+                <div 
+                  className="target-folder-grid-card"
+                  onClick={() => handleBatchMoveBooks(null)}
+                  title="移至 近期下載 (未分類)"
+                >
+                  <div className="target-folder-card-icon" style={{ backgroundColor: '#2b6cb0' }}>
+                    <Download size={18} color="#ffffff" style={{ strokeWidth: 2.2 }} />
+                  </div>
+                  <div className="target-folder-card-title">
+                    近期下載
+                  </div>
+                  <div className="target-folder-card-count">
+                    未分類
+                  </div>
+                </div>
+
+                {/* 2. 所有自訂資料夾 */}
+                {folders.map(f => {
+                  const bookCount = getFolderTotalBookCount(f.id);
+
+                  return (
+                    <div 
+                      key={f.id}
+                      className="target-folder-grid-card"
+                      onClick={() => handleBatchMoveBooks(f.id)}
+                      title={`移入 ${f.name}`}
+                    >
+                      <div className="target-folder-card-icon" style={{ backgroundColor: '#8b7355' }}>
+                        <Folder size={18} color="#ffffff" />
+                      </div>
+                      <div className="target-folder-card-title" title={f.name}>
+                        {f.name}
+                      </div>
+                      <div className="target-folder-card-count">
+                        {bookCount}本經書
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Builder 進度遮罩 (6 方塊現代質感) */}
       {buildProgress && (
         <BuilderProgressOverlay 
@@ -2489,8 +2645,8 @@ export function Library({
         </div>
       )}
 
-      {/* 編輯資料夾（修改名稱與顏色）對話框 */}
-      {editingFolderId && (
+      {/* 編輯資料夾（修改名稱與顏色）對話框（僅在非集中管理面板時作為備援） */}
+      {editingFolderId && !showFolderManagerModal && (
         <div className="search-dialog-overlay" onClick={() => setEditingFolderId(null)}>
           <div className="search-dialog-card animate-slide-up" style={{ maxWidth: '380px' }} onClick={e => e.stopPropagation()}>
             <div className="dialog-header">
@@ -2519,9 +2675,6 @@ export function Library({
                 autoFocus
               />
 
-              {/* 💡 更換資料夾顏色：暫時隱藏 (color picker hidden temporarily) */}
-
-
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', width: '100%' }}>
                 <button 
                   className="dialog-btn-confirm"
@@ -2541,71 +2694,138 @@ export function Library({
         </div>
       )}
 
-      {/* 批量移動至資料夾對話框 (雙模式：移動書籍 / 移動資料夾) */}
-      {showBatchMoveDialog && (
-        <div className="search-dialog-overlay" onClick={() => { setShowBatchMoveDialog(false); setMovingFolderId(null); }}>
-          <div className="search-dialog-card animate-slide-up" style={{ maxWidth: '400px' }} onClick={e => e.stopPropagation()}>
-            <div className="dialog-header">
-              <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
-                {movingFolderId
-                  ? `移動資料夾：${folders.find(f => f.id === movingFolderId)?.name || ''}`
-                  : `批量移動經典 (${selectedBookIds.length}本)`
-                }
-              </h3>
-              <button className="icon-button close-btn" onClick={() => { setShowBatchMoveDialog(false); setMovingFolderId(null); }}>
+
+
+      {/* 📁 「我的書櫃」所有資料夾集中管理 Modal (上移、下移、重新命名、刪除) */}
+      {showFolderManagerModal && (
+        <div className="search-dialog-overlay" onClick={() => { setEditingFolderId(null); setShowFolderManagerModal(false); }}>
+          <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '440px', width: '92%', borderRadius: '16px', padding: '1.2rem' }}>
+            <div className="dialog-header" style={{ marginBottom: '0.8rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
+                <Folder size={18} style={{ color: '#8c4b27' }} />
+                <span>資料夾管理</span>
+              </div>
+              <button className="icon-button close-btn" onClick={() => { setEditingFolderId(null); setShowFolderManagerModal(false); }}>
                 <X size={18} />
               </button>
             </div>
-            <div className="dialog-body" style={{ gap: '0.8rem', padding: '1.2rem', maxHeight: '60vh' }}>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
-                請選擇要移入的目標資料夾：
-              </p>
-              
-              {/* 首頁 (暫存經典) */}
-              <div 
-                className="folder-target-option"
-                onClick={() => movingFolderId ? handleMoveFolder(null) : handleBatchMoveBooks(null)}
-              >
-                <Home size={18} style={{ color: 'var(--theme-accent)', flexShrink: 0 }} />
-                <span style={{ fontWeight: 600 }}>首頁 (暫存經典)</span>
-              </div>
 
-              {/* 移入我的書櫃頂層 */}
-              {!movingFolderId && (
-                <div 
-                  className="folder-target-option"
-                  onClick={() => handleBatchMoveBooks('virtual_my_folders')}
-                >
-                  <Folder size={18} style={{ color: '#8c4b27', flexShrink: 0 }} />
-                  <span style={{ fontWeight: 600 }}>我的書櫃 (頂層)</span>
+            <div className="dialog-body" style={{ maxHeight: '60vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.6rem', padding: '0.2rem 0.1rem' }}>
+              {folders.filter(f => !f.parentId).length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                  目前尚無自訂資料夾
                 </div>
-              )}
+              ) : (
+                folders.filter(f => !f.parentId).map((folder, index, arr) => {
+                  const bookCount = getFolderTotalBookCount(folder.id);
+                  const isEditingThis = editingFolderId === folder.id;
 
-              {folders
-                .filter(f => movingFolderId ? f.id !== movingFolderId : true)
-                .map(f => {
-                  // 移動資料夾模式：排除被移動資料夾本身與其子孫
-                  if (movingFolderId) {
-                    const isDescendant = (checkId: string | null): boolean => {
-                      if (checkId === null) return false;
-                      if (checkId === movingFolderId) return true;
-                      const p = folders.find(x => x.id === checkId);
-                      return p ? isDescendant(p.parentId) : false;
-                    };
-                    if (isDescendant(f.id)) return null;
-                  }
                   return (
                     <div 
-                      key={f.id}
-                      className="folder-target-option"
-                      onClick={() => movingFolderId ? handleMoveFolder(f.id) : handleBatchMoveBooks(f.id)}
+                      key={folder.id} 
+                      className="folder-manager-item"
                     >
-                      <Folder size={18} style={{ color: '#8b7355', flexShrink: 0 }} />
-                      <span>{getFolderPath(f.id)}</span>
+                      {/* 左側：資料夾名稱與書本數量 或 內嵌即時輸入框（點選直接文字反白修改） */}
+                      <div className="folder-manager-item-left">
+                        <Folder size={16} style={{ color: '#8b7355', flexShrink: 0 }} />
+                        {isEditingThis ? (
+                          <input
+                            autoFocus
+                            onFocus={(e) => e.target.select()}
+                            type="text"
+                            className="folder-manager-inline-input"
+                            value={editingFolderName}
+                            onChange={(e) => setEditingFolderName(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleRenameFolder();
+                              } else if (e.key === 'Escape') {
+                                setEditingFolderId(null);
+                              }
+                            }}
+                            onBlur={() => {
+                              handleRenameFolder();
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        ) : (
+                          <>
+                            <span 
+                              className="folder-manager-item-name" 
+                              title={folder.name}
+                              onClick={(e) => startRenameFolder(folder, e)}
+                            >
+                              {folder.name}
+                            </span>
+                            <span className="folder-manager-item-badge">
+                              {bookCount}本
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      {/* 右側：4 個功能鍵 (上移、下移、重新命名、刪除) */}
+                      <div className="folder-manager-item-actions">
+                        {/* 1. 上移 */}
+                        <button
+                          className="folder-manager-action-btn"
+                          disabled={index === 0}
+                          onClick={() => handleSwapFolderOrder(folder.id, 'up')}
+                          title="上移資料夾"
+                        >
+                          <ChevronUp size={16} />
+                        </button>
+
+                        {/* 2. 下移 */}
+                        <button
+                          className="folder-manager-action-btn"
+                          disabled={index === arr.length - 1}
+                          onClick={() => handleSwapFolderOrder(folder.id, 'down')}
+                          title="下移資料夾"
+                        >
+                          <ChevronDown size={16} />
+                        </button>
+
+                        {/* 3. 重新命名 */}
+                        <button
+                          className={`folder-manager-action-btn ${isEditingThis ? 'active-edit' : ''}`}
+                          onClick={(e) => {
+                            if (isEditingThis) {
+                              handleRenameFolder();
+                            } else {
+                              startRenameFolder(folder, e);
+                            }
+                          }}
+                          title={isEditingThis ? '確認修改' : '重新命名資料夾'}
+                        >
+                          {isEditingThis ? <Check size={15} color="#1ea98c" /> : <Edit3 size={15} />}
+                        </button>
+
+                        {/* 4. 刪除 */}
+                        <button
+                          className="folder-manager-action-btn delete-btn"
+                          onClick={(e) => {
+                            handleDeleteFolder(folder.id, e);
+                          }}
+                          title="刪除資料夾（經典將回到近期下載）"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
                     </div>
                   );
                 })
-              }
+              )}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.08))', paddingTop: '0.8rem' }}>
+              <button
+                className="dialog-btn-confirm"
+                onClick={() => setShowFolderManagerModal(false)}
+                style={{ padding: '0.45rem 1.4rem', fontSize: '0.9rem' }}
+              >
+                完成
+              </button>
             </div>
           </div>
         </div>
@@ -2642,30 +2862,6 @@ export function Library({
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {/* 💡 僅在自訂子資料夾（非我的書櫃頂層）內，才顯示「移出至上一層資料夾」 */}
-              {currentFolderId && currentFolderId !== 'virtual_my_folders' && (
-                <button 
-                  className="action-menu-item-btn"
-                  onClick={(e) => {
-                    handleRemoveFolderFromFolder(e, menuTargetFolder.id);
-                    setMenuTargetFolder(null);
-                  }}
-                >
-                  <ArrowUp size={16} />
-                  <span>移出至上一層資料夾</span>
-                </button>
-              )}
-              <button 
-                className="action-menu-item-btn"
-                onClick={() => {
-                  const f = menuTargetFolder;
-                  setMenuTargetFolder(null);
-                  openMoveFolderDialog(f.id);
-                }}
-              >
-                <FolderInput size={16} />
-                <span>移動資料夾</span>
-              </button>
               <button 
                 className="action-menu-item-btn"
                 onClick={(e) => {
@@ -2745,62 +2941,73 @@ export function Library({
               )}
 
               {/* 1 列 3 個按鈕：移至資料夾 | 加入我的最愛 | 刪除經文 (等寬 1:1:1 佐以細分隔線) */}
-              <div className="action-buttons-grid-3">
-                {/* 1. 移至資料夾 */}
-                <button 
-                  className="action-grid-btn"
-                  onClick={() => {
-                    const b = menuTargetBook;
-                    setMenuTargetBook(null);
-                    setSelectedBookIds([b.workId]);
-                    setShowBatchMoveDialog(true);
-                  }}
-                  title="移至資料夾"
-                >
-                  <FolderInput size={20} />
-                  <span>移至資料夾</span>
-                </button>
+              {(() => {
+                const isTransitionFolder = menuTargetBookSource === 'virtual_recent_reads' || menuTargetBookSource === 'virtual_favorites';
+                return (
+                  <div className="action-buttons-grid-3">
+                    {/* 1. 移至資料夾 */}
+                    <button 
+                      className="action-grid-btn"
+                      disabled={isTransitionFolder}
+                      style={isTransitionFolder ? { opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)' } : undefined}
+                      onClick={() => {
+                        if (isTransitionFolder) return;
+                        const b = menuTargetBook;
+                        setMenuTargetBook(null);
+                        setSelectedBookIds([b.workId]);
+                        setShowBatchMoveDialog(true);
+                      }}
+                      title={isTransitionFolder ? '過渡專區不可移動，請至原資料夾操作' : '移至資料夾'}
+                    >
+                      <FolderInput size={20} />
+                      <span>移至資料夾</span>
+                    </button>
 
-                {/* 分隔線 1 */}
-                <div className="action-grid-divider" />
+                    {/* 分隔線 1 */}
+                    <div className="action-grid-divider" />
 
-                {/* 2. 加入我的最愛 */}
-                <button 
-                  className="action-grid-btn"
-                  onClick={(e) => {
-                    toggleFavoriteBook(e, menuTargetBook.workId);
-                  }}
-                  title={favoriteWorkIds.includes(menuTargetBook.workId) ? '取消最愛' : '加入我的最愛'}
-                >
-                  <Heart 
-                    size={20} 
-                    fill={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "none"} 
-                    color={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "currentColor"} 
-                  />
-                  <span>{favoriteWorkIds.includes(menuTargetBook.workId) ? '取消最愛' : '加入我的最愛'}</span>
-                </button>
+                    {/* 2. 加入我的最愛 */}
+                    <button 
+                      className="action-grid-btn"
+                      onClick={(e) => {
+                        toggleFavoriteBook(e, menuTargetBook.workId);
+                      }}
+                      title={favoriteWorkIds.includes(menuTargetBook.workId) ? '取消最愛' : '加入我的最愛'}
+                    >
+                      <Heart 
+                        size={20} 
+                        fill={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "none"} 
+                        color={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "currentColor"} 
+                      />
+                      <span>{favoriteWorkIds.includes(menuTargetBook.workId) ? '取消最愛' : '加入我的最愛'}</span>
+                    </button>
 
-                {/* 分隔線 2 */}
-                <div className="action-grid-divider" />
+                    {/* 分隔線 2 */}
+                    <div className="action-grid-divider" />
 
-                {/* 3. 刪除經文 */}
-                <button 
-                  className="action-grid-btn delete-action"
-                  onClick={(e) => {
-                    const b = menuTargetBook;
-                    setMenuTargetBook(null);
-                    if (currentFolderId === 'virtual_resume') {
-                      handleDeleteProgress(e, b.workId);
-                    } else {
-                      handleDeleteBook(e, b.workId);
-                    }
-                  }}
-                  title="刪除經文"
-                >
-                  <Trash2 size={20} color="#e53e3e" />
-                  <span style={{ color: '#e53e3e' }}>刪除經文</span>
-                </button>
-              </div>
+                    {/* 3. 刪除經文 */}
+                    <button 
+                      className="action-grid-btn delete-action"
+                      disabled={isTransitionFolder}
+                      style={isTransitionFolder ? { opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)' } : undefined}
+                      onClick={(e) => {
+                        if (isTransitionFolder) return;
+                        const b = menuTargetBook;
+                        setMenuTargetBook(null);
+                        if (currentFolderId === 'virtual_resume') {
+                          handleDeleteProgress(e, b.workId);
+                        } else {
+                          handleDeleteBook(e, b.workId);
+                        }
+                      }}
+                      title={isTransitionFolder ? '過渡專區不可刪除，請至原資料夾操作' : '刪除經文'}
+                    >
+                      <Trash2 size={20} color={isTransitionFolder ? 'var(--text-muted)' : '#e53e3e'} />
+                      <span style={{ color: isTransitionFolder ? 'var(--text-muted)' : '#e53e3e' }}>刪除經文</span>
+                    </button>
+                  </div>
+                );
+              })()}
 
               {/* 閱讀控制按鈕 (維持「從頭開始閱讀」與「接續閱讀」雙欄按鈕) */}
 

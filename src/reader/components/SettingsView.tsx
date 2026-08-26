@@ -1156,15 +1156,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.2.5) 直接顯示 */}
+                {/* 最新 App 版本 (v4.2.6) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.2.5</span>
+                    <span>⭐ App: v4.2.6</span>
                     <span className="changelog-date">(2026-08-25)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 全面加入防下拉重整保護（overscroll-behavior），防止手機滑動時閃爍跳回首頁。</li>
-                    <li>• 支援 URL Hash 路由與瀏覽器歷史紀錄，手機邊緣側滑返回與背景喚醒精準復原。</li>
+                    <li>• 首頁調整為四大核心入口：「下載經典」、「我的書櫃」、「重點與筆記」與「關鍵字搜尋」。</li>
+                    <li>• 「我的書櫃」內裝升級為 iOS App Store 精選專區排版，每欄 3 本垂直收納並支援水平平滑輪播。</li>
+                    <li>• 目標資料夾選擇改版為「一列 3 個資料夾」直觀九宮格卡片，操作清晰一目了然。</li>
                   </ul>
                 </div>
 
@@ -1187,6 +1188,13 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.2.5 <span className="changelog-date">(2026-08-25)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 全面加入防下拉重整保護（overscroll-behavior），防止手機滑動時閃爍跳回首頁。</li>
+                        <li>• 支援 URL Hash 路由與瀏覽器歷史紀錄，手機邊緣側滑返回與背景喚醒精準復原。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.2.4 <span className="changelog-date">(2026-08-23)</span></div>
                       <ul className="changelog-list">

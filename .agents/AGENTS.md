@@ -22,6 +22,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
   1. **App 調整（不涉及 Builder）**：可直接在 `main` 分支上進行修改與部署。
   2. **Scripture 解析與 Builder 調整**：必須在 `dev-builder-optimization` 分支上進行開發與測試，確認編譯與解析完全無誤後，再合併回 `main` 分支。
   3. 不論在哪個分支修改，皆需確保 `npm run build` 編譯成功。
+  4. **任務完成後免自行錄影驗證原則 (No Auto-Recording Verification Policy)**：任務執行完成並確保 `npm run build` 編譯通過後，**不需自行啟動瀏覽器進行錄影/截圖 Check**，統一直接交付由使用者親自於瀏覽器中操作驗證。
 
 ---
 
@@ -29,7 +30,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.2.5` (App: v4.2.5 / Builder: v2.9.11)
+- **Current Version**: `v4.2.6` (App: v4.2.6 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -50,6 +51,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.2.6 / Builder: v2.9.11** (2026-08-25)
+  - [App] 首頁四大系統入口標題與副標細緻化：「下載經典（從CBETA資料庫）」、「我的書櫃（共X本書）」、「重點與筆記（共Y則筆記）」與「關鍵字搜尋（站內已下載經典）」。
+  - [App] 「我的書櫃」自訂資料夾標題保持極簡純淨（「名稱 ➔ 數量徽章 ➔ 右箭頭」），頂部抬頭配置高對比清晰「...」資料夾管理按鈕。
+  - [App] 資料夾管理支援「原地內嵌即時重新命名」（點選鉛筆名稱自動反白選取，Enter/失焦自動儲存，免除彈窗覆蓋）；過渡專區內經典選項自動防呆反灰「移至資料夾」與「刪除經文」。
 - **⭐ App: v4.2.5 / Builder: v2.9.11** (2026-08-25)
   - [App] 全站與閱讀頁容器全面導入 `overscroll-behavior: none` 與 `contain` 防禦，徹底根除手機滑動閱讀時誤觸原生下拉刷新導致閃爍跳回首頁的問題。
   - [App] 支援 URL Hash 路由（`#/reader/T0262`）與 `popstate` 歷史紀錄，手機邊緣側滑返回、背景休眠喚醒或意外刷新時，均可 100% 精準復原至當前經典與段落。
