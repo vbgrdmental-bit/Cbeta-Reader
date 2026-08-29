@@ -1542,9 +1542,9 @@ export function Library({
             </div>
           )}
 
-          {/* === A. 最外層首頁：CBETA Reader 4 個系統資料夾方塊 === */}
+          {/* === A. 最外層首頁：CBETA Reader 2x2 四宮格系統方塊 + 上次閱讀 + 底部經文法句 === */}
           {!currentFolderId && (
-            <>
+            <div className="home-dashboard-container animate-fade-in">
               <div className="library-title-area">
                 <h1 style={{ fontFamily: 'var(--font-rounded)', letterSpacing: '0.04em' }}>
                   <span style={{ color: '#1ea98c' }}>CBETA</span> Reader
@@ -1552,85 +1552,114 @@ export function Library({
                 <p>淨心小角落．閱讀大藏經</p>
               </div>
 
-              {/* 💡 首頁根目錄固定渲染 4 個系統資料夾方塊 */}
-              <div className="folders-grid-container system-grid">
-                {/* 1. 下載經典 - 主題綠色 (#1ea98c) */}
+              {/* 💡 2x2 四宮格系統方塊 (左上: 下載經典, 右上: 重點與筆記, 左下: 我的書櫃, 右下: 關鍵字搜尋) */}
+              <div className="home-grid-2x2">
+                {/* 1. 左上：下載經典 - 柔和翡翠綠 (#1ea98c) */}
                 <div 
-                  className="list-book-item list-folder-item system-folder-item"
+                  className="home-grid-card"
                   onClick={handleOpenCbetaCatalogWithAnimation}
                   title="進入 CBETA 藏經庫目錄下載經典"
                 >
-                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#1ea98c' }}>
-                    <Plus size={16} color="#ffffff" style={{ strokeWidth: 2.8 }} />
+                  <div className="home-grid-icon-box" style={{ backgroundColor: '#1ea98c' }}>
+                    <Plus size={20} color="#ffffff" style={{ strokeWidth: 2.6 }} />
                   </div>
-                  <div className="list-folder-info">
-                    <div className="list-folder-title" title="下載經典">
-                      下載經典
-                    </div>
-                    <div className="list-folder-count-text">
-                      從CBETA資料庫
-                    </div>
+                  <div className="home-grid-info">
+                    <div className="home-grid-title">下載經典</div>
+                    <div className="home-grid-subtitle">從CBETA資料庫下載</div>
                   </div>
                 </div>
 
-                {/* 2. 我的書櫃 - 經典深琥珀色 (#8c4b27) */}
+                {/* 2. 右上：重點與筆記 - 柔和琥珀金 (#c07d2a) */}
                 <div 
-                  className="list-book-item list-folder-item system-folder-item"
-                  onClick={() => navigateToFolderWithAnimation('virtual_my_folders')}
-                  title="點擊查看我的書櫃"
-                >
-                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#8c4b27' }}>
-                    <Folder size={15} color="#ffffff" />
-                  </div>
-                  <div className="list-folder-info">
-                    <div className="list-folder-title" title="我的書櫃">
-                      我的書櫃
-                    </div>
-                    <div className="list-folder-count-text">
-                      共{downloadedBooks.length}本書
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. 重點與筆記 - 琥珀金 (#c07d2a) */}
-                <div 
-                  className="list-book-item list-folder-item system-folder-item"
+                  className="home-grid-card"
                   onClick={() => navigateToFolderWithAnimation('virtual_highlights')}
                   title="點擊查看重點與筆記"
                 >
-                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#c07d2a' }}>
-                    <Notebook size={14} color="#ffffff" />
+                  <div className="home-grid-icon-box" style={{ backgroundColor: '#c07d2a' }}>
+                    <Notebook size={18} color="#ffffff" />
                   </div>
-                  <div className="list-folder-info">
-                    <div className="list-folder-title" title="重點與筆記">
-                      重點與筆記
-                    </div>
-                    <div className="list-folder-count-text">
-                      共{allHighlights.length}則筆記
-                    </div>
+                  <div className="home-grid-info">
+                    <div className="home-grid-title">重點與筆記</div>
+                    <div className="home-grid-subtitle">共{allHighlights.length}則筆記</div>
                   </div>
                 </div>
 
-                {/* 4. 關鍵字搜尋 - 典雅海軍藍 (#2b6cb0) */}
+                {/* 3. 左下：我的書櫃 - 經典沉香木褐 (#8c4b27) */}
                 <div 
-                  className="list-book-item list-folder-item system-folder-item"
+                  className="home-grid-card"
+                  onClick={() => navigateToFolderWithAnimation('virtual_my_folders')}
+                  title="點擊查看我的書櫃"
+                >
+                  <div className="home-grid-icon-box" style={{ backgroundColor: '#8c4b27' }}>
+                    <Folder size={18} color="#ffffff" />
+                  </div>
+                  <div className="home-grid-info">
+                    <div className="home-grid-title">我的書櫃</div>
+                    <div className="home-grid-subtitle">共{downloadedBooks.length}本書</div>
+                  </div>
+                </div>
+
+                {/* 4. 右下：關鍵字搜尋 - 典雅海軍藍 (#2b6cb0) */}
+                <div 
+                  className="home-grid-card"
                   onClick={() => setActiveTab('search')}
                   title="點擊進行關鍵字搜尋"
                 >
-                  <div className="list-folder-icon-wrapper" style={{ backgroundColor: '#2b6cb0' }}>
-                    <Search size={14} color="#ffffff" style={{ strokeWidth: 2.5 }} />
+                  <div className="home-grid-icon-box" style={{ backgroundColor: '#2b6cb0' }}>
+                    <Search size={18} color="#ffffff" style={{ strokeWidth: 2.4 }} />
                   </div>
-                  <div className="list-folder-info">
-                    <div className="list-folder-title" title="關鍵字搜尋">
-                      關鍵字搜尋
-                    </div>
-                    <div className="list-folder-count-text">
-                      站內已下載經典
-                    </div>
+                  <div className="home-grid-info">
+                    <div className="home-grid-title">關鍵字搜尋</div>
+                    <div className="home-grid-subtitle">已下載經典全文檢索</div>
                   </div>
                 </div>
               </div>
-            </>
+
+              {/* 💡 中段：上次閱讀快捷卡 (若有閱讀紀錄) */}
+              {resumeBooks.length > 0 && (
+                <div className="home-resume-container">
+                  <div className="home-resume-label">上次閱讀</div>
+                  <div 
+                    className="home-resume-card"
+                    onClick={() => {
+                      const top = resumeBooks[0];
+                      onSelectBook(top.book.workId, top.progress.segmentId, undefined, 'resume');
+                    }}
+                    title={`繼續閱讀：${resumeBooks[0].book.title}`}
+                  >
+                    <div className="home-resume-left">
+                      <div className="home-resume-badge" style={{ backgroundColor: getBookCoverColor(resumeBooks[0].book.workId) }}>
+                        {resumeBooks[0].book.workId}
+                      </div>
+                      <div className="home-resume-info">
+                        <div className="home-resume-title" title={resumeBooks[0].book.title}>
+                          {resumeBooks[0].book.title}
+                        </div>
+                        <div className="home-resume-sub">
+                          {resumeBooks[0].progress.juan ? `第 ${resumeBooks[0].progress.juan} 卷` : ''}
+                          {resumeBooks[0].book.creators ? ` · ${sanitizeCreators(resumeBooks[0].book.creators)}` : ''}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="home-resume-btn">
+                      <span>繼續</span>
+                      <ChevronRight size={14} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 💡 最下方佛典偈語 */}
+              <div className="home-zen-quote">
+                <div className="home-zen-lotus">🪷</div>
+                <div className="home-zen-text">
+                  「由聞知諸法，由聞遮眾惡，由聞斷無義，由聞得涅槃。」
+                </div>
+                <div className="home-zen-source">
+                  印順導師《成佛之道》Y0040
+                </div>
+              </div>
+            </div>
           )}
 
           {/* === B. 「我的書櫃」（virtual_my_folders）：iOS App Store 精選專區式排版 (3 本一組橫向輪播) === */}

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBETA Reader - 首頁改版 3 大方案設計預覽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #eae6db;
+      --bg-card-parchment: #fcfaf6;
+      --bg-card-inner: #ffffff;
+      --text-main: #2d241e;
+      --text-muted: #827266;
+      --text-faint: #a6988d;
+      --border-parchment: rgba(140, 75, 39, 0.15);
+      --shadow-card: 0 3px 12px rgba(90, 50, 20, 0.05);
+      --font-serif: "Noto Serif TC", "Songti TC", "Source Han Serif TC", serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: #2b2622;
+      color: #333;
+      padding: 24px 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .preview-header {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #f7f3ec;
+    }
+
+    .preview-header h1 {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      color: #f3dfc8;
+    }
+
+    .preview-header p {
+      font-size: 0.9rem;
+      color: #c4b5a5;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 28px;
+      max-width: 1300px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    /* 模擬手機螢幕容器 */
+    .phone-mockup-card {
+      background-color: var(--bg-card-parchment);
+      width: 360px;
+      height: 720px;
+      border-radius: 36px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 8px #1a1614;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .option-badge-header {
+      background: #3e322a;
+      color: #f3dfc8;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .option-tag {
+      background: #1ea98c;
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    /* 手機內部頂部控制列 */
+    .mock-topbar {
+      height: 52px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-parchment);
+      background: rgba(252, 250, 246, 0.85);
+      backdrop-filter: blur(8px);
+    }
+
+    .mock-topbar-icons-left,
+    .mock-topbar-icons-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #635347;
+    }
+
+    .mock-content-body {
+      flex: 1;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* 抬頭標題 */
+    .mock-title-area {
+      text-align: center;
+      margin-top: 4px;
+      margin-bottom: 18px;
+    }
+
+    .mock-title-area h2 {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text-main);
+    }
+
+    .mock-title-area h2 span {
+      color: #1ea98c;
+    }
+
+    .mock-title-area p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      letter-spacing: 0.08em;
+    }
+
+    /* 方案 1 & 2 的 2x2 四宮格卡片 */
+    .grid-2x2-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid-2x2-card {
+      background: var(--bg-card-inner);
+      border: 1.5px solid var(--border-parchment);
+      border-radius: 16px;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+
+    .grid-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    }
+
+    .grid-card-title {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 3px;
+      white-space: nowrap;
+    }
+
+    .grid-card-subtitle {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* 方案 2 的「上次閱讀」卡片 */
+    .resume-strip-card {
+      background: linear-gradient(135deg, #f7f0e6 0%, #efe5d6 100%);
+      border: 1.5px solid rgba(140, 75, 39, 0.22);
+      border-radius: 14px;
+      padding: 11px 14px;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(90, 50, 20, 0.06);
+    }
+
+    .resume-strip-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .resume-icon-badge {
+      width: 32px;
+      height: 32px;
+      background: #8c4b27;
+      color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .resume-strip-title {
+      font-family: var(--font-serif);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .resume-strip-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .resume-btn-pill {
+      background: #8c4b27;
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 5px 10px;
+      border-radius: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* 方案 3 的垂直 4 列長條卡 */
+    .list-vertical-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .list-vertical-row {
+      background: var(--bg-card-inner);
+      border: 1.5px solid var(--border-parchment);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-card);
+    }
+
+    .list-vertical-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .list-vertical-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .list-vertical-texts {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .list-vertical-title {
+      font-family: var(--font-serif);
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .list-vertical-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .list-vertical-arrow {
+      color: #a6988d;
+      font-size: 1rem;
+    }
+
+    /* 置底經文法句 (佛典法音 / 每日禪語) */
+    .zen-quote-bottom {
+      margin-top: auto;
+      padding-top: 14px;
+      text-align: center;
+      border-top: 1px dashed rgba(140, 75, 39, 0.2);
+    }
+
+    .zen-lotus-icon {
+      font-size: 1.1rem;
+      color: #8c4b27;
+      margin-bottom: 4px;
+      opacity: 0.75;
+    }
+
+    .zen-quote-text {
+      font-family: var(--font-serif);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: #5c4b3e;
+      letter-spacing: 0.05em;
+      padding: 0 8px;
+    }
+
+    .zen-quote-source {
+      font-size: 0.7rem;
+      color: #96867a;
+      margin-top: 3px;
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-header">
+    <h1>CBETA Reader 首頁改版視覺方案比較</h1>
+    <p>針對手機螢幕空間優化，徹底根除文字重疊，營造典雅靜心的閱讀大藏經體驗</p>
+  </div>
+
+  <div class="options-container">
+
+    <!-- ==================== 方案 1 ==================== -->
+    <div class="phone-mockup-card">
+      <div class="option-badge-header">
+        <span>方案 1：2×2 四宮格大卡片 + 每日法句</span>
+        <span class="option-tag">熱門推薦 ⭐</span>
+      </div>
+
+      <div class="mock-topbar">
+        <div class="mock-topbar-icons-left">
+          <span>⌂</span>
+          <span style="opacity: 0.4;">|</span>
+          <span>＋</span>
+        </div>
+        <div class="mock-topbar-icons-right">
+          <span>🔍</span>
+          <span>⚙</span>
+        </div>
+      </div>
+
+      <div class="mock-content-body">
+        <div>
+          <div class="mock-title-area">
+            <h2><span>CBETA</span> Reader</h2>
+            <p>淨心小角落 ‧ 閱讀大藏經</p>
+          </div>
+
+          <!-- 2x2 四宮格大卡片 -->
+          <div class="grid-2x2-wrap">
+            <!-- 1. 下載經典 -->
+            <div class="grid-2x2-card">
+              <div class="grid-icon-box" style="background: #1ea98c;">＋</div>
+              <div class="grid-card-title">下載經典</div>
+              <div class="grid-card-subtitle">從CBETA藏經庫</div>
+            </div>
+
+            <!-- 2. 我的書櫃 -->
+            <div class="grid-2x2-card">
+              <div class="grid-icon-box" style="background: #8c4b27;">📁</div>
+              <div class="grid-card-title">我的書櫃</div>
+              <div class="grid-card-subtitle">共92本書</div>
+            </div>
+
+            <!-- 3. 重點與筆記 -->
+            <div class="grid-2x2-card">
+              <div class="grid-icon-box" style="background: #c07d2a;">📒</div>
+              <div class="grid-card-title">重點與筆記</div>
+              <div class="grid-card-subtitle">共83則筆記</div>
+            </div>
+
+            <!-- 4. 關鍵字搜尋 -->
+            <div class="grid-2x2-card">
+              <div class="grid-icon-box" style="background: #2b6cb0;">🔍</div>
+              <div class="grid-card-title">關鍵字搜尋</div>
+              <div class="grid-card-subtitle">站內已下載經典</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部法句 -->
+        <div class="zen-quote-bottom">
+          <div class="zen-lotus-icon">🪷</div>
+          <div class="zen-quote-text">「一切有為法，如夢幻泡影，如露亦如電，應作如是觀。」</div>
+          <div class="zen-quote-source">——《金剛般若波羅蜜經》</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 方案 2 ==================== -->
+    <div class="phone-mockup-card">
+      <div class="option-badge-header">
+        <span>方案 2：四宮格 + 繼續閱讀捷徑 + 法句</span>
+        <span class="option-tag" style="background: #8c4b27;">高實用性 📖</span>
+      </div>
+
+      <div class="mock-topbar">
+        <div class="mock-topbar-icons-left">
+          <span>⌂</span>
+          <span style="opacity: 0.4;">|</span>
+          <span>＋</span>
+        </div>
+        <div class="mock-topbar-icons-right">
+          <span>🔍</span>
+          <span>⚙</span>
+        </div>
+      </div>
+
+      <div class="mock-content-body">
+        <div>
+          <div class="mock-title-area">
+            <h2><span>CBETA</span> Reader</h2>
+            <p>淨心小角落 ‧ 閱讀大藏經</p>
+          </div>
+
+          <!-- 2x2 四宮格大卡片 -->
+          <div class="grid-2x2-wrap">
+            <div class="grid-2x2-card">
+              <div class="grid-icon-box" style="background: #1ea98c;">＋</div>
+              <div class="grid-card-title">下載經典</div>
+              <div class="grid-card-subtitle">從CBETA藏經庫</div>
+            </div>
+
+            <div class="grid-2x2-card">
+              <div class="grid-icon-box" style="background: #8c4b27;">📁</div>
+              <div class="grid-card-title">我的書櫃</div>
+              <div class="grid-card-subtitle">共92本書</div>
+            </div>
+
+            <div class="grid-2x2-card">
+              <div class="grid-icon-box" style="background: #c07d2a;">📒</div>
+              <div class="grid-card-title">重點與筆記</div>
+              <div class="grid-card-subtitle">共83則筆記</div>
+            </div>
+
+            <div class="grid-2x2-card">
+              <div class="grid-icon-box" style="background: #2b6cb0;">🔍</div>
+              <div class="grid-card-title">關鍵字搜尋</div>
+              <div class="grid-card-subtitle">站內已下載經典</div>
+            </div>
+          </div>
+
+          <!-- 中段：上次閱讀捷徑卡 -->
+          <div class="resume-strip-card">
+            <div class="resume-strip-left">
+              <div class="resume-icon-badge">📖</div>
+              <div>
+                <div class="resume-strip-title">妙法蓮華經 (卷一)</div>
+                <div class="resume-strip-sub">上次讀至：序品第一</div>
+              </div>
+            </div>
+            <div class="resume-btn-pill">繼續 ➔</div>
+          </div>
+        </div>
+
+        <!-- 底部法句 -->
+        <div class="zen-quote-bottom">
+          <div class="zen-lotus-icon">🪷</div>
+          <div class="zen-quote-text">「諸法從本來，常自寂滅相。」</div>
+          <div class="zen-quote-source">——《妙法蓮華經》</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 方案 3 ==================== -->
+    <div class="phone-mockup-card">
+      <div class="option-badge-header">
+        <span>方案 3：4 列垂直典雅長條卡 + 法句</span>
+        <span class="option-tag" style="background: #2b6cb0;">極簡條列 📑</span>
+      </div>
+
+      <div class="mock-topbar">
+        <div class="mock-topbar-icons-left">
+          <span>⌂</span>
+          <span style="opacity: 0.4;">|</span>
+          <span>＋</span>
+        </div>
+        <div class="mock-topbar-icons-right">
+          <span>🔍</span>
+          <span>⚙</span>
+        </div>
+      </div>
+
+      <div class="mock-content-body">
+        <div>
+          <div class="mock-title-area">
+            <h2><span>CBETA</span> Reader</h2>
+            <p>淨心小角落 ‧ 閱讀大藏經</p>
+          </div>
+
+          <!-- 4 列垂直長條卡 -->
+          <div class="list-vertical-wrap">
+            <div class="list-vertical-row">
+              <div class="list-vertical-left">
+                <div class="list-vertical-icon" style="background: #1ea98c;">＋</div>
+                <div class="list-vertical-texts">
+                  <div class="list-vertical-title">下載經典</div>
+                  <div class="list-vertical-sub">從CBETA官方資料庫下載</div>
+                </div>
+              </div>
+              <div class="list-vertical-arrow">›</div>
+            </div>
+
+            <div class="list-vertical-row">
+              <div class="list-vertical-left">
+                <div class="list-vertical-icon" style="background: #8c4b27;">📁</div>
+                <div class="list-vertical-texts">
+                  <div class="list-vertical-title">我的書櫃</div>
+                  <div class="list-vertical-sub">管理所有已下載經典 (共92本)</div>
+                </div>
+              </div>
+              <div class="list-vertical-arrow">›</div>
+            </div>
+
+            <div class="list-vertical-row">
+              <div class="list-vertical-left">
+                <div class="list-vertical-icon" style="background: #c07d2a;">📒</div>
+                <div class="list-vertical-texts">
+                  <div class="list-vertical-title">重點與筆記</div>
+                  <div class="list-vertical-sub">劃線重點與心得複習 (共83則)</div>
+                </div>
+              </div>
+              <div class="list-vertical-arrow">›</div>
+            </div>
+
+            <div class="list-vertical-row">
+              <div class="list-vertical-left">
+                <div class="list-vertical-icon" style="background: #2b6cb0;">🔍</div>
+                <div class="list-vertical-texts">
+                  <div class="list-vertical-title">關鍵字搜尋</div>
+                  <div class="list-vertical-sub">全站已下載經典內文檢索</div>
+                </div>
+              </div>
+              <div class="list-vertical-arrow">›</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部法句 -->
+        <div class="zen-quote-bottom">
+          <div class="zen-lotus-icon">🪷</div>
+          <div class="zen-quote-text">「心如工畫師，能畫諸世間，五蘊悉從生，無法而不造。」</div>
+          <div class="zen-quote-source">——《大方廣佛華嚴經》</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

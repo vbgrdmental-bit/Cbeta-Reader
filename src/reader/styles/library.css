@@ -278,30 +278,311 @@ body.theme-ebony .library-title-area {
   box-sizing: border-box;
 }
 
-.folders-grid-container.system-grid {
-  grid-template-columns: repeat(4, 1fr) !important;
-  gap: 0.45rem;
-  margin: 0;
-  padding: 0 0 0.75rem 0;
+/* ==========================================================================
+   首頁 2x2 四宮格系統方塊 + 上次閱讀快捷卡 + 靜心偈語佈局
+   ========================================================================== */
+.home-dashboard-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  border-bottom: 1px solid rgba(140, 75, 39, 0.12);
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 0.2rem 1rem 1.4rem 1rem;
+  box-sizing: border-box;
+  flex-grow: 1;
 }
 
-.folders-grid-container.system-grid .list-folder-item {
-  padding: 0.65rem 0.3rem !important;
+.home-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.folders-grid-container.system-grid .list-folder-title {
-  font-size: 0.8rem !important;
+.home-grid-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--bg-card, #ffffff);
+  border: 1.5px solid var(--border-color, rgba(140, 75, 39, 0.16));
+  border-radius: 18px;
+  padding: 1.1rem 0.6rem;
+  box-shadow: 0 3px 12px rgba(90, 50, 20, 0.04);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  box-sizing: border-box;
+  min-height: 120px;
 }
 
-.folders-grid-container.system-grid .list-folder-count-text {
-  font-size: 0.68rem !important;
+.home-grid-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(90, 50, 20, 0.09);
+  border-color: var(--theme-accent, #8c4b27);
 }
 
-body.theme-dark .folders-grid-container.system-grid,
-body.theme-ebony .folders-grid-container.system-grid {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+.home-grid-card:active {
+  transform: scale(0.98);
+}
+
+.home-grid-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.65rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.home-grid-card:hover .home-grid-icon-box {
+  transform: scale(1.05);
+}
+
+.home-grid-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+}
+
+.home-grid-title {
+  font-family: var(--font-serif, serif);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text-primary, #2d241e);
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.home-grid-subtitle {
+  font-size: 0.74rem;
+  color: var(--text-muted, #718096);
+  margin-top: 0.25rem;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* 💡 中段：上次閱讀快捷卡 */
+.home-resume-container {
+  margin-top: 1.1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.home-resume-label {
+  font-size: 0.72rem;
+  color: var(--text-muted, #827266);
+  margin-bottom: 0.35rem;
+  padding-left: 0.25rem;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.home-resume-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 243, 235, 0.98) 100%);
+  border: 1.5px solid rgba(140, 75, 39, 0.2);
+  border-radius: 14px;
+  padding: 0.7rem 0.9rem;
+  box-shadow: 0 2px 8px rgba(90, 50, 20, 0.05);
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  user-select: none;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.home-resume-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(90, 50, 20, 0.08);
+  border-color: var(--theme-accent, #8c4b27);
+}
+
+.home-resume-card:active {
+  transform: scale(0.99);
+}
+
+.home-resume-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1 1 0%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.home-resume-badge {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.78rem;
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.14);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  font-family: var(--font-serif, serif);
+}
+
+.home-resume-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15rem;
+  flex: 1 1 0%;
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+}
+
+.home-resume-title {
+  font-family: var(--font-serif, serif);
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--text-primary, #2d241e);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.home-resume-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted, #718096);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-resume-btn {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: 12px;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  box-shadow: 0 2px 6px rgba(140, 75, 39, 0.25);
+  transition: opacity 0.15s ease;
+}
+
+.home-resume-card:hover .home-resume-btn {
+  opacity: 0.92;
+}
+
+/* 💡 最下方佛典靜心偈語 */
+.home-zen-quote {
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  text-align: center;
+  border-top: 1px dashed rgba(140, 75, 39, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.home-zen-lotus {
+  font-size: 1.2rem;
+  margin-bottom: 0.35rem;
+  opacity: 0.85;
+}
+
+.home-zen-text {
+  font-family: var(--font-serif, serif);
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: #5c4b3e;
+  letter-spacing: 0.06em;
+  padding: 0 0.5rem;
+  font-weight: 500;
+}
+
+.home-zen-source {
+  font-size: 0.72rem;
+  color: #96867a;
+  margin-top: 0.35rem;
+  letter-spacing: 0.04em;
+  font-family: var(--font-serif, serif);
+}
+
+/* 烏木與深色主題特化 */
+body.theme-ebony .home-grid-card,
+body.theme-dark .home-grid-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.theme-ebony .home-grid-card:hover,
+body.theme-dark .home-grid-card:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+body.theme-ebony .home-grid-title,
+body.theme-dark .home-grid-title {
+  color: #f0f4f8 !important;
+}
+
+body.theme-ebony .home-grid-subtitle,
+body.theme-dark .home-grid-subtitle {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+body.theme-ebony .home-resume-label,
+body.theme-dark .home-resume-label {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+body.theme-ebony .home-resume-card,
+body.theme-dark .home-resume-card {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.theme-ebony .home-resume-title,
+body.theme-dark .home-resume-title {
+  color: #f0f4f8 !important;
+}
+
+body.theme-ebony .home-resume-sub,
+body.theme-dark .home-resume-sub {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+body.theme-ebony .home-zen-quote,
+body.theme-dark .home-zen-quote {
+  border-top-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body.theme-ebony .home-zen-text,
+body.theme-dark .home-zen-text {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+body.theme-ebony .home-zen-source,
+body.theme-dark .home-zen-source {
+  color: rgba(255, 255, 255, 0.45) !important;
 }
 
 /* ==========================================================================
