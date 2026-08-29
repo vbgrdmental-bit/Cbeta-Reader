@@ -907,40 +907,40 @@ export function Library({
     onSelectBook(workId, segmentId, query);
   };
 
-  // 💡 大藏經 A...Z 共 26 個字母開頭之經典色系字典 (典雅東方書籍質感配色)
+  // 💡 大藏經 A...Z 共 26 個字母開頭之經典色系字典 (溫暖療癒・同色系相鄰木質茶褐漸層)
   const CANON_LETTER_COLORS: { [key: string]: string } = {
-    A: '#3b5998', // 紺藍
-    B: '#702459', // 紫紅 / 茜色
-    C: '#2b6cb0', // 寶藍
-    D: '#2c5282', // 黛藍
-    E: '#276749', // 苔綠
-    F: '#317873', // 松石青
-    G: '#4a5b4e', // 竹綠
-    H: '#d69e2e', // 琥珀黃
-    I: '#b7791f', // 古銅黃
-    J: '#c05621', // 赭紅
-    K: '#9b2c2c', // 硃砂紅
-    L: '#742a2a', // 栗紅
-    M: '#6b46c1', // 紫藤
-    N: '#5a67d8', // 群青
-    O: '#2b4c7e', // 藏青
-    P: '#805ad5', // 桔梗紫
-    Q: '#d53f8c', // 胭脂紅
-    R: '#e53e3e', // 丹紅
-    S: '#dd6b20', // 柿黃
-    T: '#2b4c7e', // 大正藏 - 紺青
-    U: '#319795', // 孔雀藍
-    V: '#3182ce', // 琉璃藍
-    W: '#805ad5', // 深紫
-    X: '#782d2d', // 卍續藏 - 緋紅
-    Y: '#654321', // 印順導師 - 墨茶
-    Z: '#314e52'  // 墨綠
+    A: '#8c5332', // 溫潤沉香
+    B: '#824c2d', // 栗褐
+    C: '#915938', // 暖茶棕
+    D: '#7a4729', // 檀木褐
+    E: '#8a5637', // 暖木色
+    F: '#945e3c', // 琥珀棕
+    G: '#764324', // 深沉香
+    H: '#8e5836', // 暖泥金
+    I: '#865131', // 沉水香
+    J: '#96603e', // 暖杏褐
+    K: '#7e4a2b', // 熟褐
+    L: '#885333', // 桂皮木
+    M: '#935d3b', // 焙茶色
+    N: '#7c482a', // 烏木棕
+    O: '#8b5535', // 溫潤檀
+    P: '#95613f', // 暖秋褐
+    Q: '#7f4b2d', // 降真香
+    R: '#875232', // 赤檀
+    S: '#925c3a', // 琥珀木
+    T: '#7a4628', // 大正藏 - 溫潤深檀
+    U: '#8d5736', // 暖栗色
+    V: '#844e2f', // 沉檀香
+    W: '#96613e', // 茶金色
+    X: '#7e492a', // 卍續藏 - 典雅木褐
+    Y: '#885333', // 印順導師 - 沉香木茶
+    Z: '#784426'  // 古木色
   };
 
   const getBookCoverColor = (workId: string) => {
-    if (!workId) return '#4a5b4e';
+    if (!workId) return '#7e4628';
     const letter = workId.charAt(0).toUpperCase();
-    return CANON_LETTER_COLORS[letter] || '#4a5b4e';
+    return CANON_LETTER_COLORS[letter] || '#7e4628';
   };
 
   // === 篩選渲染資料夾與書籍 ===
@@ -1554,13 +1554,13 @@ export function Library({
 
               {/* 💡 2x2 四宮格系統方塊 (左上: 下載經典, 右上: 重點與筆記, 左下: 我的書櫃, 右下: 關鍵字搜尋) */}
               <div className="home-grid-2x2">
-                {/* 1. 左上：下載經典 - 柔和翡翠綠 (#1ea98c) */}
+                {/* 1. 左上：下載經典 */}
                 <div 
                   className="home-grid-card"
                   onClick={handleOpenCbetaCatalogWithAnimation}
                   title="進入 CBETA 藏經庫目錄下載經典"
                 >
-                  <div className="home-grid-icon-box" style={{ backgroundColor: '#1ea98c' }}>
+                  <div className="home-grid-icon-box">
                     <Plus size={20} color="#ffffff" style={{ strokeWidth: 2.6 }} />
                   </div>
                   <div className="home-grid-info">
@@ -1569,13 +1569,13 @@ export function Library({
                   </div>
                 </div>
 
-                {/* 2. 右上：重點與筆記 - 柔和琥珀金 (#c07d2a) */}
+                {/* 2. 右上：重點與筆記 */}
                 <div 
                   className="home-grid-card"
                   onClick={() => navigateToFolderWithAnimation('virtual_highlights')}
                   title="點擊查看重點與筆記"
                 >
-                  <div className="home-grid-icon-box" style={{ backgroundColor: '#c07d2a' }}>
+                  <div className="home-grid-icon-box">
                     <Notebook size={18} color="#ffffff" />
                   </div>
                   <div className="home-grid-info">
@@ -1584,13 +1584,13 @@ export function Library({
                   </div>
                 </div>
 
-                {/* 3. 左下：我的書櫃 - 經典沉香木褐 (#8c4b27) */}
+                {/* 3. 左下：我的書櫃 */}
                 <div 
                   className="home-grid-card"
                   onClick={() => navigateToFolderWithAnimation('virtual_my_folders')}
                   title="點擊查看我的書櫃"
                 >
-                  <div className="home-grid-icon-box" style={{ backgroundColor: '#8c4b27' }}>
+                  <div className="home-grid-icon-box">
                     <Folder size={18} color="#ffffff" />
                   </div>
                   <div className="home-grid-info">
@@ -1599,13 +1599,13 @@ export function Library({
                   </div>
                 </div>
 
-                {/* 4. 右下：關鍵字搜尋 - 典雅海軍藍 (#2b6cb0) */}
+                {/* 4. 右下：關鍵字搜尋 */}
                 <div 
                   className="home-grid-card"
                   onClick={() => setActiveTab('search')}
                   title="點擊進行關鍵字搜尋"
                 >
-                  <div className="home-grid-icon-box" style={{ backgroundColor: '#2b6cb0' }}>
+                  <div className="home-grid-icon-box">
                     <Search size={18} color="#ffffff" style={{ strokeWidth: 2.4 }} />
                   </div>
                   <div className="home-grid-info">
@@ -1651,7 +1651,14 @@ export function Library({
 
               {/* 💡 最下方佛典偈語 */}
               <div className="home-zen-quote">
-                <div className="home-zen-lotus">🪷</div>
+                <div className="home-zen-lotus">
+                  <svg width="22" height="18" viewBox="0 0 24 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.65, color: 'var(--theme-accent, #8c4b27)' }}>
+                    <path d="M12 2C12 2 8 8 8 13C8 16 10 18 12 18C14 18 16 16 16 13C16 8 12 2 12 2Z" />
+                    <path d="M12 18C7.5 18 4 14.5 4 11C4 8.5 6 6 8 5" />
+                    <path d="M12 18C16.5 18 20 14.5 20 11C20 8.5 18 6 16 5" />
+                    <path d="M2 18C5 18 8 17.5 12 17.5C16 17.5 19 18 22 18" />
+                  </svg>
+                </div>
                 <div className="home-zen-text">
                   「由聞知諸法，由聞遮眾惡，由聞斷無義，由聞得涅槃。」
                 </div>

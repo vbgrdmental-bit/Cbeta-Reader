@@ -336,13 +336,22 @@ body.theme-ebony .library-title-area {
   align-items: center;
   justify-content: center;
   margin-bottom: 0.65rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(140, 75, 39, 0.22);
   flex-shrink: 0;
   transition: transform 0.15s ease;
 }
 
 .home-grid-card:hover .home-grid-icon-box {
   transform: scale(1.05);
+}
+
+body.theme-ebony .home-grid-icon-box,
+body.theme-dark .home-grid-icon-box {
+  background: rgba(224, 164, 120, 0.18);
+  color: #e0a478;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .home-grid-info {
@@ -3882,44 +3891,27 @@ body.theme-dark .action-grid-btn:hover {
   transition: all 0.15s ease;
 }
 
-/* 1. 近期閱讀：淡琥珀/棕暖色 */
-.appstore-capsule-recent {
-  background: rgba(140, 75, 39, 0.10);
-  color: var(--theme-accent, #8c4b27);
-}
-body.theme-ebony .appstore-capsule-recent {
-  background: rgba(224, 164, 120, 0.18);
-  color: #e0a478;
-}
-
-/* 2. 我的最愛：淡粉紅/紅寶石色 */
-.appstore-capsule-favorites {
-  background: rgba(229, 62, 62, 0.10);
-  color: #d93838;
-}
-body.theme-ebony .appstore-capsule-favorites {
-  background: rgba(248, 113, 113, 0.18);
-  color: #f87171;
-}
-
-/* 3. 近期下載：淡海軍藍色 */
-.appstore-capsule-unclassified {
-  background: rgba(43, 108, 176, 0.10);
-  color: #2b6cb0;
-}
-body.theme-ebony .appstore-capsule-unclassified {
-  background: rgba(96, 165, 250, 0.18);
-  color: #60a5fa;
-}
-
-/* 4. 自訂資料夾：淡大地木質色 */
+/* 💡 書架各專區標題膠囊：統一為典雅沉香木同色系 */
+.appstore-capsule-recent,
+.appstore-capsule-favorites,
+.appstore-capsule-unclassified,
 .appstore-capsule-folder {
-  background: rgba(139, 115, 85, 0.10);
-  color: var(--text-primary);
+  background: rgba(140, 75, 39, 0.08);
+  color: var(--theme-accent, #8c4b27);
+  border: 1px solid rgba(140, 75, 39, 0.14);
 }
-body.theme-ebony .appstore-capsule-folder {
-  background: rgba(212, 196, 176, 0.15);
-  color: #e4e4e7;
+
+body.theme-ebony .appstore-capsule-recent,
+body.theme-ebony .appstore-capsule-favorites,
+body.theme-ebony .appstore-capsule-unclassified,
+body.theme-ebony .appstore-capsule-folder,
+body.theme-dark .appstore-capsule-recent,
+body.theme-dark .appstore-capsule-favorites,
+body.theme-dark .appstore-capsule-unclassified,
+body.theme-dark .appstore-capsule-folder {
+  background: rgba(224, 164, 120, 0.15);
+  color: #e0a478;
+  border: 1px solid rgba(224, 164, 120, 0.22);
 }
 
 .appstore-section-title {
