@@ -907,40 +907,40 @@ export function Library({
     onSelectBook(workId, segmentId, query);
   };
 
-  // 💡 大藏經 A...Z 共 26 個字母開頭之經典色系字典 (溫暖療癒・同色系相鄰木質茶褐漸層)
-  const CANON_LETTER_COLORS: { [key: string]: string } = {
-    A: '#8c5332', // 溫潤沉香
-    B: '#824c2d', // 栗褐
-    C: '#915938', // 暖茶棕
-    D: '#7a4729', // 檀木褐
-    E: '#8a5637', // 暖木色
-    F: '#945e3c', // 琥珀棕
-    G: '#764324', // 深沉香
-    H: '#8e5836', // 暖泥金
-    I: '#865131', // 沉水香
-    J: '#96603e', // 暖杏褐
-    K: '#7e4a2b', // 熟褐
-    L: '#885333', // 桂皮木
-    M: '#935d3b', // 焙茶色
-    N: '#7c482a', // 烏木棕
-    O: '#8b5535', // 溫潤檀
-    P: '#95613f', // 暖秋褐
-    Q: '#7f4b2d', // 降真香
-    R: '#875232', // 赤檀
-    S: '#925c3a', // 琥珀木
-    T: '#7a4628', // 大正藏 - 溫潤深檀
-    U: '#8d5736', // 暖栗色
-    V: '#844e2f', // 沉檀香
-    W: '#96613e', // 茶金色
-    X: '#7e492a', // 卍續藏 - 典雅木褐
-    Y: '#885333', // 印順導師 - 沉香木茶
-    Z: '#784426'  // 古木色
+  // 💡 大藏經 A...Z 共 26 個字母開頭之經典色系字典 (溫暖療癒・咖啡/暖茶同色系鄰近漸層色)
+  const CANON_LETTER_GRADIENTS: { [key: string]: string } = {
+    A: 'linear-gradient(135deg, #a46f48 0%, #8b5531 100%)', // 溫潤摩卡
+    B: 'linear-gradient(135deg, #9e6740 0%, #844d28 100%)', // 沉香栗褐
+    C: 'linear-gradient(135deg, #ab764f 0%, #925d37 100%)', // 暖茶拿鐵
+    D: 'linear-gradient(135deg, #99623b 0%, #804823 100%)', // 檀木深褐
+    E: 'linear-gradient(135deg, #a6724b 0%, #8d5833 100%)', // 暖秋木色
+    F: 'linear-gradient(135deg, #b07a53 0%, #96613b 100%)', // 琥珀太妃
+    G: 'linear-gradient(135deg, #955e37 0%, #7d441f 100%)', // 焦糖深木
+    H: 'linear-gradient(135deg, #ad7851 0%, #945f39 100%)', // 暖泥茶金
+    I: 'linear-gradient(135deg, #a16c45 0%, #87522d 100%)', // 沉水香褐
+    J: 'linear-gradient(135deg, #b37e57 0%, #99653e 100%)', // 杏仁烤茶
+    K: 'linear-gradient(135deg, #9b643d 0%, #824a25 100%)', // 熟焙咖啡
+    L: 'linear-gradient(135deg, #a57049 0%, #8c5631 100%)', // 桂皮暖棕
+    M: 'linear-gradient(135deg, #af7952 0%, #95603a 100%)', // 焙茶拿鐵
+    N: 'linear-gradient(135deg, #98613a 0%, #7f4722 100%)', // 烏木沉香
+    O: 'linear-gradient(135deg, #a8734c 0%, #8e5934 100%)', // 溫潤檀棕
+    P: 'linear-gradient(135deg, #b17c55 0%, #98633d 100%)', // 暖栗琥珀
+    Q: 'linear-gradient(135deg, #9c653e 0%, #834b26 100%)', // 降真暖褐
+    R: 'linear-gradient(135deg, #a36e47 0%, #8a542f 100%)', // 赤檀咖啡
+    S: 'linear-gradient(135deg, #ad7750 0%, #935e38 100%)', // 琥珀沉木
+    T: 'linear-gradient(135deg, #9a633c 0%, #814924 100%)', // 大正藏 - 經典深檀
+    U: 'linear-gradient(135deg, #a9754e 0%, #8f5a35 100%)', // 暖栗淺棕
+    V: 'linear-gradient(135deg, #a06b44 0%, #86512c 100%)', // 沉檀香咖
+    W: 'linear-gradient(135deg, #b27d56 0%, #97643f 100%)', // 茶金暖木
+    X: 'linear-gradient(135deg, #9d663f 0%, #844c27 100%)', // 卍續藏 - 典雅木褐
+    Y: 'linear-gradient(135deg, #a7714a 0%, #8d5732 100%)', // 印順導師 - 沉香茶木
+    Z: 'linear-gradient(135deg, #976039 0%, #7e4621 100%)'  // 古木醇咖
   };
 
-  const getBookCoverColor = (workId: string) => {
-    if (!workId) return '#7e4628';
+  const getBookCoverGradient = (workId: string) => {
+    if (!workId) return 'linear-gradient(135deg, #9a633c 0%, #814924 100%)';
     const letter = workId.charAt(0).toUpperCase();
-    return CANON_LETTER_COLORS[letter] || '#7e4628';
+    return CANON_LETTER_GRADIENTS[letter] || 'linear-gradient(135deg, #9a633c 0%, #814924 100%)';
   };
 
   // === 篩選渲染資料夾與書籍 ===
@@ -1247,7 +1247,7 @@ export function Library({
         )}
 
         {/* 💡 左側：經典編號顏色方塊 Badge (如 T0801, Y0040) */}
-        <div className="horizontal-book-badge" style={{ backgroundColor: getBookCoverColor(book.workId) }}>
+        <div className="horizontal-book-badge" style={{ background: getBookCoverGradient(book.workId) }}>
           {book.workId}
         </div>
 
@@ -1619,32 +1619,34 @@ export function Library({
               {resumeBooks.length > 0 && (
                 <div className="home-resume-container">
                   <div className="home-resume-label">上次閱讀</div>
-                  <div 
-                    className="home-resume-card"
-                    onClick={() => {
-                      const top = resumeBooks[0];
-                      onSelectBook(top.book.workId, top.progress.segmentId, undefined, 'resume');
-                    }}
-                    title={`繼續閱讀：${resumeBooks[0].book.title}`}
-                  >
-                    <div className="home-resume-left">
-                      <div className="home-resume-badge" style={{ backgroundColor: getBookCoverColor(resumeBooks[0].book.workId) }}>
-                        {resumeBooks[0].book.workId}
-                      </div>
-                      <div className="home-resume-info">
-                        <div className="home-resume-title" title={resumeBooks[0].book.title}>
-                          {resumeBooks[0].book.title}
+                  <div className="home-resume-list">
+                    {resumeBooks.slice(0, 2).map((item, idx) => (
+                      <div 
+                        key={`home-resume-${item.book.workId}-${idx}`}
+                        className="home-resume-card"
+                        onClick={() => onSelectBook(item.book.workId, item.progress.segmentId, undefined, 'resume')}
+                        title={`繼續閱讀：${item.book.title}`}
+                      >
+                        <div className="home-resume-left">
+                          <div className="home-resume-badge" style={{ background: getBookCoverGradient(item.book.workId) }}>
+                            {item.book.workId}
+                          </div>
+                          <div className="home-resume-info">
+                            <div className="home-resume-title" title={item.book.title}>
+                              {item.book.title}
+                            </div>
+                            <div className="home-resume-sub">
+                              {item.progress.juan ? `第 ${item.progress.juan} 卷` : ''}
+                              {item.book.creators ? ` · ${sanitizeCreators(item.book.creators)}` : ''}
+                            </div>
+                          </div>
                         </div>
-                        <div className="home-resume-sub">
-                          {resumeBooks[0].progress.juan ? `第 ${resumeBooks[0].progress.juan} 卷` : ''}
-                          {resumeBooks[0].book.creators ? ` · ${sanitizeCreators(resumeBooks[0].book.creators)}` : ''}
+                        <div className="home-resume-btn">
+                          <span>繼續</span>
+                          <ChevronRight size={14} />
                         </div>
                       </div>
-                    </div>
-                    <div className="home-resume-btn">
-                      <span>繼續</span>
-                      <ChevronRight size={14} />
-                    </div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -1872,7 +1874,7 @@ export function Library({
                               <div 
                                 className="horizontal-book-badge" 
                                 style={{ 
-                                  backgroundColor: getBookCoverColor(group.workId),
+                                  background: getBookCoverGradient(group.workId),
                                   width: '32px',
                                   height: '32px',
                                   minWidth: '32px',

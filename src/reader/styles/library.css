@@ -1,23 +1,23 @@
 /* Theme Accent Color System */
 body, body.theme-parchment {
-  --theme-accent: #8c4b27;
-  --theme-accent-hover: #5d3c26;
-  --theme-accent-light: rgba(140, 75, 39, 0.04);
-  --theme-accent-border: rgba(140, 75, 39, 0.12);
+  --theme-accent: #9c623c;
+  --theme-accent-hover: #86522f;
+  --theme-accent-light: rgba(156, 98, 60, 0.05);
+  --theme-accent-border: rgba(156, 98, 60, 0.14);
 }
 
 body.theme-ivory {
-  --theme-accent: #7a5c3a;
-  --theme-accent-hover: #5a4228;
-  --theme-accent-light: rgba(122, 92, 58, 0.04);
-  --theme-accent-border: rgba(122, 92, 58, 0.10);
+  --theme-accent: #8c6a46;
+  --theme-accent-hover: #755534;
+  --theme-accent-light: rgba(140, 106, 70, 0.05);
+  --theme-accent-border: rgba(140, 106, 70, 0.12);
 }
 
 body.theme-comfort {
-  --theme-accent: #2b422b;
-  --theme-accent-hover: #3e5c3e;
-  --theme-accent-light: rgba(43, 66, 43, 0.04);
-  --theme-accent-border: rgba(43, 66, 43, 0.12);
+  --theme-accent: #457a58;
+  --theme-accent-hover: #376547;
+  --theme-accent-light: rgba(69, 122, 88, 0.05);
+  --theme-accent-border: rgba(69, 122, 88, 0.15);
 }
 
 body.theme-ebony {
@@ -394,6 +394,13 @@ body.theme-dark .home-grid-icon-box {
   padding-left: 0.25rem;
   letter-spacing: 0.06em;
   font-weight: 600;
+}
+
+.home-resume-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: 100%;
 }
 
 .home-resume-card {
