@@ -907,40 +907,42 @@ export function Library({
     onSelectBook(workId, segmentId, query);
   };
 
-  // 💡 大藏經 A...Z 共 26 個字母開頭之經典色系字典 (溫暖療癒・咖啡/暖茶同色系鄰近漸層色)
+  // 💡 大藏經 A...Z 共 26 個字母開頭之經典色系字典 v3
+  //    大幅擴展明度跨度（奶茶淺棕 #d4a878 → 深焙濃咖 #541e04）
+  //    + 強化暖色偏移：琥珀金(F/H/J/P/W)、磚紅(B/K/R/X)、純深木(G/T/Z)
   const CANON_LETTER_GRADIENTS: { [key: string]: string } = {
-    A: 'linear-gradient(135deg, #a46f48 0%, #8b5531 100%)', // 溫潤摩卡
-    B: 'linear-gradient(135deg, #9e6740 0%, #844d28 100%)', // 沉香栗褐
-    C: 'linear-gradient(135deg, #ab764f 0%, #925d37 100%)', // 暖茶拿鐵
-    D: 'linear-gradient(135deg, #99623b 0%, #804823 100%)', // 檀木深褐
-    E: 'linear-gradient(135deg, #a6724b 0%, #8d5833 100%)', // 暖秋木色
-    F: 'linear-gradient(135deg, #b07a53 0%, #96613b 100%)', // 琥珀太妃
-    G: 'linear-gradient(135deg, #955e37 0%, #7d441f 100%)', // 焦糖深木
-    H: 'linear-gradient(135deg, #ad7851 0%, #945f39 100%)', // 暖泥茶金
-    I: 'linear-gradient(135deg, #a16c45 0%, #87522d 100%)', // 沉水香褐
-    J: 'linear-gradient(135deg, #b37e57 0%, #99653e 100%)', // 杏仁烤茶
-    K: 'linear-gradient(135deg, #9b643d 0%, #824a25 100%)', // 熟焙咖啡
-    L: 'linear-gradient(135deg, #a57049 0%, #8c5631 100%)', // 桂皮暖棕
-    M: 'linear-gradient(135deg, #af7952 0%, #95603a 100%)', // 焙茶拿鐵
-    N: 'linear-gradient(135deg, #98613a 0%, #7f4722 100%)', // 烏木沉香
-    O: 'linear-gradient(135deg, #a8734c 0%, #8e5934 100%)', // 溫潤檀棕
-    P: 'linear-gradient(135deg, #b17c55 0%, #98633d 100%)', // 暖栗琥珀
-    Q: 'linear-gradient(135deg, #9c653e 0%, #834b26 100%)', // 降真暖褐
-    R: 'linear-gradient(135deg, #a36e47 0%, #8a542f 100%)', // 赤檀咖啡
-    S: 'linear-gradient(135deg, #ad7750 0%, #935e38 100%)', // 琥珀沉木
-    T: 'linear-gradient(135deg, #9a633c 0%, #814924 100%)', // 大正藏 - 經典深檀
-    U: 'linear-gradient(135deg, #a9754e 0%, #8f5a35 100%)', // 暖栗淺棕
-    V: 'linear-gradient(135deg, #a06b44 0%, #86512c 100%)', // 沉檀香咖
-    W: 'linear-gradient(135deg, #b27d56 0%, #97643f 100%)', // 茶金暖木
-    X: 'linear-gradient(135deg, #9d663f 0%, #844c27 100%)', // 卍續藏 - 典雅木褐
-    Y: 'linear-gradient(135deg, #a7714a 0%, #8d5732 100%)', // 印順導師 - 沉香茶木
-    Z: 'linear-gradient(135deg, #976039 0%, #7e4621 100%)'  // 古木醇咖
+    A: 'linear-gradient(135deg, #c48252 0%, #9c5c2a 100%)', // 摩卡焦糖（中淺）
+    B: 'linear-gradient(135deg, #aa6640 0%, #7e4018 100%)', // 磚紅栗褐（中深・磚紅偏移）
+    C: 'linear-gradient(135deg, #d4a878 0%, #b08052 100%)', // 拿鐵米棕（最淺）
+    D: 'linear-gradient(135deg, #9a5838 0%, #703816 100%)', // 深檀烘焙（深）
+    E: 'linear-gradient(135deg, #b87848 0%, #8e5220 100%)', // 暖木沉香（中）
+    F: 'linear-gradient(135deg, #dca868 0%, #b87e3a 100%)', // 奶金太妃（最淺・琥珀偏移）
+    G: 'linear-gradient(135deg, #824828 0%, #582606 100%)', // 焦糖深焙（最深）
+    H: 'linear-gradient(135deg, #c8924a 0%, #a46c24 100%)', // 蜂蜜琥珀（中淺・琥珀偏移）
+    I: 'linear-gradient(135deg, #bc7a4a 0%, #904e24 100%)', // 沉水木褐（中）
+    J: 'linear-gradient(135deg, #d8aa74 0%, #b48248 100%)', // 杏仁拿鐵（最淺・琥珀）
+    K: 'linear-gradient(135deg, #985a36 0%, #6e3812 100%)', // 熟焙磚褐（深・磚紅偏移）
+    L: 'linear-gradient(135deg, #b87a48 0%, #8c5420 100%)', // 桂皮咖棕（中）
+    M: 'linear-gradient(135deg, #c28650 0%, #9a6028 100%)', // 肉桂奶棕（中淺）
+    N: 'linear-gradient(135deg, #945636 0%, #6a3412 100%)', // 烏木沉香（深）
+    O: 'linear-gradient(135deg, #ae7048 0%, #824820 100%)', // 溫潤檀棕（中深）
+    P: 'linear-gradient(135deg, #c68e50 0%, #a06828 100%)', // 暖栗琥珀（中淺・琥珀偏移）
+    Q: 'linear-gradient(135deg, #965836 0%, #6c3612 100%)', // 降真暗木（深）
+    R: 'linear-gradient(135deg, #a86440 0%, #7c3e18 100%)', // 赤檀磚褐（中深・磚紅偏移）
+    S: 'linear-gradient(135deg, #b07248 0%, #865028 100%)', // 琥珀深木（中深）
+    T: 'linear-gradient(135deg, #824a2a 0%, #5a2808 100%)', // 大正深檀（最深）
+    U: 'linear-gradient(135deg, #bc8050 0%, #90582a 100%)', // 暖栗咖褐（中）
+    V: 'linear-gradient(135deg, #986040 0%, #703e1c 100%)', // 沉檀深木（深）
+    W: 'linear-gradient(135deg, #d4aa70 0%, #ae8044 100%)', // 茶金奶棕（最淺・琥珀偏移）
+    X: 'linear-gradient(135deg, #945638 0%, #6c3612 100%)', // 卍續深褐（深・磚紅偏移）
+    Y: 'linear-gradient(135deg, #ba7e4c 0%, #8e5628 100%)', // 印順沉香（中）
+    Z: 'linear-gradient(135deg, #7e4626 0%, #541e04 100%)'  // 古木濃咖（最深）
   };
 
   const getBookCoverGradient = (workId: string) => {
-    if (!workId) return 'linear-gradient(135deg, #9a633c 0%, #814924 100%)';
+    if (!workId) return 'linear-gradient(135deg, #b87848 0%, #8e5220 100%)';
     const letter = workId.charAt(0).toUpperCase();
-    return CANON_LETTER_GRADIENTS[letter] || 'linear-gradient(135deg, #9a633c 0%, #814924 100%)';
+    return CANON_LETTER_GRADIENTS[letter] || 'linear-gradient(135deg, #b87848 0%, #8e5220 100%)';
   };
 
   // === 篩選渲染資料夾與書籍 ===

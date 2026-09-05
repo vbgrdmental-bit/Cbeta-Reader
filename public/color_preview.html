@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBETA Reader — A~Z 經典封面色階預覽 v3</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Noto Sans TC', sans-serif;
+    background: #f5f0eb;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 2rem;
+    gap: 0.4rem;
+  }
+  h1 { font-size: 1.3rem; color: #4a3020; margin-bottom: 0.2rem; font-weight: 800; letter-spacing: 0.04em; text-align: center; }
+  .subtitle { font-size: 0.76rem; color: #9a7c62; margin-bottom: 1.6rem; text-align: center; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 1rem;
+    max-width: 840px;
+    width: 100%;
+  }
+  .swatch { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
+  .box {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; color: #fff;
+    box-shadow: 0 4px 14px rgba(60, 25, 0, 0.28);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.35);
+  }
+  .lname { font-size: 0.62rem; color: #7a5a3a; font-weight: 600; text-align: center; line-height: 1.2; }
+  .hex { font-size: 0.5rem; color: #b09880; font-family: monospace; text-align: center; line-height: 1.4; }
+  .band-label {
+    font-size: 0.68rem; color: #8a6848; font-weight: 700;
+    letter-spacing: 0.06em; margin-top: 0.6rem; margin-bottom: -0.4rem;
+    width: 840px; max-width: 100%;
+    padding-left: 0.2rem;
+  }
+  .legend { display: flex; gap: 1.2rem; margin-top: 1.4rem; flex-wrap: wrap; justify-content: center; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.68rem; color: #7a5a3a; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h1>CBETA Reader — A~Z 經典封面色階預覽 v3</h1>
+<div class="subtitle">大幅擴展明度跨度（奶茶白 #d8aa → 深焙濃咖 #541e）＋ 強化暖色偏移（琥珀金 / 磚紅 / 純深木）</div>
+<div class="grid" id="grid"></div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#d8aa74,#b48248)"></div>① 最淺（拿鐵奶茶）</div>
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#c48252,#9c5c2a)"></div>② 中淺（焦糖琥珀）</div>
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#b87848,#8e5220)"></div>③ 中（暖咖沉香）</div>
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#aa6640,#7e4018)"></div>④ 中深（磚褐栗棕）</div>
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#9a5838,#703816)"></div>⑤ 深（烘焙木色）</div>
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#7e4626,#541e04)"></div>⑥ 最深（深焙濃咖）</div>
+  <div class="legend-item" style="color:#c8860c">🟡 琥珀偏移 +hue</div>
+  <div class="legend-item" style="color:#a03020">🔴 磚紅偏移 -hue</div>
+</div>
+<script>
+// v3: 明度跨度大幅擴展 + 強化暖色偏移
+// 最淺 #d8aa → 最深 #541e，跨越約 10 個明度段
+// 琥珀金偏移(F/H/J/P/W): hue 向 35-40° 偏移（更黃金）
+// 磚紅偏移(B/K/R/X): hue 向 15-18° 偏移（更赤紅）
+// 純深木(G/T/Z): 最深、純棕
+const palette = [
+  // ─── ① 最淺（拿鐵奶茶）───
+  { letter: 'C', from: '#d4a878', to: '#b08052', name: '拿鐵米棕' },
+  { letter: 'F', from: '#dca868', to: '#b87e3a', name: '奶金太妃 🟡' },
+  { letter: 'J', from: '#d8aa74', to: '#b48248', name: '杏仁拿鐵' },
+  { letter: 'W', from: '#d4aa70', to: '#ae8044', name: '茶金奶棕 🟡' },
+  // ─── ② 中淺（焦糖琥珀）───
+  { letter: 'A', from: '#c48252', to: '#9c5c2a', name: '摩卡焦糖' },
+  { letter: 'H', from: '#c8924a', to: '#a46c24', name: '蜂蜜琥珀 🟡' },
+  { letter: 'M', from: '#c28650', to: '#9a6028', name: '肉桂奶棕' },
+  { letter: 'P', from: '#c68e50', to: '#a06828', name: '暖栗琥珀 🟡' },
+  // ─── ③ 中（暖咖沉香）───
+  { letter: 'E', from: '#b87848', to: '#8e5220', name: '暖木沉香' },
+  { letter: 'I', from: '#bc7a4a', to: '#904e24', name: '沉水木褐' },
+  { letter: 'L', from: '#b87a48', to: '#8c5420', name: '桂皮咖棕' },
+  { letter: 'U', from: '#bc8050', to: '#90582a', name: '暖栗咖褐' },
+  { letter: 'Y', from: '#ba7e4c', to: '#8e5628', name: '印順沉香' },
+  // ─── ④ 中深（磚褐栗棕）───
+  { letter: 'B', from: '#aa6640', to: '#7e4018', name: '磚紅栗褐 🔴' },
+  { letter: 'O', from: '#ae7048', to: '#824820', name: '溫潤檀棕' },
+  { letter: 'R', from: '#a86440', to: '#7c3e18', name: '赤檀磚褐 🔴' },
+  { letter: 'S', from: '#b07248', to: '#865028', name: '琥珀深木' },
+  // ─── ⑤ 深（烘焙木色）───
+  { letter: 'D', from: '#9a5838', to: '#703816', name: '深檀烘焙' },
+  { letter: 'K', from: '#985a36', to: '#6e3812', name: '熟焙磚褐 🔴' },
+  { letter: 'N', from: '#945636', to: '#6a3412', name: '烏木沉香' },
+  { letter: 'Q', from: '#965836', to: '#6c3612', name: '降真暗木' },
+  { letter: 'V', from: '#986040', to: '#703e1c', name: '沉檀深木' },
+  { letter: 'X', from: '#945638', to: '#6c3612', name: '卍續深褐 🔴' },
+  // ─── ⑥ 最深（深焙濃咖）───
+  { letter: 'G', from: '#824828', to: '#582606', name: '焦糖深焙' },
+  { letter: 'T', from: '#824a2a', to: '#5a2808', name: '大正深檀' },
+  { letter: 'Z', from: '#7e4626', to: '#541e04', name: '古木濃咖' },
+];
+
+const sorted = [...palette].sort((a, b) => a.letter.localeCompare(b.letter));
+const grid = document.getElementById('grid');
+sorted.forEach(({ letter, from, to, name }) => {
+  const el = document.createElement('div');
+  el.className = 'swatch';
+  el.innerHTML = `
+    <div class="box" style="background:linear-gradient(135deg,${from} 0%,${to} 100%)">${letter}</div>
+    <div class="lname">${name.replace(' 🟡','').replace(' 🔴','')}</div>
+    <div class="hex">${from}<br>${to}</div>
+  `;
+  grid.appendChild(el);
+});
+</script>
+</body>
+</html>
