@@ -22,7 +22,10 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
   1. **App 調整（不涉及 Builder）**：可直接在 `main` 分支上進行修改與部署。
   2. **Scripture 解析與 Builder 調整**：必須在 `dev-builder-optimization` 分支上進行開發與測試，確認編譯與解析完全無誤後，再合併回 `main` 分支。
   3. 不論在哪個分支修改，皆需確保 `npm run build` 編譯成功。
-  4. **任務完成後免自行錄影驗證原則 (No Auto-Recording Verification Policy)**：任務執行完成並確保 `npm run build` 編譯通過後，**不需自行啟動瀏覽器進行錄影/截圖 Check**，統一直接交付由使用者親自於瀏覽器中操作驗證。
+  4. **嚴格禁止自動錄影/截圖驗證（No Auto-Recording Verification Policy）**：
+     - **未來任何任務執行完成後，絕對不用自行啟動瀏覽器進行錄影、截圖或 Subagent 瀏覽器驗證！**
+     - 統一由使用者親自於瀏覽器中操作確認。
+     - Agent 僅需確保程式碼邏輯正確、`npm run build` 編譯通過並正常推送到指定分支即可。
 
 ---
 
