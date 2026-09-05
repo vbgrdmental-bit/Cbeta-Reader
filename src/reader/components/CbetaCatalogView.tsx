@@ -11,6 +11,7 @@ import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress } from '../../builder/PackageBuilder';
 import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { isBackupMode } from '../../utils/sourceMode';
+import { getBookCoverGradient } from '../../utils/bookColors';
 import '../styles/cbeta-catalog.css';
 
 interface CbetaCatalogViewProps {
@@ -1300,7 +1301,15 @@ export function CbetaCatalogView({
                           onClick={() => !isDownloaded && toggleSelectOnlineWork(res.workId)}
                           style={{ cursor: isDownloaded ? 'default' : 'pointer' }}
                         >
-                          {!isDownloaded && (
+                          {isDownloaded ? (
+                            <div 
+                              className="batch-checkbox downloaded-checked"
+                              style={{ marginRight: '6px' }}
+                              title="已在書架"
+                            >
+                              <Check size={12} style={{ strokeWidth: 2.5 }} />
+                            </div>
+                          ) : (
                             <div 
                               className={`batch-checkbox ${isChecked ? 'checked' : ''}`}
                               onClick={(e) => {
@@ -1313,7 +1322,7 @@ export function CbetaCatalogView({
                             </div>
                           )}
 
-                          <div className="cbeta-work-badge">{res.workId}</div>
+                          <div className="cbeta-work-badge" style={{ background: getBookCoverGradient(res.workId) }}>{res.workId}</div>
 
                           <div className="cbeta-work-info">
                             <div className="cbeta-work-title">{res.title}</div>
@@ -1321,9 +1330,17 @@ export function CbetaCatalogView({
                           </div>
 
                           {isDownloaded ? (
-                            <div className="download-status-square" title="已匯入書架">
-                              <Check size={16} />
-                            </div>
+                            <button 
+                              className="cbeta-read-btn" 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSelectBook(res.workId);
+                              }} 
+                              title="立即閱讀此經典"
+                            >
+                              <span>閱讀</span>
+                              <ChevronRight size={13} style={{ strokeWidth: 2.4 }} />
+                            </button>
                           ) : (
                             <button 
                               className="download-btn-square" 
@@ -1431,9 +1448,17 @@ export function CbetaCatalogView({
                           key={`catalog-item-${item.id}`} 
                           className={`cbeta-work-card ${isChecked ? 'selected' : ''}`}
                           onClick={() => !isDownloaded && toggleSelectOnlineWork(wId)}
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: isDownloaded ? 'default' : 'pointer' }}
                         >
-                          {!isDownloaded && (
+                          {isDownloaded ? (
+                            <div 
+                              className="batch-checkbox downloaded-checked"
+                              style={{ marginRight: '6px' }}
+                              title="已在書架"
+                            >
+                              <Check size={12} style={{ strokeWidth: 2.5 }} />
+                            </div>
+                          ) : (
                             <div 
                               className={`batch-checkbox ${isChecked ? 'checked' : ''}`}
                               onClick={(e) => {
@@ -1446,7 +1471,7 @@ export function CbetaCatalogView({
                             </div>
                           )}
 
-                          <div className="cbeta-work-badge">{wId}</div>
+                          <div className="cbeta-work-badge" style={{ background: getBookCoverGradient(wId) }}>{wId}</div>
                           <div className="cbeta-work-info">
                             <div className="cbeta-work-title">{item.label}</div>
                             {sanitizeCreators(item.creators) && (
@@ -1457,9 +1482,17 @@ export function CbetaCatalogView({
                           </div>
 
                           {isDownloaded ? (
-                            <div className="download-status-square" title="已在書架">
-                              <Check size={16} />
-                            </div>
+                            <button 
+                              className="cbeta-read-btn" 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSelectBook(wId);
+                              }} 
+                              title="立即閱讀此經典"
+                            >
+                              <span>閱讀</span>
+                              <ChevronRight size={13} style={{ strokeWidth: 2.4 }} />
+                            </button>
                           ) : (
                             <button 
                               className="download-btn-square" 

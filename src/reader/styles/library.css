@@ -614,13 +614,45 @@ body.theme-dark .home-zen-source {
   box-sizing: border-box;
 }
 
-/* 💡 烏木黑 (夜間) 主題下，重點與筆記卡片無底色，僅有灰白細邊框 */
+/* 💡 重點與筆記卡片通用與夜間/烏木主題樣式 */
+.highlight-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.highlight-entry-card {
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
 body.theme-dark .highlight-card,
 body.theme-ebony .highlight-card {
-  background-color: transparent !important;
-  background: transparent !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.theme-dark .highlight-entry-card,
+body.theme-ebony .highlight-entry-card {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.theme-dark .highlight-note-content,
+body.theme-ebony .highlight-note-content {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-left-color: var(--color-gold-500, #c07d2a) !important;
+}
+
+body.theme-dark .highlight-card .batch-btn-secondary,
+body.theme-ebony .highlight-card .batch-btn-secondary {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .folders-grid-container .list-folder-item {

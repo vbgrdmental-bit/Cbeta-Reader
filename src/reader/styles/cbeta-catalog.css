@@ -502,11 +502,68 @@ body.theme-dark .cbeta-work-card {
   color: #ffffff;
 }
 
+/* 已下載經典左側的打勾標記 (與未下載的 batch-checkbox 完全同寬高與對齊) */
+.batch-checkbox.downloaded-checked {
+  border-color: rgba(46, 125, 50, 0.4);
+  background-color: rgba(46, 125, 50, 0.09);
+  color: #2e7d32;
+  cursor: default;
+}
+
+body.theme-ebony .batch-checkbox.downloaded-checked,
+.theme-ebony .batch-checkbox.downloaded-checked {
+  border-color: rgba(129, 199, 132, 0.45);
+  background-color: rgba(129, 199, 132, 0.14);
+  color: #81c784;
+}
+
+/* 已下載經典右側的「閱讀 >」小膠囊按鈕 (類似圖 4) */
+.cbeta-read-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0.32rem 0.68rem;
+  border-radius: 999px;
+  background-color: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(140, 75, 39, 0.22);
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  user-select: none;
+}
+
+.cbeta-read-btn:hover {
+  background-color: #713c23;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(140, 75, 39, 0.3);
+}
+
+.cbeta-read-btn:active {
+  transform: translateY(0);
+}
+
+body.theme-ebony .cbeta-read-btn,
+.theme-ebony .cbeta-read-btn {
+  background-color: #aa6640;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+body.theme-ebony .cbeta-read-btn:hover,
+.theme-ebony .cbeta-read-btn:hover {
+  background-color: #c48252;
+}
+
 .cbeta-work-badge {
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background-color: #2b5c8f;
+  background-color: var(--theme-accent, #8c4b27);
   color: #ffffff;
   font-weight: bold;
   font-size: 0.75rem;
@@ -514,6 +571,8 @@ body.theme-dark .cbeta-work-card {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(60, 25, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .cbeta-work-info {

@@ -15,6 +15,7 @@ import type { BuildProgress } from '../../builder/PackageBuilder';
 import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { SearchPanel } from './SearchPanel';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
+import { getBookCoverGradient } from '../../utils/bookColors';
 import '../styles/library.css';
 
 interface LibraryProps {
@@ -907,44 +908,6 @@ export function Library({
     onSelectBook(workId, segmentId, query);
   };
 
-  // 💡 大藏經 A...Z 共 26 個字母開頭之經典色系字典 v3
-  //    大幅擴展明度跨度（奶茶淺棕 #d4a878 → 深焙濃咖 #541e04）
-  //    + 強化暖色偏移：琥珀金(F/H/J/P/W)、磚紅(B/K/R/X)、純深木(G/T/Z)
-  const CANON_LETTER_GRADIENTS: { [key: string]: string } = {
-    A: 'linear-gradient(135deg, #c48252 0%, #9c5c2a 100%)', // 摩卡焦糖（中淺）
-    B: 'linear-gradient(135deg, #aa6640 0%, #7e4018 100%)', // 磚紅栗褐（中深・磚紅偏移）
-    C: 'linear-gradient(135deg, #d4a878 0%, #b08052 100%)', // 拿鐵米棕（最淺）
-    D: 'linear-gradient(135deg, #9a5838 0%, #703816 100%)', // 深檀烘焙（深）
-    E: 'linear-gradient(135deg, #b87848 0%, #8e5220 100%)', // 暖木沉香（中）
-    F: 'linear-gradient(135deg, #dca868 0%, #b87e3a 100%)', // 奶金太妃（最淺・琥珀偏移）
-    G: 'linear-gradient(135deg, #824828 0%, #582606 100%)', // 焦糖深焙（最深）
-    H: 'linear-gradient(135deg, #c8924a 0%, #a46c24 100%)', // 蜂蜜琥珀（中淺・琥珀偏移）
-    I: 'linear-gradient(135deg, #bc7a4a 0%, #904e24 100%)', // 沉水木褐（中）
-    J: 'linear-gradient(135deg, #d8aa74 0%, #b48248 100%)', // 杏仁拿鐵（最淺・琥珀）
-    K: 'linear-gradient(135deg, #985a36 0%, #6e3812 100%)', // 熟焙磚褐（深・磚紅偏移）
-    L: 'linear-gradient(135deg, #b87a48 0%, #8c5420 100%)', // 桂皮咖棕（中）
-    M: 'linear-gradient(135deg, #c28650 0%, #9a6028 100%)', // 肉桂奶棕（中淺）
-    N: 'linear-gradient(135deg, #945636 0%, #6a3412 100%)', // 烏木沉香（深）
-    O: 'linear-gradient(135deg, #ae7048 0%, #824820 100%)', // 溫潤檀棕（中深）
-    P: 'linear-gradient(135deg, #c68e50 0%, #a06828 100%)', // 暖栗琥珀（中淺・琥珀偏移）
-    Q: 'linear-gradient(135deg, #965836 0%, #6c3612 100%)', // 降真暗木（深）
-    R: 'linear-gradient(135deg, #a86440 0%, #7c3e18 100%)', // 赤檀磚褐（中深・磚紅偏移）
-    S: 'linear-gradient(135deg, #b07248 0%, #865028 100%)', // 琥珀深木（中深）
-    T: 'linear-gradient(135deg, #824a2a 0%, #5a2808 100%)', // 大正深檀（最深）
-    U: 'linear-gradient(135deg, #bc8050 0%, #90582a 100%)', // 暖栗咖褐（中）
-    V: 'linear-gradient(135deg, #986040 0%, #703e1c 100%)', // 沉檀深木（深）
-    W: 'linear-gradient(135deg, #d4aa70 0%, #ae8044 100%)', // 茶金奶棕（最淺・琥珀偏移）
-    X: 'linear-gradient(135deg, #945638 0%, #6c3612 100%)', // 卍續深褐（深・磚紅偏移）
-    Y: 'linear-gradient(135deg, #ba7e4c 0%, #8e5628 100%)', // 印順沉香（中）
-    Z: 'linear-gradient(135deg, #7e4626 0%, #541e04 100%)'  // 古木濃咖（最深）
-  };
-
-  const getBookCoverGradient = (workId: string) => {
-    if (!workId) return 'linear-gradient(135deg, #b87848 0%, #8e5220 100%)';
-    const letter = workId.charAt(0).toUpperCase();
-    return CANON_LETTER_GRADIENTS[letter] || 'linear-gradient(135deg, #b87848 0%, #8e5220 100%)';
-  };
-
   // === 篩選渲染資料夾與書籍 ===
   // 💡 收集並排序所有有閱讀進度的經典
   const resumeBooks = React.useMemo(() => {
@@ -1554,7 +1517,7 @@ export function Library({
                 <p>淨心小角落．閱讀大藏經</p>
               </div>
 
-              {/* 💡 2x2 四宮格系統方塊 (左上: 下載經典, 右上: 重點與筆記, 左下: 我的書櫃, 右下: 關鍵字搜尋) */}
+              {/* 💡 2x2 四宮格系統方塊 (左上: 下載經典, 右上: 關鍵字搜尋, 左下: 我的書櫃, 右下: 重點與筆記) */}
               <div className="home-grid-2x2">
                 {/* 1. 左上：下載經典 */}
                 <div 
@@ -1571,18 +1534,18 @@ export function Library({
                   </div>
                 </div>
 
-                {/* 2. 右上：重點與筆記 */}
+                {/* 2. 右上：關鍵字搜尋 */}
                 <div 
                   className="home-grid-card"
-                  onClick={() => navigateToFolderWithAnimation('virtual_highlights')}
-                  title="點擊查看重點與筆記"
+                  onClick={() => setActiveTab('search')}
+                  title="點擊進行關鍵字搜尋"
                 >
                   <div className="home-grid-icon-box">
-                    <Notebook size={18} color="#ffffff" />
+                    <Search size={18} color="#ffffff" style={{ strokeWidth: 2.4 }} />
                   </div>
                   <div className="home-grid-info">
-                    <div className="home-grid-title">重點與筆記</div>
-                    <div className="home-grid-subtitle">共{allHighlights.length}則筆記</div>
+                    <div className="home-grid-title">關鍵字搜尋</div>
+                    <div className="home-grid-subtitle">已下載經典全文檢索</div>
                   </div>
                 </div>
 
@@ -1601,18 +1564,18 @@ export function Library({
                   </div>
                 </div>
 
-                {/* 4. 右下：關鍵字搜尋 */}
+                {/* 4. 右下：重點與筆記 */}
                 <div 
                   className="home-grid-card"
-                  onClick={() => setActiveTab('search')}
-                  title="點擊進行關鍵字搜尋"
+                  onClick={() => navigateToFolderWithAnimation('virtual_highlights')}
+                  title="點擊查看重點與筆記"
                 >
                   <div className="home-grid-icon-box">
-                    <Search size={18} color="#ffffff" style={{ strokeWidth: 2.4 }} />
+                    <Notebook size={18} color="#ffffff" />
                   </div>
                   <div className="home-grid-info">
-                    <div className="home-grid-title">關鍵字搜尋</div>
-                    <div className="home-grid-subtitle">已下載經典全文檢索</div>
+                    <div className="home-grid-title">重點與筆記</div>
+                    <div className="home-grid-subtitle">共{allHighlights.length}則筆記</div>
                   </div>
                 </div>
               </div>
@@ -1676,7 +1639,38 @@ export function Library({
           {/* === B. 「我的書櫃」（virtual_my_folders）：iOS App Store 精選專區式排版 (3 本一組橫向輪播) === */}
           {currentFolderId === 'virtual_my_folders' && (
             <div className="appstore-bookshelf-container animate-slide-up">
-              {/* 1. 最上面：近期閱讀 (最多 9 本，即 3 欄 × 3 列) */}
+              {/* 1. 最上面：近期下載 (未分類經書，一直都留著，若無書籍則為空) */}
+              <div className="appstore-section animate-fade-in">
+                <div 
+                  className="appstore-section-header"
+                  onClick={() => navigateToFolderWithAnimation('virtual_unclassified')}
+                  title="點擊查看所有近期下載經典"
+                >
+                  <div className="appstore-section-title-wrap">
+                    <span className="appstore-section-title-capsule appstore-capsule-unclassified">
+                      <Download size={14} style={{ strokeWidth: 2.2 }} />
+                      <span>近期下載</span>
+                    </span>
+                    <span className="appstore-section-arrow">
+                      <ChevronRight size={18} />
+                    </span>
+                    <span className="appstore-section-badge">
+                      {unclassifiedBooks.length}
+                    </span>
+                  </div>
+                </div>
+                {unclassifiedBooks.length > 0 && (
+                  <div className="appstore-carousel-scroll custom-scrollbar">
+                    {chunkBooksInto3(unclassifiedBooks).map((colBooks, colIdx) => (
+                      <div key={`unclassified-col-${colIdx}`} className="appstore-carousel-column">
+                        {colBooks.map(b => renderBookCard(b, false, 'virtual_unclassified'))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 2. 下一個：近期閱讀 (最多 9 本，即 3 欄 × 3 列) */}
               {recentReadsBooks.length > 0 && (
                 <div className="appstore-section animate-fade-in">
                   <div 
@@ -1707,7 +1701,7 @@ export function Library({
                 </div>
               )}
 
-              {/* 2. 下一個：我的最愛 */}
+              {/* 3. 下一個：我的最愛 */}
               {favoriteBooksList.length > 0 && (
                 <div className="appstore-section animate-fade-in">
                   <div 
@@ -1737,37 +1731,6 @@ export function Library({
                   </div>
                 </div>
               )}
-
-              {/* 3. 下一個：近期下載 (未分類經書，一直都留著，若無書籍則為空) */}
-              <div className="appstore-section animate-fade-in">
-                <div 
-                  className="appstore-section-header"
-                  onClick={() => navigateToFolderWithAnimation('virtual_unclassified')}
-                  title="點擊查看所有近期下載經典"
-                >
-                  <div className="appstore-section-title-wrap">
-                    <span className="appstore-section-title-capsule appstore-capsule-unclassified">
-                      <Download size={14} style={{ strokeWidth: 2.2 }} />
-                      <span>近期下載</span>
-                    </span>
-                    <span className="appstore-section-arrow">
-                      <ChevronRight size={18} />
-                    </span>
-                    <span className="appstore-section-badge">
-                      {unclassifiedBooks.length}
-                    </span>
-                  </div>
-                </div>
-                {unclassifiedBooks.length > 0 && (
-                  <div className="appstore-carousel-scroll custom-scrollbar">
-                    {chunkBooksInto3(unclassifiedBooks).map((colBooks, colIdx) => (
-                      <div key={`unclassified-col-${colIdx}`} className="appstore-carousel-column">
-                        {colBooks.map(b => renderBookCard(b, false, 'virtual_unclassified'))}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
 
               {/* 4. 再來陸續是已分類的資料夾 */}
               {folders.filter(f => !f.parentId).map((folder) => {
@@ -1849,17 +1812,15 @@ export function Library({
                       return (
                         <div 
                           key={group.workId}
+                          className="highlight-card"
                           style={{
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '0.6rem',
                             width: '100%',
-                            border: '1px solid var(--border-color, rgba(140, 75, 39, 0.12))',
                             borderRadius: '12px',
-                            backgroundColor: 'var(--bg-card, #ffffff)',
                             padding: '0.8rem 1rem',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                            boxBox: 'border-box'
+                            boxSizing: 'border-box'
                           } as React.CSSProperties}
                         >
                           <div 
@@ -1919,14 +1880,13 @@ export function Library({
                               {group.list.map((hl) => (
                                 <div 
                                   key={hl.id}
+                                  className="highlight-entry-card"
                                   style={{
                                     display: 'flex',
                                     flexDirection: 'column',
                                     gap: '0.4rem',
                                     padding: '0.6rem 0.8rem',
-                                    borderRadius: '8px',
-                                    backgroundColor: 'rgba(0,0,0,0.02)',
-                                    border: '1px solid rgba(0,0,0,0.04)'
+                                    borderRadius: '8px'
                                   }}
                                 >
                                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
@@ -1940,6 +1900,7 @@ export function Library({
 
                                   {hl.note && (
                                     <div 
+                                      className="highlight-note-content"
                                       style={{
                                         fontSize: '0.95rem',
                                         lineHeight: 1.6,
