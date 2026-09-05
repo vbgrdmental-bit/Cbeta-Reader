@@ -502,18 +502,25 @@ body.theme-dark .cbeta-work-card {
   color: #ffffff;
 }
 
-/* 已下載經典左側的打勾標記 (與未下載的 batch-checkbox 完全同寬高與對齊) */
+/* 已下載經典左側的圓圈打勾標記 (圓圈圈的v，與未下載的方形 batch-checkbox 清晰區分) */
 .batch-checkbox.downloaded-checked {
-  border-color: rgba(46, 125, 50, 0.4);
-  background-color: rgba(46, 125, 50, 0.09);
+  width: 20px;
+  height: 20px;
+  border-radius: 50% !important;
+  border: 1.6px solid rgba(46, 125, 50, 0.5);
+  background-color: rgba(46, 125, 50, 0.12);
   color: #2e7d32;
   cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 body.theme-ebony .batch-checkbox.downloaded-checked,
 .theme-ebony .batch-checkbox.downloaded-checked {
-  border-color: rgba(129, 199, 132, 0.45);
-  background-color: rgba(129, 199, 132, 0.14);
+  border-color: rgba(129, 199, 132, 0.55);
+  background-color: rgba(129, 199, 132, 0.18);
   color: #81c784;
 }
 

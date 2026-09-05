@@ -202,20 +202,20 @@ export const STATIC_VOL_CATEGORIES: CatalogItem[] = [
   { id: 'orig.006', label: '近代新編文獻', nodeType: 'category' }
 ];
 
-// 常用經典 12 本熱門經典常數 (在本地僅保留經名與經號，下載時 100% 重新抓取 CBETA 官方最新內容)
+// 常用經典 12 本熱門經典常數 (在本地僅保留經名、作譯者與卷數，下載時 100% 重新抓取 CBETA 官方最新正文)
 export const STATIC_FAVORITE_WORKS: CatalogItem[] = [
-  { id: 'T0779', label: '佛說八大人覺經', nodeType: 'work', workId: 'T0779' },
-  { id: 'T0784', label: '四十二章經', nodeType: 'work', workId: 'T0784' },
-  { id: 'T0801', label: '佛說無常經', nodeType: 'work', workId: 'T0801' },
-  { id: 'T0251', label: '般若波羅蜜多心經', nodeType: 'work', workId: 'T0251' },
-  { id: 'T0235', label: '金剛般若波羅蜜經', nodeType: 'work', workId: 'T0235' },
-  { id: 'T0366', label: '佛說阿彌陀經', nodeType: 'work', workId: 'T0366' },
-  { id: 'T0450', label: '藥師琉璃光如來本願功德經', nodeType: 'work', workId: 'T0450' },
-  { id: 'T0276', label: '無量義經', nodeType: 'work', workId: 'T0276' },
-  { id: 'T0262', label: '妙法蓮華經', nodeType: 'work', workId: 'T0262' },
-  { id: 'T0412', label: '地藏菩薩本願經', nodeType: 'work', workId: 'T0412' },
-  { id: 'T0945', label: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經', nodeType: 'work', workId: 'T0945' },
-  { id: 'Y0040', label: '成佛之道（增注本）', nodeType: 'work', workId: 'Y0040' }
+  { id: 'T0779', label: '佛說八大人覺經', nodeType: 'work', workId: 'T0779', creators: '後漢 安世高譯', juansCount: 1 },
+  { id: 'T0784', label: '四十二章經', nodeType: 'work', workId: 'T0784', creators: '東漢 攝摩騰,竺法蘭譯', juansCount: 1 },
+  { id: 'T0801', label: '佛說無常經', nodeType: 'work', workId: 'T0801', creators: '唐 義淨譯', juansCount: 1 },
+  { id: 'T0251', label: '般若波羅蜜多心經', nodeType: 'work', workId: 'T0251', creators: '唐 玄奘譯', juansCount: 1 },
+  { id: 'T0235', label: '金剛般若波羅蜜經', nodeType: 'work', workId: 'T0235', creators: '姚秦 鳩摩羅什譯', juansCount: 1 },
+  { id: 'T0366', label: '佛說阿彌陀經', nodeType: 'work', workId: 'T0366', creators: '姚秦 鳩摩羅什譯', juansCount: 1 },
+  { id: 'T0450', label: '藥師琉璃光如來本願功德經', nodeType: 'work', workId: 'T0450', creators: '唐 玄奘譯', juansCount: 1 },
+  { id: 'T0276', label: '無量義經', nodeType: 'work', workId: 'T0276', creators: '蕭齊 曇摩迦陀耶舍譯', juansCount: 1 },
+  { id: 'T0262', label: '妙法蓮華經', nodeType: 'work', workId: 'T0262', creators: '姚秦 鳩摩羅什譯', juansCount: 7 },
+  { id: 'T0412', label: '地藏菩薩本願經', nodeType: 'work', workId: 'T0412', creators: '唐 實叉難陀譯', juansCount: 2 },
+  { id: 'T0945', label: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經', nodeType: 'work', workId: 'T0945', creators: '唐 般剌蜜帝譯', juansCount: 10 },
+  { id: 'Y0040', label: '成佛之道（增注本）', nodeType: 'work', workId: 'Y0040', creators: '民國 釋印順著', juansCount: 5 }
 ];
 
 export function CbetaCatalogView({
@@ -1474,9 +1474,11 @@ export function CbetaCatalogView({
                           <div className="cbeta-work-badge" style={{ background: getBookCoverGradient(wId) }}>{wId}</div>
                           <div className="cbeta-work-info">
                             <div className="cbeta-work-title">{item.label}</div>
-                            {sanitizeCreators(item.creators) && (
+                            {(sanitizeCreators(item.creators) || item.juansCount) && (
                               <div className="cbeta-work-meta">
                                 {sanitizeCreators(item.creators)}
+                                {sanitizeCreators(item.creators) && item.juansCount ? ' · ' : ''}
+                                {item.juansCount ? `${item.juansCount}卷` : ''}
                               </div>
                             )}
                           </div>

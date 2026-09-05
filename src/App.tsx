@@ -156,27 +156,37 @@ export function App() {
 
   const [resetFolderTrigger, setResetFolderTrigger] = useState(0);
   const [autoResumeMode, setAutoResumeMode] = useState<'resume' | 'restart' | null>(null);
+  const [returnView, setReturnView] = useState<'library' | 'cbeta'>('library');
 
   const handleSelectBook = (workId: string, segmentId?: string, searchQuery?: string, autoResume?: 'resume' | 'restart') => {
     setActiveBookId(workId);
     setActiveSegmentId(segmentId);
     setLastSearchQuery(searchQuery);
     setAutoResumeMode(autoResume || null);
+    if (view !== 'reader') {
+      setReturnView(view as 'library' | 'cbeta');
+    }
     setView('reader');
     updateHashRoute('reader', workId, segmentId);
   };
 
   const handleBackToLibrary = (resetToRoot = false) => {
-    setView('library');
+    if (resetToRoot) {
+      // 點選 Home 首頁按鈕：固定回到首頁 Library
+      setView('library');
+      setResetFolderTrigger(prev => prev + 1);
+      updateHashRoute('library');
+    } else {
+      // 點選返回按鈕「←」：回到先前的視圖 (例如剛剛搜尋結果所在的 cbeta 頁面)
+      const targetView = returnView || 'library';
+      setView(targetView);
+      updateHashRoute(targetView);
+    }
     setActiveBookId(null);
     setActiveSegmentId(undefined);
     setAutoResumeMode(null);
     // 觸發書庫重新整理（以防在閱讀器中做了一些變動）
     setBooksUpdatedTrigger(prev => prev + 1);
-    if (resetToRoot) {
-      setResetFolderTrigger(prev => prev + 1);
-    }
-    updateHashRoute('library');
   };
 
   const handleCompleteOnboarding = () => {
@@ -224,7 +234,8 @@ export function App() {
         />
       </div>
 
-      {view === 'cbeta' && (
+      {/* 💡 使用 CSS display 來控制 CbetaCatalogView 顯示/隱藏，避免組件銷毀丟失搜尋狀態與滾動位置 */}
+      <div style={{ display: view === 'cbeta' ? 'block' : 'none', width: '100%', height: '100%' }}>
         <CbetaCatalogView
           onBackToLibrary={() => {
             setView('library');
@@ -235,7 +246,7 @@ export function App() {
           onSelectBook={handleSelectBook}
           settings={settings}
         />
-      )}
+      </div>
 
       {view === 'reader' && activeBookId && (
         <ReaderView 
