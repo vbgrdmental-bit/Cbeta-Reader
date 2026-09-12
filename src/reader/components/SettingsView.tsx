@@ -189,10 +189,37 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
         </div>
 
         <div className="settings-body custom-scrollbar">
-          {/* 💡 閱讀版面預覽與一體化設定工作台 */}
-          <div className="reading-layout-card">
+          {/* 💡 閱讀版面預覽與一體化設定工作台 (雙重保險：CSS Class + Inline Style) */}
+          <div 
+            className="reading-layout-card"
+            style={{
+              display: 'block',
+              width: '100%',
+              boxSizing: 'border-box',
+              backgroundColor: '#ffffff',
+              border: '1.5px solid rgba(0, 0, 0, 0.14)',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
+              marginBottom: '1.2rem'
+            }}
+          >
             {/* 預覽標題 */}
-            <div className="reading-preview-header">
+            <div 
+              className="reading-preview-header"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '0.65rem 0.95rem',
+                fontSize: '0.88rem',
+                fontWeight: 700,
+                color: '#444444',
+                fontFamily: 'var(--font-serif)',
+                borderBottom: '1px solid rgba(0, 0, 0, 0.09)',
+                backgroundColor: 'rgba(0, 0, 0, 0.025)'
+              }}
+            >
               <Eye size={16} style={{ color: 'var(--theme-accent, #8c4b27)' }} />
               <span>閱讀版面預覽</span>
             </div>
@@ -201,6 +228,13 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
             <div 
               className="reading-preview-content-box custom-scrollbar"
               style={{
+                display: 'block',
+                minHeight: '100px',
+                maxHeight: '155px',
+                overflowY: 'auto',
+                boxSizing: 'border-box',
+                borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+                boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.03)',
                 backgroundColor: settings.theme === 'ivory' ? '#fdfbf7' : settings.theme === 'parchment' ? '#f4ecd8' : settings.theme === 'comfort' ? '#c7edcc' : '#1a1a1a',
                 color: settings.theme === 'ebony' ? '#d5d8dc' : settings.theme === 'comfort' ? '#1e2d24' : settings.theme === 'parchment' ? '#362b1d' : '#2c2416',
                 fontFamily: (settings.fontFamily === 'jhenghei') ? '"Microsoft JhengHei", "PingFang TC", sans-serif' : (settings.fontFamily === 'iansui') ? '"Iansui", "Klee One", serif' : (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') ? '"CBETASupplement", "標楷體", "BiauKai", serif' : 'var(--font-serif)',
@@ -217,14 +251,24 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
             </div>
 
             {/* 一體化極簡控制工具列 */}
-            <div className="reading-controls-panel">
+            <div 
+              className="reading-controls-panel"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.65rem',
+                padding: '0.75rem 0.85rem',
+                backgroundColor: '#f8f7f5',
+                boxSizing: 'border-box'
+              }}
+            >
               {/* 1. 主題 */}
-              <div className="compact-ctrl-row">
-                <div className="compact-ctrl-label">
+              <div className="compact-ctrl-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
+                <div className="compact-ctrl-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666666', width: '52px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Palette size={14} />
                   <span>主題</span>
                 </div>
-                <div className="compact-ctrl-items">
+                <div className="compact-ctrl-items" style={{ display: 'flex', gap: '0.4rem', flex: 1, minWidth: 0 }}>
                   {[
                     { id: 'ivory', label: '象牙白', bg: '#fdfbf7' },
                     { id: 'parchment', label: '羊皮紙', bg: '#f4ecd8' },
@@ -238,13 +282,32 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                         className={`compact-opt-btn ${isActive ? 'active' : ''}`}
                         onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
                         title={t.label}
+                        style={{
+                          flex: '1 1 0px',
+                          minWidth: 0,
+                          padding: '0.42rem 0.2rem',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          backgroundColor: isActive ? 'rgba(140, 75, 39, 0.1)' : '#ffffff',
+                          border: isActive ? '1px solid #8c4b27' : '1px solid rgba(0, 0, 0, 0.13)',
+                          boxShadow: isActive ? '0 1px 3px rgba(140, 75, 39, 0.18)' : 'none'
+                        }}
                       >
                         <div
                           className="compact-color-circle"
                           style={{
+                            width: '22px',
+                            height: '22px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             backgroundColor: t.bg,
-                            border: isActive ? '2px solid var(--text-primary)' : '1px solid var(--reader-border, rgba(0,0,0,0.18))',
-                            color: t.id === 'ebony' ? '#fff' : '#000'
+                            border: isActive ? '2px solid var(--text-primary, #333)' : '1px solid rgba(0, 0, 0, 0.18)',
+                            color: t.id === 'ebony' ? '#ffffff' : '#000000'
                           }}
                         >
                           {isActive && <Check size={12} strokeWidth={3} />}
@@ -256,12 +319,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
               </div>
 
               {/* 2. 字體 */}
-              <div className="compact-ctrl-row">
-                <div className="compact-ctrl-label">
+              <div className="compact-ctrl-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
+                <div className="compact-ctrl-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666666', width: '52px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Type size={14} />
                   <span>字體</span>
                 </div>
-                <div className="compact-ctrl-items">
+                <div className="compact-ctrl-items" style={{ display: 'flex', gap: '0.4rem', flex: 1, minWidth: 0 }}>
                   {[
                     { id: 'default', name: '宋/明', fontFamily: 'var(--font-serif)' },
                     { id: 'jhenghei', name: '正黑', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' },
@@ -281,7 +344,23 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                           }
                           onSave({ ...settings, fontFamily: f.id as any });
                         }}
-                        style={{ fontFamily: f.fontFamily, fontSize: '0.82rem' }}
+                        style={{
+                          flex: '1 1 0px',
+                          minWidth: 0,
+                          padding: '0.42rem 0.2rem',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          fontFamily: f.fontFamily,
+                          fontSize: '0.82rem',
+                          backgroundColor: isActive ? 'rgba(140, 75, 39, 0.1)' : '#ffffff',
+                          border: isActive ? '1px solid #8c4b27' : '1px solid rgba(0, 0, 0, 0.13)',
+                          color: isActive ? '#7a3e1e' : '#333333',
+                          fontWeight: isActive ? 700 : 'normal',
+                          boxShadow: isActive ? '0 1px 3px rgba(140, 75, 39, 0.18)' : 'none'
+                        }}
                       >
                         {f.name}
                       </div>
@@ -291,12 +370,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
               </div>
 
               {/* 3. 行高 */}
-              <div className="compact-ctrl-row">
-                <div className="compact-ctrl-label">
+              <div className="compact-ctrl-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
+                <div className="compact-ctrl-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666666', width: '52px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <MoveVertical size={14} />
                   <span>行高</span>
                 </div>
-                <div className="compact-ctrl-items">
+                <div className="compact-ctrl-items" style={{ display: 'flex', gap: '0.4rem', flex: 1, minWidth: 0 }}>
                   {[1.6, 1.8, 2.0, 2.2].map(lh => {
                     const isActive = settings.lineHeight === lh;
                     return (
@@ -304,6 +383,22 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                         key={`compact-lh-${lh}`}
                         className={`compact-opt-btn ${isActive ? 'active' : ''}`}
                         onClick={() => onSave({ ...settings, lineHeight: lh })}
+                        style={{
+                          flex: '1 1 0px',
+                          minWidth: 0,
+                          padding: '0.42rem 0.2rem',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          fontSize: '0.8rem',
+                          backgroundColor: isActive ? 'rgba(140, 75, 39, 0.1)' : '#ffffff',
+                          border: isActive ? '1px solid #8c4b27' : '1px solid rgba(0, 0, 0, 0.13)',
+                          color: isActive ? '#7a3e1e' : '#333333',
+                          fontWeight: isActive ? 700 : 'normal',
+                          boxShadow: isActive ? '0 1px 3px rgba(140, 75, 39, 0.18)' : 'none'
+                        }}
                       >
                         {lh.toFixed(1)}
                       </div>
@@ -313,12 +408,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
               </div>
 
               {/* 4. 邊距 */}
-              <div className="compact-ctrl-row">
-                <div className="compact-ctrl-label">
+              <div className="compact-ctrl-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
+                <div className="compact-ctrl-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666666', width: '52px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <MoveHorizontal size={14} />
                   <span>邊距</span>
                 </div>
-                <div className="compact-ctrl-items">
+                <div className="compact-ctrl-items" style={{ display: 'flex', gap: '0.4rem', flex: 1, minWidth: 0 }}>
                   {paddings.map(p => {
                     const isActive = settings.padding === p;
                     return (
@@ -326,6 +421,22 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                         key={`compact-pad-${p}`}
                         className={`compact-opt-btn ${isActive ? 'active' : ''}`}
                         onClick={() => onSave({ ...settings, padding: p })}
+                        style={{
+                          flex: '1 1 0px',
+                          minWidth: 0,
+                          padding: '0.42rem 0.2rem',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          fontSize: '0.8rem',
+                          backgroundColor: isActive ? 'rgba(140, 75, 39, 0.1)' : '#ffffff',
+                          border: isActive ? '1px solid #8c4b27' : '1px solid rgba(0, 0, 0, 0.13)',
+                          color: isActive ? '#7a3e1e' : '#333333',
+                          fontWeight: isActive ? 700 : 'normal',
+                          boxShadow: isActive ? '0 1px 3px rgba(140, 75, 39, 0.18)' : 'none'
+                        }}
                       >
                         {p}%
                       </div>
