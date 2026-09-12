@@ -1201,16 +1201,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.2.6) 直接顯示 */}
+                {/* 最新 App 版本 (v4.2.7) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.2.6</span>
-                    <span className="changelog-date">(2026-08-25)</span>
+                    <span>⭐ App: v4.2.7</span>
+                    <span className="changelog-date">(2026-09-13)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 首頁調整為四大核心入口：「下載經典」、「我的書櫃」、「重點與筆記」與「關鍵字搜尋」。</li>
-                    <li>• 「我的書櫃」內裝升級為 iOS App Store 精選專區排版，每欄 3 本垂直收納並支援水平平滑輪播。</li>
-                    <li>• 目標資料夾選擇改版為「一列 3 個資料夾」直觀九宮格卡片，操作清晰一目了然。</li>
+                    <li>• 閱讀設定升級「閱讀版面預覽」工作台，即時連動主題/字體/行高/邊距。</li>
+                    <li>• 其他設定全面改版為 iOS 風格直覺開關（Toggle Switches）與雙層說明。</li>
+                    <li>• 新增每日閱讀日誌（閱讀天數、閱讀時數、閱讀本數與每日精進日曆）。</li>
                   </ul>
                 </div>
 
@@ -1233,6 +1233,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.2.6 <span className="changelog-date">(2026-08-25)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 首頁調整為四大核心入口：「下載經典」、「我的書櫃」、「重點與筆記」與「關鍵字搜尋」。</li>
+                        <li>• 「我的書櫃」自訂資料夾標題保持極簡純淨，頂部配置高對比清晰資料夾管理按鈕。</li>
+                        <li>• 資料夾管理支援原地即時重新命名，過渡專區內經典選項自動防呆保護。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.2.5 <span className="changelog-date">(2026-08-25)</span></div>
                       <ul className="changelog-list">

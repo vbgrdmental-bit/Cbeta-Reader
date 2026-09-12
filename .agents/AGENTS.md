@@ -33,7 +33,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.2.6` (App: v4.2.6 / Builder: v2.9.11)
+- **Current Version**: `v4.2.7` (App: v4.2.7 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -54,6 +54,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.2.7 / Builder: v2.9.11** (2026-09-13)
+  - [App] 閱讀設定升級「閱讀版面預覽」工作台，即時連動主題/字體/行高/邊距。
+  - [App] 「其他設定」全面改版為 iOS 風格直覺開關（Toggle Switches）與雙層說明。
+  - [App] 新增「每日閱讀日誌」（閱讀天數、閱讀時數、閱讀本數與每日精進日曆）。
 - **⭐ App: v4.2.6 / Builder: v2.9.11** (2026-08-25)
   - [App] 首頁四大系統入口標題與副標細緻化：「下載經典（從CBETA資料庫）」、「我的書櫃（共X本書）」、「重點與筆記（共Y則筆記）」與「關鍵字搜尋（站內已下載經典）」。
   - [App] 「我的書櫃」自訂資料夾標題保持極簡純淨（「名稱 ➔ 數量徽章 ➔ 右箭頭」），頂部抬頭配置高對比清晰「...」資料夾管理按鈕。
