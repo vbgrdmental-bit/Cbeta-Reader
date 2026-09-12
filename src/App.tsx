@@ -246,6 +246,7 @@ export function App() {
       {/* 💡 使用 CSS display 來控制 CbetaCatalogView 顯示/隱藏，避免組件銷毀丟失搜尋狀態與滾動位置 */}
       <div style={{ display: view === 'cbeta' ? 'block' : 'none', width: '100%', height: '100%' }}>
         <CbetaCatalogView
+          isActive={view === 'cbeta'}
           onBackToLibrary={() => {
             setView('library');
             setBooksUpdatedTrigger(prev => prev + 1);

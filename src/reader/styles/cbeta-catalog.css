@@ -599,16 +599,21 @@ body.theme-ebony .cbeta-read-btn:hover,
 }
 
 .cbeta-work-title {
-  font-size: 0.98rem;
+  font-size: 0.90rem;
   font-weight: 700;
   color: var(--text-primary);
+  line-height: 1.36;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .cbeta-work-meta {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;

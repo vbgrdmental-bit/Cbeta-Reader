@@ -19,6 +19,7 @@ interface CbetaCatalogViewProps {
   onOpenSettings: () => void;
   onSelectBook: (workId: string, segmentId?: string, searchQuery?: string) => void;
   settings: AppSettings;
+  isActive?: boolean;
 }
 
 interface CatalogNode {
@@ -222,7 +223,8 @@ export function CbetaCatalogView({
   onBackToLibrary,
   onOpenSettings,
   onSelectBook,
-  settings
+  settings,
+  isActive
 }: CbetaCatalogViewProps) {
   // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代) - 預設開啟「常用經典」
   const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('favorite');
@@ -301,11 +303,19 @@ export function CbetaCatalogView({
   // 💡 平滑倒滑離場動畫返回首頁 (Smooth Slide Exit back to Library)
   const [isCatalogExiting, setIsCatalogExiting] = useState(false);
 
+  // 💡 確保每次切換進來時復位動畫狀態，杜絕畫面空白
+  useEffect(() => {
+    if (isActive) {
+      setIsCatalogExiting(false);
+    }
+  }, [isActive]);
+
   const handleSmoothBackToLibrary = () => {
     if (isCatalogExiting) return;
     setIsCatalogExiting(true);
     setTimeout(() => {
       onBackToLibrary();
+      setIsCatalogExiting(false);
     }, 220);
   };
 
