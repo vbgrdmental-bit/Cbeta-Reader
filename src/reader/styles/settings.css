@@ -263,6 +263,131 @@ body.theme-ebony .settings-select:focus {
   color: var(--color-gold-400);
 }
 
+/* ── 閱讀版面預覽與一體化設定工作台 ── */
+.reading-layout-card {
+  border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.12));
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: var(--bg-card, #ffffff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 1.2rem;
+}
+
+body.theme-ebony .reading-layout-card,
+body.theme-dark .reading-layout-card {
+  border-color: rgba(255, 255, 255, 0.16);
+  background-color: rgba(26, 26, 26, 0.95);
+}
+
+.reading-preview-header {
+  padding: 0.65rem 0.95rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  border-bottom: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.reading-preview-content-box {
+  padding: 0.9rem 1rem;
+  min-height: 110px;
+  max-height: 155px;
+  overflow-y: auto;
+  transition: all 0.25s ease;
+  border-bottom: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.reading-controls-panel {
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+.compact-ctrl-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.compact-ctrl-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  width: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.compact-ctrl-items {
+  display: flex;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.compact-opt-btn {
+  flex: 1 1 0px;
+  min-width: 0;
+  padding: 0.42rem 0.2rem;
+  border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.12));
+  background: var(--bg-card, #ffffff);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  user-select: none;
+}
+
+.compact-opt-btn:hover {
+  border-color: var(--theme-accent, #8c4b27);
+  background-color: var(--theme-accent-light, rgba(140, 75, 39, 0.05));
+}
+
+.compact-opt-btn.active {
+  border-color: var(--theme-accent, #8c4b27);
+  background-color: var(--theme-accent-light, rgba(140, 75, 39, 0.12));
+  color: var(--theme-accent, #8c4b27);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(140, 75, 39, 0.15);
+}
+
+body.theme-ebony .compact-opt-btn,
+body.theme-dark .compact-opt-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+body.theme-ebony .compact-opt-btn.active,
+body.theme-dark .compact-opt-btn.active {
+  background: rgba(217, 119, 6, 0.2);
+  border-color: #d97706;
+  color: #fbbf24;
+}
+
+.compact-color-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
 /* Custom toggles checkboxes list */
 .custom-elements-list {
   display: flex;

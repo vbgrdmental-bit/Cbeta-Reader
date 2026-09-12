@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Database, FileText, Upload, HelpCircle, RotateCw, Archive, Trash2, HardDrive, CheckCircle2 } from 'lucide-react';
+import { X, Database, FileText, Upload, HelpCircle, RotateCw, Archive, Trash2, HardDrive, CheckCircle2, Eye, Palette, Type, MoveVertical, MoveHorizontal, Check } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
 import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks, saveSettings, DEFAULT_SETTINGS } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
@@ -189,121 +189,150 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
         </div>
 
         <div className="settings-body custom-scrollbar">
-          {/* 1. 閱讀主題色彩 */}
-          <div className="settings-section">
-            <div className="settings-section-title">閱讀主題色彩</div>
-            <div className="visual-options-row">
-              {[
-                { id: 'ivory', label: '象牙白', bg: 'var(--bg-paper-ivory, #fdfbf7)' },
-                { id: 'parchment', label: '羊皮紙', bg: 'var(--bg-paper-parchment, #f4ecd8)' },
-                { id: 'comfort', label: '舒服', bg: 'var(--bg-paper-comfort, #c7edcc)' },
-                { id: 'ebony', label: '烏木', bg: 'var(--bg-paper-ebony, #1a1a1a)' }
-              ].map((t) => {
-                const isActive = settings.theme === t.id;
-                return (
-                  <div
-                    key={`theme-${t.id}`}
-                    className={`visual-option-card ${isActive ? 'active' : ''}`}
-                    onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
-                  >
-                    <div
-                      className="color-circle"
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        backgroundColor: t.bg,
-                        border: isActive ? '2px solid var(--text-primary)' : '1px solid var(--reader-border)',
-                        boxShadow: isActive ? '0 0 6px rgba(0,0,0,0.15)' : 'none',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: t.id === 'ebony' ? '#fff' : '#000'
-                      }}
-                    >
-                      {isActive && <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>✓</span>}
-                    </div>
-                    <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
-                      {t.label}
-                    </span>
-                  </div>
-                );
-              })}
+          {/* 💡 閱讀版面預覽與一體化設定工作台 */}
+          <div className="reading-layout-card">
+            {/* 預覽標題 */}
+            <div className="reading-preview-header">
+              <Eye size={16} style={{ color: 'var(--theme-accent, #8c4b27)' }} />
+              <span>閱讀版面預覽</span>
             </div>
-          </div>
 
-          {/* 2. 內文字體 */}
-          <div className="settings-section">
-            <div className="settings-section-title">內文字體</div>
-            <div className="visual-options-row">
-              {[
-                { 
-                  id: 'default', 
-                  name: '宋/明體', 
-                  fontFamily: 'var(--font-serif)',
-                  sample: '永' 
-                },
-                { 
-                  id: 'jhenghei', 
-                  name: '正黑體', 
-                  fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", "Heiti TC", "Noto Sans TC", "CBETASupplement", sans-serif',
-                  sample: '永' 
-                },
-                { 
-                  id: 'iansui', 
-                  name: '芫荽體', 
-                  fontFamily: '"Iansui", "Klee One", "CBETASupplement", serif',
-                  sample: '永' 
-                },
-                { 
-                  id: 'kaiti', 
-                  name: '標楷體', 
-                  fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
-                  sample: '永' 
-                }
-              ].map((fontItem) => {
-                const rawFont = settings.fontFamily || 'default';
-                const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold') ? 'kaiti' : rawFont;
-                const isActive = currentFont === fontItem.id;
-                return (
-                  <div
-                    key={`fontFamily-${fontItem.id}`}
-                    className={`visual-option-card ${isActive ? 'active' : ''}`}
-                    onClick={() => {
-                      if (fontItem.id === 'kaiti') {
-                        loadEduKaiFontOnDemand();
-                      }
-                      onSave({ ...settings, fontFamily: fontItem.id as any });
-                    }}
-                  >
-                    <div 
-                      style={{ 
-                        fontFamily: fontItem.fontFamily, 
-                        fontSize: '1.35rem',
-                        fontWeight: fontItem.id === 'iansui-bold' ? '700' : fontItem.id === 'default' ? '600' : 'normal',
-                        lineHeight: 1,
-                        height: '28px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--text-primary)'
-                      }}
-                    >
-                      {fontItem.sample}
-                    </div>
-                    <span 
-                      className="visual-option-label" 
-                      style={{ 
-                        fontSize: fontItem.name.length > 5 ? '0.66rem' : '0.75rem', 
-                        letterSpacing: fontItem.name.length > 5 ? '-0.3px' : 'normal'
-                      }}
-                    >
-                      {fontItem.name}
-                    </span>
-                  </div>
-                );
-              })}
+            {/* 即時經文預覽框 */}
+            <div 
+              className="reading-preview-content-box custom-scrollbar"
+              style={{
+                backgroundColor: settings.theme === 'ivory' ? '#fdfbf7' : settings.theme === 'parchment' ? '#f4ecd8' : settings.theme === 'comfort' ? '#c7edcc' : '#1a1a1a',
+                color: settings.theme === 'ebony' ? '#d5d8dc' : settings.theme === 'comfort' ? '#1e2d24' : settings.theme === 'parchment' ? '#362b1d' : '#2c2416',
+                fontFamily: (settings.fontFamily === 'jhenghei') ? '"Microsoft JhengHei", "PingFang TC", sans-serif' : (settings.fontFamily === 'iansui') ? '"Iansui", "Klee One", serif' : (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') ? '"CBETASupplement", "標楷體", "BiauKai", serif' : 'var(--font-serif)',
+                lineHeight: settings.lineHeight || 1.8,
+                padding: `0.85rem ${Math.max(10, Math.round((settings.padding || 10) * 1.6))}px`,
+                fontSize: '0.90rem',
+                textAlign: 'justify'
+              }}
+            >
+              <div style={{ fontWeight: 'bold', marginBottom: '0.2rem' }}>如是我聞：</div>
+              <div>
+                一時，佛在忉利天，為母說法。爾時，十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。讚歎釋迦牟尼佛，能於五濁惡世，現不可思議大智慧神通之力，調伏剛彊眾生，知苦樂法，各遣侍者，問訊世尊。
+              </div>
+            </div>
+
+            {/* 一體化極簡控制工具列 */}
+            <div className="reading-controls-panel">
+              {/* 1. 主題 */}
+              <div className="compact-ctrl-row">
+                <div className="compact-ctrl-label">
+                  <Palette size={14} />
+                  <span>主題</span>
+                </div>
+                <div className="compact-ctrl-items">
+                  {[
+                    { id: 'ivory', label: '象牙白', bg: '#fdfbf7' },
+                    { id: 'parchment', label: '羊皮紙', bg: '#f4ecd8' },
+                    { id: 'comfort', label: '舒服', bg: '#c7edcc' },
+                    { id: 'ebony', label: '烏木', bg: '#1a1a1a' }
+                  ].map(t => {
+                    const isActive = settings.theme === t.id;
+                    return (
+                      <div
+                        key={`compact-theme-${t.id}`}
+                        className={`compact-opt-btn ${isActive ? 'active' : ''}`}
+                        onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
+                        title={t.label}
+                      >
+                        <div
+                          className="compact-color-circle"
+                          style={{
+                            backgroundColor: t.bg,
+                            border: isActive ? '2px solid var(--text-primary)' : '1px solid var(--reader-border, rgba(0,0,0,0.18))',
+                            color: t.id === 'ebony' ? '#fff' : '#000'
+                          }}
+                        >
+                          {isActive && <Check size={12} strokeWidth={3} />}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 2. 字體 */}
+              <div className="compact-ctrl-row">
+                <div className="compact-ctrl-label">
+                  <Type size={14} />
+                  <span>字體</span>
+                </div>
+                <div className="compact-ctrl-items">
+                  {[
+                    { id: 'default', name: '宋/明', fontFamily: 'var(--font-serif)' },
+                    { id: 'jhenghei', name: '正黑', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' },
+                    { id: 'iansui', name: '芫荽', fontFamily: '"Iansui", "Klee One", serif' },
+                    { id: 'kaiti', name: '標楷', fontFamily: '"CBETASupplement", "標楷體", "BiauKai", serif' }
+                  ].map(f => {
+                    const rawFont = settings.fontFamily || 'default';
+                    const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold') ? 'kaiti' : rawFont;
+                    const isActive = currentFont === f.id;
+                    return (
+                      <div
+                        key={`compact-font-${f.id}`}
+                        className={`compact-opt-btn ${isActive ? 'active' : ''}`}
+                        onClick={() => {
+                          if (f.id === 'kaiti') {
+                            loadEduKaiFontOnDemand();
+                          }
+                          onSave({ ...settings, fontFamily: f.id as any });
+                        }}
+                        style={{ fontFamily: f.fontFamily, fontSize: '0.82rem' }}
+                      >
+                        {f.name}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 3. 行高 */}
+              <div className="compact-ctrl-row">
+                <div className="compact-ctrl-label">
+                  <MoveVertical size={14} />
+                  <span>行高</span>
+                </div>
+                <div className="compact-ctrl-items">
+                  {[1.6, 1.8, 2.0, 2.2].map(lh => {
+                    const isActive = settings.lineHeight === lh;
+                    return (
+                      <div
+                        key={`compact-lh-${lh}`}
+                        className={`compact-opt-btn ${isActive ? 'active' : ''}`}
+                        onClick={() => onSave({ ...settings, lineHeight: lh })}
+                      >
+                        {lh.toFixed(1)}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 4. 邊距 */}
+              <div className="compact-ctrl-row">
+                <div className="compact-ctrl-label">
+                  <MoveHorizontal size={14} />
+                  <span>邊距</span>
+                </div>
+                <div className="compact-ctrl-items">
+                  {paddings.map(p => {
+                    const isActive = settings.padding === p;
+                    return (
+                      <div
+                        key={`compact-pad-${p}`}
+                        className={`compact-opt-btn ${isActive ? 'active' : ''}`}
+                        onClick={() => onSave({ ...settings, padding: p })}
+                      >
+                        {p}%
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -498,56 +527,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
             </div>
           </div>
 
-          {/* 4. 行高與行距 */}
-          <div className="settings-section">
-            <div className="settings-section-title">行高與行距</div>
-            <div className="visual-options-row">
-              {[1.6, 1.8, 2.0, 2.2].map((lh) => {
-                const spacing = lh === 1.6 ? 6 : lh === 1.8 ? 8 : lh === 2.0 ? 10 : 12;
-                return (
-                  <div
-                    key={`lineHeight-${lh}`}
-                    className={`visual-option-card ${settings.lineHeight === lh ? 'active' : ''}`}
-                    onClick={() => onSave({ ...settings, lineHeight: lh })}
-                  >
-                    <svg className="padding-svg" viewBox="0 0 36 36">
-                      <rect x="3" y="3" width="30" height="30" rx="4" className="svg-border" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="8" y1={18 - spacing} x2="28" y2={18 - spacing} stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="8" y1="18" x2="28" y2="18" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="8" y1={18 + spacing} x2="28" y2={18 + spacing} stroke="currentColor" strokeWidth="1.5" />
-                    </svg>
-                    <span className="visual-option-label">{lh.toFixed(1)}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
 
-          {/* 5. 排版與邊距 */}
-          <div className="settings-section">
-            <div className="settings-section-title">排版與邊距</div>
-            <div className="visual-options-row">
-              {paddings.map((p) => {
-                const offset = p === 5 ? 6 : p === 10 ? 8 : p === 15 ? 10 : 12;
-                return (
-                  <div
-                    key={`padding-${p}`}
-                    className={`visual-option-card ${settings.padding === p ? 'active' : ''}`}
-                    onClick={() => onSave({ ...settings, padding: p })}
-                  >
-                    <svg className="padding-svg" viewBox="0 0 36 36">
-                      <rect x="3" y="3" width="30" height="30" rx="4" className="svg-border" />
-                      <line x1={offset} y1="9" x2={36 - offset} y2="9" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1={offset} y1="15" x2={36 - offset} y2="15" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1={offset} y1="21" x2={36 - offset} y2="21" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1={offset} y1="27" x2={p === 5 ? 20 : p === 10 ? 18 : 18} y2="27" stroke="currentColor" strokeWidth="1.5" />
-                    </svg>
-                    <span className="visual-option-label">{p}%</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
 
           {/* 6. 朗讀速度 (暫時隱藏) */}
           {/* <div className="settings-section"> ... </div> */}
