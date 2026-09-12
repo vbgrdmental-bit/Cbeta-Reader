@@ -851,49 +851,94 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
           {/* 9. 其他設定 */}
           <div className="settings-section">
             <div className="settings-section-title">其他設定</div>
-            <div className="custom-elements-list">
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={settings.customVisibleElements?.showReaderControls ?? true} 
-                  onChange={() => handleCheckboxChange('showReaderControls')}
-                />
-                顯示閱讀頁上下控制列
-              </label>
+            <div className="settings-toggle-group">
+              {/* 1. 閱讀頁上下控制列 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => handleCheckboxChange('showReaderControls')}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">閱讀頁上下控制列</div>
+                  <div className="settings-toggle-desc">開啟時顯示頂部與底部工具列，關閉時隱藏以提供全螢幕閱讀體驗</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.customVisibleElements?.showReaderControls ?? true} 
+                    onChange={() => handleCheckboxChange('showReaderControls')}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
 
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
-                  onChange={() => handleCheckboxChange('autoResumeProgress')}
-                />
-                開啟經文時自動回到上次閱讀位置 (未勾選則從頭開始閱讀)
-              </label>
+              {/* 2. 自動接續閱讀 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => handleCheckboxChange('autoResumeProgress')}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">自動接續閱讀</div>
+                  <div className="settings-toggle-desc">開啟經文時自動回到上次閱讀段落，關閉時一律從頭開始閱讀</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
+                    onChange={() => handleCheckboxChange('autoResumeProgress')}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
 
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={settings.customVisibleElements?.showNoteInText ?? false} 
-                  onChange={() => handleCheckboxChange('showNoteInText')}
-                />
-                顯示筆記內容
-              </label>
+              {/* 3. 顯示筆記內容 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => handleCheckboxChange('showNoteInText')}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">顯示筆記內容</div>
+                  <div className="settings-toggle-desc">於經文段落下直接顯示您隨文記錄的感悟筆記與心得</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.customVisibleElements?.showNoteInText ?? false} 
+                    onChange={() => handleCheckboxChange('showNoteInText')}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
 
-              {/* 💡 每日閱讀日誌開關 */}
-              <label className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  checked={settings.readingLogEnabled ?? false} 
-                  onChange={() => {
-                    const updated = {
-                      ...settings,
-                      readingLogEnabled: !(settings.readingLogEnabled ?? false)
-                    };
-                    onSave(updated);
-                  }}
-                />
-                自動記錄每日閱讀日誌（首頁顯示行事曆入口）
-              </label>
+              {/* 4. 每日閱讀日誌 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => {
+                  const updated = {
+                    ...settings,
+                    readingLogEnabled: !(settings.readingLogEnabled ?? false)
+                  };
+                  onSave(updated);
+                }}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">每日閱讀日誌</div>
+                  <div className="settings-toggle-desc">自動記錄每日閱讀時長與天數，並於首頁提供行事曆日誌入口</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.readingLogEnabled ?? false} 
+                    onChange={() => {
+                      const updated = {
+                        ...settings,
+                        readingLogEnabled: !(settings.readingLogEnabled ?? false)
+                      };
+                      onSave(updated);
+                    }}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
             </div>
 
             {/* Cbeta Reader 簡易功能導覽 按鈕 */}
