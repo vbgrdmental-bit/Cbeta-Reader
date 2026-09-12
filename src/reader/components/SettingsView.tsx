@@ -147,8 +147,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
       setIsImporting(true);
       const res = await importUserData(file);
       let msg = '備份還原成功！';
-      if (res.booksCount > 0 || res.highlightsCount > 0) {
-        msg = `已成功還原 ${res.booksCount > 0 ? `${res.booksCount} 本經文、` : ''}${res.highlightsCount} 筆劃線重點與個人設定！`;
+      const parts = [];
+      if (res.booksCount > 0) parts.push(`${res.booksCount} 本經文`);
+      if (res.highlightsCount > 0) parts.push(`${res.highlightsCount} 筆重點`);
+      if (res.readingLogsCount > 0) parts.push(`${res.readingLogsCount} 筆閱讀日誌`);
+      if (parts.length > 0) {
+        msg = `已成功還原 ${parts.join('、')} 與個人設定！`;
       }
       setBackupMsg(msg);
     } catch (err: any) {
@@ -873,6 +877,22 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   onChange={() => handleCheckboxChange('showNoteInText')}
                 />
                 顯示筆記內容
+              </label>
+
+              {/* 💡 每日閱讀日誌開關 */}
+              <label className="checkbox-item">
+                <input 
+                  type="checkbox" 
+                  checked={settings.readingLogEnabled ?? false} 
+                  onChange={() => {
+                    const updated = {
+                      ...settings,
+                      readingLogEnabled: !(settings.readingLogEnabled ?? false)
+                    };
+                    onSave(updated);
+                  }}
+                />
+                自動記錄每日閱讀日誌（首頁顯示行事曆入口）
               </label>
             </div>
 

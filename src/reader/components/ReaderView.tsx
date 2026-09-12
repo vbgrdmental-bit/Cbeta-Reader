@@ -15,6 +15,7 @@ import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
 import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
 import type { ReadingTimerState } from '../../utils/readingTimer';
 import { isBackupMode } from '../../utils/sourceMode';
+import { readingLogManager } from '../../utils/readingLogManager';
 import '../styles/reader.css';
 
 interface ReaderViewProps {
@@ -735,6 +736,8 @@ export function ReaderView({
 
           // 💡 核心極速體驗：只要本地已有經書，立即 0 秒開書！絕不因版號更新或網路延遲阻斷開書
           setBook(bookData);
+          // 💡 閱讀日誌：書名確定後更新 session
+          readingLogManager.startSession(workId, bookData.metadata.title || workId);
           if ((!bookData.toc || !bookData.toc.items || bookData.toc.items.length === 0) && bookData.content?.juans?.length > 1) {
             setNavTab('juan');
           }
@@ -804,6 +807,8 @@ export function ReaderView({
               };
               await saveBook(updatedBook);
               setBook(updatedBook);
+              // 💡 閱讀日誌： AutoHeal 後再次更新書名（經文可能更新了標題）
+              readingLogManager.startSession(workId, updatedBook.metadata.title || workId);
               console.log(`[AutoHeal] Successfully auto-healed real content for ${workId}`);
             } catch (err) {
               console.warn('[AutoHeal] Background refresh failed, keeping current local content:', err);

@@ -8,6 +8,7 @@ import { getSettings, saveSettings } from './utils/db';
 import type { AppSettings } from './utils/db';
 import { readingTimer, formatTimerMMSS } from './utils/readingTimer';
 import type { ReadingTimerState } from './utils/readingTimer';
+import { readingLogManager } from './utils/readingLogManager';
 import './App.css';
 
 interface RouteState {
@@ -124,6 +125,8 @@ export function App() {
         const stored = await getSettings();
         setSettings(stored);
         applyThemeClass(stored.theme);
+        // 💡 同步閱讀日誌啟用狀態
+        readingLogManager.setEnabled(stored.readingLogEnabled ?? false);
       } catch (e) {
         console.error('Failed to load settings:', e);
       }
@@ -147,6 +150,8 @@ export function App() {
   const handleSaveSettings = async (updated: AppSettings) => {
     setSettings(updated);
     applyThemeClass(updated.theme);
+    // 💡 同步閱讀日誌啟用狀態
+    readingLogManager.setEnabled(updated.readingLogEnabled ?? false);
     try {
       await saveSettings(updated);
     } catch (e) {
@@ -168,9 +173,13 @@ export function App() {
     }
     setView('reader');
     updateHashRoute('reader', workId, segmentId);
+    // 💡 閱讀日誌：開始計時（書名稍後由 ReaderView 補傳，此處先用 workId 暫代）
+    readingLogManager.startSession(workId, workId);
   };
 
   const handleBackToLibrary = (resetToRoot = false) => {
+    // 💡 閱讀日誌：結束計時
+    readingLogManager.endSession();
     if (resetToRoot) {
       // 點選 Home 首頁按鈕：固定回到首頁 Library
       setView('library');

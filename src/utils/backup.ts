@@ -6,7 +6,9 @@ import {
   saveBook, 
   saveSettings, 
   getSettings, 
-  type BookHighlight 
+  getAllReadingLogs,
+  saveReadingLog,
+  type BookHighlight
 } from './db';
 
 const BOOKS_STORE = 'books';
@@ -40,6 +42,7 @@ export async function getAllFullBooks(): Promise<ReaderPackage[]> {
 export async function exportUserData(options: { includeBooks?: boolean } = {}): Promise<void> {
   const highlights = await getAllHighlights();
   const settings = await getSettings();
+  const readingLogs = await getAllReadingLogs();
   let books: ReaderPackage[] = [];
 
   if (options.includeBooks) {
@@ -58,8 +61,10 @@ export async function exportUserData(options: { includeBooks?: boolean } = {}): 
     exportedAt: now.toISOString(),
     includeBooks: !!options.includeBooks,
     highlightsCount: highlights.length,
+    readingLogsCount: readingLogs.length,
     booksCount: books.length,
     highlights,
+    readingLogs,
     settings,
     books: options.includeBooks ? books : undefined
   };
@@ -79,7 +84,7 @@ export async function exportUserData(options: { includeBooks?: boolean } = {}): 
 }
 
 // 匯入個人備份 (.json) 並覆寫還原至 IndexedDB
-export async function importUserData(file: File): Promise<{ highlightsCount: number; booksCount: number; settingsUpdated: boolean }> {
+export async function importUserData(file: File): Promise<{ highlightsCount: number; booksCount: number; readingLogsCount: number; settingsUpdated: boolean }> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -87,12 +92,13 @@ export async function importUserData(file: File): Promise<{ highlightsCount: num
         const text = e.target?.result as string;
         const parsed = JSON.parse(text);
 
-        if (!parsed || (parsed.app !== 'CBETA Reader' && !parsed.highlights && !parsed.books)) {
+        if (!parsed || (parsed.app !== 'CBETA Reader' && !parsed.highlights && !parsed.books && !parsed.readingLogs)) {
           throw new Error('無效的 CBETA Reader 備份檔案格式。');
         }
 
         let highlightsCount = 0;
         let booksCount = 0;
+        let readingLogsCount = 0;
         let settingsUpdated = false;
 
         // 1. 還原劃線重點
@@ -105,7 +111,17 @@ export async function importUserData(file: File): Promise<{ highlightsCount: num
           }
         }
 
-        // 2. 還原離線經文包
+        // 2. 還原每日閱讀日誌
+        if (Array.isArray(parsed.readingLogs) && parsed.readingLogs.length > 0) {
+          for (const log of parsed.readingLogs) {
+            if (log.id && log.workId && log.startTime) {
+              await saveReadingLog(log);
+              readingLogsCount++;
+            }
+          }
+        }
+
+        // 3. 還原離線經文包
         if (Array.isArray(parsed.books) && parsed.books.length > 0) {
           for (const bookPkg of parsed.books) {
             if (bookPkg.metadata && bookPkg.metadata.workId) {
@@ -115,13 +131,13 @@ export async function importUserData(file: File): Promise<{ highlightsCount: num
           }
         }
 
-        // 3. 還原偏好設定
+        // 4. 還原偏好設定
         if (parsed.settings && typeof parsed.settings === 'object') {
           await saveSettings(parsed.settings);
           settingsUpdated = true;
         }
 
-        resolve({ highlightsCount, booksCount, settingsUpdated });
+        resolve({ highlightsCount, booksCount, readingLogsCount, settingsUpdated });
       } catch (err) {
         reject(err);
       }

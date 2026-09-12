@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, X, Download,
-  Home, Search,
+  Home, Search, CalendarDays,
   Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
@@ -14,6 +14,7 @@ import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress } from '../../builder/PackageBuilder';
 import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { SearchPanel } from './SearchPanel';
+import { ReadingLogView } from './ReadingLogView';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
 import { getBookCoverGradient } from '../../utils/bookColors';
 import '../styles/library.css';
@@ -43,6 +44,7 @@ export function Library({
   const [onlineSearchQuery, setOnlineSearchQuery] = useState('');
   const [onlineResults, setOnlineResults] = useState<SearchResult[]>([]);
   const [isSearchingOnline, setIsSearchingOnline] = useState(false);
+  const [showReadingLog, setShowReadingLog] = useState(false); // 💡 閱讀日誌入口
   
   // Builder 進度與動畫
   const [buildProgress, setBuildProgress] = useState<BuildProgress | null>(null);
@@ -1410,6 +1412,17 @@ export function Library({
         )}
 
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          {/* 💡 閱讀日誌入口（僅在 readingLogEnabled 時顯示），放大鏡左邊 */}
+          {settings.readingLogEnabled && activeTab === 'shelf' && (
+            <button
+              className="library-header-btn"
+              onClick={() => setShowReadingLog(true)}
+              title="閱讀日誌"
+            >
+              <CalendarDays size={20} />
+            </button>
+          )}
+
           {/* 只有在書架分頁時才顯示放大鏡，點擊切換至搜尋分頁 */}
           {activeTab === 'shelf' && (
             <button 
@@ -2922,6 +2935,14 @@ export function Library({
             </div>
           </div>
         </div>
+      )}
+
+      {/* 💡 每日閱讀日誌 Modal */}
+      {showReadingLog && (
+        <ReadingLogView 
+          onClose={() => setShowReadingLog(false)} 
+          onSelectBook={onSelectBook} 
+        />
       )}
 
     </div>

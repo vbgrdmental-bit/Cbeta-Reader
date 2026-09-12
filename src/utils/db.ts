@@ -2,10 +2,11 @@ import type { ReaderPackage, BookMetadata } from '../types/book';
 import { APP_VERSION } from '../builder/version';
 
 const DB_NAME = 'cbeta_reader_db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const BOOKS_STORE = 'books';
 const SETTINGS_STORE = 'settings';
 const HIGHLIGHTS_STORE = 'highlights';
+const READING_LOGS_STORE = 'reading_logs';
 
 export function initDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -25,6 +26,12 @@ export function initDB(): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains(HIGHLIGHTS_STORE)) {
         const highlightsStore = db.createObjectStore(HIGHLIGHTS_STORE, { keyPath: 'id' });
         highlightsStore.createIndex('workId', 'workId', { unique: false });
+      }
+      // 💡 v3: 閱讀日誌 store（每次開啟/關閉一本書自動記錄一條）
+      if (!db.objectStoreNames.contains(READING_LOGS_STORE)) {
+        const logsStore = db.createObjectStore(READING_LOGS_STORE, { keyPath: 'id' });
+        logsStore.createIndex('date', 'date', { unique: false });
+        logsStore.createIndex('workId', 'workId', { unique: false });
       }
     };
   });
@@ -265,6 +272,7 @@ export interface AppSettings {
   ttsMode: 'normal' | 'natural'; // 朗讀口吻
   highlightColor: 'yellow' | 'red' | 'gray' | 'blue';
   highlightStyle: 'underline' | 'bottom-half' | 'full' | 'border';
+  readingLogEnabled?: boolean; // 💡 每日閱讀記錄（預設關閉）
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -289,7 +297,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   ttsPitch: 1.0,
   ttsMode: 'normal',
   highlightColor: 'yellow',
-  highlightStyle: 'full'         // 預設畫重點樣式：全塗
+  highlightStyle: 'full',        // 預設畫重點樣式：全塗
+  readingLogEnabled: false       // 💡 每日閱讀記錄預設關閉
 };
 
 export async function saveSettings(settings: AppSettings): Promise<void> {
@@ -587,4 +596,78 @@ export async function compressAllBooks(): Promise<{ compressedCount: number }> {
   return { compressedCount };
 }
 
+// ──────────────────────────────────────────────────────────────
+// 💡 每日閱讀日誌 (Reading Log) — v3 新增
+// ──────────────────────────────────────────────────────────────
 
+/** 一筆閱讀紀錄（打開經文 → 離開，≥1 分鐘才記錄） */
+export interface ReadingLogEntry {
+  id: string;            // UUID 主鍵
+  workId: string;        // e.g. "T0412"
+  title: string;         // e.g. "地藏菩薩本願經"
+  startTime: number;     // timestamp ms
+  endTime: number;       // timestamp ms
+  durationMinutes: number; // Math.round(elapsed / 60000)
+  date: string;          // "YYYY-MM-DD"，用於依日查詢
+}
+
+export async function saveReadingLog(entry: ReadingLogEntry): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(READING_LOGS_STORE, 'readwrite');
+    const store = transaction.objectStore(READING_LOGS_STORE);
+    const request = store.put(entry);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+export async function getAllReadingLogs(): Promise<ReadingLogEntry[]> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(READING_LOGS_STORE, 'readonly');
+    const store = transaction.objectStore(READING_LOGS_STORE);
+    const request = store.getAll();
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result || []);
+  });
+}
+
+export async function getReadingLogsByDate(date: string): Promise<ReadingLogEntry[]> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(READING_LOGS_STORE, 'readonly');
+    const store = transaction.objectStore(READING_LOGS_STORE);
+    const index = store.index('date');
+    const request = index.getAll(date);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result || []);
+  });
+}
+
+export async function getReadingLogsByDateRange(from: string, to: string): Promise<ReadingLogEntry[]> {
+  const all = await getAllReadingLogs();
+  return all.filter(e => e.date >= from && e.date <= to);
+}
+
+export async function deleteReadingLog(id: string): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(READING_LOGS_STORE, 'readwrite');
+    const store = transaction.objectStore(READING_LOGS_STORE);
+    const request = store.delete(id);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+export async function clearAllReadingLogs(): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(READING_LOGS_STORE, 'readwrite');
+    const store = transaction.objectStore(READING_LOGS_STORE);
+    const request = store.clear();
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
