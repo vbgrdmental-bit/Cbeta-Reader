@@ -195,6 +195,8 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
             style={{
               display: 'block',
               width: '100%',
+              flexShrink: 0,
+              flex: '0 0 auto',
               boxSizing: 'border-box',
               backgroundColor: '#ffffff',
               border: '1.5px solid rgba(0, 0, 0, 0.14)',
