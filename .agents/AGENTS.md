@@ -26,6 +26,9 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
      - **未來任何任務執行完成後，絕對不用自行啟動瀏覽器進行錄影、截圖或 Subagent 瀏覽器驗證！**
      - 統一由使用者親自於瀏覽器中操作確認。
      - Agent 僅需確保程式碼邏輯正確、`npm run build` 編譯通過並正常推送到指定分支即可。
+  5. **高難度任務模型切換主動提醒原則（Model Selection Advisory Policy）**：
+     - 一般日常開發（App 介面、CSS 樣式、設定面板、字體字級、一般功能增修）預設使用 **Gemini 3.7** 保持極速流暢。
+     - 若任務評估為「**遇到大型經文打包引擎架構重構**」或「**複雜多卷層級樹狀算法設計**」等高難度核心架構任務時，**必須在動手前先主動提醒使用者是否要改為 Gemini 3.8**，以發揮深層長鏈推理與系統架構推導優勢。
 
 ---
 
@@ -33,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.2.7` (App: v4.2.7 / Builder: v2.9.11)
+- **Current Version**: `v4.2.8` (App: v4.2.8 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -54,8 +57,12 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.2.8 / Builder: v2.9.11** (2026-09-14)
+  - [App] 閱讀設定新增「進階功能」折疊面板（「+ 展開 / − 收合」預設收折），本質區分設定值選項與任務執行。
+  - [App] 收納兩大分組「書籍與儲存空間」及「資料備份與還原」，全面採用首頁風格圓潤動作膠囊按鈕並移除左側冗餘小圖示。
+  - [App] 完整備份新增耗時預估提示，若評估超過 3 分鐘主動跳窗確認（顯示經書本數、MB 容量與預估時間），小於 3 分鐘直接極速匯出。
 - **⭐ App: v4.2.7 / Builder: v2.9.11** (2026-09-13)
-  - [App] 閱讀設定升級「閱讀版面預覽」工作台，即時連動主題/字體/行高/邊距。
+  - [App] 閱讀設定升級「閱讀版面預覽」工作台，即時連動主題/字體/字級/行高/邊距。
   - [App] 「其他設定」全面改版為 iOS 風格直覺開關（Toggle Switches）與雙層說明。
   - [App] 新增「每日閱讀日誌」（閱讀天數、閱讀時數、閱讀本數與每日精進日曆）。
 - **⭐ App: v4.2.6 / Builder: v2.9.11** (2026-08-25)

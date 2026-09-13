@@ -431,12 +431,12 @@ body.theme-ebony .reader-bottom-blur-gradient {
 }
 
 /* ==========================================================================
-   💡 浮動膠囊控制列 (Floating Capsule Bottom Bar / Floating Pill Bar)
-   高度厚度 56px 與上方控制列一致，20% 半透明 (80% 不透明度)
+   💡 浮動膠囊控制列 (Floating Capsule Bottom Bar)
+   高度自動適配、圓角 22px、20% 半透明 (80% 不透明度)
    ========================================================================== */
 .reader-floating-bottom-bar {
   position: absolute;
-  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(0);
   z-index: 500;
@@ -444,19 +444,19 @@ body.theme-ebony .reader-bottom-blur-gradient {
   align-items: center;
   justify-content: center;
   gap: 0.85rem;
-  height: 56px;
-  min-height: 56px;
-  max-height: 56px;
-  padding: 0 1.35rem;
-  border-radius: 9999px;
+  height: auto;
+  min-height: auto;
+  max-height: none;
+  padding: 0.55rem 0.75rem;
+  border-radius: 22px;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1.2px solid rgba(140, 75, 39, 0.22);
-  background: rgba(254, 252, 248, 0.80);
+  background: rgba(254, 252, 248, 0.88);
   box-shadow: 0 12px 36px rgba(70, 45, 20, 0.14), 0 3px 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease-out, background-color 0.2s ease, border-color 0.2s ease;
-  width: max-content;
-  max-width: calc(100vw - 28px);
+  width: calc(100% - 24px);
+  max-width: 440px;
   box-sizing: border-box;
   user-select: none;
   -webkit-text-size-adjust: 100%;
@@ -465,19 +465,19 @@ body.theme-ebony .reader-bottom-blur-gradient {
 
 /* 4 種主題配色適配 (20% 透明 / 80% 不透明度) */
 body.theme-ivory .reader-floating-bottom-bar {
-  background: rgba(254, 252, 248, 0.80);
+  background: rgba(254, 252, 248, 0.88);
   border-color: rgba(140, 75, 39, 0.22);
   box-shadow: 0 12px 36px rgba(80, 50, 25, 0.14), 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 body.theme-parchment .reader-floating-bottom-bar {
-  background: rgba(245, 238, 224, 0.80);
+  background: rgba(245, 238, 224, 0.88);
   border-color: rgba(130, 80, 40, 0.24);
   box-shadow: 0 12px 36px rgba(70, 45, 15, 0.15), 0 3px 10px rgba(0, 0, 0, 0.06);
 }
 
 body.theme-comfort .reader-floating-bottom-bar {
-  background: rgba(236, 243, 226, 0.80);
+  background: rgba(236, 243, 226, 0.88);
   border-color: rgba(65, 95, 55, 0.24);
   box-shadow: 0 12px 36px rgba(35, 60, 30, 0.13), 0 3px 10px rgba(0, 0, 0, 0.05);
 }
@@ -1389,19 +1389,40 @@ body.theme-ebony .popover-color-dot.selected,
   box-shadow: 0 0 0 2.5px rgba(207, 159, 96, 0.35) !important;
 }
 
-/* 💡 畫重點筆刷按鈕在 active (開啟畫重點模式) 時的雅緻邊框樣式 */
+/* 💡 頂部控制列按鈕（字、筆刷、首頁、返回、搜尋、目錄、設定）在 active 時的圓型灰色底樣式 */
+.reader-top-bar .icon-button.active,
+.reader-top-bar .library-header-btn.active,
+.reader-top-bar .reader-text-btn.active,
 .reader-text-btn.highlight-btn.active,
-.highlight-btn.active {
-  border: 1.5px solid var(--theme-accent, #8c4b27) !important;
-  background: var(--theme-accent-light, rgba(140, 75, 39, 0.12)) !important;
-  border-radius: 8px !important;
+.highlight-btn.active,
+.reader-text-btn.typography-btn.active,
+.typography-btn.active {
+  border: none !important;
+  background: rgba(0, 0, 0, 0.08) !important;
+  border-radius: 50% !important;
+  color: var(--text-primary) !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
 }
 
-body.theme-ebony .reader-text-btn.highlight-btn.active,
+body.theme-comfort .reader-top-bar .icon-button.active,
+body.theme-comfort .reader-top-bar .library-header-btn.active,
+body.theme-comfort .reader-top-bar .reader-text-btn.active,
+body.theme-comfort .highlight-btn.active,
+body.theme-comfort .typography-btn.active {
+  background: rgba(43, 66, 43, 0.12) !important;
+  box-shadow: inset 0 0 0 1px rgba(43, 66, 43, 0.10) !important;
+}
+
+body.theme-ebony .reader-top-bar .icon-button.active,
+body.theme-ebony .reader-top-bar .library-header-btn.active,
+body.theme-ebony .reader-top-bar .reader-text-btn.active,
 body.theme-ebony .highlight-btn.active,
-.theme-ebony .highlight-btn.active {
-  border: 1.5px solid #85bb65 !important;
-  background: rgba(133, 187, 101, 0.18) !important;
+body.theme-ebony .typography-btn.active {
+  border: none !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-radius: 50% !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
 }
 
 /* 烏木模式下頂部工具列字體大小按鈕 active 樣式 */
@@ -1412,18 +1433,19 @@ body.theme-ebony .font-size-btn.active,
 }
 
 /* ==========================================================================
-   💡 手機版專屬：浮動膠囊控制列高度 56px 與上方一致、精確底邊距與底層模糊漸變適配
+   💡 手機版專屬：浮動膠囊控制列高度自適應、精確底邊距與底層模糊漸變適配
    ========================================================================== */
 @media (max-width: 768px) {
   .reader-floating-bottom-bar {
-    height: 56px !important;
-    min-height: 56px !important;
-    max-height: 56px !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
     bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
-    padding: 0 0.85rem !important;
+    padding: 0.45rem 0.55rem !important;
     gap: 0.45rem !important;
-    max-width: calc(100vw - 16px) !important;
-    border-radius: 9999px !important;
+    width: calc(100vw - 20px) !important;
+    max-width: 420px !important;
+    border-radius: 20px !important;
     box-shadow: 0 12px 36px rgba(70, 45, 20, 0.16), 0 3px 10px rgba(0, 0, 0, 0.06) !important;
   }
 

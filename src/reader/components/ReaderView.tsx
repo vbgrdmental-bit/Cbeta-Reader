@@ -250,9 +250,9 @@ export function ReaderView({
   const [activeHighlightForDelete, setActiveHighlightForDelete] = useState<BookHighlight | null>(null);
   const [deleteMenuPosition, setDeleteMenuPosition] = useState<{ top: number; left: number } | null>(null);
   
-  // 💡 控制列：畫重點設定浮動選單 (整合筆刷顏色與粗細標註模式)
-  const [showHighlightPopover, setShowHighlightPopover] = useState(false);
-  // 💡 筆刷畫重點模式狀態 (點進選顏色/粗細時為 true 帶框，再點筆刷時為 false 解除框框可複製內文)
+  // 💡 控制列：快速閱讀版面設定面板 (字體、字級、行高、邊距)
+  const [showTypographyPanel, setShowTypographyPanel] = useState(false);
+  // 💡 筆刷畫重點模式狀態 (點擊筆刷為 true 帶底色並開啟下方畫重點設定，再點筆刷為 false 關閉並可自由複製經文)
   const [isHighlightMode, setIsHighlightMode] = useState(false);
 
   // 💡 心得筆記編輯 Modal 狀態
@@ -1167,8 +1167,8 @@ export function ReaderView({
     const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
-      if (!target.closest('.highlight-popover-container')) {
-        setShowHighlightPopover(false);
+      if (!target.closest('.reader-floating-bottom-bar') && !target.closest('.typography-btn') && !target.closest('.highlight-btn')) {
+        setShowTypographyPanel(false);
       }
       if (!target.closest('.reader-nav-drawer') && !target.closest('.nav-menu-btn')) {
         setShowNavDrawer(false);
@@ -1329,14 +1329,13 @@ export function ReaderView({
     // 💡 勾選「顯示閱讀頁上下控制列」時，上下控制列始終保持顯示，點擊不隱藏
     if (settings.customVisibleElements?.showReaderControls) {
       if (showNavDrawer) setShowNavDrawer(false);
-      if (showHighlightPopover) setShowHighlightPopover(false);
+      if (showTypographyPanel) setShowTypographyPanel(false);
       return;
     }
 
-    // 💡 若側邊欄抽屜或畫重點選單開啟，點擊螢幕時立即自動關閉
-    if (showNavDrawer || showHighlightPopover) {
-      if (showNavDrawer) setShowNavDrawer(false);
-      if (showHighlightPopover) setShowHighlightPopover(false);
+    // 💡 若側邊欄抽屜開啟，點擊螢幕時立即自動關閉
+    if (showNavDrawer) {
+      setShowNavDrawer(false);
       return;
     }
     // 若點擊的是按鈕、輸入框、筆記或劃線刪除選單、浮動控制列等，不切換控制列
@@ -1460,12 +1459,9 @@ export function ReaderView({
   };
 
   const handleScroll = () => {
-    // 💡 滑動或滾動內文時，若側邊欄抽屜或畫重點選單開啟，自動收合隱藏
+    // 💡 滑動或滾動內文時，若側邊欄抽屜開啟，自動收合隱藏
     if (showNavDrawer) {
       setShowNavDrawer(false);
-    }
-    if (showHighlightPopover) {
-      setShowHighlightPopover(false);
     }
     if (activeHighlightForDelete) {
       setActiveHighlightForDelete(null);
@@ -1726,7 +1722,8 @@ export function ReaderView({
         <button 
           className="library-header-btn" 
           onClick={() => {
-            setShowHighlightPopover(false);
+            setShowTypographyPanel(false);
+            setIsHighlightMode(false);
             setShowNavDrawer(false);
             onBackToLibrary(true);
           }} 
@@ -1740,7 +1737,8 @@ export function ReaderView({
         <button 
           className="library-header-btn" 
           onClick={() => {
-            setShowHighlightPopover(false);
+            setShowTypographyPanel(false);
+            setIsHighlightMode(false);
             setShowNavDrawer(false);
             onBackToLibrary(false);
           }} 
@@ -1749,19 +1747,35 @@ export function ReaderView({
           <ArrowLeft size={20} />
         </button>
 
+        {/* 💡 閱讀版面快速設定鍵 「字」 (點擊開啟/收合下方 4 個閱讀版面膠囊) */}
+        <button 
+          className={`icon-button typography-btn ${showTypographyPanel ? 'active' : ''}`}
+          onClick={() => {
+            setShowNavDrawer(false);
+            setIsHighlightMode(false);
+            setShowTypographyPanel(prev => !prev);
+          }}
+          title={showTypographyPanel ? "收合閱讀版面設定" : "開啟閱讀版面設定 (字體、字級、行高、邊距)"}
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            position: 'relative',
+            cursor: 'pointer',
+            padding: 0
+          }}
+        >
+          <span style={{ fontSize: '1.05rem', fontWeight: 600, fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
+            字
+          </span>
+        </button>
 
-
-        {/* 💡 畫重點設定按鈕 (整合筆刷顏色與粗細標註模式為單一按鍵) */}
+        {/* 💡 畫重點開關與設定鍵 「筆刷」 (點擊開啟/關閉畫重點模式，並開啟/收合下方 2 個畫重點膠囊) */}
         {(() => {
           const colorHex = 
             settings.highlightColor === 'yellow' ? '#fbbf24' :
             settings.highlightColor === 'red' ? '#f87171' :
             settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
-
-          const currentRgba = 
-            settings.highlightColor === 'yellow' ? 'rgba(250, 204, 21, 0.65)' :
-            settings.highlightColor === 'red' ? 'rgba(248, 113, 113, 0.65)' :
-            settings.highlightColor === 'gray' ? 'rgba(156, 163, 175, 0.65)' : 'rgba(96, 165, 250, 0.65)';
 
           const getIndicatorStyle = (): React.CSSProperties => {
             const currentStyle = settings.highlightStyle || 'bottom-half';
@@ -1769,7 +1783,7 @@ export function ReaderView({
               case 'underline':
                 return {
                   position: 'absolute',
-                  bottom: '2px',
+                  bottom: '4px',
                   width: '14px',
                   height: '3px',
                   borderRadius: '1.5px',
@@ -1779,7 +1793,7 @@ export function ReaderView({
               case 'bottom-half':
                 return {
                   position: 'absolute',
-                  bottom: '2px',
+                  bottom: '4px',
                   width: '16px',
                   height: '7px',
                   borderRadius: '2px',
@@ -1793,9 +1807,9 @@ export function ReaderView({
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '5px',
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
                   backgroundColor: colorHex,
                   opacity: 0.45,
                   boxSizing: 'border-box',
@@ -1809,7 +1823,7 @@ export function ReaderView({
                   transform: 'translate(-50%, -50%)',
                   width: '26px',
                   height: '26px',
-                  borderRadius: '5px',
+                  borderRadius: '50%',
                   border: `2.2px solid ${colorHex}`,
                   backgroundColor: 'transparent',
                   boxSizing: 'border-box',
@@ -1819,176 +1833,42 @@ export function ReaderView({
           };
 
           return (
-            <div className="highlight-popover-container" style={{ position: 'relative' }}>
-              <button 
-                className={`reader-text-btn highlight-btn ${isHighlightMode ? 'active' : ''}`}
-                onClick={() => {
-                  setShowNavDrawer(false);
-                  if (isHighlightMode) {
-                    // 💡 當讀者再次點擊「筆刷」時，解除框框，關閉畫重點模式，此時可以自由複製內文
-                    setIsHighlightMode(false);
-                    setShowHighlightPopover(false);
-                  } else {
-                    // 💡 點擊「筆刷」開啟畫重點模式並彈出顏色/粗細選單
-                    setIsHighlightMode(true);
-                    setShowHighlightPopover(true);
-                  }
-                }}
-                title={isHighlightMode ? "畫重點模式中 (點擊解除框框，可複製內文)" : "開啟畫重點模式 (選顏色/粗細)"}
+            <button 
+              className={`icon-button highlight-btn ${isHighlightMode ? 'active' : ''}`}
+              onClick={() => {
+                setShowNavDrawer(false);
+                setShowTypographyPanel(false);
+                setIsHighlightMode(prev => !prev);
+              }}
+              title={isHighlightMode ? "關閉畫重點模式 (可自由複製經文)" : "開啟畫重點模式 (選取經文自動劃線)"}
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                position: 'relative',
+                cursor: 'pointer',
+                padding: 0
+              }}
+            >
+              <Paintbrush 
+                size={20} 
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0 0.4rem',
-                  position: 'relative',
-                  borderRadius: '6px',
-                  height: '32px'
+                  color: 'currentColor',
+                  zIndex: 2
                 }}
-              >
-                <Paintbrush 
-                  size={20} 
-                  style={{
-                    color: 'currentColor',
-                    zIndex: 2
-                  }}
-                />
-                <div className="brush-color-indicator" style={getIndicatorStyle()} />
-              </button>
-
-              {showHighlightPopover && (
-                <div 
-                  className="reader-popover animate-fade-in"
-                  style={{
-                    padding: '0.6rem 0.7rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem'
-                  }}
-                >
-                  {/* 左右兩欄佈局：左欄顏色、右欄標註模式 */}
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'stretch' }}>
-
-                    {/* 左欄：4 個筆刷顏色 (縱向排列) */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                      {(['yellow', 'red', 'blue', 'gray'] as const).map(c => {
-                        const cHex = c === 'yellow' ? '#fbbf24' : c === 'red' ? '#f87171' : c === 'blue' ? '#60a5fa' : '#9ca3af';
-                        const isSelected = settings.highlightColor === c;
-
-                        return (
-                          <div
-                            key={c}
-                            onClick={() => handleSelectHighlightColor(c)}
-                            title={c === 'yellow' ? '淺黃' : c === 'red' ? '淺紅' : c === 'blue' ? '淺藍' : '淺灰'}
-                            style={{
-                              width: '40px',
-                              height: '26px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: 'pointer',
-                              flexShrink: 0
-                            }}
-                          >
-                            <div 
-                              className={`popover-color-dot ${isSelected ? 'selected' : ''}`}
-                              style={{
-                                width: '18px',
-                                height: '18px',
-                                borderRadius: '50%',
-                                backgroundColor: cHex,
-                                border: isSelected ? '2px solid var(--theme-accent, #8c4b27)' : '1.5px solid rgba(0,0,0,0.18)',
-                                boxShadow: isSelected ? '0 0 0 2.5px rgba(140, 75, 39, 0.25)' : 'none',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'transform 0.15s, box-shadow 0.15s',
-                                transform: isSelected ? 'scale(1.15)' : 'scale(1)'
-                              }}
-                            >
-                              {isSelected && (
-                                <span style={{ fontSize: '0.6rem', fontWeight: 'bold', color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.5)', lineHeight: 1 }}>
-                                  ✓
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* 垂直分隔線 */}
-                    <div className="popover-divider-v" style={{ width: '1px', backgroundColor: 'var(--border-color, rgba(0,0,0,0.08))', alignSelf: 'stretch' }} />
-
-                    {/* 右欄：4 個粗細與標註模式 (縱向排列) */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                      {(['full', 'bottom-half', 'underline', 'border'] as const).map(s => {
-                        const isSelected = (settings.highlightStyle || 'bottom-half') === s;
-
-                        const getStyleItemPreview = () => {
-                          switch (s) {
-                            case 'underline':
-                              return { borderBottom: `2.5px solid ${colorHex}`, background: 'transparent' };
-                            case 'bottom-half':
-                              return { background: `linear-gradient(180deg, transparent 55%, ${currentRgba} 55%)` };
-                            case 'full':
-                              return { backgroundColor: currentRgba, borderRadius: '3px' };
-                            case 'border':
-                              return { border: `2px solid ${colorHex}`, borderRadius: '3px', padding: '0 2px' };
-                          }
-                        };
-
-                        return (
-                          <div
-                            key={s}
-                            className={`popover-style-option ${isSelected ? 'selected' : ''}`}
-                            onClick={() => handleSelectHighlightStyle(s)}
-                            title={s === 'full' ? '全塗' : s === 'bottom-half' ? '半塗' : s === 'underline' ? '底線' : '方框'}
-                            style={{
-                              width: '40px',
-                              height: '26px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              borderRadius: '6px',
-                              cursor: 'pointer',
-                              flexShrink: 0,
-                              border: isSelected ? '1.5px solid var(--theme-accent, #8c4b27)' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
-                              backgroundColor: isSelected ? 'var(--theme-accent-light, rgba(140, 75, 39, 0.1))' : 'var(--input-bg, rgba(0,0,0,0.02))',
-                              transition: 'all 0.15s',
-                              transform: isSelected ? 'scale(1.05)' : 'scale(1)'
-                            }}
-                          >
-                            <span 
-                              style={{ 
-                                fontSize: '0.78rem',
-                                fontFamily: 'var(--font-serif)',
-                                fontWeight: 'bold',
-                                color: 'var(--text-primary)',
-                                padding: '1px 2px',
-                                ...getStyleItemPreview()
-                              }}
-                            >
-                              經文
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                  </div>
-                </div>
-              )}
-            </div>
+              />
+              <div className="brush-color-indicator" style={getIndicatorStyle()} />
+            </button>
           );
         })()}
-
 
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
           {/* 💡 頂部列：「三」左邊新增搜尋鍵，樣式 100% 統一 */}
           <button 
             className={`icon-button ${activeSearchQuery ? 'active' : ''}`} 
             onClick={() => {
-              setShowHighlightPopover(false);
+              setShowTypographyPanel(false);
+              setIsHighlightMode(false);
               setShowNavDrawer(false);
               setInBookSearchInput(activeSearchQuery);
               setShowInBookSearchModal(true);
@@ -2000,7 +1880,8 @@ export function ReaderView({
           <button 
             className="icon-button nav-menu-btn" 
             onClick={() => {
-              setShowHighlightPopover(false);
+              setShowTypographyPanel(false);
+              setIsHighlightMode(false);
               setShowNavDrawer(prev => !prev);
             }} 
             title="目次"
@@ -2010,7 +1891,8 @@ export function ReaderView({
           <button 
             className="icon-button" 
             onClick={() => {
-              setShowHighlightPopover(false);
+              setShowTypographyPanel(false);
+              setIsHighlightMode(false);
               setShowNavDrawer(false);
               setShowSettingsView(true);
             }} 
@@ -2296,82 +2178,272 @@ export function ReaderView({
       </div>
 
       {/* 💡 底部過渡毛玻璃模糊漸變層 (Bottom Transition Blur Gradient) */}
-      <div className={`reader-bottom-blur-gradient ${showToolbar ? 'visible' : 'hidden'}`} />
+      <div className={`reader-bottom-blur-gradient ${(showToolbar && (showTypographyPanel || isHighlightMode)) ? 'visible' : 'hidden'}`} />
 
       {/* 💡 浮動膠囊控制列 (Floating Capsule Bottom Bar) */}
-      <div className={`reader-floating-bottom-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-        {/* 左側：4 種顏色模式 (象牙白, 羊皮紙, 護眼綠, 烏木黑) */}
-        <div className="floating-bar-theme-group">
-          {(['ivory', 'parchment', 'comfort', 'ebony'] as const).map((t) => {
-            const isSelected = settings.theme === t;
-            return (
-              <div
-                key={t}
-                className={`floating-theme-circle ${t} ${isSelected ? 'active' : ''}`}
-                onClick={() => {
-                  setShowHighlightPopover(false);
-                  setShowNavDrawer(false);
-                  onSaveSettings({ ...settings, theme: t });
-                }}
-                title={t === 'ivory' ? '象牙白' : t === 'parchment' ? '羊皮紙' : t === 'comfort' ? '舒服護眼' : '烏木暗色'}
-              >
-                {isSelected && <Check size={14} strokeWidth={3.5} className="theme-check-icon" />}
+      <div className={`reader-floating-bottom-bar ${(showToolbar && (showTypographyPanel || isHighlightMode)) ? 'visible' : 'hidden'}`}>
+        {showTypographyPanel && (
+          <div className="bottom-workbench-grid animate-fade-in" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {/* 第 1 列：字體 3 分段 + 文字大小 3 分段 */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', width: '100%' }}>
+              {/* 字體 */}
+              <div className="segmented-pill-capsule">
+                {[
+                  { id: 'default', name: '宋/明', fontFamily: 'var(--font-serif)' },
+                  { id: 'jhenghei', name: '黑體', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' },
+                  { id: 'kaiti', name: '楷體', fontFamily: '"CBETASupplement", "標楷體", "BiauKai", serif' }
+                ].map(f => {
+                  const rawFont = settings.fontFamily || 'default';
+                  const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold' || rawFont === 'kaiti') ? 'kaiti' : (rawFont === 'jhenghei' ? 'jhenghei' : 'default');
+                  const isActive = currentFont === f.id;
+                  return (
+                    <button
+                      key={`fl-font-${f.id}`}
+                      type="button"
+                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => {
+                        if (f.id === 'kaiti') {
+                          loadEduKaiFontOnDemand();
+                        }
+                        onSaveSettings({ ...settings, fontFamily: f.id as any });
+                      }}
+                      style={{ fontFamily: f.fontFamily }}
+                    >
+                      {f.name}
+                    </button>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-
-        {/* ⏱️ 閱讀時間倒數計時 (若有設定閱讀時間) */}
-        {timerState.duration && timerState.remainingSeconds > 0 && (
-          <>
-            <div className="floating-bar-divider" />
-            <div 
-              className="floating-bar-timer"
-              onClick={() => {
-                setShowHighlightPopover(false);
-                setShowNavDrawer(false);
-                setShowSettingsView(true);
-              }}
-              title="閱讀時間倒數中 (點擊開啟設定)"
-            >
-              <Clock size={13} style={{ strokeWidth: 2.2 }} />
-              <span>{formatTimerMMSS(timerState.remainingSeconds)}</span>
+              {/* 字級 */}
+              <div className="segmented-pill-capsule">
+                <button
+                  type="button"
+                  className="segmented-pill-btn"
+                  onClick={() => onSaveSettings({ ...settings, fontSize: Math.max(12, settings.fontSize - 1) })}
+                  title="縮小字體"
+                >
+                  A-
+                </button>
+                <div className="segmented-pill-btn" style={{ cursor: 'default', fontWeight: 700 }}>
+                  {settings.fontSize}px
+                </div>
+                <button
+                  type="button"
+                  className="segmented-pill-btn"
+                  onClick={() => onSaveSettings({ ...settings, fontSize: Math.min(36, settings.fontSize + 1) })}
+                  title="放大字體"
+                >
+                  A+
+                </button>
+              </div>
             </div>
-          </>
+
+            {/* 第 2 列：行高 3 分段 + 邊距 3 分段 */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', width: '100%' }}>
+              {/* 行高 */}
+              <div className="segmented-pill-capsule">
+                {([1.6, 1.8, 2.0] as const).map((lh) => {
+                  const isActive = settings.lineHeight === lh;
+                  return (
+                    <button
+                      key={`fl-lh-${lh}`}
+                      type="button"
+                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => onSaveSettings({ ...settings, lineHeight: lh })}
+                    >
+                      {lh}
+                    </button>
+                  );
+                })}
+              </div>
+              {/* 邊距 */}
+              <div className="segmented-pill-capsule">
+                {([5, 10, 15] as const).map((p) => {
+                  const isActive = settings.padding === p;
+                  return (
+                    <button
+                      key={`fl-pad-${p}`}
+                      type="button"
+                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => onSaveSettings({ ...settings, padding: p })}
+                    >
+                      {p}%
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         )}
 
-        {/* 細細豎線垂直分隔線 */}
-        <div className="floating-bar-divider" />
+        {isHighlightMode && (
+          <div 
+            className="bottom-highlight-grid animate-fade-in"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '0.65rem',
+              width: '100%'
+            }}
+          >
+            {/* 左側：4 色圓潤膠囊列 */}
+            <div className="segmented-pill-capsule">
+              {(['yellow', 'red', 'gray', 'blue'] as const).map((color) => {
+                const colorMap = {
+                  yellow: '#fbbf24',
+                  red: '#f87171',
+                  gray: '#9ca3af',
+                  blue: '#60a5fa'
+                };
+                const labelMap = {
+                  yellow: '淺黃',
+                  red: '淺紅',
+                  gray: '淺灰',
+                  blue: '淺藍'
+                };
+                const isActive = settings.highlightColor === color;
+                return (
+                  <button
+                    key={`fl-hl-color-${color}`}
+                    type="button"
+                    className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                    onClick={() => handleSelectHighlightColor(color)}
+                    title={labelMap[color]}
+                    style={{ padding: '0.35rem 0.1rem' }}
+                  >
+                    <div
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        borderRadius: '50%',
+                        backgroundColor: colorMap[color],
+                        border: isActive ? '1.5px solid var(--text-primary)' : '1px solid var(--reader-border)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.15)' : 'none'
+                      }}
+                    >
+                      {isActive && (
+                        <Check 
+                          size={10} 
+                          strokeWidth={3.5} 
+                          style={{ color: color === 'yellow' ? '#2c2016' : '#ffffff' }} 
+                        />
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
-        {/* 右側：字體大小調整器 [A-] 22px [A+] */}
-        <div className="floating-bar-font-group">
-          <button 
-            type="button" 
-            className="floating-font-btn" 
-            onClick={() => {
-              setShowHighlightPopover(false);
-              setShowNavDrawer(false);
-              onSaveSettings({ ...settings, fontSize: Math.max(12, settings.fontSize - 1) });
-            }}
-            title="縮小字體 (A-)"
-          >
-            A-
-          </button>
-          <span className="floating-font-val">{settings.fontSize}px</span>
-          <button 
-            type="button" 
-            className="floating-font-btn" 
-            onClick={() => {
-              setShowHighlightPopover(false);
-              setShowNavDrawer(false);
-              onSaveSettings({ ...settings, fontSize: Math.min(36, settings.fontSize + 1) });
-            }}
-            title="放大字體 (A+)"
-          >
-            A+
-          </button>
-        </div>
+            {/* 右側：標註模式 4 分段膠囊 (依左側顏色即時同步呈現相應樣式) */}
+            <div className="segmented-pill-capsule">
+              {(() => {
+                const hlHex = 
+                  settings.highlightColor === 'yellow' ? '#fbbf24' :
+                  settings.highlightColor === 'red' ? '#f87171' :
+                  settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
+
+                const hlRgba = 
+                  settings.highlightColor === 'yellow' ? 'rgba(250, 204, 21, 0.65)' :
+                  settings.highlightColor === 'red' ? 'rgba(248, 113, 113, 0.65)' :
+                  settings.highlightColor === 'gray' ? 'rgba(156, 163, 175, 0.65)' : 'rgba(96, 165, 250, 0.65)';
+
+                return (['underline', 'bottom-half', 'full', 'border'] as const).map((style) => {
+                  const labelMap = {
+                    underline: '底線',
+                    'bottom-half': '半塗',
+                    full: '全塗',
+                    border: '方框'
+                  };
+                  const isActive = settings.highlightStyle === style;
+
+                  const renderStyleContent = () => {
+                    switch (style) {
+                      case 'underline':
+                        return (
+                          <span style={{ borderBottom: `2.5px solid ${hlHex}`, paddingBottom: '1px' }}>
+                            底線
+                          </span>
+                        );
+                      case 'bottom-half':
+                        return (
+                          <span style={{ background: `linear-gradient(180deg, transparent 52%, ${hlRgba} 52%)`, padding: '0 2px', borderRadius: '2px' }}>
+                            半塗
+                          </span>
+                        );
+                      case 'full':
+                        return (
+                          <span style={{ backgroundColor: hlRgba, borderRadius: '3px', padding: '1px 3px', color: (settings.highlightColor === 'yellow' && settings.theme === 'ebony') ? '#000000' : 'inherit' }}>
+                            全塗
+                          </span>
+                        );
+                      case 'border':
+                        return (
+                          <span style={{ border: `1.8px solid ${hlHex}`, borderRadius: '3px', padding: '0 2px' }}>
+                            方框
+                          </span>
+                        );
+                    }
+                  };
+
+                  return (
+                    <button
+                      key={`fl-hl-style-${style}`}
+                      type="button"
+                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => handleSelectHighlightStyle(style)}
+                      title={labelMap[style]}
+                      style={{ padding: '0.35rem 0.2rem' }}
+                    >
+                      {renderStyleContent()}
+                    </button>
+                  );
+                });
+              })()}
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* ⏱️ 閱讀時間倒數計時浮動標籤 (若有設定閱讀時間) */}
+      {timerState.duration && timerState.remainingSeconds > 0 && (
+        <div 
+          className="floating-bar-timer"
+          style={{
+            position: 'fixed',
+            bottom: (showToolbar && (showTypographyPanel || isHighlightMode)) ? 'calc(115px + env(safe-area-inset-bottom, 0px))' : 'calc(18px + env(safe-area-inset-bottom, 0px))',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 499,
+            background: 'var(--bg-card, #ffffff)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid var(--reader-border)',
+            borderRadius: '20px',
+            padding: '4px 12px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            fontSize: '0.8rem',
+            color: 'var(--text-primary)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+            cursor: 'pointer',
+            transition: 'bottom 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+          onClick={() => {
+            setShowTypographyPanel(false);
+            setIsHighlightMode(false);
+            setShowNavDrawer(false);
+            setShowSettingsView(true);
+          }}
+          title="閱讀時間倒數中 (點擊開啟設定)"
+        >
+          <Clock size={13} style={{ strokeWidth: 2.2 }} />
+          <span>{formatTimerMMSS(timerState.remainingSeconds)}</span>
+        </div>
+      )}
 
       {/* 雙導航目錄 Drawer */}
       {showNavDrawer && (

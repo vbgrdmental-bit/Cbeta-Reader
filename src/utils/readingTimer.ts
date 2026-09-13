@@ -1,6 +1,6 @@
 // 💡 全局閱讀計時器與螢幕睡眠鎖 (Screen WakeLock) 管理器
 
-export type TimerDuration = 15 | 30 | 45 | 60 | null;
+export type TimerDuration = number | null;
 
 export interface ReadingTimerState {
   duration: TimerDuration;
@@ -216,7 +216,7 @@ class ReadingTimerManager {
     this.extendTimer(minutes);
   }
 
-  public extendTimer(minutes: 15 | 30 | 45 | 60) {
+  public extendTimer(minutes: number) {
     this.clearTimeouts();
     this.duration = minutes;
     this.endTime = Date.now() + minutes * 60 * 1000;

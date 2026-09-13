@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Database, FileText, Upload, HelpCircle, RotateCw, Archive, Trash2, HardDrive, CheckCircle2, Eye, Palette, Type, MoveVertical, MoveHorizontal, Check } from 'lucide-react';
+import { X, Database, FileText, HelpCircle, RotateCw, CheckCircle2, Check } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
 import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks, saveSettings, DEFAULT_SETTINGS } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
@@ -62,6 +62,9 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
   // 💡 閱讀時間倒數計時狀態
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
 
+  // 💡 進階功能折疊開關 (預設收合)
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+
   useEffect(() => {
     getStorageStats().then(setStorageStats).catch(console.warn);
   }, []);
@@ -90,14 +93,27 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
     }
   };
 
-  const getEstimatedBackupTime = (usedBytes?: number): string => {
-    if (!usedBytes || usedBytes <= 0) return '< 1 分鐘';
+  const getEstimatedMinutes = (usedBytes?: number): number => {
+    if (!usedBytes || usedBytes <= 0) return 0;
     const sizeMB = usedBytes / (1024 * 1024);
-    if (sizeMB <= 20) {
-      return '< 1 分鐘';
+    if (sizeMB <= 20) return 1;
+    return Math.ceil(sizeMB / 20);
+  };
+
+  const getEstimatedBackupTime = (usedBytes?: number): string => {
+    const mins = getEstimatedMinutes(usedBytes);
+    if (mins <= 1) return '< 1 分鐘';
+    return `約 ${mins} 分鐘`;
+  };
+
+  const handleTriggerFullBackup = () => {
+    if (isExporting) return;
+    const mins = getEstimatedMinutes(storageStats?.usedBytes);
+    // 依使用者規則：如評估超過三分鐘以上，必須有對話窗跳出提醒
+    if (mins >= 3) {
+      setShowBackupConfirm(true);
     } else {
-      const mins = Math.ceil(sizeMB / 20);
-      return `約 ${mins} 分鐘`;
+      handleExport(true);
     }
   };
 
@@ -175,9 +191,6 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
     });
   };
 
-  const paddings = [5, 10, 15, 20];
-  // const speeds = [0.5, 1.0, 1.5, 2.0];
-
   return (
     <div className="settings-panel-overlay" onClick={onClose}>
       <div className="settings-card animate-slide-up" onClick={e => e.stopPropagation()}>
@@ -189,382 +202,320 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
         </div>
 
         <div className="settings-body custom-scrollbar">
-          {/* 💡 閱讀版面預覽與一體化設定工作台 (雙重保險：CSS Class + Inline Style) */}
+          {/* 💡 閱讀版面預覽標題列與右上角 4 色主題色盤 */}
           <div 
-            className="reading-layout-card"
+            className="reading-preview-top-bar"
             style={{
-              display: 'block',
-              width: '100%',
-              flexShrink: 0,
-              flex: '0 0 auto',
-              boxSizing: 'border-box',
-              backgroundColor: '#ffffff',
-              border: '1.5px solid rgba(0, 0, 0, 0.14)',
-              borderRadius: '14px',
-              overflow: 'hidden',
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-              marginBottom: '1.2rem'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '0.65rem'
             }}
           >
-            {/* 預覽標題 */}
-            <div 
-              className="reading-preview-header"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '0.65rem 0.95rem',
-                fontSize: '0.88rem',
-                fontWeight: 700,
-                color: '#444444',
-                fontFamily: 'var(--font-serif)',
-                borderBottom: '1px solid rgba(0, 0, 0, 0.09)',
-                backgroundColor: 'rgba(0, 0, 0, 0.025)'
-              }}
-            >
-              <Eye size={16} style={{ color: 'var(--theme-accent, #8c4b27)' }} />
-              <span>閱讀版面預覽</span>
+            <div className="settings-section-title" style={{ margin: 0 }}>閱讀版面預覽</div>
+            
+            {/* 右上角 4 個圓形質感主題色盤 */}
+            <div className="preview-theme-swatches" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {[
+                { id: 'ivory', label: '象牙白', bg: '#faf7f0' },
+                { id: 'parchment', label: '羊皮紙', bg: '#f1e5c9' },
+                { id: 'comfort', label: '舒服', bg: '#e3ebd9' },
+                { id: 'ebony', label: '烏木', bg: '#12161a' }
+              ].map(t => {
+                const isActive = settings.theme === t.id;
+                return (
+                  <div
+                    key={`preview-theme-${t.id}`}
+                    onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
+                    title={t.label}
+                    style={{
+                      width: '23px',
+                      height: '23px',
+                      borderRadius: '50%',
+                      backgroundColor: t.bg,
+                      border: isActive 
+                        ? (settings.theme === 'ebony' ? '2px solid #fbbf24' : '2px solid var(--theme-accent, #8c4b27)') 
+                        : (settings.theme === 'ebony' ? '1.5px solid rgba(255,255,255,0.2)' : '1.5px solid rgba(0,0,0,0.18)'),
+                      boxShadow: isActive ? '0 1px 4px rgba(0,0,0,0.2)' : '0 1px 2px rgba(0,0,0,0.06)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transform: isActive ? 'scale(1.12)' : 'scale(1)',
+                      transition: 'all 0.18s ease'
+                    }}
+                  >
+                    {isActive && (
+                      <Check 
+                        size={12} 
+                        strokeWidth={3.5} 
+                        style={{ color: t.id === 'ebony' ? '#fbbf24' : '#2c2016' }} 
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
+          </div>
 
-            {/* 即時經文預覽框 */}
+          {/* 閱讀版面預覽與 2x2 對稱分段膠囊工作台 */}
+          <div className="reading-layout-card">
+            {/* 即時經文預覽框 (完整模擬主題、字體、字級、行高、邊距) */}
             <div 
               className="reading-preview-content-box custom-scrollbar"
               style={{
                 display: 'block',
-                minHeight: '100px',
+                minHeight: '110px',
                 maxHeight: '155px',
                 overflowY: 'auto',
                 boxSizing: 'border-box',
-                borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-                boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.03)',
-                backgroundColor: settings.theme === 'ivory' ? '#fdfbf7' : settings.theme === 'parchment' ? '#f4ecd8' : settings.theme === 'comfort' ? '#c7edcc' : '#1a1a1a',
-                color: settings.theme === 'ebony' ? '#d5d8dc' : settings.theme === 'comfort' ? '#1e2d24' : settings.theme === 'parchment' ? '#362b1d' : '#2c2416',
-                fontFamily: (settings.fontFamily === 'jhenghei') ? '"Microsoft JhengHei", "PingFang TC", sans-serif' : (settings.fontFamily === 'iansui') ? '"Iansui", "Klee One", serif' : (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') ? '"CBETASupplement", "標楷體", "BiauKai", serif' : 'var(--font-serif)',
+                backgroundColor: settings.theme === 'ivory' ? '#faf7f0' : settings.theme === 'parchment' ? '#f1e5c9' : settings.theme === 'comfort' ? '#e3ebd9' : '#12161a',
+                color: settings.theme === 'ebony' ? '#d8dec9' : settings.theme === 'comfort' ? '#23351d' : settings.theme === 'parchment' ? '#3c2a1a' : '#2c2016',
+                fontFamily: (settings.fontFamily === 'jhenghei') ? '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' : (settings.fontFamily === 'iansui') ? '"Iansui", "Klee One", serif' : (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') ? '"CBETASupplement", "標楷體", "BiauKai", serif' : 'var(--font-serif)',
                 lineHeight: settings.lineHeight || 1.8,
-                padding: `0.85rem ${Math.max(10, Math.round((settings.padding || 10) * 1.6))}px`,
-                fontSize: '0.90rem',
-                textAlign: 'justify'
+                padding: `0.9rem ${settings.padding || 10}%`,
+                fontSize: `${settings.fontSize || 22}px`,
+                textAlign: 'justify',
+                transition: 'all 0.2s ease'
               }}
             >
-              <div style={{ fontWeight: 'bold', marginBottom: '0.2rem' }}>如是我聞：</div>
+              <div style={{ fontWeight: 'bold', marginBottom: '0.5em' }}>如是我聞：</div>
               <div>
-                一時，佛在忉利天，為母說法。爾時，十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。讚歎釋迦牟尼佛，能於五濁惡世，現不可思議大智慧神通之力，調伏剛彊眾生，知苦樂法，各遣侍者，問訊世尊。
+                一時，佛在忉利天，為母說法。爾時，十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。讚歎釋迦牟尼佛，能於五濁惡世，現不可思議大智慧神通之力，調伏剛彊眾生，知苦樂法，各遣侍者，問訊世尊。是時，
               </div>
             </div>
 
-            {/* 一體化極簡控制工具列 */}
-            <div 
-              className="reading-controls-panel"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.65rem',
-                padding: '0.75rem 0.85rem',
-                backgroundColor: '#f8f7f5',
-                boxSizing: 'border-box'
-              }}
-            >
-              {/* 1. 主題 */}
-              <div className="compact-ctrl-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
-                <div className="compact-ctrl-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666666', width: '52px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Palette size={14} />
-                  <span>主題</span>
-                </div>
-                <div className="compact-ctrl-items" style={{ display: 'flex', gap: '0.4rem', flex: 1, minWidth: 0 }}>
-                  {[
-                    { id: 'ivory', label: '象牙白', bg: '#fdfbf7' },
-                    { id: 'parchment', label: '羊皮紙', bg: '#f4ecd8' },
-                    { id: 'comfort', label: '舒服', bg: '#c7edcc' },
-                    { id: 'ebony', label: '烏木', bg: '#1a1a1a' }
-                  ].map(t => {
-                    const isActive = settings.theme === t.id;
-                    return (
-                      <div
-                        key={`compact-theme-${t.id}`}
-                        className={`compact-opt-btn ${isActive ? 'active' : ''}`}
-                        onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
-                        title={t.label}
-                        style={{
-                          flex: '1 1 0px',
-                          minWidth: 0,
-                          padding: '0.42rem 0.2rem',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          backgroundColor: isActive ? 'rgba(140, 75, 39, 0.1)' : '#ffffff',
-                          border: isActive ? '1px solid #8c4b27' : '1px solid rgba(0, 0, 0, 0.13)',
-                          boxShadow: isActive ? '0 1px 3px rgba(140, 75, 39, 0.18)' : 'none'
-                        }}
-                      >
-                        <div
-                          className="compact-color-circle"
-                          style={{
-                            width: '22px',
-                            height: '22px',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: t.bg,
-                            border: isActive ? '2px solid var(--text-primary, #333)' : '1px solid rgba(0, 0, 0, 0.18)',
-                            color: t.id === 'ebony' ? '#ffffff' : '#000000'
-                          }}
-                        >
-                          {isActive && <Check size={12} strokeWidth={3} />}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+            {/* 2x2 對稱膠囊控制列 */}
+            <div className="reading-controls-grid-2x2">
+              {/* Row 1, Left: 字體膠囊 [ 宋/明 | 黑體 | 楷體 ] */}
+              <div className="segmented-pill-capsule">
+                {[
+                  { id: 'default', name: '宋/明', fontFamily: 'var(--font-serif)' },
+                  { id: 'jhenghei', name: '黑體', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' },
+                  { id: 'kaiti', name: '楷體', fontFamily: '"CBETASupplement", "標楷體", "BiauKai", serif' }
+                ].map(f => {
+                  const rawFont = settings.fontFamily || 'default';
+                  const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold' || rawFont === 'kaiti') ? 'kaiti' : (rawFont === 'jhenghei' ? 'jhenghei' : 'default');
+                  const isActive = currentFont === f.id;
+                  return (
+                    <button
+                      key={`pill-font-${f.id}`}
+                      type="button"
+                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => {
+                        if (f.id === 'kaiti') {
+                          loadEduKaiFontOnDemand();
+                        }
+                        onSave({ ...settings, fontFamily: f.id as any });
+                      }}
+                      style={{ fontFamily: f.fontFamily }}
+                    >
+                      {f.name}
+                    </button>
+                  );
+                })}
               </div>
 
-              {/* 2. 字體 */}
-              <div className="compact-ctrl-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
-                <div className="compact-ctrl-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666666', width: '52px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Type size={14} />
-                  <span>字體</span>
+              {/* Row 1, Right: 大小膠囊 [ A- | 24px | A+ ] */}
+              <div className="segmented-pill-capsule">
+                <button
+                  type="button"
+                  className="segmented-pill-btn"
+                  onClick={() => onSave({ ...settings, fontSize: Math.max(12, (settings.fontSize || 22) - 1) })}
+                  title="縮小字體 (A-)"
+                  style={{ fontWeight: 700 }}
+                >
+                  A-
+                </button>
+                <div className="segmented-pill-val">
+                  {settings.fontSize || 22}px
                 </div>
-                <div className="compact-ctrl-items" style={{ display: 'flex', gap: '0.4rem', flex: 1, minWidth: 0 }}>
-                  {[
-                    { id: 'default', name: '宋/明', fontFamily: 'var(--font-serif)' },
-                    { id: 'jhenghei', name: '正黑', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' },
-                    { id: 'iansui', name: '芫荽', fontFamily: '"Iansui", "Klee One", serif' },
-                    { id: 'kaiti', name: '標楷', fontFamily: '"CBETASupplement", "標楷體", "BiauKai", serif' }
-                  ].map(f => {
-                    const rawFont = settings.fontFamily || 'default';
-                    const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold') ? 'kaiti' : rawFont;
-                    const isActive = currentFont === f.id;
-                    return (
-                      <div
-                        key={`compact-font-${f.id}`}
-                        className={`compact-opt-btn ${isActive ? 'active' : ''}`}
-                        onClick={() => {
-                          if (f.id === 'kaiti') {
-                            loadEduKaiFontOnDemand();
-                          }
-                          onSave({ ...settings, fontFamily: f.id as any });
-                        }}
-                        style={{
-                          flex: '1 1 0px',
-                          minWidth: 0,
-                          padding: '0.42rem 0.2rem',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          fontFamily: f.fontFamily,
-                          fontSize: '0.82rem',
-                          backgroundColor: isActive ? 'rgba(140, 75, 39, 0.1)' : '#ffffff',
-                          border: isActive ? '1px solid #8c4b27' : '1px solid rgba(0, 0, 0, 0.13)',
-                          color: isActive ? '#7a3e1e' : '#333333',
-                          fontWeight: isActive ? 700 : 'normal',
-                          boxShadow: isActive ? '0 1px 3px rgba(140, 75, 39, 0.18)' : 'none'
-                        }}
-                      >
-                        {f.name}
-                      </div>
-                    );
-                  })}
-                </div>
+                <button
+                  type="button"
+                  className="segmented-pill-btn"
+                  onClick={() => onSave({ ...settings, fontSize: Math.min(36, (settings.fontSize || 22) + 1) })}
+                  title="放大字體 (A+)"
+                  style={{ fontWeight: 700 }}
+                >
+                  A+
+                </button>
               </div>
 
-              {/* 3. 行高 */}
-              <div className="compact-ctrl-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
-                <div className="compact-ctrl-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666666', width: '52px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <MoveVertical size={14} />
-                  <span>行高</span>
-                </div>
-                <div className="compact-ctrl-items" style={{ display: 'flex', gap: '0.4rem', flex: 1, minWidth: 0 }}>
-                  {[1.6, 1.8, 2.0, 2.2].map(lh => {
-                    const isActive = settings.lineHeight === lh;
-                    return (
-                      <div
-                        key={`compact-lh-${lh}`}
-                        className={`compact-opt-btn ${isActive ? 'active' : ''}`}
-                        onClick={() => onSave({ ...settings, lineHeight: lh })}
-                        style={{
-                          flex: '1 1 0px',
-                          minWidth: 0,
-                          padding: '0.42rem 0.2rem',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          fontSize: '0.8rem',
-                          backgroundColor: isActive ? 'rgba(140, 75, 39, 0.1)' : '#ffffff',
-                          border: isActive ? '1px solid #8c4b27' : '1px solid rgba(0, 0, 0, 0.13)',
-                          color: isActive ? '#7a3e1e' : '#333333',
-                          fontWeight: isActive ? 700 : 'normal',
-                          boxShadow: isActive ? '0 1px 3px rgba(140, 75, 39, 0.18)' : 'none'
-                        }}
-                      >
-                        {lh.toFixed(1)}
-                      </div>
-                    );
-                  })}
-                </div>
+              {/* Row 2, Left: 行高膠囊 [ 1.6 | 1.8 | 2.0 ] */}
+              <div className="segmented-pill-capsule">
+                {[1.6, 1.8, 2.0].map(lh => {
+                  const isActive = settings.lineHeight === lh || (lh === 2.0 && settings.lineHeight > 1.9);
+                  return (
+                    <button
+                      key={`pill-lh-${lh}`}
+                      type="button"
+                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => onSave({ ...settings, lineHeight: lh })}
+                    >
+                      {lh.toFixed(1)}
+                    </button>
+                  );
+                })}
               </div>
 
-              {/* 4. 邊距 */}
-              <div className="compact-ctrl-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
-                <div className="compact-ctrl-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666666', width: '52px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <MoveHorizontal size={14} />
-                  <span>邊距</span>
-                </div>
-                <div className="compact-ctrl-items" style={{ display: 'flex', gap: '0.4rem', flex: 1, minWidth: 0 }}>
-                  {paddings.map(p => {
-                    const isActive = settings.padding === p;
-                    return (
-                      <div
-                        key={`compact-pad-${p}`}
-                        className={`compact-opt-btn ${isActive ? 'active' : ''}`}
-                        onClick={() => onSave({ ...settings, padding: p })}
-                        style={{
-                          flex: '1 1 0px',
-                          minWidth: 0,
-                          padding: '0.42rem 0.2rem',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          fontSize: '0.8rem',
-                          backgroundColor: isActive ? 'rgba(140, 75, 39, 0.1)' : '#ffffff',
-                          border: isActive ? '1px solid #8c4b27' : '1px solid rgba(0, 0, 0, 0.13)',
-                          color: isActive ? '#7a3e1e' : '#333333',
-                          fontWeight: isActive ? 700 : 'normal',
-                          boxShadow: isActive ? '0 1px 3px rgba(140, 75, 39, 0.18)' : 'none'
-                        }}
-                      >
-                        {p}%
-                      </div>
-                    );
-                  })}
-                </div>
+              {/* Row 2, Right: 邊距膠囊 [ 5% | 10% | 15% ] */}
+              <div className="segmented-pill-capsule">
+                {[5, 10, 15].map(p => {
+                  const isActive = settings.padding === p || (p === 15 && settings.padding >= 15);
+                  return (
+                    <button
+                      key={`pill-pad-${p}`}
+                      type="button"
+                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => onSave({ ...settings, padding: p })}
+                    >
+                      {p}%
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          {/* 3. 畫重點設定 */}
+          {/* 3. 畫重點設定 (左右 1:1 對稱分段膠囊 + 即時同步筆刷色) */}
           <div className="settings-section">
             <div className="settings-section-title">畫重點設定</div>
             
-            {/* 筆刷顏色選擇 (4個等分項目) */}
-            <div className="settings-subsection-title" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>筆刷顏色</div>
-            <div className="visual-options-row">
-              {(['yellow', 'red', 'gray', 'blue'] as const).map((color) => {
-                const colorMap = {
-                  yellow: '#fbbf24',
-                  red: '#f87171',
-                  gray: '#9ca3af',
-                  blue: '#60a5fa'
-                };
-                const labelMap = {
-                  yellow: '淺黃',
-                  red: '淺紅',
-                  gray: '淺灰',
-                  blue: '淺藍'
-                };
-                const isActive = settings.highlightColor === color;
-                return (
-                  <div
-                    key={`hl-color-${color}`}
-                    className={`visual-option-card ${isActive ? 'active' : ''}`}
-                    onClick={() => onSave({ ...settings, highlightColor: color })}
-                  >
-                    <div
-                      className="color-circle"
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        backgroundColor: colorMap[color],
-                        border: isActive ? '2px solid var(--text-primary)' : '1px solid var(--reader-border)',
-                        boxShadow: isActive ? '0 0 6px rgba(0,0,0,0.15)' : 'none',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: settings.theme === 'ebony' ? '#000' : '#fff'
-                      }}
+            <div 
+              className="highlight-controls-grid-2col"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '0.65rem',
+                width: '100%',
+                boxSizing: 'border-box'
+              }}
+            >
+              {/* 左側：4 色圓潤膠囊列 */}
+              <div className="segmented-pill-capsule">
+                {(['yellow', 'red', 'gray', 'blue'] as const).map((color) => {
+                  const colorMap = {
+                    yellow: '#fbbf24',
+                    red: '#f87171',
+                    gray: '#9ca3af',
+                    blue: '#60a5fa'
+                  };
+                  const labelMap = {
+                    yellow: '淺黃',
+                    red: '淺紅',
+                    gray: '淺灰',
+                    blue: '淺藍'
+                  };
+                  const isActive = settings.highlightColor === color;
+                  return (
+                    <button
+                      key={`hl-pill-color-${color}`}
+                      type="button"
+                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => onSave({ ...settings, highlightColor: color })}
+                      title={labelMap[color]}
+                      style={{ padding: '0.35rem 0.1rem' }}
                     >
-                      {isActive && <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>✓</span>}
-                    </div>
-                    <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
-                      {labelMap[color]}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+                      <div
+                        style={{
+                          width: '18px',
+                          height: '18px',
+                          borderRadius: '50%',
+                          backgroundColor: colorMap[color],
+                          border: isActive ? '1.5px solid var(--text-primary)' : '1px solid var(--reader-border)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.15)' : 'none'
+                        }}
+                      >
+                        {isActive && (
+                          <Check 
+                            size={10} 
+                            strokeWidth={3.5} 
+                            style={{ color: color === 'yellow' ? '#2c2016' : '#ffffff' }} 
+                          />
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
 
-            {/* 粗細模式選擇 (4個等分項目) */}
-            <div className="settings-subsection-title" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '1rem 0 0.5rem 0' }}>粗細與標註模式</div>
-            <div className="visual-options-row">
-              {(['underline', 'bottom-half', 'full', 'border'] as const).map((style) => {
-                const labelMap = {
-                  underline: '底線',
-                  'bottom-half': '半塗',
-                  full: '全塗',
-                  border: '方框'
-                };
-                
-                const currentHex = 
-                  settings.highlightColor === 'yellow' ? '#fbbf24' :
-                  settings.highlightColor === 'red' ? '#f87171' :
-                  settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
+              {/* 右側：標註模式 4 分段膠囊 (依左側顏色即時同步呈現相應樣式) */}
+              <div className="segmented-pill-capsule">
+                {(() => {
+                  const hlHex = 
+                    settings.highlightColor === 'yellow' ? '#fbbf24' :
+                    settings.highlightColor === 'red' ? '#f87171' :
+                    settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
 
-                const currentRgba = 
-                  settings.highlightColor === 'yellow' ? 'rgba(250, 204, 21, 0.65)' :
-                  settings.highlightColor === 'red' ? 'rgba(248, 113, 113, 0.65)' :
-                  settings.highlightColor === 'gray' ? 'rgba(156, 163, 175, 0.65)' : 'rgba(96, 165, 250, 0.65)';
+                  const hlRgba = 
+                    settings.highlightColor === 'yellow' ? 'rgba(250, 204, 21, 0.65)' :
+                    settings.highlightColor === 'red' ? 'rgba(248, 113, 113, 0.65)' :
+                    settings.highlightColor === 'gray' ? 'rgba(156, 163, 175, 0.65)' : 'rgba(96, 165, 250, 0.65)';
 
-                const getPreviewStyle = () => {
-                  switch (style) {
-                    case 'underline':
-                      return { borderBottom: `2.5px solid ${currentHex}`, background: 'transparent' };
-                    case 'bottom-half':
-                      return { background: `linear-gradient(180deg, transparent 55%, ${currentRgba} 55%)` };
-                    case 'full':
-                      return { backgroundColor: currentRgba, borderRadius: '3px' };
-                    case 'border':
-                      return { border: `2.2px solid ${currentHex}`, borderRadius: '3px', padding: '0 2px' };
-                  }
-                };
+                  return (['underline', 'bottom-half', 'full', 'border'] as const).map((style) => {
+                    const labelMap = {
+                      underline: '底線',
+                      'bottom-half': '半塗',
+                      full: '全塗',
+                      border: '方框'
+                    };
+                    const isActive = settings.highlightStyle === style;
 
-                const isActive = settings.highlightStyle === style;
-                return (
-                  <div
-                    key={`hl-style-${style}`}
-                    className={`visual-option-card ${isActive ? 'active' : ''}`}
-                    onClick={() => onSave({ ...settings, highlightStyle: style })}
-                  >
-                    <div 
-                      className="style-preview-text" 
-                      style={{ 
-                        fontSize: '0.82rem', 
-                        fontFamily: 'var(--font-serif)',
-                        color: 'var(--text-primary)',
-                        padding: '1px 3px',
-                        ...getPreviewStyle()
-                      }}
-                    >
-                      經文
-                    </div>
-                    <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
-                      {labelMap[style]}
-                    </span>
-                  </div>
-                );
-              })}
+                    const renderStyleContent = () => {
+                      switch (style) {
+                        case 'underline':
+                          return (
+                            <span style={{ borderBottom: `2.5px solid ${hlHex}`, paddingBottom: '1px' }}>
+                              底線
+                            </span>
+                          );
+                        case 'bottom-half':
+                          return (
+                            <span style={{ background: `linear-gradient(180deg, transparent 52%, ${hlRgba} 52%)`, padding: '0 2px', borderRadius: '2px' }}>
+                              半塗
+                            </span>
+                          );
+                        case 'full':
+                          return (
+                            <span style={{ backgroundColor: hlRgba, borderRadius: '3px', padding: '1px 3px', color: (settings.highlightColor === 'yellow' && settings.theme === 'ebony') ? '#000000' : 'inherit' }}>
+                              全塗
+                            </span>
+                          );
+                        case 'border':
+                          return (
+                            <span style={{ border: `1.8px solid ${hlHex}`, borderRadius: '3px', padding: '0 2px' }}>
+                              方框
+                            </span>
+                          );
+                      }
+                    };
+
+                    return (
+                      <button
+                        key={`hl-style-${style}`}
+                        type="button"
+                        className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
+                        onClick={() => onSave({ ...settings, highlightStyle: style })}
+                        title={labelMap[style]}
+                        style={{
+                          padding: '0.42rem 0.1rem',
+                          fontSize: '0.8rem',
+                          fontWeight: isActive ? 700 : 500
+                        }}
+                      >
+                        {renderStyleContent()}
+                      </button>
+                    );
+                  });
+                })()}
+              </div>
             </div>
           </div>
 
-          {/* 💡 設定閱讀時間 (1:1:1:1 4 個按鍵，極簡時鐘繪圖) */}
+          {/* 💡 設定閱讀時間 (10~60 分鐘 6 個時段，圓潤膠囊直排時鐘繪圖) */}
           <div className="settings-section">
             <div className="settings-section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span>設定閱讀時間 <span style={{ fontSize: '0.8rem', opacity: 0.75, fontWeight: 'normal' }}>(護眼模式)</span></span>
@@ -574,48 +525,68 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 </span>
               )}
             </div>
-            <div className="visual-options-row">
-              {([15, 30, 45, 60] as const).map((mins) => {
+            <div className="segmented-pill-capsule" style={{ padding: '3px' }}>
+              {([10, 20, 30, 40, 50, 60] as const).map((mins) => {
                 const isActive = timerState.duration === mins && timerState.remainingSeconds > 0;
                 
-                // 依據 15/30/45/60 繪製專屬扇形與時針 (1/4, 2/4, 3/4, 4/4 灰色區塊與 12點起點指針)
+                // 依據 10/20/30/40/50/60 繪製專屬扇形與時針
                 const renderClockSvg = () => {
                   switch (mins) {
-                    case 15:
+                    case 10:
                       return (
-                        <svg className="padding-svg" viewBox="0 0 36 36">
-                          <circle cx="18" cy="18" r="13" className="svg-border" fill="none" stroke="currentColor" strokeWidth="1.6" />
-                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 31 18 Z" fill="currentColor" opacity="0.3" />
+                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
+                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 29.26 11.5 Z" fill="currentColor" opacity="0.35" />
                           <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <line x1="18" y1="18" x2="26" y2="18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <line x1="18" y1="18" x2="25.8" y2="13.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                        </svg>
+                      );
+                    case 20:
+                      return (
+                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
+                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 29.26 24.5 Z" fill="currentColor" opacity="0.35" />
+                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <line x1="18" y1="18" x2="25.8" y2="22.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                           <circle cx="18" cy="18" r="1.5" fill="currentColor" />
                         </svg>
                       );
                     case 30:
                       return (
-                        <svg className="padding-svg" viewBox="0 0 36 36">
-                          <circle cx="18" cy="18" r="13" className="svg-border" fill="none" stroke="currentColor" strokeWidth="1.6" />
-                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 18 31 Z" fill="currentColor" opacity="0.3" />
+                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
+                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 18 31 Z" fill="currentColor" opacity="0.35" />
                           <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <line x1="18" y1="18" x2="18" y2="28" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <line x1="18" y1="18" x2="18" y2="27" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                           <circle cx="18" cy="18" r="1.5" fill="currentColor" />
                         </svg>
                       );
-                    case 45:
+                    case 40:
                       return (
-                        <svg className="padding-svg" viewBox="0 0 36 36">
-                          <circle cx="18" cy="18" r="13" className="svg-border" fill="none" stroke="currentColor" strokeWidth="1.6" />
-                          <path d="M 18 18 L 18 5 A 13 13 0 1 1 5 18 Z" fill="currentColor" opacity="0.3" />
+                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
+                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                          <path d="M 18 18 L 18 5 A 13 13 0 1 1 6.74 24.5 Z" fill="currentColor" opacity="0.35" />
                           <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <line x1="18" y1="18" x2="10" y2="18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <line x1="18" y1="18" x2="10.2" y2="22.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                        </svg>
+                      );
+                    case 50:
+                      return (
+                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
+                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                          <path d="M 18 18 L 18 5 A 13 13 0 1 1 6.74 11.5 Z" fill="currentColor" opacity="0.35" />
+                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                          <line x1="18" y1="18" x2="10.2" y2="13.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                           <circle cx="18" cy="18" r="1.5" fill="currentColor" />
                         </svg>
                       );
                     case 60:
                       return (
-                        <svg className="padding-svg" viewBox="0 0 36 36">
-                          <circle cx="18" cy="18" r="13" className="svg-border" fill="none" stroke="currentColor" strokeWidth="1.6" />
-                          <circle cx="18" cy="18" r="13" fill="currentColor" opacity="0.3" />
+                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
+                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                          <circle cx="18" cy="18" r="13" fill="currentColor" opacity="0.35" />
                           <line x1="18" y1="18" x2="18" y2="7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                           <circle cx="18" cy="18" r="1.5" fill="currentColor" />
                         </svg>
@@ -624,319 +595,188 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 };
 
                 return (
-                  <div
+                  <button
                     key={`timer-${mins}`}
-                    className={`visual-option-card ${isActive ? 'active' : ''}`}
+                    type="button"
+                    className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
                     onClick={() => readingTimer.setTimer(mins)}
                     title={isActive ? `取消 ${mins} 分鐘閱讀計時` : `設定 ${mins} 分鐘閱讀計時`}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '2px',
+                      padding: '0.45rem 0.15rem'
+                    }}
                   >
                     {renderClockSvg()}
-                    <span className="visual-option-label" style={{ fontSize: '0.75rem' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: isActive ? 700 : 500 }}>
                       {mins}分
                     </span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
           </div>
 
-
-
-          {/* 6. 朗讀速度 (暫時隱藏) */}
-          {/* <div className="settings-section"> ... </div> */}
-
-          {/* 7. 資料備份與還原 */}
-          <div className="settings-section">
-            <div className="settings-section-title">資料備份與還原</div>
-            <div className="visual-options-row" style={{ alignItems: 'stretch' }}>
-              {/* 卡片 1: 完整備份 */}
-              <div
-                className="visual-option-card"
-                onClick={() => !isExporting && setShowBackupConfirm(true)}
-                style={{
-                  borderColor: isExporting ? undefined : 'rgba(59, 130, 246, 0.35)',
-                  backgroundColor: 'rgba(59, 130, 246, 0.04)',
-                  opacity: isExporting ? 0.6 : 1,
-                  padding: '0.7rem 0.3rem'
-                }}
-              >
-                <div 
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#3b82f6'
-                  }}
-                >
-                  <Database size={16} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#2563eb', fontWeight: 700 }}>
-                    完整備份
-                  </span>
-                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    含經文與劃線
-                  </span>
-                </div>
-              </div>
-
-              {/* 卡片 2: 輕量備份 */}
-              <div
-                className="visual-option-card"
-                onClick={() => !isExporting && handleExport(false)}
-                style={{
-                  borderColor: isExporting ? undefined : 'rgba(16, 185, 129, 0.35)',
-                  backgroundColor: 'rgba(16, 185, 129, 0.04)',
-                  opacity: isExporting ? 0.6 : 1,
-                  padding: '0.7rem 0.3rem'
-                }}
-              >
-                <div 
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(16, 185, 129, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#10b981'
-                  }}
-                >
-                  <FileText size={16} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#059669', fontWeight: 700 }}>
-                    輕量備份
-                  </span>
-                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    僅劃線與設定
-                  </span>
-                </div>
-              </div>
-
-              {/* 分隔線 | */}
-              <div 
-                style={{ 
-                  width: '1px', 
-                  backgroundColor: 'var(--reader-border, rgba(0,0,0,0.18))', 
-                  height: '36px', 
-                  alignSelf: 'center',
-                  margin: '0 0.15rem',
-                  opacity: 0.5
-                }} 
-              />
-
-              {/* 卡片 3: 還原備份 */}
-              <label
-                className="visual-option-card"
-                style={{
-                  borderColor: isImporting ? undefined : 'rgba(245, 158, 11, 0.35)',
-                  backgroundColor: 'rgba(245, 158, 11, 0.04)',
-                  opacity: isImporting ? 0.6 : 1,
-                  cursor: isImporting ? 'default' : 'pointer',
-                  padding: '0.7rem 0.3rem'
-                }}
-              >
-                <div 
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(245, 158, 11, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#d97706'
-                  }}
-                >
-                  <Upload size={16} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#d97706', fontWeight: 700 }}>
-                    {isImporting ? '還原中...' : '還原備份'}
-                  </span>
-                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    匯入 .json 檔
-                  </span>
-                </div>
-                <input 
-                  type="file" 
-                  accept=".json" 
-                  style={{ display: 'none' }} 
-                  onChange={handleImportFile}
-                  disabled={isImporting}
-                />
-              </label>
-            </div>
-
-            {backupMsg && (
-              <div style={{ fontSize: '0.78rem', color: 'var(--accent-color, #2b6cb0)', marginTop: '0.2rem', textAlign: 'center' }}>
-                {backupMsg}
-              </div>
-            )}
-          </div>
-
-          {/* 8. 書籍與儲存空間 */}
-          <div className="settings-section">
-            <div className="settings-section-title">書籍與儲存空間</div>
-
-            {/* 容量狀態資訊框：小字 / 粗體 / 有方框 / 背景灰色 */}
+          {/* 6. 進階功能 (可點選 + / - 平滑展開與收合，預設收合) */}
+          <div className="settings-section advanced-settings-section">
             <div 
+              className="settings-section-title"
               style={{
-                padding: '0.5rem 0.8rem',
-                backgroundColor: 'rgba(0, 0, 0, 0.035)',
-                border: '1px solid var(--reader-border, rgba(0, 0, 0, 0.12))',
-                borderRadius: '8px',
-                marginBottom: '0.75rem',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: 'var(--text-main, #333)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.45rem'
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                userSelect: 'none',
+                paddingRight: '0.2rem'
               }}
+              onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
             >
-              <HardDrive size={15} style={{ color: 'var(--text-muted)' }} />
-              <span>已下載共 {storageStats ? storageStats.bookCount : 0} 本書，總容量約 {storageStats ? storageStats.formattedUsed : '0 MB'}</span>
+              <span>進階功能</span>
+              <button
+                type="button"
+                className="advanced-toggle-btn"
+              >
+                {isAdvancedOpen ? '− 收合' : '+ 展開'}
+              </button>
             </div>
 
-            {/* 操作按鈕卡片：一鍵壓縮 | 清理快取 | 直立線 | 清空經典 */}
-            <div className="visual-options-row">
-              {/* 第1個: 一鍵壓縮 */}
-              <div 
-                className="visual-option-card"
-                onClick={() => !isCompressing && handleCompressAll()}
-                style={{
-                  opacity: isCompressing ? 0.6 : 1,
-                  padding: '0.7rem 0.3rem',
-                  cursor: isCompressing ? 'default' : 'pointer'
-                }}
-              >
-                <div 
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--text-main, #333)'
-                  }}
-                >
-                  <Archive size={16} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: 'var(--text-main, #333)', fontWeight: 600 }}>
-                    {isCompressing ? '壓縮中...' : '一鍵壓縮'}
-                  </span>
-                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    高比例節省容量
-                  </span>
-                </div>
-              </div>
+            {isAdvancedOpen && (
+              <div className="advanced-cards-container animate-fade-in">
+                {/* 第一組：書籍與儲存空間 */}
+                <div className="advanced-group-card">
+                  <div className="advanced-group-header">
+                    <div className="advanced-group-title">書籍與儲存空間</div>
+                    <div className="advanced-group-badge">
+                      已下載 {storageStats ? storageStats.bookCount : 0} 本書 · 容量 {storageStats ? storageStats.formattedUsed : '0 MB'}
+                    </div>
+                  </div>
 
-              {/* 第2個: 清理快取 */}
-              <div
-                className="visual-option-card"
-                onClick={handleClearCache}
-                style={{
-                  padding: '0.7rem 0.3rem',
-                  cursor: 'pointer'
-                }}
-              >
-                <div 
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--text-main, #333)'
-                  }}
-                >
-                  <RotateCw size={16} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: 'var(--text-main, #333)', fontWeight: 600 }}>
-                    清理快取
-                  </span>
-                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    釋放 HTTP 暫存
-                  </span>
-                </div>
-              </div>
+                  <div className="advanced-action-list">
+                    {/* 項目 1: 一鍵壓縮 */}
+                    <div className="advanced-action-item">
+                      <div className="advanced-action-info">
+                        <div className="advanced-action-title">一鍵壓縮</div>
+                        <div className="advanced-action-desc">採用 Gzip 壓縮本地離線經文，大幅釋放裝置儲存空間</div>
+                      </div>
+                      <button
+                        type="button"
+                        className="advanced-action-pill-btn"
+                        disabled={isCompressing}
+                        onClick={handleCompressAll}
+                      >
+                        {isCompressing ? '壓縮中...' : '壓縮 >'}
+                      </button>
+                    </div>
 
-              {/* 清理快取與清空經典之間的直立分隔線 | */}
-              <div 
-                style={{ 
-                  width: '1px', 
-                  backgroundColor: 'var(--reader-border, rgba(0,0,0,0.18))', 
-                  height: '36px', 
-                  alignSelf: 'center',
-                  margin: '0 0.15rem',
-                  opacity: 0.5
-                }} 
-              />
+                    {/* 項目 2: 清理快取 */}
+                    <div className="advanced-action-item">
+                      <div className="advanced-action-info">
+                        <div className="advanced-action-title">清理快取</div>
+                        <div className="advanced-action-desc">清理 ServiceWorker 與 HTTP 網路快取，釋放暫存空間</div>
+                      </div>
+                      <button
+                        type="button"
+                        className="advanced-action-pill-btn"
+                        onClick={handleClearCache}
+                      >
+                        {'清理 >'}
+                      </button>
+                    </div>
 
-              {/* 第3個: 清空經典 */}
-              <div
-                className="visual-option-card"
-                onClick={handleClearAllBooks}
-                style={{
-                  borderColor: 'rgba(239, 68, 68, 0.35)',
-                  backgroundColor: 'rgba(239, 68, 68, 0.04)',
-                  padding: '0.7rem 0.3rem',
-                  cursor: 'pointer'
-                }}
-              >
-                <div 
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#dc2626'
-                  }}
-                >
-                  <Trash2 size={16} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-                  <span className="visual-option-label" style={{ fontSize: '0.8rem', color: '#dc2626', fontWeight: 700 }}>
-                    清空經典
-                  </span>
-                  <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                    清空並恢復初始設定
-                  </span>
-                </div>
-              </div>
-            </div>
+                    {/* 項目 3: 清空經典 */}
+                    <div className="advanced-action-item">
+                      <div className="advanced-action-info">
+                        <div className="advanced-action-title" style={{ color: '#dc2626' }}>清空經典</div>
+                        <div className="advanced-action-desc">清空所有已下載經文並將閱讀設定恢復為初始預設值</div>
+                      </div>
+                      <button
+                        type="button"
+                        className="advanced-action-pill-btn danger"
+                        onClick={handleClearAllBooks}
+                      >
+                        {'清空 >'}
+                      </button>
+                    </div>
+                  </div>
 
-            {/* 最下面提示訊息：僅打勾勾小圖與簡潔文字，不用底色和方框 */}
-            {storageMsg && (
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  gap: '0.35rem',
-                  fontSize: '0.8rem', 
-                  color: 'var(--text-main, #333)', 
-                  marginTop: '0.6rem' 
-                }}
-              >
-                <CheckCircle2 size={16} style={{ color: '#10b981', flexShrink: 0 }} />
-                <span>{storageMsg}</span>
+                  {storageMsg && (
+                    <div className="advanced-status-msg">
+                      <CheckCircle2 size={14} style={{ color: '#10b981', flexShrink: 0 }} />
+                      <span>{storageMsg}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* 第二組：資料備份與還原 */}
+                <div className="advanced-group-card">
+                  <div className="advanced-group-header">
+                    <div className="advanced-group-title">資料備份與還原</div>
+                  </div>
+
+                  <div className="advanced-action-list">
+                    {/* 項目 1: 完整備份 */}
+                    <div className="advanced-action-item">
+                      <div className="advanced-action-info">
+                        <div className="advanced-action-title">完整備份</div>
+                        <div className="advanced-action-desc">匯出包含全經文快取、讀者劃線筆記與設定之 .json 檔案</div>
+                      </div>
+                      <button
+                        type="button"
+                        className="advanced-action-pill-btn"
+                        disabled={isExporting}
+                        onClick={handleTriggerFullBackup}
+                      >
+                        {isExporting ? '備份中...' : '備份 >'}
+                      </button>
+                    </div>
+
+                    {/* 項目 2: 輕量備份 */}
+                    <div className="advanced-action-item">
+                      <div className="advanced-action-info">
+                        <div className="advanced-action-title">輕量備份</div>
+                        <div className="advanced-action-desc">僅備份讀者劃線重點、閱讀日誌與個人設定（不含經文本文）</div>
+                      </div>
+                      <button
+                        type="button"
+                        className="advanced-action-pill-btn"
+                        disabled={isExporting}
+                        onClick={() => !isExporting && handleExport(false)}
+                      >
+                        {isExporting ? '備份中...' : '備份 >'}
+                      </button>
+                    </div>
+
+                    {/* 項目 3: 還原備份 */}
+                    <div className="advanced-action-item">
+                      <div className="advanced-action-info">
+                        <div className="advanced-action-title">還原備份</div>
+                        <div className="advanced-action-desc">匯入先前備份之 .json 檔案以恢復經文、筆記與設定</div>
+                      </div>
+                      <label 
+                        className="advanced-action-pill-btn" 
+                        style={{ cursor: isImporting ? 'default' : 'pointer' }}
+                      >
+                        {isImporting ? '還原中...' : '匯入 >'}
+                        <input
+                          type="file"
+                          accept=".json"
+                          style={{ display: 'none' }}
+                          onChange={handleImportFile}
+                          disabled={isImporting}
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {backupMsg && (
+                    <div className="advanced-status-msg">
+                      <CheckCircle2 size={14} style={{ color: '#2563eb', flexShrink: 0 }} />
+                      <span>{backupMsg}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -1131,9 +971,12 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span style={{ color: 'var(--text-muted, #666)', textAlign: 'right' }}>預計備份容量：</span>
                   <strong style={{ color: 'var(--text-main, #222)', textAlign: 'left' }}>共 {storageStats ? storageStats.formattedUsed : '0 MB'}</strong>
 
-                  <span style={{ color: 'var(--text-muted, #666)', textAlign: 'right' }}>預計備份時間：</span>
+                  <span style={{ color: 'var(--text-muted, #666)', textAlign: 'right' }}>預估備份時間：</span>
                   <strong style={{ color: '#2563eb', textAlign: 'left' }}>{getEstimatedBackupTime(storageStats?.usedBytes)}</strong>
                 </div>
+                <p style={{ margin: '0.75rem 0 0 0', textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-main, #333)', fontWeight: 600 }}>
+                  備份共 {storageStats ? storageStats.bookCount : 0} 本經書，共 {storageStats ? storageStats.formattedUsed : '0 MB'}，時間約 {getEstimatedMinutes(storageStats?.usedBytes)} 分鐘，請問是否繼續？
+                </p>
               </div>
 
               <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '0.9rem' }}>
@@ -1314,16 +1157,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>App 閱讀器介面更新</span>
                 </div>
 
-                {/* 最新 App 版本 (v4.2.7) 直接顯示 */}
+                {/* 最新 App 版本 (v4.2.8) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.2.7</span>
-                    <span className="changelog-date">(2026-09-13)</span>
+                    <span>⭐ App: v4.2.8</span>
+                    <span className="changelog-date">(2026-09-14)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 閱讀設定升級「閱讀版面預覽」工作台，即時連動主題/字體/行高/邊距。</li>
-                    <li>• 其他設定全面改版為 iOS 風格直覺開關（Toggle Switches）與雙層說明。</li>
-                    <li>• 新增每日閱讀日誌（閱讀天數、閱讀時數、閱讀本數與每日精進日曆）。</li>
+                    <li>• 閱讀設定新增「進階功能」收折面板，空間管理與備份還原分組呈現。</li>
+                    <li>• 首頁風格動作膠囊按鈕（壓縮、清理、清空、備份、匯入），移除冗餘圖示。</li>
+                    <li>• 完整備份新增耗時預估提示，超過 3 分鐘跳窗確認，極速模式直接匯出。</li>
                   </ul>
                 </div>
 
@@ -1346,6 +1189,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 App 歷史版本 */}
                 {showAppHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">App: v4.2.7 <span className="changelog-date">(2026-09-13)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 閱讀設定升級「閱讀版面預覽」工作台，即時連動主題/字體/字級/行高/邊距。</li>
+                        <li>• 其他設定全面改版為 iOS 風格直覺開關（Toggle Switches）與雙層說明。</li>
+                        <li>• 新增每日閱讀日誌（閱讀天數、閱讀時數、閱讀本數與每日精進日曆）。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.2.6 <span className="changelog-date">(2026-08-25)</span></div>
                       <ul className="changelog-list">
