@@ -265,6 +265,7 @@ export interface AppSettings {
     ttsHighlight: boolean; // 朗讀時 Highlight
     showNoteInText?: boolean; // 顯示筆記內容 (經文中顯示 (筆記：xxx))
     autoResumeProgress?: boolean; // 開啟經文時自動回到上次閱讀位置 (預設 true)
+    showFloatingTitle?: boolean; // 顯示閱讀頁經文經題 (下滑時頂部顯示經名膠囊，預設 false)
   };
   ttsVoice: string; // 選定的 Voice Name
   ttsSpeed: number; // 播放速度 0.5 ~ 2
@@ -290,7 +291,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
     pageNumber: true,            // 預設顯示頁碼
     ttsHighlight: true,
     showNoteInText: false,       // 預設關閉「顯示筆記內容」
-    autoResumeProgress: true     // 預設開啟「自動回到上次閱讀位置」
+    autoResumeProgress: true,    // 預設開啟「自動回到上次閱讀位置」
+    showFloatingTitle: false     // 預設關閉「顯示閱讀頁經文經題」
   },
   ttsVoice: '',
   ttsSpeed: 1.0,
@@ -335,6 +337,9 @@ export async function getSettings(): Promise<AppSettings> {
         }
         if (stored.customVisibleElements?.showNoteInText === undefined) {
           mergedCustom.showNoteInText = false;
+        }
+        if (stored.customVisibleElements?.showFloatingTitle === undefined) {
+          mergedCustom.showFloatingTitle = false;
         }
         resolve({
           ...DEFAULT_SETTINGS,

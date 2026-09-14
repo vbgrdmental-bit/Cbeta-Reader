@@ -65,6 +65,13 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
   // 💡 進階功能折疊開關 (預設收合)
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
+  // 💡 按需動態加載教育部標楷體 (Lazy-Load WOFF2)
+  useEffect(() => {
+    if (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') {
+      loadEduKaiFontOnDemand();
+    }
+  }, [settings.fontFamily]);
+
   useEffect(() => {
     getStorageStats().then(setStorageStats).catch(console.warn);
   }, []);
@@ -271,7 +278,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 boxSizing: 'border-box',
                 backgroundColor: settings.theme === 'ivory' ? '#faf7f0' : settings.theme === 'parchment' ? '#f1e5c9' : settings.theme === 'comfort' ? '#e3ebd9' : '#12161a',
                 color: settings.theme === 'ebony' ? '#d8dec9' : settings.theme === 'comfort' ? '#23351d' : settings.theme === 'parchment' ? '#3c2a1a' : '#2c2016',
-                fontFamily: (settings.fontFamily === 'jhenghei') ? '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' : (settings.fontFamily === 'iansui') ? '"Iansui", "Klee One", serif' : (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') ? '"CBETASupplement", "標楷體", "BiauKai", serif' : 'var(--font-serif)',
+                fontFamily: (settings.fontFamily === 'jhenghei') ? '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' : (settings.fontFamily === 'iansui') ? '"Iansui", "Klee One", serif' : (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') ? '"CBETASupplement", "MOE-EduKai", "TW-Kai-98", "TW-Kai", "標楷體", "BiauKai", "DFKai-SB", "STKaiti", "KaiTi", "Kaiti SC", "Kaiti TC", serif' : 'var(--font-serif)',
                 lineHeight: settings.lineHeight || 1.8,
                 padding: `0.9rem ${settings.padding || 10}%`,
                 fontSize: `${settings.fontSize || 22}px`,
@@ -292,7 +299,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {[
                   { id: 'default', name: '宋/明', fontFamily: 'var(--font-serif)' },
                   { id: 'jhenghei', name: '黑體', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' },
-                  { id: 'kaiti', name: '楷體', fontFamily: '"CBETASupplement", "標楷體", "BiauKai", serif' }
+                  { id: 'kaiti', name: '楷體', fontFamily: '"CBETASupplement", "MOE-EduKai", "TW-Kai-98", "TW-Kai", "標楷體", "BiauKai", "DFKai-SB", "STKaiti", "KaiTi", serif' }
                 ].map(f => {
                   const rawFont = settings.fontFamily || 'default';
                   const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold' || rawFont === 'kaiti') ? 'kaiti' : (rawFont === 'jhenghei' ? 'jhenghei' : 'default');
@@ -619,7 +626,148 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
             </div>
           </div>
 
-          {/* 6. 進階功能 (可點選 + / - 平滑展開與收合，預設收合) */}
+          {/* 6. 其他設定 */}
+          <div className="settings-section">
+            <div className="settings-section-title">其他設定</div>
+            <div className="settings-toggle-group">
+              {/* 1. 閱讀頁上下控制列 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => handleCheckboxChange('showReaderControls')}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">閱讀頁上下控制列</div>
+                  <div className="settings-toggle-desc">開啟時顯示頂部與底部工具列，關閉時隱藏以提供全螢幕閱讀體驗</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.customVisibleElements?.showReaderControls ?? true} 
+                    onChange={() => handleCheckboxChange('showReaderControls')}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
+
+              {/* 2. 自動接續閱讀 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => handleCheckboxChange('autoResumeProgress')}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">自動接續閱讀</div>
+                  <div className="settings-toggle-desc">開啟經文時自動回到上次閱讀段落，關閉時一律從頭開始閱讀</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
+                    onChange={() => handleCheckboxChange('autoResumeProgress')}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
+
+              {/* 3. 顯示筆記內容 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => handleCheckboxChange('showNoteInText')}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">顯示筆記內容</div>
+                  <div className="settings-toggle-desc">於經文段落下直接顯示您隨文記錄的感悟筆記與心得</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.customVisibleElements?.showNoteInText ?? false} 
+                    onChange={() => handleCheckboxChange('showNoteInText')}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
+
+              {/* 4. 每日閱讀日誌 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => {
+                  const updated = {
+                    ...settings,
+                    readingLogEnabled: !(settings.readingLogEnabled ?? false)
+                  };
+                  onSave(updated);
+                }}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">每日閱讀日誌</div>
+                  <div className="settings-toggle-desc">自動記錄每日閱讀時長與天數，並於首頁提供行事曆日誌入口</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.readingLogEnabled ?? false} 
+                    onChange={() => {
+                      const updated = {
+                        ...settings,
+                        readingLogEnabled: !(settings.readingLogEnabled ?? false)
+                      };
+                      onSave(updated);
+                    }}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
+
+              {/* 5. 顯示閱讀頁經文經題 */}
+              <div 
+                className="settings-toggle-row"
+                onClick={() => handleCheckboxChange('showFloatingTitle')}
+              >
+                <div className="settings-toggle-info">
+                  <div className="settings-toggle-title">顯示閱讀頁經文經題</div>
+                  <div className="settings-toggle-desc">下滑閱讀時於頂部顯示當前經名膠囊，滑回頂部時自動隱藏</div>
+                </div>
+                <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    checked={settings.customVisibleElements?.showFloatingTitle ?? false} 
+                    onChange={() => handleCheckboxChange('showFloatingTitle')}
+                  />
+                  <span className="settings-switch-slider" />
+                </label>
+              </div>
+            </div>
+
+            {/* Cbeta Reader 簡易功能導覽 按鈕 */}
+            {onReplayOnboarding && (
+              <div style={{ marginTop: '0.75rem', width: '100%' }}>
+                <button
+                  type="button"
+                  onClick={onReplayOnboarding}
+                  style={{
+                    width: '100%',
+                    padding: '0.6rem 0.8rem',
+                    borderRadius: '8px',
+                    border: '1.2px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
+                    backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.05))',
+                    color: 'var(--theme-accent, #8c4b27)',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.45rem',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <span>📖 Cbeta Reader 簡易功能導覽</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* 7. 進階功能 (可點選 + / - 平滑展開與收合，預設收合) */}
           <div className="settings-section advanced-settings-section">
             <div 
               className="settings-section-title"
@@ -777,128 +925,6 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     </div>
                   )}
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* 9. 其他設定 */}
-          <div className="settings-section">
-            <div className="settings-section-title">其他設定</div>
-            <div className="settings-toggle-group">
-              {/* 1. 閱讀頁上下控制列 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => handleCheckboxChange('showReaderControls')}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">閱讀頁上下控制列</div>
-                  <div className="settings-toggle-desc">開啟時顯示頂部與底部工具列，關閉時隱藏以提供全螢幕閱讀體驗</div>
-                </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.customVisibleElements?.showReaderControls ?? true} 
-                    onChange={() => handleCheckboxChange('showReaderControls')}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
-              </div>
-
-              {/* 2. 自動接續閱讀 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => handleCheckboxChange('autoResumeProgress')}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">自動接續閱讀</div>
-                  <div className="settings-toggle-desc">開啟經文時自動回到上次閱讀段落，關閉時一律從頭開始閱讀</div>
-                </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
-                    onChange={() => handleCheckboxChange('autoResumeProgress')}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
-              </div>
-
-              {/* 3. 顯示筆記內容 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => handleCheckboxChange('showNoteInText')}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">顯示筆記內容</div>
-                  <div className="settings-toggle-desc">於經文段落下直接顯示您隨文記錄的感悟筆記與心得</div>
-                </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.customVisibleElements?.showNoteInText ?? false} 
-                    onChange={() => handleCheckboxChange('showNoteInText')}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
-              </div>
-
-              {/* 4. 每日閱讀日誌 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => {
-                  const updated = {
-                    ...settings,
-                    readingLogEnabled: !(settings.readingLogEnabled ?? false)
-                  };
-                  onSave(updated);
-                }}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">每日閱讀日誌</div>
-                  <div className="settings-toggle-desc">自動記錄每日閱讀時長與天數，並於首頁提供行事曆日誌入口</div>
-                </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.readingLogEnabled ?? false} 
-                    onChange={() => {
-                      const updated = {
-                        ...settings,
-                        readingLogEnabled: !(settings.readingLogEnabled ?? false)
-                      };
-                      onSave(updated);
-                    }}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
-              </div>
-            </div>
-
-            {/* Cbeta Reader 簡易功能導覽 按鈕 */}
-            {onReplayOnboarding && (
-              <div style={{ marginTop: '0.75rem', width: '100%' }}>
-                <button
-                  type="button"
-                  onClick={onReplayOnboarding}
-                  style={{
-                    width: '100%',
-                    padding: '0.6rem 0.8rem',
-                    borderRadius: '8px',
-                    border: '1.2px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
-                    backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.05))',
-                    color: 'var(--theme-accent, #8c4b27)',
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.45rem',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  <span>📖 Cbeta Reader 簡易功能導覽</span>
-                </button>
               </div>
             )}
           </div>
@@ -1123,7 +1149,6 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                         <li>• 備援資料摘要註明經文內容版本號 `(CBReader 2X v0.9.9 2026-01-21)`。</li>
                       </ul>
                     </div>
-
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">
                         <span>backup Builder: v1.0.1</span>
@@ -1140,64 +1165,72 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
               ) : (
                 <>
                   {/* 第一部分：App 閱讀器介面更新 */}
-              <div className="changelog-group-section" style={{ marginBottom: '1.8rem' }}>
-                <div style={{
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
-                  color: 'var(--theme-accent, #8c4b27)',
-                  borderBottom: '1.5px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
-                  paddingBottom: '0.4rem',
-                  marginBottom: '0.9rem',
-                  fontFamily: 'var(--font-serif)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem'
-                }}>
-                  <FileText size={16} style={{ strokeWidth: 2.2 }} />
-                  <span>App 閱讀器介面更新</span>
-                </div>
+                  <div className="changelog-group-section" style={{ marginBottom: '1.8rem' }}>
+                    <div style={{
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      color: 'var(--theme-accent, #8c4b27)',
+                      borderBottom: '1.5px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
+                      paddingBottom: '0.4rem',
+                      marginBottom: '0.9rem',
+                      fontFamily: 'var(--font-serif)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem'
+                    }}>
+                      <FileText size={16} style={{ strokeWidth: 2.2 }} />
+                      <span>App 閱讀器介面更新</span>
+                    </div>
 
-                {/* 最新 App 版本 (v4.2.8) 直接顯示 */}
-                <div className="changelog-version-section">
-                  <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                    <span>⭐ App: v4.2.8</span>
-                    <span className="changelog-date">(2026-09-14)</span>
-                  </div>
-                  <ul className="changelog-list">
-                    <li>• 閱讀設定新增「進階功能」收折面板，空間管理與備份還原分組呈現。</li>
-                    <li>• 首頁風格動作膠囊按鈕（壓縮、清理、清空、備份、匯入），移除冗餘圖示。</li>
-                    <li>• 完整備份新增耗時預估提示，超過 3 分鐘跳窗確認，極速模式直接匯出。</li>
-                  </ul>
-                </div>
-
-                {/* 置左按鈕：+ 更多 App 修改歷程 (未展開時顯示於最新版下方) */}
-                {!showAppHistory && (
-                  <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
-                    <button 
-                      type="button"
-                      className="changelog-history-btn"
-                      onClick={() => {
-                        setShowAppHistory(true);
-                        setShowBuilderHistory(false); // 自動收合 Builder 歷程
-                      }}
-                    >
-                      + 更多 App 修改歷程
-                    </button>
-                  </div>
-                )}
-
-                {/* 展開的 App 歷史版本 */}
-                {showAppHistory && (
-                  <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
-                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
-                      <div className="changelog-version-title">App: v4.2.7 <span className="changelog-date">(2026-09-13)</span></div>
+                    {/* 最新 App 版本 (v4.2.9) 直接顯示 */}
+                    <div className="changelog-version-section">
+                      <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                        <span>⭐ App: v4.2.9</span>
+                        <span className="changelog-date">(2026-09-14)</span>
+                      </div>
                       <ul className="changelog-list">
-                        <li>• 閱讀設定升級「閱讀版面預覽」工作台，即時連動主題/字體/字級/行高/邊距。</li>
-                        <li>• 其他設定全面改版為 iOS 風格直覺開關（Toggle Switches）與雙層說明。</li>
-                        <li>• 新增每日閱讀日誌（閱讀天數、閱讀時數、閱讀本數與每日精進日曆）。</li>
+                        <li>• 新增「顯示閱讀頁經文經題」設定，下滑閱讀時頂部浮現經名膠囊，滑回頂部自動隱藏。</li>
+                        <li>• 藏經庫與搜尋「閱讀按鈕」調整為等寬正圓「→」圖示，底色隨四大主題自適應。</li>
+                        <li>• 護眼倒數膠囊位置自適應面板高度，支援手機端教育部標楷體按需載入與羊皮紙卡片調色。</li>
                       </ul>
                     </div>
-                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+
+                    {/* 置左按鈕：+ 更多 App 修改歷程 (未展開時顯示於最新版下方) */}
+                    {!showAppHistory && (
+                      <div style={{ marginTop: '0.6rem', textAlign: 'left' }}>
+                        <button 
+                          type="button" 
+                          className="changelog-history-btn"
+                          onClick={() => {
+                            setShowAppHistory(true);
+                            setShowBuilderHistory(false); // 自動收合 Builder 歷程
+                          }}
+                        >
+                          + 更多 App 修改歷程
+                        </button>
+                      </div>
+                    )}
+
+                    {/* 展開的 App 歷史版本 */}
+                    {showAppHistory && (
+                      <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.2.8 <span className="changelog-date">(2026-09-14)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 閱讀設定新增「進階功能」收折面板，空間管理與備份還原分組呈現。</li>
+                            <li>• 首頁風格動作膠囊按鈕（壓縮、清理、清空、備份、匯入），移除冗餘圖示。</li>
+                            <li>• 完整備份新增耗時預估提示，超過 3 分鐘跳窗確認，極速模式直接匯出。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.2.7 <span className="changelog-date">(2026-09-13)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 閱讀設定升級「閱讀版面預覽」工作台，即時連動主題/字體/字級/行高/邊距。</li>
+                            <li>• 其他設定全面改版為 iOS 風格直覺開關（Toggle Switches）與雙層說明。</li>
+                            <li>• 新增每日閱讀日誌（閱讀天數、閱讀時數、閱讀本數與每日精進日曆）。</li>
+                          </ul>
+                        </div>
+<div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">App: v4.2.6 <span className="changelog-date">(2026-08-25)</span></div>
                       <ul className="changelog-list">
                         <li>• 首頁調整為四大核心入口：「下載經典」、「我的書櫃」、「重點與筆記」與「關鍵字搜尋」。</li>

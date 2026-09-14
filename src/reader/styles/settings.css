@@ -506,6 +506,17 @@ body.theme-ebony .advanced-toggle-btn:hover {
   transition: all var(--transition-fast, 0.2s ease);
 }
 
+body.theme-parchment .advanced-group-card {
+  background: rgba(140, 75, 39, 0.035);
+  border-color: rgba(140, 75, 39, 0.16);
+  box-shadow: 0 1px 4px rgba(70, 45, 15, 0.04);
+}
+
+body.theme-ivory .advanced-group-card {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(140, 106, 70, 0.15);
+}
+
 body.theme-comfort .advanced-group-card {
   background: rgba(43, 66, 43, 0.03);
   border-color: var(--reader-border, rgba(43, 66, 43, 0.15));
@@ -546,6 +557,11 @@ body.theme-dark .advanced-group-header {
   padding: 2px 8px;
   border-radius: 10px;
   font-weight: 500;
+}
+
+body.theme-parchment .advanced-group-badge {
+  background: rgba(140, 75, 39, 0.08);
+  color: var(--text-muted);
 }
 
 body.theme-ebony .advanced-group-badge,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, ChevronLeft, ChevronRight, Settings, Search,
+  Home, ChevronLeft, ChevronRight, ArrowRight, Settings, Search,
   Folder, Download, Check, X, Layers, BookMarked, User, Clock, Plus, Minus, Heart
 } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
@@ -1348,8 +1348,7 @@ export function CbetaCatalogView({
                               }} 
                               title="立即閱讀此經典"
                             >
-                              <span>閱讀</span>
-                              <ChevronRight size={13} style={{ strokeWidth: 2.4 }} />
+                              <ArrowRight size={17} strokeWidth={2.4} />
                             </button>
                           ) : (
                             <button 
@@ -1502,8 +1501,7 @@ export function CbetaCatalogView({
                               }} 
                               title="立即閱讀此經典"
                             >
-                              <span>閱讀</span>
-                              <ChevronRight size={13} style={{ strokeWidth: 2.4 }} />
+                              <ArrowRight size={17} strokeWidth={2.4} />
                             </button>
                           ) : (
                             <button 

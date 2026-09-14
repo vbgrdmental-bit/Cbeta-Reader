@@ -243,6 +243,8 @@ export function ReaderView({
   const [isCopyrightExpanded, setIsCopyrightExpanded] = useState(false);
   const [scrollPercent, setScrollPercent] = useState(0);
   const [showSettingsView, setShowSettingsView] = useState(false);
+  // 💡 頂部浮動經名膠囊觸發狀態 (下滑閱讀時為 true，回頂部為 false)
+  const [isScrolledPastTop, setIsScrolledPastTop] = useState(false);
 
   // 💡 畫重點相關狀態
   const [highlights, setHighlights] = useState<BookHighlight[]>([]);
@@ -1470,6 +1472,11 @@ export function ReaderView({
     const el = contentAreaRef.current;
     if (!el) return;
     const totalHeight = el.scrollHeight - el.clientHeight;
+    
+    // 💡 監聽滾動位置：當滾動超過頂部標題區域 (scrollTop > 70) 時標記為已下滑
+    const isPast = el.scrollTop > 70;
+    setIsScrolledPastTop(prev => (prev !== isPast ? isPast : prev));
+
     if (totalHeight <= 0) {
       setScrollPercent(0);
       return;
@@ -1693,7 +1700,7 @@ export function ReaderView({
       case 'wenkai':
       case 'yuanti':
       case 'fangsong':
-        return '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif';
+        return '"CBETASupplement", "MOE-EduKai", "TW-Kai-98", "TW-Kai", "標楷體", "BiauKai", "DFKai-SB", "STKaiti", "KaiTi", "Kaiti SC", "Kaiti TC", serif';
       case 'default':
       default:
         return 'var(--font-serif)';
@@ -1998,6 +2005,53 @@ export function ReaderView({
         </div>
       )}
 
+      {/* 💡 頂部浮動經名膠囊 (下滑閱讀時自動浮現，滑回頂部時自動隱藏) */}
+      {book && (
+        <div 
+          className={`reader-floating-title-capsule ${
+            (settings.customVisibleElements?.showFloatingTitle && isScrolledPastTop) ? 'visible' : 'hidden'
+          }`}
+          style={{
+            position: 'fixed',
+            top: showToolbar 
+              ? (activeSearchQuery && matchedSegments.length > 0)
+                ? 'calc(102px + env(safe-area-inset-top, 0px))'
+                : 'calc(62px + env(safe-area-inset-top, 0px))'
+              : 'calc(16px + env(safe-area-inset-top, 0px))',
+            left: '50%',
+            transform: (settings.customVisibleElements?.showFloatingTitle && isScrolledPastTop) 
+              ? 'translateX(-50%) translateY(0)' 
+              : 'translateX(-50%) translateY(-10px)',
+            opacity: (settings.customVisibleElements?.showFloatingTitle && isScrolledPastTop) ? 1 : 0,
+            pointerEvents: (settings.customVisibleElements?.showFloatingTitle && isScrolledPastTop) ? 'auto' : 'none',
+            zIndex: 490,
+            padding: '4px 14px',
+            borderRadius: '20px',
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            fontFamily: 'var(--font-serif)',
+            letterSpacing: '0.04em',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+            maxWidth: 'calc(100vw - 32px)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            cursor: 'pointer',
+            transition: 'top 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+          onClick={() => {
+            if (contentAreaRef.current) {
+              contentAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          title={`${book.metadata.title} (點擊回到頂部)`}
+        >
+          {book.metadata.title}
+        </div>
+      )}
+
       {/* 經文排版內文區 (點擊空白處切換工具列，且無 absolute 蓋板，支持滑動滾動與文字點選) */}
       <div 
         className="reader-content-area custom-scrollbar" 
@@ -2191,7 +2245,7 @@ export function ReaderView({
                 {[
                   { id: 'default', name: '宋/明', fontFamily: 'var(--font-serif)' },
                   { id: 'jhenghei', name: '黑體', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' },
-                  { id: 'kaiti', name: '楷體', fontFamily: '"CBETASupplement", "標楷體", "BiauKai", serif' }
+                  { id: 'kaiti', name: '楷體', fontFamily: '"CBETASupplement", "MOE-EduKai", "TW-Kai-98", "TW-Kai", "標楷體", "BiauKai", "DFKai-SB", "STKaiti", "KaiTi", serif' }
                 ].map(f => {
                   const rawFont = settings.fontFamily || 'default';
                   const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold' || rawFont === 'kaiti') ? 'kaiti' : (rawFont === 'jhenghei' ? 'jhenghei' : 'default');
@@ -2413,7 +2467,11 @@ export function ReaderView({
           className="floating-bar-timer"
           style={{
             position: 'fixed',
-            bottom: (showToolbar && (showTypographyPanel || isHighlightMode)) ? 'calc(115px + env(safe-area-inset-bottom, 0px))' : 'calc(18px + env(safe-area-inset-bottom, 0px))',
+            bottom: (showToolbar && showTypographyPanel) 
+              ? 'calc(115px + env(safe-area-inset-bottom, 0px))' 
+              : (showToolbar && isHighlightMode) 
+                ? 'calc(70px + env(safe-area-inset-bottom, 0px))' 
+                : 'calc(18px + env(safe-area-inset-bottom, 0px))',
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 499,

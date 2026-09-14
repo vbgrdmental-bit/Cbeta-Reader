@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.2.8` (App: v4.2.8 / Builder: v2.9.11)
+- **Current Version**: `v4.2.9` (App: v4.2.9 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.2.9 / Builder: v2.9.11** (2026-09-14)
+  - [App] 新增「顯示閱讀頁經文經題」設定（預設關閉），下滑閱讀時頂部自動浮現半透明毛玻璃經名膠囊，滑回頂部自動隱藏。
+  - [App] 藏經庫與搜尋「閱讀按鈕」調整為等寬正圓「→」圖示（34px，與下載鈕等寬），底色隨四大主題自適應。
+  - [App] 護眼倒數膠囊位置自適應筆刷面板高度，修正手機端閱讀預覽楷體顯示，並將「進階功能」移至「其他設定」之下。
 - **⭐ App: v4.2.8 / Builder: v2.9.11** (2026-09-14)
   - [App] 閱讀設定新增「進階功能」折疊面板（「+ 展開 / − 收合」預設收折），本質區分設定值選項與任務執行。
   - [App] 收納兩大分組「書籍與儲存空間」及「資料備份與還原」，全面採用首頁風格圓潤動作膠囊按鈕並移除左側冗餘小圖示。

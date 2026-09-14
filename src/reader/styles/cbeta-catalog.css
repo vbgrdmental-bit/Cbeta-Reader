@@ -524,46 +524,87 @@ body.theme-ebony .batch-checkbox.downloaded-checked,
   color: #81c784;
 }
 
-/* 已下載經典右側的「閱讀 >」小膠囊按鈕 (類似圖 4) */
+/* 已下載經典右側的圓型「→」按鈕 (與「下載↓」鍵等寬 34px，底色隨四大主題自適應) */
 .cbeta-read-btn {
+  width: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  height: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  padding: 0;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 0.32rem 0.68rem;
-  border-radius: 999px;
+  justify-content: center;
   background-color: var(--theme-accent, #8c4b27);
   color: #ffffff;
-  font-size: 0.78rem;
-  font-weight: 600;
   border: none;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(140, 75, 39, 0.22);
-  transition: all 0.18s ease;
+  box-shadow: 0 2px 6px rgba(140, 75, 39, 0.25);
+  transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
   flex-shrink: 0;
-  font-family: var(--font-sans);
   user-select: none;
+  box-sizing: border-box;
 }
 
 .cbeta-read-btn:hover {
-  background-color: #713c23;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(140, 75, 39, 0.3);
+  background-color: var(--theme-accent-hover, #713c23);
+  transform: scale(1.08);
+  box-shadow: 0 4px 10px rgba(140, 75, 39, 0.35);
 }
 
 .cbeta-read-btn:active {
-  transform: translateY(0);
+  transform: scale(0.95);
+}
+
+/* 四大主題模式專屬底色適配 */
+body.theme-ivory .cbeta-read-btn,
+.theme-ivory .cbeta-read-btn {
+  background-color: #8c6a46;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(140, 106, 70, 0.25);
+}
+
+body.theme-ivory .cbeta-read-btn:hover,
+.theme-ivory .cbeta-read-btn:hover {
+  background-color: #755534;
+}
+
+body.theme-parchment .cbeta-read-btn,
+.theme-parchment .cbeta-read-btn {
+  background-color: #9c623c;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(156, 98, 60, 0.25);
+}
+
+body.theme-parchment .cbeta-read-btn:hover,
+.theme-parchment .cbeta-read-btn:hover {
+  background-color: #86522f;
+}
+
+body.theme-comfort .cbeta-read-btn,
+.theme-comfort .cbeta-read-btn {
+  background-color: #457a58;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(69, 122, 88, 0.25);
+}
+
+body.theme-comfort .cbeta-read-btn:hover,
+.theme-comfort .cbeta-read-btn:hover {
+  background-color: #376547;
 }
 
 body.theme-ebony .cbeta-read-btn,
 .theme-ebony .cbeta-read-btn {
-  background-color: #aa6640;
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  background-color: #f2a31b;
+  color: #14181e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
 body.theme-ebony .cbeta-read-btn:hover,
 .theme-ebony .cbeta-read-btn:hover {
-  background-color: #c48252;
+  background-color: #ffb732;
 }
 
 .cbeta-work-badge {

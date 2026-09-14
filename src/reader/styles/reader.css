@@ -610,6 +610,46 @@ body.theme-ebony .floating-bar-timer:hover {
   color: #85bb65;
 }
 
+/* 💡 頂部浮動經名膠囊 (Floating Title Capsule) */
+.reader-floating-title-capsule {
+  background: rgba(254, 252, 248, 0.90);
+  color: var(--reader-text, #2c2016);
+  border: 1px solid rgba(140, 75, 39, 0.22);
+}
+
+body.theme-ivory .reader-floating-title-capsule {
+  background: rgba(254, 252, 248, 0.92);
+  color: #2c2016;
+  border-color: rgba(140, 75, 39, 0.22);
+  box-shadow: 0 4px 14px rgba(80, 50, 25, 0.12);
+}
+
+body.theme-parchment .reader-floating-title-capsule {
+  background: rgba(245, 238, 224, 0.92);
+  color: #3c2a1a;
+  border-color: rgba(130, 80, 40, 0.24);
+  box-shadow: 0 4px 14px rgba(70, 45, 15, 0.12);
+}
+
+body.theme-comfort .reader-floating-title-capsule {
+  background: rgba(236, 243, 226, 0.92);
+  color: #23351d;
+  border-color: rgba(65, 95, 55, 0.24);
+  box-shadow: 0 4px 14px rgba(35, 60, 30, 0.10);
+}
+
+body.theme-ebony .reader-floating-title-capsule {
+  background: rgba(20, 24, 30, 0.88);
+  color: #d8dec9;
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65);
+}
+
+.reader-floating-title-capsule:hover {
+  opacity: 0.92;
+  transform: translateX(-50%) scale(1.02);
+}
+
 /* 字體大小調整器 */
 .floating-bar-font-group {
   display: flex;
