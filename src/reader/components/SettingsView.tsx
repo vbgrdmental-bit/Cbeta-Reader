@@ -1182,16 +1182,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.2.9) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.3.0) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.2.9</span>
-                        <span className="changelog-date">(2026-09-14)</span>
+                        <span>⭐ App: v4.3.0</span>
+                        <span className="changelog-date">(2026-09-16)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 新增「顯示閱讀頁經文經題」設定，下滑閱讀時頂部浮現經名膠囊，滑回頂部自動隱藏。</li>
-                        <li>• 藏經庫與搜尋「閱讀按鈕」調整為等寬正圓「→」圖示，底色隨四大主題自適應。</li>
-                        <li>• 護眼倒數膠囊位置自適應面板高度，支援手機端教育部標楷體按需載入與羊皮紙卡片調色。</li>
+                        <li>• 頂部控制列升級「雙翼對稱展開微膠囊」，左翼整合下載與書櫃，右翼整合筆記與搜尋。</li>
+                        <li>• 選中項目自動向外展開標籤文字，未選中項收合為精緻圓形圖示，手機窄螢幕零溢出。</li>
+                        <li>• 支援全站跨視圖 0 秒即時切換，保持左側「家」與右側「齒輪」永恆黃金錨定。</li>
                       </ul>
                     </div>
 
@@ -1214,6 +1214,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.2.9 <span className="changelog-date">(2026-09-14)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 新增「顯示閱讀頁經文經題」設定，下滑閱讀時頂部浮現經名膠囊，滑回頂部自動隱藏。</li>
+                            <li>• 藏經庫與搜尋「閱讀按鈕」調整為等寬正圓「→」圖示，底色隨四大主題自適應。</li>
+                            <li>• 護眼倒數膠囊位置自適應面板高度，支援手機端教育部標楷體按需載入。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title">App: v4.2.8 <span className="changelog-date">(2026-09-14)</span></div>
                           <ul className="changelog-list">

@@ -25,6 +25,7 @@ interface LibraryProps {
   settings: AppSettings;
   initialSearchQuery?: string;
   resetFolderTrigger?: number;
+  targetSection?: { section: 'home' | 'shelf' | 'notes' | 'search'; timestamp: number } | null;
   onOpenSettings?: () => void;
   onOpenCbetaCatalog?: () => void;
 }
@@ -35,6 +36,7 @@ export function Library({
   settings,
   initialSearchQuery,
   resetFolderTrigger,
+  targetSection,
   onOpenSettings,
   onOpenCbetaCatalog
 }: LibraryProps) {
@@ -89,14 +91,8 @@ export function Library({
       const prevIdx = historyIndex - 1;
       setHistoryIndex(prevIdx);
       setCurrentFolderId(folderHistory[prevIdx]);
-    }
-  };
-
-  const handleGoForward = () => {
-    if (historyIndex < folderHistory.length - 1) {
-      const nextIdx = historyIndex + 1;
-      setHistoryIndex(nextIdx);
-      setCurrentFolderId(folderHistory[nextIdx]);
+    } else {
+      setCurrentFolderId(null);
     }
   };
 
@@ -108,6 +104,22 @@ export function Library({
       setHistoryIndex(0);
     }
   }, [resetFolderTrigger]);
+
+  // 💡 當接收到全站頂部四大功能導航目標時，切換至對應分頁與資料夾
+  useEffect(() => {
+    if (!targetSection) return;
+    if (targetSection.section === 'home') {
+      handleGoHomeWithAnimation();
+    } else if (targetSection.section === 'shelf') {
+      setActiveTab('shelf');
+      navigateToFolderWithAnimation('virtual_my_folders');
+    } else if (targetSection.section === 'notes') {
+      setActiveTab('shelf');
+      navigateToFolderWithAnimation('virtual_highlights');
+    } else if (targetSection.section === 'search') {
+      setActiveTab('search');
+    }
+  }, [targetSection]);
 
   const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
 
@@ -1345,13 +1357,15 @@ export function Library({
         document.body
       )}
       
-      {/* 首頁一致控制列 */}
+      {/* 首頁一致控制列：雙翼對稱展開微膠囊 (方案 C + 方案 B) */}
       <div className="library-header animate-fade-in">
         {isBackup && (
           <div className="header-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
             備援
           </div>
         )}
+        
+        {/* 1. 左端：家 (Home) */}
         <button 
           className={`library-header-btn ${activeTab === 'shelf' && !currentFolderId ? 'active' : ''}`}
           onClick={handleGoHomeWithAnimation}
@@ -1360,77 +1374,71 @@ export function Library({
           <Home size={20} />
         </button>
 
-        {/* 只有在書架分頁 (shelf) 時才渲染後續按鈕 */}
-        {activeTab === 'shelf' && (
-          <>
-            <div className="control-divider" />
-            
-            {currentFolderId === null ? (
-              // 💡 1. 處於最外層首頁：顯示「下載新佛典（+）」
-              <button
-                className="library-header-btn"
-                onClick={handleOpenCbetaCatalogWithAnimation}
-                title="進入 CBETA 藏經庫目錄下載佛典"
-              >
-                <Plus size={22} style={{ strokeWidth: 2.5 }} />
-              </button>
-            ) : (
-              // 💡 2. 處於資料夾內：將「<」和「>」整合到最上方控制列
-              <>
-                <button
-                  className="library-header-btn"
-                  onClick={handleGoBack}
-                  disabled={historyIndex === 0}
-                  title="返回上一頁"
-                  style={{ opacity: historyIndex === 0 ? 0.3 : 1 }}
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                <button
-                  className="library-header-btn"
-                  onClick={handleGoForward}
-                  disabled={historyIndex >= folderHistory.length - 1}
-                  title="前進下一頁"
-                  style={{ opacity: historyIndex >= folderHistory.length - 1 ? 0.3 : 1 }}
-                >
-                  <ChevronRight size={20} />
-                </button>
+        {/* 2. 左翼微膠囊：[ 下載 + 書櫃 ] */}
+        <div className="wing-capsule wing-left">
+          {/* 下載經典 */}
+          <button
+            className="wing-capsule-item"
+            onClick={handleOpenCbetaCatalogWithAnimation}
+            title="從 CBETA 資料庫下載經典"
+          >
+            <Plus size={17} style={{ strokeWidth: 2.2 }} />
+            <span className="capsule-label">下載經典</span>
+          </button>
 
-                {/* 💡 只有在「我的書櫃」（virtual_my_folders）頂部控制列才顯示「新建資料夾 (+)」圖示按鈕；進入子資料夾時隱藏 */}
-                {currentFolderId === 'virtual_my_folders' && (
-                  <button
-                    className="library-header-btn"
-                    onClick={() => setShowNewFolderDialog(true)}
-                    title="新建資料夾"
-                  >
-                    <FolderPlus size={20} />
-                  </button>
-                )}
-              </>
-            )}
-          </>
-        )}
+          {/* 我的書櫃 */}
+          <button
+            className={`wing-capsule-item ${activeTab === 'shelf' && (currentFolderId === 'virtual_my_folders' || (currentFolderId && currentFolderId !== 'virtual_highlights')) ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('shelf');
+              navigateToFolderWithAnimation('virtual_my_folders');
+            }}
+            title="我的書櫃（已下載經典與資料夾）"
+          >
+            <Folder size={16} />
+            <span className="capsule-label">我的書櫃</span>
+          </button>
+        </div>
 
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-          {/* 💡 閱讀日誌入口（僅在 readingLogEnabled 時顯示），放大鏡左邊 */}
+        {/* 3. 中央留白呼吸區 */}
+        <div className="header-center-spacer" />
+
+        {/* 4. 右翼微膠囊：[ 筆記 + 搜尋 ] */}
+        <div className="wing-capsule wing-right">
+          {/* 重點與筆記 */}
+          <button
+            className={`wing-capsule-item ${activeTab === 'shelf' && currentFolderId === 'virtual_highlights' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('shelf');
+              navigateToFolderWithAnimation('virtual_highlights');
+            }}
+            title="重點與筆記"
+          >
+            <Notebook size={16} />
+            <span className="capsule-label">重點筆記</span>
+          </button>
+
+          {/* 全文搜尋 */}
+          <button
+            className={`wing-capsule-item ${activeTab === 'search' ? 'active' : ''}`}
+            onClick={() => setActiveTab('search')}
+            title="關鍵字搜尋（已下載經典檢索）"
+          >
+            <Search size={16} />
+            <span className="capsule-label">全文搜尋</span>
+          </button>
+        </div>
+
+        {/* 5. 右端：設定與日誌 */}
+        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
+          {/* 💡 閱讀日誌入口（僅在 readingLogEnabled 時顯示） */}
           {settings.readingLogEnabled && activeTab === 'shelf' && (
             <button
               className="library-header-btn"
               onClick={() => setShowReadingLog(true)}
               title="閱讀日誌"
             >
-              <CalendarDays size={20} />
-            </button>
-          )}
-
-          {/* 只有在書架分頁時才顯示放大鏡，點擊切換至搜尋分頁 */}
-          {activeTab === 'shelf' && (
-            <button 
-              className="library-header-btn"
-              onClick={() => setActiveTab('search')}
-              title="關鍵字搜尋"
-            >
-              <Search size={20} />
+              <CalendarDays size={19} />
             </button>
           )}
 
@@ -1457,6 +1465,28 @@ export function Library({
           {currentFolderId && (
             <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
+                <button 
+                  type="button"
+                  className="folder-back-btn"
+                  onClick={handleGoBack}
+                  title="返回上一層"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    border: 'none',
+                    background: 'transparent',
+                    cursor: 'pointer',
+                    color: 'var(--text-muted)',
+                    marginRight: '2px',
+                    flexShrink: 0
+                  }}
+                >
+                  <ChevronLeft size={18} />
+                </button>
                 <div className="folder-nav-middle" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   {/* 💡 專區/資料夾同款識別圖示 Badge */}
                   <div 
@@ -1505,7 +1535,7 @@ export function Library({
                     </button>
                   )}
                 </div>
-                <div className="folder-nav-right">
+                <div className="folder-nav-right" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span className="folder-book-count-badge" title="當前層級數量">
                     {currentFolderId === 'virtual_my_folders' ? `共${downloadedBooks.length}本` :
                      currentFolderId === 'virtual_recent_reads' ? `共${recentReadsBooks.length}本` :
@@ -1515,6 +1545,18 @@ export function Library({
                      currentFolderId === 'virtual_resume' ? `共${displayBooks.length}本` :
                      `共${getFolderTotalBookCount(currentFolderId)}本`}
                   </span>
+
+                  {/* 💡 在「我的書櫃」時提供新建資料夾按鈕 */}
+                  {currentFolderId === 'virtual_my_folders' && (
+                    <button
+                      className="appstore-section-circle-more-btn"
+                      onClick={() => setShowNewFolderDialog(true)}
+                      title="新建資料夾"
+                      style={{ marginLeft: '2px' }}
+                    >
+                      <FolderPlus size={13} />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

@@ -82,6 +82,23 @@ export function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [booksUpdatedTrigger, setBooksUpdatedTrigger] = useState(0);
 
+  // 💡 全站四大核心功能導航目標
+  const [targetLibrarySection, setTargetLibrarySection] = useState<{ section: 'home' | 'shelf' | 'notes' | 'search'; timestamp: number } | null>(null);
+
+  const handleNavigateToLibrarySection = (section: 'home' | 'shelf' | 'notes' | 'search') => {
+    // 若在閱讀頁，先結束當前閱讀日誌
+    if (view === 'reader') {
+      readingLogManager.endSession();
+      setActiveBookId(null);
+      setActiveSegmentId(undefined);
+      setAutoResumeMode(null);
+    }
+    setView('library');
+    updateHashRoute('library');
+    setTargetLibrarySection({ section, timestamp: Date.now() });
+    setBooksUpdatedTrigger(prev => prev + 1);
+  };
+
   // 💡 全域閱讀計時器狀態
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
 
@@ -235,6 +252,7 @@ export function App() {
           settings={settings}
           initialSearchQuery={lastSearchQuery}
           resetFolderTrigger={resetFolderTrigger}
+          targetSection={targetLibrarySection}
           onOpenSettings={() => setShowSettings(true)}
           onOpenCbetaCatalog={() => {
             setView('cbeta');
@@ -255,6 +273,7 @@ export function App() {
           onOpenSettings={() => setShowSettings(true)}
           onSelectBook={handleSelectBook}
           settings={settings}
+          onNavigateToLibrarySection={handleNavigateToLibrarySection}
         />
       </div>
 
@@ -268,6 +287,15 @@ export function App() {
           onBackToLibrary={handleBackToLibrary}
           onSaveSettings={handleSaveSettings}
           searchQuery={lastSearchQuery}
+          onNavigateToLibrarySection={handleNavigateToLibrarySection}
+          onOpenCbetaCatalog={() => {
+            readingLogManager.endSession();
+            setActiveBookId(null);
+            setActiveSegmentId(undefined);
+            setAutoResumeMode(null);
+            setView('cbeta');
+            updateHashRoute('cbeta');
+          }}
         />
       )}
 

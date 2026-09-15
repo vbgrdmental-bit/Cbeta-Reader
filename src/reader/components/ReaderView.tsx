@@ -26,6 +26,8 @@ interface ReaderViewProps {
   onBackToLibrary: (resetToRoot?: boolean) => void;
   onSaveSettings: (settings: AppSettings) => void;
   searchQuery?: string;
+  onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search') => void;
+  onOpenCbetaCatalog?: () => void;
 }
 
 // 💡 展平樹狀 TOC items 陣列，方便進行區間匹配與平舖查詢

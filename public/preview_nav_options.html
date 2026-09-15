@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>整合方案：雙翼對稱「展開微膠囊」控制列預覽 - CBETA Reader</title>
+  <style>
+    :root {
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    /* 4 大主題定義 */
+    .theme-warm {
+      --bg-app: #f7f3ec;
+      --bg-header: #f7f3ec;
+      --bg-card: #ffffff;
+      --text-main: #3c2a21;
+      --text-muted: #8c7365;
+      --border-color: rgba(140, 75, 39, 0.12);
+      --capsule-bg: rgba(140, 75, 39, 0.08);
+      --capsule-active-bg: #8c4b27;
+      --capsule-active-text: #ffffff;
+      --btn-hover: rgba(140, 75, 39, 0.08);
+      --accent: #8c4b27;
+      --shadow: 0 4px 16px rgba(140, 75, 39, 0.08);
+    }
+
+    .theme-light {
+      --bg-app: #f8fafc;
+      --bg-header: #ffffff;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --capsule-bg: #f1f5f9;
+      --capsule-active-bg: #2563eb;
+      --capsule-active-text: #ffffff;
+      --btn-hover: #e2e8f0;
+      --accent: #2563eb;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .theme-comfort {
+      --bg-app: #d9e3d6;
+      --bg-header: #e6ede4;
+      --bg-card: #f3f7f2;
+      --text-main: #1f3323;
+      --text-muted: #566f5c;
+      --border-color: rgba(46, 92, 59, 0.12);
+      --capsule-bg: rgba(46, 92, 59, 0.09);
+      --capsule-active-bg: #2d5a39;
+      --capsule-active-text: #ffffff;
+      --btn-hover: rgba(46, 92, 59, 0.08);
+      --accent: #2d5a39;
+      --shadow: 0 4px 16px rgba(46, 92, 59, 0.08);
+    }
+
+    .theme-ebony {
+      --bg-app: #14100e;
+      --bg-header: #1e1917;
+      --bg-card: #27211e;
+      --text-main: #f5ebe6;
+      --text-muted: #9e8e86;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --capsule-bg: rgba(255, 255, 255, 0.08);
+      --capsule-active-bg: #d4a373;
+      --capsule-active-text: #1a1513;
+      --btn-hover: rgba(255, 255, 255, 0.1);
+      --accent: #d4a373;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      padding: 24px;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header-info {
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 1.45rem;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .subtitle {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* 主題切換 Bar */
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+    }
+    .theme-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .theme-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .theme-pill-btn {
+      padding: 5px 12px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-main);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .theme-pill-btn.active {
+      background: var(--text-main);
+      color: var(--bg-header);
+      border-color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* 狀態快速切換按鈕 */
+    .state-quick-switch {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      flex-wrap: wrap;
+    }
+    .state-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-main);
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .state-btn:hover {
+      background: var(--btn-hover);
+    }
+    .state-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* 展示主區塊 */
+    .section-card {
+      background: var(--bg-card);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 30px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge-pill {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 600;
+    }
+
+    .desc-text {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* ============================================================ */
+    /* 核心元件：雙翼展開微膠囊控制列 (The Header Bar) */
+    /* ============================================================ */
+    .cbeta-integrated-header {
+      width: 100%;
+      height: 56px;
+      background: var(--bg-header);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      box-sizing: border-box;
+      position: relative;
+      user-select: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    /* 左端 Home 按鈕 (固定 36px 圓形) */
+    .header-fixed-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .header-fixed-btn:hover {
+      background: var(--btn-hover);
+      color: var(--text-main);
+    }
+    .header-fixed-btn.active {
+      background: var(--btn-hover);
+      color: var(--text-main);
+      box-shadow: inset 0 0 0 1.2px var(--border-color);
+    }
+
+    /* 雙翼膠囊群組容器 (左翼 & 右翼) */
+    .wing-capsule {
+      display: inline-flex;
+      align-items: center;
+      background: var(--capsule-bg);
+      border-radius: 9999px;
+      padding: 3px 4px;
+      gap: 3px;
+      border: 1px solid var(--border-color);
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    .wing-left {
+      margin-left: 8px;
+    }
+    .wing-right {
+      margin-right: 8px;
+    }
+
+    /* 中央呼吸留白區 (可放經題或純留白) */
+    .center-space {
+      flex: 1;
+      min-width: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .center-title-chip {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: var(--btn-hover);
+      padding: 3px 10px;
+      border-radius: 9999px;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
+      display: none; /* 預設留白 */
+    }
+
+    /* 膠囊內的單一微按鈕 */
+    .pill-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      height: 30px;
+      padding: 0 8px;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      /* 核心：絲滑展開與收合動畫 */
+      transition: all 0.28s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+
+    .pill-item svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .pill-item:hover {
+      color: var(--text-main);
+    }
+    .pill-item:hover svg {
+      transform: scale(1.08);
+    }
+
+    /* 文字收合狀態 (未選中) */
+    .pill-item .pill-label {
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      display: inline-block;
+      transition: max-width 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+      vertical-align: middle;
+    }
+
+    /* 🌟 核心：選中狀態 (主動展開文字 + 高亮底色) */
+    .pill-item.active {
+      background: var(--capsule-active-bg);
+      color: var(--capsule-active-text);
+      padding: 0 12px;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+    .pill-item.active .pill-label {
+      max-width: 80px; /* 柔和展開文字 */
+      opacity: 1;
+      margin-left: 2px;
+    }
+
+    /* 模擬畫面預覽框架 (雙尺寸比對) */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    .device-box {
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      background: var(--bg-app);
+    }
+    .device-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* 手機模擬器 (390px iPhone 比例) */
+    .phone-wrapper {
+      max-width: 390px;
+      margin: 0 auto;
+      border: 2px solid var(--border-color);
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--bg-header);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .phone-body {
+      padding: 18px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      background: var(--bg-app);
+      gap: 8px;
+    }
+
+    /* 特色剖析標籤 */
+    .feature-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .point-card {
+      padding: 12px 14px;
+      background: var(--bg-app);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .point-card strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body class="theme-warm">
+
+  <div class="container">
+    <div class="header-info">
+      <h1>⭐ 整合方案：雙翼對稱「展開微膠囊」控制列</h1>
+      <p class="subtitle">
+        左翼整合「<strong>下載 + 書櫃</strong>」，右翼整合「<strong>筆記 + 搜尋</strong>」；左端「<strong>家 🏠</strong>」與右端「<strong>齒輪 ⚙️</strong>」位置恆定不變。<br>
+        結合展開式微膠囊特性：<strong>選中者自動展開文字，未選中者收合為精緻圓圖示</strong>，兼具極致對稱美與超高空間效率！
+      </p>
+    </div>
+
+    <!-- 上方控制 Bar：主題切換 -->
+    <div class="top-controls">
+      <div class="theme-group">
+        <span class="theme-label">🎨 四大主題切換：</span>
+        <button class="theme-pill-btn active" onclick="setTheme('theme-warm', this)">典雅暖褐</button>
+        <button class="theme-pill-btn" onclick="setTheme('theme-light', this)">純淨明亮</button>
+        <button class="theme-pill-btn" onclick="setTheme('theme-comfort', this)">護眼茶綠</button>
+        <button class="theme-pill-btn" onclick="setTheme('theme-ebony', this)">沉靜烏木</button>
+      </div>
+    </div>
+
+    <!-- 狀態快速模擬 Bar -->
+    <div class="state-quick-switch">
+      <span class="theme-label">🚀 快速切換當前所在頁面狀態：</span>
+      <button class="state-btn" onclick="triggerNav('home')">
+        🏠 處於首頁
+      </button>
+      <button class="state-btn" onclick="triggerNav('download')">
+        ➕ 下載經典 (CBETA目錄)
+      </button>
+      <button class="state-btn active" onclick="triggerNav('shelf')">
+        📁 我的書櫃 (本地藏書)
+      </button>
+      <button class="state-btn" onclick="triggerNav('notes')">
+        📒 重點與筆記 (讀者筆記)
+      </button>
+      <button class="state-btn" onclick="triggerNav('search')">
+        🔍 關鍵字搜尋 (全文檢索)
+      </button>
+    </div>
+
+    <!-- 展示主區塊 -->
+    <div class="section-card">
+      <div class="section-title">
+        <span>控制列真實尺寸與動態預覽（桌機 / 平板全寬）</span>
+        <span class="badge-pill">高度 56px · 雙翼展開微膠囊</span>
+      </div>
+      <p class="desc-text">
+        直接點擊下方控制列中任何一個按鈕，體驗<strong>平滑伸展動畫</strong>與<strong>左右雙膠囊的高雅平衡感</strong>：
+      </p>
+
+      <!-- 全寬控制列 -->
+      <div class="cbeta-integrated-header" id="mainHeader">
+        <!-- 1. 最左端：家 (Home) -->
+        <button class="header-fixed-btn" id="btn-home" onclick="triggerNav('home')" title="返回書架首頁">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </button>
+
+        <!-- 2. 左翼膠囊：[ 下載 + 書櫃 ] -->
+        <div class="wing-capsule wing-left">
+          <!-- 下載經典 -->
+          <button class="pill-item" id="btn-download" onclick="triggerNav('download')" title="從 CBETA 資料庫下載經典">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span class="pill-label">下載經典</span>
+          </button>
+
+          <!-- 我的書櫃 -->
+          <button class="pill-item active" id="btn-shelf" onclick="triggerNav('shelf')" title="已下載經書與自訂資料夾">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="pill-label">我的書櫃</span>
+          </button>
+        </div>
+
+        <!-- 3. 中央留白呼吸區 (可彈性放置當前經題膠囊) -->
+        <div class="center-space">
+          <div class="center-title-chip" id="centerChip">金剛般若波羅蜜經</div>
+        </div>
+
+        <!-- 4. 右翼膠囊：[ 筆記 + 搜尋 ] -->
+        <div class="wing-capsule wing-right">
+          <!-- 重點與筆記 -->
+          <button class="pill-item" id="btn-notes" onclick="triggerNav('notes')" title="經文劃線重點與感悟筆記">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              <line x1="9" y1="7" x2="15" y2="7"></line>
+              <line x1="9" y1="11" x2="13" y2="11"></line>
+            </svg>
+            <span class="pill-label">重點筆記</span>
+          </button>
+
+          <!-- 關鍵字搜尋 -->
+          <button class="pill-item" id="btn-search" onclick="triggerNav('search')" title="已下載經文全文檢索">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span class="pill-label">全文搜尋</span>
+          </button>
+        </div>
+
+        <!-- 5. 最右端：齒輪 (Settings) -->
+        <button class="header-fixed-btn" id="btn-settings" onclick="alert('點擊了偏好設定 ⚙️')" title="偏好設定">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 手機端 (390px 寬度) 實機比例模擬框架 -->
+      <div style="margin-top: 32px;">
+        <div class="device-title">
+          <span>📱 手機窄螢幕實機模擬（寬度 375px ~ 390px）</span>
+          <span>驗證留白空間與防溢出</span>
+        </div>
+        <div class="phone-wrapper">
+          <!-- 複製一份給手機框內展示，同步連動 -->
+          <div class="cbeta-integrated-header" style="border-radius: 0; border: none; border-bottom: 1px solid var(--border-color);" id="phoneHeader">
+            <!-- 注入同款按鈕 -->
+          </div>
+          <div class="phone-body" id="phoneBodyText">
+            <span style="font-size: 1.8rem;" id="stateIcon">📁</span>
+            <strong style="color: var(--text-main); font-size: 1rem;" id="stateTitle">我的書櫃</strong>
+            <p id="stateDesc">目前瀏覽本地已下載經書與自訂資料夾</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 特色要點剖析 -->
+      <div class="feature-points">
+        <div class="point-card">
+          <strong>1. 認知心理學分組</strong>
+          左側「下載 + 書櫃」掌管經典收藏來源；右側「筆記 + 搜尋」掌管研讀筆記與文字檢索，大腦認知負擔最低。
+        </div>
+        <div class="point-card">
+          <strong>2. 手機寬度完美相容</strong>
+          即便在 375px 窄螢幕手機上，單邊展開文字時僅增加約 45px，中央依然保有至少 35px 呼吸留白，絕不擁擠卡邊。
+        </div>
+        <div class="point-card">
+          <strong>3. 左「家」右「齒輪」永恆錨定</strong>
+          最常使用的「快速回頂層（家）」與「閱讀調整（齒輪）」鎖定在兩側最順手的手指邊界，符合肌肉記憶。
+        </div>
+        <div class="point-card">
+          <strong>4. 0 秒穿梭全站</strong>
+          無論身在藏經庫搜尋、資料夾內層或經典閱讀中，只要點一下對應膠囊，立刻瞬間切換！
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 主題切換
+    function setTheme(themeName, btn) {
+      document.body.className = themeName;
+      document.querySelectorAll('.theme-pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // 狀態設定字典
+    const stateInfo = {
+      home: {
+        activeBtn: 'home',
+        icon: '🏠',
+        title: '書架首頁',
+        desc: '所有功能收合，中央舒朗留白',
+        showChip: false
+      },
+      download: {
+        activeBtn: 'download',
+        icon: '➕',
+        title: '下載經典',
+        desc: '進入 CBETA 藏經庫目錄，瀏覽 2,000+ 部經典與譯者',
+        showChip: false
+      },
+      shelf: {
+        activeBtn: 'shelf',
+        icon: '📁',
+        title: '我的書櫃',
+        desc: '瀏覽本地已下載經典、自訂資料夾與近期閱讀',
+        showChip: false
+      },
+      notes: {
+        activeBtn: 'notes',
+        icon: '📒',
+        title: '重點與筆記',
+        desc: '閱讀時標記的重點佳句、心得感悟隨身手冊',
+        showChip: false
+      },
+      search: {
+        activeBtn: 'search',
+        icon: '🔍',
+        title: '全文搜尋',
+        desc: '針對已下載經典進行秒級關鍵字全文搜尋',
+        showChip: false
+      }
+    };
+
+    // 同步渲染手機模擬器的 Header
+    function syncPhoneHeader() {
+      const mainHeader = document.getElementById('mainHeader');
+      const phoneHeader = document.getElementById('phoneHeader');
+      phoneHeader.innerHTML = mainHeader.innerHTML;
+    }
+
+    // 導航狀態切換
+    function triggerNav(targetState) {
+      const info = stateInfo[targetState];
+
+      // 更新外部快捷按鈕 active
+      document.querySelectorAll('.state-btn').forEach(b => {
+        b.classList.remove('active');
+        if (b.innerText.includes(info.title.substring(0, 2))) {
+          b.classList.add('active');
+        }
+      });
+
+      // 移除全部 header 項目的 active
+      document.querySelectorAll('.pill-item, .header-fixed-btn').forEach(el => el.classList.remove('active'));
+
+      // 依狀態高亮
+      if (targetState === 'home') {
+        document.querySelectorAll('#btn-home').forEach(b => b.classList.add('active'));
+      } else if (targetState === 'download') {
+        document.querySelectorAll('#btn-download').forEach(b => b.classList.add('active'));
+      } else if (targetState === 'shelf') {
+        document.querySelectorAll('#btn-shelf').forEach(b => b.classList.add('active'));
+      } else if (targetState === 'notes') {
+        document.querySelectorAll('#btn-notes').forEach(b => b.classList.add('active'));
+      } else if (targetState === 'search') {
+        document.querySelectorAll('#btn-search').forEach(b => b.classList.add('active'));
+      }
+
+      // 更新手機框文字
+      document.getElementById('stateIcon').innerText = info.icon;
+      document.getElementById('stateTitle').innerText = info.title;
+      document.getElementById('stateDesc').innerText = info.desc;
+
+      // 同步到手機框
+      syncPhoneHeader();
+    }
+
+    // 初始同步
+    syncPhoneHeader();
+  </script>
+</body>
+</html>

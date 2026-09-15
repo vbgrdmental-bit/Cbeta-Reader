@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, ChevronLeft, ChevronRight, ArrowRight, Settings, Search,
-  Folder, Download, Check, X, Layers, BookMarked, User, Clock, Plus, Minus, Heart
+  Home, ChevronLeft, ArrowRight, Settings, Search,
+  Folder, Download, Check, X, Layers, BookMarked, User, Clock, Plus, Minus, Heart, Notebook
 } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
 import { listBooks } from '../../utils/db';
@@ -20,6 +20,7 @@ interface CbetaCatalogViewProps {
   onSelectBook: (workId: string, segmentId?: string, searchQuery?: string) => void;
   settings: AppSettings;
   isActive?: boolean;
+  onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search') => void;
 }
 
 interface CatalogNode {
@@ -224,7 +225,8 @@ export function CbetaCatalogView({
   onOpenSettings,
   onSelectBook,
   settings,
-  isActive
+  isActive,
+  onNavigateToLibrarySection
 }: CbetaCatalogViewProps) {
   // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代) - 預設開啟「常用經典」
   const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('favorite');
@@ -795,14 +797,8 @@ export function CbetaCatalogView({
 
   // 控制列上一頁 / 下一頁
   const canGoBack = historyIndex > 0;
-  const canGoForward = historyIndex < historyStack.length - 1;
-
   const handleHeaderPrev = () => {
     if (canGoBack) setHistoryIndex(prev => prev - 1);
-  };
-
-  const handleHeaderNext = () => {
-    if (canGoForward) setHistoryIndex(prev => prev + 1);
   };
 
 
@@ -1044,7 +1040,8 @@ export function CbetaCatalogView({
             備援
           </div>
         )}
-        {/* 回首頁 (書架) 圖示 */}
+        
+        {/* 1. 左端：回首頁 (書架) 圖示 */}
         <button 
           className="library-header-btn" 
           onClick={handleSmoothBackToLibrary}
@@ -1053,31 +1050,75 @@ export function CbetaCatalogView({
           <Home size={20} />
         </button>
 
-        <div className="control-divider" />
+        {/* 2. 左翼微膠囊：[ 下載 + 書櫃 ] */}
+        <div className="wing-capsule wing-left">
+          {/* 下載經典：目前處於 CBETA 藏經庫，此項展開 active */}
+          <button
+            className="wing-capsule-item active"
+            title="從 CBETA 資料庫下載經典"
+          >
+            <Plus size={17} style={{ strokeWidth: 2.2 }} />
+            <span className="capsule-label">下載經典</span>
+          </button>
 
-        {/* 上一層 (<) 與 下一層 (>) 歷史導航按鈕 */}
-        <button 
-          className="library-header-btn" 
-          onClick={handleHeaderPrev}
-          disabled={!canGoBack}
-          title="上一頁 / 上一層"
-          style={{ opacity: canGoBack ? 1 : 0.3 }}
-        >
-          <ChevronLeft size={20} />
-        </button>
+          {/* 我的書櫃 */}
+          <button
+            className="wing-capsule-item"
+            onClick={() => {
+              if (onNavigateToLibrarySection) {
+                onNavigateToLibrarySection('shelf');
+              } else {
+                handleSmoothBackToLibrary();
+              }
+            }}
+            title="我的書櫃（已下載經典與資料夾）"
+          >
+            <Folder size={16} />
+            <span className="capsule-label">我的書櫃</span>
+          </button>
+        </div>
 
-        <button 
-          className="library-header-btn" 
-          onClick={handleHeaderNext}
-          disabled={!canGoForward}
-          title="下一頁 / 下一層"
-          style={{ opacity: canGoForward ? 1 : 0.3 }}
-        >
-          <ChevronRight size={20} />
-        </button>
+        {/* 3. 中央留白呼吸區 */}
+        <div className="header-center-spacer" />
 
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-          {/* 右上角齒輪設定圖示 */}
+        {/* 4. 右翼微膠囊：[ 筆記 + 搜尋 ] */}
+        <div className="wing-capsule wing-right">
+          {/* 重點與筆記 */}
+          <button
+            className="wing-capsule-item"
+            onClick={() => {
+              if (onNavigateToLibrarySection) {
+                onNavigateToLibrarySection('notes');
+              } else {
+                handleSmoothBackToLibrary();
+              }
+            }}
+            title="重點與筆記"
+          >
+            <Notebook size={16} />
+            <span className="capsule-label">重點筆記</span>
+          </button>
+
+          {/* 全文搜尋 */}
+          <button
+            className="wing-capsule-item"
+            onClick={() => {
+              if (onNavigateToLibrarySection) {
+                onNavigateToLibrarySection('search');
+              } else {
+                handleSmoothBackToLibrary();
+              }
+            }}
+            title="關鍵字搜尋（已下載經典檢索）"
+          >
+            <Search size={16} />
+            <span className="capsule-label">全文搜尋</span>
+          </button>
+        </div>
+
+        {/* 5. 右端：設定 */}
+        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
+          {/* 齒輪設定按鈕 */}
           <button 
             className="library-header-btn" 
             onClick={onOpenSettings}
@@ -1382,7 +1423,18 @@ export function CbetaCatalogView({
             {/* 💡 當有經文清單（包含「常用經典」與深層目錄）時，顯示麵包屑與批量下載工具列 */}
             {(historyIndex > 0 || currentCategoryWorks.length > 0) && (
               <div className="cbeta-pane-header">
-                <div className="cbeta-breadcrumb-row">
+                <div className="cbeta-breadcrumb-row" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {canGoBack && (
+                    <button 
+                      type="button"
+                      className="library-header-btn"
+                      onClick={handleHeaderPrev}
+                      title="返回上一層"
+                      style={{ width: '26px', height: '26px', padding: 0, marginRight: '4px', flexShrink: 0 }}
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                  )}
                   {historyStack.slice(0, historyIndex + 1).map((node, index) => {
                     const isLast = index === historyIndex;
                     return (

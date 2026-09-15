@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.2.9` (App: v4.2.9 / Builder: v2.9.11)
+- **Current Version**: `v4.3.0` (App: v4.3.0 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.3.0 / Builder: v2.9.11** (2026-09-16)
+  - [App] 頂部控制列重構為「雙翼對稱展開微膠囊」（方案 C + 方案 B），左翼整合「下載經典 + 我的書櫃」，右翼整合「重點筆記 + 全文搜尋」，左端「家 🏠」與右端「齒輪 ⚙️」位置恆定不變。
+  - [App] 選中項目自動向外滑出展開標籤文字，未選中項優雅收合為精緻圓形圖示（Bezier 曲線平滑伸縮），兼具極佳空間利用率，在 375px 手機窄螢幕下零溢出。
+  - [App] 支援全站跨視圖 0 秒無縫即時切換，在 CBETA 藏經庫、書架、子資料夾、筆記與搜尋之間隨時任意穿梭。
 - **⭐ App: v4.2.9 / Builder: v2.9.11** (2026-09-14)
   - [App] 新增「顯示閱讀頁經文經題」設定（預設關閉），下滑閱讀時頂部自動浮現半透明毛玻璃經名膠囊，滑回頂部自動隱藏。
   - [App] 藏經庫與搜尋「閱讀按鈕」調整為等寬正圓「→」圖示（34px，與下載鈕等寬），底色隨四大主題自適應。
