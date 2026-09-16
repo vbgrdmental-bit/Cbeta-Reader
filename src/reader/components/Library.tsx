@@ -105,17 +105,20 @@ export function Library({
     }
   }, [resetFolderTrigger]);
 
-  // 💡 當接收到全站頂部四大功能導航目標時，切換至對應分頁與資料夾
+  // 💡 當接收到全站頂部四大功能導航目標時，直接切換至對應分頁與資料夾（無滑動動畫）
   useEffect(() => {
     if (!targetSection) return;
     if (targetSection.section === 'home') {
-      handleGoHomeWithAnimation();
+      setActiveTab('shelf');
+      setCurrentFolderId(null);
+      setFolderHistory([null]);
+      setHistoryIndex(0);
     } else if (targetSection.section === 'shelf') {
       setActiveTab('shelf');
-      navigateToFolderWithAnimation('virtual_my_folders');
+      navigateToFolder('virtual_my_folders');
     } else if (targetSection.section === 'notes') {
       setActiveTab('shelf');
-      navigateToFolderWithAnimation('virtual_highlights');
+      navigateToFolder('virtual_highlights');
     } else if (targetSection.section === 'search') {
       setActiveTab('search');
     }
@@ -470,44 +473,7 @@ export function Library({
     }
   };
 
-  // 💡 點擊「首頁」按鈕時的平滑倒滑往回動畫 (CBETA 式整頁飛出)
-  const handleGoHomeWithAnimation = () => {
-    if (activeTab === 'shelf' && !currentFolderId) return; // 本身就在首頁時不觸發
 
-    if (swipeContainerRef.current) {
-      const container = swipeContainerRef.current;
-      // 1. 整頁向右飛出（返回首頁 = 向後 = 右邊飛出）
-      container.style.transition = 'transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out';
-      container.style.transform = 'translateX(100%)';
-      container.style.opacity = '0.15';
-
-      setTimeout(() => {
-        // 2. 切換狀態回首頁
-        setActiveTab('shelf');
-        setCurrentFolderId(null);
-        setFolderHistory([null]);
-        setHistoryIndex(0);
-
-        // 3. 從左側全幅滑入歸位
-        container.style.transition = 'none';
-        container.style.transform = 'translateX(-100%)';
-        container.style.opacity = '0.7';
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease-out';
-            container.style.transform = 'translateX(0px)';
-            container.style.opacity = '1';
-          });
-        });
-      }, 210);
-    } else {
-      setActiveTab('shelf');
-      setCurrentFolderId(null);
-      setFolderHistory([null]);
-      setHistoryIndex(0);
-    }
-  };
 
   // 取消全選
   const handleDeselectAllBooks = () => {
@@ -1368,7 +1334,12 @@ export function Library({
         {/* 1. 左端：家 (Home) */}
         <button 
           className={`library-header-btn ${activeTab === 'shelf' && !currentFolderId ? 'active' : ''}`}
-          onClick={handleGoHomeWithAnimation}
+          onClick={() => {
+            setActiveTab('shelf');
+            setCurrentFolderId(null);
+            setFolderHistory([null]);
+            setHistoryIndex(0);
+          }}
           title="書架首頁"
         >
           <Home size={20} />
@@ -1379,7 +1350,7 @@ export function Library({
           {/* 下載經典 */}
           <button
             className="wing-capsule-item"
-            onClick={handleOpenCbetaCatalogWithAnimation}
+            onClick={() => onOpenCbetaCatalog?.()}
             title="從 CBETA 資料庫下載經典"
           >
             <Plus size={17} style={{ strokeWidth: 2.2 }} />
@@ -1391,7 +1362,7 @@ export function Library({
             className={`wing-capsule-item ${activeTab === 'shelf' && (currentFolderId === 'virtual_my_folders' || (currentFolderId && currentFolderId !== 'virtual_highlights')) ? 'active' : ''}`}
             onClick={() => {
               setActiveTab('shelf');
-              navigateToFolderWithAnimation('virtual_my_folders');
+              navigateToFolder('virtual_my_folders');
             }}
             title="我的書櫃（已下載經典與資料夾）"
           >
@@ -1403,14 +1374,14 @@ export function Library({
         {/* 3. 中央留白呼吸區 */}
         <div className="header-center-spacer" />
 
-        {/* 4. 右翼微膠囊：[ 筆記 + 搜尋 ] */}
+        {/* 4. 右翼微膠囊：[ 筆記 + 搜尋 + (閱讀日誌) ] */}
         <div className="wing-capsule wing-right">
           {/* 重點與筆記 */}
           <button
             className={`wing-capsule-item ${activeTab === 'shelf' && currentFolderId === 'virtual_highlights' ? 'active' : ''}`}
             onClick={() => {
               setActiveTab('shelf');
-              navigateToFolderWithAnimation('virtual_highlights');
+              navigateToFolder('virtual_highlights');
             }}
             title="重點與筆記"
           >
@@ -1427,21 +1398,22 @@ export function Library({
             <Search size={16} />
             <span className="capsule-label">全文搜尋</span>
           </button>
-        </div>
 
-        {/* 5. 右端：設定與日誌 */}
-        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
-          {/* 💡 閱讀日誌入口（僅在 readingLogEnabled 時顯示） */}
-          {settings.readingLogEnabled && activeTab === 'shelf' && (
+          {/* 閱讀日誌（若勾選「閱讀日誌」時整合於右側微膠囊內） */}
+          {settings.readingLogEnabled && (
             <button
-              className="library-header-btn"
+              className={`wing-capsule-item ${showReadingLog ? 'active' : ''}`}
               onClick={() => setShowReadingLog(true)}
               title="閱讀日誌"
             >
-              <CalendarDays size={19} />
+              <CalendarDays size={16} />
+              <span className="capsule-label">閱讀日誌</span>
             </button>
           )}
+        </div>
 
+        {/* 5. 右端：設定 */}
+        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
           {/* 齒輪設定按鈕（一律在最右端顯示，點擊開啟與閱讀頁相同的設定彈窗） */}
           <button 
             className="library-header-btn"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Home, ChevronLeft, ArrowRight, Settings, Search,
-  Folder, Download, Check, X, Layers, BookMarked, User, Clock, Plus, Minus, Heart, Notebook
+  Folder, Download, Check, X, Layers, BookMarked, User, Clock, Plus, Minus, Heart, Notebook, CalendarDays
 } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
 import { listBooks } from '../../utils/db';
@@ -10,6 +10,7 @@ import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import type { BuildProgress } from '../../builder/PackageBuilder';
 import { BuilderProgressOverlay } from './BuilderProgressOverlay';
+import { ReadingLogView } from './ReadingLogView';
 import { isBackupMode } from '../../utils/sourceMode';
 import { getBookCoverGradient } from '../../utils/bookColors';
 import '../styles/cbeta-catalog.css';
@@ -230,6 +231,7 @@ export function CbetaCatalogView({
 }: CbetaCatalogViewProps) {
   // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代) - 預設開啟「常用經典」
   const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('favorite');
+  const [showReadingLog, setShowReadingLog] = useState(false);
 
   // 導航歷史紀錄 (Header 上一頁/下一頁及麵包屑使用) - 初始對齊「常用經典」頁籤
   const [historyStack, setHistoryStack] = useState<CatalogNode[]>([
@@ -1044,7 +1046,7 @@ export function CbetaCatalogView({
         {/* 1. 左端：回首頁 (書架) 圖示 */}
         <button 
           className="library-header-btn" 
-          onClick={handleSmoothBackToLibrary}
+          onClick={onBackToLibrary}
           title="返回本地書架"
         >
           <Home size={20} />
@@ -1068,7 +1070,7 @@ export function CbetaCatalogView({
               if (onNavigateToLibrarySection) {
                 onNavigateToLibrarySection('shelf');
               } else {
-                handleSmoothBackToLibrary();
+                onBackToLibrary();
               }
             }}
             title="我的書櫃（已下載經典與資料夾）"
@@ -1081,7 +1083,7 @@ export function CbetaCatalogView({
         {/* 3. 中央留白呼吸區 */}
         <div className="header-center-spacer" />
 
-        {/* 4. 右翼微膠囊：[ 筆記 + 搜尋 ] */}
+        {/* 4. 右翼微膠囊：[ 筆記 + 搜尋 + (閱讀日誌) ] */}
         <div className="wing-capsule wing-right">
           {/* 重點與筆記 */}
           <button
@@ -1090,7 +1092,7 @@ export function CbetaCatalogView({
               if (onNavigateToLibrarySection) {
                 onNavigateToLibrarySection('notes');
               } else {
-                handleSmoothBackToLibrary();
+                onBackToLibrary();
               }
             }}
             title="重點與筆記"
@@ -1106,7 +1108,7 @@ export function CbetaCatalogView({
               if (onNavigateToLibrarySection) {
                 onNavigateToLibrarySection('search');
               } else {
-                handleSmoothBackToLibrary();
+                onBackToLibrary();
               }
             }}
             title="關鍵字搜尋（已下載經典檢索）"
@@ -1114,6 +1116,18 @@ export function CbetaCatalogView({
             <Search size={16} />
             <span className="capsule-label">全文搜尋</span>
           </button>
+
+          {/* 閱讀日誌（若勾選「閱讀日誌」時整合於右側微膠囊內） */}
+          {settings?.readingLogEnabled && (
+            <button
+              className={`wing-capsule-item ${showReadingLog ? 'active' : ''}`}
+              onClick={() => setShowReadingLog(true)}
+              title="閱讀日誌"
+            >
+              <CalendarDays size={16} />
+              <span className="capsule-label">閱讀日誌</span>
+            </button>
+          )}
         </div>
 
         {/* 5. 右端：設定 */}
@@ -1773,6 +1787,14 @@ export function CbetaCatalogView({
         <BuilderProgressOverlay 
           buildProgress={buildProgress} 
           theme={settings.theme} 
+        />
+      )}
+
+      {/* 💡 每日閱讀日誌 Modal */}
+      {showReadingLog && (
+        <ReadingLogView 
+          onClose={() => setShowReadingLog(false)} 
+          onSelectBook={onSelectBook} 
         />
       )}
     </div>
