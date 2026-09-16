@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.3.2` (App: v4.3.2 / Builder: v2.9.11)
+- **Current Version**: `v4.3.3` (App: v4.3.3 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.3.3 / Builder: v2.9.11** (2026-09-17)
+  - [App] 頂部控制列徹底統一首頁（`Library`）與藏經庫（`CbetaCatalogView`）之 HTML 容器標籤與 CSS class（`library-header`），消除邊框寬度（`1.2px`）與陰影差異，確保點擊「+ 下載經典」時左端「家 🏠」、右端「微膠囊」與最右側「齒輪 ⚙️」像素級完美錨定，零位移、零跳動。
+  - [App] 「全文搜尋」面板若已有「近期搜尋：」關鍵字標籤，自動隱藏下方「站內已下載書籍檢索」提示文字，僅在無任何近期搜尋紀錄時呈現，確保排版簡約清爽。
 - **⭐ App: v4.3.2 / Builder: v2.9.11** (2026-09-17)
   - [App] 頂部控制列手機窄螢幕極致自適應排版（`max-width: 600px` 與 `380px`），徹底解決加入「閱讀日誌」時右側齒輪按鈕被推擠跑出版面之問題。
   - [App] 「我的書櫃」將標題列獨立「新建資料夾」按鈕功能併入「…」選單，改名為「我的書櫃分類管理」，並於清單頂部提供「新增分類」內嵌即時建立項目。

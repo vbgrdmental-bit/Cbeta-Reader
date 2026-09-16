@@ -258,10 +258,12 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery, onTrigg
           </div>
         )}
 
-        {/* 💡 放在中間的搜尋 bar 虛線下緣，置左 */}
-        <div className="search-info-tip" style={{ marginTop: recentSearches.length > 0 ? '0.4rem' : '0.2rem' }}>
-          站內已下載書籍檢索
-        </div>
+        {/* 💡 放在中間的搜尋 bar 虛線下緣，置左（若已有近期搜尋則不再顯示） */}
+        {recentSearches.length === 0 && (
+          <div className="search-info-tip" style={{ marginTop: '0.2rem' }}>
+            站內已下載書籍檢索
+          </div>
+        )}
       </div>
 
       {searched && (

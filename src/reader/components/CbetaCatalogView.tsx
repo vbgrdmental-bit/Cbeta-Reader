@@ -13,6 +13,7 @@ import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { ReadingLogView } from './ReadingLogView';
 import { isBackupMode } from '../../utils/sourceMode';
 import { getBookCoverGradient } from '../../utils/bookColors';
+import '../styles/library.css';
 import '../styles/cbeta-catalog.css';
 
 interface CbetaCatalogViewProps {
@@ -1035,8 +1036,8 @@ export function CbetaCatalogView({
       onTouchStart={handleCatalogTouchStart}
       onTouchEnd={handleCatalogTouchEnd}
     >
-      {/* 頂部固定控制列 (Header Bar) */}
-      <header className="cbeta-catalog-header">
+      {/* 頂部固定控制列 (Header Bar) - 56pxBaseHeight 完全對齊首頁 */}
+      <div className="library-header">
         {isBackupMode() && (
           <div className="header-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
             備援
@@ -1147,7 +1148,7 @@ export function CbetaCatalogView({
             <Settings size={20} />
           </button>
         </div>
-      </header>
+      </div>
 
       {/* 主頁面內容區 */}
       <main className="cbeta-catalog-body custom-scrollbar">
