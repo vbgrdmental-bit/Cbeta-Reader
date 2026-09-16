@@ -26,7 +26,7 @@ interface ReaderViewProps {
   onBackToLibrary: (resetToRoot?: boolean) => void;
   onSaveSettings: (settings: AppSettings) => void;
   searchQuery?: string;
-  onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search') => void;
+  onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log') => void;
   onOpenCbetaCatalog?: () => void;
 }
 

@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.3.0` (App: v4.3.0 / Builder: v2.9.11)
+- **Current Version**: `v4.3.1` (App: v4.3.1 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.3.1 / Builder: v2.9.11** (2026-09-17)
+  - [App] 「每日閱讀日誌」改為獨立原生分頁（非彈跳視窗），延用頂部「雙翼對稱微膠囊」控制列，並支援微膠囊項目選中展開與全站無縫切換。
+  - [App] 頂部控制列最右側「齒輪」配置圓型灰色/主題底圖，與首頁左側「家 🏠」按鈕左右對稱。
+  - [App] 藏經庫與搜尋容器背景統一對齊全站主題變數 `--bg-library`，徹底消除羊皮紙、象牙白、舒服模式下的背景色差。
+  - [App] 頂層「我的書櫃」與「重點筆記」隱藏多餘的「<」返回按鈕；「我的書櫃」標題右側圓型灰色直立「…」資料夾管理按鈕恢復為恆常顯示。
 - **⭐ App: v4.3.0 / Builder: v2.9.11** (2026-09-16)
   - [App] 頂部控制列重構為「雙翼對稱展開微膠囊」（方案 C + 方案 B），左翼整合「下載經典 + 我的書櫃」，右翼整合「重點筆記 + 全文搜尋」，左端「家 🏠」與右端「齒輪 ⚙️」位置恆定不變。
   - [App] 選中項目自動向外滑出展開標籤文字，未選中項優雅收合為精緻圓形圖示（Bezier 曲線平滑伸縮），兼具極佳空間利用率，在 375px 手機窄螢幕下零溢出。

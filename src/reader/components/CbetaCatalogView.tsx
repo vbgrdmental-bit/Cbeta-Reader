@@ -21,7 +21,7 @@ interface CbetaCatalogViewProps {
   onSelectBook: (workId: string, segmentId?: string, searchQuery?: string) => void;
   settings: AppSettings;
   isActive?: boolean;
-  onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search') => void;
+  onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log') => void;
 }
 
 interface CatalogNode {
@@ -1120,8 +1120,14 @@ export function CbetaCatalogView({
           {/* 閱讀日誌（若勾選「閱讀日誌」時整合於右側微膠囊內） */}
           {settings?.readingLogEnabled && (
             <button
-              className={`wing-capsule-item ${showReadingLog ? 'active' : ''}`}
-              onClick={() => setShowReadingLog(true)}
+              className="wing-capsule-item"
+              onClick={() => {
+                if (onNavigateToLibrarySection) {
+                  onNavigateToLibrarySection('reading-log');
+                } else {
+                  onBackToLibrary();
+                }
+              }}
               title="閱讀日誌"
             >
               <CalendarDays size={16} />

@@ -25,7 +25,7 @@ interface LibraryProps {
   settings: AppSettings;
   initialSearchQuery?: string;
   resetFolderTrigger?: number;
-  targetSection?: { section: 'home' | 'shelf' | 'notes' | 'search'; timestamp: number } | null;
+  targetSection?: { section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log'; timestamp: number } | null;
   onOpenSettings?: () => void;
   onOpenCbetaCatalog?: () => void;
 }
@@ -46,11 +46,10 @@ export function Library({
   const [onlineSearchQuery, setOnlineSearchQuery] = useState('');
   const [onlineResults, setOnlineResults] = useState<SearchResult[]>([]);
   const [isSearchingOnline, setIsSearchingOnline] = useState(false);
-  const [showReadingLog, setShowReadingLog] = useState(false); // 💡 閱讀日誌入口
   
   // Builder 進度與動畫
   const [buildProgress, setBuildProgress] = useState<BuildProgress | null>(null);
-  const [activeTab, setActiveTab] = useState<'shelf' | 'search'>(initialSearchQuery ? 'search' : 'shelf');
+  const [activeTab, setActiveTab] = useState<'shelf' | 'search' | 'reading-log'>(initialSearchQuery ? 'search' : 'shelf');
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
 
   const [isBackup, setIsBackup] = useState(isBackupMode());
@@ -121,6 +120,8 @@ export function Library({
       navigateToFolder('virtual_highlights');
     } else if (targetSection.section === 'search') {
       setActiveTab('search');
+    } else if (targetSection.section === 'reading-log') {
+      setActiveTab('reading-log');
     }
   }, [targetSection]);
 
@@ -1402,8 +1403,8 @@ export function Library({
           {/* 閱讀日誌（若勾選「閱讀日誌」時整合於右側微膠囊內） */}
           {settings.readingLogEnabled && (
             <button
-              className={`wing-capsule-item ${showReadingLog ? 'active' : ''}`}
-              onClick={() => setShowReadingLog(true)}
+              className={`wing-capsule-item ${activeTab === 'reading-log' ? 'active' : ''}`}
+              onClick={() => setActiveTab('reading-log')}
               title="閱讀日誌"
             >
               <CalendarDays size={16} />
@@ -1437,28 +1438,31 @@ export function Library({
           {currentFolderId && (
             <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
-                <button 
-                  type="button"
-                  className="folder-back-btn"
-                  onClick={handleGoBack}
-                  title="返回上一層"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '28px',
-                    height: '28px',
-                    borderRadius: '50%',
-                    border: 'none',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    color: 'var(--text-muted)',
-                    marginRight: '2px',
-                    flexShrink: 0
-                  }}
-                >
-                  <ChevronLeft size={18} />
-                </button>
+                {/* 💡 僅在深入子資料夾層級時顯示返回「<」，「我的書櫃」與「重點筆記」頂層隱藏 */}
+                {currentFolderId && currentFolderId !== 'virtual_my_folders' && currentFolderId !== 'virtual_highlights' && (
+                  <button 
+                    type="button"
+                    className="folder-back-btn"
+                    onClick={handleGoBack}
+                    title="返回上一層"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      background: 'transparent',
+                      cursor: 'pointer',
+                      color: 'var(--text-muted)',
+                      marginRight: '2px',
+                      flexShrink: 0
+                    }}
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                )}
                 <div className="folder-nav-middle" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   {/* 💡 專區/資料夾同款識別圖示 Badge */}
                   <div 
@@ -1492,8 +1496,8 @@ export function Library({
                      getFolderPath(currentFolderId)}
                   </span>
 
-                  {/* 💡 在「我的書櫃」時提供圓形「...」資料夾集中管理按鈕 */}
-                  {currentFolderId === 'virtual_my_folders' && folders.filter(f => !f.parentId).length > 0 && (
+                  {/* 💡 在「我的書櫃」時恆常提供圓形「...」資料夾集中管理按鈕 */}
+                  {currentFolderId === 'virtual_my_folders' && (
                     <button
                       className="appstore-section-circle-more-btn"
                       onClick={(e) => {
@@ -2048,7 +2052,7 @@ export function Library({
             </div>
           )}
         </div>
-      ) : (
+      ) : activeTab === 'search' ? (
         /* 本地檢索畫面 */
         <div className="animate-slide-up">
           <SearchPanel 
@@ -2069,6 +2073,14 @@ export function Library({
                 setIsSearchingOnline(false);
               }
             }}
+          />
+        </div>
+      ) : (
+        /* 💡 每日閱讀日誌分頁畫面 (延用頂部微膠囊控制列) */
+        <div className="animate-slide-up" style={{ width: '100%', height: '100%' }}>
+          <ReadingLogView
+            mode="page"
+            onSelectBook={onSelectBook}
           />
         </div>
       )}
@@ -2951,13 +2963,7 @@ export function Library({
         </div>
       )}
 
-      {/* 💡 每日閱讀日誌 Modal */}
-      {showReadingLog && (
-        <ReadingLogView 
-          onClose={() => setShowReadingLog(false)} 
-          onSelectBook={onSelectBook} 
-        />
-      )}
+
 
     </div>
   );

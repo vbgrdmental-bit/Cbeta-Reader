@@ -1182,16 +1182,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.3.0) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.3.1) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.3.0</span>
-                        <span className="changelog-date">(2026-09-16)</span>
+                        <span>⭐ App: v4.3.1</span>
+                        <span className="changelog-date">(2026-09-17)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 頂部控制列升級「雙翼對稱展開微膠囊」，左翼整合下載與書櫃，右翼整合筆記與搜尋。</li>
-                        <li>• 選中項目自動向外展開標籤文字，未選中項收合為精緻圓形圖示，手機窄螢幕零溢出。</li>
-                        <li>• 支援全站跨視圖 0 秒即時切換，保持左側「家」與右側「齒輪」永恆黃金錨定。</li>
+                        <li>• 「每日閱讀日誌」改為原生分頁，延用頂部微膠囊控制列並支援跨視圖無縫切換。</li>
+                        <li>• 控制列最右側「齒輪」配置圓型主題底圖，與首頁「家」按鈕左右完美平衡對稱。</li>
+                        <li>• 藏經庫背景色對齊全站消除色差；書櫃與筆記移除頂層「&lt;」並恆常顯示「…」管理鈕。</li>
                       </ul>
                     </div>
 
@@ -1214,6 +1214,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.0 <span className="changelog-date">(2026-09-16)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 頂部控制列升級「雙翼對稱展開微膠囊」，左翼整合下載與書櫃，右翼整合筆記與搜尋。</li>
+                            <li>• 選中項目自動向外展開標籤文字，未選中項收合為精緻圓形圖示，手機窄螢幕零溢出。</li>
+                            <li>• 支援全站跨視圖 0 秒即時切換，保持左側「家」與右側「齒輪」永恆黃金錨定。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title">App: v4.2.9 <span className="changelog-date">(2026-09-14)</span></div>
                           <ul className="changelog-list">

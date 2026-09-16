@@ -11,8 +11,9 @@ import {
 } from '../../utils/db';
 
 interface ReadingLogViewProps {
-  onClose: () => void;
+  onClose?: () => void;
   onSelectBook: (workId: string, segmentId?: string, searchQuery?: string, autoResumeMode?: 'resume' | 'restart') => void;
+  mode?: 'page' | 'modal';
 }
 
 /** 將 timestamp 格式化為 "HH:MM" */
@@ -44,7 +45,7 @@ function formatDurationStat(minutes: number): string {
   return Number.isInteger(hrs) ? `${hrs} 小時` : `${hrs.toFixed(1)} 小時`;
 }
 
-export function ReadingLogView({ onClose, onSelectBook }: ReadingLogViewProps) {
+export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: ReadingLogViewProps) {
   const [logs, setLogs] = useState<ReadingLogEntry[]>([]);
   const [, setLoading] = useState(true);
 
@@ -106,40 +107,45 @@ export function ReadingLogView({ onClose, onSelectBook }: ReadingLogViewProps) {
   };
 
   // ── 統計計算 ──────────────────────────────────────────────
-  // 1. 累計閱讀天數（不重複的所有日期總數）
   const totalActiveDays = useMemo(() => {
-    const dates = new Set(logs.map(l => l.date));
-    return dates.size;
+    const daySet = new Set<string>();
+    logs.forEach(l => {
+      if (l.date) daySet.add(l.date);
+    });
+    return daySet.size;
   }, [logs]);
 
-  // 2. 當前選定月份的日誌清單
-  const currentMonthStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
-  const monthLogs = useMemo(() => {
-    return logs.filter(l => l.date.startsWith(currentMonthStr));
-  }, [logs, currentMonthStr]);
+  // 本月紀錄與統計
+  const currentMonthPrefix = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+  
+  const currentMonthLogs = useMemo(() => {
+    return logs.filter(l => l.date && l.date.startsWith(currentMonthPrefix));
+  }, [logs, currentMonthPrefix]);
 
-  // 本月閱讀總分鐘數
   const monthTotalMinutes = useMemo(() => {
-    return monthLogs.reduce((acc, cur) => acc + (cur.durationMinutes || 0), 0);
-  }, [monthLogs]);
+    return currentMonthLogs.reduce((acc, cur) => acc + (cur.durationMinutes || 0), 0);
+  }, [currentMonthLogs]);
 
-  // 本月閱讀本數（當月讀過的不同 workId 總數）
   const monthUniqueBooksCount = useMemo(() => {
-    const bookIds = new Set(monthLogs.map(l => l.workId));
-    return bookIds.size;
-  }, [monthLogs]);
+    const bookSet = new Set<string>();
+    currentMonthLogs.forEach(l => {
+      if (l.workId) bookSet.add(l.workId);
+    });
+    return bookSet.size;
+  }, [currentMonthLogs]);
 
-  // 依日期分組當月的閱讀總時長 (Map: date -> totalMinutes)
+  // 日期 -> 當日總分鐘數映射（用於月曆熱力標記）
   const dateMinutesMap = useMemo(() => {
     const map = new Map<string, number>();
-    for (const log of monthLogs) {
-      const current = map.get(log.date) || 0;
-      map.set(log.date, current + (log.durationMinutes || 0));
-    }
+    logs.forEach(l => {
+      if (l.date) {
+        map.set(l.date, (map.get(l.date) || 0) + (l.durationMinutes || 0));
+      }
+    });
     return map;
-  }, [monthLogs]);
+  }, [logs]);
 
-  // 當前選取日期的明細紀錄
+  // 選中日期的記錄列表
   const selectedDateLogs = useMemo(() => {
     return logs.filter(l => l.date === selectedDate);
   }, [logs, selectedDate]);
@@ -179,68 +185,20 @@ export function ReadingLogView({ onClose, onSelectBook }: ReadingLogViewProps) {
     setSelectedDate(todayStr);
   };
 
-  return (
-    <div className="search-dialog-overlay" onClick={onClose} style={{ zIndex: 1100 }}>
-      <div 
-        className="search-dialog-card animate-slide-up" 
-        onClick={e => e.stopPropagation()}
-        style={{ 
-          maxWidth: '480px', 
-          width: '94vw',
-          maxHeight: '88vh',
-          borderRadius: '16px',
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          backgroundColor: 'var(--bg-card, #fff)'
-        }}
-      >
-        {/* 頂部標題列 */}
-        <div 
-          className="dialog-header" 
-          style={{ 
-            padding: '0.9rem 1.2rem',
-            borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: 'var(--bg-card, #fff)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <CalendarDays size={20} style={{ color: 'var(--theme-accent, #8b5a2b)' }} />
-            <h3 style={{ 
-              margin: 0, 
-              fontSize: '1.15rem', 
-              fontWeight: 700, 
-              fontFamily: 'var(--font-serif)',
-              color: 'var(--text-primary)'
-            }}>
-              每日閱讀日誌
-            </h3>
-          </div>
-          <button 
-            className="icon-button close-btn" 
-            onClick={onClose}
-            title="關閉"
-            style={{ padding: '4px' }}
-          >
-            <X size={20} />
-          </button>
-        </div>
+  const isPageMode = mode === 'page';
 
-        {/* 滾動內容本體 */}
-        <div 
-          style={{ 
-            padding: '1.1rem', 
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            overscrollBehavior: 'contain'
-          }}
-        >
+  const bodyContent = (
+    <div 
+      className="reading-log-body-content custom-scrollbar"
+      style={{ 
+        padding: isPageMode ? '0' : '1.1rem', 
+        overflowY: isPageMode ? 'visible' : 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.2rem',
+        overscrollBehavior: 'contain'
+      }}
+    >
           {/* 💡 1. 頂部三大統計看板 */}
           <div style={{ 
             display: 'grid', 
@@ -570,7 +528,7 @@ export function ReadingLogView({ onClose, onSelectBook }: ReadingLogViewProps) {
                       {/* 接續閱讀 */}
                       <button
                         onClick={() => {
-                          onClose();
+                          onClose?.();
                           onSelectBook(log.workId, '', '', 'resume');
                         }}
                         style={{
@@ -612,17 +570,16 @@ export function ReadingLogView({ onClose, onSelectBook }: ReadingLogViewProps) {
               </div>
             )}
           </div>
-        </div>
 
         {/* 底部功能與清空列 */}
         <div 
           style={{ 
             padding: '0.8rem 1.2rem',
-            borderTop: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+            borderTop: isPageMode ? 'none' : '1px solid var(--border-color, rgba(0,0,0,0.08))',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: 'var(--bg-card, #fff)'
+            justifyContent: isPageMode ? 'center' : 'space-between',
+            backgroundColor: isPageMode ? 'transparent' : 'var(--bg-card, #fff)'
           }}
         >
           {showClearConfirm ? (
@@ -683,22 +640,102 @@ export function ReadingLogView({ onClose, onSelectBook }: ReadingLogViewProps) {
                 <span>清空所有閱讀記錄</span>
               </button>
 
-              <button
-                onClick={onClose}
-                className="dialog-btn-cancel"
-                style={{ 
-                  padding: '5px 16px', 
-                  fontSize: '0.82rem',
-                  borderRadius: '8px' 
-                }}
-              >
-                關閉
-              </button>
+              {!isPageMode && onClose && (
+                <button
+                  onClick={onClose}
+                  className="dialog-btn-cancel"
+                  style={{ 
+                    padding: '5px 16px', 
+                    fontSize: '0.82rem', 
+                    borderRadius: '8px' 
+                  }}
+                >
+                  關閉
+                </button>
+              )}
             </>
           )}
         </div>
+    </div>
+  );
+
+  if (isPageMode) {
+    return (
+      <div 
+        className="reading-log-page-container animate-fade-in custom-scrollbar"
+        style={{
+          width: '100%',
+          height: '100%',
+          overflowY: 'auto',
+          overscrollBehavior: 'contain',
+          padding: '1.2rem 1rem 3.5rem',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div style={{ maxWidth: '840px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {bodyContent}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="search-dialog-overlay" onClick={onClose} style={{ zIndex: 1100 }}>
+      <div 
+        className="search-dialog-card animate-slide-up" 
+        onClick={e => e.stopPropagation()}
+        style={{ 
+          maxWidth: '480px', 
+          width: '94vw',
+          maxHeight: '88vh',
+          borderRadius: '16px',
+          padding: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          backgroundColor: 'var(--bg-card, #fff)'
+        }}
+      >
+        {/* 頂部標題列 */}
+        <div 
+          className="dialog-header" 
+          style={{ 
+            padding: '0.9rem 1.2rem',
+            borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: 'var(--bg-card, #fff)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <CalendarDays size={20} style={{ color: 'var(--theme-accent, #8b5a2b)' }} />
+            <h3 style={{ 
+              margin: 0, 
+              fontSize: '1.15rem', 
+              fontWeight: 700, 
+              fontFamily: 'var(--font-serif)',
+              color: 'var(--text-primary)'
+            }}>
+              每日閱讀日誌
+            </h3>
+          </div>
+          {onClose && (
+            <button 
+              className="icon-button close-btn" 
+              onClick={onClose}
+              title="關閉"
+              style={{ padding: '4px' }}
+            >
+              <X size={20} />
+            </button>
+          )}
+        </div>
+
+        {bodyContent}
       </div>
     </div>
   );
 }
+
 export default ReadingLogView;

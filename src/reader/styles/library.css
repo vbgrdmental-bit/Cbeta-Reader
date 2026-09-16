@@ -1033,29 +1033,74 @@ body.theme-ebony .list-folder-item.add-folder-dashed-card {
   justify-content: center;
   color: var(--text-muted);
   cursor: pointer;
-  background: transparent;
+  background: rgba(140, 75, 39, 0.08);
+  border: 1px solid rgba(140, 75, 39, 0.12);
   transition: var(--transition-fast);
   flex-shrink: 0;
 }
 
+body.theme-ebony .library-header-btn,
+body.theme-dark .library-header-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #e4e4e7;
+}
+
+body.theme-comfort .library-header-btn {
+  background: rgba(46, 92, 59, 0.09);
+  border-color: rgba(46, 92, 59, 0.12);
+}
+
+body.theme-light .library-header-btn,
+body.theme-ivory .library-header-btn {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
 .library-header-btn:hover {
-  background: rgba(140, 75, 39, 0.06);
+  background: rgba(140, 75, 39, 0.14);
   color: var(--text-primary);
 }
 
 body.theme-ebony .library-header-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.15);
   color: #ffffff;
 }
 
+body.theme-comfort .library-header-btn:hover {
+  background: rgba(46, 92, 59, 0.16);
+  color: var(--text-primary);
+}
+
+body.theme-light .library-header-btn:hover,
+body.theme-ivory .library-header-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-primary);
+}
+
 .library-header-btn.active {
-  background: rgba(140, 75, 39, 0.12);
+  background: rgba(140, 75, 39, 0.18);
+  border-color: rgba(140, 75, 39, 0.28);
   color: var(--text-primary) !important;
 }
 
 body.theme-ebony .library-header-btn.active {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.28);
   color: var(--color-gold-400) !important;
+}
+
+body.theme-comfort .library-header-btn.active {
+  background: rgba(46, 92, 59, 0.22);
+  border-color: rgba(46, 92, 59, 0.28);
+  color: var(--text-primary) !important;
+}
+
+body.theme-light .library-header-btn.active,
+body.theme-ivory .library-header-btn.active {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: var(--text-primary) !important;
 }
 
 /* Bookshelf Layout */

@@ -82,10 +82,10 @@ export function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [booksUpdatedTrigger, setBooksUpdatedTrigger] = useState(0);
 
-  // 💡 全站四大核心功能導航目標
-  const [targetLibrarySection, setTargetLibrarySection] = useState<{ section: 'home' | 'shelf' | 'notes' | 'search'; timestamp: number } | null>(null);
+  // 💡 全站核心功能導航目標（首頁、書櫃、筆記、搜尋、閱讀日誌）
+  const [targetLibrarySection, setTargetLibrarySection] = useState<{ section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log'; timestamp: number } | null>(null);
 
-  const handleNavigateToLibrarySection = (section: 'home' | 'shelf' | 'notes' | 'search') => {
+  const handleNavigateToLibrarySection = (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log') => {
     // 若在閱讀頁，先結束當前閱讀日誌
     if (view === 'reader') {
       readingLogManager.endSession();

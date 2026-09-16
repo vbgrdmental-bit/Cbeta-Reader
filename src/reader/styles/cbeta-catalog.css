@@ -9,7 +9,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--reader-bg, #fbf8f3);
+  background: var(--bg-library) !important;
   color: var(--text-primary, #2c2016);
   position: relative;
   overflow: hidden;
@@ -36,7 +36,7 @@
   position: relative;
   flex-shrink: 0;
   z-index: 100;
-  background-color: var(--reader-bg, #fbf8f3) !important;
+  background: var(--bg-library) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
