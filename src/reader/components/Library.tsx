@@ -138,6 +138,7 @@ export function Library({
 
   // 「...」選項 Modal 狀態
   const [showFolderManagerModal, setShowFolderManagerModal] = useState(false);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [menuTargetFolder, setMenuTargetFolder] = useState<BookFolder | null>(null);
   const [menuTargetBook, setMenuTargetBook] = useState<BookMetadata | null>(null);
   const [menuTargetBookSource, setMenuTargetBookSource] = useState<string | null>(null);
@@ -579,8 +580,8 @@ export function Library({
   const handleCreateFolder = () => {
     if (!newFolderName.trim()) return;
     
-    // 如果在「我的書櫃」專區，parentId 設為 null，屬於頂層自訂資料夾
-    const targetParentId = currentFolderId === 'virtual_my_folders' ? null : currentFolderId;
+    // 如果在「我的書櫃」專區或在分類管理 Modal，parentId 設為 null，屬於頂層自訂資料夾
+    const targetParentId = (showFolderManagerModal || currentFolderId === 'virtual_my_folders') ? null : currentFolderId;
 
     const newFolder: BookFolder = {
       id: `folder-${Date.now()}`,
@@ -1504,7 +1505,7 @@ export function Library({
                         e.stopPropagation();
                         setShowFolderManagerModal(true);
                       }}
-                      title="管理所有資料夾（上移、下移、重新命名、刪除）"
+                      title="我的書櫃分類管理（新增分類、上移、下移、重新命名、刪除）"
                       style={{ marginLeft: '4px' }}
                     >
                       <MoreVertical size={13} />
@@ -1521,18 +1522,6 @@ export function Library({
                      currentFolderId === 'virtual_resume' ? `共${displayBooks.length}本` :
                      `共${getFolderTotalBookCount(currentFolderId)}本`}
                   </span>
-
-                  {/* 💡 在「我的書櫃」時提供新建資料夾按鈕 */}
-                  {currentFolderId === 'virtual_my_folders' && (
-                    <button
-                      className="appstore-section-circle-more-btn"
-                      onClick={() => setShowNewFolderDialog(true)}
-                      title="新建資料夾"
-                      style={{ marginLeft: '2px' }}
-                    >
-                      <FolderPlus size={13} />
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
@@ -2549,24 +2538,108 @@ export function Library({
 
 
 
-      {/* 📁 「我的書櫃」所有資料夾集中管理 Modal (上移、下移、重新命名、刪除) */}
+      {/* 📁 「我的書櫃」分類管理 Modal (新增分類、上移、下移、重新命名、刪除) */}
       {showFolderManagerModal && (
-        <div className="search-dialog-overlay" onClick={() => { setEditingFolderId(null); setShowFolderManagerModal(false); }}>
+        <div className="search-dialog-overlay" onClick={() => { setEditingFolderId(null); setIsAddingCategory(false); setShowFolderManagerModal(false); }}>
           <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '440px', width: '92%', borderRadius: '16px', padding: '1.2rem' }}>
             <div className="dialog-header" style={{ marginBottom: '0.8rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
                 <Folder size={18} style={{ color: '#8c4b27' }} />
-                <span>資料夾管理</span>
+                <span>我的書櫃分類管理</span>
               </div>
-              <button className="icon-button close-btn" onClick={() => { setEditingFolderId(null); setShowFolderManagerModal(false); }}>
+              <button className="icon-button close-btn" onClick={() => { setEditingFolderId(null); setIsAddingCategory(false); setShowFolderManagerModal(false); }}>
                 <X size={18} />
               </button>
             </div>
 
             <div className="dialog-body" style={{ maxHeight: '60vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.6rem', padding: '0.2rem 0.1rem' }}>
+              {/* 💡 新增分類項目 (按鈕與內嵌即時輸入框) */}
+              {isAddingCategory ? (
+                <div className="folder-manager-item" style={{ border: '1.5px dashed var(--theme-accent, #8c4b27)', background: 'rgba(140, 75, 39, 0.04)', marginBottom: '0.2rem' }}>
+                  <div className="folder-manager-item-left">
+                    <FolderPlus size={16} style={{ color: 'var(--theme-accent, #8c4b27)', flexShrink: 0 }} />
+                    <input
+                      autoFocus
+                      type="text"
+                      placeholder="請輸入分類名稱..."
+                      className="folder-manager-inline-input"
+                      style={{ maxWidth: '180px' }}
+                      value={newFolderName}
+                      onChange={(e) => setNewFolderName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          if (newFolderName.trim()) {
+                            handleCreateFolder();
+                            setIsAddingCategory(false);
+                          }
+                        } else if (e.key === 'Escape') {
+                          setIsAddingCategory(false);
+                          setNewFolderName('');
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="folder-manager-item-actions">
+                    <button
+                      className="folder-manager-action-btn"
+                      style={{ color: '#1ea98c' }}
+                      onClick={() => {
+                        if (newFolderName.trim()) {
+                          handleCreateFolder();
+                          setIsAddingCategory(false);
+                        }
+                      }}
+                      title="確認新增分類"
+                    >
+                      <Check size={16} />
+                    </button>
+                    <button
+                      className="folder-manager-action-btn"
+                      onClick={() => {
+                        setIsAddingCategory(false);
+                        setNewFolderName('');
+                      }}
+                      title="取消"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  className="folder-manager-add-btn"
+                  onClick={() => {
+                    setNewFolderName('');
+                    setIsAddingCategory(true);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    padding: '0.6rem',
+                    borderRadius: '10px',
+                    border: '1.5px dashed var(--border-color, rgba(140, 75, 39, 0.25))',
+                    background: 'rgba(140, 75, 39, 0.04)',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.88rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    width: '100%',
+                    marginBottom: '0.2rem',
+                    flexShrink: 0
+                  }}
+                  title="新增書櫃分類"
+                >
+                  <FolderPlus size={16} style={{ color: '#8c4b27' }} />
+                  <span>新增分類</span>
+                </button>
+              )}
+
               {folders.filter(f => !f.parentId).length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                  目前尚無自訂資料夾
+                <div style={{ textAlign: 'center', padding: '1.5rem 1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                  目前尚無自訂分類
                 </div>
               ) : (
                 folders.filter(f => !f.parentId).map((folder, index, arr) => {
@@ -2674,7 +2747,11 @@ export function Library({
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.08))', paddingTop: '0.8rem' }}>
               <button
                 className="dialog-btn-confirm"
-                onClick={() => setShowFolderManagerModal(false)}
+                onClick={() => {
+                  setEditingFolderId(null);
+                  setIsAddingCategory(false);
+                  setShowFolderManagerModal(false);
+                }}
                 style={{ padding: '0.45rem 1.4rem', fontSize: '0.9rem' }}
               >
                 完成

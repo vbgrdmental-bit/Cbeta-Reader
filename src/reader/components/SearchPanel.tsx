@@ -17,35 +17,35 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery, onTrigg
   const [searched, setSearched] = useState(false);
   const [selectedBookFilter, setSelectedBookFilter] = useState<string>('all');
 
-  // 💡 自動還原搜尋結果
-  useEffect(() => {
-    if (initialSearchQuery) {
-      setQuery(initialSearchQuery);
-      setSelectedBookFilter('all');
-      
-      const allResults: any[] = [];
-      books.forEach((book) => {
-        const searchIndex = book.searchIndex;
-        if (searchIndex) {
-          const bookResults = SearchIndexBuilder.search(searchIndex, initialSearchQuery);
-          bookResults.forEach((res) => {
-            allResults.push({
-              ...res,
-              bookTitle: book.metadata.title,
-              workId: book.metadata.workId
-            });
-          });
-        }
-      });
-      setResults(allResults);
-      setSearched(true);
+  // 💡 近期 5 個搜尋關鍵字紀錄 (LocalStorage 持久化)
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('cbeta_recent_local_searches');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
-  }, [initialSearchQuery, books]);
+  });
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+  const saveRecentSearch = (searchQuery: string) => {
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
+    setRecentSearches((prev) => {
+      const updated = [trimmed, ...prev.filter((q) => q !== trimmed)].slice(0, 5);
+      try {
+        localStorage.setItem('cbeta_recent_local_searches', JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
+      return updated;
+    });
+  };
 
+  const executeSearch = (searchQueryText: string) => {
+    const trimmed = searchQueryText.trim();
+    if (!trimmed) return;
+
+    saveRecentSearch(trimmed);
     setSelectedBookFilter('all');
     const allResults: any[] = [];
 
@@ -53,9 +53,7 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery, onTrigg
     books.forEach((book) => {
       const searchIndex = book.searchIndex;
       if (searchIndex) {
-        const bookResults = SearchIndexBuilder.search(searchIndex, query);
-        
-        // 附加書籍的 metadata 方便 UI 渲染
+        const bookResults = SearchIndexBuilder.search(searchIndex, trimmed);
         bookResults.forEach((res) => {
           allResults.push({
             ...res,
@@ -68,6 +66,19 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery, onTrigg
 
     setResults(allResults);
     setSearched(true);
+  };
+
+  // 💡 自動還原搜尋結果
+  useEffect(() => {
+    if (initialSearchQuery) {
+      setQuery(initialSearchQuery);
+      executeSearch(initialSearchQuery);
+    }
+  }, [initialSearchQuery, books]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    executeSearch(query);
   };
 
   // 💡 統計各本書籍的匹配數量
@@ -199,8 +210,56 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery, onTrigg
           </button>
         </form>
 
+        {/* 💡 近期 5 個搜尋關鍵字 Chip 標籤列 (單行、灰黑小字，型式對齊圖4) */}
+        {recentSearches.length > 0 && (
+          <div 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.4rem', 
+              marginTop: '0.55rem', 
+              overflowX: 'auto', 
+              whiteSpace: 'nowrap',
+              paddingBottom: '0.15rem',
+              width: '100%',
+              maxWidth: '440px',
+              paddingLeft: '0.4rem',
+              boxSizing: 'border-box'
+            }}
+            className="custom-scrollbar"
+          >
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted, #718096)', flexShrink: 0, opacity: 0.85 }}>
+              近期搜尋：
+            </span>
+            {recentSearches.map((q, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => {
+                  setQuery(q);
+                  executeSearch(q);
+                }}
+                style={{
+                  fontSize: '0.76rem',
+                  color: 'var(--text-primary, #4a5568)',
+                  backgroundColor: 'var(--theme-accent-light, rgba(0, 0, 0, 0.04))',
+                  border: '1px solid var(--theme-accent-border, rgba(0, 0, 0, 0.12))',
+                  borderRadius: '12px',
+                  padding: '0.15rem 0.55rem',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  transition: 'all 0.15s ease'
+                }}
+                title={`點擊立即搜尋：${q}`}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* 💡 放在中間的搜尋 bar 虛線下緣，置左 */}
-        <div className="search-info-tip">
+        <div className="search-info-tip" style={{ marginTop: recentSearches.length > 0 ? '0.4rem' : '0.2rem' }}>
           站內已下載書籍檢索
         </div>
       </div>

@@ -1182,16 +1182,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.3.1) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.3.2) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.3.1</span>
+                        <span>⭐ App: v4.3.2</span>
                         <span className="changelog-date">(2026-09-17)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 「每日閱讀日誌」改為原生分頁，延用頂部微膠囊控制列並支援跨視圖無縫切換。</li>
-                        <li>• 控制列最右側「齒輪」配置圓型主題底圖，與首頁「家」按鈕左右完美平衡對稱。</li>
-                        <li>• 藏經庫背景色對齊全站消除色差；書櫃與筆記移除頂層「&lt;」並恆常顯示「…」管理鈕。</li>
+                        <li>• 頂部控制列手機窄螢幕自適應排版，徹底解決加入閱讀日誌時右側齒輪跑出畫面問題。</li>
+                        <li>• 「我的書櫃」將新建資料夾併入右側「…」按鈕，改為「我的書櫃分類管理」並支援新增分類。</li>
+                        <li>• 「全文搜尋」新增近期 5 個搜尋關鍵字膠囊標籤，支援點擊立即檢索已下載書籍。</li>
                       </ul>
                     </div>
 
@@ -1214,6 +1214,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.1 <span className="changelog-date">(2026-09-17)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 「每日閱讀日誌」改為原生分頁，延用頂部微膠囊控制列並支援跨視圖無縫切換。</li>
+                            <li>• 控制列最右側「齒輪」配置圓型主題底圖，與首頁「家」按鈕左右完美平衡對稱。</li>
+                            <li>• 藏經庫背景色對齊全站消除色差；書櫃與筆記移除頂層「&lt;」並恆常顯示「…」管理鈕。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title">App: v4.3.0 <span className="changelog-date">(2026-09-16)</span></div>
                           <ul className="changelog-list">

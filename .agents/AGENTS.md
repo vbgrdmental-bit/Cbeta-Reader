@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.3.1` (App: v4.3.1 / Builder: v2.9.11)
+- **Current Version**: `v4.3.2` (App: v4.3.2 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.3.2 / Builder: v2.9.11** (2026-09-17)
+  - [App] 頂部控制列手機窄螢幕極致自適應排版（`max-width: 600px` 與 `380px`），徹底解決加入「閱讀日誌」時右側齒輪按鈕被推擠跑出版面之問題。
+  - [App] 「我的書櫃」將標題列獨立「新建資料夾」按鈕功能併入「…」選單，改名為「我的書櫃分類管理」，並於清單頂部提供「新增分類」內嵌即時建立項目。
+  - [App] 「全文搜尋」（已下載經文檢索）新增近期 5 個搜尋關鍵字膠囊標籤（對齊 CBETA 檢索樣式），支援 LocalStorage 記憶與點選立即檢索。
 - **⭐ App: v4.3.1 / Builder: v2.9.11** (2026-09-17)
   - [App] 「每日閱讀日誌」改為獨立原生分頁（非彈跳視窗），延用頂部「雙翼對稱微膠囊」控制列，並支援微膠囊項目選中展開與全站無縫切換。
   - [App] 頂部控制列最右側「齒輪」配置圓型灰色/主題底圖，與首頁左側「家 🏠」按鈕左右對稱。

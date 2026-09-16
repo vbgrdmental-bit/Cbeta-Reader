@@ -214,6 +214,108 @@ body.theme-light .wing-capsule-item.active {
   margin-left: 2px;
 }
 
+/* 💡 手機版窄螢幕極致自適應：防止加入「閱讀日誌」時右側齒輪按鈕跑出版面 (圖1) */
+@media (max-width: 600px) {
+  .library-header,
+  .cbeta-catalog-header {
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+    gap: 0.25rem;
+  }
+
+  .library-header-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  .library-header-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .wing-capsule {
+    padding: 2px 3px;
+    gap: 2px;
+  }
+
+  .wing-capsule.wing-left {
+    margin-left: 2px;
+  }
+
+  .wing-capsule.wing-right {
+    margin-right: 2px;
+  }
+
+  .header-center-spacer {
+    min-width: 2px;
+  }
+
+  .wing-capsule-item {
+    height: 28px;
+    padding: 0 6px;
+    gap: 3px;
+    font-size: 0.78rem;
+  }
+
+  .wing-capsule-item svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .wing-capsule-item.active {
+    padding: 0 8px;
+  }
+
+  .wing-capsule-item.active .capsule-label {
+    max-width: 65px;
+    margin-left: 1px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .library-header,
+  .cbeta-catalog-header {
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    gap: 0.15rem;
+  }
+
+  .library-header-btn {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+  }
+
+  .library-header-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .wing-capsule {
+    padding: 2px;
+    gap: 1px;
+  }
+
+  .wing-capsule-item {
+    height: 27px;
+    padding: 0 5px;
+    gap: 2px;
+  }
+
+  .wing-capsule-item.active {
+    padding: 0 7px;
+  }
+
+  .wing-capsule-item.active .capsule-label {
+    max-width: 58px;
+    font-size: 0.74rem;
+  }
+}
+
 
 /* 💡 備援模式標籤：頂部控制列正中央 (正黑體) */
 .header-backup-badge {
@@ -4282,6 +4384,22 @@ body.theme-ebony .appstore-section-circle-more-btn:hover {
 /* ==========================================================================
    📁 我的書櫃集中資料夾管理 Modal 樣式
    ========================================================================== */
+.folder-manager-add-btn:hover {
+  background: rgba(140, 75, 39, 0.08) !important;
+  border-color: var(--theme-accent, #8c4b27) !important;
+}
+
+body.theme-ebony .folder-manager-add-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #e4e4e7 !important;
+}
+
+body.theme-ebony .folder-manager-add-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
 .folder-manager-item {
   display: flex;
   align-items: center;
