@@ -1053,11 +1053,11 @@ export function CbetaCatalogView({
           <Home size={20} />
         </button>
 
-        {/* 2. 左翼微膠囊：[ 下載 + 書櫃 ] */}
-        <div className="wing-capsule wing-left">
+        {/* 2. 中央統一微膠囊：[ 下載 + 書櫃 + 筆記 + 搜尋 + (閱讀日誌) ] */}
+        <div className="unified-nav-capsule">
           {/* 下載經典：目前處於 CBETA 藏經庫，此項展開 active */}
           <button
-            className="wing-capsule-item active"
+            className="capsule-nav-item active"
             title="從 CBETA 資料庫下載經典"
           >
             <Plus size={17} style={{ strokeWidth: 2.2 }} />
@@ -1066,7 +1066,7 @@ export function CbetaCatalogView({
 
           {/* 我的書櫃 */}
           <button
-            className="wing-capsule-item"
+            className="capsule-nav-item"
             onClick={() => {
               if (onNavigateToLibrarySection) {
                 onNavigateToLibrarySection('shelf');
@@ -1079,16 +1079,10 @@ export function CbetaCatalogView({
             <Folder size={16} />
             <span className="capsule-label">我的書櫃</span>
           </button>
-        </div>
 
-        {/* 3. 中央留白呼吸區 */}
-        <div className="header-center-spacer" />
-
-        {/* 4. 右翼微膠囊：[ 筆記 + 搜尋 + (閱讀日誌) ] */}
-        <div className="wing-capsule wing-right">
           {/* 重點與筆記 */}
           <button
-            className="wing-capsule-item"
+            className="capsule-nav-item"
             onClick={() => {
               if (onNavigateToLibrarySection) {
                 onNavigateToLibrarySection('notes');
@@ -1104,7 +1098,7 @@ export function CbetaCatalogView({
 
           {/* 全文搜尋 */}
           <button
-            className="wing-capsule-item"
+            className="capsule-nav-item"
             onClick={() => {
               if (onNavigateToLibrarySection) {
                 onNavigateToLibrarySection('search');
@@ -1118,10 +1112,10 @@ export function CbetaCatalogView({
             <span className="capsule-label">全文搜尋</span>
           </button>
 
-          {/* 閱讀日誌（若勾選「閱讀日誌」時整合於右側微膠囊內） */}
+          {/* 閱讀日誌（若勾選「閱讀日誌」時整合於微膠囊內） */}
           {settings?.readingLogEnabled && (
             <button
-              className="wing-capsule-item"
+              className="capsule-nav-item"
               onClick={() => {
                 if (onNavigateToLibrarySection) {
                   onNavigateToLibrarySection('reading-log');
@@ -1137,7 +1131,7 @@ export function CbetaCatalogView({
           )}
         </div>
 
-        {/* 5. 右端：設定 */}
+        {/* 3. 右端：設定 */}
         <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
           {/* 齒輪設定按鈕 */}
           <button 

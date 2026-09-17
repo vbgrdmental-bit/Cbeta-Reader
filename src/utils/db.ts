@@ -274,6 +274,9 @@ export interface AppSettings {
   highlightColor: 'yellow' | 'red' | 'gray' | 'blue';
   highlightStyle: 'underline' | 'bottom-half' | 'full' | 'border';
   readingLogEnabled?: boolean; // 💡 每日閱讀記錄（預設關閉）
+  customHomeLayoutEnabled?: boolean; // 💡 自訂首頁 4 格卡片版面（預設關閉）
+  homeLayoutPreset?: 'default' | 'compact' | 'focus' | 'zen' | 'custom';
+  homeWidgets?: Array<{ id: string; type: string; size: string }>;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -300,7 +303,10 @@ export const DEFAULT_SETTINGS: AppSettings = {
   ttsMode: 'normal',
   highlightColor: 'yellow',
   highlightStyle: 'full',        // 預設畫重點樣式：全塗
-  readingLogEnabled: false       // 💡 每日閱讀記錄預設關閉
+  readingLogEnabled: false,      // 💡 每日閱讀記錄預設關閉
+  customHomeLayoutEnabled: false, // 💡 自訂首頁版面預設關閉
+  homeLayoutPreset: 'default',
+  homeWidgets: undefined
 };
 
 export async function saveSettings(settings: AppSettings): Promise<void> {

@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.3.3` (App: v4.3.3 / Builder: v2.9.11)
+- **Current Version**: `v4.3.8` (App: v4.3.8 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,26 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.3.8 / Builder: v2.9.11** (2026-09-18)
+  - [App] 護眼計時器動態優化：僅外圍虛線環旋轉，中央倒數數字（如 `14:58`）保持端正水平不旋轉。
+  - [App] 護眼計時器選定狀態（如 `15m`）改用淺色灰底（`#d8d5ce` / ebony `rgba(255,255,255,0.25)`），視覺柔和沉靜。
+  - [App] 四合一導航小工具（`four_nav_4x1`）新增 4x2 規格支援，提供水平 4 大圓角按鈕大版面，空間寬敞舒適不擁擠。
+- **⭐ App: v4.3.7 / Builder: v2.9.11** (2026-09-18)
+  - [App] 核心四大導航卡片（下載經典、我的書櫃、重點筆記、全文搜尋）移除 1x1 與 2x1 尺寸，新增支援 4x1 與 4x2；「下載經典」在 4x1 下文字為淺色且邊框為淺色虛線。
+  - [App] 優化藏經庫（`+ 下載經典`）切換至「我的書櫃」、「重點筆記」、「全文搜尋」、「閱讀日誌」之同步狀態渲染，徹底消除 1 幀白屏跳動與畫面閃爍。
+  - [App] 修正書櫃「近期下載」資料夾標題圖示（下載圖示與藍色徽章）及高對比圓形「<」返回上一層按鈕排版。
+- **⭐ App: v4.3.6 / Builder: v2.9.11** (2026-09-18)
+  - [App] 頂部控制列左右翼微膠囊合體為正中央單一微膠囊，視覺統合平穩不跳動。
+  - [App] 品牌標題文字與小標垂直上移；淺色模式加強 Reader 高對比度；2x2 閱讀底色小圓點改為最下方置中。
+  - [App] 4x4 卡片支援顯示 4 部經書並可點擊跳轉對應書櫃專區；護眼倒數圓環改為點點虛線優雅淺灰色旋轉。
+- **⭐ App: v4.3.5 / Builder: v2.9.11** (2026-09-17)
+  - [App] 統一首頁所有 2x2 小工具高度（148px）與規格比例，排版齊整無高低落差。
+  - [App] 上次閱讀支援 4x1（書本樣式圖標）、4x2 與 4x4（可容納 2 部經典），新增「我的最愛」與「近期下載」小工具（均支援 4x1、4x2、4x4）。
+  - [App] 四色主題 2x2 改為上圓圈下文字排版；護眼計時器旋轉圓環改為淺灰色並於 4x2 增加「護眼模式設定」標籤（移除 2x1 與 1x1 尺寸）。
+- **⭐ App: v4.3.4 / Builder: v2.9.11** (2026-09-17)
+  - [App] 首頁導入 iOS 4 格 Widget 自訂版面系統，支援 `4x1`、`2x2`、`4x2`、`1x1` 多種規格小工具卡片，全裝置自適應（手機、折疊雙螢幕、平板與 PC）。
+  - [App] 支援滑鼠與觸控直接拖曳排序（Drag & Drop）卡片，並可點擊 `⛶` 即時切換尺寸，直覺順暢。
+  - [App] 閱讀設定「進階功能」新增「自訂首頁版面」開關，並提供 4 組風格範本（經典原味、極簡精巧 4x1、每日精進、禪修護眼）。
 - **⭐ App: v4.3.3 / Builder: v2.9.11** (2026-09-17)
   - [App] 頂部控制列徹底統一首頁（`Library`）與藏經庫（`CbetaCatalogView`）之 HTML 容器標籤與 CSS class（`library-header`），消除邊框寬度（`1.2px`）與陰影差異，確保點擊「+ 下載經典」時左端「家 🏠」、右端「微膠囊」與最右側「齒輪 ⚙️」像素級完美錨定，零位移、零跳動。
   - [App] 「全文搜尋」面板若已有「近期搜尋：」關鍵字標籤，自動隱藏下方「站內已下載書籍檢索」提示文字，僅在無任何近期搜尋紀錄時呈現，確保排版簡約清爽。

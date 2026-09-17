@@ -8,6 +8,7 @@ import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
 import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
 import type { ReadingTimerState } from '../../utils/readingTimer';
 import { isBackupMode } from '../../utils/sourceMode';
+import { PRESET_LAYOUTS } from '../../types/homeLayout';
 import '../styles/settings.css';
 
 interface SettingsViewProps {
@@ -792,6 +793,88 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
 
             {isAdvancedOpen && (
               <div className="advanced-cards-container animate-fade-in">
+                {/* 第零組：首頁版面自訂 */}
+                <div className="advanced-group-card">
+                  <div className="advanced-group-header">
+                    <div className="advanced-group-title">首頁版面自訂 (4 格 Widget 系統)</div>
+                  </div>
+
+                  <div className="advanced-action-list">
+                    {/* 項目: 開啟自訂首頁 */}
+                    <div 
+                      className="advanced-action-item"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        const nextEnabled = !settings.customHomeLayoutEnabled;
+                        onSave({
+                          ...settings,
+                          customHomeLayoutEnabled: nextEnabled,
+                          homeLayoutPreset: nextEnabled ? (settings.homeLayoutPreset || 'default') : 'default',
+                          homeWidgets: nextEnabled ? (settings.homeWidgets || PRESET_LAYOUTS.default) : undefined
+                        });
+                      }}
+                    >
+                      <div className="advanced-action-info">
+                        <div className="advanced-action-title">自訂首頁版面</div>
+                        <div className="advanced-action-desc">支援 4 格卡片自由拖曳排序、切換尺寸 (4x1 / 2x2 / 4x2 / 4x4) 與捷徑配置</div>
+                      </div>
+                      <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={!!settings.customHomeLayoutEnabled}
+                          onChange={(e) => {
+                            const enabled = e.target.checked;
+                            onSave({
+                              ...settings,
+                              customHomeLayoutEnabled: enabled,
+                              homeLayoutPreset: enabled ? (settings.homeLayoutPreset || 'default') : 'default',
+                              homeWidgets: enabled ? (settings.homeWidgets || PRESET_LAYOUTS.default) : undefined
+                            });
+                          }}
+                        />
+                        <span className="settings-switch-slider" />
+                      </label>
+                    </div>
+
+                    {settings.customHomeLayoutEnabled && (
+                      <div className="advanced-action-item" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.6rem' }}>
+                        <div className="advanced-action-info">
+                          <div className="advanced-action-title">快速套用風格範本</div>
+                          <div className="advanced-action-desc">一鍵更換精心調配之首頁版面配置</div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', width: '100%' }}>
+                          {(['default', 'compact', 'focus', 'zen'] as const).map(presetKey => {
+                            const names = { default: '經典原味', compact: '極簡精巧 (4x1)', focus: '每日精進', zen: '禪修護眼' };
+                            const isSelected = (settings.homeLayoutPreset || 'default') === presetKey;
+                            return (
+                              <button
+                                key={presetKey}
+                                type="button"
+                                className={`advanced-action-pill-btn ${isSelected ? 'active' : ''}`}
+                                style={{
+                                  background: isSelected ? 'var(--theme-accent, #8c4b27)' : 'transparent',
+                                  color: isSelected ? '#ffffff' : 'inherit',
+                                  borderColor: isSelected ? 'var(--theme-accent, #8c4b27)' : 'var(--border-color)'
+                                }}
+                                onClick={() => {
+                                  onSave({
+                                    ...settings,
+                                    customHomeLayoutEnabled: true,
+                                    homeLayoutPreset: presetKey,
+                                    homeWidgets: PRESET_LAYOUTS[presetKey]
+                                  });
+                                }}
+                              >
+                                {names[presetKey]}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 {/* 第一組：書籍與儲存空間 */}
                 <div className="advanced-group-card">
                   <div className="advanced-group-header">
@@ -1182,15 +1265,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.3.3) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.3.8) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.3.3</span>
-                        <span className="changelog-date">(2026-09-17)</span>
+                        <span>⭐ App: v4.3.8</span>
+                        <span className="changelog-date">(2026-09-18)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 頂部控制列統一首頁與藏經庫結構樣式，點擊「+ 下載」時家、膠囊與齒輪位置恆定零位移。</li>
-                        <li>• 全文搜尋若已有「近期搜尋」標籤則自動隱藏下方多餘提示文字，版面更為簡潔純粹。</li>
+                        <li>• 護眼計時器僅外圍虛線圈旋轉，倒數數字保持端正不轉；選定時間改以淺灰底呈現。</li>
+                        <li>• 四合一導航新增 4x2 寬敞大版面，排版舒適大方不擁擠。</li>
                       </ul>
                     </div>
 
@@ -1213,6 +1296,45 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.7 <span className="changelog-date">(2026-09-18)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 核心導航卡片支援 2x2、4x1、4x2；下載經典 4x1 採淺色字與虛線邊框。</li>
+                            <li>• 優化藏經庫切換至書架、筆記、搜尋與日誌之無縫渲染，徹底消除畫面閃爍。</li>
+                            <li>• 修正書櫃「近期下載」資料夾標題圖示與高對比圓形返回按鈕排版。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.6 <span className="changelog-date">(2026-09-18)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 頂部控制列左右翼微膠囊合體為正中央單一微膠囊，視覺統合平穩不跳動。</li>
+                            <li>• 品牌標題文字與小標垂直上移；淺色模式加強 Reader 高對比度；2x2 閱讀底色小圓點改為最下方置中。</li>
+                            <li>• 4x4 卡片支援顯示 4 部經書並可點擊跳轉對應書櫃專區；護眼倒數圓環改為點點虛線優雅淺灰色旋轉。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.5 <span className="changelog-date">(2026-09-17)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 統一首頁所有 2x2 小工具高度（148px）與規格比例，排版齊整無高低落差。</li>
+                            <li>• 上次閱讀支援 4x1（書本樣式圖標）、4x2 與 4x4，新增「我的最愛」與「近期下載」小工具。</li>
+                            <li>• 四色主題 2x2 改為上圓圈下文字排版；護眼計時器旋轉圓環改為淺灰色並於 4x2 增加「護眼模式設定」標籤。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.4 <span className="changelog-date">(2026-09-17)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 首頁導入 iOS 4 格 Widget 自訂版面系統，支援 4x1、2x2、4x2、1x1 多種規格卡片。</li>
+                            <li>• 支援全功能滑鼠與觸控直接拖曳排序（Drag & Drop）及點選即時切換卡片尺寸。</li>
+                            <li>• 進階功能新增自訂首頁開關與 4 組風格範本（經典原味、極簡精巧、每日精進、禪修護眼）。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.3 <span className="changelog-date">(2026-09-17)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 頂部控制列統一首頁與藏經庫結構樣式，點擊「+ 下載」時家、膠囊與齒輪位置恆定零位移。</li>
+                            <li>• 全文搜尋若已有「近期搜尋」標籤則自動隱藏下方多餘提示文字，版面更為簡潔純粹。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title">App: v4.3.2 <span className="changelog-date">(2026-09-17)</span></div>
                           <ul className="changelog-list">

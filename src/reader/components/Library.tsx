@@ -15,6 +15,7 @@ import type { BuildProgress } from '../../builder/PackageBuilder';
 import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { SearchPanel } from './SearchPanel';
 import { ReadingLogView } from './ReadingLogView';
+import { HomeDashboard } from './HomeDashboard';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
 import { getBookCoverGradient } from '../../utils/bookColors';
 import '../styles/library.css';
@@ -28,6 +29,7 @@ interface LibraryProps {
   targetSection?: { section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log'; timestamp: number } | null;
   onOpenSettings?: () => void;
   onOpenCbetaCatalog?: () => void;
+  onSaveSettings?: (settings: AppSettings) => void;
 }
 
 export function Library({ 
@@ -38,7 +40,8 @@ export function Library({
   resetFolderTrigger,
   targetSection,
   onOpenSettings,
-  onOpenCbetaCatalog
+  onOpenCbetaCatalog,
+  onSaveSettings
 }: LibraryProps) {
   const [downloadedBooks, setDownloadedBooks] = useState<BookMetadata[]>([]);
   const [downloadedPackages, setDownloadedPackages] = useState<ReaderPackage[]>([]);
@@ -51,6 +54,7 @@ export function Library({
   const [buildProgress, setBuildProgress] = useState<BuildProgress | null>(null);
   const [activeTab, setActiveTab] = useState<'shelf' | 'search' | 'reading-log'>(initialSearchQuery ? 'search' : 'shelf');
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
+  const [isLayoutEditMode, setIsLayoutEditMode] = useState(false);
 
   const [isBackup, setIsBackup] = useState(isBackupMode());
 
@@ -95,18 +99,20 @@ export function Library({
     }
   };
 
-  // 💡 當接收到首頁重設信號時，重置當前所在的資料夾路徑與瀏覽歷史
+  // 💡 當接收到首頁重設信號時，重置當前所在的資料夾路徑與瀏覽歷史，並回到首頁
   useEffect(() => {
     if (resetFolderTrigger && resetFolderTrigger > 0) {
+      setActiveTab('shelf');
       setCurrentFolderId(null);
       setFolderHistory([null]);
       setHistoryIndex(0);
     }
   }, [resetFolderTrigger]);
 
-  // 💡 當接收到全站頂部四大功能導航目標時，直接切換至對應分頁與資料夾（無滑動動畫）
-  useEffect(() => {
-    if (!targetSection) return;
+  // 💡 當接收到全站頂部四大功能導航目標時，在渲染期即時同步狀態（徹底消除切換時的 1 幀白屏/首頁閃爍）
+  const [prevTargetSectionTimestamp, setPrevTargetSectionTimestamp] = useState<number | null>(null);
+  if (targetSection && targetSection.timestamp !== prevTargetSectionTimestamp) {
+    setPrevTargetSectionTimestamp(targetSection.timestamp);
     if (targetSection.section === 'home') {
       setActiveTab('shelf');
       setCurrentFolderId(null);
@@ -114,16 +120,20 @@ export function Library({
       setHistoryIndex(0);
     } else if (targetSection.section === 'shelf') {
       setActiveTab('shelf');
-      navigateToFolder('virtual_my_folders');
+      setCurrentFolderId('virtual_my_folders');
+      setFolderHistory(['virtual_my_folders']);
+      setHistoryIndex(0);
     } else if (targetSection.section === 'notes') {
       setActiveTab('shelf');
-      navigateToFolder('virtual_highlights');
+      setCurrentFolderId('virtual_highlights');
+      setFolderHistory(['virtual_highlights']);
+      setHistoryIndex(0);
     } else if (targetSection.section === 'search') {
       setActiveTab('search');
     } else if (targetSection.section === 'reading-log') {
       setActiveTab('reading-log');
     }
-  }, [targetSection]);
+  }
 
   const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
 
@@ -1347,11 +1357,11 @@ export function Library({
           <Home size={20} />
         </button>
 
-        {/* 2. 左翼微膠囊：[ 下載 + 書櫃 ] */}
-        <div className="wing-capsule wing-left">
+        {/* 2. 中央統一微膠囊：[ 下載 + 書櫃 + 筆記 + 搜尋 + (閱讀日誌) ] */}
+        <div className="unified-nav-capsule">
           {/* 下載經典 */}
           <button
-            className="wing-capsule-item"
+            className="capsule-nav-item"
             onClick={() => onOpenCbetaCatalog?.()}
             title="從 CBETA 資料庫下載經典"
           >
@@ -1361,7 +1371,7 @@ export function Library({
 
           {/* 我的書櫃 */}
           <button
-            className={`wing-capsule-item ${activeTab === 'shelf' && (currentFolderId === 'virtual_my_folders' || (currentFolderId && currentFolderId !== 'virtual_highlights')) ? 'active' : ''}`}
+            className={`capsule-nav-item ${activeTab === 'shelf' && (currentFolderId === 'virtual_my_folders' || (currentFolderId && currentFolderId !== 'virtual_highlights')) ? 'active' : ''}`}
             onClick={() => {
               setActiveTab('shelf');
               navigateToFolder('virtual_my_folders');
@@ -1371,16 +1381,10 @@ export function Library({
             <Folder size={16} />
             <span className="capsule-label">我的書櫃</span>
           </button>
-        </div>
 
-        {/* 3. 中央留白呼吸區 */}
-        <div className="header-center-spacer" />
-
-        {/* 4. 右翼微膠囊：[ 筆記 + 搜尋 + (閱讀日誌) ] */}
-        <div className="wing-capsule wing-right">
           {/* 重點與筆記 */}
           <button
-            className={`wing-capsule-item ${activeTab === 'shelf' && currentFolderId === 'virtual_highlights' ? 'active' : ''}`}
+            className={`capsule-nav-item ${activeTab === 'shelf' && currentFolderId === 'virtual_highlights' ? 'active' : ''}`}
             onClick={() => {
               setActiveTab('shelf');
               navigateToFolder('virtual_highlights');
@@ -1393,7 +1397,7 @@ export function Library({
 
           {/* 全文搜尋 */}
           <button
-            className={`wing-capsule-item ${activeTab === 'search' ? 'active' : ''}`}
+            className={`capsule-nav-item ${activeTab === 'search' ? 'active' : ''}`}
             onClick={() => setActiveTab('search')}
             title="關鍵字搜尋（已下載經典檢索）"
           >
@@ -1401,10 +1405,10 @@ export function Library({
             <span className="capsule-label">全文搜尋</span>
           </button>
 
-          {/* 閱讀日誌（若勾選「閱讀日誌」時整合於右側微膠囊內） */}
+          {/* 閱讀日誌（若勾選「閱讀日誌」時整合於微膠囊內） */}
           {settings.readingLogEnabled && (
             <button
-              className={`wing-capsule-item ${activeTab === 'reading-log' ? 'active' : ''}`}
+              className={`capsule-nav-item ${activeTab === 'reading-log' ? 'active' : ''}`}
               onClick={() => setActiveTab('reading-log')}
               title="閱讀日誌"
             >
@@ -1414,7 +1418,7 @@ export function Library({
           )}
         </div>
 
-        {/* 5. 右端：設定 */}
+        {/* 3. 右端：設定 */}
         <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
           {/* 齒輪設定按鈕（一律在最右端顯示，點擊開啟與閱讀頁相同的設定彈窗） */}
           <button 
@@ -1450,15 +1454,16 @@ export function Library({
                       display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      width: '28px',
-                      height: '28px',
+                      width: '30px',
+                      height: '30px',
                       borderRadius: '50%',
-                      border: 'none',
-                      background: 'transparent',
+                      border: '1px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
+                      background: 'var(--btn-bg, rgba(140, 75, 39, 0.08))',
                       cursor: 'pointer',
-                      color: 'var(--text-muted)',
-                      marginRight: '2px',
-                      flexShrink: 0
+                      color: 'var(--text-primary)',
+                      marginRight: '6px',
+                      flexShrink: 0,
+                      transition: 'all 0.15s ease'
                     }}
                   >
                     <ChevronLeft size={18} />
@@ -1478,6 +1483,7 @@ export function Library({
                                        currentFolderId === 'virtual_recent_reads' ? '#4a2c11' :
                                        currentFolderId === 'virtual_favorites' ? '#e53e3e' :
                                        currentFolderId === 'virtual_highlights' ? '#c07d2a' :
+                                       currentFolderId === 'virtual_unclassified' ? '#2b6cb0' :
                                        '#8c4b27',
                       flexShrink: 0
                     }}
@@ -1485,6 +1491,7 @@ export function Library({
                     {currentFolderId === 'virtual_recent_reads' ? <Clock size={13} color="#ffffff" /> :
                      currentFolderId === 'virtual_favorites' ? <Heart size={13} fill="#ffffff" color="#ffffff" /> :
                      currentFolderId === 'virtual_highlights' ? <Notebook size={13} color="#ffffff" /> :
+                     currentFolderId === 'virtual_unclassified' ? <Download size={13} color="#ffffff" style={{ strokeWidth: 2.2 }} /> :
                      <Folder size={13} color="#ffffff" />}
                   </div>
 
@@ -1494,6 +1501,7 @@ export function Library({
                      currentFolderId === 'virtual_favorites' ? '我的最愛' :
                      currentFolderId === 'virtual_highlights' ? '重點與筆記' :
                      currentFolderId === 'virtual_my_folders' ? '我的書櫃' :
+                     currentFolderId === 'virtual_unclassified' ? '近期下載' :
                      getFolderPath(currentFolderId)}
                   </span>
 
@@ -1527,132 +1535,28 @@ export function Library({
             </div>
           )}
 
-          {/* === A. 最外層首頁：CBETA Reader 2x2 四宮格系統方塊 + 上次閱讀 + 底部經文法句 === */}
+          {/* === A. 最外層首頁：CBETA Reader 4格卡片系統首頁 (支援自由自訂/拖曳排序/切換尺寸) === */}
           {!currentFolderId && (
             <div className="home-dashboard-container animate-fade-in">
-              <div className="library-title-area">
-                <h1 style={{ fontFamily: 'var(--font-rounded)', letterSpacing: '0.04em' }}>
-                  <span style={{ color: '#1ea98c' }}>CBETA</span> Reader
-                </h1>
-                <p>淨心小角落．閱讀大藏經</p>
-              </div>
-
-              {/* 💡 2x2 四宮格系統方塊 (左上: 下載經典, 右上: 關鍵字搜尋, 左下: 我的書櫃, 右下: 重點與筆記) */}
-              <div className="home-grid-2x2">
-                {/* 1. 左上：下載經典 */}
-                <div 
-                  className="home-grid-card"
-                  onClick={handleOpenCbetaCatalogWithAnimation}
-                  title="進入 CBETA 藏經庫目錄下載經典"
-                >
-                  <div className="home-grid-icon-box">
-                    <Plus size={20} color="#ffffff" style={{ strokeWidth: 2.6 }} />
-                  </div>
-                  <div className="home-grid-info">
-                    <div className="home-grid-title">下載經典</div>
-                    <div className="home-grid-subtitle">從CBETA資料庫下載</div>
-                  </div>
-                </div>
-
-                {/* 2. 右上：關鍵字搜尋 */}
-                <div 
-                  className="home-grid-card"
-                  onClick={() => setActiveTab('search')}
-                  title="點擊進行關鍵字搜尋"
-                >
-                  <div className="home-grid-icon-box">
-                    <Search size={18} color="#ffffff" style={{ strokeWidth: 2.4 }} />
-                  </div>
-                  <div className="home-grid-info">
-                    <div className="home-grid-title">關鍵字搜尋</div>
-                    <div className="home-grid-subtitle">已下載經典全文檢索</div>
-                  </div>
-                </div>
-
-                {/* 3. 左下：我的書櫃 */}
-                <div 
-                  className="home-grid-card"
-                  onClick={() => navigateToFolderWithAnimation('virtual_my_folders')}
-                  title="點擊查看我的書櫃"
-                >
-                  <div className="home-grid-icon-box">
-                    <Folder size={18} color="#ffffff" />
-                  </div>
-                  <div className="home-grid-info">
-                    <div className="home-grid-title">我的書櫃</div>
-                    <div className="home-grid-subtitle">共{downloadedBooks.length}本書</div>
-                  </div>
-                </div>
-
-                {/* 4. 右下：重點與筆記 */}
-                <div 
-                  className="home-grid-card"
-                  onClick={() => navigateToFolderWithAnimation('virtual_highlights')}
-                  title="點擊查看重點與筆記"
-                >
-                  <div className="home-grid-icon-box">
-                    <Notebook size={18} color="#ffffff" />
-                  </div>
-                  <div className="home-grid-info">
-                    <div className="home-grid-title">重點與筆記</div>
-                    <div className="home-grid-subtitle">共{allHighlights.length}則筆記</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 💡 中段：上次閱讀快捷卡 (若有閱讀紀錄) */}
-              {resumeBooks.length > 0 && (
-                <div className="home-resume-container">
-                  <div className="home-resume-label">上次閱讀</div>
-                  <div className="home-resume-list">
-                    {resumeBooks.slice(0, 2).map((item, idx) => (
-                      <div 
-                        key={`home-resume-${item.book.workId}-${idx}`}
-                        className="home-resume-card"
-                        onClick={() => onSelectBook(item.book.workId, item.progress.segmentId, undefined, 'resume')}
-                        title={`繼續閱讀：${item.book.title}`}
-                      >
-                        <div className="home-resume-left">
-                          <div className="home-resume-badge" style={{ background: getBookCoverGradient(item.book.workId) }}>
-                            {item.book.workId}
-                          </div>
-                          <div className="home-resume-info">
-                            <div className="home-resume-title" title={item.book.title}>
-                              {item.book.title}
-                            </div>
-                            <div className="home-resume-sub">
-                              {item.progress.juan ? `第 ${item.progress.juan} 卷` : ''}
-                              {item.book.creators ? ` · ${sanitizeCreators(item.book.creators)}` : ''}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="home-resume-btn">
-                          <span>繼續</span>
-                          <ChevronRight size={14} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 💡 最下方佛典偈語 */}
-              <div className="home-zen-quote">
-                <div className="home-zen-lotus">
-                  <svg width="22" height="18" viewBox="0 0 24 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.65, color: 'var(--theme-accent, #8c4b27)' }}>
-                    <path d="M12 2C12 2 8 8 8 13C8 16 10 18 12 18C14 18 16 16 16 13C16 8 12 2 12 2Z" />
-                    <path d="M12 18C7.5 18 4 14.5 4 11C4 8.5 6 6 8 5" />
-                    <path d="M12 18C16.5 18 20 14.5 20 11C20 8.5 18 6 16 5" />
-                    <path d="M2 18C5 18 8 17.5 12 17.5C16 17.5 19 18 22 18" />
-                  </svg>
-                </div>
-                <div className="home-zen-text">
-                  「由聞知諸法，由聞遮眾惡，由聞斷無義，由聞得涅槃。」
-                </div>
-                <div className="home-zen-source">
-                  印順導師《成佛之道》Y0040
-                </div>
-              </div>
+              <HomeDashboard
+                downloadedBooks={downloadedBooks}
+                resumeBooks={resumeBooks}
+                allHighlights={allHighlights}
+                settings={settings}
+                onSaveSettings={onSaveSettings || (() => {})}
+                onSelectBook={onSelectBook}
+                onOpenCbetaCatalog={onOpenCbetaCatalog || handleOpenCbetaCatalogWithAnimation}
+                onNavigateToLibrarySection={(section) => {
+                  if (section === 'shelf') navigateToFolder('virtual_my_folders');
+                  else if (section === 'notes') navigateToFolder('virtual_highlights');
+                  else if (section === 'search') setActiveTab('search');
+                  else if (section === 'reading-log') setActiveTab('reading-log');
+                  else if (section === 'home') navigateToFolder(null);
+                }}
+                onOpenFolder={navigateToFolderWithAnimation}
+                isLayoutEditMode={isLayoutEditMode}
+                setIsLayoutEditMode={setIsLayoutEditMode}
+              />
             </div>
           )}
 

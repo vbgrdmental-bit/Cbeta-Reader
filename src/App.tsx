@@ -96,7 +96,6 @@ export function App() {
     setView('library');
     updateHashRoute('library');
     setTargetLibrarySection({ section, timestamp: Date.now() });
-    setBooksUpdatedTrigger(prev => prev + 1);
   };
 
   // 💡 全域閱讀計時器狀態
@@ -198,8 +197,9 @@ export function App() {
     // 💡 閱讀日誌：結束計時
     readingLogManager.endSession();
     if (resetToRoot) {
-      // 點選 Home 首頁按鈕：固定回到首頁 Library
+      // 點選 Home 首頁按鈕：固定回到首頁 Library 頂層根目錄
       setView('library');
+      setTargetLibrarySection({ section: 'home', timestamp: Date.now() });
       setResetFolderTrigger(prev => prev + 1);
       updateHashRoute('library');
     } else {
@@ -258,6 +258,7 @@ export function App() {
             setView('cbeta');
             updateHashRoute('cbeta');
           }}
+          onSaveSettings={handleSaveSettings}
         />
       </div>
 
@@ -266,9 +267,7 @@ export function App() {
         <CbetaCatalogView
           isActive={view === 'cbeta'}
           onBackToLibrary={() => {
-            setView('library');
-            setBooksUpdatedTrigger(prev => prev + 1);
-            updateHashRoute('library');
+            handleNavigateToLibrarySection('home');
           }}
           onOpenSettings={() => setShowSettings(true)}
           onSelectBook={handleSelectBook}
