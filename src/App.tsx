@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Library } from './reader/components/Library';
 import { ReaderView } from './reader/components/ReaderView';
-import { CbetaCatalogView } from './reader/components/CbetaCatalogView';
 import { SettingsView } from './reader/components/SettingsView';
 import { OnboardingView } from './reader/components/OnboardingView';
 import { getSettings, saveSettings } from './utils/db';
@@ -37,7 +36,7 @@ const parseHashRoute = (): RouteState => {
   return { view: 'library' };
 };
 
-const updateHashRoute = (targetView: 'library' | 'cbeta' | 'reader', workId?: string | null, segmentId?: string, replace = false) => {
+export const updateHashRoute = (targetView: 'library' | 'cbeta' | 'reader', workId?: string | null, segmentId?: string, replace = false) => {
   if (typeof window === 'undefined') return;
   try {
     let targetHash = '#/';
@@ -82,10 +81,10 @@ export function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [booksUpdatedTrigger, setBooksUpdatedTrigger] = useState(0);
 
-  // 💡 全站核心功能導航目標（首頁、書櫃、筆記、搜尋、閱讀日誌）
-  const [targetLibrarySection, setTargetLibrarySection] = useState<{ section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log'; timestamp: number } | null>(null);
+  // 💡 全站核心功能導航目標（首頁、書櫃、筆記、搜尋、閱讀日誌、下載經典）
+  const [targetLibrarySection, setTargetLibrarySection] = useState<{ section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log' | 'cbeta'; timestamp: number } | null>(null);
 
-  const handleNavigateToLibrarySection = (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log') => {
+  const handleNavigateToLibrarySection = (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log' | 'cbeta') => {
     // 若在閱讀頁，先結束當前閱讀日誌
     if (view === 'reader') {
       readingLogManager.endSession();
@@ -93,8 +92,9 @@ export function App() {
       setActiveSegmentId(undefined);
       setAutoResumeMode(null);
     }
-    setView('library');
-    updateHashRoute('library');
+    const targetView = section === 'cbeta' ? 'cbeta' : 'library';
+    setView(targetView);
+    updateHashRoute(targetView);
     setTargetLibrarySection({ section, timestamp: Date.now() });
   };
 
@@ -118,6 +118,7 @@ export function App() {
         setActiveBookId(null);
         setActiveSegmentId(undefined);
         setAutoResumeMode(null);
+        setTargetLibrarySection({ section: 'cbeta', timestamp: Date.now() });
       } else {
         setActiveBookId(null);
         setActiveSegmentId(undefined);
@@ -138,11 +139,11 @@ export function App() {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const stored = await getSettings();
-        setSettings(stored);
-        applyThemeClass(stored.theme);
+        const data = await getSettings();
+        setSettings(data);
+        applyThemeClass(data.theme);
         // 💡 同步閱讀日誌啟用狀態
-        readingLogManager.setEnabled(stored.readingLogEnabled ?? false);
+        readingLogManager.setEnabled(data.readingLogEnabled ?? false);
       } catch (e) {
         console.error('Failed to load settings:', e);
       }
@@ -244,35 +245,22 @@ export function App() {
         <OnboardingView onComplete={handleCompleteOnboarding} />
       )}
 
-      {/* 💡 使用 CSS display 來控制 Library 顯示/隱藏，避免組件銷毀丟失當前資料夾路徑狀態 */}
-      <div style={{ display: view === 'library' ? 'block' : 'none', width: '100%', height: '100%' }}>
+      {/* 💡 使用 CSS display 來控制 Library 顯示/隱藏，由 Library 統一管理 Shelf、Search、Log 與 CbetaCatalogView */}
+      <div style={{ display: (view === 'library' || view === 'cbeta') ? 'block' : 'none', width: '100%', height: '100%' }}>
         <Library 
           onSelectBook={handleSelectBook} 
           booksUpdatedTrigger={booksUpdatedTrigger}
           settings={settings}
           initialSearchQuery={lastSearchQuery}
           resetFolderTrigger={resetFolderTrigger}
-          targetSection={targetLibrarySection}
+          targetSection={targetLibrarySection || (view === 'cbeta' ? { section: 'cbeta', timestamp: 0 } : null)}
           onOpenSettings={() => setShowSettings(true)}
           onOpenCbetaCatalog={() => {
             setView('cbeta');
             updateHashRoute('cbeta');
+            setTargetLibrarySection({ section: 'cbeta', timestamp: Date.now() });
           }}
           onSaveSettings={handleSaveSettings}
-        />
-      </div>
-
-      {/* 💡 使用 CSS display 來控制 CbetaCatalogView 顯示/隱藏，避免組件銷毀丟失搜尋狀態與滾動位置 */}
-      <div style={{ display: view === 'cbeta' ? 'block' : 'none', width: '100%', height: '100%' }}>
-        <CbetaCatalogView
-          isActive={view === 'cbeta'}
-          onBackToLibrary={() => {
-            handleNavigateToLibrarySection('home');
-          }}
-          onOpenSettings={() => setShowSettings(true)}
-          onSelectBook={handleSelectBook}
-          settings={settings}
-          onNavigateToLibrarySection={handleNavigateToLibrarySection}
         />
       </div>
 

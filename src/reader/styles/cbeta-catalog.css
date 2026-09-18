@@ -483,7 +483,7 @@ body.theme-ebony .batch-checkbox.downloaded-checked,
   color: #81c784;
 }
 
-/* 已下載經典右側的圓型「→」按鈕 (與「下載↓」鍵等寬 34px，底色隨四大主題自適應) */
+/* 已下載經典右側的圓型「→」按鈕 (與「下載↓」鍵等寬 34px，淺色底色，箭頭跟隨主題色) */
 .cbeta-read-btn {
   width: 34px;
   min-width: 34px;
@@ -496,21 +496,22 @@ body.theme-ebony .batch-checkbox.downloaded-checked,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--theme-accent, #8c4b27);
-  color: #ffffff;
-  border: none;
+  background: rgba(140, 75, 39, 0.09);
+  color: var(--theme-accent, #8c4b27);
+  border: 1.5px solid rgba(140, 75, 39, 0.16);
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(140, 75, 39, 0.25);
-  transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
   flex-shrink: 0;
   user-select: none;
   box-sizing: border-box;
 }
 
 .cbeta-read-btn:hover {
-  background-color: var(--theme-accent-hover, #713c23);
+  background: rgba(140, 75, 39, 0.18);
+  border-color: rgba(140, 75, 39, 0.35);
   transform: scale(1.08);
-  box-shadow: 0 4px 10px rgba(140, 75, 39, 0.35);
+  box-shadow: 0 3px 8px rgba(140, 75, 39, 0.15);
 }
 
 .cbeta-read-btn:active {
@@ -520,50 +521,55 @@ body.theme-ebony .batch-checkbox.downloaded-checked,
 /* 四大主題模式專屬底色適配 */
 body.theme-ivory .cbeta-read-btn,
 .theme-ivory .cbeta-read-btn {
-  background-color: #8c6a46;
-  color: #ffffff;
-  box-shadow: 0 2px 6px rgba(140, 106, 70, 0.25);
+  background: rgba(140, 106, 70, 0.09);
+  border-color: rgba(140, 106, 70, 0.18);
+  color: #8c6a46;
 }
 
 body.theme-ivory .cbeta-read-btn:hover,
 .theme-ivory .cbeta-read-btn:hover {
-  background-color: #755534;
+  background: rgba(140, 106, 70, 0.2);
+  border-color: rgba(140, 106, 70, 0.4);
 }
 
 body.theme-parchment .cbeta-read-btn,
 .theme-parchment .cbeta-read-btn {
-  background-color: #9c623c;
-  color: #ffffff;
-  box-shadow: 0 2px 6px rgba(156, 98, 60, 0.25);
+  background: rgba(156, 98, 60, 0.09);
+  border-color: rgba(156, 98, 60, 0.18);
+  color: #9c623c;
 }
 
 body.theme-parchment .cbeta-read-btn:hover,
 .theme-parchment .cbeta-read-btn:hover {
-  background-color: #86522f;
+  background: rgba(156, 98, 60, 0.2);
+  border-color: rgba(156, 98, 60, 0.4);
 }
 
 body.theme-comfort .cbeta-read-btn,
 .theme-comfort .cbeta-read-btn {
-  background-color: #457a58;
-  color: #ffffff;
-  box-shadow: 0 2px 6px rgba(69, 122, 88, 0.25);
+  background: rgba(69, 122, 88, 0.09);
+  border-color: rgba(69, 122, 88, 0.18);
+  color: #457a58;
 }
 
 body.theme-comfort .cbeta-read-btn:hover,
 .theme-comfort .cbeta-read-btn:hover {
-  background-color: #376547;
+  background: rgba(69, 122, 88, 0.2);
+  border-color: rgba(69, 122, 88, 0.4);
 }
 
 body.theme-ebony .cbeta-read-btn,
 .theme-ebony .cbeta-read-btn {
-  background-color: #f2a31b;
-  color: #14181e;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #f2a31b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 body.theme-ebony .cbeta-read-btn:hover,
 .theme-ebony .cbeta-read-btn:hover {
-  background-color: #ffb732;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(242, 163, 27, 0.45);
 }
 
 .cbeta-work-badge {

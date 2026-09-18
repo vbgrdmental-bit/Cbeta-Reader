@@ -22,7 +22,8 @@ interface CbetaCatalogViewProps {
   onSelectBook: (workId: string, segmentId?: string, searchQuery?: string) => void;
   settings: AppSettings;
   isActive?: boolean;
-  onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log') => void;
+  onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log' | 'cbeta') => void;
+  hideHeader?: boolean;
 }
 
 interface CatalogNode {
@@ -228,7 +229,8 @@ export function CbetaCatalogView({
   onSelectBook,
   settings,
   isActive,
-  onNavigateToLibrarySection
+  onNavigateToLibrarySection,
+  hideHeader
 }: CbetaCatalogViewProps) {
   // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代) - 預設開啟「常用經典」
   const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('favorite');
@@ -1037,112 +1039,114 @@ export function CbetaCatalogView({
       onTouchEnd={handleCatalogTouchEnd}
     >
       {/* 頂部固定控制列 (Header Bar) - 56pxBaseHeight 完全對齊首頁 */}
-      <div className="library-header">
-        {isBackupMode() && (
-          <div className="header-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
-            備援
-          </div>
-        )}
-        
-        {/* 1. 左端：回首頁 (書架) 圖示 */}
-        <button 
-          className="library-header-btn" 
-          onClick={onBackToLibrary}
-          title="返回本地書架"
-        >
-          <Home size={20} />
-        </button>
-
-        {/* 2. 中央統一微膠囊：[ 下載 + 書櫃 + 筆記 + 搜尋 + (閱讀日誌) ] */}
-        <div className="unified-nav-capsule">
-          {/* 下載經典：目前處於 CBETA 藏經庫，此項展開 active */}
-          <button
-            className="capsule-nav-item active"
-            title="從 CBETA 資料庫下載經典"
+      {!hideHeader && (
+        <div className="library-header">
+          {isBackupMode() && (
+            <div className="header-backup-badge" title="目前處於備援閱讀模式 (?source=backup)">
+              備援
+            </div>
+          )}
+          
+          {/* 1. 左端：回首頁 (書架) 圖示 */}
+          <button 
+            className="library-header-btn" 
+            onClick={onBackToLibrary}
+            title="返回本地書架"
           >
-            <Plus size={17} style={{ strokeWidth: 2.2 }} />
-            <span className="capsule-label">下載經典</span>
+            <Home size={20} />
           </button>
 
-          {/* 我的書櫃 */}
-          <button
-            className="capsule-nav-item"
-            onClick={() => {
-              if (onNavigateToLibrarySection) {
-                onNavigateToLibrarySection('shelf');
-              } else {
-                onBackToLibrary();
-              }
-            }}
-            title="我的書櫃（已下載經典與資料夾）"
-          >
-            <Folder size={16} />
-            <span className="capsule-label">我的書櫃</span>
-          </button>
+          {/* 2. 中央統一微膠囊：[ 下載 + 書櫃 + 筆記 + 搜尋 + (閱讀日誌) ] */}
+          <div className="unified-nav-capsule">
+            {/* 下載經典：目前處於 CBETA 藏經庫，此項展開 active */}
+            <button
+              className="capsule-nav-item active"
+              title="從 CBETA 資料庫下載經典"
+            >
+              <Plus size={17} style={{ strokeWidth: 2.2 }} />
+              <span className="capsule-label">下載經典</span>
+            </button>
 
-          {/* 重點與筆記 */}
-          <button
-            className="capsule-nav-item"
-            onClick={() => {
-              if (onNavigateToLibrarySection) {
-                onNavigateToLibrarySection('notes');
-              } else {
-                onBackToLibrary();
-              }
-            }}
-            title="重點與筆記"
-          >
-            <Notebook size={16} />
-            <span className="capsule-label">重點筆記</span>
-          </button>
-
-          {/* 全文搜尋 */}
-          <button
-            className="capsule-nav-item"
-            onClick={() => {
-              if (onNavigateToLibrarySection) {
-                onNavigateToLibrarySection('search');
-              } else {
-                onBackToLibrary();
-              }
-            }}
-            title="關鍵字搜尋（已下載經典檢索）"
-          >
-            <Search size={16} />
-            <span className="capsule-label">全文搜尋</span>
-          </button>
-
-          {/* 閱讀日誌（若勾選「閱讀日誌」時整合於微膠囊內） */}
-          {settings?.readingLogEnabled && (
+            {/* 我的書櫃 */}
             <button
               className="capsule-nav-item"
               onClick={() => {
                 if (onNavigateToLibrarySection) {
-                  onNavigateToLibrarySection('reading-log');
+                  onNavigateToLibrarySection('shelf');
                 } else {
                   onBackToLibrary();
                 }
               }}
-              title="閱讀日誌"
+              title="我的書櫃（已下載經典與資料夾）"
             >
-              <CalendarDays size={16} />
-              <span className="capsule-label">閱讀日誌</span>
+              <Folder size={16} />
+              <span className="capsule-label">我的書櫃</span>
             </button>
-          )}
-        </div>
 
-        {/* 3. 右端：設定 */}
-        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
-          {/* 齒輪設定按鈕 */}
-          <button 
-            className="library-header-btn" 
-            onClick={onOpenSettings}
-            title="偏好設定"
-          >
-            <Settings size={20} />
-          </button>
+            {/* 重點與筆記 */}
+            <button
+              className="capsule-nav-item"
+              onClick={() => {
+                if (onNavigateToLibrarySection) {
+                  onNavigateToLibrarySection('notes');
+                } else {
+                  onBackToLibrary();
+                }
+              }}
+              title="重點與筆記"
+            >
+              <Notebook size={16} />
+              <span className="capsule-label">重點筆記</span>
+            </button>
+
+            {/* 全文搜尋 */}
+            <button
+              className="capsule-nav-item"
+              onClick={() => {
+                if (onNavigateToLibrarySection) {
+                  onNavigateToLibrarySection('search');
+                } else {
+                  onBackToLibrary();
+                }
+              }}
+              title="關鍵字搜尋（已下載經典檢索）"
+            >
+              <Search size={16} />
+              <span className="capsule-label">全文搜尋</span>
+            </button>
+
+            {/* 閱讀日誌（若勾選「閱讀日誌」時整合於微膠囊內） */}
+            {settings?.readingLogEnabled && (
+              <button
+                className="capsule-nav-item"
+                onClick={() => {
+                  if (onNavigateToLibrarySection) {
+                    onNavigateToLibrarySection('reading-log');
+                  } else {
+                    onBackToLibrary();
+                  }
+                }}
+                title="閱讀日誌"
+              >
+                <CalendarDays size={16} />
+                <span className="capsule-label">閱讀日誌</span>
+              </button>
+            )}
+          </div>
+
+          {/* 3. 右端：設定 */}
+          <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
+            {/* 齒輪設定按鈕 */}
+            <button 
+              className="library-header-btn" 
+              onClick={onOpenSettings}
+              title="偏好設定"
+            >
+              <Settings size={20} />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 主頁面內容區 */}
       <main className="cbeta-catalog-body custom-scrollbar">

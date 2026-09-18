@@ -16,6 +16,8 @@ import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { SearchPanel } from './SearchPanel';
 import { ReadingLogView } from './ReadingLogView';
 import { HomeDashboard } from './HomeDashboard';
+import { CbetaCatalogView } from './CbetaCatalogView';
+import { updateHashRoute } from '../../App';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
 import { getBookCoverGradient } from '../../utils/bookColors';
 import '../styles/library.css';
@@ -26,7 +28,7 @@ interface LibraryProps {
   settings: AppSettings;
   initialSearchQuery?: string;
   resetFolderTrigger?: number;
-  targetSection?: { section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log'; timestamp: number } | null;
+  targetSection?: { section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log' | 'cbeta'; timestamp: number } | null;
   onOpenSettings?: () => void;
   onOpenCbetaCatalog?: () => void;
   onSaveSettings?: (settings: AppSettings) => void;
@@ -52,7 +54,7 @@ export function Library({
   
   // Builder 進度與動畫
   const [buildProgress, setBuildProgress] = useState<BuildProgress | null>(null);
-  const [activeTab, setActiveTab] = useState<'shelf' | 'search' | 'reading-log'>(initialSearchQuery ? 'search' : 'shelf');
+  const [activeTab, setActiveTab] = useState<'shelf' | 'search' | 'reading-log' | 'cbeta'>(initialSearchQuery ? 'search' : 'shelf');
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
   const [isLayoutEditMode, setIsLayoutEditMode] = useState(false);
 
@@ -132,6 +134,8 @@ export function Library({
       setActiveTab('search');
     } else if (targetSection.section === 'reading-log') {
       setActiveTab('reading-log');
+    } else if (targetSection.section === 'cbeta') {
+      setActiveTab('cbeta');
     }
   }
 
@@ -464,23 +468,11 @@ export function Library({
     }
   };
 
-  // 💡 點擊「+」開啟 CBETA 藏經庫時的平滑向左推進動畫 (CBETA 式整頁飛出)
+  // 💡 點擊「+」開啟 CBETA 藏經庫時
   const handleOpenCbetaCatalogWithAnimation = () => {
-    if (!onOpenCbetaCatalog) return;
-    if (swipeContainerRef.current) {
-      const container = swipeContainerRef.current;
-      // 1. 整頁向右飛出（CBETA 在首頁左邊，向左滑進入 = 首頁向右飛出）
-      container.style.transition = 'transform 0.24s cubic-bezier(0.4, 0, 1, 1), opacity 0.24s ease-out';
-      container.style.transform = 'translateX(100%)';
-      container.style.opacity = '0.15';
-      setTimeout(() => {
-        onOpenCbetaCatalog();
-        // CBETA 頁接管，不需要復位動畫
-        container.style.transition = 'none';
-        container.style.transform = 'translateX(0px)';
-        container.style.opacity = '1';
-      }, 210);
-    } else {
+    setActiveTab('cbeta');
+    updateHashRoute('cbeta');
+    if (onOpenCbetaCatalog) {
       onOpenCbetaCatalog();
     }
   };
@@ -1351,6 +1343,7 @@ export function Library({
             setCurrentFolderId(null);
             setFolderHistory([null]);
             setHistoryIndex(0);
+            updateHashRoute('library');
           }}
           title="書架首頁"
         >
@@ -1361,8 +1354,12 @@ export function Library({
         <div className="unified-nav-capsule">
           {/* 下載經典 */}
           <button
-            className="capsule-nav-item"
-            onClick={() => onOpenCbetaCatalog?.()}
+            className={`capsule-nav-item ${activeTab === 'cbeta' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('cbeta');
+              updateHashRoute('cbeta');
+              onOpenCbetaCatalog?.();
+            }}
             title="從 CBETA 資料庫下載經典"
           >
             <Plus size={17} style={{ strokeWidth: 2.2 }} />
@@ -1375,6 +1372,7 @@ export function Library({
             onClick={() => {
               setActiveTab('shelf');
               navigateToFolder('virtual_my_folders');
+              updateHashRoute('library');
             }}
             title="我的書櫃（已下載經典與資料夾）"
           >
@@ -1388,6 +1386,7 @@ export function Library({
             onClick={() => {
               setActiveTab('shelf');
               navigateToFolder('virtual_highlights');
+              updateHashRoute('library');
             }}
             title="重點與筆記"
           >
@@ -1398,7 +1397,10 @@ export function Library({
           {/* 全文搜尋 */}
           <button
             className={`capsule-nav-item ${activeTab === 'search' ? 'active' : ''}`}
-            onClick={() => setActiveTab('search')}
+            onClick={() => {
+              setActiveTab('search');
+              updateHashRoute('library');
+            }}
             title="關鍵字搜尋（已下載經典檢索）"
           >
             <Search size={16} />
@@ -1409,7 +1411,10 @@ export function Library({
           {settings.readingLogEnabled && (
             <button
               className={`capsule-nav-item ${activeTab === 'reading-log' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reading-log')}
+              onClick={() => {
+                setActiveTab('reading-log');
+                updateHashRoute('library');
+              }}
               title="閱讀日誌"
             >
               <CalendarDays size={16} />
@@ -1443,30 +1448,15 @@ export function Library({
           {currentFolderId && (
             <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
-                {/* 💡 僅在深入子資料夾層級時顯示返回「<」，「我的書櫃」與「重點筆記」頂層隱藏 */}
+                {/* 💡 深入專區/子資料夾時，左側顯示圓型「<」返回上一層（與下方書籍卡片左側對齊） */}
                 {currentFolderId && currentFolderId !== 'virtual_my_folders' && currentFolderId !== 'virtual_highlights' && (
                   <button 
                     type="button"
-                    className="folder-back-btn"
+                    className="folder-back-circle-btn"
                     onClick={handleGoBack}
                     title="返回上一層"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '50%',
-                      border: '1px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
-                      background: 'var(--btn-bg, rgba(140, 75, 39, 0.08))',
-                      cursor: 'pointer',
-                      color: 'var(--text-primary)',
-                      marginRight: '6px',
-                      flexShrink: 0,
-                      transition: 'all 0.15s ease'
-                    }}
                   >
-                    <ChevronLeft size={18} />
+                    <ChevronLeft size={18} strokeWidth={2.6} />
                   </button>
                 )}
                 <div className="folder-nav-middle" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1547,11 +1537,28 @@ export function Library({
                 onSelectBook={onSelectBook}
                 onOpenCbetaCatalog={onOpenCbetaCatalog || handleOpenCbetaCatalogWithAnimation}
                 onNavigateToLibrarySection={(section) => {
-                  if (section === 'shelf') navigateToFolder('virtual_my_folders');
-                  else if (section === 'notes') navigateToFolder('virtual_highlights');
-                  else if (section === 'search') setActiveTab('search');
-                  else if (section === 'reading-log') setActiveTab('reading-log');
-                  else if (section === 'home') navigateToFolder(null);
+                  if (section === 'shelf') {
+                    setActiveTab('shelf');
+                    navigateToFolder('virtual_my_folders');
+                    updateHashRoute('library');
+                  } else if (section === 'notes') {
+                    setActiveTab('shelf');
+                    navigateToFolder('virtual_highlights');
+                    updateHashRoute('library');
+                  } else if (section === 'search') {
+                    setActiveTab('search');
+                    updateHashRoute('library');
+                  } else if (section === 'reading-log') {
+                    setActiveTab('reading-log');
+                    updateHashRoute('library');
+                  } else if (section === 'cbeta') {
+                    setActiveTab('cbeta');
+                    updateHashRoute('cbeta');
+                  } else if (section === 'home') {
+                    setActiveTab('shelf');
+                    navigateToFolder(null);
+                    updateHashRoute('library');
+                  }
                 }}
                 onOpenFolder={navigateToFolderWithAnimation}
                 isLayoutEditMode={isLayoutEditMode}
@@ -1968,7 +1975,7 @@ export function Library({
             }}
           />
         </div>
-      ) : (
+      ) : activeTab === 'reading-log' ? (
         /* 💡 每日閱讀日誌分頁畫面 (延用頂部微膠囊控制列) */
         <div className="animate-slide-up" style={{ width: '100%', height: '100%' }}>
           <ReadingLogView
@@ -1976,7 +1983,46 @@ export function Library({
             onSelectBook={onSelectBook}
           />
         </div>
-      )}
+      ) : null}
+
+      {/* 💡 藏經庫 (下載經典) 視圖：以 display 控制顯隱，保留搜尋狀態與滾動位置，且共享頂部微膠囊 Header */}
+      <div style={{ display: activeTab === 'cbeta' ? 'flex' : 'none', flexDirection: 'column', flex: 1, minHeight: 0, width: '100%', height: '100%' }}>
+        <CbetaCatalogView
+          hideHeader={true}
+          isActive={activeTab === 'cbeta'}
+          onBackToLibrary={() => {
+            setActiveTab('shelf');
+            setCurrentFolderId(null);
+            setFolderHistory([null]);
+            setHistoryIndex(0);
+            updateHashRoute('library');
+          }}
+          onOpenSettings={onOpenSettings || (() => {})}
+          onSelectBook={onSelectBook}
+          settings={settings}
+          onNavigateToLibrarySection={(sec) => {
+            if (sec === 'home') {
+              setActiveTab('shelf');
+              setCurrentFolderId(null);
+              setFolderHistory([null]);
+              setHistoryIndex(0);
+            } else if (sec === 'shelf') {
+              setActiveTab('shelf');
+              navigateToFolder('virtual_my_folders');
+            } else if (sec === 'notes') {
+              setActiveTab('shelf');
+              setCurrentFolderId('virtual_highlights');
+            } else if (sec === 'search') {
+              setActiveTab('search');
+            } else if (sec === 'reading-log') {
+              setActiveTab('reading-log');
+            } else if (sec === 'cbeta') {
+              setActiveTab('cbeta');
+            }
+            updateHashRoute(sec === 'cbeta' ? 'cbeta' : 'library');
+          }}
+        />
+      </div>
       </div>
 
       {/* 線上搜尋並下載對話框 */}

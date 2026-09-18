@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.3.8` (App: v4.3.8 / Builder: v2.9.11)
+- **Current Version**: `v4.4.1` (App: v4.4.1 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,18 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.4.1 / Builder: v2.9.11** (2026-09-19)
+  - [App] 預設加入小工具改為置於最上方，新增後平滑滾動至頂部。
+  - [App] 上次閱讀、我的最愛、近期下載新增 4×3 規格（顯示 3 部經典），4×4 顯示 4 部經典。
+  - [App] 首頁圓型「→」統一像素級置右對齊與淺色底色；書櫃專區頂部返回鍵升級為圓型「<」並與卡片左側對齊。
+- **⭐ App: v4.4.0 / Builder: v2.9.11** (2026-09-19)
+  - [App] 導入 iOS 原生小工具庫 (Widget Gallery)：支援大類別瀏覽、關鍵字搜尋與風格範本快捷套用。
+  - [App] 支援小工具各規格真實外觀即時預覽（4×1/4×2/2×2/4×4），隨選即看、一鍵直覺加入。
+  - [App] 編輯模式升級：頂部「加入小工具」與「完成」控制列，卡片左上角配置「➖」刪除小工具按鈕。
+- **⭐ App: v4.3.9 / Builder: v2.9.11** (2026-09-18)
+  - [App] 頂部導航控制列與 CBETA 藏經庫（+ 下載經典）完全統合共享，徹底消除切換時的 1 幀白屏/畫面閃爍。
+  - [App] 「+ 下載經典」、「我的書櫃」、「重點筆記」、「全文搜尋」、「閱讀日誌」與「家」呈現 100% 順暢一致的 0 閃動感切換體驗。
+  - [App] 「+ 下載經典」微膠囊獲得 100% 絲滑平滑彈跳展開與收合 transition 動態效果。
 - **⭐ App: v4.3.8 / Builder: v2.9.11** (2026-09-18)
   - [App] 護眼計時器動態優化：僅外圍虛線環旋轉，中央倒數數字（如 `14:58`）保持端正水平不旋轉。
   - [App] 護眼計時器選定狀態（如 `15m`）改用淺色灰底（`#d8d5ce` / ebony `rgba(255,255,255,0.25)`），視覺柔和沉靜。

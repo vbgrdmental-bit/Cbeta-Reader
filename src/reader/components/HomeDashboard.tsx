@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Plus, Search, Folder, Notebook, ChevronRight, Check, X,
-  Maximize2, Sliders, CalendarDays
+  Plus, Search, Folder, Notebook, ChevronRight, ChevronLeft, Check, X,
+  Maximize2, Sliders, CalendarDays, ArrowRight
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
 import type { AppSettings, BookHighlight } from '../../utils/db';
@@ -12,10 +12,13 @@ import type { ReadingTimerState } from '../../utils/readingTimer';
 import type { 
   HomeWidgetConfig, 
   HomeWidgetType, 
-  HomeLayoutPreset 
+  HomeWidgetSize,
+  HomeLayoutPreset,
+  WidgetCategoryId 
 } from '../../types/homeLayout';
 import { 
   WIDGET_CATALOG, 
+  WIDGET_CATEGORIES,
   PRESET_LAYOUTS, 
   ALLOWED_SIZES_BY_TYPE,
   ZEN_ICONS_LIST
@@ -29,7 +32,7 @@ interface HomeDashboardProps {
   onSaveSettings: (settings: AppSettings) => void;
   onSelectBook: (workId: string, segmentId?: string, searchQuery?: string, autoResumeMode?: 'resume' | 'restart') => void;
   onOpenCbetaCatalog: () => void;
-  onNavigateToLibrarySection: (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log') => void;
+  onNavigateToLibrarySection: (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log' | 'cbeta') => void;
   onOpenFolder?: (folderId: string) => void;
   isLayoutEditMode: boolean;
   setIsLayoutEditMode: (val: boolean) => void;
@@ -57,7 +60,13 @@ export function HomeDashboard({
     return JSON.parse(JSON.stringify(PRESET_LAYOUTS[preset] || PRESET_LAYOUTS.default));
   });
 
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'brand' | 'nav' | 'reading' | 'tools' | 'zen'>('all');
+  // 💡 iOS Widget Gallery 狀態 (4大類別，單層直接預覽 + 「<」「>」直接切換加入)
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<WidgetCategoryId>('nav');
+  const [currentWidgetIndex, setCurrentWidgetIndex] = useState<number>(0);
+  const [previewWidgetSize, setPreviewWidgetSize] = useState<HomeWidgetSize>('size-4x1');
+  const [previewIconIndex, setPreviewIconIndex] = useState<number>(1);
+
   const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
   const [dragOverWidgetId, setDragOverWidgetId] = useState<string | null>(null);
 
@@ -99,27 +108,32 @@ export function HomeDashboard({
     setWidgets(prev => prev.filter(w => w.id !== widgetId));
   };
 
-  // 加入新卡片
-  const handleAddWidget = (type: HomeWidgetType) => {
+  // 加入新卡片 (出現在最上面)
+  const handleAddWidget = (type: HomeWidgetType, size?: HomeWidgetSize, iconIndex?: number) => {
     const catalogItem = WIDGET_CATALOG.find(item => item.type === type);
-    const defaultSize = catalogItem ? catalogItem.size : 'size-2x2';
+    const chosenSize = size || (catalogItem ? catalogItem.size : 'size-2x2');
     const newWidget: HomeWidgetConfig = {
       id: `w_${type}_${Date.now()}`,
       type,
-      size: defaultSize,
-      iconIndex: 1
+      size: chosenSize,
+      iconIndex: iconIndex || 1
     };
-    setWidgets(prev => [...prev, newWidget]);
+    setWidgets(prev => [newWidget, ...prev]);
+    setIsGalleryOpen(false);
 
-    // 💡 確保新加入的小工具立即可見，平滑捲動至底部
+    // 💡 確保新加入的小工具立即可見，平滑捲動至頂部
     setTimeout(() => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
   };
 
   // 💡 點擊禪意 App Icon：循環更換 10 款蓮花圖標 (01 -> 02 -> ... -> 10 -> 01)
   const handleCycleZenIcon = (widgetId: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
+    if (widgetId === 'preview-instance') {
+      setPreviewIconIndex(prev => (prev % 10) + 1);
+      return;
+    }
     setWidgets(prev => {
       const updated = prev.map(w => {
         if (w.id !== widgetId) return w;
@@ -572,18 +586,23 @@ export function HomeDashboard({
         if (size === 'size-4x1') {
           return (
             <div 
-              className="core-download-dashed-4x1"
+              className="core-widget-4x1"
               onClick={!isLayoutEditMode ? onOpenCbetaCatalog : undefined}
               title="前往 CBETA 藏經庫下載經典"
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
             >
-              <div className="core-icon-box-4x1">
-                <Plus size={16} color="#ffffff" style={{ strokeWidth: 2.6 }} />
+              <div className="core-widget-4x1-left">
+                <div className="core-icon-box-4x1">
+                  <Plus size={16} color="#ffffff" style={{ strokeWidth: 2.6 }} />
+                </div>
+                <div className="core-info-4x1">
+                  <span className="core-title-4x1">下載經典</span>
+                  <span className="core-sub-4x1">· 從CBETA資料庫下載</span>
+                </div>
               </div>
-              <div className="core-info-4x1">
-                <span className="core-title-4x1">下載經典</span>
-                <span className="core-sub-4x1">· 從CBETA資料庫下載 ➔</span>
-              </div>
+              <button type="button" className="cbeta-read-btn" title="前往下載">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -604,10 +623,9 @@ export function HomeDashboard({
                   <div className="core-sub">從 CBETA 藏經資料庫檢索與下載</div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>前往下載</span>
-                <ChevronRight size={14} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="前往下載">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -642,13 +660,12 @@ export function HomeDashboard({
                 </div>
                 <div className="core-info-4x1">
                   <span className="core-title-4x1">我的書櫃</span>
-                  <span className="core-sub-4x1">· 共 {downloadedBooks.length} 本書</span>
+                  <span className="core-count-badge">{downloadedBooks.length}</span>
                 </div>
               </div>
-              <div className="btn-resume" style={{ fontSize: '0.78rem', padding: '0.25rem 0.6rem' }}>
-                <span>瀏覽</span>
-                <ChevronRight size={12} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="瀏覽書櫃">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -669,10 +686,9 @@ export function HomeDashboard({
                   <div className="core-sub">已收錄 {downloadedBooks.length} 部已下載經典與自訂分類</div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>進入書櫃</span>
-                <ChevronRight size={14} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="進入書櫃">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -707,13 +723,12 @@ export function HomeDashboard({
                 </div>
                 <div className="core-info-4x1">
                   <span className="core-title-4x1">重點與筆記</span>
-                  <span className="core-sub-4x1">· 共 {allHighlights.length} 則筆記</span>
+                  <span className="core-count-badge">{allHighlights.length}</span>
                 </div>
               </div>
-              <div className="btn-resume" style={{ fontSize: '0.78rem', padding: '0.25rem 0.6rem' }}>
-                <span>查看</span>
-                <ChevronRight size={12} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="查看筆記">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -734,10 +749,9 @@ export function HomeDashboard({
                   <div className="core-sub">已累積 {allHighlights.length} 條劃線重點與個人筆記</div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>查看筆記</span>
-                <ChevronRight size={14} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="查看筆記">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -775,10 +789,9 @@ export function HomeDashboard({
                   <span className="core-sub-4x1">· 已下載經典搜尋</span>
                 </div>
               </div>
-              <div className="btn-resume" style={{ fontSize: '0.78rem', padding: '0.25rem 0.6rem' }}>
-                <span>搜尋</span>
-                <ChevronRight size={12} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="開始檢索">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -799,10 +812,9 @@ export function HomeDashboard({
                   <div className="core-sub">快速檢索已下載經書中之關鍵字句</div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>開始檢索</span>
-                <ChevronRight size={14} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="開始檢索">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -833,11 +845,12 @@ export function HomeDashboard({
           );
         }
 
-        // 💡 4x4 大版面：可容納最多 4 部近期閱讀經書
-        if (size === 'size-4x4') {
-          const displayResumeBooks = resumeBooks.slice(0, 4);
+        // 💡 4x3（3部經典）與 4x4（4部經典）大版面
+        if (size === 'size-4x3' || size === 'size-4x4') {
+          const maxBooks = size === 'size-4x3' ? 3 : 4;
+          const displayResumeBooks = resumeBooks.slice(0, maxBooks);
           return (
-            <div className="book-list-widget-4x4">
+            <div className={`book-list-widget-multi ${size === 'size-4x3' ? 'multi-4x3' : 'multi-4x4'}`}>
               <div 
                 className="widget-header-row-4x4"
                 onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
@@ -854,20 +867,19 @@ export function HomeDashboard({
                     className="book-stack-item-4x4"
                     onClick={!isLayoutEditMode ? () => onSelectBook(item.book.workId, item.progress?.segmentId, undefined, 'resume') : undefined}
                   >
-                    <div className="book-badge" style={{ background: getBookCoverGradient(item.book.workId), width: 34, height: 34, fontSize: '0.72rem', borderRadius: 8 }}>
+                    <div className="book-badge" style={{ background: getBookCoverGradient(item.book.workId) }}>
                       {item.book.workId}
                     </div>
-                    <div className="book-info" style={{ flex: 1, overflow: 'hidden' }}>
+                    <div className="book-info">
                       <div className="b-title" title={item.book.title}>{item.book.title}</div>
                       <div className="b-sub">
                         {item.progress?.juan ? `第 ${item.progress.juan} 卷` : '閱讀中'}
                         {item.book.creators ? ` · ${sanitizeCreators(item.book.creators)}` : ''}
                       </div>
                     </div>
-                    <div className="btn-resume">
-                      <span>繼續</span>
-                      <ChevronRight size={12} />
-                    </div>
+                    <button type="button" className="cbeta-read-btn" title="繼續閱讀">
+                      <ArrowRight size={17} strokeWidth={2.4} />
+                    </button>
                   </div>
                 ))}
               </div>
@@ -875,7 +887,7 @@ export function HomeDashboard({
           );
         }
 
-        // 💡 4x1 簡約條：左側使用原來的書本樣式 (含 workId)
+        // 💡 4x1 簡約條：統一 4x2 規格 (42px 正方形圖示、經文文字、圓型 →)
         if (size === 'size-4x1') {
           return (
             <div 
@@ -883,10 +895,10 @@ export function HomeDashboard({
               onClick={!isLayoutEditMode ? () => onSelectBook(lastBook.book.workId, lastBook.progress.segmentId, undefined, 'resume') : undefined}
             >
               <div className="left">
-                <div className="book-badge" style={{ background: getBookCoverGradient(lastBook.book.workId), width: 34, height: 34, fontSize: '0.72rem', borderRadius: 8, flexShrink: 0 }}>
+                <div className="book-badge" style={{ background: getBookCoverGradient(lastBook.book.workId) }}>
                   {lastBook.book.workId}
                 </div>
-                <div style={{ overflow: 'hidden' }}>
+                <div className="book-info">
                   <div className="b-title" title={lastBook.book.title}>{lastBook.book.title} {lastBook.progress.juan ? `(第${lastBook.progress.juan}卷)` : ''}</div>
                   <div 
                     className="b-sub" 
@@ -898,10 +910,9 @@ export function HomeDashboard({
                   </div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>繼續</span>
-                <ChevronRight size={13} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="繼續閱讀">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -933,16 +944,15 @@ export function HomeDashboard({
                   </div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>繼續</span>
-                <ChevronRight size={14} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="繼續閱讀">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           </div>
         );
       }
 
-      // 8-1. 新增「我的最愛」卡片 (4x2 / 4x1 / 4x4)
+      // 8-1. 新增「我的最愛」卡片 (4x2 / 4x1 / 4x3 / 4x4)
       case 'favorites_4x2': {
         const favoriteWorkIds: string[] = (() => {
           try {
@@ -966,11 +976,12 @@ export function HomeDashboard({
           );
         }
 
-        // 4x4 大版面：最多 4 本
-        if (size === 'size-4x4') {
-          const displayFavs = favoriteBooks.slice(0, 4);
+        // 4x3（3部）與 4x4（4部）大版面
+        if (size === 'size-4x3' || size === 'size-4x4') {
+          const maxFavs = size === 'size-4x3' ? 3 : 4;
+          const displayFavs = favoriteBooks.slice(0, maxFavs);
           return (
-            <div className="book-list-widget-4x4">
+            <div className={`book-list-widget-multi ${size === 'size-4x3' ? 'multi-4x3' : 'multi-4x4'}`}>
               <div 
                 className="widget-header-row-4x4"
                 onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
@@ -987,20 +998,19 @@ export function HomeDashboard({
                     className="book-stack-item-4x4"
                     onClick={!isLayoutEditMode ? () => onSelectBook(b.workId) : undefined}
                   >
-                    <div className="book-badge" style={{ background: getBookCoverGradient(b.workId), width: 34, height: 34, fontSize: '0.72rem', borderRadius: 8 }}>
+                    <div className="book-badge" style={{ background: getBookCoverGradient(b.workId) }}>
                       {b.workId}
                     </div>
-                    <div className="book-info" style={{ flex: 1, overflow: 'hidden' }}>
+                    <div className="book-info">
                       <div className="b-title" title={b.title}>{b.title}</div>
                       <div className="b-sub">
                         {b.juansCount ? `全 ${b.juansCount} 卷` : ''}
                         {b.creators ? ` · ${sanitizeCreators(b.creators)}` : ''}
                       </div>
                     </div>
-                    <div className="btn-resume">
-                      <span>閱讀</span>
-                      <ChevronRight size={12} />
-                    </div>
+                    <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                      <ArrowRight size={17} strokeWidth={2.4} />
+                    </button>
                   </div>
                 ))}
               </div>
@@ -1010,7 +1020,7 @@ export function HomeDashboard({
 
         const firstFav = favoriteBooks[0];
 
-        // 4x1 簡約條
+        // 4x1 簡約條：統一 4x2 規格
         if (size === 'size-4x1') {
           return (
             <div 
@@ -1018,10 +1028,10 @@ export function HomeDashboard({
               onClick={!isLayoutEditMode ? () => onSelectBook(firstFav.workId) : undefined}
             >
               <div className="left">
-                <div className="book-badge" style={{ background: getBookCoverGradient(firstFav.workId), width: 34, height: 34, fontSize: '0.72rem', borderRadius: 8, flexShrink: 0 }}>
+                <div className="book-badge" style={{ background: getBookCoverGradient(firstFav.workId) }}>
                   {firstFav.workId}
                 </div>
-                <div style={{ overflow: 'hidden' }}>
+                <div className="book-info">
                   <div className="b-title" title={firstFav.title}>{firstFav.title}</div>
                   <div 
                     className="b-sub"
@@ -1033,10 +1043,9 @@ export function HomeDashboard({
                   </div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>閱讀</span>
-                <ChevronRight size={13} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -1068,16 +1077,15 @@ export function HomeDashboard({
                   </div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>閱讀</span>
-                <ChevronRight size={14} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           </div>
         );
       }
 
-      // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x4)
+      // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x3 / 4x4)
       case 'recent_downloads_4x2': {
         const recentDownloadedBooks = [...downloadedBooks].reverse();
 
@@ -1093,11 +1101,12 @@ export function HomeDashboard({
           );
         }
 
-        // 4x4 大版面：最多 4 本
-        if (size === 'size-4x4') {
-          const displayRecent = recentDownloadedBooks.slice(0, 4);
+        // 4x3（3部）與 4x4（4部）大版面
+        if (size === 'size-4x3' || size === 'size-4x4') {
+          const maxRecent = size === 'size-4x3' ? 3 : 4;
+          const displayRecent = recentDownloadedBooks.slice(0, maxRecent);
           return (
-            <div className="book-list-widget-4x4">
+            <div className={`book-list-widget-multi ${size === 'size-4x3' ? 'multi-4x3' : 'multi-4x4'}`}>
               <div 
                 className="widget-header-row-4x4"
                 onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
@@ -1114,20 +1123,19 @@ export function HomeDashboard({
                     className="book-stack-item-4x4"
                     onClick={!isLayoutEditMode ? () => onSelectBook(b.workId) : undefined}
                   >
-                    <div className="book-badge" style={{ background: getBookCoverGradient(b.workId), width: 34, height: 34, fontSize: '0.72rem', borderRadius: 8 }}>
+                    <div className="book-badge" style={{ background: getBookCoverGradient(b.workId) }}>
                       {b.workId}
                     </div>
-                    <div className="book-info" style={{ flex: 1, overflow: 'hidden' }}>
+                    <div className="book-info">
                       <div className="b-title" title={b.title}>{b.title}</div>
                       <div className="b-sub">
                         {b.juansCount ? `全 ${b.juansCount} 卷` : ''}
                         {b.creators ? ` · ${sanitizeCreators(b.creators)}` : ''}
                       </div>
                     </div>
-                    <div className="btn-resume">
-                      <span>閱讀</span>
-                      <ChevronRight size={12} />
-                    </div>
+                    <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                      <ArrowRight size={17} strokeWidth={2.4} />
+                    </button>
                   </div>
                 ))}
               </div>
@@ -1137,7 +1145,7 @@ export function HomeDashboard({
 
         const firstRecent = recentDownloadedBooks[0];
 
-        // 4x1 簡約條
+        // 4x1 簡約條：統一 4x2 規格
         if (size === 'size-4x1') {
           return (
             <div 
@@ -1145,10 +1153,10 @@ export function HomeDashboard({
               onClick={!isLayoutEditMode ? () => onSelectBook(firstRecent.workId) : undefined}
             >
               <div className="left">
-                <div className="book-badge" style={{ background: getBookCoverGradient(firstRecent.workId), width: 34, height: 34, fontSize: '0.72rem', borderRadius: 8, flexShrink: 0 }}>
+                <div className="book-badge" style={{ background: getBookCoverGradient(firstRecent.workId) }}>
                   {firstRecent.workId}
                 </div>
-                <div style={{ overflow: 'hidden' }}>
+                <div className="book-info">
                   <div className="b-title" title={firstRecent.title}>{firstRecent.title}</div>
                   <div 
                     className="b-sub"
@@ -1160,10 +1168,9 @@ export function HomeDashboard({
                   </div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>閱讀</span>
-                <ChevronRight size={13} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           );
         }
@@ -1195,10 +1202,9 @@ export function HomeDashboard({
                   </div>
                 </div>
               </div>
-              <div className="btn-resume">
-                <span>閱讀</span>
-                <ChevronRight size={14} />
-              </div>
+              <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
             </div>
           </div>
         );
@@ -1427,13 +1433,85 @@ export function HomeDashboard({
     }
   };
 
-  // 分類篩選的小工具清單
-  const filteredCatalog = selectedCategory === 'all'
-    ? WIDGET_CATALOG
-    : WIDGET_CATALOG.filter(w => w.category === selectedCategory);
+  // 💡 當前分類下的小工具清單與當前選中之小工具
+  const currentCategoryWidgets = WIDGET_CATALOG.filter(w => w.category === activeCategory);
+  const currentWidget = currentCategoryWidgets[currentWidgetIndex] || currentCategoryWidgets[0] || WIDGET_CATALOG[0];
+  const availableSizes = ALLOWED_SIZES_BY_TYPE[currentWidget.type] || ['size-4x2', 'size-4x1', 'size-2x2'];
+
+  // 切換大類別
+  const handleSelectCategory = (catId: WidgetCategoryId) => {
+    setActiveCategory(catId);
+    setCurrentWidgetIndex(0);
+    const catWidgets = WIDGET_CATALOG.filter(w => w.category === catId);
+    if (catWidgets.length > 0) {
+      const firstW = catWidgets[0];
+      const allowed = ALLOWED_SIZES_BY_TYPE[firstW.type] || ['size-4x2', 'size-4x1', 'size-2x2'];
+      if (!allowed.includes(previewWidgetSize)) {
+        setPreviewWidgetSize(firstW.size);
+      }
+    }
+  };
+
+  // 💡 按「<」切換上一個小工具
+  const handlePrevWidget = () => {
+    const len = currentCategoryWidgets.length;
+    if (len <= 1) return;
+    const prevIdx = (currentWidgetIndex - 1 + len) % len;
+    setCurrentWidgetIndex(prevIdx);
+    const prevW = currentCategoryWidgets[prevIdx];
+    const allowed = ALLOWED_SIZES_BY_TYPE[prevW.type] || ['size-4x2', 'size-4x1', 'size-2x2'];
+    if (!allowed.includes(previewWidgetSize)) {
+      setPreviewWidgetSize(allowed[0]);
+    }
+  };
+
+  // 💡 按「>」切換下一個小工具
+  const handleNextWidget = () => {
+    const len = currentCategoryWidgets.length;
+    if (len <= 1) return;
+    const nextIdx = (currentWidgetIndex + 1) % len;
+    setCurrentWidgetIndex(nextIdx);
+    const nextW = currentCategoryWidgets[nextIdx];
+    const allowed = ALLOWED_SIZES_BY_TYPE[nextW.type] || ['size-4x2', 'size-4x1', 'size-2x2'];
+    if (!allowed.includes(previewWidgetSize)) {
+      setPreviewWidgetSize(allowed[0]);
+    }
+  };
 
   return (
     <div className={`home-custom-dashboard-wrapper ${isLayoutEditMode ? 'edit-mode' : ''}`}>
+      {/* 💡 圖1：編輯模式頂部控制列（左上：＋加入小工具(淺灰底虛線) / 右上：✓完成(淺灰底實線)） */}
+      {isLayoutEditMode && (
+        <div className="home-edit-top-banner animate-fade-in">
+          <button 
+            type="button" 
+            className="home-edit-top-btn btn-add-widget"
+            onClick={() => {
+              setIsGalleryOpen(true);
+            }}
+            title="開啟小工具庫加入新組件"
+          >
+            <Plus size={15} strokeWidth={2.6} />
+            <span>加入小工具</span>
+          </button>
+
+          <div className="home-edit-top-hint">
+            <span>✦ 拖曳卡片即可排序</span>
+            <span className="hint-sub">· 點 ⛶ 切換尺寸</span>
+          </div>
+
+          <button 
+            type="button" 
+            className="home-edit-top-btn btn-done"
+            onClick={handleSaveAndExit}
+            title="儲存自訂版面並退出編輯"
+          >
+            <Check size={15} strokeWidth={2.6} />
+            <span>完成</span>
+          </button>
+        </div>
+      )}
+
       {/* 4 欄基礎 Widget 網格容器 */}
       <div className="home-grid-container">
         {widgets.map(widget => {
@@ -1453,28 +1531,33 @@ export function HomeDashboard({
               onTouchStart={(e) => handleTouchStart(widget.id, e)}
               onTouchEnd={handleTouchEnd}
             >
-              {/* 編輯模式下的控制按鈕 */}
+              {/* 💡 圖1：編輯模式下方塊右上角小圓灰色「x」與右下角小圓綠色「切換尺寸」 */}
               {isLayoutEditMode && (
                 <>
+                  {/* 1. 左上角拖曳指示 */}
                   <div className="drag-handle-hint" title="拖曳排序">⠿</div>
-                  <div className="edit-controls">
-                    <button 
-                      type="button" 
-                      className="edit-btn btn-size" 
-                      title="切換尺寸" 
-                      onClick={(e) => handleCycleSize(widget.id, e)}
-                    >
-                      <Maximize2 size={11} />
-                    </button>
-                    <button 
-                      type="button" 
-                      className="edit-btn btn-remove" 
-                      title="移除卡片" 
-                      onClick={(e) => handleRemoveWidget(widget.id, e)}
-                    >
-                      <X size={12} />
-                    </button>
-                  </div>
+
+                  {/* 2. 右上角小圓灰色「x」刪除按鈕 */}
+                  <button
+                    type="button"
+                    className="edit-btn btn-remove-tr"
+                    title="移除小工具"
+                    onClick={(e) => handleRemoveWidget(widget.id, e)}
+                  >
+                    <X size={11} strokeWidth={2.8} />
+                  </button>
+
+                  {/* 3. 右下角小圓綠色「切換尺寸」按鈕 */}
+                  <button 
+                    type="button" 
+                    className="edit-btn btn-size-br" 
+                    title="切換尺寸" 
+                    onClick={(e) => handleCycleSize(widget.id, e)}
+                  >
+                    <Maximize2 size={11} strokeWidth={2.4} />
+                  </button>
+
+                  {/* 4. 左下角尺寸標籤 */}
                   <div className="size-indicator">
                     {widget.size.replace('size-', '')}
                   </div>
@@ -1501,85 +1584,140 @@ export function HomeDashboard({
         </div>
       )}
 
-      {/* 💡 編輯模式底部分類挑選抽屜 (Categorized Widget Drawer) */}
-      {isLayoutEditMode && (
-        <div className="edit-bottom-sheet animate-slide-up">
-          <div className="catalog-header-bar">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <span className="sim-badge-mode">✦ 拖曳卡片即可排序</span>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>（點選 ⛶ 切換合適尺寸）</span>
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+      {/* ==========================================================================
+          iOS Widget Gallery Modal (圖 2 & 圖 3：4 大類別 + 「<」「>」直接切換加入，單層無下一層)
+          ========================================================================== */}
+      {isGalleryOpen && (
+        <div className="ios-gallery-overlay animate-fade-in" onClick={() => setIsGalleryOpen(false)}>
+          <div className="ios-gallery-sheet animate-slide-up" onClick={(e) => e.stopPropagation()}>
+            {/* 1. Sheet Grabber */}
+            <div className="ios-gallery-grabber" />
+
+            {/* 2. Top Navigation Bar */}
+            <div className="ios-gallery-nav-bar">
+              <div className="ios-gallery-title">加入小工具</div>
+
               <button
                 type="button"
-                className="sim-btn"
-                style={{ background: '#1ea98c', color: '#fff', padding: '0.35rem 0.9rem' }}
-                onClick={handleSaveAndExit}
+                className="ios-gallery-close-btn"
+                onClick={() => setIsGalleryOpen(false)}
+                title="關閉"
               >
-                <Check size={14} />
-                <span>完成儲存</span>
+                <X size={18} />
               </button>
             </div>
-          </div>
 
-          {/* 預設範本快捷選單 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', overflowX: 'auto', paddingBottom: '2px' }}>
-            <span style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>範本:</span>
-            <button type="button" className="cat-tab" onClick={() => handleApplyPreset('default')}>經典原味</button>
-            <button type="button" className="cat-tab" onClick={() => handleApplyPreset('compact')}>極簡精巧</button>
-            <button type="button" className="cat-tab" onClick={() => handleApplyPreset('focus')}>每日精進</button>
-            <button type="button" className="cat-tab" onClick={() => handleApplyPreset('zen')}>禪修護眼</button>
-          </div>
+            {/* 3. 圖3：4 大類別選單 (無左側圖示，純文字藥丸按鈕) */}
+            <div className="ios-gallery-category-tabs">
+              {WIDGET_CATEGORIES.map(cat => (
+                <button
+                  key={`cat-pill-${cat.id}`}
+                  type="button"
+                  className={`ios-category-tab-btn ${activeCategory === cat.id ? 'active' : ''}`}
+                  onClick={() => handleSelectCategory(cat.id)}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
 
-          {/* 分類標籤頁 */}
-          <div className="catalog-category-tabs">
-            <button 
-              type="button" 
-              className={`cat-tab ${selectedCategory === 'all' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('all')}
-            >🌟 全部</button>
-            <button 
-              type="button" 
-              className={`cat-tab ${selectedCategory === 'brand' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('brand')}
-            >🏷️ 品牌標題</button>
-            <button 
-              type="button" 
-              className={`cat-tab ${selectedCategory === 'nav' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('nav')}
-            >🧭 系統導航</button>
-            <button 
-              type="button" 
-              className={`cat-tab ${selectedCategory === 'reading' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('reading')}
-            >📖 閱讀進度</button>
-            <button 
-              type="button" 
-              className={`cat-tab ${selectedCategory === 'tools' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('tools')}
-            >⚙️ 工具護眼</button>
-            <button 
-              type="button" 
-              className={`cat-tab ${selectedCategory === 'zen' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('zen')}
-            >🪷 禪意法語</button>
-          </div>
+            {/* 4. 預設範本快捷選單 */}
+            <div className="ios-gallery-presets-bar">
+              <span className="presets-label">範本:</span>
+              <button type="button" className="preset-pill-btn" onClick={() => { handleApplyPreset('default'); setIsGalleryOpen(false); }}>經典原味</button>
+              <button type="button" className="preset-pill-btn" onClick={() => { handleApplyPreset('compact'); setIsGalleryOpen(false); }}>極簡精巧</button>
+              <button type="button" className="preset-pill-btn" onClick={() => { handleApplyPreset('focus'); setIsGalleryOpen(false); }}>每日精進</button>
+              <button type="button" className="preset-pill-btn" onClick={() => { handleApplyPreset('zen'); setIsGalleryOpen(false); }}>禪修護眼</button>
+            </div>
 
-          {/* 分類挑選小工具膠囊清單 */}
-          <div className="widget-picker-grid">
-            {filteredCatalog.map(item => (
-              <button
-                key={`picker-${item.type}`}
-                type="button"
-                className="picker-card-chip"
-                onClick={() => handleAddWidget(item.type)}
-                title={item.description}
-              >
-                <span>{item.icon}</span>
-                <span>{item.name}</span>
-                <span className="picker-chip-size">{item.size.replace('size-', '')}</span>
-              </button>
-            ))}
+            {/* 5. 單層直接預覽主舞台 (圖 3：按「<」「>」選擇卡片直接加到主頁，不用進入下一層) */}
+            <div className="ios-gallery-preview-stage custom-scrollbar">
+              {/* Widget Title & Indicator */}
+              <div className="ios-preview-info-header">
+                <div className="ios-preview-title-row">
+                  <h3 className="ios-preview-title">{currentWidget.name}</h3>
+                  <span className="ios-preview-counter-badge">
+                    {currentWidgetIndex + 1} / {currentCategoryWidgets.length}
+                  </span>
+                </div>
+                <p className="ios-preview-desc">{currentWidget.description}</p>
+              </div>
+
+              {/* 💡 Preview Showcase Box with < and > Navigation */}
+              <div className="ios-preview-showcase-row">
+                <button
+                  type="button"
+                  className="ios-preview-nav-arrow-btn prev"
+                  onClick={handlePrevWidget}
+                  title="切換上一個小工具"
+                  disabled={currentCategoryWidgets.length <= 1}
+                >
+                  <ChevronLeft size={22} />
+                </button>
+
+                <div className="ios-live-preview-viewport">
+                  <div className={`widget-card preview-card-mode ${previewWidgetSize} ${currentWidget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${currentWidget.type === 'download_2x2' && previewWidgetSize === 'size-4x1' ? 'download-dashed-card-4x1' : ''}`}>
+                    {renderWidgetContent({
+                      id: 'preview-instance',
+                      type: currentWidget.type,
+                      size: previewWidgetSize,
+                      iconIndex: previewIconIndex
+                    })}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="ios-preview-nav-arrow-btn next"
+                  onClick={handleNextWidget}
+                  title="切換下一個小工具"
+                  disabled={currentCategoryWidgets.length <= 1}
+                >
+                  <ChevronRight size={22} />
+                </button>
+              </div>
+
+              {/* 💡 Size Selector & Pagination Dots (圖 2：小類別尺寸規格切換 4x1/4x2/2x2/4x4) */}
+              <div className="ios-preview-size-controls">
+                {/* Pagination Dots */}
+                <div className="ios-pagination-dots">
+                  {availableSizes.map(sizeKey => (
+                    <div
+                      key={`dot-${sizeKey}`}
+                      className={`ios-page-dot ${previewWidgetSize === sizeKey ? 'active' : ''}`}
+                      onClick={() => setPreviewWidgetSize(sizeKey)}
+                      title={`切換為 ${sizeKey.replace('size-', '')}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Size Chips */}
+                <div className="ios-size-chips-row">
+                  {availableSizes.map(sizeKey => (
+                    <button
+                      key={`size-chip-${sizeKey}`}
+                      type="button"
+                      className={`ios-size-chip-btn ${previewWidgetSize === sizeKey ? 'active' : ''}`}
+                      onClick={() => setPreviewWidgetSize(sizeKey)}
+                    >
+                      {sizeKey.replace('size-', '').replace('x', '×')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 💡 Bottom Action Button (直接加入主頁) */}
+              <div className="ios-preview-bottom-action">
+                <button
+                  type="button"
+                  className="ios-add-widget-confirm-btn"
+                  onClick={() => handleAddWidget(currentWidget.type, previewWidgetSize, previewIconIndex)}
+                >
+                  <Plus size={19} strokeWidth={2.6} />
+                  <span>加入小工具</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

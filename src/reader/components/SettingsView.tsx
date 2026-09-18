@@ -1265,15 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.3.8) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.4.1) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.3.8</span>
-                        <span className="changelog-date">(2026-09-18)</span>
+                        <span>⭐ App: v4.4.1</span>
+                        <span className="changelog-date">(2026-09-19)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 護眼計時器僅外圍虛線圈旋轉，倒數數字保持端正不轉；選定時間改以淺灰底呈現。</li>
-                        <li>• 四合一導航新增 4x2 寬敞大版面，排版舒適大方不擁擠。</li>
+                        <li>• 預設加入小工具改為置於最上方，新增後平滑滾動至頂部。</li>
+                        <li>• 上次閱讀、我的最愛、近期下載新增 4×3 規格（顯示 3 部經典），4×4 顯示 4 部經典。</li>
+                        <li>• 首頁圓型「→」統一像素級置右對齊與淺色底色；書櫃專區頂部返回鍵升級為圓型「&lt;」並與卡片左側對齊。</li>
                       </ul>
                     </div>
 
@@ -1297,11 +1298,26 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
-                          <div className="changelog-version-title">App: v4.3.7 <span className="changelog-date">(2026-09-18)</span></div>
+                          <div className="changelog-version-title">App: v4.4.0 <span className="changelog-date">(2026-09-19)</span></div>
                           <ul className="changelog-list">
-                            <li>• 核心導航卡片支援 2x2、4x1、4x2；下載經典 4x1 採淺色字與虛線邊框。</li>
-                            <li>• 優化藏經庫切換至書架、筆記、搜尋與日誌之無縫渲染，徹底消除畫面閃爍。</li>
-                            <li>• 修正書櫃「近期下載」資料夾標題圖示與高對比圓形返回按鈕排版。</li>
+                            <li>• 導入 iOS 原生小工具庫 (Widget Gallery)：支援大類別瀏覽、關鍵字搜尋與風格範本快捷套用。</li>
+                            <li>• 支援小工具各規格真實外觀即時預覽（4×1/4×2/2×2/4×4），隨選即看、一鍵直覺加入。</li>
+                            <li>• 編輯模式升級：頂部「加入小工具」與「完成」控制列，卡片左上角配置「➖」刪除小工具按鈕。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.9 <span className="changelog-date">(2026-09-18)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 「+ 下載經典」與「我的書櫃」、「重點筆記」、「全文搜尋」、「閱讀日誌」、「家」統合共用 Header Bar。</li>
+                            <li>• 徹底消除切換時的 1 幀白屏與螢幕閃爍，實現全畫面 0 閃動流暢切換。</li>
+                            <li>• 「+ 下載經典」膠囊獲得 100% 絲滑平滑彈跳展開與收合 transition 動態效果。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.3.8 <span className="changelog-date">(2026-09-18)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 護眼計時器僅外圍虛線圈旋轉，倒數數字保持端正不轉；選定時間改以淺灰底呈現。</li>
+                            <li>• 四合一導航新增 4x2 寬敞大版面，排版舒適大方不擁擠。</li>
                           </ul>
                         </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
