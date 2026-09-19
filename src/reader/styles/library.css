@@ -6140,22 +6140,22 @@ body.theme-ebony .ios-preview-nav-arrow-btn {
   color: #e0e6ed;
 }
 
-/* 💡 視窗框：固定恆定尺寸 (不會因 4x1/4x2/4x3/4x4/2x2 跳動) */
+/* 💡 視窗框：加高至 255px 並維持固定恆定尺寸 (不會因 4x1/4x2/4x3/4x4/2x2 跳動) */
 .ios-live-preview-viewport {
   position: relative;
   width: 320px;
   min-width: 320px;
   max-width: 320px;
-  height: 220px;
-  min-height: 220px;
-  max-height: 220px;
+  height: 255px;
+  min-height: 255px;
+  max-height: 255px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.75rem;
   box-sizing: border-box;
   background: var(--bg-library, rgba(0, 0, 0, 0.025));
-  border-radius: 22px;
+  border-radius: 24px;
   border: 1.5px solid var(--border-color, rgba(0, 0, 0, 0.12));
   overflow: hidden;
   flex-shrink: 0;
@@ -6200,7 +6200,7 @@ body.theme-ebony .preview-size-badge {
   border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* 視窗框內卡片自適應等比縮放容器 (卡片依比例縮放，視窗框永不改變) */
+/* 視窗框內卡片自適應等比縮放容器 (所有尺寸卡片統一採用相同比例縮放，確保書本大小與相對比例完全一致) */
 .preview-card-stage-container {
   width: 100%;
   height: 100%;
@@ -6210,33 +6210,24 @@ body.theme-ebony .preview-size-badge {
   box-sizing: border-box;
 }
 
-.preview-card-stage-container.scale-4x1 {
-  width: 100%;
-  max-width: 290px;
+/* 4 欄規格 (4x1, 4x2, 4x3, 4x4) 寬度基準一律為 300px，統一採用 scale(0.65) */
+.preview-card-stage-container.scale-4x1,
+.preview-card-stage-container.scale-4x2,
+.preview-card-stage-container.scale-4x3,
+.preview-card-stage-container.scale-4x4 {
+  width: 300px;
+  transform: scale(0.65);
+  transform-origin: center center;
+  flex-shrink: 0;
 }
 
-.preview-card-stage-container.scale-4x2 {
-  width: 100%;
-  max-width: 290px;
-}
-
+/* 2x2 正方形規格在 148px 寬高下以完全相同的 scale(0.65) 縮放 */
 .preview-card-stage-container.scale-2x2 {
   width: 148px;
   height: 148px;
-}
-
-.preview-card-stage-container.scale-4x3 {
-  transform: scale(0.72);
+  transform: scale(0.65);
   transform-origin: center center;
-  width: calc(100% / 0.72);
-  max-width: calc(290px / 0.72);
-}
-
-.preview-card-stage-container.scale-4x4 {
-  transform: scale(0.58);
-  transform-origin: center center;
-  width: calc(100% / 0.58);
-  max-width: calc(290px / 0.58);
+  flex-shrink: 0;
 }
 
 .preview-card-mode {
@@ -6247,6 +6238,19 @@ body.theme-ebony .preview-size-badge {
   transform: none !important;
   animation: none !important;
   margin: 0 auto;
+}
+
+/* 💡 預覽卡片模式：永遠保持正常靜態外觀，嚴禁出現編輯模式之綠色虛線外框與抖動 */
+.home-custom-dashboard-wrapper.edit-mode .widget-card.preview-card-mode.has-outer-header .book-widget-card-box,
+.preview-card-mode .book-widget-card-box {
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12)) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+  animation: none !important;
+}
+
+body.theme-ebony .home-custom-dashboard-wrapper.edit-mode .widget-card.preview-card-mode.has-outer-header .book-widget-card-box,
+body.theme-ebony .preview-card-mode .book-widget-card-box {
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .ios-size-chips-row {
@@ -7173,22 +7177,22 @@ body.theme-ebony .book-stack-item-4x4:hover {
 }
 
 .widget-outside-tag {
-  font-family: var(--font-serif);
-  font-size: 0.90rem;
+  font-family: inherit;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 .widget-outside-badge {
   font-size: 0.72rem;
   color: var(--text-muted);
   background: rgba(140, 75, 39, 0.08);
-  padding: 2px 8px;
-  border-radius: 8px;
+  padding: 2px 7px;
+  border-radius: 10px;
   font-weight: 600;
   white-space: nowrap;
 }

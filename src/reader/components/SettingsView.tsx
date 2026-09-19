@@ -1272,9 +1272,9 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                         <span className="changelog-date">(2026-09-20)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 「加入小工具」視窗框尺寸嚴格恆定（220px），各規格卡片依比例縮放，徹底消除切換跳動。</li>
-                        <li>• 四大分類更名為「主題圖卡、快捷功能、我的書櫃、其他功能」，取消分層，由「&lt;」「&gt;」全流程巡覽。</li>
-                        <li>• 視窗框左上角配置灰底黑字尺寸徽章，隱藏範本與說明文字，卡片模擬真實呈現。</li>
+                        <li>• 「加入小工具」視窗框加高（255px）且尺寸恆定，卡片統一比例縮放，徹底杜絕長條Bar大小不一。</li>
+                        <li>• 外置標題「上次閱讀/我的最愛/近期閱讀」字體、顏色、大小在 4×1/4×2/4×3/4×4 完全統一。</li>
+                        <li>• 四大分類更名為「主題圖卡、快捷功能、我的書櫃、其他功能」，取消分層，全由「&lt;」「&gt;」巡覽。</li>
                       </ul>
                     </div>
 
