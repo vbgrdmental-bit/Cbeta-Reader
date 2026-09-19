@@ -845,49 +845,7 @@ export function HomeDashboard({
           );
         }
 
-        // 💡 4x3（3部經典）與 4x4（4部經典）大版面
-        if (size === 'size-4x3' || size === 'size-4x4') {
-          const maxBooks = size === 'size-4x3' ? 3 : 4;
-          const displayResumeBooks = resumeBooks.slice(0, maxBooks);
-          return (
-            <div className={`book-list-widget-multi ${size === 'size-4x3' ? 'multi-4x3' : 'multi-4x4'}`}>
-              <div 
-                className="widget-header-row-4x4"
-                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                title="點擊進入書櫃「近期閱讀」"
-              >
-                <div className="widget-tag-4x4">上次閱讀進度 ➔</div>
-                <div className="widget-count-badge-4x4">共 {resumeBooks.length} 部</div>
-              </div>
-              <div className="book-stack-4x4">
-                {displayResumeBooks.map((item, idx) => (
-                  <div 
-                    key={`lastread-stack-${item.book.workId}-${idx}`}
-                    className="book-stack-item-4x4"
-                    onClick={!isLayoutEditMode ? () => onSelectBook(item.book.workId, item.progress?.segmentId, undefined, 'resume') : undefined}
-                  >
-                    <div className="book-badge" style={{ background: getBookCoverGradient(item.book.workId) }}>
-                      {item.book.workId}
-                    </div>
-                    <div className="book-info">
-                      <div className="b-title" title={item.book.title}>{item.book.title}</div>
-                      <div className="b-sub">
-                        {item.progress?.juan ? `第 ${item.progress.juan} 卷` : '閱讀中'}
-                        {item.book.creators ? ` · ${sanitizeCreators(item.book.creators)}` : ''}
-                      </div>
-                    </div>
-                    <button type="button" className="cbeta-read-btn" title="繼續閱讀">
-                      <ArrowRight size={17} strokeWidth={2.4} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        }
-
-        // 💡 4x1 簡約條：統一 4x2 規格 (42px 正方形圖示、經文文字、圓型 →)
+        // 💡 4x1 簡約條：1 部經典 (42px 正方形圖示、經文文字、圓型 →)
         if (size === 'size-4x1') {
           return (
             <div 
@@ -917,36 +875,42 @@ export function HomeDashboard({
           );
         }
 
-        // size-4x2
+        // 💡 4x2 (2部) / 4x3 (3部) / 4x4 (4部) 規格
+        const maxBooks = size === 'size-4x2' ? 2 : size === 'size-4x3' ? 3 : 4;
+        const displayResumeBooks = resumeBooks.slice(0, maxBooks);
         return (
-          <div 
-            className="lastread-4x2"
-            onClick={!isLayoutEditMode ? () => onSelectBook(lastBook.book.workId, lastBook.progress.segmentId, undefined, 'resume') : undefined}
-          >
+          <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
             <div 
-              className="lastread-tag"
-              onClick={!isLayoutEditMode ? (e) => { e.stopPropagation(); onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf'); } : undefined}
-              style={{ cursor: 'pointer' }}
+              className="widget-header-row-4x4"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
               title="點擊進入書櫃「近期閱讀」"
             >
-              上次閱讀 ➔
+              <div className="widget-tag-4x4">上次閱讀 ➔</div>
+              <div className="widget-count-badge-4x4">共 {resumeBooks.length} 部</div>
             </div>
-            <div className="lastread-row">
-              <div className="lastread-book-box">
-                <div className="book-badge" style={{ background: getBookCoverGradient(lastBook.book.workId) }}>
-                  {lastBook.book.workId}
-                </div>
-                <div className="book-info">
-                  <div className="b-title" title={lastBook.book.title}>{lastBook.book.title}</div>
-                  <div className="b-sub">
-                    {lastBook.progress.juan ? `第 ${lastBook.progress.juan} 卷` : ''}
-                    {lastBook.book.creators ? ` · ${sanitizeCreators(lastBook.book.creators)}` : ''}
+            <div className="book-stack-4x4">
+              {displayResumeBooks.map((item, idx) => (
+                <div 
+                  key={`lastread-stack-${item.book.workId}-${idx}`}
+                  className="book-stack-item-4x4"
+                  onClick={!isLayoutEditMode ? () => onSelectBook(item.book.workId, item.progress?.segmentId, undefined, 'resume') : undefined}
+                >
+                  <div className="book-badge" style={{ background: getBookCoverGradient(item.book.workId) }}>
+                    {item.book.workId}
                   </div>
+                  <div className="book-info">
+                    <div className="b-title" title={item.book.title}>{item.book.title}</div>
+                    <div className="b-sub">
+                      {item.progress?.juan ? `第 ${item.progress.juan} 卷` : '閱讀中'}
+                      {item.book.creators ? ` · ${sanitizeCreators(item.book.creators)}` : ''}
+                    </div>
+                  </div>
+                  <button type="button" className="cbeta-read-btn" title="繼續閱讀">
+                    <ArrowRight size={17} strokeWidth={2.4} />
+                  </button>
                 </div>
-              </div>
-              <button type="button" className="cbeta-read-btn" title="繼續閱讀">
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </button>
+              ))}
             </div>
           </div>
         );
