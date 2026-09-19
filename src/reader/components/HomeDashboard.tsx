@@ -976,55 +976,13 @@ export function HomeDashboard({
           );
         }
 
-        // 4x3（3部）與 4x4（4部）大版面
-        if (size === 'size-4x3' || size === 'size-4x4') {
-          const maxFavs = size === 'size-4x3' ? 3 : 4;
-          const displayFavs = favoriteBooks.slice(0, maxFavs);
-          return (
-            <div className={`book-list-widget-multi ${size === 'size-4x3' ? 'multi-4x3' : 'multi-4x4'}`}>
-              <div 
-                className="widget-header-row-4x4"
-                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
-                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                title="點擊進入書櫃「我的最愛」"
-              >
-                <div className="widget-tag-4x4">我的最愛經典 ➔</div>
-                <div className="widget-count-badge-4x4">共 {favoriteBooks.length} 部</div>
-              </div>
-              <div className="book-stack-4x4">
-                {displayFavs.map(b => (
-                  <div 
-                    key={`fav-stack-${b.workId}`}
-                    className="book-stack-item-4x4"
-                    onClick={!isLayoutEditMode ? () => onSelectBook(b.workId) : undefined}
-                  >
-                    <div className="book-badge" style={{ background: getBookCoverGradient(b.workId) }}>
-                      {b.workId}
-                    </div>
-                    <div className="book-info">
-                      <div className="b-title" title={b.title}>{b.title}</div>
-                      <div className="b-sub">
-                        {b.juansCount ? `全 ${b.juansCount} 卷` : ''}
-                        {b.creators ? ` · ${sanitizeCreators(b.creators)}` : ''}
-                      </div>
-                    </div>
-                    <button type="button" className="cbeta-read-btn" title="閱讀經典">
-                      <ArrowRight size={17} strokeWidth={2.4} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        }
-
         const firstFav = favoriteBooks[0];
 
-        // 4x1 簡約條：統一 4x2 規格
+        // 💡 4x1 簡約條：1 部經典
         if (size === 'size-4x1') {
           return (
             <div 
-              className="lastread-4x1"
+              className="lastread-4x1" 
               onClick={!isLayoutEditMode ? () => onSelectBook(firstFav.workId) : undefined}
             >
               <div className="left">
@@ -1050,42 +1008,48 @@ export function HomeDashboard({
           );
         }
 
-        // size-4x2
+        // 💡 4x2 (2部) / 4x3 (3部) / 4x4 (4部) 規格
+        const maxFavs = size === 'size-4x2' ? 2 : size === 'size-4x3' ? 3 : 4;
+        const displayFavs = favoriteBooks.slice(0, maxFavs);
         return (
-          <div 
-            className="lastread-4x2"
-            onClick={!isLayoutEditMode ? () => onSelectBook(firstFav.workId) : undefined}
-          >
+          <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
             <div 
-              className="lastread-tag"
-              onClick={!isLayoutEditMode ? (e) => { e.stopPropagation(); onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf'); } : undefined}
-              style={{ cursor: 'pointer' }}
+              className="widget-header-row-4x4"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
               title="點擊進入書櫃「我的最愛」"
             >
-              我的最愛 · 共 {favoriteBooks.length} 本 ➔
+              <div className="widget-tag-4x4">我的最愛經典 ➔</div>
+              <div className="widget-count-badge-4x4">共 {favoriteBooks.length} 部</div>
             </div>
-            <div className="lastread-row">
-              <div className="lastread-book-box">
-                <div className="book-badge" style={{ background: getBookCoverGradient(firstFav.workId) }}>
-                  {firstFav.workId}
-                </div>
-                <div className="book-info">
-                  <div className="b-title" title={firstFav.title}>{firstFav.title}</div>
-                  <div className="b-sub">
-                    {firstFav.juansCount ? `全 ${firstFav.juansCount} 卷` : ''}
-                    {firstFav.creators ? ` · ${sanitizeCreators(firstFav.creators)}` : ''}
+            <div className="book-stack-4x4">
+              {displayFavs.map(b => (
+                <div 
+                  key={`fav-stack-${b.workId}`}
+                  className="book-stack-item-4x4"
+                  onClick={!isLayoutEditMode ? () => onSelectBook(b.workId) : undefined}
+                >
+                  <div className="book-badge" style={{ background: getBookCoverGradient(b.workId) }}>
+                    {b.workId}
                   </div>
+                  <div className="book-info">
+                    <div className="b-title" title={b.title}>{b.title}</div>
+                    <div className="b-sub">
+                      {b.juansCount ? `全 ${b.juansCount} 卷` : ''}
+                      {b.creators ? ` · ${sanitizeCreators(b.creators)}` : ''}
+                    </div>
+                  </div>
+                  <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                    <ArrowRight size={17} strokeWidth={2.4} />
+                  </button>
                 </div>
-              </div>
-              <button type="button" className="cbeta-read-btn" title="閱讀經典">
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </button>
+              ))}
             </div>
           </div>
         );
       }
 
-      // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x3 / 4x4)
+            // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x3 / 4x4)
       case 'recent_downloads_4x2': {
         const recentDownloadedBooks = [...downloadedBooks].reverse();
 
@@ -1101,55 +1065,13 @@ export function HomeDashboard({
           );
         }
 
-        // 4x3（3部）與 4x4（4部）大版面
-        if (size === 'size-4x3' || size === 'size-4x4') {
-          const maxRecent = size === 'size-4x3' ? 3 : 4;
-          const displayRecent = recentDownloadedBooks.slice(0, maxRecent);
-          return (
-            <div className={`book-list-widget-multi ${size === 'size-4x3' ? 'multi-4x3' : 'multi-4x4'}`}>
-              <div 
-                className="widget-header-row-4x4"
-                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
-                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                title="點擊進入書櫃「近期下載」"
-              >
-                <div className="widget-tag-4x4">近期下載經典 ➔</div>
-                <div className="widget-count-badge-4x4">共 {downloadedBooks.length} 部</div>
-              </div>
-              <div className="book-stack-4x4">
-                {displayRecent.map(b => (
-                  <div 
-                    key={`recent-stack-${b.workId}`}
-                    className="book-stack-item-4x4"
-                    onClick={!isLayoutEditMode ? () => onSelectBook(b.workId) : undefined}
-                  >
-                    <div className="book-badge" style={{ background: getBookCoverGradient(b.workId) }}>
-                      {b.workId}
-                    </div>
-                    <div className="book-info">
-                      <div className="b-title" title={b.title}>{b.title}</div>
-                      <div className="b-sub">
-                        {b.juansCount ? `全 ${b.juansCount} 卷` : ''}
-                        {b.creators ? ` · ${sanitizeCreators(b.creators)}` : ''}
-                      </div>
-                    </div>
-                    <button type="button" className="cbeta-read-btn" title="閱讀經典">
-                      <ArrowRight size={17} strokeWidth={2.4} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        }
-
         const firstRecent = recentDownloadedBooks[0];
 
-        // 4x1 簡約條：統一 4x2 規格
+        // 💡 4x1 簡約條：1 部經典
         if (size === 'size-4x1') {
           return (
             <div 
-              className="lastread-4x1"
+              className="lastread-4x1" 
               onClick={!isLayoutEditMode ? () => onSelectBook(firstRecent.workId) : undefined}
             >
               <div className="left">
@@ -1175,42 +1097,48 @@ export function HomeDashboard({
           );
         }
 
-        // size-4x2
+        // 💡 4x2 (2部) / 4x3 (3部) / 4x4 (4部) 規格
+        const maxRecent = size === 'size-4x2' ? 2 : size === 'size-4x3' ? 3 : 4;
+        const displayRecent = recentDownloadedBooks.slice(0, maxRecent);
         return (
-          <div 
-            className="lastread-4x2"
-            onClick={!isLayoutEditMode ? () => onSelectBook(firstRecent.workId) : undefined}
-          >
+          <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
             <div 
-              className="lastread-tag"
-              onClick={!isLayoutEditMode ? (e) => { e.stopPropagation(); onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf'); } : undefined}
-              style={{ cursor: 'pointer' }}
-              title="點擊進入書櫃「近期下載經典」"
+              className="widget-header-row-4x4"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+              title="點擊進入書櫃「近期下載」"
             >
-              近期下載 · 共 {downloadedBooks.length} 本 ➔
+              <div className="widget-tag-4x4">近期下載經典 ➔</div>
+              <div className="widget-count-badge-4x4">共 {downloadedBooks.length} 部</div>
             </div>
-            <div className="lastread-row">
-              <div className="lastread-book-box">
-                <div className="book-badge" style={{ background: getBookCoverGradient(firstRecent.workId) }}>
-                  {firstRecent.workId}
-                </div>
-                <div className="book-info">
-                  <div className="b-title" title={firstRecent.title}>{firstRecent.title}</div>
-                  <div className="b-sub">
-                    {firstRecent.juansCount ? `全 ${firstRecent.juansCount} 卷` : ''}
-                    {firstRecent.creators ? ` · ${sanitizeCreators(firstRecent.creators)}` : ''}
+            <div className="book-stack-4x4">
+              {displayRecent.map(b => (
+                <div 
+                  key={`recent-stack-${b.workId}`}
+                  className="book-stack-item-4x4"
+                  onClick={!isLayoutEditMode ? () => onSelectBook(b.workId) : undefined}
+                >
+                  <div className="book-badge" style={{ background: getBookCoverGradient(b.workId) }}>
+                    {b.workId}
                   </div>
+                  <div className="book-info">
+                    <div className="b-title" title={b.title}>{b.title}</div>
+                    <div className="b-sub">
+                      {b.juansCount ? `全 ${b.juansCount} 卷` : ''}
+                      {b.creators ? ` · ${sanitizeCreators(b.creators)}` : ''}
+                    </div>
+                  </div>
+                  <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                    <ArrowRight size={17} strokeWidth={2.4} />
+                  </button>
                 </div>
-              </div>
-              <button type="button" className="cbeta-read-btn" title="閱讀經典">
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </button>
+              ))}
             </div>
           </div>
         );
       }
 
-      // 9. 四色主題快捷列 (4x1 / 2x2)
+            // 9. 四色主題快捷列 (4x1 / 2x2)
       case 'theme_4x1': {
         if (size === 'size-2x2') {
           // 💡 圖1：四大模式為 2x2 時，圓圈內不要有字，純色圓點，文字標籤寫在圓圈圈的下面

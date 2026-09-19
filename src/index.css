@@ -129,8 +129,8 @@
   --reader-bg: var(--bg-paper-parchment);
   --reader-text: #3c2a1a;
   --reader-text-muted: #7a6652;
-  --border-color: rgba(140, 75, 39, 0.12);
-  --bg-card: #ffffff;
+  --border-color: rgba(140, 75, 39, 0.14);
+  --bg-card: #faf4e6;
 }
 
 /* 0. 象牙白主題全域變量 */
@@ -143,8 +143,8 @@
   --bg-shelf: linear-gradient(180deg, #ede8dd 0%, #dfd8cb 100%);
   --text-primary: #2c2016;
   --text-muted: #6a5a48;
-  --bg-card: #ffffff;
-  --border-color: rgba(140, 75, 39, 0.12);
+  --bg-card: #fcfaf6;
+  --border-color: rgba(140, 106, 70, 0.14);
 }
 
 /* 1. 羊皮紙主題全域變量與書架同步 */
@@ -157,8 +157,8 @@
   --bg-shelf: linear-gradient(180deg, #eddcb8 0%, #dec18c 100%);
   --text-primary: #3c2a1a;
   --text-muted: #7a6652;
-  --bg-card: #ffffff;
-  --border-color: rgba(140, 75, 39, 0.12);
+  --bg-card: #faf4e6;
+  --border-color: rgba(140, 75, 39, 0.14);
 }
 
 /* 2. 舒服護眼主題全域變量與書架同步 */
@@ -171,8 +171,8 @@
   --bg-shelf: linear-gradient(180deg, #d3e1c2 0%, #bdcda7 100%);
   --text-primary: #23351d;
   --text-muted: #596b52;
-  --bg-card: #ffffff;
-  --border-color: rgba(140, 75, 39, 0.12);
+  --bg-card: #f3f8f0;
+  --border-color: rgba(69, 122, 88, 0.15);
 }
 
 /* 3. 烏木暗色主題全域變量與書架同步 */
@@ -185,8 +185,8 @@
   --bg-shelf: linear-gradient(180deg, #25333f 0%, #141c22 100%);
   --text-primary: #d8dec9;
   --text-muted: #727c69;
-  --bg-card: rgba(255, 255, 255, 0.05);
-  --border-color: rgba(255, 255, 255, 0.18);
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Reset */

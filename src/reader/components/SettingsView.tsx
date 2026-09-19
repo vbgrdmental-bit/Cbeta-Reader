@@ -1265,16 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.4.1) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.4.2) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.4.1</span>
+                        <span>⭐ App: v4.4.2</span>
                         <span className="changelog-date">(2026-09-19)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 預設加入小工具改為置於最上方，新增後平滑滾動至頂部。</li>
-                        <li>• 上次閱讀、我的最愛、近期下載新增 4×3 規格（顯示 3 部經典），4×4 顯示 4 部經典。</li>
-                        <li>• 首頁圓型「→」統一像素級置右對齊與淺色底色；書櫃專區頂部返回鍵升級為圓型「&lt;」並與卡片左側對齊。</li>
+                        <li>• 上次閱讀、我的最愛、近期下載 4×2 規格改為 2 本書，形成 1/2/3/4 本完整規律。</li>
+                        <li>• 四大顏色主題卡片底色依象牙白、羊皮紙、舒服綠進行鄰近色細緻微調。</li>
+                        <li>• 四合一導航 4×2 升級為精緻資訊磁貼，新增書櫃本數與筆記則數即時徽章。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1297,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.4.1 <span className="changelog-date">(2026-09-19)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 預設加入小工具改為置於最上方，新增後平滑滾動至頂部。</li>
+                            <li>• 上次閱讀、我的最愛、近期下載新增 4×3 規格（顯示 3 部經典），4×4 顯示 4 部經典。</li>
+                            <li>• 首頁圓型「→」統一像素級置右對齊與淺色底色；書櫃專區頂部返回鍵升級為圓型「&lt;」並與卡片左側對齊。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title">App: v4.4.0 <span className="changelog-date">(2026-09-19)</span></div>
                           <ul className="changelog-list">
