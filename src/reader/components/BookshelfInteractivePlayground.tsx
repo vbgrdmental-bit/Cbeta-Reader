@@ -125,52 +125,139 @@ export function BookshelfInteractivePlayground({
     return activeBooksPool;
   }, [activeBooksPool, statusFilter, dataScale, recentReadsBooks, favoriteWorkIds]);
 
-  // 輔助函式：從 creators 提取朝代與作譯者名稱
+  // CBETA 權威歷史朝代年表 (依時間先後嚴格排序)
+  const HISTORICAL_CHRONOLOGY = useMemo(() => [
+    { name: '東漢', order: 1, aliases: ['東漢', '後漢'] },
+    { name: '曹魏', order: 2, aliases: ['曹魏', '魏'] },
+    { name: '東吳', order: 3, aliases: ['孫吳', '吳'] },
+    { name: '西晉', order: 4, aliases: ['西晉'] },
+    { name: '東晉', order: 5, aliases: ['東晉', '晉'] },
+    { name: '前秦', order: 6, aliases: ['前秦', '符秦'] },
+    { name: '後秦', order: 7, aliases: ['後秦', '姚秦'] },
+    { name: '西秦', order: 8, aliases: ['西秦', '乞伏秦'] },
+    { name: '北涼', order: 9, aliases: ['北涼'] },
+    { name: '劉宋', order: 10, aliases: ['劉宋', '宋(劉)'] },
+    { name: '北魏', order: 11, aliases: ['元魏', '北魏', '後魏'] },
+    { name: '東魏', order: 12, aliases: ['東魏'] },
+    { name: '南齊', order: 13, aliases: ['蕭齊', '南齊'] },
+    { name: '梁朝', order: 14, aliases: ['蕭梁', '梁'] },
+    { name: '北齊', order: 15, aliases: ['北齊', '高齊'] },
+    { name: '北周', order: 16, aliases: ['北周', '宇文周'] },
+    { name: '陳朝', order: 17, aliases: ['陳'] },
+    { name: '隋朝', order: 18, aliases: ['隋'] },
+    { name: '唐朝', order: 19, aliases: ['唐', '武周'] },
+    { name: '五代', order: 20, aliases: ['後唐', '後晉', '南唐', '南漢'] },
+    { name: '宋朝', order: 21, aliases: ['宋', '北宋', '南宋'] },
+    { name: '遼金', order: 22, aliases: ['遼', '金', '西夏', '夏'] },
+    { name: '元朝', order: 23, aliases: ['元'] },
+    { name: '明朝', order: 24, aliases: ['明'] },
+    { name: '清朝', order: 25, aliases: ['清'] },
+    { name: '民國/現代', order: 26, aliases: ['民國', '近代', '現代'] },
+    { name: '西域/天竺', order: 98, aliases: ['天竺', '印度', '西域', '月支', '安息'] },
+    { name: '其他', order: 99, aliases: [] }
+  ], []);
+
+  // 權威部類傳統順序
+  const CATEGORY_ORDER = useMemo(() => [
+    '阿含部', '本生部', '大集部', '般若部', '法華部', '華嚴部', 
+    '寶積部', '涅槃部', '淨土部', '經集部', '密教部', '諸宗部', 
+    '論疏部', '中觀部', '瑜伽部', '律部', '懺儀部', '史傳部', '未分類'
+  ], []);
+
+  // 輔助函式：從 creators 智慧提取朝代與作譯者名稱 (精準解析「彌勒菩薩說 · 唐 玄奘譯」等造論與譯者多層結構)
   const parseCreators = (creatorsStr: string) => {
     const raw = (creatorsStr || '').trim();
-    // 常見朝代前綴
-    const dynasties = ['後秦', '東漢', '西晉', '東晉', '曹魏', '劉宋', '蕭齊', '北涼', '隋', '唐', '宋', '清', '梁', '元', '明'];
-    let dynasty = '其他';
-    let author = raw;
-
-    for (const d of dynasties) {
-      if (raw.startsWith(d)) {
-        dynasty = d;
-        author = raw.slice(d.length).trim();
-        break;
-      }
+    if (!raw) {
+      return { dynastyName: '其他', dynastyOrder: 99, authorName: '佚名' };
     }
-    // 移除「譯」、「述」、「說」等字尾
-    author = author.replace(/[譯述造說共等]+$/g, '').trim();
-    if (!author) author = raw || '佚名';
 
-    return { dynasty, author };
+    // 1. 如果有造論者（包含 · 或 /），優先提取實際翻譯者段落
+    let translationPart = raw;
+    if (raw.includes('·')) {
+      const parts = raw.split('·');
+      translationPart = parts[parts.length - 1].trim();
+    } else if (raw.includes('/')) {
+      const parts = raw.split('/');
+      translationPart = parts[parts.length - 1].trim();
+    }
+
+    // 2. 匹配朝代：依歷史朝代別名長度降序比對，避免「後秦」被誤判為「秦」
+    let matchedDynasty = HISTORICAL_CHRONOLOGY.find(d => d.name === '其他')!;
+    let matchedAlias = '';
+
+    for (const d of HISTORICAL_CHRONOLOGY) {
+      const sortedAliases = [...d.aliases].sort((a, b) => b.length - a.length);
+      for (const alias of sortedAliases) {
+        if (translationPart.includes(alias)) {
+          matchedDynasty = d;
+          matchedAlias = alias;
+          break;
+        }
+      }
+      if (matchedAlias) break;
+    }
+
+    // 3. 提取純粹作譯者名稱
+    let authorName = translationPart;
+    if (matchedAlias) {
+      authorName = authorName.replace(matchedAlias, '').trim();
+    }
+    // 移除常見字尾 (如「譯」、「述」、「造」、「說」、「撰」、「等譯」、「共譯」等)
+    authorName = authorName.replace(/(等?[譯述造說撰集錄編纂著]+|等)$/g, '').trim();
+    if (!authorName) {
+      authorName = translationPart || '佚名';
+    }
+
+    return { 
+      dynastyName: matchedDynasty.name, 
+      dynastyOrder: matchedDynasty.order, 
+      authorName 
+    };
   };
 
-  // 依選取的維度進行分組
+  // 依選取的維度進行分組，並嚴格依歷史年代與標準順序排序
   const groupedData = useMemo(() => {
-    const groups: Record<string, BookMetadata[]> = {};
+    const groups: Record<string, { order: number; books: BookMetadata[] }> = {};
 
     filteredBooks.forEach(b => {
       let key = '未分類';
+      let sortOrder = 999;
+
       if (classificationMode === 'category') {
         key = b.category || '未分類';
+        const catIdx = CATEGORY_ORDER.indexOf(key);
+        sortOrder = catIdx !== -1 ? catIdx : 900;
       } else if (classificationMode === 'volume') {
-        key = b.vol ? `大正藏 第 ${b.vol.replace(/[^\d]/g, '')} 冊` : '大正藏 第 01 冊';
+        const volNum = b.vol ? parseInt(b.vol.replace(/[^\d]/g, ''), 10) : 1;
+        key = `大正藏 第 ${volNum.toString().padStart(2, '0')} 冊`;
+        sortOrder = volNum;
       } else if (classificationMode === 'author') {
-        const { author } = parseCreators(b.creators);
-        key = author;
+        const { authorName, dynastyOrder } = parseCreators(b.creators);
+        key = authorName;
+        // 作譯者排序：優先依據其所屬朝代的歷史順序排列！
+        sortOrder = dynastyOrder * 1000;
       } else if (classificationMode === 'dynasty') {
-        const { dynasty } = parseCreators(b.creators);
-        key = `${dynasty}朝`;
+        const { dynastyName, dynastyOrder } = parseCreators(b.creators);
+        key = dynastyName;
+        // 朝代排序：嚴格依歷史時間由古至今依序排列！
+        sortOrder = dynastyOrder;
       }
 
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(b);
+      if (!groups[key]) {
+        groups[key] = { order: sortOrder, books: [] };
+      }
+      groups[key].books.push(b);
     });
 
-    return groups;
-  }, [filteredBooks, classificationMode]);
+    // 依 order 排序分組
+    const sortedEntries = Object.entries(groups).sort((a, b) => a[1].order - b[1].order);
+    const result: Record<string, BookMetadata[]> = {};
+    sortedEntries.forEach(([key, val]) => {
+      result[key] = val.books;
+    });
+
+    return result;
+  }, [filteredBooks, classificationMode, HISTORICAL_CHRONOLOGY, CATEGORY_ORDER]);
 
   // 切換折疊組
   const toggleGroup = (groupKey: string) => {
