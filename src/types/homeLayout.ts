@@ -57,10 +57,10 @@ export interface WidgetCategoryMeta {
 }
 
 export const WIDGET_CATEGORIES: WidgetCategoryMeta[] = [
-  { id: 'brand', name: '品牌標題', sub: '經典大標題、簡約橫幅、禪意圖標' },
-  { id: 'nav', name: '系統導航', sub: '四合一導航、下載經典、我的書櫃、重點筆記、全文檢索' },
-  { id: 'reading', name: '閱讀進度', sub: '上次閱讀、我的最愛、近期下載、閱讀日誌' },
-  { id: 'other', name: '其他', sub: '護眼計時器、四色主題快捷列、佛典精進名句' }
+  { id: 'brand', name: '主題圖卡', sub: '經典大標題、簡約橫幅、禪意圖標' },
+  { id: 'nav', name: '快捷功能', sub: '四合一導航、下載經典、我的書櫃、重點筆記、全文檢索' },
+  { id: 'reading', name: '我的書櫃', sub: '上次閱讀、我的最愛、近期下載、閱讀日誌' },
+  { id: 'other', name: '其他功能', sub: '護眼計時器、四色主題快捷列、佛典精進名句' }
 ];
 
 export interface WidgetCatalogItem {

@@ -42,6 +42,71 @@ interface HomeDashboardProps {
 const isBookWidgetOuterHeader = (type: string, size: string) => 
   (type === 'lastread_4x2' || type === 'lastread_4x1' || type === 'favorites_4x2' || type === 'recent_downloads_4x2') && (size === 'size-4x2' || size === 'size-4x1');
 
+// 💡 扁平化全小工具線性巡覽清單 (全由「<」「>」依序瀏覽所有分類與規格)
+interface FlatGalleryItem {
+  id: string;
+  type: HomeWidgetType;
+  size: HomeWidgetSize;
+  sizeLabel: string;
+  category: WidgetCategoryId;
+  title: string;
+}
+
+const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
+  // 1. 主題圖卡 (brand)
+  { id: 'b_title_4x2', type: 'title_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'brand', title: '經典大標題' },
+  { id: 'b_title_4x1', type: 'title_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'brand', title: '簡約橫幅標題' },
+  { id: 'b_title_2x2', type: 'title_4x2', size: 'size-2x2', sizeLabel: '2×2', category: 'brand', title: '正方標題' },
+  { id: 'b_icon_2x2', type: 'appicon_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'brand', title: '禪意圖標' },
+
+  // 2. 快捷功能 (nav)
+  { id: 'n_four_4x1', type: 'four_nav_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '四合一導航' },
+  { id: 'n_four_4x2', type: 'four_nav_4x1', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '四合一導航' },
+  { id: 'n_four_2x2', type: 'four_nav_4x1', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '四合一導航' },
+  { id: 'n_four_4x4', type: 'four_nav_4x1', size: 'size-4x4', sizeLabel: '4×4', category: 'nav', title: '四合一導航' },
+
+  { id: 'n_dl_4x1', type: 'download_2x2', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '下載經典' },
+  { id: 'n_dl_4x2', type: 'download_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '下載經典' },
+  { id: 'n_dl_2x2', type: 'download_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '下載經典' },
+
+  { id: 'n_shelf_4x1', type: 'shelf_2x2', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '我的書櫃' },
+  { id: 'n_shelf_4x2', type: 'shelf_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '我的書櫃' },
+  { id: 'n_shelf_2x2', type: 'shelf_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '我的書櫃' },
+
+  { id: 'n_notes_4x1', type: 'notes_2x2', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '重點與筆記' },
+  { id: 'n_notes_4x2', type: 'notes_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '重點與筆記' },
+  { id: 'n_notes_2x2', type: 'notes_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '重點與筆記' },
+
+  { id: 'n_search_4x1', type: 'search_2x2', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '全文檢索' },
+  { id: 'n_search_4x2', type: 'search_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '全文檢索' },
+  { id: 'n_search_2x2', type: 'search_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '全文檢索' },
+
+  // 3. 我的書櫃 (reading)
+  { id: 'r_last_4x1', type: 'lastread_4x2', size: 'size-4x1', sizeLabel: '4×1', category: 'reading', title: '上次閱讀' },
+  { id: 'r_last_4x2', type: 'lastread_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '上次閱讀' },
+  { id: 'r_last_4x3', type: 'lastread_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'reading', title: '上次閱讀' },
+  { id: 'r_last_4x4', type: 'lastread_4x2', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '上次閱讀' },
+
+  { id: 'r_fav_4x1', type: 'favorites_4x2', size: 'size-4x1', sizeLabel: '4×1', category: 'reading', title: '我的最愛' },
+  { id: 'r_fav_4x2', type: 'favorites_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '我的最愛' },
+  { id: 'r_fav_4x3', type: 'favorites_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'reading', title: '我的最愛' },
+  { id: 'r_fav_4x4', type: 'favorites_4x2', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '我的最愛' },
+
+  { id: 'r_down_4x1', type: 'recent_downloads_4x2', size: 'size-4x1', sizeLabel: '4×1', category: 'reading', title: '近期下載' },
+  { id: 'r_down_4x2', type: 'recent_downloads_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '近期下載' },
+  { id: 'r_down_4x3', type: 'recent_downloads_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'reading', title: '近期下載' },
+  { id: 'r_down_4x4', type: 'recent_downloads_4x2', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '近期下載' },
+
+  { id: 'r_stats_2x2', type: 'stats_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'reading', title: '每日閱讀日誌' },
+
+  // 4. 其他功能 (other)
+  { id: 'o_timer_4x2', type: 'timer_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '護眼計時器' },
+  { id: 'o_timer_2x2', type: 'timer_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'other', title: '護眼計時器' },
+  { id: 'o_theme_4x1', type: 'theme_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'other', title: '四色主題' },
+  { id: 'o_theme_2x2', type: 'theme_4x1', size: 'size-2x2', sizeLabel: '2×2', category: 'other', title: '四色主題' },
+  { id: 'o_zen_4x2', type: 'zen_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '佛典精進名句' }
+];
+
 
 export function HomeDashboard({
   downloadedBooks,
@@ -65,11 +130,9 @@ export function HomeDashboard({
     return JSON.parse(JSON.stringify(PRESET_LAYOUTS[preset] || PRESET_LAYOUTS.default));
   });
 
-  // 💡 iOS Widget Gallery 狀態 (4大類別，單層直接預覽 + 「<」「>」直接切換加入)
+  // 💡 iOS Widget Gallery 狀態 (單層扁平化巡覽 + 「<」「>」全流程切換)
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<WidgetCategoryId>('nav');
-  const [currentWidgetIndex, setCurrentWidgetIndex] = useState<number>(0);
-  const [previewWidgetSize, setPreviewWidgetSize] = useState<HomeWidgetSize>('size-4x1');
+  const [galleryIndex, setGalleryIndex] = useState<number>(0);
   const [previewIconIndex, setPreviewIconIndex] = useState<number>(1);
 
   const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
@@ -157,7 +220,7 @@ export function HomeDashboard({
     });
   };
 
-  // 套用預設版面
+  // 套用預設版面 (暫時保留供未來範本使用)
   const handleApplyPreset = (preset: HomeLayoutPreset) => {
     const presetItems = JSON.parse(JSON.stringify(PRESET_LAYOUTS[preset] || PRESET_LAYOUTS.default));
     setWidgets(presetItems);
@@ -167,6 +230,7 @@ export function HomeDashboard({
       homeWidgets: presetItems
     });
   };
+  void handleApplyPreset;
 
   // 儲存並退出編輯模式
   const handleSaveAndExit = () => {
@@ -1480,49 +1544,26 @@ export function HomeDashboard({
     }
   };
 
-  // 💡 當前分類下的小工具清單與當前選中之小工具
-  const currentCategoryWidgets = WIDGET_CATALOG.filter(w => w.category === activeCategory);
-  const currentWidget = currentCategoryWidgets[currentWidgetIndex] || currentCategoryWidgets[0] || WIDGET_CATALOG[0];
-  const availableSizes = ALLOWED_SIZES_BY_TYPE[currentWidget.type] || ['size-4x2', 'size-4x1', 'size-2x2'];
+  // 💡 取得當前扁平巡覽項目與對應之大類別
+  const currentItem = FLAT_GALLERY_ITEMS[galleryIndex] || FLAT_GALLERY_ITEMS[0];
+  const activeCategory = currentItem.category;
 
-  // 切換大類別
+  // 切換大類別（直接跳至該大類別的第一個小工具）
   const handleSelectCategory = (catId: WidgetCategoryId) => {
-    setActiveCategory(catId);
-    setCurrentWidgetIndex(0);
-    const catWidgets = WIDGET_CATALOG.filter(w => w.category === catId);
-    if (catWidgets.length > 0) {
-      const firstW = catWidgets[0];
-      const allowed = ALLOWED_SIZES_BY_TYPE[firstW.type] || ['size-4x2', 'size-4x1', 'size-2x2'];
-      if (!allowed.includes(previewWidgetSize)) {
-        setPreviewWidgetSize(firstW.size);
-      }
+    const targetIdx = FLAT_GALLERY_ITEMS.findIndex(item => item.category === catId);
+    if (targetIdx !== -1) {
+      setGalleryIndex(targetIdx);
     }
   };
 
-  // 💡 按「<」切換上一個小工具
+  // 💡 按「<」切換上一個小工具（跨類別與尺寸全流程巡覽）
   const handlePrevWidget = () => {
-    const len = currentCategoryWidgets.length;
-    if (len <= 1) return;
-    const prevIdx = (currentWidgetIndex - 1 + len) % len;
-    setCurrentWidgetIndex(prevIdx);
-    const prevW = currentCategoryWidgets[prevIdx];
-    const allowed = ALLOWED_SIZES_BY_TYPE[prevW.type] || ['size-4x2', 'size-4x1', 'size-2x2'];
-    if (!allowed.includes(previewWidgetSize)) {
-      setPreviewWidgetSize(allowed[0]);
-    }
+    setGalleryIndex(prev => (prev - 1 + FLAT_GALLERY_ITEMS.length) % FLAT_GALLERY_ITEMS.length);
   };
 
-  // 💡 按「>」切換下一個小工具
+  // 💡 按「>」切換下一個小工具（跨類別與尺寸全流程巡覽）
   const handleNextWidget = () => {
-    const len = currentCategoryWidgets.length;
-    if (len <= 1) return;
-    const nextIdx = (currentWidgetIndex + 1) % len;
-    setCurrentWidgetIndex(nextIdx);
-    const nextW = currentCategoryWidgets[nextIdx];
-    const allowed = ALLOWED_SIZES_BY_TYPE[nextW.type] || ['size-4x2', 'size-4x1', 'size-2x2'];
-    if (!allowed.includes(previewWidgetSize)) {
-      setPreviewWidgetSize(allowed[0]);
-    }
+    setGalleryIndex(prev => (prev + 1) % FLAT_GALLERY_ITEMS.length);
   };
 
   return (
@@ -1719,28 +1760,17 @@ export function HomeDashboard({
               ))}
             </div>
 
-            {/* 4. 預設範本快捷選單 */}
-            <div className="ios-gallery-presets-bar">
+            {/* 4. 預設範本快捷選單 (暫時隱藏) */}
+            {/* <div className="ios-gallery-presets-bar">
               <span className="presets-label">範本:</span>
               <button type="button" className="preset-pill-btn" onClick={() => { handleApplyPreset('default'); setIsGalleryOpen(false); }}>經典原味</button>
               <button type="button" className="preset-pill-btn" onClick={() => { handleApplyPreset('compact'); setIsGalleryOpen(false); }}>極簡精巧</button>
               <button type="button" className="preset-pill-btn" onClick={() => { handleApplyPreset('focus'); setIsGalleryOpen(false); }}>每日精進</button>
               <button type="button" className="preset-pill-btn" onClick={() => { handleApplyPreset('zen'); setIsGalleryOpen(false); }}>禪修護眼</button>
-            </div>
+            </div> */}
 
-            {/* 5. 單層直接預覽主舞台 (圖 3：按「<」「>」選擇卡片直接加到主頁，不用進入下一層) */}
+            {/* 5. 單層直接預覽主舞台 (全依「<」「>」巡覽所有小工具及尺寸) */}
             <div className="ios-gallery-preview-stage custom-scrollbar">
-              {/* Widget Title & Indicator */}
-              <div className="ios-preview-info-header">
-                <div className="ios-preview-title-row">
-                  <h3 className="ios-preview-title">{currentWidget.name}</h3>
-                  <span className="ios-preview-counter-badge">
-                    {currentWidgetIndex + 1} / {currentCategoryWidgets.length}
-                  </span>
-                </div>
-                <p className="ios-preview-desc">{currentWidget.description}</p>
-              </div>
-
               {/* 💡 Preview Showcase Box with < and > Navigation */}
               <div className="ios-preview-showcase-row">
                 <button
@@ -1748,19 +1778,26 @@ export function HomeDashboard({
                   className="ios-preview-nav-arrow-btn prev"
                   onClick={handlePrevWidget}
                   title="切換上一個小工具"
-                  disabled={currentCategoryWidgets.length <= 1}
                 >
                   <ChevronLeft size={22} />
                 </button>
 
                 <div className="ios-live-preview-viewport">
-                  <div className={`widget-card preview-card-mode ${previewWidgetSize} ${isBookWidgetOuterHeader(currentWidget.type, previewWidgetSize) ? 'has-outer-header' : ''} ${currentWidget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${currentWidget.type === 'download_2x2' && previewWidgetSize === 'size-4x1' ? 'download-dashed-card-4x1' : ''}`}>
-                    {renderWidgetContent({
-                      id: 'preview-instance',
-                      type: currentWidget.type,
-                      size: previewWidgetSize,
-                      iconIndex: previewIconIndex
-                    })}
+                  {/* 視窗框左上角小小字 (黑色字 / 淺灰方框) */}
+                  <div className="preview-size-badge">
+                    {currentItem.sizeLabel}
+                  </div>
+
+                  {/* 等比自我縮放容器 (視窗框維持固定大小) */}
+                  <div className={`preview-card-stage-container scale-${currentItem.size.replace('size-', '')}`}>
+                    <div className={`widget-card preview-card-mode ${currentItem.size} ${isBookWidgetOuterHeader(currentItem.type, currentItem.size) ? 'has-outer-header' : ''} ${currentItem.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${currentItem.type === 'download_2x2' && currentItem.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''}`}>
+                      {renderWidgetContent({
+                        id: 'preview-instance',
+                        type: currentItem.type,
+                        size: currentItem.size,
+                        iconIndex: previewIconIndex
+                      })}
+                    </div>
                   </div>
                 </div>
 
@@ -1769,39 +1806,9 @@ export function HomeDashboard({
                   className="ios-preview-nav-arrow-btn next"
                   onClick={handleNextWidget}
                   title="切換下一個小工具"
-                  disabled={currentCategoryWidgets.length <= 1}
                 >
                   <ChevronRight size={22} />
                 </button>
-              </div>
-
-              {/* 💡 Size Selector & Pagination Dots (圖 2：小類別尺寸規格切換 4x1/4x2/2x2/4x4) */}
-              <div className="ios-preview-size-controls">
-                {/* Pagination Dots */}
-                <div className="ios-pagination-dots">
-                  {availableSizes.map(sizeKey => (
-                    <div
-                      key={`dot-${sizeKey}`}
-                      className={`ios-page-dot ${previewWidgetSize === sizeKey ? 'active' : ''}`}
-                      onClick={() => setPreviewWidgetSize(sizeKey)}
-                      title={`切換為 ${sizeKey.replace('size-', '')}`}
-                    />
-                  ))}
-                </div>
-
-                {/* Size Chips */}
-                <div className="ios-size-chips-row">
-                  {availableSizes.map(sizeKey => (
-                    <button
-                      key={`size-chip-${sizeKey}`}
-                      type="button"
-                      className={`ios-size-chip-btn ${previewWidgetSize === sizeKey ? 'active' : ''}`}
-                      onClick={() => setPreviewWidgetSize(sizeKey)}
-                    >
-                      {sizeKey.replace('size-', '').replace('x', '×')}
-                    </button>
-                  ))}
-                </div>
               </div>
 
               {/* 💡 Bottom Action Button (直接加入主頁) */}
@@ -1809,7 +1816,7 @@ export function HomeDashboard({
                 <button
                   type="button"
                   className="ios-add-widget-confirm-btn"
-                  onClick={() => handleAddWidget(currentWidget.type, previewWidgetSize, previewIconIndex)}
+                  onClick={() => handleAddWidget(currentItem.type, currentItem.size, previewIconIndex)}
                 >
                   <Plus size={19} strokeWidth={2.6} />
                   <span>加入小工具</span>

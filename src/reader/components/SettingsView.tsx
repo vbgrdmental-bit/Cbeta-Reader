@@ -1265,16 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.4.3) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.4.4) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.4.3</span>
-                        <span className="changelog-date">(2026-09-19)</span>
+                        <span>⭐ App: v4.4.4</span>
+                        <span className="changelog-date">(2026-09-20)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 經書 4×2 與 4×1 小工具標題移至卡片外上方，卡片內維持 1/2 本書，高度齊平且下緣不切邊。</li>
-                        <li>• 四合一導航 4×2 規格之 4 個按鍵間距加寬，標籤字體升級為清晰現代黑體(粗)。</li>
-                        <li>• 首頁卡片支援長按 2 秒自動直覺進入「自訂首頁排版」編輯模式（相容觸控與滑鼠）。</li>
+                        <li>• 「加入小工具」視窗框尺寸嚴格恆定（220px），各規格卡片依比例縮放，徹底消除切換跳動。</li>
+                        <li>• 四大分類更名為「主題圖卡、快捷功能、我的書櫃、其他功能」，取消分層，由「&lt;」「&gt;」全流程巡覽。</li>
+                        <li>• 視窗框左上角配置灰底黑字尺寸徽章，隱藏範本與說明文字，卡片模擬真實呈現。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1297,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">
+                            <span>App: v4.4.3</span>
+                            <span className="changelog-date">(2026-09-19)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 經書 4×2 與 4×1 小工具標題移至卡片外上方，卡片內維持 1/2 本書，高度齊平且下緣不切邊。</li>
+                            <li>• 四合一導航 4×2 規格之 4 個按鍵間距加寬，標籤字體升級為清晰現代黑體(粗)。</li>
+                            <li>• 首頁卡片支援長按 2 秒自動直覺進入「自訂首頁排版」編輯模式（相容觸控與滑鼠）。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title">App: v4.4.2 <span className="changelog-date">(2026-09-19)</span></div>
                           <ul className="changelog-list">
