@@ -6140,22 +6140,21 @@ body.theme-ebony .ios-preview-nav-arrow-btn {
   color: #e0e6ed;
 }
 
-/* 💡 視窗框：加高至 255px 並維持固定恆定尺寸 (不會因 4x1/4x2/4x3/4x4/2x2 跳動) */
+/* 💡 視窗框：加高至 285px，寬度加寬至 360px，確保大版面與微型組件皆有極佳展示視野與合適留白 */
 .ios-live-preview-viewport {
   position: relative;
-  width: 320px;
-  min-width: 320px;
-  max-width: 320px;
-  height: 255px;
-  min-height: 255px;
-  max-height: 255px;
+  width: 100%;
+  max-width: 360px;
+  height: 285px;
+  min-height: 285px;
+  max-height: 285px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
+  padding: 0.85rem;
   box-sizing: border-box;
   background: var(--bg-library, rgba(0, 0, 0, 0.025));
-  border-radius: 24px;
+  border-radius: 26px;
   border: 1.5px solid var(--border-color, rgba(0, 0, 0, 0.12));
   overflow: hidden;
   flex-shrink: 0;
@@ -6163,9 +6162,8 @@ body.theme-ebony .ios-preview-nav-arrow-btn {
 
 @media (max-width: 440px) {
   .ios-live-preview-viewport {
-    width: calc(100vw - 110px);
-    min-width: 0;
-    max-width: 320px;
+    width: calc(100vw - 96px);
+    max-width: 360px;
   }
 }
 
@@ -6177,8 +6175,8 @@ body.theme-ebony .ios-live-preview-viewport {
 /* 視窗框左上角小小字尺寸徽章 (黑色字 / 淺灰色方框) */
 .preview-size-badge {
   position: absolute;
-  top: 9px;
-  left: 10px;
+  top: 10px;
+  left: 12px;
   z-index: 25;
   background: #e4e4e7;
   color: #18181b;
@@ -6200,7 +6198,7 @@ body.theme-ebony .preview-size-badge {
   border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* 視窗框內卡片自適應等比縮放容器 (所有尺寸卡片統一採用相同比例縮放，確保書本大小與相對比例完全一致) */
+/* 視窗框內卡片自適應等比縮放容器 (全規格統一比例基準，書籍長條Bar修長大氣、尺寸比例完全一致) */
 .preview-card-stage-container {
   width: 100%;
   height: 100%;
@@ -6210,22 +6208,22 @@ body.theme-ebony .preview-size-badge {
   box-sizing: border-box;
 }
 
-/* 4 欄規格 (4x1, 4x2, 4x3, 4x4) 寬度基準一律為 300px，統一採用 scale(0.65) */
+/* 4 欄規格 (4x1, 4x2, 4x3, 4x4) 基準寬度提升至 335px，長條Bar更修長，統一採用 scale(0.76) */
 .preview-card-stage-container.scale-4x1,
 .preview-card-stage-container.scale-4x2,
 .preview-card-stage-container.scale-4x3,
 .preview-card-stage-container.scale-4x4 {
-  width: 300px;
-  transform: scale(0.65);
+  width: 335px;
+  transform: scale(0.76);
   transform-origin: center center;
   flex-shrink: 0;
 }
 
-/* 2x2 正方形規格在 148px 寬高下以完全相同的 scale(0.65) 縮放 */
+/* 2x2 正方形規格設定為 190px 寬高，採用 scale(0.76)，圖標與文字清晰可見，杜絕文字太小看不清 */
 .preview-card-stage-container.scale-2x2 {
-  width: 148px;
-  height: 148px;
-  transform: scale(0.65);
+  width: 190px;
+  height: 190px;
+  transform: scale(0.76);
   transform-origin: center center;
   flex-shrink: 0;
 }
@@ -6238,6 +6236,52 @@ body.theme-ebony .preview-size-badge {
   transform: none !important;
   animation: none !important;
   margin: 0 auto;
+}
+
+/* 💡 預覽卡片細節提升：確保 2x2 圖標與文字比例清晰、不被擠壓或太小 */
+.preview-card-mode.size-2x2 .compact-nav-item-2x2 {
+  padding: 0.35rem 0;
+}
+
+.preview-card-mode.size-2x2 .compact-nav-icon-2x2 {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.preview-card-mode.size-2x2 .compact-nav-label-2x2 {
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+}
+
+.preview-card-mode.size-2x2 .core-icon-box {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 16px !important;
+}
+
+.preview-card-mode.size-2x2 .core-title {
+  font-size: 1.15rem !important;
+}
+
+.preview-card-mode.size-2x2 .core-sub {
+  font-size: 0.82rem !important;
+}
+
+/* 書籍長條 Bar 在 335px 基準寬度下更修長大器，左右間距更充裕 */
+.preview-card-mode .book-stack-item-4x4 {
+  padding: 0.48rem 0.85rem !important;
+  border-radius: 14px !important;
+}
+
+.preview-card-mode .book-stack-item-4x4 .b-title {
+  font-size: 1.02rem !important;
+}
+
+.preview-card-mode .book-stack-item-4x4 .b-sub {
+  font-size: 0.76rem !important;
 }
 
 /* 💡 預覽卡片模式：永遠保持正常靜態外觀，嚴禁出現編輯模式之綠色虛線外框與抖動 */
