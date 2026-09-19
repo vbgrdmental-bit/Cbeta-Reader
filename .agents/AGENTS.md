@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.4.4` (App: v4.4.4 / Builder: v2.9.11)
+- **Current Version**: `v4.4.5` (App: v4.4.5 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.4.5 / Builder: v2.9.11** (2026-09-20)
+  - [App] 「加入小工具」左右切換「<」「>」按鈕與邊界留白優化，徹底消除手機貼邊擠壓。
+  - [App] 4×2 卡片「4」長度完全舒展拉長（長寬比 2.28:1），1:1 等比呈現首頁修長長條感，經文字句與「→」按鈕間距充沛。
+  - [App] 四色主題 2×2 優化圓圈與字級排版，「象牙白、羊皮紙、舒服綠、烏木」4 個文字標籤 100% 完整露出。
 - **⭐ App: v4.4.4 / Builder: v2.9.11** (2026-09-20)
   - [App] 「加入小工具」視窗框加高（255px）且尺寸恆定固定，卡片統一基準等比縮放，長條Bar大小與相對比例完全一致。
   - [App] 經書外置標題「上次閱讀/我的最愛/近期閱讀」字體、顏色、大小在 4×1/4×2/4×3/4×4 完全統一為 4×3/4×4 樣式。
