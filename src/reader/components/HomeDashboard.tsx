@@ -107,6 +107,58 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'o_zen_4x2', type: 'zen_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '佛典精進名句' }
 ];
 
+// 💡 預覽展示專用之 CBETA 官方經典示範資料 (確保在無歷史進度時亦能真實預覽卡片排版與長條Bar)
+const DEMO_PREVIEW_RESUME: Array<{ book: BookMetadata; progress?: any }> = [
+  {
+    book: {
+      workId: 'T0262',
+      title: '妙法蓮華經',
+      canon: 'T',
+      creators: '後秦 鳩摩羅什譯',
+      juansCount: 7,
+      category: '大乘法華部',
+      version: '2.9.11'
+    },
+    progress: { juan: 1, segmentId: 'p0001a01' }
+  },
+  {
+    book: {
+      workId: 'T0779',
+      title: '佛說八大人覺經',
+      canon: 'T',
+      creators: '東漢 安世高譯',
+      juansCount: 1,
+      category: '阿含部',
+      version: '2.9.11'
+    },
+    progress: { juan: 1, segmentId: 'p0001a01' }
+  },
+  {
+    book: {
+      workId: 'T0411',
+      title: '大乘大集地藏十輪經',
+      canon: 'T',
+      creators: '唐 玄奘譯',
+      juansCount: 10,
+      category: '大乘大集部',
+      version: '2.9.11'
+    },
+    progress: { juan: 1, segmentId: 'p0001a01' }
+  },
+  {
+    book: {
+      workId: 'T0412',
+      title: '地藏菩薩本願經',
+      canon: 'T',
+      creators: '唐 實叉難陀譯',
+      juansCount: 2,
+      category: '大乘本生部',
+      version: '2.9.11'
+    },
+    progress: { juan: 1, segmentId: 'p0001a01' }
+  }
+];
+
 
 export function HomeDashboard({
   downloadedBooks,
@@ -400,7 +452,13 @@ export function HomeDashboard({
 
   // 渲染各類型小工具組件
   const renderWidgetContent = (widget: HomeWidgetConfig) => {
-    const { type, size } = widget;
+    const { type, size, id } = widget;
+    const isPreview = id === 'preview-instance';
+
+    // 💡 預覽展示優先：無實際閱讀或下載紀錄時自動套用 CBETA 官方經典示範資料，確保長條Bar與各規格真實排版完全可見
+    const effectiveResumeBooks = (isPreview && resumeBooks.length === 0) ? DEMO_PREVIEW_RESUME : resumeBooks;
+    const effectiveDownloadedBooks = (isPreview && downloadedBooks.length === 0) ? DEMO_PREVIEW_RESUME.map(d => d.book) : downloadedBooks;
+    const effectiveHighlightsCount = (isPreview && allHighlights.length === 0) ? 12 : allHighlights.length;
 
     switch (type) {
       // 1. 品牌標題組件 (title_4x2 / title_4x1)
@@ -512,7 +570,7 @@ export function HomeDashboard({
                   <Folder size={20} color="#ffffff" />
                 </div>
                 <div className="core-title">我的書櫃</div>
-                <div className="core-sub">共{downloadedBooks.length}本書</div>
+                <div className="core-sub">共{effectiveDownloadedBooks.length}本書</div>
               </div>
 
               {/* 3. 重點筆記 */}
@@ -525,7 +583,7 @@ export function HomeDashboard({
                   <Notebook size={20} color="#ffffff" />
                 </div>
                 <div className="core-title">重點與筆記</div>
-                <div className="core-sub">共{allHighlights.length}則筆記</div>
+                <div className="core-sub">共{effectiveHighlightsCount}則筆記</div>
               </div>
 
               {/* 4. 全文檢索 */}
@@ -567,9 +625,10 @@ export function HomeDashboard({
                 title="我的書櫃"
               >
                 <div className="compact-nav-icon-4x2">
-                  <Folder size={22} color="#ffffff" />
+                  <Folder size={20} color="#ffffff" />
                 </div>
                 <div className="compact-nav-label-4x2">我的書櫃</div>
+                <div className="compact-nav-badge-4x2">{effectiveDownloadedBooks.length} 本</div>
               </div>
 
               {/* 3. 重點筆記 */}
@@ -579,9 +638,10 @@ export function HomeDashboard({
                 title="重點筆記"
               >
                 <div className="compact-nav-icon-4x2">
-                  <Notebook size={22} color="#ffffff" />
+                  <Notebook size={20} color="#ffffff" />
                 </div>
                 <div className="compact-nav-label-4x2">重點筆記</div>
+                <div className="compact-nav-badge-4x2">{effectiveHighlightsCount} 則</div>
               </div>
 
               {/* 4. 全文檢索 */}
@@ -591,7 +651,7 @@ export function HomeDashboard({
                 title="已下載經文搜尋"
               >
                 <div className="compact-nav-icon-4x2">
-                  <Search size={22} color="#ffffff" style={{ strokeWidth: 2.4 }} />
+                  <Search size={20} color="#ffffff" style={{ strokeWidth: 2.4 }} />
                 </div>
                 <div className="compact-nav-label-4x2">全文檢索</div>
               </div>
@@ -806,7 +866,7 @@ export function HomeDashboard({
                 </div>
                 <div>
                   <div className="core-title">我的書櫃</div>
-                  <div className="core-sub">已收錄 {downloadedBooks.length} 部已下載經典與自訂分類</div>
+                  <div className="core-sub">已收錄 {effectiveDownloadedBooks.length} 部已下載經典與自訂分類</div>
                 </div>
               </div>
               <button type="button" className="cbeta-read-btn" title="進入書櫃">
@@ -825,7 +885,7 @@ export function HomeDashboard({
               <Folder size={20} color="#ffffff" />
             </div>
             <div className="core-title">我的書櫃</div>
-            <div className="core-sub">共{downloadedBooks.length}本書</div>
+            <div className="core-sub">共{effectiveDownloadedBooks.length}本書</div>
           </div>
         );
       }
@@ -846,7 +906,7 @@ export function HomeDashboard({
                 </div>
                 <div className="core-info-4x1">
                   <span className="core-title-4x1">重點與筆記</span>
-                  <span className="core-count-badge">{allHighlights.length}</span>
+                  <span className="core-count-badge">{effectiveHighlightsCount}</span>
                 </div>
               </div>
               <button type="button" className="cbeta-read-btn" title="查看筆記">
@@ -869,7 +929,7 @@ export function HomeDashboard({
                 </div>
                 <div>
                   <div className="core-title">重點與筆記</div>
-                  <div className="core-sub">已累積 {allHighlights.length} 條劃線重點與個人筆記</div>
+                  <div className="core-sub">已累積 {effectiveHighlightsCount} 條劃線重點與個人筆記</div>
                 </div>
               </div>
               <button type="button" className="cbeta-read-btn" title="查看筆記">
@@ -888,7 +948,7 @@ export function HomeDashboard({
               <Notebook size={20} color="#ffffff" />
             </div>
             <div className="core-title">重點與筆記</div>
-            <div className="core-sub">共{allHighlights.length}則筆記</div>
+            <div className="core-sub">共{effectiveHighlightsCount}則筆記</div>
           </div>
         );
       }
@@ -959,7 +1019,7 @@ export function HomeDashboard({
       // 8. 上次閱讀 (4x2 / 4x1 / 4x3 / 4x4)
       case 'lastread_4x2':
       case 'lastread_4x1': {
-        const lastBook = resumeBooks[0];
+        const lastBook = effectiveResumeBooks[0];
         if (!lastBook) {
           if (size === 'size-4x2' || size === 'size-4x1') {
             return (
@@ -989,7 +1049,7 @@ export function HomeDashboard({
         // 💡 4x2 (2部) 與 4x1 (1部)：外置標題列 + 卡片本體 (下緣完美不切邊，左右 100% 垂直對齊 4x3)
         if (size === 'size-4x2' || size === 'size-4x1') {
           const count = size === 'size-4x2' ? 2 : 1;
-          const displayResumeBooks = resumeBooks.slice(0, count);
+          const displayResumeBooks = effectiveResumeBooks.slice(0, count);
           return (
             <>
               {/* 1. 卡片外面的上方標題列 */}
@@ -1000,7 +1060,7 @@ export function HomeDashboard({
                 title="點擊進入書櫃「近期閱讀」"
               >
                 <div className="widget-outside-tag">上次閱讀 ➔</div>
-                <div className="widget-outside-badge">共 {resumeBooks.length} 部</div>
+                <div className="widget-outside-badge">共 {effectiveResumeBooks.length} 部</div>
               </div>
 
               {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
@@ -1033,7 +1093,7 @@ export function HomeDashboard({
 
         // 💡 4x3 (3部) / 4x4 (4部) 規格
         const maxBooks = size === 'size-4x3' ? 3 : 4;
-        const displayResumeBooks = resumeBooks.slice(0, maxBooks);
+        const displayResumeBooks = effectiveResumeBooks.slice(0, maxBooks);
         return (
           <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
             <div 
@@ -1043,7 +1103,7 @@ export function HomeDashboard({
               title="點擊進入書櫃「近期閱讀」"
             >
               <div className="widget-tag-4x4">上次閱讀 ➔</div>
-              <div className="widget-count-badge-4x4">共 {resumeBooks.length} 部</div>
+              <div className="widget-count-badge-4x4">共 {effectiveResumeBooks.length} 部</div>
             </div>
             <div className="book-stack-4x4">
               {displayResumeBooks.map((item, idx) => (
@@ -1082,7 +1142,8 @@ export function HomeDashboard({
             return [];
           }
         })();
-        const favoriteBooks = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
+        const actualFavs = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
+        const favoriteBooks = (isPreview && actualFavs.length === 0) ? DEMO_PREVIEW_RESUME.map(d => d.book) : actualFavs;
 
         if (favoriteBooks.length === 0) {
           if (size === 'size-4x2' || size === 'size-4x1') {
@@ -1094,7 +1155,7 @@ export function HomeDashboard({
                   style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
                   title="點擊進入書櫃「我的最愛」"
                 >
-                  <div className="widget-outside-tag">我的最愛經典 ➔</div>
+                  <div className="widget-outside-tag">我的最愛 ➔</div>
                   <div className="widget-outside-badge">共 0 部</div>
                 </div>
                 <div className={`book-widget-card-box box-${size.replace('size-', '')}`} style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -1127,7 +1188,7 @@ export function HomeDashboard({
                 style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
                 title="點擊進入書櫃「我的最愛」"
               >
-                <div className="widget-outside-tag">我的最愛經典 ➔</div>
+                <div className="widget-outside-tag">我的最愛 ➔</div>
                 <div className="widget-outside-badge">共 {favoriteBooks.length} 部</div>
               </div>
 
@@ -1170,7 +1231,7 @@ export function HomeDashboard({
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
               title="點擊進入書櫃「我的最愛」"
             >
-              <div className="widget-tag-4x4">我的最愛經典 ➔</div>
+              <div className="widget-tag-4x4">我的最愛 ➔</div>
               <div className="widget-count-badge-4x4">共 {favoriteBooks.length} 部</div>
             </div>
             <div className="book-stack-4x4">
@@ -1200,10 +1261,10 @@ export function HomeDashboard({
         );
       }
 
-            // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x3 / 4x4)
       // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x3 / 4x4)
       case 'recent_downloads_4x2': {
-        const recentDownloadedBooks = [...downloadedBooks].reverse();
+        const actualRecent = [...downloadedBooks].reverse();
+        const recentDownloadedBooks = (isPreview && actualRecent.length === 0) ? DEMO_PREVIEW_RESUME.map(d => d.book) : actualRecent;
 
         if (recentDownloadedBooks.length === 0) {
           if (size === 'size-4x2' || size === 'size-4x1') {
@@ -1215,7 +1276,7 @@ export function HomeDashboard({
                   style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
                   title="點擊進入書櫃「近期下載」"
                 >
-                  <div className="widget-outside-tag">近期下載經典 ➔</div>
+                  <div className="widget-outside-tag">近期下載 ➔</div>
                   <div className="widget-outside-badge">共 0 部</div>
                 </div>
                 <div className={`book-widget-card-box box-${size.replace('size-', '')}`} style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -1248,8 +1309,8 @@ export function HomeDashboard({
                 style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
                 title="點擊進入書櫃「近期下載」"
               >
-                <div className="widget-outside-tag">近期下載經典 ➔</div>
-                <div className="widget-outside-badge">共 {downloadedBooks.length} 部</div>
+                <div className="widget-outside-tag">近期下載 ➔</div>
+                <div className="widget-outside-badge">共 {recentDownloadedBooks.length} 部</div>
               </div>
 
               {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
