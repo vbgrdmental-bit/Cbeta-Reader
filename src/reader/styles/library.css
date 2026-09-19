@@ -7055,37 +7055,118 @@ body.theme-ebony .book-stack-item-4x4:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* 💡 4x2 兩部經典專屬排版 (最適化 148px 高度，字體與封面緊湊優雅) */
-.multi-4x2 .widget-header-row-4x4 {
-  margin-bottom: 0.25rem;
+/* 💡 4x2 經書小工具外置標題專屬樣式 (標題移至卡片外上方，卡片內放 2 本與 4x3/4x4 統一大小之經典) */
+.widget-card.size-4x2.has-outside-header {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
 }
 
-.multi-4x2 .book-stack-4x4 {
-  gap: 0.35rem;
+.book-widget-outside-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.multi-4x2 .book-stack-item-4x4 {
-  padding: 0.38rem 0.6rem;
-  border-radius: 11px;
+.widget-outside-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 0.35rem;
+  margin-bottom: 0.38rem;
+  box-sizing: border-box;
 }
 
-.multi-4x2 .book-stack-item-4x4 .book-badge {
-  width: 36px !important;
-  min-width: 36px !important;
-  max-width: 36px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  font-size: 0.72rem !important;
-  border-radius: 8px !important;
+.widget-outside-tag {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-muted, #7c685d);
+  transition: color 0.15s ease;
+  user-select: none;
 }
 
-.multi-4x2 .book-stack-item-4x4 .b-title {
-  font-size: 0.92rem;
+.widget-outside-tag:hover {
+  color: var(--theme-accent, #8c4b27);
 }
 
-.multi-4x2 .book-stack-item-4x4 .b-sub {
-  font-size: 0.70rem;
+.widget-outside-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(140, 75, 39, 0.08);
+  color: var(--text-muted, #7c685d);
+  user-select: none;
 }
+
+body.theme-ebony .widget-outside-badge {
+  background: rgba(255, 255, 255, 0.1);
+  color: #a1a1aa;
+}
+
+.widget-outside-card-box {
+  background: var(--bg-card, #ffffff);
+  border: 1.5px solid var(--border-color, rgba(140, 75, 39, 0.14));
+  border-radius: 20px;
+  box-shadow: 0 4px 14px rgba(90, 50, 20, 0.05);
+  height: 148px;
+  padding: 0.65rem 0.95rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+body.theme-ebony .widget-outside-card-box,
+body.theme-dark .widget-outside-card-box {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.widget-card.has-outside-header:hover .widget-outside-card-box {
+  transform: translateY(-2px);
+  border-color: var(--theme-accent, #8c4b27);
+  box-shadow: 0 8px 22px rgba(90, 50, 20, 0.08);
+}
+
+/* 編輯模式下的視覺適配 */
+.home-custom-dashboard-wrapper.edit-mode .widget-card.has-outside-header {
+  border: none !important;
+}
+
+.home-custom-dashboard-wrapper.edit-mode .widget-card.has-outside-header .widget-outside-card-box {
+  border-style: dashed !important;
+  border-color: #1ea98c !important;
+}
+
+.widget-card.has-outside-header .edit-btn.btn-remove-tr {
+  top: 26px !important;
+  right: 6px !important;
+}
+
+.widget-card.has-outside-header .drag-handle-hint {
+  top: 26px !important;
+  left: 8px !important;
+}
+
+.widget-card.has-outside-header .edit-btn.btn-size-br {
+  bottom: 6px !important;
+  right: 6px !important;
+}
+
+.widget-card.has-outside-header .size-indicator {
+  bottom: 8px !important;
+  left: 10px !important;
+}
+
 
 

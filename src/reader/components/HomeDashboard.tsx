@@ -38,6 +38,10 @@ interface HomeDashboardProps {
   setIsLayoutEditMode: (val: boolean) => void;
 }
 
+// 💡 檢查是否為經書 4x2 小工具 (標題外置於卡片上方)
+const isBookWidget4x2 = (type: string, size: string) => 
+  (type === 'lastread_4x2' || type === 'lastread_4x1' || type === 'favorites_4x2' || type === 'recent_downloads_4x2') && size === 'size-4x2';
+
 export function HomeDashboard({
   downloadedBooks,
   resumeBooks,
@@ -1413,7 +1417,7 @@ export function HomeDashboard({
           return (
             <div
               key={widget.id}
-              className={`widget-card ${widget.size} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
+              className={`widget-card ${widget.size} ${isBookWidget4x2(widget.type, widget.size) ? 'has-outside-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
               draggable={isLayoutEditMode}
               onDragStart={(e) => handleDragStart(e, widget.id)}
               onDragOver={(e) => handleDragOver(e, widget.id)}
@@ -1548,7 +1552,7 @@ export function HomeDashboard({
                 </button>
 
                 <div className="ios-live-preview-viewport">
-                  <div className={`widget-card preview-card-mode ${previewWidgetSize} ${currentWidget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${currentWidget.type === 'download_2x2' && previewWidgetSize === 'size-4x1' ? 'download-dashed-card-4x1' : ''}`}>
+                  <div className={`widget-card preview-card-mode ${previewWidgetSize} ${isBookWidget4x2(currentWidget.type, previewWidgetSize) ? 'has-outside-header' : ''} ${currentWidget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${currentWidget.type === 'download_2x2' && previewWidgetSize === 'size-4x1' ? 'download-dashed-card-4x1' : ''}`}>
                     {renderWidgetContent({
                       id: 'preview-instance',
                       type: currentWidget.type,
