@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.4.2` (App: v4.4.2 / Builder: v2.9.11)
+- **Current Version**: `v4.4.3` (App: v4.4.3 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.4.3 / Builder: v2.9.11** (2026-09-19)
+  - [App] 經書 4×2 與 4×1 小工具標題移至卡片外上方，卡片內維持 1/2 本書，高度齊平且下緣不切邊。
+  - [App] 四合一導航 4×2 規格之 4 個按鍵間距加寬，標籤字體升級為清晰現代黑體(粗)。
+  - [App] 首頁卡片支援長按 2 秒自動直覺進入「自訂首頁排版」編輯模式（相容觸控與滑鼠）。
 - **⭐ App: v4.4.2 / Builder: v2.9.11** (2026-09-19)
   - [App] 上次閱讀、我的最愛、近期下載 4×2 規格改為 2 本書，形成 1/2/3/4 本完整規律。
   - [App] 四大顏色主題卡片底色依象牙白、羊皮紙、舒服綠進行鄰近色細緻微調。

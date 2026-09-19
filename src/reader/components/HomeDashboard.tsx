@@ -38,9 +38,10 @@ interface HomeDashboardProps {
   setIsLayoutEditMode: (val: boolean) => void;
 }
 
-// 💡 檢查是否為經書 4x2 小工具 (上次閱讀、我的最愛、近期下載)
-const isBookWidget4x2 = (type: string, size: string) => 
-  (type === 'lastread_4x2' || type === 'lastread_4x1' || type === 'favorites_4x2' || type === 'recent_downloads_4x2') && size === 'size-4x2';
+// 💡 檢查是否為經書外置標題小工具 (上次閱讀、我的最愛、近期下載之 4x2 與 4x1 規格)
+const isBookWidgetOuterHeader = (type: string, size: string) => 
+  (type === 'lastread_4x2' || type === 'lastread_4x1' || type === 'favorites_4x2' || type === 'recent_downloads_4x2') && (size === 'size-4x2' || size === 'size-4x1');
+
 
 export function HomeDashboard({
   downloadedBooks,
@@ -244,6 +245,60 @@ export function HomeDashboard({
     touchActiveIdRef.current = null;
     setDraggedWidgetId(null);
     setDragOverWidgetId(null);
+  };
+
+  // === 長按卡片 2-3 秒自動進入自訂首頁排版 (圖4/圖5) ===
+  const longPressTimerRef = useRef<any>(null);
+  const longPressTriggeredRef = useRef(false);
+  const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
+
+  const startLongPress = (e: React.TouchEvent | React.MouseEvent) => {
+    if (isLayoutEditMode) return;
+    longPressTriggeredRef.current = false;
+
+    if ('touches' in e && e.touches.length > 0) {
+      touchStartPosRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    } else if ('clientX' in e) {
+      touchStartPosRef.current = { x: (e as React.MouseEvent).clientX, y: (e as React.MouseEvent).clientY };
+    }
+
+    if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+
+    // 2 秒（2000ms）長按觸發自訂首頁排版
+    longPressTimerRef.current = setTimeout(() => {
+      longPressTriggeredRef.current = true;
+      if ('vibrate' in navigator) {
+        try {
+          navigator.vibrate([40, 60, 40]);
+        } catch (_) {}
+      }
+      setIsLayoutEditMode(true);
+    }, 2000);
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+    touchStartPosRef.current = null;
+  };
+
+  const checkMoveLongPress = (e: React.TouchEvent | React.MouseEvent) => {
+    if (!longPressTimerRef.current || !touchStartPosRef.current) return;
+    let currentX = 0;
+    let currentY = 0;
+    if ('touches' in e && e.touches.length > 0) {
+      currentX = e.touches[0].clientX;
+      currentY = e.touches[0].clientY;
+    } else if ('clientX' in e) {
+      currentX = (e as React.MouseEvent).clientX;
+      currentY = (e as React.MouseEvent).clientY;
+    }
+    const dist = Math.hypot(currentX - touchStartPosRef.current.x, currentY - touchStartPosRef.current.y);
+    if (dist > 10) {
+      cancelLongPress();
+    }
   };
 
   // 四大閱讀底色清單與循環切換
@@ -837,11 +892,29 @@ export function HomeDashboard({
         );
       }
 
-      // 8. 上次閱讀 (4x2 / 4x1 / 4x4)
+      // 8. 上次閱讀 (4x2 / 4x1 / 4x3 / 4x4)
       case 'lastread_4x2':
       case 'lastread_4x1': {
         const lastBook = resumeBooks[0];
         if (!lastBook) {
+          if (size === 'size-4x2' || size === 'size-4x1') {
+            return (
+              <>
+                <div 
+                  className="widget-outside-header-row"
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  title="點擊進入書櫃「近期閱讀」"
+                >
+                  <div className="widget-outside-tag">上次閱讀 ➔</div>
+                  <div className="widget-outside-badge">共 0 部</div>
+                </div>
+                <div className={`book-widget-card-box box-${size.replace('size-', '')}`} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>上次閱讀：尚無閱讀進度</span>
+                </div>
+              </>
+            );
+          }
           return (
             <div className="lastread-4x1" style={{ justifyContent: 'center' }}>
               <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>上次閱讀：尚無閱讀進度</span>
@@ -849,38 +922,53 @@ export function HomeDashboard({
           );
         }
 
-        // 💡 4x1 簡約條：1 部經典 (42px 正方形圖示、經文文字、圓型 →)
-        if (size === 'size-4x1') {
+        // 💡 4x2 (2部) 與 4x1 (1部)：外置標題列 + 卡片本體 (下緣完美不切邊，左右 100% 垂直對齊 4x3)
+        if (size === 'size-4x2' || size === 'size-4x1') {
+          const count = size === 'size-4x2' ? 2 : 1;
+          const displayResumeBooks = resumeBooks.slice(0, count);
           return (
-            <div 
-              className="lastread-4x1"
-              onClick={!isLayoutEditMode ? () => onSelectBook(lastBook.book.workId, lastBook.progress.segmentId, undefined, 'resume') : undefined}
-            >
-              <div className="left">
-                <div className="book-badge" style={{ background: getBookCoverGradient(lastBook.book.workId) }}>
-                  {lastBook.book.workId}
-                </div>
-                <div className="book-info">
-                  <div className="b-title" title={lastBook.book.title}>{lastBook.book.title} {lastBook.progress.juan ? `(第${lastBook.progress.juan}卷)` : ''}</div>
-                  <div 
-                    className="b-sub" 
-                    onClick={!isLayoutEditMode ? (e) => { e.stopPropagation(); onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf'); } : undefined}
-                    style={{ cursor: 'pointer' }}
-                    title="點擊查看所有近期閱讀"
-                  >
-                    上次閱讀進度 ➔
-                  </div>
-                </div>
+            <>
+              {/* 1. 卡片外面的上方標題列 */}
+              <div 
+                className="widget-outside-header-row"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「近期閱讀」"
+              >
+                <div className="widget-outside-tag">上次閱讀 ➔</div>
+                <div className="widget-outside-badge">共 {resumeBooks.length} 部</div>
               </div>
-              <button type="button" className="cbeta-read-btn" title="繼續閱讀">
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </button>
-            </div>
+
+              {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
+              <div className={`book-widget-card-box box-${size.replace('size-', '')}`}>
+                {displayResumeBooks.map((item, idx) => (
+                  <div 
+                    key={`lastread-stack-${item.book.workId}-${idx}`}
+                    className="book-stack-item-4x4"
+                    onClick={!isLayoutEditMode ? () => onSelectBook(item.book.workId, item.progress?.segmentId, undefined, 'resume') : undefined}
+                  >
+                    <div className="book-badge" style={{ background: getBookCoverGradient(item.book.workId) }}>
+                      {item.book.workId}
+                    </div>
+                    <div className="book-info">
+                      <div className="b-title" title={item.book.title}>{item.book.title}</div>
+                      <div className="b-sub">
+                        {item.progress?.juan ? `第 ${item.progress.juan} 卷` : '閱讀中'}
+                        {item.book.creators ? ` · ${sanitizeCreators(item.book.creators)}` : ''}
+                      </div>
+                    </div>
+                    <button type="button" className="cbeta-read-btn" title="繼續閱讀">
+                      <ArrowRight size={17} strokeWidth={2.4} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
           );
         }
 
-        // 💡 4x2 (2部) / 4x3 (3部) / 4x4 (4部) 規格
-        const maxBooks = size === 'size-4x2' ? 2 : size === 'size-4x3' ? 3 : 4;
+        // 💡 4x3 (3部) / 4x4 (4部) 規格
+        const maxBooks = size === 'size-4x3' ? 3 : 4;
         const displayResumeBooks = resumeBooks.slice(0, maxBooks);
         return (
           <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
@@ -933,6 +1021,24 @@ export function HomeDashboard({
         const favoriteBooks = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
 
         if (favoriteBooks.length === 0) {
+          if (size === 'size-4x2' || size === 'size-4x1') {
+            return (
+              <>
+                <div 
+                  className="widget-outside-header-row"
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  title="點擊進入書櫃「我的最愛」"
+                >
+                  <div className="widget-outside-tag">我的最愛經典 ➔</div>
+                  <div className="widget-outside-badge">共 0 部</div>
+                </div>
+                <div className={`book-widget-card-box box-${size.replace('size-', '')}`} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>我的最愛：尚未收藏任何經典 (點擊進入書櫃)</span>
+                </div>
+              </>
+            );
+          }
           return (
             <div 
               className="lastread-4x1" 
@@ -944,40 +1050,53 @@ export function HomeDashboard({
           );
         }
 
-        const firstFav = favoriteBooks[0];
-
-        // 💡 4x1 簡約條：1 部經典
-        if (size === 'size-4x1') {
+        // 💡 4x2 (2部) 與 4x1 (1部)：外置標題列 + 卡片本體 (下緣完美不切邊，左右 100% 垂直對齊 4x3)
+        if (size === 'size-4x2' || size === 'size-4x1') {
+          const count = size === 'size-4x2' ? 2 : 1;
+          const displayFavs = favoriteBooks.slice(0, count);
           return (
-            <div 
-              className="lastread-4x1" 
-              onClick={!isLayoutEditMode ? () => onSelectBook(firstFav.workId) : undefined}
-            >
-              <div className="left">
-                <div className="book-badge" style={{ background: getBookCoverGradient(firstFav.workId) }}>
-                  {firstFav.workId}
-                </div>
-                <div className="book-info">
-                  <div className="b-title" title={firstFav.title}>{firstFav.title}</div>
-                  <div 
-                    className="b-sub"
-                    onClick={!isLayoutEditMode ? (e) => { e.stopPropagation(); onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf'); } : undefined}
-                    style={{ cursor: 'pointer' }}
-                    title="點擊查看所有我的最愛"
-                  >
-                    我的最愛經典 ➔
-                  </div>
-                </div>
+            <>
+              {/* 1. 卡片外面的上方標題列 */}
+              <div 
+                className="widget-outside-header-row"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「我的最愛」"
+              >
+                <div className="widget-outside-tag">我的最愛經典 ➔</div>
+                <div className="widget-outside-badge">共 {favoriteBooks.length} 部</div>
               </div>
-              <button type="button" className="cbeta-read-btn" title="閱讀經典">
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </button>
-            </div>
+
+              {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
+              <div className={`book-widget-card-box box-${size.replace('size-', '')}`}>
+                {displayFavs.map(b => (
+                  <div 
+                    key={`fav-stack-${b.workId}`}
+                    className="book-stack-item-4x4"
+                    onClick={!isLayoutEditMode ? () => onSelectBook(b.workId) : undefined}
+                  >
+                    <div className="book-badge" style={{ background: getBookCoverGradient(b.workId) }}>
+                      {b.workId}
+                    </div>
+                    <div className="book-info">
+                      <div className="b-title" title={b.title}>{b.title}</div>
+                      <div className="b-sub">
+                        {b.juansCount ? `全 ${b.juansCount} 卷` : ''}
+                        {b.creators ? ` · ${sanitizeCreators(b.creators)}` : ''}
+                      </div>
+                    </div>
+                    <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                      <ArrowRight size={17} strokeWidth={2.4} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
           );
         }
 
-        // 💡 4x2 (2部) / 4x3 (3部) / 4x4 (4部) 規格
-        const maxFavs = size === 'size-4x2' ? 2 : size === 'size-4x3' ? 3 : 4;
+        // 💡 4x3 (3部) / 4x4 (4部) 規格
+        const maxFavs = size === 'size-4x3' ? 3 : 4;
         const displayFavs = favoriteBooks.slice(0, maxFavs);
         return (
           <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
@@ -1018,10 +1137,29 @@ export function HomeDashboard({
       }
 
             // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x3 / 4x4)
+      // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x3 / 4x4)
       case 'recent_downloads_4x2': {
         const recentDownloadedBooks = [...downloadedBooks].reverse();
 
         if (recentDownloadedBooks.length === 0) {
+          if (size === 'size-4x2' || size === 'size-4x1') {
+            return (
+              <>
+                <div 
+                  className="widget-outside-header-row"
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  title="點擊進入書櫃「近期下載」"
+                >
+                  <div className="widget-outside-tag">近期下載經典 ➔</div>
+                  <div className="widget-outside-badge">共 0 部</div>
+                </div>
+                <div className={`book-widget-card-box box-${size.replace('size-', '')}`} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>近期下載：暫無已下載經典 (點擊進入書櫃)</span>
+                </div>
+              </>
+            );
+          }
           return (
             <div 
               className="lastread-4x1" 
@@ -1033,40 +1171,53 @@ export function HomeDashboard({
           );
         }
 
-        const firstRecent = recentDownloadedBooks[0];
-
-        // 💡 4x1 簡約條：1 部經典
-        if (size === 'size-4x1') {
+        // 💡 4x2 (2部) 與 4x1 (1部)：外置標題列 + 卡片本體 (下緣完美不切邊，左右 100% 垂直對齊 4x3)
+        if (size === 'size-4x2' || size === 'size-4x1') {
+          const count = size === 'size-4x2' ? 2 : 1;
+          const displayRecent = recentDownloadedBooks.slice(0, count);
           return (
-            <div 
-              className="lastread-4x1" 
-              onClick={!isLayoutEditMode ? () => onSelectBook(firstRecent.workId) : undefined}
-            >
-              <div className="left">
-                <div className="book-badge" style={{ background: getBookCoverGradient(firstRecent.workId) }}>
-                  {firstRecent.workId}
-                </div>
-                <div className="book-info">
-                  <div className="b-title" title={firstRecent.title}>{firstRecent.title}</div>
-                  <div 
-                    className="b-sub"
-                    onClick={!isLayoutEditMode ? (e) => { e.stopPropagation(); onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf'); } : undefined}
-                    style={{ cursor: 'pointer' }}
-                    title="點擊查看所有近期下載經典"
-                  >
-                    近期下載經典 ➔
-                  </div>
-                </div>
+            <>
+              {/* 1. 卡片外面的上方標題列 */}
+              <div 
+                className="widget-outside-header-row"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「近期下載」"
+              >
+                <div className="widget-outside-tag">近期下載經典 ➔</div>
+                <div className="widget-outside-badge">共 {downloadedBooks.length} 部</div>
               </div>
-              <button type="button" className="cbeta-read-btn" title="閱讀經典">
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </button>
-            </div>
+
+              {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
+              <div className={`book-widget-card-box box-${size.replace('size-', '')}`}>
+                {displayRecent.map(b => (
+                  <div 
+                    key={`recent-stack-${b.workId}`}
+                    className="book-stack-item-4x4"
+                    onClick={!isLayoutEditMode ? () => onSelectBook(b.workId) : undefined}
+                  >
+                    <div className="book-badge" style={{ background: getBookCoverGradient(b.workId) }}>
+                      {b.workId}
+                    </div>
+                    <div className="book-info">
+                      <div className="b-title" title={b.title}>{b.title}</div>
+                      <div className="b-sub">
+                        {b.juansCount ? `全 ${b.juansCount} 卷` : ''}
+                        {b.creators ? ` · ${sanitizeCreators(b.creators)}` : ''}
+                      </div>
+                    </div>
+                    <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                      <ArrowRight size={17} strokeWidth={2.4} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
           );
         }
 
-        // 💡 4x2 (2部) / 4x3 (3部) / 4x4 (4部) 規格
-        const maxRecent = size === 'size-4x2' ? 2 : size === 'size-4x3' ? 3 : 4;
+        // 💡 4x3 (3部) / 4x4 (4部) 規格
+        const maxRecent = size === 'size-4x3' ? 3 : 4;
         const displayRecent = recentDownloadedBooks.slice(0, maxRecent);
         return (
           <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
@@ -1417,15 +1568,66 @@ export function HomeDashboard({
           return (
             <div
               key={widget.id}
-              className={`widget-card ${widget.size} ${isBookWidget4x2(widget.type, widget.size) ? 'book-widget-card-4x2' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
+              className={`widget-card ${widget.size} ${isBookWidgetOuterHeader(widget.type, widget.size) ? 'has-outer-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
               draggable={isLayoutEditMode}
               onDragStart={(e) => handleDragStart(e, widget.id)}
               onDragOver={(e) => handleDragOver(e, widget.id)}
               onDragLeave={(e) => handleDragLeave(e, widget.id)}
               onDrop={(e) => handleDrop(e, widget.id)}
               onDragEnd={handleDragEnd}
-              onTouchStart={(e) => handleTouchStart(widget.id, e)}
-              onTouchEnd={handleTouchEnd}
+              onTouchStart={(e) => {
+                if (isLayoutEditMode) {
+                  handleTouchStart(widget.id, e);
+                } else {
+                  startLongPress(e);
+                }
+              }}
+              onTouchMove={(e) => {
+                if (!isLayoutEditMode) {
+                  checkMoveLongPress(e);
+                }
+              }}
+              onTouchEnd={() => {
+                if (isLayoutEditMode) {
+                  handleTouchEnd();
+                } else {
+                  cancelLongPress();
+                }
+              }}
+              onTouchCancel={() => {
+                if (!isLayoutEditMode) {
+                  cancelLongPress();
+                }
+              }}
+              onMouseDown={(e) => {
+                if (!isLayoutEditMode && e.button === 0) {
+                  startLongPress(e);
+                }
+              }}
+              onMouseMove={(e) => {
+                if (!isLayoutEditMode) {
+                  checkMoveLongPress(e);
+                }
+              }}
+              onMouseUp={() => {
+                if (!isLayoutEditMode) {
+                  cancelLongPress();
+                }
+              }}
+              onMouseLeave={() => {
+                if (!isLayoutEditMode) {
+                  cancelLongPress();
+                }
+              }}
+              onClickCapture={(e) => {
+                if (longPressTriggeredRef.current) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setTimeout(() => {
+                    longPressTriggeredRef.current = false;
+                  }, 350);
+                }
+              }}
             >
               {/* 💡 圖1：編輯模式下方塊右上角小圓灰色「x」與右下角小圓綠色「切換尺寸」 */}
               {isLayoutEditMode && (
@@ -1552,7 +1754,7 @@ export function HomeDashboard({
                 </button>
 
                 <div className="ios-live-preview-viewport">
-                  <div className={`widget-card preview-card-mode ${previewWidgetSize} ${isBookWidget4x2(currentWidget.type, previewWidgetSize) ? 'book-widget-card-4x2' : ''} ${currentWidget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${currentWidget.type === 'download_2x2' && previewWidgetSize === 'size-4x1' ? 'download-dashed-card-4x1' : ''}`}>
+                  <div className={`widget-card preview-card-mode ${previewWidgetSize} ${isBookWidgetOuterHeader(currentWidget.type, previewWidgetSize) ? 'has-outer-header' : ''} ${currentWidget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${currentWidget.type === 'download_2x2' && previewWidgetSize === 'size-4x1' ? 'download-dashed-card-4x1' : ''}`}>
                     {renderWidgetContent({
                       id: 'preview-instance',
                       type: currentWidget.type,

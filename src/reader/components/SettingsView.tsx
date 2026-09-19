@@ -1265,16 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.4.2) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.4.3) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.4.2</span>
+                        <span>⭐ App: v4.4.3</span>
                         <span className="changelog-date">(2026-09-19)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 上次閱讀、我的最愛、近期下載 4×2 規格改為 2 本書，形成 1/2/3/4 本完整規律。</li>
-                        <li>• 四大顏色主題卡片底色依象牙白、羊皮紙、舒服綠進行鄰近色細緻微調。</li>
-                        <li>• 四合一導航 4×2 升級為精緻資訊磁貼，新增書櫃本數與筆記則數即時徽章。</li>
+                        <li>• 經書 4×2 與 4×1 小工具標題移至卡片外上方，卡片內維持 1/2 本書，高度齊平且下緣不切邊。</li>
+                        <li>• 四合一導航 4×2 規格之 4 個按鍵間距加寬，標籤字體升級為清晰現代黑體(粗)。</li>
+                        <li>• 首頁卡片支援長按 2 秒自動直覺進入「自訂首頁排版」編輯模式（相容觸控與滑鼠）。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1297,14 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title">App: v4.4.2 <span className="changelog-date">(2026-09-19)</span></div>
+                          <ul className="changelog-list">
+                            <li>• 上次閱讀、我的最愛、近期下載 4×2 規格改為 2 本書，形成 1/2/3/4 本完整規律。</li>
+                            <li>• 四大顏色主題卡片底色依象牙白、羊皮紙、舒服綠進行鄰近色細緻微調。</li>
+                            <li>• 四合一導航 4×2 升級為精緻資訊磁貼，新增書櫃本數與筆記則數即時徽章。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title">App: v4.4.1 <span className="changelog-date">(2026-09-19)</span></div>
                           <ul className="changelog-list">

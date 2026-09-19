@@ -5348,12 +5348,12 @@ body.theme-ebony .core-sub { color: #8a9680 !important; }
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
   height: 100%;
-  padding: 0.35rem 0.2rem;
+  padding: 0.35rem 0.35rem;
   box-sizing: border-box;
-  gap: 0.45rem;
+  gap: 0.75rem;
 }
 
 .compact-nav-item-4x2 {
@@ -5408,12 +5408,12 @@ body.theme-ebony .compact-nav-item-4x2:hover {
 }
 
 .compact-nav-label-4x2 {
-  font-family: var(--font-serif);
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  font-weight: 800;
   color: var(--text-primary);
   white-space: nowrap;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .compact-nav-badge-4x2 {
@@ -7055,30 +7055,129 @@ body.theme-ebony .book-stack-item-4x4:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* 💡 4x2 經書小工具左右對齊 4x3 規範 (卡片左右 padding 嚴格等於 0.95rem，左右圖示與箭頭 100% 垂直切齊) */
-.widget-card.size-4x2.book-widget-card-4x2,
-.widget-card.size-4x2:has(.book-list-widget-multi) {
-  padding: 0.55rem 0.95rem !important;
-  justify-content: space-between;
+/* 💡 4x2 與 4x1 經書小工具外置標題規範 (標題移至卡片外面上方，卡片內維持 1/2 本書，高度齊平、不切邊，左右 100% 垂直切齊) */
+.widget-card.has-outer-header {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-.multi-4x2 .widget-header-row-4x4 {
-  margin-bottom: 0.22rem;
+/* 卡片外面的上方標題列 */
+.widget-outside-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
   padding: 0 0.15rem;
+  margin-bottom: 0.35rem;
+  box-sizing: border-box;
+  user-select: none;
 }
 
-.multi-4x2 .book-stack-4x4 {
-  gap: 0.32rem;
-  justify-content: space-between;
+.widget-outside-tag {
+  font-family: var(--font-serif);
+  font-size: 0.90rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  letter-spacing: 0.02em;
 }
 
-.multi-4x2 .book-stack-item-4x4 {
-  padding: 0.36rem 0.65rem;
+.widget-outside-badge {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: rgba(140, 75, 39, 0.08);
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+body.theme-ebony .widget-outside-badge {
+  background: rgba(255, 255, 255, 0.1);
+  color: #a1a1aa;
+}
+
+/* 卡片本體 (4x2 / 4x1) */
+.book-widget-card-box {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  padding: 0.45rem 0.95rem;
+}
+
+.book-widget-card-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+body.theme-ebony .book-widget-card-box {
+  background: var(--bg-card);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 4x2 卡片本體高度嚴格等於標準 4x2 高度 148px，卡片內維持 2 本書完整無切邊 */
+.book-widget-card-box.box-4x2 {
+  height: 148px;
+  min-height: 148px;
+  max-height: 148px;
+  justify-content: space-around;
+  gap: 0.45rem;
+}
+
+/* 4x1 卡片本體高度嚴格等於標準 4x1 高度 68px，卡片內維持 1 本書 */
+.book-widget-card-box.box-4x1 {
+  height: 68px;
+  min-height: 68px;
+  max-height: 68px;
+  justify-content: center;
+}
+
+/* 編輯模式下的樣式適配 */
+.home-custom-dashboard-wrapper.edit-mode .widget-card.has-outer-header {
+  border: none !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.home-custom-dashboard-wrapper.edit-mode .widget-card.has-outer-header .book-widget-card-box {
+  border: 1.5px dashed #10b981 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15) !important;
+  animation: widget-shake 0.32s infinite ease-in-out alternate;
+}
+
+.widget-card.has-outer-header .drag-handle-hint {
+  top: 30px;
+}
+
+.widget-card.has-outer-header .btn-remove-tr {
+  top: 30px;
+}
+
+/* 確保 4x2、4x1 圖標與 4x3 完全一致 (42px 寬高，左右 100% 垂直切齊) */
+.book-widget-card-box .book-stack-item-4x4 {
+  padding: 0.38rem 0.65rem;
   border-radius: 12px;
 }
 
-/* 確保 4x2 圖標與 4x3 完全一致 (42px 寬高，左右 100% 垂直切齊) */
-.multi-4x2 .book-stack-item-4x4 .book-badge {
+.book-widget-card-box .book-stack-item-4x4 .book-badge {
   width: 42px !important;
   min-width: 42px !important;
   max-width: 42px !important;
@@ -7087,15 +7186,17 @@ body.theme-ebony .book-stack-item-4x4:hover {
   max-height: 42px !important;
   font-size: 0.8rem !important;
   border-radius: 10px !important;
+  flex-shrink: 0;
 }
 
-.multi-4x2 .book-stack-item-4x4 .b-title {
+.book-widget-card-box .book-stack-item-4x4 .b-title {
   font-size: 0.96rem;
 }
 
-.multi-4x2 .book-stack-item-4x4 .b-sub {
+.book-widget-card-box .book-stack-item-4x4 .b-sub {
   font-size: 0.72rem;
 }
+
 
 
 
