@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, X, Download,
   Home, Search, CalendarDays,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw, Sparkles
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
@@ -17,6 +17,7 @@ import { SearchPanel } from './SearchPanel';
 import { ReadingLogView } from './ReadingLogView';
 import { HomeDashboard } from './HomeDashboard';
 import { CbetaCatalogView } from './CbetaCatalogView';
+import { BookshelfInteractivePlayground } from './BookshelfInteractivePlayground';
 import { updateHashRoute } from '../../App';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
 import { getBookCoverGradient } from '../../utils/bookColors';
@@ -57,6 +58,7 @@ export function Library({
   const [activeTab, setActiveTab] = useState<'shelf' | 'search' | 'reading-log' | 'cbeta'>(initialSearchQuery ? 'search' : 'shelf');
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
   const [isLayoutEditMode, setIsLayoutEditMode] = useState(false);
+  const [showPlaygroundDemo, setShowPlaygroundDemo] = useState(true);
 
   const [isBackup, setIsBackup] = useState(isBackupMode());
 
@@ -1567,9 +1569,43 @@ export function Library({
             </div>
           )}
 
-          {/* === B. 「我的書櫃」（virtual_my_folders）：iOS App Store 精選專區式排版 (3 本一組橫向輪播) === */}
+          {/* === B. 「我的書櫃」（virtual_my_folders）：支援體驗 ABC 互動排版提案與原版書櫃切換 === */}
           {currentFolderId === 'virtual_my_folders' && (
+            showPlaygroundDemo ? (
+              <div className="appstore-bookshelf-container animate-slide-up">
+                <BookshelfInteractivePlayground
+                  downloadedBooks={downloadedBooks}
+                  favoriteWorkIds={favoriteWorkIds}
+                  recentReadsBooks={recentReadsBooks}
+                  onSelectBook={onSelectBook}
+                  onExitDemo={() => setShowPlaygroundDemo(false)}
+                />
+              </div>
+            ) : (
             <div className="appstore-bookshelf-container animate-slide-up">
+              {/* 返回體驗提案按鈕 */}
+              <div style={{ textAlign: 'center', margin: '0.5rem 0 1rem 0' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowPlaygroundDemo(true)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 14px',
+                    borderRadius: '20px',
+                    background: 'rgba(30, 169, 140, 0.12)',
+                    color: '#1ea98c',
+                    border: '1.2px solid #1ea98c',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Sparkles size={14} />
+                  <span>切換至：新書櫃互動提案展示 (A / B / C 方案)</span>
+                </button>
+              </div>
               {/* 1. 最上面：近期下載 (未分類經書，一直都留著，若無書籍則為空) */}
               <div className="appstore-section animate-fade-in">
                 <div 
@@ -1720,6 +1756,7 @@ export function Library({
                 </div>
               )}
             </div>
+            )
           )}
 
           {/* === C. 進入特定資料夾/專區檢視 (非 virtual_my_folders)：垂直列表向下無限延伸 === */}
