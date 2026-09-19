@@ -95,6 +95,7 @@ body.theme-ebony .library-header {
 /* ============================================================ */
 /* 中央統一置中微膠囊控制列 (Unified Center Capsule Navigation) */
 /* ============================================================ */
+/* 微膠囊外層容器 */
 .unified-nav-capsule,
 .wing-capsule {
   display: inline-flex;
@@ -102,8 +103,8 @@ body.theme-ebony .library-header {
   justify-content: center;
   background: rgba(140, 75, 39, 0.08);
   border-radius: 9999px;
-  padding: 3px 4px;
-  gap: 3px;
+  padding: 4px 6px;
+  gap: 5px;
   border: 1px solid rgba(140, 75, 39, 0.12);
   transition: all 0.25s ease;
   flex-shrink: 0;
@@ -144,20 +145,21 @@ body.theme-light .wing-capsule {
   min-width: 8px;
 }
 
-/* 微膠囊單項按鈕 */
+/* 微膠囊單項按鈕 (按鍵加大、間距加大、手機更好點) */
 .capsule-nav-item,
 .wing-capsule-item {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  height: 30px;
-  padding: 0 8px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0 10px;
   border-radius: 9999px;
   border: none;
   background: transparent;
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -168,8 +170,8 @@ body.theme-light .wing-capsule {
 
 .capsule-nav-item svg,
 .wing-capsule-item svg {
-  width: 17px;
-  height: 17px;
+  width: 18.5px;
+  height: 18.5px;
   flex-shrink: 0;
   transition: transform 0.2s;
 }
@@ -195,12 +197,12 @@ body.theme-light .wing-capsule {
   vertical-align: middle;
 }
 
-/* 🌟 被選中項：展開膠囊帶文字 + 主題色底色高亮 */
+/* 🌟 被選中項：展開膠囊帶文字 + 主題色底色高亮 (呈現 4 個文字) */
 .capsule-nav-item.active,
 .wing-capsule-item.active {
   background: #8c4b27;
   color: #ffffff !important;
-  padding: 0 12px;
+  padding: 0 13px;
   font-weight: 600;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
@@ -227,36 +229,37 @@ body.theme-light .wing-capsule-item.active {
 
 .capsule-nav-item.active .capsule-label,
 .wing-capsule-item.active .capsule-label {
-  max-width: 80px;
+  max-width: 82px;
   opacity: 1;
-  margin-left: 2px;
+  margin-left: 3px;
+  letter-spacing: 0.01em;
 }
 
-/* 💡 手機版窄螢幕極致自適應：保持置中膠囊在窄螢幕下零溢出 */
+/* 💡 手機版主流螢幕 (max-width: 600px)：按鍵與間距顯著加大，好按好點且四字舒展呈現 */
 @media (max-width: 600px) {
   .library-header,
   .cbeta-catalog-header {
-    padding-left: 0.45rem;
-    padding-right: 0.45rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
     gap: 0.25rem;
   }
 
   .library-header-btn {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
   }
 
   .library-header-btn svg {
-    width: 17px;
-    height: 17px;
+    width: 18px;
+    height: 18px;
   }
 
   .unified-nav-capsule,
   .wing-capsule {
-    padding: 2px 3px;
-    gap: 2px;
+    padding: 3px 4px;
+    gap: 4px;
   }
 
   .wing-capsule.wing-left {
@@ -273,31 +276,33 @@ body.theme-light .wing-capsule-item.active {
 
   .capsule-nav-item,
   .wing-capsule-item {
-    height: 28px;
-    padding: 0 6px;
-    gap: 3px;
-    font-size: 0.78rem;
+    height: 32px;
+    min-width: 30px;
+    padding: 0 7.5px;
+    gap: 4px;
+    font-size: 0.80rem;
   }
 
   .capsule-nav-item svg,
   .wing-capsule-item svg {
-    width: 15px;
-    height: 15px;
+    width: 17px;
+    height: 17px;
   }
 
   .capsule-nav-item.active,
   .wing-capsule-item.active {
-    padding: 0 8px;
+    padding: 0 10.5px;
   }
 
   .capsule-nav-item.active .capsule-label,
   .wing-capsule-item.active .capsule-label {
-    max-width: 65px;
-    margin-left: 1px;
-    font-size: 0.78rem;
+    max-width: 72px;
+    margin-left: 2px;
+    font-size: 0.80rem;
   }
 }
 
+/* 💡 手機版窄螢幕 (max-width: 380px)：精確匹配 360px/375px 窄螢幕寬度，四字完整無溢出且好按 */
 @media (max-width: 380px) {
   .library-header,
   .cbeta-catalog-header {
@@ -307,39 +312,76 @@ body.theme-light .wing-capsule-item.active {
   }
 
   .library-header-btn {
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-    min-height: 30px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
   }
 
   .library-header-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 16.5px;
+    height: 16.5px;
   }
 
   .unified-nav-capsule,
   .wing-capsule {
-    padding: 2px;
-    gap: 1px;
+    padding: 2.5px 3px;
+    gap: 3px;
   }
 
   .capsule-nav-item,
   .wing-capsule-item {
-    height: 27px;
-    padding: 0 4px;
-    gap: 2px;
+    height: 30px;
+    min-width: 28px;
+    padding: 0 6px;
+    gap: 3px;
+  }
+
+  .capsule-nav-item svg,
+  .wing-capsule-item svg {
+    width: 16px;
+    height: 16px;
   }
 
   .capsule-nav-item.active,
   .wing-capsule-item.active {
-    padding: 0 6px;
+    padding: 0 8.5px;
   }
 
   .capsule-nav-item.active .capsule-label,
   .wing-capsule-item.active .capsule-label {
-    max-width: 58px;
-    font-size: 0.74rem;
+    max-width: 64px;
+    font-size: 0.76rem;
+    margin-left: 2px;
+  }
+}
+
+/* 💡 超窄微型手機極限 (max-width: 330px) */
+@media (max-width: 330px) {
+  .unified-nav-capsule {
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .capsule-nav-item {
+    height: 28px;
+    min-width: 26px;
+    padding: 0 4.5px;
+    gap: 2px;
+  }
+
+  .capsule-nav-item svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .capsule-nav-item.active {
+    padding: 0 7px;
+  }
+
+  .capsule-nav-item.active .capsule-label {
+    max-width: 56px;
+    font-size: 0.72rem;
   }
 }
 
