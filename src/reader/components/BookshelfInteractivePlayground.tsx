@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { 
   Heart, Clock, Download, ChevronRight, ChevronDown, 
-  Layers, BookOpen, User, Grid, List, Sparkles
+  Layers, BookOpen, User, Grid, List, Sparkles,
+  MoreVertical, FolderInput, Trash2
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
 
@@ -11,76 +12,194 @@ interface BookshelfInteractivePlaygroundProps {
   recentReadsBooks: BookMetadata[];
   onSelectBook: (workId: string) => void;
   onExitDemo?: () => void;
+  onOpenBookMenu?: (book: BookMetadata) => void;
+  onToggleFavorite?: (workId: string) => void;
+  onDeleteBook?: (workId: string) => void;
 }
 
-// 💡 120 部正統 CBETA 大藏經海量模擬經典資料庫 (涵蓋阿含、般若、法華、華嚴、本生、密教、論疏)
+// 💡 120 部正統 CBETA 大藏經海量模擬經典資料庫 (涵蓋阿含、般若、法華、華嚴、本生、密教、論疏、近代新編等)
 const SIMULATED_120_BOOKS: BookMetadata[] = [
   // 法華部 (大正藏 第 9 冊)
-  { workId: 'T0262', title: '妙法蓮華經', canon: 'T', vol: 'T09', creators: '後秦 鳩摩羅什譯', juansCount: 7, category: '法華部', cjkChars: 69430 },
-  { workId: 'T0263', title: '正法華經', canon: 'T', vol: 'T09', creators: '西晉 竺法護譯', juansCount: 10, category: '法華部', cjkChars: 93420 },
-  { workId: 'T0264', title: '添品妙法蓮華經', canon: 'T', vol: 'T09', creators: '隋 闍那崛多等譯', juansCount: 7, category: '法華部', cjkChars: 72100 },
-  { workId: 'T0277', title: '無量義經', canon: 'T', vol: 'T09', creators: '蕭齊 曇摩伽陀耶舍譯', juansCount: 1, category: '法華部', cjkChars: 9680 },
-  { workId: 'T0278', title: '觀普賢菩薩行法經', canon: 'T', vol: 'T09', creators: '劉宋 曇無蜜多譯', juansCount: 1, category: '法華部', cjkChars: 8750 },
+  { workId: 'T0262', title: '妙法蓮華經', canon: 'T', vol: 'T09', creators: '後秦 鳩摩羅什譯', juansCount: 7, category: '法華部類', cjkChars: 69430 },
+  { workId: 'T0263', title: '正法華經', canon: 'T', vol: 'T09', creators: '西晉 竺法護譯', juansCount: 10, category: '法華部類', cjkChars: 93420 },
+  { workId: 'T0264', title: '添品妙法蓮華經', canon: 'T', vol: 'T09', creators: '隋 闍那崛多等譯', juansCount: 7, category: '法華部類', cjkChars: 72100 },
+  { workId: 'T0277', title: '無量義經', canon: 'T', vol: 'T09', creators: '蕭齊 曇摩迦陀耶舍譯', juansCount: 1, category: '法華部類', cjkChars: 9680 },
+  { workId: 'T0278', title: '觀普賢菩薩行法經', canon: 'T', vol: 'T09', creators: '劉宋 曇無蜜多譯', juansCount: 1, category: '法華部類', cjkChars: 8750 },
 
-  // 本生部 / 大集部 (大正藏 第 13、14 冊)
-  { workId: 'T0412', title: '地藏菩薩本願經', canon: 'T', vol: 'T13', creators: '唐 實叉難陀譯', juansCount: 2, category: '本生部', cjkChars: 17200 },
-  { workId: 'T0411', title: '大乘大集地藏十輪經', canon: 'T', vol: 'T13', creators: '唐 玄奘譯', juansCount: 10, category: '大集部', cjkChars: 85300 },
-  { workId: 'T0839', title: '占察善惡業報經', canon: 'T', vol: 'T17', creators: '隋 菩提燈譯', juansCount: 2, category: '經集部', cjkChars: 18900 },
-  { workId: 'X1487', title: '慈悲地藏菩薩懺法', canon: 'X', vol: 'X74', creators: '清 知源等述', juansCount: 3, category: '懺儀部', cjkChars: 24100 },
+  // 本緣部 / 大集部 (大正藏 第 13、14 冊)
+  { workId: 'T0412', title: '地藏菩薩本願經', canon: 'T', vol: 'T13', creators: '唐 實叉難陀譯', juansCount: 2, category: '本緣部類', cjkChars: 17200 },
+  { workId: 'T0411', title: '大乘大集地藏十輪經', canon: 'T', vol: 'T13', creators: '唐 玄奘譯', juansCount: 10, category: '大集部類', cjkChars: 85300 },
+  { workId: 'T0839', title: '占察善惡業報經', canon: 'T', vol: 'T17', creators: '隋 菩提燈譯', juansCount: 2, category: '經集部類', cjkChars: 18900 },
+  { workId: 'X1487', title: '慈悲地藏菩薩懺法', canon: 'X', vol: 'X74', creators: '清 知源等述', juansCount: 3, category: '事彙部類', cjkChars: 24100 },
 
   // 般若部 (大正藏 第 5~8 冊)
-  { workId: 'T0251', title: '般若波羅蜜多心經', canon: 'T', vol: 'T08', creators: '唐 玄奘譯', juansCount: 1, category: '般若部', cjkChars: 260 },
-  { workId: 'T0235', title: '金剛般若波羅蜜經', canon: 'T', vol: 'T08', creators: '後秦 鳩摩羅什譯', juansCount: 1, category: '般若部', cjkChars: 5140 },
-  { workId: 'T0220', title: '大般若波羅蜜多經', canon: 'T', vol: 'T05', creators: '唐 玄奘譯', juansCount: 600, category: '般若部', cjkChars: 3890000 },
-  { workId: 'T0224', title: '道行般若經', canon: 'T', vol: 'T08', creators: '東漢 支婁迦讖譯', juansCount: 10, category: '般若部', cjkChars: 68300 },
-  { workId: 'T0227', title: '小品般若波羅蜜經', canon: 'T', vol: 'T08', creators: '後秦 鳩摩羅什譯', juansCount: 10, category: '般若部', cjkChars: 71200 },
-  { workId: 'T0228', title: '佛說佛母出生三法藏般若波羅蜜多經', canon: 'T', vol: 'T08', creators: '宋 施護等譯', juansCount: 25, category: '般若部', cjkChars: 165000 },
+  { workId: 'T0251', title: '般若波羅蜜多心經', canon: 'T', vol: 'T08', creators: '唐 玄奘譯', juansCount: 1, category: '般若部類', cjkChars: 260 },
+  { workId: 'T0235', title: '金剛般若波羅蜜經', canon: 'T', vol: 'T08', creators: '後秦 鳩摩羅什譯', juansCount: 1, category: '般若部類', cjkChars: 5140 },
+  { workId: 'T0220', title: '大般若波羅蜜多經', canon: 'T', vol: 'T05', creators: '唐 玄奘譯', juansCount: 600, category: '般若部類', cjkChars: 3890000 },
+  { workId: 'T0224', title: '道行般若經', canon: 'T', vol: 'T08', creators: '東漢 支婁迦讖譯', juansCount: 10, category: '般若部類', cjkChars: 68300 },
+  { workId: 'T0227', title: '小品般若波羅蜜經', canon: 'T', vol: 'T08', creators: '後秦 鳩摩羅什譯', juansCount: 10, category: '般若部類', cjkChars: 71200 },
+  { workId: 'T0228', title: '佛說佛母出生三法藏般若波羅蜜多經', canon: 'T', vol: 'T08', creators: '宋 施護等譯', juansCount: 25, category: '般若部類', cjkChars: 165000 },
 
   // 華嚴部 (大正藏 第 9、10 冊)
-  { workId: 'T0279', title: '大方廣佛華嚴經 (八十華嚴)', canon: 'T', vol: 'T10', creators: '唐 實叉難陀譯', juansCount: 80, category: '華嚴部', cjkChars: 588000 },
-  { workId: 'T0278_HY', title: '大方廣佛華嚴經 (六十華嚴)', canon: 'T', vol: 'T09', creators: '東晉 佛馱跋陀羅譯', juansCount: 60, category: '華嚴部', cjkChars: 423000 },
-  { workId: 'T0293', title: '大方廣佛華嚴經 (四十華嚴)', canon: 'T', vol: 'T10', creators: '唐 般若譯', juansCount: 40, category: '華嚴部', cjkChars: 289000 },
-  { workId: 'T0294', title: '佛說羅摩伽經', canon: 'T', vol: 'T10', creators: '西秦 聖堅譯', juansCount: 3, category: '華嚴部', cjkChars: 22100 },
+  { workId: 'T0279', title: '大方廣佛華嚴經 (八十華嚴)', canon: 'T', vol: 'T10', creators: '唐 實叉難陀譯', juansCount: 80, category: '華嚴部類', cjkChars: 588000 },
+  { workId: 'T0278_HY', title: '大方廣佛華嚴經 (六十華嚴)', canon: 'T', vol: 'T09', creators: '東晉 佛馱跋陀羅譯', juansCount: 60, category: '華嚴部類', cjkChars: 423000 },
+  { workId: 'T0293', title: '大方廣佛華嚴經 (四十華嚴)', canon: 'T', vol: 'T10', creators: '唐 般若譯', juansCount: 40, category: '華嚴部類', cjkChars: 289000 },
+  { workId: 'T0294', title: '佛說羅摩伽經', canon: 'T', vol: 'T10', creators: '西秦 聖堅譯', juansCount: 3, category: '華嚴部類', cjkChars: 22100 },
 
   // 阿含部 (大正藏 第 1、2 冊)
-  { workId: 'T0001', title: '長阿含經', canon: 'T', vol: 'T01', creators: '後秦 佛陀耶舍共竺佛念譯', juansCount: 22, category: '阿含部', cjkChars: 198000 },
-  { workId: 'T0026', title: '中阿含經', canon: 'T', vol: 'T01', creators: '東晉 僧伽提婆譯', juansCount: 60, category: '阿含部', cjkChars: 514000 },
-  { workId: 'T0099', title: '雜阿含經', canon: 'T', vol: 'T02', creators: '劉宋 求那跋陀羅譯', juansCount: 50, category: '阿含部', cjkChars: 642000 },
-  { workId: 'T0125', title: '增壹阿含經', canon: 'T', vol: 'T02', creators: '東晉 僧伽提婆譯', juansCount: 51, category: '阿含部', cjkChars: 485000 },
-  { workId: 'T0779', title: '佛說八大人覺經', canon: 'T', vol: 'T17', creators: '東漢 安世高譯', juansCount: 1, category: '阿含部', cjkChars: 380 },
+  { workId: 'T0001', title: '長阿含經', canon: 'T', vol: 'T01', creators: '後秦 佛陀耶舍共竺佛念譯', juansCount: 22, category: '阿含部類', cjkChars: 198000 },
+  { workId: 'T0026', title: '中阿含經', canon: 'T', vol: 'T01', creators: '東晉 僧伽提婆譯', juansCount: 60, category: '阿含部類', cjkChars: 514000 },
+  { workId: 'T0099', title: '雜阿含經', canon: 'T', vol: 'T02', creators: '劉宋 求那跋陀羅譯', juansCount: 50, category: '阿含部類', cjkChars: 642000 },
+  { workId: 'T0125', title: '增壹阿含經', canon: 'T', vol: 'T02', creators: '東晉 僧伽提婆譯', juansCount: 51, category: '阿含部類', cjkChars: 485000 },
+  { workId: 'T0112', title: '佛說八正道經', canon: 'T', vol: 'T02', creators: '東漢 安清譯', juansCount: 1, category: '阿含部類', cjkChars: 450 },
+  { workId: 'T0779', title: '佛說八大人覺經', canon: 'T', vol: 'T17', creators: '東漢 安世高譯', juansCount: 1, category: '阿含部類', cjkChars: 380 },
 
   // 淨土部 (大正藏 第 12 冊)
-  { workId: 'T0360', title: '無量壽經', canon: 'T', vol: 'T12', creators: '曹魏 康僧鎧譯', juansCount: 2, category: '淨土部', cjkChars: 18600 },
-  { workId: 'T0365', title: '觀無量壽佛經', canon: 'T', vol: 'T12', creators: '劉宋 畺良耶舍譯', juansCount: 1, category: '淨土部', cjkChars: 7900 },
-  { workId: 'T0366', title: '佛說阿彌陀經', canon: 'T', vol: 'T12', creators: '後秦 鳩摩羅什譯', juansCount: 1, category: '淨土部', cjkChars: 1850 },
-  { workId: 'T0367', title: '稱讚淨土佛攝受經', canon: 'T', vol: 'T12', creators: '唐 玄奘譯', juansCount: 1, category: '淨土部', cjkChars: 3400 },
-  { workId: 'T0374', title: '大般涅槃經', canon: 'T', vol: 'T12', creators: '北涼 曇無讖譯', juansCount: 40, category: '涅槃部', cjkChars: 420000 },
+  { workId: 'T0360', title: '無量壽經', canon: 'T', vol: 'T12', creators: '曹魏 康僧鎧譯', juansCount: 2, category: '淨土宗部類', cjkChars: 18600 },
+  { workId: 'T0365', title: '觀無量壽佛經', canon: 'T', vol: 'T12', creators: '劉宋 畺良耶舍譯', juansCount: 1, category: '淨土宗部類', cjkChars: 7900 },
+  { workId: 'T0366', title: '佛說阿彌陀經', canon: 'T', vol: 'T12', creators: '後秦 鳩摩羅什譯', juansCount: 1, category: '淨土宗部類', cjkChars: 1850 },
+  { workId: 'T0367', title: '稱讚淨土佛攝受經', canon: 'T', vol: 'T12', creators: '唐 玄奘譯', juansCount: 1, category: '淨土宗部類', cjkChars: 3400 },
+  { workId: 'T0374', title: '大般涅槃經', canon: 'T', vol: 'T12', creators: '北涼 曇無讖譯', juansCount: 40, category: '涅槃部類', cjkChars: 420000 },
 
-  // 經集部 / 禪觀 (大正藏 第 14~17 冊)
-  { workId: 'T0475', title: '維摩詰所說經', canon: 'T', vol: 'T14', creators: '後秦 鳩摩羅什譯', juansCount: 3, category: '經集部', cjkChars: 24500 },
-  { workId: 'T0642', title: '首楞嚴三昧經', canon: 'T', vol: 'T15', creators: '後秦 鳩摩羅什譯', juansCount: 2, category: '經集部', cjkChars: 17800 },
-  { workId: 'T0666', title: '大乘理趣六波羅蜜多經', canon: 'T', vol: 'T16', creators: '唐 般若譯', juansCount: 10, category: '經集部', cjkChars: 86000 },
-  { workId: 'T0670', title: '楞伽阿跋多羅寶經', canon: 'T', vol: 'T16', creators: '劉宋 求那跋陀羅譯', juansCount: 4, category: '經集部', cjkChars: 31200 },
-  { workId: 'T0945', title: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經', canon: 'T', vol: 'T19', creators: '唐 般剌蜜帝譯', juansCount: 10, category: '密教部', cjkChars: 62400 },
+  // 經集部 / 密教部 (大正藏 第 14~21 冊)
+  { workId: 'T0475', title: '維摩詰所說經', canon: 'T', vol: 'T14', creators: '後秦 鳩摩羅什譯', juansCount: 3, category: '經集部類', cjkChars: 24500 },
+  { workId: 'T0642', title: '首楞嚴三昧經', canon: 'T', vol: 'T15', creators: '後秦 鳩摩羅什譯', juansCount: 2, category: '經集部類', cjkChars: 17800 },
+  { workId: 'T0666', title: '大乘理趣六波羅蜜多經', canon: 'T', vol: 'T16', creators: '唐 般若譯', juansCount: 10, category: '經集部類', cjkChars: 86000 },
+  { workId: 'T0670', title: '楞伽阿跋多羅寶經', canon: 'T', vol: 'T16', creators: '劉宋 求那跋陀羅譯', juansCount: 4, category: '經集部類', cjkChars: 31200 },
+  { workId: 'T0901', title: '陀羅尼集經', canon: 'T', vol: 'T18', creators: '唐 阿地瞿多譯', juansCount: 12, category: '密教部類', cjkChars: 95400 },
+  { workId: 'T0918', title: '諸佛心陀羅尼經', canon: 'T', vol: 'T19', creators: '唐 玄奘譯', juansCount: 1, category: '密教部類', cjkChars: 3200 },
+  { workId: 'T0933', title: '九品往生阿彌陀三摩地集陀羅尼經', canon: 'T', vol: 'T19', creators: '唐 不空譯', juansCount: 1, category: '密教部類', cjkChars: 2100 },
+  { workId: 'T0945', title: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經', canon: 'T', vol: 'T19', creators: '唐 般剌蜜帝譯', juansCount: 10, category: '密教部類', cjkChars: 62400 },
+  { workId: 'T0947', title: '大佛頂如來放光悉怛多般怛羅陀羅尼', canon: 'T', vol: 'T19', creators: '唐 不空譯', juansCount: 1, category: '密教部類', cjkChars: 4100 },
+  { workId: 'C1666', title: '梵本大悲神咒', canon: 'C', vol: 'C56', creators: '唐 達磨等譯', juansCount: 1, category: '密教部類', cjkChars: 1250 },
 
   // 瑜伽唯識 / 論疏部 (大正藏 第 30~32 冊)
-  { workId: 'T1579', title: '瑜伽師地論', canon: 'T', vol: 'T30', creators: '彌勒菩薩說 · 唐 玄奘譯', juansCount: 100, category: '論疏部', cjkChars: 812000 },
-  { workId: 'T1585', title: '成唯識論', canon: 'T', vol: 'T31', creators: '護法等菩薩造 · 唐 玄奘譯', juansCount: 10, category: '論疏部', cjkChars: 98000 },
-  { workId: 'T1666', title: '大乘起信論', canon: 'T', vol: 'T32', creators: '馬鳴菩薩造 · 梁 真諦譯', juansCount: 1, category: '論疏部', cjkChars: 11200 },
-  { workId: 'T1564', title: '中論', canon: 'T', vol: 'T30', creators: '龍樹菩薩造 · 後秦 鳩摩羅什譯', juansCount: 4, category: '中觀部', cjkChars: 28500 }
+  { workId: 'T1579', title: '瑜伽師地論', canon: 'T', vol: 'T30', creators: '彌勒菩薩說 · 唐 玄奘譯', juansCount: 100, category: '瑜伽部類', cjkChars: 812000 },
+  { workId: 'T1585', title: '成唯識論', canon: 'T', vol: 'T31', creators: '護法等菩薩造 · 唐 玄奘譯', juansCount: 10, category: '瑜伽部類', cjkChars: 98000 },
+  { workId: 'T1666', title: '大乘起信論', canon: 'T', vol: 'T32', creators: '馬鳴菩薩造 · 梁 真諦譯', juansCount: 1, category: '論集部類', cjkChars: 11200 },
+  { workId: 'T1564', title: '中論', canon: 'T', vol: 'T30', creators: '龍樹菩薩造 · 後秦 鳩摩羅什譯', juansCount: 4, category: '中觀部類', cjkChars: 28500 },
+
+  // 近代新編文獻 (印順導師 Y、太虛大師 TX 等)
+  { workId: 'Y0001', title: '般若經講記', canon: 'Y', vol: 'Y01', creators: '民國 釋印順著', juansCount: 3, category: '新編部類', cjkChars: 73164 },
+  { workId: 'Y0002', title: '寶積經講記', canon: 'Y', vol: 'Y02', creators: '民國 釋印順著', juansCount: 2, category: '新編部類', cjkChars: 89078 },
+  { workId: 'Y0003', title: '勝鬘經講記', canon: 'Y', vol: 'Y03', creators: '民國 釋印順著', juansCount: 2, category: '新編部類', cjkChars: 87742 },
+  { workId: 'Y0040', title: '成佛之道（增注本）', canon: 'Y', vol: 'Y42', creators: '民國 釋印順著', juansCount: 5, category: '新編部類', cjkChars: 146784 },
+  { workId: 'TXa001', title: '太虛大師全書 · 編纂說明', canon: 'TX', vol: 'TX00', creators: '民國 釋太虛著', juansCount: 2, category: '新編部類', cjkChars: 16800 },
+  { workId: 'TX01n0001', title: '太虛大師全書 · 第一編 五乘共學', canon: 'TX', vol: 'TX01', creators: '民國 釋太虛著', juansCount: 4, category: '新編部類', cjkChars: 54200 },
+  { workId: 'B0080', title: '大唐西域記（校點本）', canon: 'B', vol: 'B13', creators: '唐 玄奘、辯機撰', juansCount: 12, category: '史傳部類', cjkChars: 109388 }
 ];
+
+// CBETA 官方 23 部類權威清單 (完全對齊 CbetaCatalogView STATIC_DEPT_CATEGORIES 與圖1)
+export const CBETA_DEPT_CATEGORIES = [
+  { code: '01', name: '阿含部類', key: '01 阿含部類', keywords: ['阿含'] },
+  { code: '02', name: '本緣部類', key: '02 本緣部類', keywords: ['本緣', '本生'] },
+  { code: '03', name: '般若部類', key: '03 般若部類', keywords: ['般若'] },
+  { code: '04', name: '法華部類', key: '04 法華部類', keywords: ['法華'] },
+  { code: '05', name: '華嚴部類', key: '05 華嚴部類', keywords: ['華嚴'] },
+  { code: '06', name: '寶積部類', key: '06 寶積部類', keywords: ['寶積'] },
+  { code: '07', name: '涅槃部類', key: '07 涅槃部類', keywords: ['涅槃'] },
+  { code: '08', name: '大集部類', key: '08 大集部類', keywords: ['大集'] },
+  { code: '09', name: '經集部類', key: '09 經集部類', keywords: ['經集'] },
+  { code: '10', name: '密教部類', key: '10 密教部類', keywords: ['密教', '密宗', '陀羅尼', '神咒', '儀軌'] },
+  { code: '11', name: '律部類', key: '11 律部類', keywords: ['律部', '律'] },
+  { code: '12', name: '毘曇部類', key: '12 毘曇部類', keywords: ['毘曇', '俱舍', '婆沙', '阿毘達磨'] },
+  { code: '13', name: '中觀部類', key: '13 中觀部類', keywords: ['中觀', '中論'] },
+  { code: '14', name: '瑜伽部類', key: '14 瑜伽部類', keywords: ['瑜伽', '唯識', '因明'] },
+  { code: '15', name: '論集部類', key: '15 論集部類', keywords: ['論集', '論疏', '造論'] },
+  { code: '16', name: '淨土宗部類', key: '16 淨土宗部類', keywords: ['淨土', '淨土宗', '阿彌陀', '無量壽'] },
+  { code: '17', name: '禪宗部類', key: '17 禪宗部類', keywords: ['禪宗', '禪', '壇經', '語錄'] },
+  { code: '18', name: '史傳部類', key: '18 史傳部類', keywords: ['史傳', '傳記', '西域', '高僧'] },
+  { code: '19', name: '事彙部類', key: '19 事彙部類', keywords: ['事彙', '懺儀', '諸宗', '音義', '目錄'] },
+  { code: '20', name: '敦煌寫本部類', key: '20 敦煌寫本部類', keywords: ['敦煌'] },
+  { code: '21', name: '國圖善本部類', key: '21 國圖善本部類', keywords: ['國圖', '善本'] },
+  { code: '22', name: '南傳大藏經部類', key: '22 南傳大藏經部類', keywords: ['南傳'] },
+  { code: '23', name: '新編部類', key: '23 新編部類', keywords: ['新編', '印順', '太虛', '文獻', '呂澂'] }
+];
+
+// CBETA 官方 6 大冊別/藏經分類 (完全對齊 CbetaCatalogView STATIC_VOL_CATEGORIES 與圖4)
+export const CBETA_CANON_CATEGORIES = [
+  { id: 'T', name: 'T 大正新脩大藏經', order: 1, prefixes: ['T'] },
+  { id: 'X', name: 'X 卍新纂續藏經選錄', order: 2, prefixes: ['X'] },
+  { id: 'supplement', name: '歷代藏經補輯', order: 3, prefixes: ['A', 'B', 'C', 'F', 'G', 'GA', 'GB', 'I', 'K', 'L', 'M', 'P', 'U', 'ZS', 'ZW'] },
+  { id: 'D', name: 'D 國家圖書館善本佛典', order: 4, prefixes: ['D'] },
+  { id: 'N', name: 'N 漢譯南傳大藏經（元亨寺版）', order: 5, prefixes: ['N'] },
+  { id: 'modern', name: '近代新編文獻', order: 6, prefixes: ['Y', 'TX', 'LC', 'YP', 'CC'] }
+];
+
+// 部類智慧映射函式：依圖1加上 01、02... 並依順序排列
+function getDeptCategoryInfo(b: BookMetadata): { key: string; order: number } {
+  const workId = (b.workId || '').toUpperCase();
+  if (workId.startsWith('Y') || workId.startsWith('TX') || workId.startsWith('LC') || workId.startsWith('CC')) {
+    return { key: '23 新編部類', order: 23 };
+  }
+  if (workId.startsWith('N')) {
+    return { key: '22 南傳大藏經部類', order: 22 };
+  }
+  if (workId.startsWith('D')) {
+    return { key: '21 國圖善本部類', order: 21 };
+  }
+
+  const cat = (b.category || '').trim();
+  if (cat) {
+    for (let i = 0; i < CBETA_DEPT_CATEGORIES.length; i++) {
+      const item = CBETA_DEPT_CATEGORIES[i];
+      if (
+        cat.includes(item.name) || 
+        cat.includes(item.name.replace('類', '')) || 
+        item.keywords.some(kw => cat.includes(kw))
+      ) {
+        return { key: item.key, order: i + 1 };
+      }
+    }
+  }
+
+  const title = (b.title || '').trim();
+  for (let i = 0; i < CBETA_DEPT_CATEGORIES.length; i++) {
+    const item = CBETA_DEPT_CATEGORIES[i];
+    if (item.keywords.some(kw => title.includes(kw))) {
+      return { key: item.key, order: i + 1 };
+    }
+  }
+
+  return { key: '23 新編部類', order: 23 };
+}
+
+// 冊別智慧映射函式：依圖4之 6 大藏經分類編排 (修正圖3將太虛/印順誤標為大正藏第00/01冊之問題)
+function getCanonCategoryInfo(b: BookMetadata): { key: string; order: number } {
+  const canon = (b.canon || (b.workId ? b.workId.match(/^[A-Za-z]+/)?.[0] : '') || 'T').toUpperCase();
+  
+  if (canon === 'T') {
+    return { key: 'T 大正新脩大藏經', order: 1 };
+  }
+  if (canon === 'X') {
+    return { key: 'X 卍新纂續藏經選錄', order: 2 };
+  }
+  if (['Y', 'TX', 'LC', 'YP', 'CC'].includes(canon)) {
+    return { key: '近代新編文獻', order: 6 };
+  }
+  if (canon === 'D') {
+    return { key: 'D 國家圖書館善本佛典', order: 4 };
+  }
+  if (canon === 'N') {
+    return { key: 'N 漢譯南傳大藏經（元亨寺版）', order: 5 };
+  }
+  return { key: '歷代藏經補輯', order: 3 };
+}
 
 export function BookshelfInteractivePlayground({
   downloadedBooks,
   favoriteWorkIds,
   recentReadsBooks,
   onSelectBook,
-  onExitDemo
+  onExitDemo,
+  onOpenBookMenu,
+  onToggleFavorite,
+  onDeleteBook
 }: BookshelfInteractivePlaygroundProps) {
   // === 1. 頂部四大藏經分類切換：'category' (依部類) | 'volume' (依冊別) | 'author' (依作譯者) | 'dynasty' (依朝代) ===
   const [classificationMode, setClassificationMode] = useState<'category' | 'volume' | 'author' | 'dynasty'>('category');
 
-  // === 2. 次層 3 大膠囊快捷過濾：'all' (全部) | 'downloads' (近期下載) | 'recent' (近期閱讀) | 'favorites' (我的最愛) ===
+  // === 2. 次層 4 大膠囊快捷過濾：'all' (全部) | 'downloads' (近期下載) | 'recent' (近期閱讀) | 'favorites' (我的最愛) ===
   const [statusFilter, setStatusFilter] = useState<'all' | 'downloads' | 'recent' | 'favorites'>('all');
 
   // === 3. 視圖切換 (圖2)：條列式 (list) vs 卡片式 (grid) ===
@@ -91,6 +210,9 @@ export function BookshelfInteractivePlayground({
 
   // === 5. 折疊分組的展開狀態 ===
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+
+  // === 6. 本地經典選單彈窗（若外部未傳入 onOpenBookMenu 時之 Fallback） ===
+  const [localTargetBook, setLocalTargetBook] = useState<BookMetadata | null>(null);
 
   // 決定當前資料來源池
   const activeBooksPool = useMemo(() => {
@@ -103,12 +225,12 @@ export function BookshelfInteractivePlayground({
   // 判斷是否為我的最愛
   const isFavorite = (workId: string) => {
     if (dataScale === 'mass') {
-      return ['T0262', 'T0412', 'T0251', 'T0279', 'T0779', 'T0366'].includes(workId);
+      return ['T0262', 'T0412', 'T0251', 'T0279', 'T0779', 'T0366', 'T0112'].includes(workId);
     }
     return favoriteWorkIds.includes(workId);
   };
 
-  // 依 3 大膠囊篩選後的書籍清單
+  // 依 4 大膠囊篩選後的書籍清單
   const filteredBooks = useMemo(() => {
     if (statusFilter === 'favorites') {
       return activeBooksPool.filter(b => isFavorite(b.workId));
@@ -155,13 +277,6 @@ export function BookshelfInteractivePlayground({
     { name: '民國/現代', order: 26, aliases: ['民國', '近代', '現代'] },
     { name: '西域/天竺', order: 98, aliases: ['天竺', '印度', '西域', '月支', '安息'] },
     { name: '其他', order: 99, aliases: [] }
-  ], []);
-
-  // 權威部類傳統順序
-  const CATEGORY_ORDER = useMemo(() => [
-    '阿含部', '本生部', '大集部', '般若部', '法華部', '華嚴部', 
-    '寶積部', '涅槃部', '淨土部', '經集部', '密教部', '諸宗部', 
-    '論疏部', '中觀部', '瑜伽部', '律部', '懺儀部', '史傳部', '未分類'
   ], []);
 
   // 輔助函式：從 creators 智慧提取朝代與作譯者名稱 (精準解析「彌勒菩薩說 · 唐 玄奘譯」等造論與譯者多層結構)
@@ -215,7 +330,7 @@ export function BookshelfInteractivePlayground({
     };
   };
 
-  // 依選取的維度進行分組，並嚴格依歷史年代與標準順序排序
+  // 依選取的維度進行分組，並嚴格依圖1、圖4之標準規範排序
   const groupedData = useMemo(() => {
     const groups: Record<string, { order: number; books: BookMetadata[] }> = {};
 
@@ -224,22 +339,22 @@ export function BookshelfInteractivePlayground({
       let sortOrder = 999;
 
       if (classificationMode === 'category') {
-        key = b.category || '未分類';
-        const catIdx = CATEGORY_ORDER.indexOf(key);
-        sortOrder = catIdx !== -1 ? catIdx : 900;
+        // 1. 依部類：依圖1加上 01、02... 並依 01~23 順序排列
+        const info = getDeptCategoryInfo(b);
+        key = info.key;
+        sortOrder = info.order;
       } else if (classificationMode === 'volume') {
-        const volNum = b.vol ? parseInt(b.vol.replace(/[^\d]/g, ''), 10) : 1;
-        key = `大正藏 第 ${volNum.toString().padStart(2, '0')} 冊`;
-        sortOrder = volNum;
+        // 2. 依冊別：依圖4之 6 大藏經分類編排 (修正圖3錯誤)
+        const info = getCanonCategoryInfo(b);
+        key = info.key;
+        sortOrder = info.order;
       } else if (classificationMode === 'author') {
         const { authorName, dynastyOrder } = parseCreators(b.creators);
         key = authorName;
-        // 作譯者排序：優先依據其所屬朝代的歷史順序排列！
         sortOrder = dynastyOrder * 1000;
       } else if (classificationMode === 'dynasty') {
         const { dynastyName, dynastyOrder } = parseCreators(b.creators);
         key = dynastyName;
-        // 朝代排序：嚴格依歷史時間由古至今依序排列！
         sortOrder = dynastyOrder;
       }
 
@@ -249,6 +364,21 @@ export function BookshelfInteractivePlayground({
       groups[key].books.push(b);
     });
 
+    // 若為依冊別，組內依冊次/卷次 (vol) 與 workId 順序排列
+    if (classificationMode === 'volume') {
+      const getVolNum = (b: BookMetadata) => {
+        if (b.vol) {
+          const num = parseInt(b.vol.replace(/[^\d]/g, ''), 10);
+          if (!isNaN(num)) return num;
+        }
+        const idNum = parseInt(b.workId.replace(/[^\d]/g, ''), 10);
+        return !isNaN(idNum) ? idNum : 999;
+      };
+      Object.values(groups).forEach(g => {
+        g.books.sort((a, b) => getVolNum(a) - getVolNum(b));
+      });
+    }
+
     // 依 order 排序分組
     const sortedEntries = Object.entries(groups).sort((a, b) => a[1].order - b[1].order);
     const result: Record<string, BookMetadata[]> = {};
@@ -257,7 +387,7 @@ export function BookshelfInteractivePlayground({
     });
 
     return result;
-  }, [filteredBooks, classificationMode, HISTORICAL_CHRONOLOGY, CATEGORY_ORDER]);
+  }, [filteredBooks, classificationMode, HISTORICAL_CHRONOLOGY]);
 
   // 切換折疊組
   const toggleGroup = (groupKey: string) => {
@@ -265,6 +395,15 @@ export function BookshelfInteractivePlayground({
       ...prev,
       [groupKey]: prev[groupKey] === false ? true : false
     }));
+  };
+
+  // 點擊書籍右側「…」按鈕
+  const handleOpenBookOptions = (book: BookMetadata) => {
+    if (onOpenBookMenu) {
+      onOpenBookMenu(book);
+    } else {
+      setLocalTargetBook(book);
+    }
   };
 
   return (
@@ -325,7 +464,7 @@ export function BookshelfInteractivePlayground({
       </div>
 
       {/* ========================================================================= */}
-      {/* 🌟 1. 頂部第一層：圖3之 4 大分類切換 (依部類 / 依冊別 / 依作譯者 / 依朝代) */}
+      {/* 🌟 1. 頂部第一層：4 大分類切換 (依部類 / 依冊別 / 依作譯者 / 依朝代)          */}
       {/* ========================================================================= */}
       <div 
         style={{
@@ -334,7 +473,7 @@ export function BookshelfInteractivePlayground({
           background: 'rgba(0, 0, 0, 0.05)',
           borderRadius: '16px',
           padding: '4px',
-          marginBottom: '0.85rem',
+          marginBottom: '0.65rem',
           border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
           boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)'
         }}
@@ -376,53 +515,118 @@ export function BookshelfInteractivePlayground({
       </div>
 
       {/* ========================================================================= */}
-      {/* 🏷️ 2. 第二層：3 大膠囊快捷過濾 (近期下載 / 近期閱讀 / 我的最愛) ＋ 全部經典 */}
+      {/* 🏷️ 2. 第二層：4 大膠囊快捷過濾 (分上下行，長度 1:1:1:1，對齊上方 4 分類)  */}
       {/* ========================================================================= */}
       <div 
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.45rem',
-          overflowX: 'auto',
-          paddingBottom: '0.4rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '6px',
           marginBottom: '0.75rem'
         }}
       >
-        {[
-          { id: 'all', label: `全部經典 (${activeBooksPool.length})`, icon: null },
-          { id: 'downloads', label: `近期下載`, icon: Download },
-          { id: 'recent', label: `近期閱讀`, icon: Clock },
-          { id: 'favorites', label: `我的最愛`, icon: Heart }
-        ].map(pill => {
-          const isActive = statusFilter === pill.id;
-          const IconComp = pill.icon;
-          return (
-            <button
-              key={pill.id}
-              type="button"
-              onClick={() => setStatusFilter(pill.id as any)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                padding: '0.42rem 0.85rem',
-                borderRadius: '20px',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                whiteSpace: 'nowrap',
-                cursor: 'pointer',
-                transition: 'all 0.16s ease',
-                border: isActive ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
-                background: isActive ? '#1ea98c' : 'var(--bg-card, #ffffff)',
-                color: isActive ? '#ffffff' : 'var(--text-primary)',
-                boxShadow: isActive ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)'
-              }}
-            >
-              {IconComp && <IconComp size={13} strokeWidth={2.4} fill={pill.id === 'favorites' && isActive ? '#fff' : 'none'} />}
-              <span>{pill.label}</span>
-            </button>
-          );
-        })}
+        {/* 膠囊 1: 全部經典 (上文字「全部」，下數字「(X)」) */}
+        <button
+          type="button"
+          onClick={() => setStatusFilter('all')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0.35rem 0.15rem',
+            borderRadius: '16px',
+            cursor: 'pointer',
+            transition: 'all 0.16s ease',
+            border: statusFilter === 'all' ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+            background: statusFilter === 'all' ? '#1ea98c' : 'var(--bg-card, #ffffff)',
+            color: statusFilter === 'all' ? '#ffffff' : 'var(--text-primary)',
+            boxShadow: statusFilter === 'all' ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)',
+            minHeight: '48px'
+          }}
+        >
+          <span style={{ fontSize: '0.78rem', fontWeight: 700, lineHeight: 1.15 }}>全部</span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 600, opacity: statusFilter === 'all' ? 0.95 : 0.75, lineHeight: 1.15 }}>
+            ({activeBooksPool.length})
+          </span>
+        </button>
+
+        {/* 膠囊 2: 近期下載 (上圖示，下文字) */}
+        <button
+          type="button"
+          onClick={() => setStatusFilter('downloads')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0.35rem 0.15rem',
+            borderRadius: '16px',
+            cursor: 'pointer',
+            transition: 'all 0.16s ease',
+            border: statusFilter === 'downloads' ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+            background: statusFilter === 'downloads' ? '#1ea98c' : 'var(--bg-card, #ffffff)',
+            color: statusFilter === 'downloads' ? '#ffffff' : 'var(--text-primary)',
+            boxShadow: statusFilter === 'downloads' ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)',
+            minHeight: '48px'
+          }}
+        >
+          <Download size={14} strokeWidth={statusFilter === 'downloads' ? 2.4 : 2} style={{ marginBottom: '2px' }} />
+          <span style={{ fontSize: '0.74rem', fontWeight: 700, lineHeight: 1.15 }}>近期下載</span>
+        </button>
+
+        {/* 膠囊 3: 近期閱讀 (上圖示，下文字) */}
+        <button
+          type="button"
+          onClick={() => setStatusFilter('recent')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0.35rem 0.15rem',
+            borderRadius: '16px',
+            cursor: 'pointer',
+            transition: 'all 0.16s ease',
+            border: statusFilter === 'recent' ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+            background: statusFilter === 'recent' ? '#1ea98c' : 'var(--bg-card, #ffffff)',
+            color: statusFilter === 'recent' ? '#ffffff' : 'var(--text-primary)',
+            boxShadow: statusFilter === 'recent' ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)',
+            minHeight: '48px'
+          }}
+        >
+          <Clock size={14} strokeWidth={statusFilter === 'recent' ? 2.4 : 2} style={{ marginBottom: '2px' }} />
+          <span style={{ fontSize: '0.74rem', fontWeight: 700, lineHeight: 1.15 }}>近期閱讀</span>
+        </button>
+
+        {/* 膠囊 4: 我的最愛 (上圖示，下文字) */}
+        <button
+          type="button"
+          onClick={() => setStatusFilter('favorites')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0.35rem 0.15rem',
+            borderRadius: '16px',
+            cursor: 'pointer',
+            transition: 'all 0.16s ease',
+            border: statusFilter === 'favorites' ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+            background: statusFilter === 'favorites' ? '#1ea98c' : 'var(--bg-card, #ffffff)',
+            color: statusFilter === 'favorites' ? '#ffffff' : 'var(--text-primary)',
+            boxShadow: statusFilter === 'favorites' ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)',
+            minHeight: '48px'
+          }}
+        >
+          <Heart 
+            size={14} 
+            strokeWidth={statusFilter === 'favorites' ? 2.4 : 2} 
+            fill={statusFilter === 'favorites' ? '#ffffff' : 'none'} 
+            style={{ marginBottom: '2px' }} 
+          />
+          <span style={{ fontSize: '0.74rem', fontWeight: 700, lineHeight: 1.15 }}>我的最愛</span>
+        </button>
       </div>
 
       {/* ========================================================================= */}
@@ -604,10 +808,22 @@ export function BookshelfInteractivePlayground({
                             </div>
                           </div>
 
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                          {/* 最右邊：最愛標記 + 小小圓圈圈/淺灰「…」選項 + 箭頭 */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
                             {isFavorite(book.workId) && (
                               <Heart size={14} fill="#e53e3e" color="#e53e3e" />
                             )}
+                            <button
+                              type="button"
+                              className="horizontal-book-more-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenBookOptions(book);
+                              }}
+                              title="經典選項"
+                            >
+                              <MoreVertical size={13} />
+                            </button>
                             <ChevronRight size={16} color="var(--text-muted)" />
                           </div>
                         </div>
@@ -636,7 +852,20 @@ export function BookshelfInteractivePlayground({
                             <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#8c4b27', background: 'rgba(140,75,39,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
                               {book.workId}
                             </span>
-                            {isFavorite(book.workId) && <Heart size={13} fill="#e53e3e" color="#e53e3e" />}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              {isFavorite(book.workId) && <Heart size={13} fill="#e53e3e" color="#e53e3e" />}
+                              <button
+                                type="button"
+                                className="horizontal-book-more-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenBookOptions(book);
+                                }}
+                                title="經典選項"
+                              >
+                                <MoreVertical size={13} />
+                              </button>
+                            </div>
                           </div>
                           <div style={{ fontSize: '0.94rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', lineHeight: 1.25 }}>
                             {book.title}
@@ -654,6 +883,99 @@ export function BookshelfInteractivePlayground({
           );
         })}
       </div>
+
+      {/* 💡 本地經典選單彈窗（Fallback）：移至資料夾為淺灰禁用 */}
+      {localTargetBook && (
+        <div 
+          className="search-dialog-overlay" 
+          style={{ zIndex: 1200 }} 
+          onClick={() => setLocalTargetBook(null)}
+        >
+          <div 
+            className="changelog-dialog-card animate-slide-up" 
+            style={{ width: '90%', maxWidth: '340px' }} 
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
+              <div style={{
+                width: '42px',
+                height: '42px',
+                borderRadius: '10px',
+                background: '#8c4b27',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                flexShrink: 0
+              }}>
+                {localTargetBook.workId}
+              </div>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
+                  {localTargetBook.title}
+                </h3>
+                <p style={{ margin: '4px 0 0 0', fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                  {localTargetBook.creators} · {localTargetBook.juansCount}卷
+                </p>
+              </div>
+            </div>
+
+            <div style={{ margin: '0.75rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.1))' }} />
+
+            {/* 3 個按鈕：移至資料夾 (淺灰禁用) | 加入我的最愛 | 刪除經文 */}
+            <div className="action-buttons-grid-3">
+              {/* 1. 移至資料夾 (淺灰，暫不開啟這個功能) */}
+              <button 
+                className="action-grid-btn"
+                disabled={true}
+                style={{ opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)', color: 'var(--text-muted)' }}
+                title="移至資料夾 (暫未開啟)"
+              >
+                <FolderInput size={20} />
+                <span style={{ color: 'var(--text-muted)' }}>移至資料夾</span>
+              </button>
+
+              <div className="action-grid-divider" />
+
+              {/* 2. 我的最愛 */}
+              <button 
+                className="action-grid-btn"
+                onClick={() => {
+                  if (onToggleFavorite) {
+                    onToggleFavorite(localTargetBook.workId);
+                  }
+                  setLocalTargetBook(null);
+                }}
+              >
+                <Heart 
+                  size={20} 
+                  fill={isFavorite(localTargetBook.workId) ? "#e53e3e" : "none"} 
+                  color={isFavorite(localTargetBook.workId) ? "#e53e3e" : "currentColor"} 
+                />
+                <span>{isFavorite(localTargetBook.workId) ? '取消最愛' : '加入最愛'}</span>
+              </button>
+
+              <div className="action-grid-divider" />
+
+              {/* 3. 刪除經文 */}
+              <button 
+                className="action-grid-btn delete-action"
+                onClick={() => {
+                  if (onDeleteBook) {
+                    onDeleteBook(localTargetBook.workId);
+                  }
+                  setLocalTargetBook(null);
+                }}
+              >
+                <Trash2 size={20} />
+                <span>刪除經文</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

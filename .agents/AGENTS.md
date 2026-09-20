@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.4.5` (App: v4.4.5 / Builder: v2.9.11)
+- **Current Version**: `v4.4.6` (App: v4.4.6 / Builder: v2.9.11)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.4.6 / Builder: v2.9.11** (2026-09-21)
+  - [App] 書櫃「依部類」全面套用 CBETA 官方 01~23 權威部類編號，嚴格依傳統部類先後順序排列。
+  - [App] 書櫃「依冊別」對齊官方 6 大藏經分類（大正藏、續藏經、補輯、國圖善本、南傳、近代新編），精準歸納並按冊次排列。
+  - [App] 書櫃 4 膠囊升級上下雙行 1:1:1:1 等寬並對齊上方 4 分類，書籍最右側配置精緻淺灰「…」選項並將移至資料夾設為淺灰禁用。
 - **⭐ App: v4.4.5 / Builder: v2.9.11** (2026-09-20)
   - [App] 「加入小工具」左右切換「<」「>」按鈕與邊界留白優化，徹底消除手機貼邊擠壓。
   - [App] 4×2 卡片「4」長度完全舒展拉長（長寬比 2.28:1），1:1 等比呈現首頁修長長條感，經文字句與「→」按鈕間距充沛。

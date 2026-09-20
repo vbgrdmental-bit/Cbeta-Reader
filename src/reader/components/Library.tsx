@@ -1579,6 +1579,16 @@ export function Library({
                   recentReadsBooks={recentReadsBooks}
                   onSelectBook={onSelectBook}
                   onExitDemo={() => setShowPlaygroundDemo(false)}
+                  onOpenBookMenu={(book) => {
+                    setMenuTargetBook(book);
+                    setMenuTargetBookSource(currentFolderId || null);
+                  }}
+                  onToggleFavorite={(workId) => {
+                    toggleFavoriteBook(undefined as any, workId);
+                  }}
+                  onDeleteBook={(workId) => {
+                    handleDeleteBook(undefined as any, workId);
+                  }}
                 />
               </div>
             ) : (
@@ -2848,22 +2858,16 @@ export function Library({
                 const isTransitionFolder = menuTargetBookSource === 'virtual_recent_reads' || menuTargetBookSource === 'virtual_favorites';
                 return (
                   <div className="action-buttons-grid-3">
-                    {/* 1. 移至資料夾 */}
+                    {/* 1. 移至資料夾 (改為淺灰，暫不開啟這個功能) */}
                     <button 
                       className="action-grid-btn"
-                      disabled={isTransitionFolder}
-                      style={isTransitionFolder ? { opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)' } : undefined}
-                      onClick={() => {
-                        if (isTransitionFolder) return;
-                        const b = menuTargetBook;
-                        setMenuTargetBook(null);
-                        setSelectedBookIds([b.workId]);
-                        setShowBatchMoveDialog(true);
-                      }}
-                      title={isTransitionFolder ? '過渡專區不可移動，請至原資料夾操作' : '移至資料夾'}
+                      disabled={true}
+                      style={{ opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)', color: 'var(--text-muted)' }}
+                      onClick={() => {}}
+                      title="移至資料夾 (暫未開放)"
                     >
                       <FolderInput size={20} />
-                      <span>移至資料夾</span>
+                      <span style={{ color: 'var(--text-muted)' }}>移至資料夾</span>
                     </button>
 
                     {/* 分隔線 1 */}

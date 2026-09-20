@@ -1265,16 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.4.5) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.4.6) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.4.5</span>
-                        <span className="changelog-date">(2026-09-20)</span>
+                        <span>⭐ App: v4.4.6</span>
+                        <span className="changelog-date">(2026-09-21)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 「加入小工具」左右切換「&lt;」「&gt;」按鈕與邊界留白優化，徹底消除手機貼邊擠壓。</li>
-                        <li>• 4×2 卡片「4」長度完全舒展拉長（長寬比 2.28:1），1:1 等比呈現首頁修長長條感，經文字句與「→」按鈕間距充沛。</li>
-                        <li>• 四色主題 2×2 優化圓圈與字級排版，「象牙白、羊皮紙、舒服綠、烏木」4 個文字標籤 100% 完整露出。</li>
+                        <li>• 書櫃「依部類」全面套用 01~23 權威部類編號並嚴格順序排列。</li>
+                        <li>• 書櫃「依冊別」依 CBETA 官方 6 大藏經分類，精準歸納經本。</li>
+                        <li>• 書櫃 4 膠囊升級上下雙行 1:1:1:1 等寬，書籍右側選項改為精緻淺灰。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1297,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.4.5</span>
+                            <span className="changelog-date">(2026-09-20)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 「加入小工具」左右切換「&lt;」「&gt;」按鈕與邊界留白優化，徹底消除手機貼邊擠壓。</li>
+                            <li>• 4×2 卡片「4」長度完全舒展拉長（長寬比 2.28:1），1:1 等比呈現首頁修長長條感，經文字句與「→」按鈕間距充沛。</li>
+                            <li>• 四色主題 2×2 優化圓圈與字級排版，「象牙白、羊皮紙、舒服綠、烏木」4 個文字標籤 100% 完整露出。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.4.4</span>
