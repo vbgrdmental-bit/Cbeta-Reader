@@ -1540,9 +1540,9 @@ body.theme-ebony .popover-color-dot.selected,
 .reader-top-bar .library-header-btn.active,
 .reader-top-bar .reader-text-btn.active,
 .reader-text-btn.highlight-btn.active,
-.highlight-btn.active,
+.highlight-btn.active:not(.reader-capsule-item),
 .reader-text-btn.typography-btn.active,
-.typography-btn.active {
+.typography-btn.active:not(.reader-capsule-item) {
   border: none !important;
   background: rgba(0, 0, 0, 0.08) !important;
   border-radius: 50% !important;
@@ -1553,8 +1553,8 @@ body.theme-ebony .popover-color-dot.selected,
 body.theme-comfort .reader-top-bar .icon-button.active,
 body.theme-comfort .reader-top-bar .library-header-btn.active,
 body.theme-comfort .reader-top-bar .reader-text-btn.active,
-body.theme-comfort .highlight-btn.active,
-body.theme-comfort .typography-btn.active {
+body.theme-comfort .highlight-btn.active:not(.reader-capsule-item),
+body.theme-comfort .typography-btn.active:not(.reader-capsule-item) {
   background: rgba(43, 66, 43, 0.12) !important;
   box-shadow: inset 0 0 0 1px rgba(43, 66, 43, 0.10) !important;
 }
@@ -1562,8 +1562,8 @@ body.theme-comfort .typography-btn.active {
 body.theme-ebony .reader-top-bar .icon-button.active,
 body.theme-ebony .reader-top-bar .library-header-btn.active,
 body.theme-ebony .reader-top-bar .reader-text-btn.active,
-body.theme-ebony .highlight-btn.active,
-body.theme-ebony .typography-btn.active {
+body.theme-ebony .highlight-btn.active:not(.reader-capsule-item),
+body.theme-ebony .typography-btn.active:not(.reader-capsule-item) {
   border: none !important;
   background: rgba(255, 255, 255, 0.12) !important;
   border-radius: 50% !important;

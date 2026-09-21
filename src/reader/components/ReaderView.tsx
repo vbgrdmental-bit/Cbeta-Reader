@@ -1171,10 +1171,16 @@ export function ReaderView({
     const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
-      if (!target.closest('.reader-floating-bottom-bar') && !target.closest('.typography-btn') && !target.closest('.highlight-btn')) {
+      if (!target.closest('.reader-floating-bottom-bar') && 
+          !target.closest('.reader-nav-capsule') && 
+          !target.closest('.library-header') && 
+          !target.closest('.typography-btn') && 
+          !target.closest('.highlight-btn')) {
         setShowTypographyPanel(false);
       }
-      if (!target.closest('.reader-nav-drawer') && !target.closest('.nav-menu-btn')) {
+      if (!target.closest('.reader-nav-drawer') && 
+          !target.closest('.library-header') && 
+          !target.closest('.nav-menu-btn')) {
         setShowNavDrawer(false);
       }
       if (!target.closest('.reader-text-highlight') && !target.closest('.highlight-delete-menu')) {
@@ -1767,6 +1773,7 @@ export function ReaderView({
               setShowNavDrawer(false);
               setIsHighlightMode(false);
               setShowSearchNavBar(false);
+              setInternalSearchQuery('');
               setShowTypographyPanel(prev => !prev);
             }}
             title={showTypographyPanel ? "收合版面設定" : "開啟版面設定 (字體、字級、行高、邊距)"}
@@ -1842,26 +1849,27 @@ export function ReaderView({
             return (
               <button 
                 type="button"
-                className={`capsule-nav-item reader-capsule-item highlight-btn ${isHighlightMode ? 'active' : ''}`}
+                className={`capsule-nav-item reader-capsule-item reader-brush-capsule ${isHighlightMode ? 'active' : ''}`}
                 onClick={() => {
                   setShowNavDrawer(false);
                   setShowTypographyPanel(false);
                   setShowSearchNavBar(false);
+                  setInternalSearchQuery('');
                   setIsHighlightMode(prev => !prev);
                 }}
                 title={isHighlightMode ? "關閉畫重點模式 (可自由複製經文)" : "開啟畫重點模式 (選取經文自動劃線)"}
               >
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}>
                   <Paintbrush 
                     size={16} 
                     style={{
-                      color: 'currentColor',
+                      color: 'var(--text-primary)',
                       zIndex: 2
                     }}
                   />
                   <div className="brush-color-indicator" style={getIndicatorStyle()} />
                 </div>
-                <span className="capsule-label">畫重點</span>
+                <span className="capsule-label brush-label-badge">畫重點</span>
               </button>
             );
           })()}
@@ -1869,23 +1877,23 @@ export function ReaderView({
           {/* 搜尋：關鍵字搜尋本書 (直接展開上方即時檢索列，不跳出彈窗) */}
           <button 
             type="button"
-            className={`capsule-nav-item reader-capsule-item ${showSearchNavBar || Boolean(activeSearchQuery) ? 'active' : ''}`} 
+            className={`capsule-nav-item reader-capsule-item ${showSearchNavBar ? 'active' : ''}`} 
             onClick={() => {
               setShowTypographyPanel(false);
               setIsHighlightMode(false);
               setShowNavDrawer(false);
-              setShowSearchNavBar(prev => {
-                const next = !prev;
-                if (next) {
-                  setTimeout(() => {
-                    searchInputRef.current?.focus();
-                    searchInputRef.current?.select();
-                  }, 60);
-                }
-                return next;
-              });
+              if (showSearchNavBar) {
+                setShowSearchNavBar(false);
+                setInternalSearchQuery('');
+              } else {
+                setShowSearchNavBar(true);
+                setTimeout(() => {
+                  searchInputRef.current?.focus();
+                  searchInputRef.current?.select();
+                }, 60);
+              }
             }} 
-            title="本書搜尋"
+            title={showSearchNavBar ? "關閉本書搜尋" : "開啟本書搜尋"}
           >
             <Search size={16} />
             <span className="capsule-label">本書搜尋</span>
@@ -1921,7 +1929,7 @@ export function ReaderView({
       </div>
 
       {/* 搜尋結果同一書內導航懸浮條 (直接呈現於頂部控制列下方，可原地即時輸入與修改關鍵字，免去彈窗干擾) */}
-      {(showSearchNavBar || (activeSearchQuery && matchedSegments.length > 0)) && (
+      {showSearchNavBar && (
         <div className={`search-nav-bar ${showToolbar ? 'visible' : 'hidden'}`}>
           <div className="search-nav-input-wrap">
             <span className="search-nav-prefix">檢索:</span>
@@ -1994,7 +2002,7 @@ export function ReaderView({
           style={{
             position: 'fixed',
             top: showToolbar 
-              ? (showSearchNavBar || (activeSearchQuery && matchedSegments.length > 0))
+              ? showSearchNavBar
                 ? 'calc(108px + env(safe-area-inset-top, 0px))'
                 : 'calc(62px + env(safe-area-inset-top, 0px))'
               : 'calc(16px + env(safe-area-inset-top, 0px))',

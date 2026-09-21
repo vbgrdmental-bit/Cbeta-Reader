@@ -7525,6 +7525,43 @@ body.theme-comfort .reader-nav-capsule .reader-capsule-item.active {
   color: #ffffff !important;
 }
 
+/* 筆刷按鈕在 active 時的專屬排版：維持原本圖標樣式變化（顏色與底線/半塗/全塗/方框），右側文字標籤帶主題底色徽章 */
+.reader-nav-capsule .reader-capsule-item.reader-brush-capsule.active {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  box-shadow: none !important;
+  padding: 0 4px 0 2px !important;
+}
+
+.reader-brush-capsule .brush-label-badge {
+  background: var(--theme-accent, #8c4b27) !important;
+  color: #ffffff !important;
+  border-radius: 9999px !important;
+  padding: 3px 9px !important;
+  font-size: 0.83rem !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  box-shadow: 0 2px 6px rgba(140, 75, 39, 0.22) !important;
+  white-space: nowrap !important;
+}
+
+body.theme-ebony .reader-nav-capsule .reader-capsule-item.reader-brush-capsule.active {
+  background: transparent !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+body.theme-ebony .reader-brush-capsule .brush-label-badge {
+  background: var(--theme-accent, #cf9f60) !important;
+  color: #18181b !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.theme-comfort .reader-brush-capsule .brush-label-badge {
+  background: #2e5c3b !important;
+  color: #ffffff !important;
+}
+
 @media (max-width: 600px) {
   .reader-capsule-item {
     height: 32px !important;
