@@ -1709,15 +1709,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   <span>Builder 經文解析引擎更新</span>
                 </div>
 
-                {/* 最新 Builder 版本 (v2.9.11) 直接顯示 */}
+                {/* 最新 Builder 版本 (v2.9.12) 直接顯示 */}
                 <div className="changelog-version-section">
                   <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>⭐ Builder: v2.9.11</span>
-                    <span className="changelog-date">(2026-08-23)</span>
+                    <span>⭐ Builder: v2.9.12</span>
+                    <span className="changelog-date">(2026-09-22)</span>
                   </div>
                   <ul className="changelog-list">
-                    <li>• 支援非連續卷數與特殊分卷經典下載（如 U1418），智慧對齊 CBETA 官方真實卷次清單。</li>
-                    <li>• 升級防限流下載與自動重試機制，提高多卷經典下載穩定性。</li>
+                    <li>• 支援 CBETA 雙字母前綴代碼（TX、GA、GB、LC 等），精確識別藏經冊別。</li>
+                    <li>• 修正經典建構 Metadata 時雙字母代碼被截斷為單字母之問題。</li>
                   </ul>
                 </div>
 
@@ -1741,6 +1741,13 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 {/* 展開的 Builder 歷史版本 */}
                 {showBuilderHistory && (
                   <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                    <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                      <div className="changelog-version-title">Builder: v2.9.11 <span className="changelog-date">(2026-08-23)</span></div>
+                      <ul className="changelog-list">
+                        <li>• 支援非連續卷數與特殊分卷經典下載（如 U1418），智慧對齊 CBETA 官方真實卷次清單。</li>
+                        <li>• 升級防限流下載與自動重試機制，提高多卷經典下載穩定性。</li>
+                      </ul>
+                    </div>
                     <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                       <div className="changelog-version-title">Builder: v2.9.10 <span className="changelog-date">(2026-08-21)</span></div>
                       <ul className="changelog-list">

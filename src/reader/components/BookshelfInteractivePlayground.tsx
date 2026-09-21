@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { 
-  Heart, Clock, Download, ChevronRight, ChevronDown, 
+  Heart, Clock, ChevronRight, ChevronDown, 
   Layers, BookOpen, User, Grid, List, Sparkles,
   MoreVertical, FolderInput, Trash2
 } from 'lucide-react';
@@ -164,23 +164,28 @@ function getDeptCategoryInfo(b: BookMetadata): { key: string; order: number } {
   return { key: '23 新編部類', order: 23 };
 }
 
-// 冊別智慧映射函式：依圖4之 6 大藏經分類編排 (修正圖3將太虛/印順誤標為大正藏第00/01冊之問題)
+// 冊別智慧映射函式：依官方 6 大藏經分類編排 (修正太虛大師全書 TX... 誤入大正藏 T 之問題)
 function getCanonCategoryInfo(b: BookMetadata): { key: string; order: number } {
-  const canon = (b.canon || (b.workId ? b.workId.match(/^[A-Za-z]+/)?.[0] : '') || 'T').toUpperCase();
+  const workId = (b.workId || '').toUpperCase();
   
-  if (canon === 'T') {
-    return { key: 'T 大正新脩大藏經', order: 1 };
-  }
-  if (canon === 'X') {
-    return { key: 'X 卍新纂續藏經選錄', order: 2 };
-  }
-  if (['Y', 'TX', 'LC', 'YP', 'CC'].includes(canon)) {
+  // 💡 1. 優先根據 workId 前綴判定：近代新編文獻 (太虛 TX、印順 Y、呂澂 LC、演培 YP、CBETA選集 CC)
+  if (['TX', 'Y', 'LC', 'YP', 'CC'].some(p => workId.startsWith(p))) {
     return { key: '近代新編文獻', order: 6 };
   }
-  if (canon === 'D') {
+  // 💡 2. 大正藏：必須以 T 開頭且非 TX
+  if (workId.startsWith('T') && !workId.startsWith('TX')) {
+    return { key: 'T 大正新脩大藏經', order: 1 };
+  }
+  // 💡 3. 卍續藏
+  if (workId.startsWith('X')) {
+    return { key: 'X 卍新纂續藏經選錄', order: 2 };
+  }
+  // 💡 4. 國圖善本
+  if (workId.startsWith('D')) {
     return { key: 'D 國家圖書館善本佛典', order: 4 };
   }
-  if (canon === 'N') {
+  // 💡 5. 南傳大藏經
+  if (workId.startsWith('N')) {
     return { key: 'N 漢譯南傳大藏經（元亨寺版）', order: 5 };
   }
   return { key: '歷代藏經補輯', order: 3 };
@@ -515,7 +520,7 @@ export function BookshelfInteractivePlayground({
       </div>
 
       {/* ========================================================================= */}
-      {/* 🏷️ 2. 第二層：4 大膠囊快捷過濾 (分上下行，長度 1:1:1:1，對齊上方 4 分類)  */}
+      {/* 🏷️ 2. 第二層：4 大膠囊快捷過濾 (圖5型式：膠囊小、文字小、單行不分兩行、點到的反灰深灰底) */}
       {/* ========================================================================= */}
       <div 
         style={{
@@ -525,108 +530,24 @@ export function BookshelfInteractivePlayground({
           marginBottom: '0.75rem'
         }}
       >
-        {/* 膠囊 1: 全部經典 (上文字「全部」，下數字「(X)」) */}
-        <button
-          type="button"
-          onClick={() => setStatusFilter('all')}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0.35rem 0.15rem',
-            borderRadius: '16px',
-            cursor: 'pointer',
-            transition: 'all 0.16s ease',
-            border: statusFilter === 'all' ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
-            background: statusFilter === 'all' ? '#1ea98c' : 'var(--bg-card, #ffffff)',
-            color: statusFilter === 'all' ? '#ffffff' : 'var(--text-primary)',
-            boxShadow: statusFilter === 'all' ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)',
-            minHeight: '48px'
-          }}
-        >
-          <span style={{ fontSize: '0.78rem', fontWeight: 700, lineHeight: 1.15 }}>全部</span>
-          <span style={{ fontSize: '0.72rem', fontWeight: 600, opacity: statusFilter === 'all' ? 0.95 : 0.75, lineHeight: 1.15 }}>
-            ({activeBooksPool.length})
-          </span>
-        </button>
-
-        {/* 膠囊 2: 近期下載 (上圖示，下文字) */}
-        <button
-          type="button"
-          onClick={() => setStatusFilter('downloads')}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0.35rem 0.15rem',
-            borderRadius: '16px',
-            cursor: 'pointer',
-            transition: 'all 0.16s ease',
-            border: statusFilter === 'downloads' ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
-            background: statusFilter === 'downloads' ? '#1ea98c' : 'var(--bg-card, #ffffff)',
-            color: statusFilter === 'downloads' ? '#ffffff' : 'var(--text-primary)',
-            boxShadow: statusFilter === 'downloads' ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)',
-            minHeight: '48px'
-          }}
-        >
-          <Download size={14} strokeWidth={statusFilter === 'downloads' ? 2.4 : 2} style={{ marginBottom: '2px' }} />
-          <span style={{ fontSize: '0.74rem', fontWeight: 700, lineHeight: 1.15 }}>近期下載</span>
-        </button>
-
-        {/* 膠囊 3: 近期閱讀 (上圖示，下文字) */}
-        <button
-          type="button"
-          onClick={() => setStatusFilter('recent')}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0.35rem 0.15rem',
-            borderRadius: '16px',
-            cursor: 'pointer',
-            transition: 'all 0.16s ease',
-            border: statusFilter === 'recent' ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
-            background: statusFilter === 'recent' ? '#1ea98c' : 'var(--bg-card, #ffffff)',
-            color: statusFilter === 'recent' ? '#ffffff' : 'var(--text-primary)',
-            boxShadow: statusFilter === 'recent' ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)',
-            minHeight: '48px'
-          }}
-        >
-          <Clock size={14} strokeWidth={statusFilter === 'recent' ? 2.4 : 2} style={{ marginBottom: '2px' }} />
-          <span style={{ fontSize: '0.74rem', fontWeight: 700, lineHeight: 1.15 }}>近期閱讀</span>
-        </button>
-
-        {/* 膠囊 4: 我的最愛 (上圖示，下文字) */}
-        <button
-          type="button"
-          onClick={() => setStatusFilter('favorites')}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0.35rem 0.15rem',
-            borderRadius: '16px',
-            cursor: 'pointer',
-            transition: 'all 0.16s ease',
-            border: statusFilter === 'favorites' ? '1.2px solid #1ea98c' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
-            background: statusFilter === 'favorites' ? '#1ea98c' : 'var(--bg-card, #ffffff)',
-            color: statusFilter === 'favorites' ? '#ffffff' : 'var(--text-primary)',
-            boxShadow: statusFilter === 'favorites' ? '0 3px 10px rgba(30,169,140,0.25)' : '0 1px 3px rgba(0,0,0,0.03)',
-            minHeight: '48px'
-          }}
-        >
-          <Heart 
-            size={14} 
-            strokeWidth={statusFilter === 'favorites' ? 2.4 : 2} 
-            fill={statusFilter === 'favorites' ? '#ffffff' : 'none'} 
-            style={{ marginBottom: '2px' }} 
-          />
-          <span style={{ fontSize: '0.74rem', fontWeight: 700, lineHeight: 1.15 }}>我的最愛</span>
-        </button>
+        {[
+          { id: 'all', label: `全部 (${activeBooksPool.length})` },
+          { id: 'downloads', label: '近期下載' },
+          { id: 'recent', label: '近期閱讀' },
+          { id: 'favorites', label: '我的最愛' }
+        ].map(item => {
+          const isActive = statusFilter === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              className={`bookshelf-filter-capsule ${isActive ? 'active' : ''}`}
+              onClick={() => setStatusFilter(item.id as any)}
+            >
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* ========================================================================= */}
@@ -710,6 +631,7 @@ export function BookshelfInteractivePlayground({
           return (
             <div 
               key={groupTitle}
+              className="bookshelf-group-card"
               style={{
                 background: 'var(--bg-card, #ffffff)',
                 borderRadius: '18px',
@@ -752,6 +674,7 @@ export function BookshelfInteractivePlayground({
                       {books.map(book => (
                         <div
                           key={book.workId}
+                          className="bookshelf-book-row"
                           onClick={() => onSelectBook(book.workId)}
                           style={{
                             display: 'flex',
@@ -835,6 +758,7 @@ export function BookshelfInteractivePlayground({
                       {books.map(book => (
                         <div
                           key={book.workId}
+                          className="bookshelf-book-card"
                           onClick={() => onSelectBook(book.workId)}
                           style={{
                             background: 'rgba(0,0,0,0.02)',

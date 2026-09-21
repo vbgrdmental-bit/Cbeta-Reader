@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.4.6` (App: v4.4.6 / Builder: v2.9.11)
+- **Current Version**: `v4.4.7` (App: v4.4.7 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.4.7 / Builder: v2.9.12** (2026-09-22)
+  - [App] 深色模式下每本書外框升級細白邊框，視覺邊界更分明清晰。
+  - [App] 書櫃「依冊別」修正太虛大師全書（TX）歸類，精準納入近代新編文獻。
+  - [App] 書櫃 4 膠囊升級單行精緻小膠囊，點選反灰深底白字。
+  - [Builder] 支援 CBETA 雙字母前綴代碼（TX、GA、GB、LC 等），精確識別藏經冊別。
 - **⭐ App: v4.4.6 / Builder: v2.9.11** (2026-09-21)
   - [App] 書櫃「依部類」全面套用 CBETA 官方 01~23 權威部類編號，嚴格依傳統部類先後順序排列。
   - [App] 書櫃「依冊別」對齊官方 6 大藏經分類（大正藏、續藏經、補輯、國圖善本、南傳、近代新編），精準歸納並按冊次排列。

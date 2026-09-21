@@ -500,13 +500,27 @@ export class IndexBuilder {
   }
 
   /**
+   * 從經號提取 CBETA 權威藏經前綴代碼 (精準支援雙字母前綴 TX, GA, GB, LC, YP, CC, ZS, ZW)
+   */
+  static extractCanon(workId?: string): string {
+    if (!workId) return 'T';
+    const cleanId = workId.trim().toUpperCase();
+    const doubleMatches = ['TX', 'GA', 'GB', 'LC', 'YP', 'CC', 'ZS', 'ZW'];
+    for (const prefix of doubleMatches) {
+      if (cleanId.startsWith(prefix)) return prefix;
+    }
+    const singleMatch = cleanId.match(/^[A-Z]/);
+    return singleMatch ? singleMatch[0] : 'T';
+  }
+
+  /**
    * 建立經典基本 Metadata
    */
   static buildMetadata(searchResult: SearchResult): BookMetadata {
     return {
       workId: searchResult.workId,
       title: searchResult.title,
-      canon: searchResult.workId.charAt(0),
+      canon: IndexBuilder.extractCanon(searchResult.workId),
       vol: searchResult.vol,
       cjkChars: searchResult.cjkChars,
       category: searchResult.category,
@@ -517,3 +531,4 @@ export class IndexBuilder {
     };
   }
 }
+

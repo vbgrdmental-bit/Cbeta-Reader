@@ -7476,6 +7476,102 @@ body.theme-ebony .book-widget-card-box {
   font-size: 0.72rem;
 }
 
+/* ============================================================ */
+/* 🌟 書櫃圖5形式：單行小膠囊、反灰(深灰底白字)與細灰邊框樣式     */
+/* ============================================================ */
+.bookshelf-filter-capsule {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  padding: 0 6px;
+  border-radius: 9999px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  transition: all 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  color: var(--text-secondary, #444444);
+  box-sizing: border-box;
+}
+
+.bookshelf-filter-capsule:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* 點到的反灰 (底色深灰，文字純白) */
+.bookshelf-filter-capsule.active {
+  background: #363636 !important;
+  border-color: #363636 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  font-weight: 700;
+}
+
+/* 烏木深色主題下的膠囊適配 */
+.theme-ebony .bookshelf-filter-capsule,
+body.theme-ebony .bookshelf-filter-capsule {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text-muted, #9ca3af);
+}
+
+.theme-ebony .bookshelf-filter-capsule:hover,
+body.theme-ebony .bookshelf-filter-capsule:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.theme-ebony .bookshelf-filter-capsule.active,
+body.theme-ebony .bookshelf-filter-capsule.active {
+  background: #454d55 !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================================ */
+/* 🌟 圖1深色模式下：每本書的外框不太明顯，可用細白邊框           */
+/* ============================================================ */
+.theme-ebony .bookshelf-group-card,
+body.theme-ebony .bookshelf-group-card {
+  border: 1.2px solid rgba(255, 255, 255, 0.16) !important;
+  background: var(--bg-card, rgba(255, 255, 255, 0.05)) !important;
+}
+
+/* 條列式項目細白邊框 */
+.theme-ebony .bookshelf-book-row,
+body.theme-ebony .bookshelf-book-row {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.theme-ebony .bookshelf-book-row:hover,
+body.theme-ebony .bookshelf-book-row:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+/* 網格雙欄卡片細白邊框 */
+.theme-ebony .bookshelf-book-card,
+body.theme-ebony .bookshelf-book-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+}
+
+.theme-ebony .bookshelf-book-card:hover,
+body.theme-ebony .bookshelf-book-card:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+
 
 
 

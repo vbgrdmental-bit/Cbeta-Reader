@@ -1,5 +1,5 @@
-export const BUILDER_VERSION = '2.9.11';
-export const APP_VERSION = '4.4.6';
+export const BUILDER_VERSION = '2.9.12';
+export const APP_VERSION = '4.4.7';
 
 
 
