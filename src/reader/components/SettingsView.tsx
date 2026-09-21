@@ -1265,16 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.4.8) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.4.9) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.4.8</span>
+                        <span>⭐ App: v4.4.9</span>
                         <span className="changelog-date">(2026-09-22)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 書櫃 4 大分類與過濾膠囊升級吸頂浮動，下滑時常駐頂部控制列下方。</li>
-                        <li>• 書櫃依冊別排序先英文字母前綴（TX... 先於 Y...）再依序號由小到大排。</li>
-                        <li>• 書櫃依作譯者排序修正為按經典編號由小到大順序排列（01、02、03...）。</li>
+                        <li>• 首頁四合一導航 4×2 取消 4 個按鍵外圍細邊框。</li>
+                        <li>• 「下載經典」按鍵下方新增「從cbeta下載」標籤。</li>
+                        <li>• 「全文檢索」按鍵下方新增「關鍵字搜尋」標籤。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1297,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.4.8</span>
+                            <span className="changelog-date">(2026-09-22)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 書櫃 4 大分類與過濾膠囊升級吸頂浮動，下滑時常駐頂部控制列下方。</li>
+                            <li>• 書櫃依冊別排序先英文字母前綴（TX... 先於 Y...）再依序號由小到大排。</li>
+                            <li>• 書櫃依作譯者排序修正為按經典編號由小到大順序排列（01、02、03...）。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.4.7</span>

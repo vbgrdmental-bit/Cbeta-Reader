@@ -616,6 +616,7 @@ export function HomeDashboard({
                   <Plus size={24} color="#ffffff" style={{ strokeWidth: 2.6 }} />
                 </div>
                 <div className="compact-nav-label-4x2">下載經典</div>
+                <div className="compact-nav-badge-4x2">從cbeta下載</div>
               </div>
 
               {/* 2. 我的書櫃 */}
@@ -654,6 +655,7 @@ export function HomeDashboard({
                   <Search size={20} color="#ffffff" style={{ strokeWidth: 2.4 }} />
                 </div>
                 <div className="compact-nav-label-4x2">全文檢索</div>
+                <div className="compact-nav-badge-4x2">關鍵字搜尋</div>
               </div>
             </div>
           );

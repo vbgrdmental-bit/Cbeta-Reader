@@ -5410,7 +5410,7 @@ body.theme-ebony .core-sub { color: #8a9680 !important; }
   padding: 0.45rem 0.2rem;
   border-radius: 14px;
   background: rgba(140, 75, 39, 0.04);
-  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
+  border: none;
   transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
   user-select: none;
   box-sizing: border-box;
@@ -5425,7 +5425,7 @@ body.theme-ebony .core-sub { color: #8a9680 !important; }
 
 body.theme-ebony .compact-nav-item-4x2 {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
+  border: none;
 }
 
 body.theme-ebony .compact-nav-item-4x2:hover {
@@ -5459,13 +5459,14 @@ body.theme-ebony .compact-nav-item-4x2:hover {
 }
 
 .compact-nav-badge-4x2 {
-  font-size: 0.70rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
   background: rgba(140, 75, 39, 0.08);
-  padding: 1px 7px;
+  padding: 1px 5px;
   border-radius: 8px;
   font-weight: 600;
   white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 body.theme-ebony .compact-nav-badge-4x2 {
