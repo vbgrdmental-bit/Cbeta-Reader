@@ -1859,17 +1859,17 @@ export function ReaderView({
                 }}
                 title={isHighlightMode ? "關閉畫重點模式 (可自由複製經文)" : "開啟畫重點模式 (選取經文自動劃線)"}
               >
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}>
+                <div className="brush-disc-wrapper">
                   <Paintbrush 
                     size={16} 
+                    className="brush-icon"
                     style={{
-                      color: 'var(--text-primary)',
                       zIndex: 2
                     }}
                   />
                   <div className="brush-color-indicator" style={getIndicatorStyle()} />
                 </div>
-                <span className="capsule-label brush-label-badge">畫重點</span>
+                <span className="capsule-label">畫重點</span>
               </button>
             );
           })()}
