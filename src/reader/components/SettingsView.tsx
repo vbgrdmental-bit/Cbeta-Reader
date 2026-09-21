@@ -1265,16 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.5.0) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.5.1) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.5.0</span>
+                        <span>⭐ App: v4.5.1</span>
                         <span className="changelog-date">(2026-09-22)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 1 本書與 2 本書小工具取消書籍外圍細小邊框，消除視覺重覆感。</li>
-                        <li>• 閱讀頁上方控制列全站統一，左「家」右「齒輪」位置與首頁精確對齊。</li>
-                        <li>• 閱讀頁「字/筆刷/搜尋」整合為中央微膠囊，目次與齒輪配置圓型背景。</li>
+                        <li>• 閱讀頁中央膠囊新增「版面設定」、「畫重點」、「本書搜尋」標籤。</li>
+                        <li>• 點選本書搜尋取消彈出視窗，直接於頂部控制列下方展開即時檢索列。</li>
+                        <li>• 支援原地直接輸入與隨時修改關鍵字，上下切換匹配與高亮。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1297,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.5.0</span>
+                            <span className="changelog-date">(2026-09-22)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 1 本書與 2 本書小工具取消書籍外圍細小邊框，消除視覺重覆感。</li>
+                            <li>• 閱讀頁上方控制列全站統一，左「家」右「齒輪」位置與首頁精確對齊。</li>
+                            <li>• 閱讀頁「字/筆刷/搜尋」整合為中央微膠囊，目次與齒輪配置圓型背景。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.4.9</span>

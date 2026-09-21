@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.0` (App: v4.5.0 / Builder: v2.9.12)
+- **Current Version**: `v4.5.1` (App: v4.5.1 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.1 / Builder: v2.9.12** (2026-09-22)
+  - [App] 閱讀頁上方中央微膠囊按鈕新增「版面設定」、「畫重點」、「本書搜尋」文字標籤。
+  - [App] 點選本書搜尋取消彈出視窗，直接於頂部控制列下方展開即時檢索導航列。
+  - [App] 支援原地直接輸入與隨時修改關鍵字，支援上下切換匹配、高亮與 Escape/關閉。
 - **⭐ App: v4.5.0 / Builder: v2.9.12** (2026-09-22)
   - [App] 1 本書與 2 本書小工具取消書籍外圍細小邊框，消除視覺重覆感。
   - [App] 閱讀頁上方控制列全站統一，左「家」右「齒輪」位置與首頁精確對齊。

@@ -263,10 +263,10 @@ export function ReaderView({
   const [editingNoteHighlight, setEditingNoteHighlight] = useState<BookHighlight | null>(null);
   const [editingNoteText, setEditingNoteText] = useState('');
 
-  // 💡 本書內動態關鍵字檢索
-  const [internalSearchQuery, setInternalSearchQuery] = useState('');
-  const [showInBookSearchModal, setShowInBookSearchModal] = useState(false);
-  const [inBookSearchInput, setInBookSearchInput] = useState('');
+  // 💡 本書內動態關鍵字檢索 (直接呈現於頂部控制列下方，支援原地即時輸入與修改)
+  const [internalSearchQuery, setInternalSearchQuery] = useState(searchQuery?.trim() || '');
+  const [showSearchNavBar, setShowSearchNavBar] = useState(Boolean(searchQuery?.trim()));
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // 最終採用的檢索關鍵字 (優先採用閱讀器內部主動搜尋的關鍵字，否則退回外部帶入的 searchQuery)
   const activeSearchQuery = internalSearchQuery.trim() || searchQuery?.trim() || '';
@@ -1766,13 +1766,15 @@ export function ReaderView({
             onClick={() => {
               setShowNavDrawer(false);
               setIsHighlightMode(false);
+              setShowSearchNavBar(false);
               setShowTypographyPanel(prev => !prev);
             }}
-            title={showTypographyPanel ? "收合閱讀版面設定" : "開啟閱讀版面設定 (字體、字級、行高、邊距)"}
+            title={showTypographyPanel ? "收合版面設定" : "開啟版面設定 (字體、字級、行高、邊距)"}
           >
             <span style={{ fontSize: '1.05rem', fontWeight: 600, fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
               字
             </span>
+            <span className="capsule-label">版面設定</span>
           </button>
 
           {/* 筆刷：畫重點模式開關與設定 */}
@@ -1844,36 +1846,49 @@ export function ReaderView({
                 onClick={() => {
                   setShowNavDrawer(false);
                   setShowTypographyPanel(false);
+                  setShowSearchNavBar(false);
                   setIsHighlightMode(prev => !prev);
                 }}
                 title={isHighlightMode ? "關閉畫重點模式 (可自由複製經文)" : "開啟畫重點模式 (選取經文自動劃線)"}
               >
-                <Paintbrush 
-                  size={18} 
-                  style={{
-                    color: 'currentColor',
-                    zIndex: 2
-                  }}
-                />
-                <div className="brush-color-indicator" style={getIndicatorStyle()} />
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Paintbrush 
+                    size={16} 
+                    style={{
+                      color: 'currentColor',
+                      zIndex: 2
+                    }}
+                  />
+                  <div className="brush-color-indicator" style={getIndicatorStyle()} />
+                </div>
+                <span className="capsule-label">畫重點</span>
               </button>
             );
           })()}
 
-          {/* 搜尋：關鍵字搜尋本書 */}
+          {/* 搜尋：關鍵字搜尋本書 (直接展開上方即時檢索列，不跳出彈窗) */}
           <button 
             type="button"
-            className={`capsule-nav-item reader-capsule-item ${activeSearchQuery ? 'active' : ''}`} 
+            className={`capsule-nav-item reader-capsule-item ${showSearchNavBar || Boolean(activeSearchQuery) ? 'active' : ''}`} 
             onClick={() => {
               setShowTypographyPanel(false);
               setIsHighlightMode(false);
               setShowNavDrawer(false);
-              setInBookSearchInput(activeSearchQuery);
-              setShowInBookSearchModal(true);
+              setShowSearchNavBar(prev => {
+                const next = !prev;
+                if (next) {
+                  setTimeout(() => {
+                    searchInputRef.current?.focus();
+                    searchInputRef.current?.select();
+                  }, 60);
+                }
+                return next;
+              });
             }} 
-            title="搜尋本書關鍵字"
+            title="本書搜尋"
           >
-            <Search size={18} />
+            <Search size={16} />
+            <span className="capsule-label">本書搜尋</span>
           </button>
         </div>
 
@@ -1905,94 +1920,64 @@ export function ReaderView({
         </div>
       </div>
 
-      {/* 💡 本書內關鍵字搜尋對話框 */}
-      {showInBookSearchModal && (
-        <div className="inbook-search-modal-backdrop" onClick={() => setShowInBookSearchModal(false)}>
-          <div className="inbook-search-modal-card" onClick={e => e.stopPropagation()}>
-            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', marginBottom: '0.8rem', color: 'var(--theme-accent, #8c4b27)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Search size={18} />
-              <span>搜尋本書經文關鍵字</span>
-            </div>
-            <div className="inbook-search-input-wrapper">
-              <input 
-                type="text" 
-                className="inbook-search-input"
-                placeholder="請輸入關鍵字，例如：地藏、勝鬘" 
-                value={inBookSearchInput}
-                onChange={e => setInBookSearchInput(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    setInternalSearchQuery(inBookSearchInput.trim());
-                    setShowInBookSearchModal(false);
-                  }
-                }}
-                autoFocus
-              />
-              {inBookSearchInput && (
-                <button 
-                  type="button" 
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }} 
-                  onClick={() => setInBookSearchInput('')}
-                >
-                  <X size={16} />
-                </button>
-              )}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.6rem', marginTop: '0.9rem' }}>
-              {activeSearchQuery && (
-                <button 
-                  className="inbook-search-btn-cancel" 
-                  style={{ color: '#ef4444', borderColor: '#fca5a5' }}
-                  onClick={() => {
-                    setInternalSearchQuery('');
-                    setInBookSearchInput('');
-                    setShowInBookSearchModal(false);
-                  }}
-                >
-                  清除搜尋
-                </button>
-              )}
-              <button 
-                className="inbook-search-btn-cancel" 
-                onClick={() => setShowInBookSearchModal(false)}
-              >
-                取消
-              </button>
-              <button 
-                className="inbook-search-btn-submit" 
-                onClick={() => {
-                  setInternalSearchQuery(inBookSearchInput.trim());
-                  setShowInBookSearchModal(false);
-                }}
-              >
-                搜尋經文
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 搜尋結果同一書內導航懸浮條 (Image 2) */}
-      {activeSearchQuery && matchedSegments.length > 0 && (
+      {/* 搜尋結果同一書內導航懸浮條 (直接呈現於頂部控制列下方，可原地即時輸入與修改關鍵字，免去彈窗干擾) */}
+      {(showSearchNavBar || (activeSearchQuery && matchedSegments.length > 0)) && (
         <div className={`search-nav-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-          <span className="search-nav-query" title={activeSearchQuery}>檢索: {activeSearchQuery}</span>
+          <div className="search-nav-input-wrap">
+            <span className="search-nav-prefix">檢索:</span>
+            <input 
+              ref={searchInputRef}
+              type="text" 
+              className="search-nav-input"
+              value={internalSearchQuery}
+              onChange={(e) => {
+                setInternalSearchQuery(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleNextMatch();
+                } else if (e.key === 'Escape') {
+                  setShowSearchNavBar(false);
+                  setInternalSearchQuery('');
+                }
+              }}
+              placeholder="關鍵字..."
+              title="輸入關鍵字檢索本書經文 (Enter 跳下一個匹配)"
+            />
+          </div>
+
           <div className="search-nav-controls">
-            <button className="search-nav-btn" onClick={handlePrevMatch} title="上一個匹配">
+            <button 
+              className="search-nav-btn" 
+              onClick={handlePrevMatch} 
+              disabled={matchedSegments.length === 0}
+              title="上一個匹配"
+              style={{ opacity: matchedSegments.length === 0 ? 0.35 : 1, cursor: matchedSegments.length === 0 ? 'default' : 'pointer' }}
+            >
               <ChevronLeft size={16} />
             </button>
             <span className="search-nav-stats">
-              {currentMatchIndex !== -1 ? currentMatchIndex + 1 : 0} / {matchedSegments.length}
+              {matchedSegments.length > 0 
+                ? `${currentMatchIndex !== -1 ? currentMatchIndex + 1 : 1} / ${matchedSegments.length}`
+                : (internalSearchQuery.trim() ? '0 / 0' : '- / -')}
             </span>
-            <button className="search-nav-btn" onClick={handleNextMatch} title="下一個匹配">
+            <button 
+              className="search-nav-btn" 
+              onClick={handleNextMatch} 
+              disabled={matchedSegments.length === 0}
+              title="下一個匹配"
+              style={{ opacity: matchedSegments.length === 0 ? 0.35 : 1, cursor: matchedSegments.length === 0 ? 'default' : 'pointer' }}
+            >
               <ChevronRight size={16} />
             </button>
             <button 
               className="search-nav-btn" 
               onClick={() => {
+                setShowSearchNavBar(false);
                 setInternalSearchQuery('');
               }} 
               title="關閉檢索"
-              style={{ marginLeft: '0.3rem' }}
+              style={{ marginLeft: '0.1rem' }}
             >
               <X size={15} />
             </button>
@@ -2009,8 +1994,8 @@ export function ReaderView({
           style={{
             position: 'fixed',
             top: showToolbar 
-              ? (activeSearchQuery && matchedSegments.length > 0)
-                ? 'calc(102px + env(safe-area-inset-top, 0px))'
+              ? (showSearchNavBar || (activeSearchQuery && matchedSegments.length > 0))
+                ? 'calc(108px + env(safe-area-inset-top, 0px))'
                 : 'calc(62px + env(safe-area-inset-top, 0px))'
               : 'calc(16px + env(safe-area-inset-top, 0px))',
             left: '50%',

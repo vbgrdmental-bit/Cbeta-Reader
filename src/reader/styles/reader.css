@@ -1135,23 +1135,25 @@ body.theme-ebony .drawer-item.active {
   font-size: 1rem;
 }
 
-/* Same book search results navigation floating bar */
+/* Same book search results navigation floating bar (直接浮現於控制列下方，支援即時輸入與切換) */
 .search-nav-bar {
   position: absolute;
-  top: 60px; /* Below top toolbar */
+  top: calc(56px + env(safe-area-inset-top, 0px) + 8px);
   left: 50%;
   transform: translateX(-50%);
   background: var(--reader-bg);
-  border: 1px solid var(--theme-accent-border, var(--reader-border));
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  border: 1px solid var(--theme-accent-border, rgba(140, 75, 39, 0.18));
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  gap: 1.2rem;
-  padding: 0.5rem 1rem;
+  gap: 0.75rem;
+  padding: 0.35rem 0.65rem 0.35rem 0.95rem;
   z-index: 1050;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeIn var(--transition-fast) forwards;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
 }
 
 /* Slide up and fade out when toolbar is hidden */
@@ -1161,31 +1163,81 @@ body.theme-ebony .drawer-item.active {
   pointer-events: none;
 }
 
-.search-nav-query {
+body.theme-ebony .search-nav-bar {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.search-nav-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   font-family: var(--font-serif);
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  color: var(--theme-accent);
-  opacity: 0.9;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--theme-accent, #8c4b27);
+}
+
+.search-nav-prefix {
+  font-size: 0.88rem;
+  color: var(--text-muted);
   white-space: nowrap;
+  user-select: none;
+  font-family: var(--font-sans);
+}
+
+body.theme-ebony .search-nav-prefix {
+  color: #a1a1aa;
+}
+
+.search-nav-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  width: 95px;
+  min-width: 55px;
+  max-width: 140px;
+  padding: 1px 4px;
+  border-bottom: 1.5px dashed var(--theme-accent-border, rgba(140, 75, 39, 0.35));
+  transition: all 0.18s ease;
+}
+
+.search-nav-input:focus {
+  border-bottom-style: solid;
+  border-bottom-color: var(--theme-accent);
+  background: rgba(140, 75, 39, 0.06);
+  border-radius: 4px;
+}
+
+body.theme-ebony .search-nav-input {
+  color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+body.theme-ebony .search-nav-input:focus {
+  border-bottom-color: var(--theme-accent, #cf9f60);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .search-nav-controls {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.45rem;
 }
 
 .search-nav-btn {
-  background: var(--theme-accent-light, rgba(242, 163, 27, 0.06));
-  border: 1px solid var(--theme-accent-border, rgba(242, 163, 27, 0.15));
-  color: var(--theme-accent);
-  border-radius: var(--radius-sm);
+  background: rgba(140, 75, 39, 0.05);
+  border: 1px solid rgba(140, 75, 39, 0.15);
+  color: var(--text-primary);
+  border-radius: 8px;
   width: 30px;
   height: 30px;
+  min-width: 30px;
+  min-height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1194,18 +1246,53 @@ body.theme-ebony .drawer-item.active {
   padding: 0;
 }
 
-.search-nav-btn:hover {
+.search-nav-btn:hover:not(:disabled) {
   background: var(--theme-accent);
   color: #ffffff;
   border-color: var(--theme-accent);
 }
 
+body.theme-ebony .search-nav-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e4e4e7;
+}
+
+body.theme-ebony .search-nav-btn:hover:not(:disabled) {
+  background: var(--theme-accent, #cf9f60);
+  color: #18181b;
+  border-color: var(--theme-accent, #cf9f60);
+}
+
 .search-nav-stats {
-  font-size: 0.82rem;
-  font-weight: bold;
-  color: var(--reader-text);
-  min-width: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 52px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .search-nav-bar {
+    gap: 0.4rem;
+    padding: 0.3rem 0.5rem 0.3rem 0.75rem;
+  }
+  .search-nav-input {
+    width: 75px;
+    font-size: 0.88rem;
+  }
+  .search-nav-stats {
+    min-width: 44px;
+    font-size: 0.80rem;
+  }
+  .search-nav-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+  }
 }
 
 /* 接續閱讀詢問視窗按鈕狀態與動效 */
