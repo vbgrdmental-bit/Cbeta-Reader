@@ -1726,155 +1726,144 @@ export function ReaderView({
       onMouseMove={resetToolbarTimeout}
     >
       
-      {/* 頂部工具列 */}
-      <div className={`reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
-        <button 
-          className="library-header-btn" 
-          onClick={() => {
-            setShowTypographyPanel(false);
-            setIsHighlightMode(false);
-            setShowNavDrawer(false);
-            onBackToLibrary(true);
-          }} 
-          title="首頁"
-        >
-          <Home size={20} />
-        </button>
-
-        <div className="control-divider" />
-
-        <button 
-          className="library-header-btn" 
-          onClick={() => {
-            setShowTypographyPanel(false);
-            setIsHighlightMode(false);
-            setShowNavDrawer(false);
-            onBackToLibrary(false);
-          }} 
-          title="返回上一頁"
-        >
-          <ArrowLeft size={20} />
-        </button>
-
-        {/* 💡 閱讀版面快速設定鍵 「字」 (點擊開啟/收合下方 4 個閱讀版面膠囊) */}
-        <button 
-          className={`icon-button typography-btn ${showTypographyPanel ? 'active' : ''}`}
-          onClick={() => {
-            setShowNavDrawer(false);
-            setIsHighlightMode(false);
-            setShowTypographyPanel(prev => !prev);
-          }}
-          title={showTypographyPanel ? "收合閱讀版面設定" : "開啟閱讀版面設定 (字體、字級、行高、邊距)"}
-          style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            position: 'relative',
-            cursor: 'pointer',
-            padding: 0
-          }}
-        >
-          <span style={{ fontSize: '1.05rem', fontWeight: 600, fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
-            字
-          </span>
-        </button>
-
-        {/* 💡 畫重點開關與設定鍵 「筆刷」 (點擊開啟/關閉畫重點模式，並開啟/收合下方 2 個畫重點膠囊) */}
-        {(() => {
-          const colorHex = 
-            settings.highlightColor === 'yellow' ? '#fbbf24' :
-            settings.highlightColor === 'red' ? '#f87171' :
-            settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
-
-          const getIndicatorStyle = (): React.CSSProperties => {
-            const currentStyle = settings.highlightStyle || 'bottom-half';
-            switch (currentStyle) {
-              case 'underline':
-                return {
-                  position: 'absolute',
-                  bottom: '4px',
-                  width: '14px',
-                  height: '3px',
-                  borderRadius: '1.5px',
-                  backgroundColor: colorHex,
-                  boxSizing: 'border-box'
-                };
-              case 'bottom-half':
-                return {
-                  position: 'absolute',
-                  bottom: '4px',
-                  width: '16px',
-                  height: '7px',
-                  borderRadius: '2px',
-                  backgroundColor: colorHex,
-                  opacity: 0.85,
-                  boxSizing: 'border-box'
-                };
-              case 'full':
-                return {
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  backgroundColor: colorHex,
-                  opacity: 0.45,
-                  boxSizing: 'border-box',
-                  zIndex: 1
-                };
-              case 'border':
-                return {
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '50%',
-                  border: `2.2px solid ${colorHex}`,
-                  backgroundColor: 'transparent',
-                  boxSizing: 'border-box',
-                  zIndex: 1
-                };
-            }
-          };
-
-          return (
-            <button 
-              className={`icon-button highlight-btn ${isHighlightMode ? 'active' : ''}`}
-              onClick={() => {
-                setShowNavDrawer(false);
-                setShowTypographyPanel(false);
-                setIsHighlightMode(prev => !prev);
-              }}
-              title={isHighlightMode ? "關閉畫重點模式 (可自由複製經文)" : "開啟畫重點模式 (選取經文自動劃線)"}
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                position: 'relative',
-                cursor: 'pointer',
-                padding: 0
-              }}
-            >
-              <Paintbrush 
-                size={20} 
-                style={{
-                  color: 'currentColor',
-                  zIndex: 2
-                }}
-              />
-              <div className="brush-color-indicator" style={getIndicatorStyle()} />
-            </button>
-          );
-        })()}
-
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-          {/* 💡 頂部列：「三」左邊新增搜尋鍵，樣式 100% 統一 */}
+      {/* 頂部工具列：全站統一控制列規格 (56px、Safe Area、左端家與右端齒輪位置恆定一致) */}
+      <div className={`library-header reader-overlay-bar reader-top-bar ${showToolbar ? 'visible' : 'hidden'}`}>
+        {/* 1. 左端：家 (Home) 與返回上一頁 (ArrowLeft)，刪除兩者間的分隔線 | */}
+        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
           <button 
-            className={`icon-button ${activeSearchQuery ? 'active' : ''}`} 
+            className="library-header-btn" 
+            onClick={() => {
+              setShowTypographyPanel(false);
+              setIsHighlightMode(false);
+              setShowNavDrawer(false);
+              onBackToLibrary(true);
+            }} 
+            title="首頁"
+          >
+            <Home size={20} />
+          </button>
+
+          <button 
+            className="library-header-btn" 
+            onClick={() => {
+              setShowTypographyPanel(false);
+              setIsHighlightMode(false);
+              setShowNavDrawer(false);
+              onBackToLibrary(false);
+            }} 
+            title="返回上一頁"
+          >
+            <ArrowLeft size={20} />
+          </button>
+        </div>
+
+        {/* 2. 中央統一微膠囊：整合「字 / 筆刷 / 搜尋」，型式同全站首頁中央膠囊 */}
+        <div className="unified-nav-capsule reader-nav-capsule">
+          {/* 字：閱讀版面快速設定 (字體、字級、行高、邊距) */}
+          <button 
+            type="button"
+            className={`capsule-nav-item reader-capsule-item ${showTypographyPanel ? 'active' : ''}`}
+            onClick={() => {
+              setShowNavDrawer(false);
+              setIsHighlightMode(false);
+              setShowTypographyPanel(prev => !prev);
+            }}
+            title={showTypographyPanel ? "收合閱讀版面設定" : "開啟閱讀版面設定 (字體、字級、行高、邊距)"}
+          >
+            <span style={{ fontSize: '1.05rem', fontWeight: 600, fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
+              字
+            </span>
+          </button>
+
+          {/* 筆刷：畫重點模式開關與設定 */}
+          {(() => {
+            const colorHex = 
+              settings.highlightColor === 'yellow' ? '#fbbf24' :
+              settings.highlightColor === 'red' ? '#f87171' :
+              settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
+
+            const getIndicatorStyle = (): React.CSSProperties => {
+              const currentStyle = settings.highlightStyle || 'bottom-half';
+              switch (currentStyle) {
+                case 'underline':
+                  return {
+                    position: 'absolute',
+                    bottom: '4px',
+                    width: '14px',
+                    height: '3px',
+                    borderRadius: '1.5px',
+                    backgroundColor: colorHex,
+                    boxSizing: 'border-box'
+                  };
+                case 'bottom-half':
+                  return {
+                    position: 'absolute',
+                    bottom: '4px',
+                    width: '16px',
+                    height: '7px',
+                    borderRadius: '2px',
+                    backgroundColor: colorHex,
+                    opacity: 0.85,
+                    boxSizing: 'border-box'
+                  };
+                case 'full':
+                  return {
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '22px',
+                    height: '22px',
+                    borderRadius: '50%',
+                    backgroundColor: colorHex,
+                    opacity: 0.45,
+                    boxSizing: 'border-box',
+                    zIndex: 1
+                  };
+                case 'border':
+                  return {
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    border: `2.2px solid ${colorHex}`,
+                    backgroundColor: 'transparent',
+                    boxSizing: 'border-box',
+                    zIndex: 1
+                  };
+              }
+            };
+
+            return (
+              <button 
+                type="button"
+                className={`capsule-nav-item reader-capsule-item highlight-btn ${isHighlightMode ? 'active' : ''}`}
+                onClick={() => {
+                  setShowNavDrawer(false);
+                  setShowTypographyPanel(false);
+                  setIsHighlightMode(prev => !prev);
+                }}
+                title={isHighlightMode ? "關閉畫重點模式 (可自由複製經文)" : "開啟畫重點模式 (選取經文自動劃線)"}
+              >
+                <Paintbrush 
+                  size={18} 
+                  style={{
+                    color: 'currentColor',
+                    zIndex: 2
+                  }}
+                />
+                <div className="brush-color-indicator" style={getIndicatorStyle()} />
+              </button>
+            );
+          })()}
+
+          {/* 搜尋：關鍵字搜尋本書 */}
+          <button 
+            type="button"
+            className={`capsule-nav-item reader-capsule-item ${activeSearchQuery ? 'active' : ''}`} 
             onClick={() => {
               setShowTypographyPanel(false);
               setIsHighlightMode(false);
@@ -1884,10 +1873,14 @@ export function ReaderView({
             }} 
             title="搜尋本書關鍵字"
           >
-            <Search size={20} />
+            <Search size={18} />
           </button>
+        </div>
+
+        {/* 3. 右端：目次 (三) 與設定 (齒輪)，均套用 library-header-btn 淺灰圓型背景 */}
+        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
           <button 
-            className="icon-button nav-menu-btn" 
+            className={`library-header-btn ${showNavDrawer ? 'active' : ''}`} 
             onClick={() => {
               setShowTypographyPanel(false);
               setIsHighlightMode(false);
@@ -1898,7 +1891,7 @@ export function ReaderView({
             <Menu size={20} />
           </button>
           <button 
-            className="icon-button" 
+            className="library-header-btn" 
             onClick={() => {
               setShowTypographyPanel(false);
               setIsHighlightMode(false);

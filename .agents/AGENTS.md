@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.4.9` (App: v4.4.9 / Builder: v2.9.12)
+- **Current Version**: `v4.5.0` (App: v4.5.0 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.0 / Builder: v2.9.12** (2026-09-22)
+  - [App] 1 本書與 2 本書小工具取消書籍外圍細小邊框，消除視覺重覆感。
+  - [App] 閱讀頁上方控制列全站統一，左「家」右「齒輪」位置與首頁精確對齊。
+  - [App] 閱讀頁「字/筆刷/搜尋」整合為中央微膠囊，目次與齒輪配置圓型背景。
 - **⭐ App: v4.4.9 / Builder: v2.9.12** (2026-09-22)
   - [App] 首頁四合一導航 4×2 取消 4 個按鍵外圍細邊框。
   - [App] 「下載經典」按鍵下方新增「從cbeta下載」標籤。

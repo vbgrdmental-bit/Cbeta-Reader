@@ -7451,10 +7451,58 @@ body.theme-ebony .book-widget-card-box {
   top: 30px;
 }
 
-/* 確保 4x2、4x1 圖標與 4x3 完全一致 (42px 寬高，左右 100% 垂直切齊) */
+/* 確保 4x2、4x1 圖標與 4x3 完全一致 (42px 寬高，左右 100% 垂直切齊)，並取消內層書籍邊框避免重覆感 */
 .book-widget-card-box .book-stack-item-4x4 {
   padding: 0.38rem 0.65rem;
   border-radius: 12px;
+  border: none;
+}
+
+body.theme-ebony .book-widget-card-box .book-stack-item-4x4 {
+  border: none;
+}
+
+/* 💡 閱讀頁中央統一微膠囊（整合「字 / 筆刷 / 搜尋」） */
+.reader-nav-capsule {
+  margin: 0 auto !important;
+  flex-shrink: 0;
+}
+
+.reader-capsule-item {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.reader-nav-capsule .reader-capsule-item.active {
+  background: var(--theme-accent, #8c4b27) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(140, 75, 39, 0.25) !important;
+}
+
+body.theme-ebony .reader-nav-capsule .reader-capsule-item.active {
+  background: var(--theme-accent, #cf9f60) !important;
+  color: #18181b !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.theme-comfort .reader-nav-capsule .reader-capsule-item.active {
+  background: #2e5c3b !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 600px) {
+  .reader-capsule-item {
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+  }
 }
 
 .book-widget-card-box .book-stack-item-4x4 .book-badge {
