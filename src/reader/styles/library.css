@@ -7571,6 +7571,41 @@ body.theme-ebony .bookshelf-book-card:hover {
   border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
+/* ============================================================ */
+/* 🌟 書櫃吸頂浮動控制列 (圖1/圖3：往下滑動時吸附在頂部控制列圖2之下) */
+/* ============================================================ */
+.appstore-bookshelf-container {
+  transform: none !important;
+}
+
+.bookshelf-sticky-controls-header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--bg-library);
+  padding-top: 0.45rem;
+  padding-bottom: 0.55rem;
+  margin-top: -0.1rem;
+  margin-bottom: 0.75rem;
+  margin-left: -0.85rem;
+  margin-right: -0.85rem;
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+body.theme-ebony .bookshelf-sticky-controls-header,
+.theme-ebony .bookshelf-sticky-controls-header {
+  background: var(--bg-library);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
 
 
 

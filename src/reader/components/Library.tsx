@@ -1572,7 +1572,7 @@ export function Library({
           {/* === B. 「我的書櫃」（virtual_my_folders）：支援體驗 ABC 互動排版提案與原版書櫃切換 === */}
           {currentFolderId === 'virtual_my_folders' && (
             showPlaygroundDemo ? (
-              <div className="appstore-bookshelf-container animate-slide-up">
+              <div className="appstore-bookshelf-container animate-fade-in" style={{ transform: 'none' }}>
                 <BookshelfInteractivePlayground
                   downloadedBooks={downloadedBooks}
                   favoriteWorkIds={favoriteWorkIds}

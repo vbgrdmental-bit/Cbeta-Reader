@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.4.7` (App: v4.4.7 / Builder: v2.9.12)
+- **Current Version**: `v4.4.8` (App: v4.4.8 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.4.8 / Builder: v2.9.12** (2026-09-22)
+  - [App] 書櫃 4 大分類與過濾膠囊升級吸頂浮動，下滑時常駐頂部控制列下方。
+  - [App] 書櫃依冊別排序先英文字母前綴（TX... 先於 Y...）再依序號由小到大排。
+  - [App] 書櫃依作譯者排序修正為按經典編號由小到大順序排列（01、02、03...）。
 - **⭐ App: v4.4.7 / Builder: v2.9.12** (2026-09-22)
   - [App] 深色模式下每本書外框升級細白邊框，視覺邊界更分明清晰。
   - [App] 書櫃「依冊別」修正太虛大師全書（TX）歸類，精準納入近代新編文獻。

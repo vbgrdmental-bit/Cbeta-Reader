@@ -191,6 +191,63 @@ function getCanonCategoryInfo(b: BookMetadata): { key: string; order: number } {
   return { key: '歷代藏經補輯', order: 3 };
 }
 
+/**
+ * 🌟 藏經書籍智慧排序：
+ * 1. 先以英文字母順序排「TX…」、「Y…」（如太虛大師 TX... 先於 印順導師 Y...）
+ * 2. 後再依數字順序從小到大排 01、02、03…（如 TXa001, TX0002, TX0003...；Y0001, Y0002, Y0042...）
+ * (完美滿足圖4冊別排序與圖5作者排序需求)
+ */
+export function sortBooksByPrefixAndNumber(books: BookMetadata[]): BookMetadata[] {
+  const getCanonCode = (id: string): string => {
+    const clean = (id || '').trim().toUpperCase();
+    const double = ['TX', 'GA', 'GB', 'LC', 'YP', 'CC', 'ZS', 'ZW'];
+    for (const d of double) {
+      if (clean.startsWith(d)) return d;
+    }
+    const single = clean.match(/^[A-Z]/);
+    return single ? single[0] : 'T';
+  };
+
+  const getSortNumber = (b: BookMetadata): number => {
+    const id = (b.workId || '').toUpperCase();
+    // 太虛大師編纂說明等序篇或 a001 視為第 0 編 (排在第一)
+    if (id.startsWith('TXA') || id.includes('A001')) return -1;
+    
+    // 優先從 vol 提取純數字 (如 Y01 => 1, TX02 => 2, Y42 => 42)
+    if (b.vol) {
+      const volNum = parseInt(b.vol.replace(/[^\d]/g, ''), 10);
+      if (!isNaN(volNum)) return volNum;
+    }
+    
+    // 從 workId 提取首個數字區塊 (如 Y0042 => 42, TX0002 => 2)
+    const match = id.match(/\d+/);
+    if (match) {
+      return parseInt(match[0], 10);
+    }
+    return 9999;
+  };
+
+  return [...books].sort((a, b) => {
+    const canonA = getCanonCode(a.workId);
+    const canonB = getCanonCode(b.workId);
+
+    // 1. 先以英文字母前綴順序排（如 TX... 先於 Y...）
+    if (canonA !== canonB) {
+      return canonA.localeCompare(canonB);
+    }
+
+    // 2. 同一藏經前綴下，依數字順序從小到大排（01、02、03...）
+    const numA = getSortNumber(a);
+    const numB = getSortNumber(b);
+    if (numA !== numB) {
+      return numA - numB;
+    }
+
+    // 3. 次要補底自然序
+    return a.workId.localeCompare(b.workId, undefined, { numeric: true });
+  });
+}
+
 export function BookshelfInteractivePlayground({
   downloadedBooks,
   favoriteWorkIds,
@@ -369,20 +426,10 @@ export function BookshelfInteractivePlayground({
       groups[key].books.push(b);
     });
 
-    // 若為依冊別，組內依冊次/卷次 (vol) 與 workId 順序排列
-    if (classificationMode === 'volume') {
-      const getVolNum = (b: BookMetadata) => {
-        if (b.vol) {
-          const num = parseInt(b.vol.replace(/[^\d]/g, ''), 10);
-          if (!isNaN(num)) return num;
-        }
-        const idNum = parseInt(b.workId.replace(/[^\d]/g, ''), 10);
-        return !isNaN(idNum) ? idNum : 999;
-      };
-      Object.values(groups).forEach(g => {
-        g.books.sort((a, b) => getVolNum(a) - getVolNum(b));
-      });
-    }
+    // 🌟 組內書籍全面智慧排序：先以英文字順序排「TX…」、「Y…」，後再依數字順序從小到大排 01、02、03… (圖4 & 圖5 需求)
+    Object.values(groups).forEach(g => {
+      g.books = sortBooksByPrefixAndNumber(g.books);
+    });
 
     // 依 order 排序分組
     const sortedEntries = Object.entries(groups).sort((a, b) => a[1].order - b[1].order);
@@ -469,85 +516,85 @@ export function BookshelfInteractivePlayground({
       </div>
 
       {/* ========================================================================= */}
-      {/* 🌟 1. 頂部第一層：4 大分類切換 (依部類 / 依冊別 / 依作譯者 / 依朝代)          */}
+      {/* 🌟 吸頂浮動控制列：4 大分類切換 + 4 大膠囊快捷過濾 (圖1/圖3 往下拉時浮於上方控制列圖2之下) */}
       {/* ========================================================================= */}
-      <div 
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          background: 'rgba(0, 0, 0, 0.05)',
-          borderRadius: '16px',
-          padding: '4px',
-          marginBottom: '0.65rem',
-          border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-          boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)'
-        }}
-      >
-        {[
-          { id: 'category', label: '依部類', icon: Layers },
-          { id: 'volume', label: '依冊別', icon: BookOpen },
-          { id: 'author', label: '依作譯者', icon: User },
-          { id: 'dynasty', label: '依朝代', icon: Clock }
-        ].map(item => {
-          const isActive = classificationMode === item.id;
-          const IconComp = item.icon;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setClassificationMode(item.id as any)}
-              style={{
-                padding: '0.55rem 0.2rem',
-                borderRadius: '12px',
-                border: 'none',
-                background: isActive ? 'var(--bg-card, #ffffff)' : 'transparent',
-                color: isActive ? 'var(--color-wood-700, #8c4b27)' : 'var(--text-muted)',
-                fontWeight: isActive ? 800 : 600,
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '4px',
-                transition: 'all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.1)' : 'none'
-              }}
-            >
-              <IconComp size={18} strokeWidth={isActive ? 2.3 : 1.8} />
-              <span style={{ fontSize: '0.8rem', letterSpacing: '0.02em' }}>{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
+      <div className="bookshelf-sticky-controls-header">
+        {/* 🌟 1. 頂部第一層：4 大分類切換 (依部類 / 依冊別 / 依作譯者 / 依朝代) */}
+        <div 
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            background: 'rgba(0, 0, 0, 0.05)',
+            borderRadius: '16px',
+            padding: '4px',
+            marginBottom: '0.55rem',
+            border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)'
+          }}
+        >
+          {[
+            { id: 'category', label: '依部類', icon: Layers },
+            { id: 'volume', label: '依冊別', icon: BookOpen },
+            { id: 'author', label: '依作譯者', icon: User },
+            { id: 'dynasty', label: '依朝代', icon: Clock }
+          ].map(item => {
+            const isActive = classificationMode === item.id;
+            const IconComp = item.icon;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setClassificationMode(item.id as any)}
+                style={{
+                  padding: '0.55rem 0.2rem',
+                  borderRadius: '12px',
+                  border: 'none',
+                  background: isActive ? 'var(--bg-card, #ffffff)' : 'transparent',
+                  color: isActive ? 'var(--color-wood-700, #8c4b27)' : 'var(--text-muted)',
+                  fontWeight: isActive ? 800 : 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px',
+                  transition: 'all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                  boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.1)' : 'none'
+                }}
+              >
+                <IconComp size={18} strokeWidth={isActive ? 2.3 : 1.8} />
+                <span style={{ fontSize: '0.8rem', letterSpacing: '0.02em' }}>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
 
-      {/* ========================================================================= */}
-      {/* 🏷️ 2. 第二層：4 大膠囊快捷過濾 (圖5型式：膠囊小、文字小、單行不分兩行、點到的反灰深灰底) */}
-      {/* ========================================================================= */}
-      <div 
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '6px',
-          marginBottom: '0.75rem'
-        }}
-      >
-        {[
-          { id: 'all', label: `全部 (${activeBooksPool.length})` },
-          { id: 'downloads', label: '近期下載' },
-          { id: 'recent', label: '近期閱讀' },
-          { id: 'favorites', label: '我的最愛' }
-        ].map(item => {
-          const isActive = statusFilter === item.id;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              className={`bookshelf-filter-capsule ${isActive ? 'active' : ''}`}
-              onClick={() => setStatusFilter(item.id as any)}
-            >
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
+        {/* 🏷️ 2. 第二層：4 大膠囊快捷過濾 (圖5型式：膠囊小、文字小、單行不分兩行、點到的反灰深灰底) */}
+        <div 
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '6px'
+          }}
+        >
+          {[
+            { id: 'all', label: `全部 (${activeBooksPool.length})` },
+            { id: 'downloads', label: '近期下載' },
+            { id: 'recent', label: '近期閱讀' },
+            { id: 'favorites', label: '我的最愛' }
+          ].map(item => {
+            const isActive = statusFilter === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={`bookshelf-filter-capsule ${isActive ? 'active' : ''}`}
+                onClick={() => setStatusFilter(item.id as any)}
+              >
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* ========================================================================= */}
