@@ -1778,9 +1778,9 @@ export function ReaderView({
             }}
             title={showTypographyPanel ? "收合版面設定" : "開啟版面設定 (字體、字級、行高、邊距)"}
           >
-            <span style={{ fontSize: '1.05rem', fontWeight: 600, fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
-              字
-            </span>
+            <div className="capsule-disc-wrapper">
+              <span className="capsule-disc-char">字</span>
+            </div>
             <span className="capsule-label">版面設定</span>
           </button>
 
@@ -1849,7 +1849,7 @@ export function ReaderView({
             return (
               <button 
                 type="button"
-                className={`capsule-nav-item reader-capsule-item reader-brush-capsule ${isHighlightMode ? 'active' : ''}`}
+                className={`capsule-nav-item reader-capsule-item ${isHighlightMode ? 'active' : ''}`}
                 onClick={() => {
                   setShowNavDrawer(false);
                   setShowTypographyPanel(false);
@@ -1859,10 +1859,10 @@ export function ReaderView({
                 }}
                 title={isHighlightMode ? "關閉畫重點模式 (可自由複製經文)" : "開啟畫重點模式 (選取經文自動劃線)"}
               >
-                <div className="brush-disc-wrapper">
+                <div className="capsule-disc-wrapper">
                   <Paintbrush 
                     size={16} 
-                    className="brush-icon"
+                    className="capsule-disc-icon"
                     style={{
                       zIndex: 2
                     }}
@@ -1895,7 +1895,9 @@ export function ReaderView({
             }} 
             title={showSearchNavBar ? "關閉本書搜尋" : "開啟本書搜尋"}
           >
-            <Search size={16} />
+            <div className="capsule-disc-wrapper">
+              <Search size={16} className="capsule-disc-icon" />
+            </div>
             <span className="capsule-label">本書搜尋</span>
           </button>
         </div>

@@ -7506,37 +7506,14 @@ body.theme-ebony .book-widget-card-box .book-stack-item-4x4 {
   background: var(--theme-accent, #8c4b27) !important;
   color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(140, 75, 39, 0.25) !important;
-}
-
-.reader-nav-capsule .reader-capsule-item.active .capsule-label {
-  max-width: 82px !important;
-  opacity: 1 !important;
-  margin-left: 4px !important;
-}
-
-body.theme-ebony .reader-nav-capsule .reader-capsule-item.active {
-  background: var(--theme-accent, #cf9f60) !important;
-  color: #18181b !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
-}
-
-body.theme-comfort .reader-nav-capsule .reader-capsule-item.active {
-  background: #2e5c3b !important;
-  color: #ffffff !important;
-}
-
-/* 筆刷按鈕在 active 時的專屬排版：底色包覆左邊筆刷邊框和右邊文字，左圓型筆刷保留原本底色，使左、右合為一體膠囊 */
-.reader-nav-capsule .reader-capsule-item.reader-brush-capsule.active {
-  background: var(--theme-accent, #8c4b27) !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(140, 75, 39, 0.25) !important;
   padding: 3px 10px 3px 3px !important;
   display: inline-flex !important;
   align-items: center !important;
   border-radius: 9999px !important;
 }
 
-.reader-brush-capsule .brush-disc-wrapper {
+/* 內層圓型微碟（提供左邊圖示/文字獨立圓型底色，不受外層膠囊底色遮蔽，形成雙核微膠囊質感） */
+.reader-capsule-item .capsule-disc-wrapper {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -7548,45 +7525,76 @@ body.theme-comfort .reader-nav-capsule .reader-capsule-item.active {
   flex-shrink: 0;
 }
 
-.reader-brush-capsule.active .brush-disc-wrapper {
+.reader-capsule-item.active .capsule-disc-wrapper {
   background: var(--reader-bg, #fdfbf7);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
 }
 
-.reader-brush-capsule .brush-disc-wrapper .brush-icon {
+.reader-capsule-item .capsule-disc-char {
+  font-size: 1.02rem;
+  font-weight: 600;
+  font-family: var(--font-serif);
+  line-height: 1;
   color: var(--text-primary, #3c2a1a);
-  transition: transform 0.2s ease;
+  transition: color 0.2s ease;
 }
 
-body.theme-ebony .reader-nav-capsule .reader-capsule-item.reader-brush-capsule.active {
+.reader-capsule-item .capsule-disc-icon {
+  color: var(--text-primary, #3c2a1a);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.reader-nav-capsule .reader-capsule-item.active .capsule-label {
+  max-width: 82px !important;
+  opacity: 1 !important;
+  margin-left: 5px !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  white-space: nowrap !important;
+}
+
+/* 烏木深色模式 */
+body.theme-ebony .reader-nav-capsule .reader-capsule-item.active {
   background: var(--theme-accent, #cf9f60) !important;
   color: #18181b !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
 }
 
-body.theme-ebony .reader-brush-capsule.active .brush-disc-wrapper {
+body.theme-ebony .reader-capsule-item.active .capsule-disc-wrapper {
   background: #232220;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-body.theme-ebony .reader-brush-capsule .brush-disc-wrapper .brush-icon {
+body.theme-ebony .reader-capsule-item .capsule-disc-char,
+body.theme-ebony .reader-capsule-item .capsule-disc-icon {
   color: #f4f4f5;
 }
 
-body.theme-comfort .reader-nav-capsule .reader-capsule-item.reader-brush-capsule.active {
+body.theme-ebony .reader-nav-capsule .reader-capsule-item.active .capsule-label {
+  color: #18181b !important;
+}
+
+/* 舒服綠模式 */
+body.theme-comfort .reader-nav-capsule .reader-capsule-item.active {
   background: #2e5c3b !important;
   color: #ffffff !important;
 }
 
-body.theme-comfort .reader-brush-capsule.active .brush-disc-wrapper {
+body.theme-comfort .reader-capsule-item.active .capsule-disc-wrapper {
   background: #edf3ee;
 }
 
+body.theme-comfort .reader-capsule-item .capsule-disc-char,
+body.theme-comfort .reader-capsule-item .capsule-disc-icon {
+  color: #1c3824;
+}
+
 @media (max-width: 600px) {
-  .reader-capsule-item.reader-brush-capsule.active {
+  .reader-nav-capsule .reader-capsule-item.active {
     padding: 2px 8px 2px 2px !important;
   }
-  .reader-brush-capsule .brush-disc-wrapper {
+  .reader-capsule-item .capsule-disc-wrapper {
     width: 26px;
     height: 26px;
   }
@@ -7596,9 +7604,6 @@ body.theme-comfort .reader-brush-capsule.active .brush-disc-wrapper {
   }
   .reader-capsule-item:not(.active) {
     width: 30px !important;
-  }
-  .reader-capsule-item.active {
-    padding: 0 8px !important;
   }
   .reader-capsule-item.active .capsule-label,
   .reader-capsule-item:hover .capsule-label {
