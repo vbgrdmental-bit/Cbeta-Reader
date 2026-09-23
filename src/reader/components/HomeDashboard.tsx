@@ -4,6 +4,7 @@ import {
   Maximize2, Sliders, CalendarDays, ArrowRight
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
+import { getBook } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { sanitizeCreators } from '../../builder/IndexBuilder';
 import { getBookCoverGradient } from '../../utils/bookColors';
@@ -38,9 +39,11 @@ interface HomeDashboardProps {
   setIsLayoutEditMode: (val: boolean) => void;
 }
 
-// 💡 檢查是否為經書外置標題小工具 (上次閱讀、我的最愛、近期下載之 4x2 與 4x1 規格)
+// 💡 檢查是否為經書外置標題小工具 (上次閱讀之 4x2、4x1、4x4，我的最愛、近期下載之 4x2 與 4x1 規格)
 const isBookWidgetOuterHeader = (type: string, size: string) => 
-  (type === 'lastread_4x2' || type === 'lastread_4x1' || type === 'favorites_4x2' || type === 'recent_downloads_4x2') && (size === 'size-4x2' || size === 'size-4x1');
+  ((type === 'lastread_4x2' || type === 'lastread_4x1') && (size === 'size-4x2' || size === 'size-4x1' || size === 'size-4x4')) ||
+  ((type === 'favorites_4x2' || type === 'recent_downloads_4x2') && (size === 'size-4x2' || size === 'size-4x1')) ||
+  (type === 'lastread_excerpt_4x4');
 
 // 💡 扁平化全小工具線性巡覽清單 (全由「<」「>」依序瀏覽所有分類與規格)
 interface FlatGalleryItem {
@@ -450,6 +453,56 @@ export function HomeDashboard({
     );
   };
 
+  // 💡 上次閱讀最後一本書的經文段落文字非同步快取 (供 4x4 經文進度卡片使用)
+  const [lastBookExcerpt, setLastBookExcerpt] = useState<string>('');
+
+  useEffect(() => {
+    const lastBook = resumeBooks[0] || DEMO_PREVIEW_RESUME[0];
+    if (!lastBook) {
+      setLastBookExcerpt('');
+      return;
+    }
+
+    // 1. 若 progress 中已內建儲存 text，直接使用
+    if (lastBook.progress?.text) {
+      setLastBookExcerpt(lastBook.progress.text);
+      return;
+    }
+
+    // 2. 若 progress 尚無 text，嘗試從 localStorage 取
+    try {
+      const stored = localStorage.getItem(`reader_progress_${lastBook.book.workId}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.text) {
+          setLastBookExcerpt(parsed.text);
+          return;
+        }
+      }
+    } catch {}
+
+    // 3. 非同步從 IndexedDB getBook 讀取段落文字
+    let cancelled = false;
+    getBook(lastBook.book.workId).then(pkg => {
+      if (cancelled || !pkg || !pkg.content || !pkg.content.juans) return;
+      const targetJuanNum = lastBook.progress?.juan || 1;
+      const juan = pkg.content.juans.find(j => j.juan === targetJuanNum) || pkg.content.juans[0];
+      if (!juan || !juan.segments || juan.segments.length === 0) return;
+
+      const targetSegId = lastBook.progress?.segmentId;
+      const segIdx = targetSegId ? juan.segments.findIndex(s => s.id === targetSegId) : 0;
+      const startIdx = segIdx !== -1 ? segIdx : 0;
+      const text = juan.segments.slice(startIdx, startIdx + 5).map(s => s.content.trim()).filter(Boolean).join('\n\n');
+      if (text && !cancelled) {
+        setLastBookExcerpt(text);
+      }
+    }).catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [resumeBooks]);
+
   // 渲染各類型小工具組件
   const renderWidgetContent = (widget: HomeWidgetConfig) => {
     const { type, size, id } = widget;
@@ -459,6 +512,109 @@ export function HomeDashboard({
     const effectiveResumeBooks = (isPreview && resumeBooks.length === 0) ? DEMO_PREVIEW_RESUME : resumeBooks;
     const effectiveDownloadedBooks = (isPreview && downloadedBooks.length === 0) ? DEMO_PREVIEW_RESUME.map(d => d.book) : downloadedBooks;
     const effectiveHighlightsCount = (isPreview && allHighlights.length === 0) ? 12 : allHighlights.length;
+
+    // 💡 🌟 上次閱讀 · 經文進度 (4x4 規格，上部分 4x1 維持圖1樣式，下部分 4x3 經文文字，外置標題列)
+    const renderLastReadExcerptCard = () => {
+      const lastBook = effectiveResumeBooks[0];
+      if (!lastBook) {
+        return (
+          <>
+            <div 
+              className="widget-outside-header-row"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+              title="點擊進入書櫃「近期閱讀」"
+            >
+              <div className="widget-outside-tag">上次閱讀 ➔</div>
+              <div className="widget-outside-badge">共 0 部</div>
+            </div>
+            <div 
+              className="lastread-excerpt-card-4x4 empty"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+            >
+              <div className="lastread-excerpt-empty-text">
+                📖 尚無閱讀進度（進入書櫃點選經文開始閱讀）
+              </div>
+            </div>
+          </>
+        );
+      }
+
+      const handleContinueRead = () => {
+        if (!isLayoutEditMode) {
+          onSelectBook(lastBook.book.workId, lastBook.progress?.segmentId, undefined, 'resume');
+        }
+      };
+
+      const rawText = lastBookExcerpt || lastBook.progress?.text || '如是我聞。一時佛在忉利天，為母說法。爾時十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。讚歎釋迦牟尼佛，能於五濁惡世，現不可思議大智慧神通之力，調伏剛強眾生，知苦樂法……';
+      const cleanText = rawText.replace(/^[…\s]+/, '').replace(/[…\s]+$/, '');
+      const excerptText = `… ${cleanText} …`;
+
+      return (
+        <>
+          {/* 卡片外、上方加上「上次閱讀→」，其位置等同「4*2」的文字位置 */}
+          <div 
+            className="widget-outside-header-row"
+            onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+            style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+            title="點擊進入書櫃「近期閱讀」"
+          >
+            <div className="widget-outside-tag">上次閱讀 ➔</div>
+            <div className="widget-outside-badge">共 {effectiveResumeBooks.length} 部</div>
+          </div>
+
+          <div className="lastread-excerpt-card-4x4">
+            {/* 上部分 4*1：維持如圖1樣式（經號徽章 + 經名與作譯者 + 圓形「➔」按鈕） */}
+            <div 
+              className="lastread-excerpt-header-4x1"
+              onClick={handleContinueRead}
+              title="點擊繼續閱讀"
+            >
+              <div className="lastread-excerpt-header-left">
+                <div 
+                  className="book-badge" 
+                  style={{ background: getBookCoverGradient(lastBook.book.workId) }}
+                >
+                  {lastBook.book.workId}
+                </div>
+                <div className="book-info">
+                  <div className="b-title" title={lastBook.book.title}>
+                    {lastBook.book.title}
+                  </div>
+                  <div className="b-sub">
+                    {lastBook.progress?.juan ? `第 ${lastBook.progress.juan} 卷` : (lastBook.book.juansCount ? `全 ${lastBook.book.juansCount} 卷` : '閱讀中')}
+                    {lastBook.book.creators ? ` · ${sanitizeCreators(lastBook.book.creators)}` : ''}
+                  </div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                className="cbeta-read-btn" 
+                title="繼續閱讀"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleContinueRead();
+                }}
+              >
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
+            </div>
+
+            {/* 下部分 4*3：直接是上次閱讀到的經文文字（16px、宋/明體、間距1.8，隨四大主題色變更，前後用「…」代替，閱讀預覽不顯示滾動條） */}
+            <div 
+              className="lastread-excerpt-body-4x3"
+              onClick={handleContinueRead}
+              title="點擊從上次讀到的段落繼續閱讀"
+            >
+              <div className="lastread-excerpt-content">
+                {excerptText}
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    };
 
     switch (type) {
       // 1. 品牌標題組件 (title_4x2 / title_4x1)
@@ -1018,9 +1174,21 @@ export function HomeDashboard({
         );
       }
 
-      // 8. 上次閱讀 (4x2 / 4x1 / 4x3 / 4x4)
+
+
+      // 8-0. 🌟 上次閱讀 · 經文進度獨立組件 (4x4 規格)
+      case 'lastread_excerpt_4x4': {
+        return renderLastReadExcerptCard();
+      }
+
+      // 8. 上次閱讀 (支援 4x1 / 4x2 / 4x3 / 4x4：4x4 即是經文進度預覽卡片)
       case 'lastread_4x2':
       case 'lastread_4x1': {
+        // 💡 圖1：4x4 規格直接渲染為經文進度預覽卡片 (包含外置標題列、4x1 經書 Bar 與 4x3 經文預覽)
+        if (size === 'size-4x4') {
+          return renderLastReadExcerptCard();
+        }
+
         const lastBook = effectiveResumeBooks[0];
         if (!lastBook) {
           if (size === 'size-4x2' || size === 'size-4x1') {
@@ -1093,11 +1261,10 @@ export function HomeDashboard({
           );
         }
 
-        // 💡 4x3 (3部) / 4x4 (4部) 規格
-        const maxBooks = size === 'size-4x3' ? 3 : 4;
-        const displayResumeBooks = effectiveResumeBooks.slice(0, maxBooks);
+        // 💡 4x3 (3部) 規格
+        const displayResumeBooks = effectiveResumeBooks.slice(0, 3);
         return (
-          <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
+          <div className="book-list-widget-multi multi-4x3">
             <div 
               className="widget-header-row-4x4"
               onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
@@ -1672,7 +1839,7 @@ export function HomeDashboard({
           return (
             <div
               key={widget.id}
-              className={`widget-card ${widget.size} ${isBookWidgetOuterHeader(widget.type, widget.size) ? 'has-outer-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
+              className={`widget-card ${widget.size} ${isBookWidgetOuterHeader(widget.type, widget.size) ? 'has-outer-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${widget.type === 'four_nav_4x1' && widget.size === 'size-4x2' ? 'four-nav-card-4x2' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
               draggable={isLayoutEditMode}
               onDragStart={(e) => handleDragStart(e, widget.id)}
               onDragOver={(e) => handleDragOver(e, widget.id)}

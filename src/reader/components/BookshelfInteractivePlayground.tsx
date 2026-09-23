@@ -210,20 +210,30 @@ export function sortBooksByPrefixAndNumber(books: BookMetadata[]): BookMetadata[
 
   const getSortNumber = (b: BookMetadata): number => {
     const id = (b.workId || '').toUpperCase();
-    // 太虛大師編纂說明等序篇或 a001 視為第 0 編 (排在第一)
-    if (id.startsWith('TXA') || id.includes('A001')) return -1;
+    // 序篇、目錄或 a001（如 TXa001 太虛大師全書編纂說明）視為第 0 編 (排在首位)
+    if (id.includes('A00') || id.includes('A0') || id.startsWith('TXA') || id.startsWith('YA')) return -1;
     
-    // 優先從 vol 提取純數字 (如 Y01 => 1, TX02 => 2, Y42 => 42)
-    if (b.vol) {
-      const volNum = parseInt(b.vol.replace(/[^\d]/g, ''), 10);
-      if (!isNaN(volNum)) return volNum;
+    // 若 workId 包含 'N' 後綴流水編號 (如 TX01n0001, T08n0251)
+    const nMatch = id.match(/N(\d+)/i);
+    if (nMatch) {
+      return parseInt(nMatch[1], 10);
     }
-    
-    // 從 workId 提取首個數字區塊 (如 Y0042 => 42, TX0002 => 2)
+
+    // 🌟 核心：優先以 CBETA 權威經典編號 (workId) 提取純數字 (如 Y0001=>1, Y0030=>30, Y0042=>42, TX0001=>1, TX0020=>20, T0262=>262)
+    // 絕不可提取包含跨冊符號的 vol 字串（如 'Y30..Y32' 曾被誤串接為 3032 導致跳號，'TX01..TX02' 曾被誤串接為 102）
     const match = id.match(/\d+/);
     if (match) {
       return parseInt(match[0], 10);
     }
+
+    // 次要補底：若 workId 無純數字，才從 vol 提取首個數字區塊
+    if (b.vol) {
+      const volMatch = b.vol.match(/\d+/);
+      if (volMatch) {
+        return parseInt(volMatch[0], 10);
+      }
+    }
+
     return 9999;
   };
 
@@ -236,7 +246,7 @@ export function sortBooksByPrefixAndNumber(books: BookMetadata[]): BookMetadata[
       return canonA.localeCompare(canonB);
     }
 
-    // 2. 同一藏經前綴下，依數字順序從小到大排（01、02、03...）
+    // 2. 同一藏經前綴下，依經典數字順序從小到大排（01、02、03...）
     const numA = getSortNumber(a);
     const numB = getSortNumber(b);
     if (numA !== numB) {
@@ -299,12 +309,13 @@ export function BookshelfInteractivePlayground({
     }
     if (statusFilter === 'recent') {
       if (dataScale === 'mass') {
-        return activeBooksPool.slice(0, 8);
+        return activeBooksPool.slice(0, 9);
       }
-      return recentReadsBooks.length > 0 ? recentReadsBooks : activeBooksPool.slice(0, 2);
+      const list = recentReadsBooks.length > 0 ? recentReadsBooks : activeBooksPool.slice(0, 2);
+      return list.slice(0, 9);
     }
     if (statusFilter === 'downloads') {
-      return [...activeBooksPool].reverse();
+      return [...activeBooksPool].reverse().slice(0, 9);
     }
     return activeBooksPool;
   }, [activeBooksPool, statusFilter, dataScale, recentReadsBooks, favoriteWorkIds]);
@@ -431,8 +442,13 @@ export function BookshelfInteractivePlayground({
       g.books = sortBooksByPrefixAndNumber(g.books);
     });
 
-    // 依 order 排序分組
-    const sortedEntries = Object.entries(groups).sort((a, b) => a[1].order - b[1].order);
+    // 依 order 排序分組，同 order 依名稱穩定字典序排列
+    const sortedEntries = Object.entries(groups).sort((a, b) => {
+      if (a[1].order !== b[1].order) {
+        return a[1].order - b[1].order;
+      }
+      return a[0].localeCompare(b[0], 'zh-Hant');
+    });
     const result: Record<string, BookMetadata[]> = {};
     sortedEntries.forEach(([key, val]) => {
       result[key] = val.books;
@@ -778,7 +794,7 @@ export function BookshelfInteractivePlayground({
                             </div>
                           </div>
 
-                          {/* 最右邊：最愛標記 + 小小圓圈圈/淺灰「…」選項 + 箭頭 */}
+                          {/* 最右邊：最愛標記 + 小小圓圈圈/淺灰「…」選項 */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
                             {isFavorite(book.workId) && (
                               <Heart size={14} fill="#e53e3e" color="#e53e3e" />
@@ -794,7 +810,6 @@ export function BookshelfInteractivePlayground({
                             >
                               <MoreVertical size={13} />
                             </button>
-                            <ChevronRight size={16} color="var(--text-muted)" />
                           </div>
                         </div>
                       ))}

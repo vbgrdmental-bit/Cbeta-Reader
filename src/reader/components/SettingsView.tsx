@@ -1265,16 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.5.1) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.5.3) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.5.1</span>
-                        <span className="changelog-date">(2026-09-22)</span>
+                        <span>⭐ App: v4.5.3</span>
+                        <span className="changelog-date">(2026-09-24)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 閱讀頁中央膠囊新增「版面設定」、「畫重點」、「本書搜尋」標籤。</li>
-                        <li>• 點選本書搜尋取消彈出視窗，直接於頂部控制列下方展開即時檢索列。</li>
-                        <li>• 支援原地直接輸入與隨時修改關鍵字，上下切換匹配與高亮。</li>
+                        <li>• 「上次閱讀」小工具支援 4×4 經文進度預覽（16px明體，前後省略號）。</li>
+                        <li>• 書櫃「上次閱讀」與「近期下載」設定最多 9 本，最愛不限。</li>
+                        <li>• 書櫃書籍列表移除右側「&gt;」符號，點選整條 Bar 即進入閱讀。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1297,28 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.5.2</span>
+                            <span className="changelog-date">(2026-09-24)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 首頁四大導航 4×2 升級網格等寬自適應，徹底解決手機端右側按鍵切邊。</li>
+                            <li>• 書櫃「依作譯者」修正印順導師跨冊經典（Y0030）跳號問題。</li>
+                            <li>• 書櫃「依作譯者」修正太虛大師全書跨冊排序，按 TX0001~TX0020 連續遞增。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.5.1</span>
+                            <span className="changelog-date">(2026-09-22)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 閱讀頁中央膠囊新增「版面設定」、「畫重點」、「本書搜尋」標籤。</li>
+                            <li>• 點選本書搜尋取消彈出視窗，直接於頂部控制列下方展開即時檢索列。</li>
+                            <li>• 支援原地直接輸入與隨時修改關鍵字，上下切換匹配與高亮。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.5.0</span>

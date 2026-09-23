@@ -9,6 +9,7 @@ export type HomeWidgetType =
   | 'search_2x2'
   | 'lastread_4x2'
   | 'lastread_4x1'
+  | 'lastread_excerpt_4x4'
   | 'favorites_4x2'
   | 'recent_downloads_4x2'
   | 'stats_2x2'
@@ -86,7 +87,7 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'search_2x2', category: 'nav', name: '全文檢索卡', size: 'size-2x2', icon: '🔍', description: '已下載經文全文快速檢索（支援 2x2/4x1/4x2）' },
 
   // 3. 閱讀與進度
-  { type: 'lastread_4x2', category: 'reading', name: '上次閱讀卡', size: 'size-4x2', icon: '📕', description: '上次閱讀經名、卷次與繼續按鈕（支援 4x1/4x2/4x3/4x4）' },
+  { type: 'lastread_4x2', category: 'reading', name: '上次閱讀卡', size: 'size-4x2', icon: '📕', description: '上次閱讀經典進度與經文摘錄（支援 4x1/4x2/4x3/4x4）' },
   { type: 'favorites_4x2', category: 'reading', name: '我的最愛卡', size: 'size-4x2', icon: '❤️', description: '收藏於我的最愛之經典（支援 4x1/4x2/4x3/4x4）' },
   { type: 'recent_downloads_4x2', category: 'reading', name: '近期下載卡', size: 'size-4x2', icon: '📥', description: '最新下載之經典清單（支援 4x1/4x2/4x3/4x4）' },
   { type: 'stats_2x2', category: 'reading', name: '每日閱讀日誌徽章', size: 'size-2x2', icon: '📅', description: '連續閱讀天數與累積時數統計' },
@@ -154,6 +155,7 @@ export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
   // 上次閱讀、我的最愛、近期下載：支援 4x1、4x2、4x3、4x4（無 2x2）
   lastread_4x2: ['size-4x2', 'size-4x1', 'size-4x3', 'size-4x4'],
   lastread_4x1: ['size-4x1', 'size-4x2', 'size-4x3', 'size-4x4'],
+  lastread_excerpt_4x4: ['size-4x4'],
   favorites_4x2: ['size-4x2', 'size-4x1', 'size-4x3', 'size-4x4'],
   recent_downloads_4x2: ['size-4x2', 'size-4x1', 'size-4x3', 'size-4x4'],
 

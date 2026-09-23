@@ -1088,7 +1088,7 @@ export function Library({
     : (currentFolderId === 'virtual_favorites'
         ? favoriteBooksList
         : (currentFolderId === 'virtual_unclassified'
-            ? unclassifiedBooks
+            ? unclassifiedBooks.slice(0, 9)
             : (currentFolderId === 'virtual_resume'
                 ? resumeBooks.map(item => item.book)
                 : sortBooksByWorkId(

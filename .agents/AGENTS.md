@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.1` (App: v4.5.1 / Builder: v2.9.12)
+- **Current Version**: `v4.5.3` (App: v4.5.3 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,14 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.3 / Builder: v2.9.12** (2026-09-24)
+  - [App] 「上次閱讀」小工具支援 4×1/4×2/4×3/4×4 尺寸切換，4×4 為經文進度卡片（上部 4×1 經書 Bar，外置「上次閱讀 ➔」，下部 4×3 經文預覽，字級 16px、宋/明體、行高 1.8，前後「…」且隱藏原生滾動條，隨四大主題自適應）。
+  - [App] 書櫃「上次閱讀」與「近期下載」設定最多 9 本，我的最愛數量不限。
+  - [App] 書櫃書籍列表移除最右側「>」符號，點選書籍 Bar 即直接進入閱讀。
+- **⭐ App: v4.5.2 / Builder: v2.9.12** (2026-09-24)
+  - [App] 首頁四大導航 4×2 升級 CSS Grid 嚴格 4 等分自適應與縮減卡片 padding，徹底根除手機端第 4 個按鍵切邊問題。
+  - [App] 書櫃依作譯者排序修正印順導師 Y 系列經典（Y0001~Y0042），消除跨冊 vol 導致 Y0030 跳號至最底之 bug。
+  - [App] 書櫃依作譯者排序修正太虛大師全書跨冊異常串接，全面依 CBETA 權威經典序號由 TX0001~TX0020 連續嚴格遞增排列。
 - **⭐ App: v4.5.1 / Builder: v2.9.12** (2026-09-22)
   - [App] 閱讀頁上方中央微膠囊按鈕新增「版面設定」、「畫重點」、「本書搜尋」文字標籤。
   - [App] 點選本書搜尋取消彈出視窗，直接於頂部控制列下方展開即時檢索導航列。

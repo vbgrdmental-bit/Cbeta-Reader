@@ -623,10 +623,23 @@ export function ReaderView({
   // 💡 自動儲存點選段落與卷次進度，並同步 URL Hash 路由
   useEffect(() => {
     if (book) {
+      let segmentText = '';
+      const activeJuan = book.content.juans.find(j => j.juan === currentJuanNum);
+      if (activeJuan) {
+        const targetId = activeSegmentId || (activeJuan.segments.length > 0 ? activeJuan.segments[0].id : '');
+        const segIdx = activeJuan.segments.findIndex(s => s.id === targetId);
+        if (segIdx !== -1) {
+          segmentText = activeJuan.segments.slice(segIdx, segIdx + 5).map(s => s.content.trim()).filter(Boolean).join('\n\n');
+        } else if (activeJuan.segments.length > 0) {
+          segmentText = activeJuan.segments.slice(0, 5).map(s => s.content.trim()).filter(Boolean).join('\n\n');
+        }
+      }
+
       const progress = {
         juan: currentJuanNum,
         segmentId: activeSegmentId || '',
         percent: scrollPercent, // 💡 儲存百分比
+        text: segmentText, // 💡 儲存閱讀處經文純文字
         timestamp: Date.now()
       };
       localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));
@@ -1605,10 +1618,22 @@ export function ReaderView({
           calculatedPercent = Math.max(0, Math.min(100, calculatedPercent));
           setScrollPercent(calculatedPercent);
 
+          let segText = '';
+          const activeJuan = book.content.juans.find(j => j.juan === currentJuanNum);
+          if (activeJuan) {
+            const segIdx = activeJuan.segments.findIndex(s => s.id === visibleSegId);
+            if (segIdx !== -1) {
+              segText = activeJuan.segments.slice(segIdx, segIdx + 5).map(s => s.content.trim()).filter(Boolean).join('\n\n');
+            } else if (activeJuan.segments.length > 0) {
+              segText = activeJuan.segments.slice(0, 5).map(s => s.content.trim()).filter(Boolean).join('\n\n');
+            }
+          }
+
           const progress = {
             juan: currentJuanNum,
             segmentId: visibleSegId,
             percent: calculatedPercent, // 💡 儲存品內百分比
+            text: segText, // 💡 儲存當前閱讀段落經文
             timestamp: Date.now()
           };
           localStorage.setItem(`reader_progress_${workId}`, JSON.stringify(progress));

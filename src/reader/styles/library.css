@@ -5385,17 +5385,21 @@ body.theme-ebony .core-sub { color: #8a9680 !important; }
 .compact-nav-item:hover .compact-nav-icon { transform: scale(1.08); }
 .compact-nav-label { font-size: 0.72rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; }
 
-/* 💡 4x2 寬敞四合一導航大版面 (4 個獨立精緻 Micro-Card 資訊磁貼) */
+/* 💡 4x2 寬敞四合一導航大版面 (4 個獨立精緻 Micro-Card 資訊磁貼，手機自適應防切邊) */
+.widget-card.size-4x2.four-nav-card-4x2,
+.widget-card.size-4x2:has(.widget-four-in-one-4x2) {
+  padding: 0.65rem 0.5rem;
+}
+
 .widget-four-in-one-4x2 {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
   width: 100%;
   height: 100%;
-  padding: 0.35rem 0.35rem;
+  padding: 0;
   box-sizing: border-box;
-  gap: 0.75rem;
+  gap: clamp(0.22rem, 1.1vw, 0.5rem);
 }
 
 .compact-nav-item-4x2 {
@@ -5403,11 +5407,12 @@ body.theme-ebony .core-sub { color: #8a9680 !important; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  flex: 1;
+  gap: 0.28rem;
+  width: 100%;
+  min-width: 0;
   text-align: center;
   cursor: pointer;
-  padding: 0.45rem 0.2rem;
+  padding: 0.4rem 0.1rem;
   border-radius: 14px;
   background: rgba(140, 75, 39, 0.04);
   border: none;
@@ -5415,6 +5420,7 @@ body.theme-ebony .core-sub { color: #8a9680 !important; }
   user-select: none;
   box-sizing: border-box;
   height: 100%;
+  overflow: hidden;
 }
 
 .compact-nav-item-4x2:hover {
@@ -5433,8 +5439,8 @@ body.theme-ebony .compact-nav-item-4x2:hover {
 }
 
 .compact-nav-icon-4x2 {
-  width: 42px;
-  height: 42px;
+  width: clamp(36px, 9vw, 42px);
+  height: clamp(36px, 9vw, 42px);
   border-radius: 12px;
   background: var(--theme-accent, #8c4b27);
   color: #ffffff;
@@ -5443,6 +5449,7 @@ body.theme-ebony .compact-nav-item-4x2:hover {
   justify-content: center;
   box-shadow: 0 3px 8px rgba(140, 75, 39, 0.2);
   transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
 }
 
 .compact-nav-item-4x2:hover .compact-nav-icon-4x2 {
@@ -5451,27 +5458,205 @@ body.theme-ebony .compact-nav-item-4x2:hover {
 
 .compact-nav-label-4x2 {
   font-family: var(--font-sans);
-  font-size: 0.86rem;
+  font-size: clamp(0.72rem, 2.3vw, 0.86rem);
   font-weight: 800;
   color: var(--text-primary);
   white-space: nowrap;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.02em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .compact-nav-badge-4x2 {
-  font-size: 0.68rem;
+  font-size: clamp(0.56rem, 1.7vw, 0.68rem);
   color: var(--text-muted);
   background: rgba(140, 75, 39, 0.08);
-  padding: 1px 5px;
+  padding: 1px 3px;
   border-radius: 8px;
   font-weight: 600;
   white-space: nowrap;
   letter-spacing: -0.01em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 body.theme-ebony .compact-nav-badge-4x2 {
   background: rgba(255, 255, 255, 0.1);
   color: #a1a1aa;
+}
+
+/* 💡 🌟 新增製作卡片：上次閱讀 · 經文進度 (4x4 規格：上部分 4x1，下部分 4x3 經文文字) */
+.lastread-excerpt-card-4x4 {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 355px;
+  min-height: 355px;
+  max-height: 355px;
+  gap: 0.55rem;
+  box-sizing: border-box;
+  background: var(--bg-card, #ffffff);
+  border-radius: 20px;
+  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.14));
+  box-shadow: var(--shadow-sm, 0 4px 14px rgba(90, 50, 20, 0.05));
+  padding: 0.65rem 0.85rem;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lastread-excerpt-card-4x4:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 8px 22px rgba(90, 50, 20, 0.08));
+}
+
+body.theme-ebony .lastread-excerpt-card-4x4 {
+  background: var(--bg-card, rgba(255, 255, 255, 0.06));
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.lastread-excerpt-card-4x4.empty {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.lastread-excerpt-empty-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* 上部分 4*1：維持如圖1樣式 (經號徽章 + 經名作譯者 + 圓形「➔」) */
+.lastread-excerpt-header-4x1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 58px;
+  min-height: 58px;
+  max-height: 58px;
+  padding: 0.35rem 0.65rem;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.06));
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lastread-excerpt-header-4x1:hover {
+  background: rgba(0, 0, 0, 0.045);
+  transform: translateY(-1px);
+}
+
+body.theme-ebony .lastread-excerpt-header-4x1 {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.theme-ebony .lastread-excerpt-header-4x1:hover {
+  background: rgba(255, 255, 255, 0.065);
+}
+
+.lastread-excerpt-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.lastread-excerpt-header-left .book-badge {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 11px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14);
+}
+
+.lastread-excerpt-header-left .book-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.lastread-excerpt-header-left .b-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.lastread-excerpt-header-left .b-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 3px;
+}
+
+/* 下部分 4*3：直接是上次閱讀到的經文文字（16px、宋/明體、間距1.8，隨四大主題色變更，閱讀預覽不顯示滾動條） */
+.lastread-excerpt-body-4x3 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.05));
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden; /* 💡 閱讀預覽不用顯示滾動條，前後用「…」代替 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.lastread-excerpt-body-4x3::-webkit-scrollbar {
+  display: none;
+}
+
+.lastread-excerpt-body-4x3:hover {
+  background: rgba(0, 0, 0, 0.035);
+  border-color: var(--border-color, rgba(0, 0, 0, 0.1));
+}
+
+body.theme-ebony .lastread-excerpt-body-4x3 {
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+body.theme-ebony .lastread-excerpt-body-4x3:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lastread-excerpt-content {
+  font-family: var(--font-serif, "Noto Serif TC", "Source Han Serif TC", "Songti TC", SimSun, serif);
+  font-size: 16px; /* 💡 文字大小調整為 16px */
+  line-height: 1.8;
+  color: var(--text-primary);
+  text-align: justify;
+  letter-spacing: 0.02em;
+  white-space: pre-line;
+  word-break: break-word;
 }
 
 /* 💡 圖5：上次閱讀、我的最愛、近期下載 (4x2 / 4x1 / 4x4 統一 4x2 規格) */
@@ -6427,14 +6612,18 @@ body.theme-ebony .preview-size-badge {
 
 /* 💡 預覽卡片模式：永遠保持正常靜態外觀，嚴禁出現編輯模式之綠色虛線外框與抖動 */
 .home-custom-dashboard-wrapper.edit-mode .widget-card.preview-card-mode.has-outer-header .book-widget-card-box,
-.preview-card-mode .book-widget-card-box {
+.home-custom-dashboard-wrapper.edit-mode .widget-card.preview-card-mode.has-outer-header .lastread-excerpt-card-4x4,
+.preview-card-mode .book-widget-card-box,
+.preview-card-mode .lastread-excerpt-card-4x4 {
   border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12)) !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
   animation: none !important;
 }
 
 body.theme-ebony .home-custom-dashboard-wrapper.edit-mode .widget-card.preview-card-mode.has-outer-header .book-widget-card-box,
-body.theme-ebony .preview-card-mode .book-widget-card-box {
+body.theme-ebony .home-custom-dashboard-wrapper.edit-mode .widget-card.preview-card-mode.has-outer-header .lastread-excerpt-card-4x4,
+body.theme-ebony .preview-card-mode .book-widget-card-box,
+body.theme-ebony .preview-card-mode .lastread-excerpt-card-4x4 {
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
@@ -7437,7 +7626,8 @@ body.theme-ebony .book-widget-card-box {
   animation: none !important;
 }
 
-.home-custom-dashboard-wrapper.edit-mode .widget-card.has-outer-header .book-widget-card-box {
+.home-custom-dashboard-wrapper.edit-mode .widget-card.has-outer-header .book-widget-card-box,
+.home-custom-dashboard-wrapper.edit-mode .widget-card.has-outer-header .lastread-excerpt-card-4x4 {
   border: 1.5px dashed #10b981 !important;
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15) !important;
   animation: widget-shake 0.32s infinite ease-in-out alternate;
