@@ -218,40 +218,40 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
 
             {/* 放在文字「主題顏色」之下的一整行 (圖2) */}
             <div className="settings-theme-under-row">
-              {/* 原先四個主題在左邊 */}
-              <div className="preview-theme-swatches">
-                {[
-                  { id: 'ivory', label: '象牙白', bg: '#faf7f0' },
-                  { id: 'parchment', label: '羊皮紙', bg: '#f1e5c9' },
-                  { id: 'comfort', label: '舒服綠', bg: '#e3ebd9' },
-                  { id: 'ebony', label: '烏木黑', bg: '#12161a' }
-                ].map(t => {
-                  const isActive = settings.theme === t.id;
-                  return (
-                    <div
-                      key={`preview-theme-${t.id}`}
-                      onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
-                      title={t.label}
-                      className={`theme-swatch-circle ${isActive ? 'active' : ''}`}
-                      style={{ backgroundColor: t.bg }}
-                    >
-                      {isActive && (
-                        <Check 
-                          size={12} 
-                          strokeWidth={3.5} 
-                          style={{ color: t.id === 'ebony' ? '#fbbf24' : '#2c2016' }} 
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+              {/* 左側：四個主題圈圈 + 分隔線 + 自訂圈圈 (左右間距加大，手機手指極易精準點擊) */}
+              <div className="settings-theme-swatches-cluster">
+                <div className="preview-theme-swatches">
+                  {[
+                    { id: 'ivory', label: '象牙白', bg: '#faf7f0' },
+                    { id: 'parchment', label: '羊皮紙', bg: '#f1e5c9' },
+                    { id: 'comfort', label: '舒服綠', bg: '#e3ebd9' },
+                    { id: 'ebony', label: '烏木黑', bg: '#12161a' }
+                  ].map(t => {
+                    const isActive = settings.theme === t.id;
+                    return (
+                      <div
+                        key={`preview-theme-${t.id}`}
+                        onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
+                        title={t.label}
+                        className={`theme-swatch-circle ${isActive ? 'active' : ''}`}
+                        style={{ backgroundColor: t.bg }}
+                      >
+                        {isActive && (
+                          <Check 
+                            size={12} 
+                            strokeWidth={3.5} 
+                            style={{ color: t.id === 'ebony' ? '#fbbf24' : '#2c2016' }} 
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
 
-              {/* 💡 在烏木圓圈圈和自訂圓圈圈中間多一個淺灰色「|」，間距再加大一點點 */}
-              <div className="theme-swatch-vertical-divider">|</div>
+                {/* 💡 在烏木圓圈圈和自訂圓圈圈中間多一個淺灰色「|」 */}
+                <div className="theme-swatch-vertical-divider">|</div>
 
-              {/* 右邊：「自訂」圓圈圈 + 膠囊「+自訂」(淺灰色) */}
-              <div className="settings-theme-custom-group">
+                {/* 第 5 個：自訂主題圓圈圈 (大小與前 4 個完全一致) */}
                 <div
                   onClick={() => onSave({ ...settings, theme: 'custom', customThemeColor: settings.customThemeColor || '#ebdcd9' })}
                   title="自訂底色"
@@ -266,17 +266,18 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     />
                   )}
                 </div>
-
-                <button
-                  type="button"
-                  className={`settings-custom-theme-pill ${showCustomThemeDrawer ? 'expanded' : ''}`}
-                  onClick={() => setShowCustomThemeDrawer(prev => !prev)}
-                  title="點擊展開/收合自訂顏色盤"
-                >
-                  <Sparkles size={13} strokeWidth={2.2} />
-                  <span>+ 自訂</span>
-                </button>
               </div>
+
+              {/* 右側：膠囊「+自訂」(淺灰色，剛好切在右邊邊緣，與閱讀版面預覽框右邊線完全切齊) */}
+              <button
+                type="button"
+                className={`settings-custom-theme-pill ${showCustomThemeDrawer ? 'expanded' : ''}`}
+                onClick={() => setShowCustomThemeDrawer(prev => !prev)}
+                title="點擊展開/收合自訂顏色盤"
+              >
+                <Sparkles size={13} strokeWidth={2.2} />
+                <span>+ 自訂</span>
+              </button>
             </div>
 
             {/* 💡 展開的自訂佛光光譜抽屜 (刪除頂部「禪修佛光…」文字，直接展示 6 款光譜色) */}
@@ -1344,16 +1345,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.5.6) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.5.7) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.5.6</span>
+                        <span>⭐ App: v4.5.7</span>
                         <span className="changelog-date">(2026-09-25)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 閱讀設定置頂獨立主題顏色，新增「+ 自訂」修行觀想與底色抽屜。</li>
-                        <li>• 內建 6 款顯密修行佛光色系與全光譜調色器，即時預覽連動。</li>
-                        <li>• 導入 W3C 亮度感知引擎，自適應切換深淺模式，文字按鍵永不吃字。</li>
+                        <li>• 紫紺木全面升級泥金佛光高對比字色，根治深底吃字問題。</li>
+                        <li>• 主題顏色圓圈間距加大，手機手指極易精準點擊。</li>
+                        <li>• 「+ 自訂」膠囊像素級對齊預覽框右邊線，排版協調俐落。</li>
                       </ul>
                     </div>
 

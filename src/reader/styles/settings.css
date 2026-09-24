@@ -270,15 +270,29 @@ body.theme-ebony .settings-select:focus {
 .settings-theme-under-row {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 💡 兩端對齊，讓「+自訂」膠囊剛好切齊預覽框右邊緣 */
   width: 100%;
+  box-sizing: border-box;
 }
 
-/* 💡 在烏木圓圈圈和自訂圓圈圈中間多一個淺灰色「|」，間距再加大一點點 */
+.settings-theme-swatches-cluster {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3.8vw, 18px); /* 💡 圈圈左右間距再加大，手機手指極易精準點擊 */
+}
+
+.preview-theme-swatches {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3.8vw, 18px); /* 💡 圈圈間距加大，手機手指更好點擊 */
+}
+
+/* 💡 在烏木圓圈圈和自訂圓圈圈中間多一個淺灰色「|」 */
 .theme-swatch-vertical-divider {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin: 0 16px; /* 間距加大 */
+  margin: 0 1px;
   color: rgba(0, 0, 0, 0.22); /* 淺灰色 */
   font-size: 0.95rem;
   font-weight: 300;
@@ -286,20 +300,9 @@ body.theme-ebony .settings-select:focus {
   line-height: 1;
 }
 
-body.theme-ebony .theme-swatch-vertical-divider {
-  color: rgba(255, 255, 255, 0.28);
-}
-
-.settings-theme-custom-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.preview-theme-swatches {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+body.theme-ebony .theme-swatch-vertical-divider,
+body.theme-custom-dark .theme-swatch-vertical-divider {
+  color: rgba(255, 255, 255, 0.32);
 }
 
 /* 💡 所有圓圈圈都一樣大 (恆定 24px，選中不放大) */
@@ -341,7 +344,7 @@ body.theme-ebony .theme-swatch-circle.active {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 11px;
+  padding: 4px 12px;
   border-radius: 9999px;
   background: #ece8e1; /* 淺灰色 */
   border: 1.2px solid rgba(0, 0, 0, 0.12);
@@ -352,6 +355,8 @@ body.theme-ebony .theme-swatch-circle.active {
   cursor: pointer;
   transition: all 0.18s ease;
   user-select: none;
+  white-space: nowrap;
+  flex-shrink: 0; /* 💡 確保膠囊完美切齊預覽框右邊線且不被壓縮 */
 }
 
 .settings-custom-theme-pill:hover {
@@ -1026,6 +1031,16 @@ body.theme-dark .advanced-status-msg {
   font-size: 0.78rem;
   color: var(--text-muted, #777);
   line-height: 1.35;
+}
+
+body.theme-ebony .settings-toggle-title,
+body.theme-custom-dark .settings-toggle-title {
+  color: #f8fafc !important;
+}
+
+body.theme-ebony .settings-toggle-desc,
+body.theme-custom-dark .settings-toggle-desc {
+  color: #cbd5e1 !important;
 }
 
 /* iOS-style toggle switch */

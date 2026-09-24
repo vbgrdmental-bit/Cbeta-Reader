@@ -158,16 +158,16 @@ export function deriveHarmoniousPalette(hex: string): {
     return { accent: '#1e4b6e', accentLight: 'rgba(30, 75, 110, 0.10)', accentBorder: 'rgba(30, 75, 110, 0.25)' };
   }
   if (clean === '#8c3835') {
-    // 硃砂赤 -> 明麗硃砂赤紅
-    return { accent: '#b3433e', accentLight: 'rgba(255, 255, 255, 0.12)', accentBorder: 'rgba(255, 255, 255, 0.22)' };
+    // 硃砂赤 -> 明麗硃砂金光
+    return { accent: '#f59e0b', accentLight: 'rgba(255, 255, 255, 0.12)', accentBorder: 'rgba(245, 158, 11, 0.35)' };
   }
   if (clean === '#234a3b') {
-    // 青松黛 -> 蒼翠松針綠
-    return { accent: '#2e7054', accentLight: 'rgba(255, 255, 255, 0.12)', accentBorder: 'rgba(255, 255, 255, 0.22)' };
+    // 青松黛 -> 蒼翠明玉光
+    return { accent: '#2dd4bf', accentLight: 'rgba(255, 255, 255, 0.12)', accentBorder: 'rgba(45, 212, 191, 0.35)' };
   }
   if (clean === '#221426') {
-    // 紫紺木 -> 甚深紫金檀
-    return { accent: '#70347a', accentLight: 'rgba(255, 255, 255, 0.12)', accentBorder: 'rgba(255, 255, 255, 0.22)' };
+    // 紫紺木 -> 經典「紫紺金字」泥金佛光 (在極深紫黑紙上無比清晰莊嚴)
+    return { accent: '#f3c969', accentLight: 'rgba(243, 201, 105, 0.14)', accentBorder: 'rgba(243, 201, 105, 0.38)' };
   }
 
   // 2. 自由取色器之任意顏色：使用 HSL 色相感知公式同色相衍生
@@ -186,13 +186,12 @@ export function deriveHarmoniousPalette(hex: string): {
       accentBorder: `rgba(${ar}, ${ag}, ${ab}, 0.25)`
     };
   } else {
-    // 深色底：衍生同色相之清晰明亮色
-    const sat = Math.min(0.9, Math.max(0.5, s * 1.2));
-    const accentHex = hslToHex(h, sat, 0.48);
+    // 深色底：衍生高明度金光或亮色，在深底上必須有足夠對比度
+    const accentHex = hslToHex(h, Math.min(0.85, Math.max(0.55, s * 1.2)), 0.68);
     return {
       accent: accentHex,
-      accentLight: 'rgba(255, 255, 255, 0.12)',
-      accentBorder: 'rgba(255, 255, 255, 0.22)'
+      accentLight: 'rgba(255, 255, 255, 0.14)',
+      accentBorder: 'rgba(255, 255, 255, 0.25)'
     };
   }
 }
@@ -228,12 +227,18 @@ export function applyCustomThemeToDOM(hex: string) {
   body.style.setProperty('--theme-accent-light', palette.accentLight);
   body.style.setProperty('--theme-accent-border', palette.accentBorder);
   body.style.setProperty('--color-wood-700', palette.accent);
+  
+  // 💡 按鍵背景的高對比文字顏色 (當 accent 為深色時用白字，accent 為亮色如泥金時用深黑字)
+  const isAccentDark = isDarkColor(palette.accent);
+  body.style.setProperty('--theme-accent-contrast', isAccentDark ? '#ffffff' : '#18181b');
 
   if (isDark) {
-    body.style.setProperty('--reader-text', '#f0f3f6');
-    body.style.setProperty('--reader-text-muted', '#9aa5b1');
-    body.style.setProperty('--text-primary', '#f0f3f6');
-    body.style.setProperty('--text-muted', '#9aa5b1');
+    body.style.setProperty('--reader-text', '#f8fafc');
+    body.style.setProperty('--reader-text-muted', '#cbd5e1');
+    body.style.setProperty('--text-primary', '#f8fafc');
+    body.style.setProperty('--text-main', '#f8fafc'); // 徹底解決深色模式下開關標題變黑問題！
+    body.style.setProperty('--text-muted', '#cbd5e1');
+    body.style.setProperty('--text-secondary', '#e2e8f0');
     body.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.08)');
     body.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.16)');
     body.style.setProperty('--reader-border', 'rgba(255, 255, 255, 0.12)');
@@ -241,7 +246,9 @@ export function applyCustomThemeToDOM(hex: string) {
     body.style.setProperty('--reader-text', '#261c14');
     body.style.setProperty('--reader-text-muted', '#68594b');
     body.style.setProperty('--text-primary', '#261c14');
+    body.style.setProperty('--text-main', '#261c14');
     body.style.setProperty('--text-muted', '#68594b');
+    body.style.setProperty('--text-secondary', '#444444');
     body.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.65)');
     body.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.12)');
     body.style.setProperty('--reader-border', 'rgba(0, 0, 0, 0.10)');

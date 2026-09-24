@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.6` (App: v4.5.6 / Builder: v2.9.12)
+- **Current Version**: `v4.5.7` (App: v4.5.7 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.7 / Builder: v2.9.12** (2026-09-25)
+  - [App] 紫紺木全面升級經典「紫紺金字」泥金佛光 Accent（`#f3c969`），根除深底死黑吃字，書櫃徽章、日誌大數字清晰明亮。
+  - [App] 閱讀頁微膠囊導入動態 `--theme-accent-contrast`，自適應深淺底色切換純白/深黑高對比字體，絕不再有暗底黑字。
+  - [App] 主題顏色圓圈間距加大至自適應 16~18px，手機觸控舒適不誤觸，「+ 自訂」膠囊透過 space-between 完美切齊預覽框右邊緣。
 - **⭐ App: v4.5.6 / Builder: v2.9.12** (2026-09-25)
   - [App] 閱讀設定將「閱讀主題底色」獨立至最上方第一區塊，保留 4 大經典主題並新增「+ 自訂」修行觀想與底色抽屜。
   - [App] 內建 6 款顯密修行佛光色系（琥珀金、琉璃紺、紫紺木、硃砂赭、蓮花粉、青松黛）與原生全光譜取色器，即時預覽連動。

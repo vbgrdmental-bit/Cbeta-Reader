@@ -2866,6 +2866,13 @@ body.theme-ebony .folder-add-sub-btn-flat:hover {
   box-sizing: border-box;
 }
 
+body.theme-ebony .folder-book-count-badge,
+body.theme-custom-dark .folder-book-count-badge {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: var(--theme-accent, #f3c969) !important;
+}
+
 /* === 1. 3D 書架資料夾卡片追加 === */
 .folder-card-3d {
   position: relative;
@@ -7952,7 +7959,7 @@ body.theme-ebony .book-widget-card-box .book-stack-item-4x4 {
 /* 烏木深色模式 */
 body.theme-ebony .reader-nav-capsule .reader-capsule-item.active {
   background: var(--theme-accent, #cf9f60) !important;
-  color: #18181b !important;
+  color: var(--theme-accent-contrast, #18181b) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
 }
 
@@ -7967,7 +7974,17 @@ body.theme-ebony .reader-capsule-item .capsule-disc-icon {
 }
 
 body.theme-ebony .reader-nav-capsule .reader-capsule-item.active .capsule-label {
-  color: #18181b !important;
+  color: var(--theme-accent-contrast, #18181b) !important;
+}
+
+/* 自訂主題模式：動態依 Accent 明度自動切換黑字或白字 */
+body.theme-custom .reader-nav-capsule .reader-capsule-item.active {
+  background: var(--theme-accent) !important;
+  color: var(--theme-accent-contrast, #ffffff) !important;
+}
+
+body.theme-custom .reader-nav-capsule .reader-capsule-item.active .capsule-label {
+  color: var(--theme-accent-contrast, #ffffff) !important;
 }
 
 /* 舒服綠模式 */
