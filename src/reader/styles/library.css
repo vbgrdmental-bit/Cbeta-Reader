@@ -5229,11 +5229,11 @@ body.theme-dark .title-brand-text {
 
 .widget-title-4x1 .sub { font-size: 0.76rem; color: var(--text-muted); }
 
-/* 💡 品牌標題面板內的四大閱讀小圓圈 (Mini Theme Dots) */
+/* 💡 品牌標題面板內的四大閱讀小圓圈 (Mini Theme Dots：縮小50%至 7px，視覺精巧協調) */
 .title-mini-theme-dots {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   user-select: none;
   z-index: 10;
 }
@@ -5255,7 +5255,7 @@ body.theme-dark .title-brand-text {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 12px;
+  bottom: 14px;
 }
 
 .title-mini-theme-dots.pos-right {
@@ -5263,14 +5263,25 @@ body.theme-dark .title-brand-text {
 }
 
 .mini-theme-dot {
-  width: 13px;
-  height: 13px;
+  position: relative;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  border: 1.2px solid rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.16);
   cursor: pointer;
   box-sizing: border-box;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   flex-shrink: 0;
+}
+
+/* 點擊熱區擴大：維持手指與滑鼠點擊靈敏度 */
+.mini-theme-dot::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: -5px;
+  right: -5px;
 }
 
 .mini-theme-dot:hover {
@@ -5278,9 +5289,9 @@ body.theme-dark .title-brand-text {
 }
 
 .mini-theme-dot.active {
-  box-shadow: 0 0 0 2px #1ea98c, 0 1px 4px rgba(30, 169, 140, 0.4);
+  box-shadow: 0 0 0 1.5px #1ea98c, 0 1px 3px rgba(30, 169, 140, 0.35);
   border-color: #1ea98c !important;
-  transform: scale(1.18);
+  transform: scale(1.15);
 }
 
 .mini-ball-ivory { background: #faf7f0; }
@@ -6667,16 +6678,6 @@ body.theme-ebony .ios-live-preview-viewport {
 .preview-card-mode.size-4x2 .brand-slogan-home {
   font-size: 0.76rem !important;
   margin-top: 0.25rem !important;
-}
-
-.preview-card-mode.size-4x2 .brand-theme-dots-row {
-  margin-top: 0.35rem !important;
-  gap: 0.45rem !important;
-}
-
-.preview-card-mode.size-4x2 .brand-theme-dot {
-  width: 14px !important;
-  height: 14px !important;
 }
 
 /* 💡 書籍長條 Bar 預覽細節 (依首頁圖 4 嚴格保持細長長條型，書名、作譯者與「➔」按鈕間距充沛寬敞) */
