@@ -277,8 +277,8 @@ export function BookshelfInteractivePlayground({
   // === 3. 視圖切換 (圖2)：條列式 (list) vs 卡片式 (grid) ===
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-  // === 4. 資料庫容量切換：'real' (現有4本) | 'mass' (模擬120本) ===
-  const [dataScale, setDataScale] = useState<'real' | 'mass'>('real');
+  // === 4. 資料庫容量模式：'real' (真實書櫃經典) ===
+  const [dataScale] = useState<'real' | 'mass'>('real');
 
   // === 5. 折疊分組的展開狀態 ===
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
@@ -477,58 +477,28 @@ export function BookshelfInteractivePlayground({
   return (
     <div className="bookshelf-playground-root animate-fade-in" style={{ padding: '0.4rem 0.85rem 3rem 0.85rem' }}>
       
-      {/* 💡 頂部輔助控制列：資料規模切換與返回原版 */}
-      <div 
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '0.75rem',
-          padding: '0.4rem 0.6rem',
-          borderRadius: '12px',
-          background: 'rgba(0,0,0,0.03)',
-          border: '1px solid var(--border-color, rgba(0,0,0,0.08))'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Sparkles size={14} color="#1ea98c" />
-          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-            藏經多維度智慧整理方案
-          </span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <button
-            type="button"
-            onClick={() => setDataScale(dataScale === 'real' ? 'mass' : 'real')}
-            style={{
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              padding: '2px 8px',
-              borderRadius: '8px',
-              border: '1px solid rgba(0,0,0,0.12)',
-              background: dataScale === 'mass' ? '#1ea98c' : 'var(--bg-card, #fff)',
-              color: dataScale === 'mass' ? '#fff' : 'var(--text-primary)',
-              cursor: 'pointer'
-            }}
-          >
-            {dataScale === 'mass' ? '測試中：120 部海量經典' : '現有書目 (4 部)'}
-          </button>
-          {onExitDemo && (
-            <button
-              type="button"
-              onClick={onExitDemo}
-              style={{
-                fontSize: '0.72rem',
-                color: 'var(--text-muted)',
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer'
-              }}
-            >
-              返回原版
-            </button>
-          )}
-        </div>
+      {/* 💡 圖2：與圖1完全統一之開關膠囊按鈕 */}
+      <div style={{ textAlign: 'center', margin: '0.5rem 0 1rem 0' }}>
+        <button
+          type="button"
+          onClick={onExitDemo}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 14px',
+            borderRadius: '20px',
+            background: 'rgba(30, 169, 140, 0.12)',
+            color: '#1ea98c',
+            border: '1.2px solid #1ea98c',
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            cursor: 'pointer'
+          }}
+        >
+          <Sparkles size={14} />
+          <span>切換至：一般分類方案</span>
+        </button>
       </div>
 
       {/* ========================================================================= */}

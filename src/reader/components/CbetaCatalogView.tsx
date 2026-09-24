@@ -926,7 +926,7 @@ export function CbetaCatalogView({
     setSelectedOnlineWorkIds([]);
 
     let targetFolderId: string | null = null;
-    if (batchFolderMode === 'new') {
+    if (batchFolderMode === 'new' && batchFolderName.trim()) {
       const newFId = `folder-${Date.now()}`;
       const newFolder = {
         id: newFId,
@@ -942,8 +942,9 @@ export function CbetaCatalogView({
       setFolders(updatedFolders);
       targetFolderId = newFId;
       window.dispatchEvent(new Event('cbeta_folders_updated'));
-    } else if (batchFolderMode === 'existing') {
-      targetFolderId = selectedExistingFolderId;
+    } else {
+      // 放入 我的書櫃/近期下載 (targetFolderId 為 null，即未分類經典)
+      targetFolderId = null;
     }
 
     const totalCount = targetWorkIds.length;
@@ -1650,19 +1651,18 @@ export function CbetaCatalogView({
                     onChange={() => setBatchFolderMode('new')}
                     style={{ accentColor: 'var(--theme-accent)' }}
                   />
-                  建立新資料夾收納經書
+                  新建分類名稱
                 </label>
 
                 {batchFolderMode === 'new' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginLeft: '1.6rem' }}>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>資料夾名稱（預設於「我的書櫃」）：</span>
                     <input 
                       type="text" 
                       className="settings-select"
                       value={batchFolderName}
                       onChange={(e) => setBatchFolderName(e.target.value)}
-                      placeholder="請輸入資料夾名稱..."
-                      style={{ fontSize: '0.88rem', padding: '0.5rem 0.8rem', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}
+                      placeholder="常用經典"
+                      style={{ fontSize: '0.88rem', padding: '0.5rem 0.8rem', fontFamily: 'var(--font-sans, "Microsoft JhengHei", "PingFang TC", sans-serif)' }}
                     />
                   </div>
                 )}
@@ -1675,41 +1675,7 @@ export function CbetaCatalogView({
                     onChange={() => setBatchFolderMode('existing')}
                     style={{ accentColor: 'var(--theme-accent)' }}
                   />
-                  放入我的書櫃
-                </label>
-
-                {batchFolderMode === 'existing' && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginLeft: '1.6rem' }}>
-                    {folders.length > 0 ? (
-                      <select 
-                        className="settings-select"
-                        value={selectedExistingFolderId}
-                        onChange={(e) => setSelectedExistingFolderId(e.target.value)}
-                        style={{ fontSize: '0.88rem', padding: '0.55rem 0.8rem', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' }}
-                      >
-                        {folders.map(f => (
-                          <option key={f.id} value={f.id}>
-                            📁 {f.name} ({f.bookIds.length} 本)
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <div style={{ fontSize: '0.78rem', color: 'var(--theme-accent)', padding: '0.3rem 0' }}>
-                        （目前尚未建立任何資料夾，請選擇「建立新資料夾」）
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <label className="checkbox-item" style={{ fontSize: '0.88rem', cursor: 'pointer' }}>
-                  <input 
-                    type="radio" 
-                    name="batchFolderMode"
-                    checked={batchFolderMode === 'none'} 
-                    onChange={() => setBatchFolderMode('none')}
-                    style={{ accentColor: 'var(--theme-accent)' }}
-                  />
-                  下載至首頁
+                  放入 我的書櫃/近期下載
                 </label>
               </div>
 
@@ -1718,7 +1684,7 @@ export function CbetaCatalogView({
                   type="button" 
                   className="dialog-btn-cancel"
                   onClick={() => setShowBatchDownloadModal(false)}
-                  style={{ fontFamily: 'var(--font-rounded)' }}
+                  style={{ fontFamily: 'var(--font-sans, "Microsoft JhengHei", "PingFang TC", sans-serif)', fontWeight: 600 }}
                 >
                   取消
                 </button>
@@ -1726,8 +1692,8 @@ export function CbetaCatalogView({
                   type="button" 
                   className="dialog-btn-confirm"
                   onClick={handleExecuteBatchDownload}
-                  disabled={(batchFolderMode === 'new' && !batchFolderName.trim()) || (batchFolderMode === 'existing' && !selectedExistingFolderId)}
-                  style={{ fontFamily: 'var(--font-rounded)' }}
+                  disabled={batchFolderMode === 'new' && !batchFolderName.trim()}
+                  style={{ fontFamily: 'var(--font-sans, "Microsoft JhengHei", "PingFang TC", sans-serif)', fontWeight: 600 }}
                 >
                   開始下載
                 </button>
