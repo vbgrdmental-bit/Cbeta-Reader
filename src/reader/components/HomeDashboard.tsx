@@ -480,29 +480,35 @@ export function HomeDashboard({
     );
   };
 
-  // 💡 上次閱讀最後一本書的經文段落文字非同步快取 (供 4x4 經文進度卡片使用)
-  const [lastBookExcerpt, setLastBookExcerpt] = useState<string>('');
+  // 💡 4x4 經文進度卡片：當前選中經書索引 (0 ~ 8，最多9本) 與經文段落文字快取
+  const [selectedExcerptIndex, setSelectedExcerptIndex] = useState<number>(0);
+  const [excerptCache, setExcerptCache] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    const lastBook = resumeBooks[0] || DEMO_PREVIEW_RESUME[0];
-    if (!lastBook) {
-      setLastBookExcerpt('');
-      return;
-    }
+    const list = resumeBooks.length > 0 ? resumeBooks : DEMO_PREVIEW_RESUME;
+    const maxCount = Math.min(list.length, 9);
+    if (maxCount === 0) return;
+
+    const safeIdx = selectedExcerptIndex < maxCount ? selectedExcerptIndex : 0;
+    const targetItem = list[safeIdx];
+    if (!targetItem) return;
+
+    const workId = targetItem.book.workId;
+    if (excerptCache[workId]) return;
 
     // 1. 若 progress 中已內建儲存 text，直接使用
-    if (lastBook.progress?.text) {
-      setLastBookExcerpt(lastBook.progress.text);
+    if (targetItem.progress?.text) {
+      setExcerptCache(prev => ({ ...prev, [workId]: targetItem.progress.text }));
       return;
     }
 
     // 2. 若 progress 尚無 text，嘗試從 localStorage 取
     try {
-      const stored = localStorage.getItem(`reader_progress_${lastBook.book.workId}`);
+      const stored = localStorage.getItem(`reader_progress_${workId}`);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed.text) {
-          setLastBookExcerpt(parsed.text);
+          setExcerptCache(prev => ({ ...prev, [workId]: parsed.text }));
           return;
         }
       }
@@ -510,25 +516,25 @@ export function HomeDashboard({
 
     // 3. 非同步從 IndexedDB getBook 讀取段落文字
     let cancelled = false;
-    getBook(lastBook.book.workId).then(pkg => {
+    getBook(workId).then(pkg => {
       if (cancelled || !pkg || !pkg.content || !pkg.content.juans) return;
-      const targetJuanNum = lastBook.progress?.juan || 1;
+      const targetJuanNum = targetItem.progress?.juan || 1;
       const juan = pkg.content.juans.find(j => j.juan === targetJuanNum) || pkg.content.juans[0];
       if (!juan || !juan.segments || juan.segments.length === 0) return;
 
-      const targetSegId = lastBook.progress?.segmentId;
+      const targetSegId = targetItem.progress?.segmentId;
       const segIdx = targetSegId ? juan.segments.findIndex(s => s.id === targetSegId) : 0;
       const startIdx = segIdx !== -1 ? segIdx : 0;
       const text = juan.segments.slice(startIdx, startIdx + 5).map(s => s.content.trim()).filter(Boolean).join('\n\n');
       if (text && !cancelled) {
-        setLastBookExcerpt(text);
+        setExcerptCache(prev => ({ ...prev, [workId]: text }));
       }
     }).catch(() => {});
 
     return () => {
       cancelled = true;
     };
-  }, [resumeBooks]);
+  }, [resumeBooks, selectedExcerptIndex, excerptCache]);
 
   // 渲染各類型小工具組件
   const renderWidgetContent = (widget: HomeWidgetConfig) => {
@@ -540,10 +546,10 @@ export function HomeDashboard({
     const effectiveDownloadedBooks = (isPreview && downloadedBooks.length === 0) ? DEMO_PREVIEW_RESUME.map(d => d.book) : downloadedBooks;
     const effectiveHighlightsCount = (isPreview && allHighlights.length === 0) ? 12 : allHighlights.length;
 
-    // 💡 🌟 上次閱讀 · 經文進度 (4x4 規格，上部分 4x1 維持圖1樣式，下部分 4x3 經文文字，外置標題列)
+    // 💡 🌟 上次閱讀 · 經文進度 (4x4 規格，上部分 4x1 維持圖1樣式，下部分 4x3 經文文字，外置標題列支援 < > 選擇最多 9 本經書)
     const renderLastReadExcerptCard = () => {
-      const lastBook = effectiveResumeBooks[0];
-      if (!lastBook) {
+      const maxCount = Math.min(effectiveResumeBooks.length, 9);
+      if (maxCount === 0) {
         return (
           <>
             <div 
@@ -568,19 +574,23 @@ export function HomeDashboard({
         );
       }
 
+      const safeIndex = selectedExcerptIndex < maxCount ? selectedExcerptIndex : 0;
+      const currentBook = effectiveResumeBooks[safeIndex] || effectiveResumeBooks[0];
+
       const handleContinueRead = () => {
-        if (!isLayoutEditMode) {
-          onSelectBook(lastBook.book.workId, lastBook.progress?.segmentId, undefined, 'resume');
+        if (!isLayoutEditMode && currentBook) {
+          onSelectBook(currentBook.book.workId, currentBook.progress?.segmentId, undefined, 'resume');
         }
       };
 
-      const rawText = lastBookExcerpt || lastBook.progress?.text || '如是我聞。一時佛在忉利天，為母說法。爾時十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。讚歎釋迦牟尼佛，能於五濁惡世，現不可思議大智慧神通之力，調伏剛強眾生，知苦樂法……';
+      const cachedText = excerptCache[currentBook.book.workId];
+      const rawText = cachedText || currentBook.progress?.text || '如是我聞。一時佛在忉利天，為母說法。爾時十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。讚歎釋迦牟尼佛，能於五濁惡世，現不可思議大智慧神通之力，調伏剛強眾生，知苦樂法……';
       const cleanText = rawText.replace(/^[…\s]+/, '').replace(/[…\s]+$/, '');
       const excerptText = `… ${cleanText} …`;
 
       return (
         <>
-          {/* 卡片外、上方加上「上次閱讀→」，其位置等同「4*2」的文字位置 */}
+          {/* 卡片外、上方加上「上次閱讀→」，右邊為「<」「>」切換按鍵與「共 X 部」徽章 */}
           <div 
             className="widget-outside-header-row"
             onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
@@ -588,7 +598,39 @@ export function HomeDashboard({
             title="點擊進入書櫃「上次閱讀」"
           >
             <div className="widget-outside-tag">上次閱讀 ➔</div>
-            <div className="widget-outside-badge">共 {Math.min(effectiveResumeBooks.length, 9)} 部</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {maxCount > 1 && (
+                <div 
+                  className="excerpt-nav-btn-group" 
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <button 
+                    type="button" 
+                    className="excerpt-nav-btn" 
+                    title="切換上一部經書預覽"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedExcerptIndex(prev => (prev - 1 + maxCount) % maxCount);
+                    }}
+                  >
+                    <ChevronLeft size={13} strokeWidth={2.4} />
+                  </button>
+                  <button 
+                    type="button" 
+                    className="excerpt-nav-btn" 
+                    title="切換下一部經書預覽"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedExcerptIndex(prev => (prev + 1) % maxCount);
+                    }}
+                  >
+                    <ChevronRight size={13} strokeWidth={2.4} />
+                  </button>
+                </div>
+              )}
+              <div className="widget-outside-badge">共 {maxCount} 部</div>
+            </div>
           </div>
 
           <div className="lastread-excerpt-card-4x4">
@@ -601,17 +643,17 @@ export function HomeDashboard({
               <div className="lastread-excerpt-header-left">
                 <div 
                   className="book-badge" 
-                  style={{ background: getBookCoverGradient(lastBook.book.workId) }}
+                  style={{ background: getBookCoverGradient(currentBook.book.workId) }}
                 >
-                  {lastBook.book.workId}
+                  {currentBook.book.workId}
                 </div>
                 <div className="book-info">
-                  <div className="b-title" title={lastBook.book.title}>
-                    {lastBook.book.title}
+                  <div className="b-title" title={currentBook.book.title}>
+                    {currentBook.book.title}
                   </div>
                   <div className="b-sub">
-                    {lastBook.progress?.juan ? `第 ${lastBook.progress.juan} 卷` : (lastBook.book.juansCount ? `全 ${lastBook.book.juansCount} 卷` : '閱讀中')}
-                    {lastBook.book.creators ? ` · ${sanitizeCreators(lastBook.book.creators)}` : ''}
+                    {currentBook.progress?.juan ? `第 ${currentBook.progress.juan} 卷` : (currentBook.book.juansCount ? `全 ${currentBook.book.juansCount} 卷` : '閱讀中')}
+                    {currentBook.book.creators ? ` · ${sanitizeCreators(currentBook.book.creators)}` : ''}
                   </div>
                 </div>
               </div>
@@ -628,7 +670,7 @@ export function HomeDashboard({
               </button>
             </div>
 
-            {/* 下部分 4*3：直接是上次閱讀到的經文文字（16px、宋/明體、間距1.8，隨四大主題色變更，前後用「…」代替，閱讀預覽不顯示滾動條） */}
+            {/* 下部分 4*3：直接是上次閱讀到的經文文字（16px、宋/明體、間距1.8，隨四大主題色變更，閱讀預覽不顯示滾動條） */}
             <div 
               className="lastread-excerpt-body-4x3"
               onClick={handleContinueRead}
@@ -1968,7 +2010,19 @@ export function HomeDashboard({
           <button
             type="button"
             className="home-layout-edit-trigger-btn"
-            onClick={() => setIsLayoutEditMode(true)}
+            onClick={() => {
+              setIsLayoutEditMode(true);
+              const scrollToTop = () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                const scrollContainers = document.querySelectorAll(
+                  '.library-content-area, .home-dashboard-container, .home-custom-dashboard-wrapper, html, body'
+                );
+                scrollContainers.forEach(el => el.scrollTo({ top: 0, behavior: 'smooth' }));
+              };
+              scrollToTop();
+              setTimeout(scrollToTop, 60);
+              setTimeout(scrollToTop, 180);
+            }}
           >
             <Sliders size={14} style={{ color: '#1ea98c' }} />
             <span>自訂首頁排版</span>
