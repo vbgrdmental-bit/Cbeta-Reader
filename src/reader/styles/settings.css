@@ -257,10 +257,260 @@ body.theme-ebony .settings-select:focus {
 
 .theme-circle-label {
   font-size: 0.75rem;
+}
+
+/* ── 最頂部：獨立的主題顏色選擇區與自訂佛光光譜抽屜 ── */
+.settings-theme-palette-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 0.85rem;
+}
+
+.settings-theme-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.settings-theme-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.preview-theme-swatches {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-swatch-circle {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+  box-sizing: border-box;
+}
+
+.theme-swatch-circle:hover {
+  transform: scale(1.12);
+}
+
+.theme-swatch-circle.active {
+  transform: scale(1.15);
+  border: 2px solid var(--theme-accent, #8c4b27);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+body.theme-ebony .theme-swatch-circle {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.theme-ebony .theme-swatch-circle.active {
+  border-color: #fbbf24;
+}
+
+/* 💡 小膠囊「+ 自訂」按鍵 */
+.settings-custom-theme-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: var(--bg-library, rgba(0, 0, 0, 0.04));
+  border: 1.2px solid rgba(30, 169, 140, 0.35);
+  color: #1ea98c;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.settings-custom-theme-pill:hover {
+  background: rgba(30, 169, 140, 0.12);
+  transform: translateY(-1px);
+}
+
+.settings-custom-theme-pill.active {
+  background: #1ea98c;
+  color: #ffffff;
+  border-color: #1ea98c;
+  box-shadow: 0 2px 8px rgba(30, 169, 140, 0.32);
+}
+
+body.theme-ebony .settings-custom-theme-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(36, 202, 168, 0.45);
+  color: #24caa8;
+}
+
+body.theme-ebony .settings-custom-theme-pill.active {
+  background: #1ea98c;
+  color: #ffffff;
+}
+
+/* 💡 展開的禪修佛光光譜抽屜 */
+.custom-theme-drawer-panel {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  box-sizing: border-box;
+}
+
+body.theme-ebony .custom-theme-drawer-panel {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.custom-theme-drawer-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 0.65rem;
+}
+
+.drawer-title {
+  font-family: var(--font-rounded, sans-serif);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.drawer-sub {
+  font-size: 0.68rem;
   color: var(--text-muted);
 }
-.theme-circle-wrapper.active .theme-circle-label {
-  color: var(--color-gold-400);
+
+.sacred-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 420px) {
+  .sacred-palette-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px 6px;
+  }
+}
+
+.sacred-color-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 2px;
+  border-radius: 10px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.sacred-color-card:hover {
+  background: rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
+}
+
+body.theme-ebony .sacred-color-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sacred-color-card.selected .sacred-color-swatch {
+  box-shadow: 0 0 0 2.5px #1ea98c, 0 2px 6px rgba(30, 169, 140, 0.4);
+  transform: scale(1.1);
+}
+
+.sacred-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-ebony .sacred-color-swatch {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.sacred-color-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* 自由取色器列 */
+.custom-color-picker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.55rem;
+  border-top: 1px dashed var(--border-color, rgba(0, 0, 0, 0.08));
+}
+
+.custom-picker-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.custom-color-input-wrapper {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  cursor: pointer;
+}
+
+.custom-native-color-picker {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.custom-color-hex-tag {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
+body.theme-ebony .custom-color-hex-tag {
+  background: rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
 }
 
 /* ── 閱讀版面預覽與 2x2 一體化設定工作台 ── */

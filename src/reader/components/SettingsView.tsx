@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Database, FileText, HelpCircle, RotateCw, CheckCircle2, Check } from 'lucide-react';
+import { X, Database, FileText, HelpCircle, RotateCw, CheckCircle2, Check, Sparkles } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
 import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks, saveSettings, DEFAULT_SETTINGS } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
@@ -9,6 +9,7 @@ import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
 import type { ReadingTimerState } from '../../utils/readingTimer';
 import { isBackupMode } from '../../utils/sourceMode';
 import { PRESET_LAYOUTS } from '../../types/homeLayout';
+import { SACRED_THEME_PALETTE, isDarkColor } from '../../utils/themeManager';
 import '../styles/settings.css';
 
 interface SettingsViewProps {
@@ -29,6 +30,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
   const [storageStats, setStorageStats] = useState<StorageStats | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
   const [storageMsg, setStorageMsg] = useState('');
+  const [showCustomThemeDrawer, setShowCustomThemeDrawer] = useState(settings.theme === 'custom');
 
   // 💡 版本紀錄對話框捲動位置重置 Refs
   const changelogBodyRef = useRef<HTMLDivElement>(null);
@@ -210,7 +212,103 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
         </div>
 
         <div className="settings-body custom-scrollbar">
-          {/* 💡 閱讀版面預覽標題列與右上角 4 色主題色盤 */}
+          {/* 💡 1. 獨立的主題顏色模式分區 (放最上面的第一個) */}
+          <div className="settings-theme-palette-section">
+            <div className="settings-theme-top-row">
+              <div className="settings-section-title" style={{ margin: 0 }}>主題顏色</div>
+
+              <div className="settings-theme-actions-right">
+                {/* 4 個經典顏色圓圈 */}
+                <div className="preview-theme-swatches">
+                  {[
+                    { id: 'ivory', label: '象牙白', bg: '#faf7f0' },
+                    { id: 'parchment', label: '羊皮紙', bg: '#f1e5c9' },
+                    { id: 'comfort', label: '舒服綠', bg: '#e3ebd9' },
+                    { id: 'ebony', label: '烏木黑', bg: '#12161a' }
+                  ].map(t => {
+                    const isActive = settings.theme === t.id;
+                    return (
+                      <div
+                        key={`preview-theme-${t.id}`}
+                        onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
+                        title={t.label}
+                        className={`theme-swatch-circle ${isActive ? 'active' : ''}`}
+                        style={{ backgroundColor: t.bg }}
+                      >
+                        {isActive && (
+                          <Check 
+                            size={12} 
+                            strokeWidth={3.5} 
+                            style={{ color: t.id === 'ebony' ? '#fbbf24' : '#2c2016' }} 
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* 右邊的小膠囊「+ 自訂」 */}
+                <button
+                  type="button"
+                  className={`settings-custom-theme-pill ${showCustomThemeDrawer || settings.theme === 'custom' ? 'active' : ''}`}
+                  onClick={() => setShowCustomThemeDrawer(prev => !prev)}
+                  title="展開修行佛光與自訂色盤"
+                >
+                  <Sparkles size={13} strokeWidth={2.4} />
+                  <span>{showCustomThemeDrawer ? '收合' : '+ 自訂'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* 💡 展開的「禪修冥想佛光光譜」抽屜 (Smooth Accordion Drawer) */}
+            {showCustomThemeDrawer && (
+              <div className="custom-theme-drawer-panel animate-fade-in">
+                <div className="custom-theme-drawer-header">
+                  <span className="drawer-title">禪修佛光光譜</span>
+                  <span className="drawer-sub">依密乘本尊與顯教經典調配 · 護眼自適應</span>
+                </div>
+
+                {/* 6 大尊貴修行佛光色票 */}
+                <div className="sacred-palette-grid">
+                  {SACRED_THEME_PALETTE.map(c => {
+                    const isSelected = settings.theme === 'custom' && settings.customThemeColor === c.hex;
+                    return (
+                      <div
+                        key={`sacred-${c.id}`}
+                        className={`sacred-color-card ${isSelected ? 'selected' : ''}`}
+                        onClick={() => onSave({ ...settings, theme: 'custom', customThemeColor: c.hex })}
+                        title={`${c.name} (${c.sub})`}
+                      >
+                        <div className="sacred-color-swatch" style={{ backgroundColor: c.hex }}>
+                          {isSelected && <Check size={14} strokeWidth={3.2} color={isDarkColor(c.hex) ? '#ffffff' : '#261c14'} />}
+                        </div>
+                        <div className="sacred-color-name">{c.name}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* 自由取色器：提供顏色光譜選擇 */}
+                <div className="custom-color-picker-row">
+                  <label className="custom-picker-label">
+                    <span>自由光譜微調：</span>
+                    <div className="custom-color-input-wrapper" style={{ backgroundColor: settings.customThemeColor || '#dcb372' }}>
+                      <input
+                        type="color"
+                        className="custom-native-color-picker"
+                        value={settings.customThemeColor || '#dcb372'}
+                        onChange={(e) => onSave({ ...settings, theme: 'custom', customThemeColor: e.target.value })}
+                        title="點擊展開全光譜取色盤"
+                      />
+                    </div>
+                  </label>
+                  <span className="custom-color-hex-tag">{settings.customThemeColor || '#dcb372'}</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 💡 2. 閱讀版面預覽標題列 */}
           <div 
             className="reading-preview-top-bar"
             style={{
@@ -221,49 +319,6 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
             }}
           >
             <div className="settings-section-title" style={{ margin: 0 }}>閱讀版面預覽</div>
-            
-            {/* 右上角 4 個圓形質感主題色盤 */}
-            <div className="preview-theme-swatches" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {[
-                { id: 'ivory', label: '象牙白', bg: '#faf7f0' },
-                { id: 'parchment', label: '羊皮紙', bg: '#f1e5c9' },
-                { id: 'comfort', label: '舒服', bg: '#e3ebd9' },
-                { id: 'ebony', label: '烏木', bg: '#12161a' }
-              ].map(t => {
-                const isActive = settings.theme === t.id;
-                return (
-                  <div
-                    key={`preview-theme-${t.id}`}
-                    onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
-                    title={t.label}
-                    style={{
-                      width: '23px',
-                      height: '23px',
-                      borderRadius: '50%',
-                      backgroundColor: t.bg,
-                      border: isActive 
-                        ? (settings.theme === 'ebony' ? '2px solid #fbbf24' : '2px solid var(--theme-accent, #8c4b27)') 
-                        : (settings.theme === 'ebony' ? '1.5px solid rgba(255,255,255,0.2)' : '1.5px solid rgba(0,0,0,0.18)'),
-                      boxShadow: isActive ? '0 1px 4px rgba(0,0,0,0.2)' : '0 1px 2px rgba(0,0,0,0.06)',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      transform: isActive ? 'scale(1.12)' : 'scale(1)',
-                      transition: 'all 0.18s ease'
-                    }}
-                  >
-                    {isActive && (
-                      <Check 
-                        size={12} 
-                        strokeWidth={3.5} 
-                        style={{ color: t.id === 'ebony' ? '#fbbf24' : '#2c2016' }} 
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
           </div>
 
           {/* 閱讀版面預覽與 2x2 對稱分段膠囊工作台 */}
@@ -277,8 +332,18 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 maxHeight: '155px',
                 overflowY: 'auto',
                 boxSizing: 'border-box',
-                backgroundColor: settings.theme === 'ivory' ? '#faf7f0' : settings.theme === 'parchment' ? '#f1e5c9' : settings.theme === 'comfort' ? '#e3ebd9' : '#12161a',
-                color: settings.theme === 'ebony' ? '#d8dec9' : settings.theme === 'comfort' ? '#23351d' : settings.theme === 'parchment' ? '#3c2a1a' : '#2c2016',
+                backgroundColor: settings.theme === 'ivory' 
+                  ? '#faf7f0' 
+                  : settings.theme === 'parchment' 
+                  ? '#f1e5c9' 
+                  : settings.theme === 'comfort' 
+                  ? '#e3ebd9' 
+                  : settings.theme === 'custom'
+                  ? (settings.customThemeColor || '#dcb372')
+                  : '#12161a',
+                color: settings.theme === 'custom'
+                  ? (isDarkColor(settings.customThemeColor || '#dcb372') ? '#f0f3f6' : '#261c14')
+                  : (settings.theme === 'ebony' ? '#d8dec9' : settings.theme === 'comfort' ? '#23351d' : settings.theme === 'parchment' ? '#3c2a1a' : '#2c2016'),
                 fontFamily: (settings.fontFamily === 'jhenghei') ? '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' : (settings.fontFamily === 'iansui') ? '"Iansui", "Klee One", serif' : (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') ? '"CBETASupplement", "MOE-EduKai", "TW-Kai-98", "TW-Kai", "標楷體", "BiauKai", "DFKai-SB", "STKaiti", "KaiTi", "Kaiti SC", "Kaiti TC", serif' : 'var(--font-serif)',
                 lineHeight: settings.lineHeight || 1.8,
                 padding: `0.9rem ${settings.padding || 10}%`,
@@ -1265,16 +1330,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.5.5) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.5.6) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.5.5</span>
+                        <span>⭐ App: v4.5.6</span>
                         <span className="changelog-date">(2026-09-25)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 加入小工具預覽框上下左右加大，兩側「&lt;」「&gt;」按鈕精巧化，版面更開闊。</li>
-                        <li>• 尺寸徽章「4×4」等外置提到預覽框外部的上面，不佔用框內畫面。</li>
-                        <li>• 4×2 經書長條 Bar 依首頁圖 4 嚴格維持細長長寬比，等比縮放納入框內。</li>
+                        <li>• 閱讀設定置頂獨立主題顏色，新增「+ 自訂」修行觀想與底色抽屜。</li>
+                        <li>• 內建 6 款顯密修行佛光色系與全光譜調色器，即時預覽連動。</li>
+                        <li>• 導入 W3C 亮度感知引擎，自適應切換深淺模式，文字按鍵永不吃字。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1362,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.5.5</span>
+                            <span className="changelog-date">(2026-09-25)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 加入小工具預覽框上下左右加大，兩側「&lt;」「&gt;」按鈕精巧化，版面更開闊。</li>
+                            <li>• 尺寸徽章「4×4」等外置提到預覽框外部的上面，不佔用框內畫面。</li>
+                            <li>• 4×2 經書長條 Bar 依首頁圖 4 嚴格維持細長長寬比，等比縮放納入框內。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.5.4</span>

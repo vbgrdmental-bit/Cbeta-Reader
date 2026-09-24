@@ -447,23 +447,24 @@ export function HomeDashboard({
     }
   };
 
-  // 四大閱讀底色清單與循環切換
+  // 閱讀底色清單與循環切換 (若有自訂佛光色則包含在循環內)
   const THEMES_LIST: Array<'ivory' | 'parchment' | 'comfort' | 'ebony'> = ['ivory', 'parchment', 'comfort', 'ebony'];
 
   const handleCycleTheme = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     const curTheme = settings.theme || 'ivory';
-    const curIdx = THEMES_LIST.indexOf(curTheme);
-    const nextTheme = THEMES_LIST[(curIdx + 1) % THEMES_LIST.length];
+    const allThemes: Array<'ivory' | 'parchment' | 'comfort' | 'ebony' | 'custom'> = settings.customThemeColor ? [...THEMES_LIST, 'custom'] : THEMES_LIST;
+    const curIdx = allThemes.indexOf(curTheme as any);
+    const nextTheme = allThemes[(curIdx + 1) % allThemes.length];
     onSaveSettings({ ...settings, theme: nextTheme });
   };
 
-  const handleSelectTheme = (theme: 'ivory' | 'parchment' | 'comfort' | 'ebony', e: React.MouseEvent) => {
+  const handleSelectTheme = (theme: 'ivory' | 'parchment' | 'comfort' | 'ebony' | 'custom', e: React.MouseEvent) => {
     e.stopPropagation();
     onSaveSettings({ ...settings, theme });
   };
 
-  // 渲染四大閱讀小圓圈 (微型底色指示器)
+  // 渲染閱讀小圓圈 (微型底色指示器，若有自訂底色則額外呈現專屬自訂修行佛光圓圈)
   const renderMiniThemeDots = (extraClass: string = '') => {
     const currentTheme = settings.theme || 'ivory';
     return (
@@ -476,6 +477,15 @@ export function HomeDashboard({
             title={`閱讀底色：${t === 'ivory' ? '象牙白' : t === 'parchment' ? '羊皮紙' : t === 'comfort' ? '舒服綠' : '烏木'}`}
           />
         ))}
+        {settings.customThemeColor && (
+          <div
+            key="mini-dot-custom"
+            className={`mini-theme-dot ${currentTheme === 'custom' ? 'active' : ''}`}
+            style={{ backgroundColor: settings.customThemeColor }}
+            onClick={(e) => handleSelectTheme('custom', e)}
+            title="閱讀底色：自訂修行佛光"
+          />
+        )}
       </div>
     );
   };

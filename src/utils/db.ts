@@ -251,7 +251,8 @@ export async function listBooks(): Promise<BookMetadata[]> {
 // 偏好設定儲存與讀取
 export interface AppSettings {
   id: string;
-  theme: 'ivory' | 'parchment' | 'comfort' | 'ebony';
+  theme: 'ivory' | 'parchment' | 'comfort' | 'ebony' | 'custom';
+  customThemeColor?: string; // 💡 自訂閱讀底色 Hex 色碼 (如 #dcb372)
   fontSize: number; // px
   fontFamily?: 'default' | 'kaiti' | 'fangsong' | 'jhenghei' | 'iansui' | 'yuanti' | 'wenkai' | 'iansui-zy' | 'iansui-bold'; // 內文字體選項：宋/明體, 正黑體, 芫荽體, 芫荽體(粗)
   lineHeight: number; // 比例，如 1.8, 2.0

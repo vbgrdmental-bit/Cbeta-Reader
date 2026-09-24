@@ -8,6 +8,7 @@ import type { AppSettings } from './utils/db';
 import { readingTimer, formatTimerMMSS } from './utils/readingTimer';
 import type { ReadingTimerState } from './utils/readingTimer';
 import { readingLogManager } from './utils/readingLogManager';
+import { applyCustomThemeToDOM, clearCustomThemeFromDOM } from './utils/themeManager';
 import './App.css';
 
 interface RouteState {
@@ -134,14 +135,13 @@ export function App() {
       window.removeEventListener('hashchange', handlePopStateOrHashChange);
     };
   }, []);
-
   // 初始化載入偏好設定
   useEffect(() => {
     const loadSettings = async () => {
       try {
         const data = await getSettings();
         setSettings(data);
-        applyThemeClass(data.theme);
+        applyThemeClass(data.theme, data.customThemeColor);
         // 💡 同步閱讀日誌啟用狀態
         readingLogManager.setEnabled(data.readingLogEnabled ?? false);
       } catch (e) {
@@ -152,7 +152,13 @@ export function App() {
   }, []);
 
   // 當 settings 改變時套用主題 class 到 body
-  const applyThemeClass = (theme: AppSettings['theme']) => {
+  const applyThemeClass = (theme: AppSettings['theme'], customColor?: string) => {
+    if (theme === 'custom' && customColor) {
+      applyCustomThemeToDOM(customColor);
+      return;
+    }
+
+    clearCustomThemeFromDOM();
     const body = document.body;
     // 移除現有的 theme-* 類別
     body.className = body.className
@@ -166,7 +172,7 @@ export function App() {
 
   const handleSaveSettings = async (updated: AppSettings) => {
     setSettings(updated);
-    applyThemeClass(updated.theme);
+    applyThemeClass(updated.theme, updated.customThemeColor);
     // 💡 同步閱讀日誌啟用狀態
     readingLogManager.setEnabled(updated.readingLogEnabled ?? false);
     try {

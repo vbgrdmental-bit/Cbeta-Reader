@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.5` (App: v4.5.5 / Builder: v2.9.12)
+- **Current Version**: `v4.5.6` (App: v4.5.6 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.6 / Builder: v2.9.12** (2026-09-25)
+  - [App] 閱讀設定將「閱讀主題底色」獨立至最上方第一區塊，保留 4 大經典主題並新增「+ 自訂」修行觀想與底色抽屜。
+  - [App] 內建 6 款顯密修行佛光色系（琥珀金、琉璃紺、紫紺木、硃砂赭、蓮花粉、青松黛）與原生全光譜取色器，即時預覽連動。
+  - [App] 導入 W3C WCAG 相對亮度感知引擎，依明度自動切換深色/淺色高對比字體與邊框按鍵，確保全站字句絕不吃字。
+  - [App] 首頁 4×1、4×2、2×2 主題小工具小圓圈尺寸等比調降 50%，排版更精巧協調，若有自訂色自動支援第 5 色切換。
 - **⭐ App: v4.5.5 / Builder: v2.9.12** (2026-09-25)
   - [App] 加入小工具預覽框上下左右加大（寬 348px × 高 288px），兩側「<」「>」按鈕縮小精巧化，版面更開闊。
   - [App] 尺寸徽章「4×4」等外置提到預覽框外部的上面，不佔用框內畫面。
