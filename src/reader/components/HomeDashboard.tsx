@@ -1668,7 +1668,7 @@ export function HomeDashboard({
           );
         }
 
-        // 4x1 橫條版
+        // 4x1 橫條版 (5 個顏色圓圈：4 個經典主題 + 1 個自訂色，移除文字)
         return (
           <div className="theme-palette-4x1">
             <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-primary)' }}>閱讀底色:</span>
@@ -1676,22 +1676,28 @@ export function HomeDashboard({
               className={`theme-ball ball-ivory ${settings.theme === 'ivory' ? 'active' : ''}`}
               onClick={!isLayoutEditMode ? () => onSaveSettings({ ...settings, theme: 'ivory' }) : undefined}
               title="象牙白"
-            >白</div>
+            />
             <div 
               className={`theme-ball ball-parchment ${settings.theme === 'parchment' ? 'active' : ''}`}
               onClick={!isLayoutEditMode ? () => onSaveSettings({ ...settings, theme: 'parchment' }) : undefined}
               title="羊皮紙"
-            >紙</div>
+            />
             <div 
               className={`theme-ball ball-comfort ${settings.theme === 'comfort' ? 'active' : ''}`}
               onClick={!isLayoutEditMode ? () => onSaveSettings({ ...settings, theme: 'comfort' }) : undefined}
               title="舒服綠"
-            >舒</div>
+            />
             <div 
               className={`theme-ball ball-ebony ${settings.theme === 'ebony' ? 'active' : ''}`}
               onClick={!isLayoutEditMode ? () => onSaveSettings({ ...settings, theme: 'ebony' }) : undefined}
-              title="烏木"
-            >木</div>
+              title="烏木黑"
+            />
+            <div 
+              className={`theme-ball ball-custom ${settings.theme === 'custom' ? 'active' : ''}`}
+              style={{ backgroundColor: settings.customThemeColor || '#ebdcd9' }}
+              onClick={!isLayoutEditMode ? () => onSaveSettings({ ...settings, theme: 'custom', customThemeColor: settings.customThemeColor || '#ebdcd9' }) : undefined}
+              title="自訂底色"
+            />
           </div>
         );
       }

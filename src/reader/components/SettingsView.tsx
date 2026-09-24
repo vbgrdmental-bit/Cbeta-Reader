@@ -214,61 +214,75 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
         <div className="settings-body custom-scrollbar">
           {/* 💡 1. 獨立的主題顏色模式分區 (放最上面的第一個) */}
           <div className="settings-theme-palette-section">
-            <div className="settings-theme-top-row">
-              <div className="settings-section-title" style={{ margin: 0 }}>主題顏色</div>
+            <div className="settings-section-title" style={{ marginBottom: '0.45rem' }}>主題顏色</div>
 
-              <div className="settings-theme-actions-right">
-                {/* 4 個經典顏色圓圈 */}
-                <div className="preview-theme-swatches">
-                  {[
-                    { id: 'ivory', label: '象牙白', bg: '#faf7f0' },
-                    { id: 'parchment', label: '羊皮紙', bg: '#f1e5c9' },
-                    { id: 'comfort', label: '舒服綠', bg: '#e3ebd9' },
-                    { id: 'ebony', label: '烏木黑', bg: '#12161a' }
-                  ].map(t => {
-                    const isActive = settings.theme === t.id;
-                    return (
-                      <div
-                        key={`preview-theme-${t.id}`}
-                        onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
-                        title={t.label}
-                        className={`theme-swatch-circle ${isActive ? 'active' : ''}`}
-                        style={{ backgroundColor: t.bg }}
-                      >
-                        {isActive && (
-                          <Check 
-                            size={12} 
-                            strokeWidth={3.5} 
-                            style={{ color: t.id === 'ebony' ? '#fbbf24' : '#2c2016' }} 
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
+            {/* 放在文字「主題顏色」之下的一整行 (圖2) */}
+            <div className="settings-theme-under-row">
+              {/* 原先四個主題在左邊 */}
+              <div className="preview-theme-swatches">
+                {[
+                  { id: 'ivory', label: '象牙白', bg: '#faf7f0' },
+                  { id: 'parchment', label: '羊皮紙', bg: '#f1e5c9' },
+                  { id: 'comfort', label: '舒服綠', bg: '#e3ebd9' },
+                  { id: 'ebony', label: '烏木黑', bg: '#12161a' }
+                ].map(t => {
+                  const isActive = settings.theme === t.id;
+                  return (
+                    <div
+                      key={`preview-theme-${t.id}`}
+                      onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
+                      title={t.label}
+                      className={`theme-swatch-circle ${isActive ? 'active' : ''}`}
+                      style={{ backgroundColor: t.bg }}
+                    >
+                      {isActive && (
+                        <Check 
+                          size={12} 
+                          strokeWidth={3.5} 
+                          style={{ color: t.id === 'ebony' ? '#fbbf24' : '#2c2016' }} 
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* 中間空一段距離 */}
+              <div className="settings-theme-middle-spacer" />
+
+              {/* 右邊：「自訂」圓圈圈 + 膠囊「+自訂」(淺灰色) */}
+              <div className="settings-theme-custom-group">
+                <div
+                  onClick={() => onSave({ ...settings, theme: 'custom', customThemeColor: settings.customThemeColor || '#ebdcd9' })}
+                  title="自訂底色"
+                  className={`theme-swatch-circle ${settings.theme === 'custom' ? 'active' : ''}`}
+                  style={{ backgroundColor: settings.customThemeColor || '#ebdcd9' }}
+                >
+                  {settings.theme === 'custom' && (
+                    <Check 
+                      size={12} 
+                      strokeWidth={3.5} 
+                      style={{ color: isDarkColor(settings.customThemeColor || '#ebdcd9') ? '#ffffff' : '#2c2016' }} 
+                    />
+                  )}
                 </div>
 
-                {/* 右邊的小膠囊「+ 自訂」 */}
                 <button
                   type="button"
-                  className={`settings-custom-theme-pill ${showCustomThemeDrawer || settings.theme === 'custom' ? 'active' : ''}`}
+                  className={`settings-custom-theme-pill ${showCustomThemeDrawer ? 'expanded' : ''}`}
                   onClick={() => setShowCustomThemeDrawer(prev => !prev)}
-                  title="展開修行佛光與自訂色盤"
+                  title="點擊展開/收合自訂顏色盤"
                 >
-                  <Sparkles size={13} strokeWidth={2.4} />
-                  <span>{showCustomThemeDrawer ? '收合' : '+ 自訂'}</span>
+                  <Sparkles size={13} strokeWidth={2.2} />
+                  <span>+ 自訂</span>
                 </button>
               </div>
             </div>
 
-            {/* 💡 展開的「禪修冥想佛光光譜」抽屜 (Smooth Accordion Drawer) */}
+            {/* 💡 展開的自訂佛光光譜抽屜 (刪除頂部「禪修佛光…」文字，直接展示 6 款光譜色) */}
             {showCustomThemeDrawer && (
               <div className="custom-theme-drawer-panel animate-fade-in">
-                <div className="custom-theme-drawer-header">
-                  <span className="drawer-title">禪修佛光光譜</span>
-                  <span className="drawer-sub">依密乘本尊與顯教經典調配 · 護眼自適應</span>
-                </div>
-
-                {/* 6 大尊貴修行佛光色票 */}
+                {/* 6 大尊貴修行佛光色票 (由淺到深排列) */}
                 <div className="sacred-palette-grid">
                   {SACRED_THEME_PALETTE.map(c => {
                     const isSelected = settings.theme === 'custom' && settings.customThemeColor === c.hex;
@@ -292,17 +306,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 <div className="custom-color-picker-row">
                   <label className="custom-picker-label">
                     <span>自由光譜微調：</span>
-                    <div className="custom-color-input-wrapper" style={{ backgroundColor: settings.customThemeColor || '#dcb372' }}>
+                    <div className="custom-color-input-wrapper" style={{ backgroundColor: settings.customThemeColor || '#ebdcd9' }}>
                       <input
                         type="color"
                         className="custom-native-color-picker"
-                        value={settings.customThemeColor || '#dcb372'}
+                        value={settings.customThemeColor || '#ebdcd9'}
                         onChange={(e) => onSave({ ...settings, theme: 'custom', customThemeColor: e.target.value })}
                         title="點擊展開全光譜取色盤"
                       />
                     </div>
                   </label>
-                  <span className="custom-color-hex-tag">{settings.customThemeColor || '#dcb372'}</span>
+                  <span className="custom-color-hex-tag">{settings.customThemeColor || '#ebdcd9'}</span>
                 </div>
               </div>
             )}

@@ -267,14 +267,17 @@ body.theme-ebony .settings-select:focus {
   margin-bottom: 0.85rem;
 }
 
-.settings-theme-top-row {
+.settings-theme-under-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
 }
 
-.settings-theme-actions-right {
+.settings-theme-middle-spacer {
+  margin-left: 1.5rem; /* 原先四個主題在左邊，中間空一段距離 */
+}
+
+.settings-theme-custom-group {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -318,16 +321,16 @@ body.theme-ebony .theme-swatch-circle.active {
   border-color: #fbbf24;
 }
 
-/* 💡 小膠囊「+ 自訂」按鍵 */
+/* 💡 小膠囊「+ 自訂」按鍵：顏色淺灰色，點一下展開，再點一下收合 */
 .settings-custom-theme-pill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 10px;
+  padding: 4px 11px;
   border-radius: 9999px;
-  background: var(--bg-library, rgba(0, 0, 0, 0.04));
-  border: 1.2px solid rgba(30, 169, 140, 0.35);
-  color: #1ea98c;
+  background: #ece8e1; /* 淺灰色 */
+  border: 1.2px solid rgba(0, 0, 0, 0.12);
+  color: #4a443d;
   font-family: var(--font-sans);
   font-size: 0.76rem;
   font-weight: 700;
@@ -337,26 +340,27 @@ body.theme-ebony .theme-swatch-circle.active {
 }
 
 .settings-custom-theme-pill:hover {
-  background: rgba(30, 169, 140, 0.12);
+  background: #e2ded7;
   transform: translateY(-1px);
 }
 
-.settings-custom-theme-pill.active {
-  background: #1ea98c;
-  color: #ffffff;
-  border-color: #1ea98c;
-  box-shadow: 0 2px 8px rgba(30, 169, 140, 0.32);
+.settings-custom-theme-pill.expanded {
+  background: #dad5cd;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 body.theme-ebony .settings-custom-theme-pill {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(36, 202, 168, 0.45);
-  color: #24caa8;
+  background: rgba(255, 255, 255, 0.14); /* 深色模式下的淺灰透色 */
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #e5e5e5;
 }
 
-body.theme-ebony .settings-custom-theme-pill.active {
-  background: #1ea98c;
-  color: #ffffff;
+body.theme-ebony .settings-custom-theme-pill:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+body.theme-ebony .settings-custom-theme-pill.expanded {
+  background: rgba(255, 255, 255, 0.26);
 }
 
 /* 💡 展開的禪修佛光光譜抽屜 */

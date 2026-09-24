@@ -10,14 +10,14 @@ export interface SacredThemeColor {
   hex: string;
 }
 
-/** 尊貴顯密傳承修行佛光色系 (經護眼與最佳對比度調校) */
+/** 尊貴顯密傳承修行佛光色系 (由淺到深、六大不同光譜排列) */
 export const SACRED_THEME_PALETTE: SacredThemeColor[] = [
+  { id: 'lotus_mist', name: '蓮花粉', sub: '西方淨土 · 慈悲柔和', hex: '#ebdcd9' },
   { id: 'amber_gold', name: '琥珀金', sub: '增益法門 · 泥金古經', hex: '#dcb372' },
-  { id: 'lapis_blue', name: '琉璃紺', sub: '藥師佛光 · 沉靜深藍', hex: '#182433' },
-  { id: 'sandalwood_purple', name: '紫紺木', sub: '金剛威德 · 沉香紫檀', hex: '#2b1b28' },
-  { id: 'cinnabar_red', name: '硃砂赭', sub: '甘珠爾經 · 尊榮藏紅', hex: '#3d1818' },
-  { id: 'lotus_mist', name: '蓮花粉', sub: '觀音水月 · 慈悲柔和', hex: '#ebdcd9' },
-  { id: 'jade_pine', name: '青松黛', sub: '翡翠空山 · 清心安神', hex: '#1c2b23' },
+  { id: 'azure_sky', name: '天青藍', sub: '琉璃晴空 · 清涼澄澈', hex: '#8caec4' },
+  { id: 'cinnabar_red', name: '硃砂赤', sub: '甘珠爾經 · 尊榮藏紅', hex: '#8c3835' },
+  { id: 'pine_green', name: '青松黛', sub: '空山古剎 · 清心安神', hex: '#234a3b' },
+  { id: 'sandalwood_purple', name: '紫紺木', sub: '金剛威德 · 甚深紫檀', hex: '#221426' },
 ];
 
 /**

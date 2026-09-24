@@ -5930,28 +5930,43 @@ body.theme-ebony .excerpt-nav-btn:hover {
   align-items: center;
   justify-content: space-around;
   width: 100%;
+  gap: 4px;
 }
 
 .theme-ball {
-  width: 32px;
-  height: 32px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 2px solid rgba(0,0,0,0.15);
+  border: 1.5px solid rgba(0,0,0,0.18);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 10px;
   font-weight: 700;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
 }
 
-.theme-ball:hover { transform: scale(1.15); }
-.theme-ball.active { box-shadow: 0 0 0 3px #1ea98c; }
+.theme-ball:hover { transform: scale(1.18); }
+.theme-ball.active { 
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2.5px #1ea98c; 
+  border-color: #1ea98c;
+}
 .ball-ivory { background: #faf7f0; color: #333; }
 .ball-parchment { background: #f1e5c9; color: #333; }
 .ball-comfort { background: #e3ebd9; color: #23351d; }
 .ball-ebony { background: #12161a; color: #fff; }
+.ball-custom { border-color: rgba(0,0,0,0.2); }
+
+body.theme-ebony .theme-ball {
+  border-color: rgba(255,255,255,0.24);
+}
+body.theme-ebony .theme-ball.active {
+  box-shadow: 0 0 0 2.5px #fbbf24;
+  border-color: #fbbf24;
+}
 
 .timer-2x2 {
   text-align: center;
