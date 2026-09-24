@@ -2618,45 +2618,71 @@ body.theme-ebony .list-book-item.dragging, body.theme-ebony .grid-book-card.drag
   margin-bottom: 0.85rem !important;
 }
 
-/* 💡 方案切換開關膠囊（置頂於「我的書櫃」bar之下，上下間隔對稱一致，切換零跳閃） */
+/* 💡 方案切換左右雙分段膠囊（左：「讀者分類」 / 右：「多維度分類」） */
 .bookshelf-scheme-switch-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.65rem;
 }
 
-.bookshelf-scheme-switch-btn {
+.bookshelf-scheme-segmented-capsule {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: rgba(30, 169, 140, 0.12);
-  color: #1ea98c;
-  border: 1.2px solid #1ea98c;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.18s ease;
+  padding: 3px;
+  border-radius: 9999px;
+  background: var(--bg-library, rgba(0, 0, 0, 0.04));
+  border: 1.2px solid rgba(30, 169, 140, 0.28);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
   user-select: none;
 }
 
-.bookshelf-scheme-switch-btn:hover {
-  background: rgba(30, 169, 140, 0.18);
-  transform: translateY(-1px);
+.scheme-seg-btn {
+  padding: 5px 15px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  white-space: nowrap;
+  outline: none;
 }
 
-.bookshelf-scheme-switch-btn:active {
-  transform: scale(0.96);
+.scheme-seg-btn:hover:not(.active) {
+  color: #1ea98c;
+  background: rgba(30, 169, 140, 0.08);
 }
 
-body.theme-ebony .bookshelf-scheme-switch-btn {
-  background: rgba(30, 169, 140, 0.18);
-  border-color: #24caa8;
+.scheme-seg-btn.active {
+  background: #1ea98c;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(30, 169, 140, 0.32);
+}
+
+body.theme-ebony .bookshelf-scheme-segmented-capsule {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(36, 202, 168, 0.35);
+}
+
+body.theme-ebony .scheme-seg-btn {
+  color: #a1a1aa;
+}
+
+body.theme-ebony .scheme-seg-btn:hover:not(.active) {
   color: #24caa8;
+  background: rgba(36, 202, 168, 0.12);
+}
+
+body.theme-ebony .scheme-seg-btn.active {
+  background: #1ea98c;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(30, 169, 140, 0.45);
 }
 
 .folder-navigation-bar {

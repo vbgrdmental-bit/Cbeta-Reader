@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, X, Download,
   Home, Search, CalendarDays,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw, Sparkles
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
@@ -1576,16 +1576,26 @@ export function Library({
           {/* === B. 「我的書櫃」（virtual_my_folders）：支援體驗 ABC 互動排版提案與原版書櫃切換 === */}
           {currentFolderId === 'virtual_my_folders' && (
             <>
-              {/* 💡 統一置頂之開關膠囊按鈕：位置恆定錨定於「我的書櫃」bar 之下，切換方案時零位移、零閃跳 */}
+              {/* 💡 方案切換左右雙分段膠囊（左：「讀者分類」 / 右：「多維度分類」） */}
               <div className="bookshelf-scheme-switch-container">
-                <button
-                  type="button"
-                  className="bookshelf-scheme-switch-btn"
-                  onClick={() => setShowPlaygroundDemo(prev => !prev)}
-                >
-                  <Sparkles size={14} />
-                  <span>{showPlaygroundDemo ? '切換至：一般分類方案' : '切換至：經藏多維度整理方案'}</span>
-                </button>
+                <div className="bookshelf-scheme-segmented-capsule">
+                  <button
+                    type="button"
+                    className={`scheme-seg-btn ${!showPlaygroundDemo ? 'active' : ''}`}
+                    onClick={() => setShowPlaygroundDemo(false)}
+                    title="切換至讀者分類（一般資料夾方案）"
+                  >
+                    讀者分類
+                  </button>
+                  <button
+                    type="button"
+                    className={`scheme-seg-btn ${showPlaygroundDemo ? 'active' : ''}`}
+                    onClick={() => setShowPlaygroundDemo(true)}
+                    title="切換至多維度分類（經藏多維度整理方案）"
+                  >
+                    多維度分類
+                  </button>
+                </div>
               </div>
 
               {showPlaygroundDemo ? (
