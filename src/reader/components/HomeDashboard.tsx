@@ -699,12 +699,9 @@ export function HomeDashboard({
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
             >
               <div className="title-center-content-2x2">
-                <h2 className="title-brand-heading" style={{ fontFamily: 'var(--font-rounded)', fontSize: '1.35rem', fontWeight: 800, margin: 0, lineHeight: 1.2 }}>
+                <h2 className="title-brand-heading" style={{ fontFamily: 'var(--font-rounded)', fontSize: '1.45rem', fontWeight: 800, margin: 0, lineHeight: 1.25 }}>
                   <span style={{ color: '#1ea98c' }}>CBETA</span> <span className="title-brand-text">Reader</span>
                 </h2>
-                <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '0.35rem', margin: 0 }}>
-                  淨心小角落 · 閱讀大藏經
-                </p>
               </div>
               {renderMiniThemeDots('pos-bottom-center')}
             </div>

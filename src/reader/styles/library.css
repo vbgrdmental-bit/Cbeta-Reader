@@ -5183,7 +5183,7 @@ body.theme-ebony .home-layout-edit-trigger-btn {
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: -12px; /* 💡 圖1：文字、小標上移一點 */
+  margin-top: -8px; /* 💡 刪除副標後垂直居中重心平衡 */
 }
 
 /* 💡 圖1：淺色模式下 Reader 高對比清晰可見 */
@@ -6536,32 +6536,32 @@ body.theme-ebony .ios-live-preview-viewport {
   box-sizing: border-box;
 }
 
-/* 4 欄規格 (4x1, 4x2)：採用首頁真實 356px 原生細長佈局 (長寬比 2.4 : 1)，等比縮放納入框內，完美還原首頁圖 4 的修長長條感！ */
+/* 4 欄規格 (4x1, 4x2)：採用首頁真實 336px 原生細長佈局 (長寬比 2.3 : 1)，等比縮放納入框內，完美還原首頁圖 4 的修長長條感！ */
 .preview-card-stage-container.scale-4x1,
 .preview-card-stage-container.scale-4x2 {
-  width: 356px;
-  max-width: 356px;
+  width: 336px;
+  max-width: 336px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transform: scale(0.84);
+  transform: scale(0.80);
   transform-origin: center center;
 }
 
 /* 4x1：高度 68px，修長細長條 Bar */
 .preview-card-stage-container.scale-4x1 .preview-card-mode.size-4x1 {
-  width: 356px !important;
+  width: 336px !important;
   height: 68px !important;
   min-height: 68px !important;
   max-height: 68px !important;
   padding: 0.45rem 0.95rem !important;
 }
 
-/* 4x2：高度 148px (長寬比 2.4 : 1)，「4」完全細長展開，書籍條與箭頭距離寬敞，與首頁真實圖 4 嚴格 1:1 等比神還原！ */
+/* 4x2：高度 148px (長寬比 2.3 : 1)，「4」完全細長展開，書籍條與箭頭距離寬敞，與首頁真實圖 4 嚴格 1:1 等比神還原！ */
 .preview-card-stage-container.scale-4x2 .preview-card-mode.size-4x2 {
-  width: 356px !important;
+  width: 336px !important;
   height: 148px !important;
   min-height: 148px !important;
   max-height: 148px !important;
@@ -6569,51 +6569,64 @@ body.theme-ebony .ios-live-preview-viewport {
 }
 
 .preview-card-stage-container.scale-4x2 .book-widget-card-box.box-4x2 {
-  width: 356px !important;
+  width: 336px !important;
   height: 148px !important;
   min-height: 148px !important;
   max-height: 148px !important;
 }
 
 .preview-card-stage-container.scale-4x2 .widget-outside-header-row {
-  width: 356px !important;
+  width: 336px !important;
 }
 
-/* 4x3：高度 275px (3 部經典)，應用 scale(0.85) 等比縮小，100% 完整容納於視窗框內，上下左右絕不切邊 */
+/* 4x3：高度 275px (3 部經典)，卡片寬度 310px，應用 scale(0.78) 等比縮小，子元素寬度 100% 自適應，徹底杜絕邊緣切邊 */
 .preview-card-stage-container.scale-4x3 {
-  width: 330px;
+  width: 310px;
   height: 275px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transform: scale(0.86);
+  transform: scale(0.78);
   transform-origin: center center;
 }
 
-.preview-card-stage-container.scale-4x3 .preview-card-mode.size-4x3,
-.preview-card-stage-container.scale-4x3 .book-list-widget-multi {
-  width: 330px !important;
+.preview-card-stage-container.scale-4x3 .preview-card-mode.size-4x3 {
+  width: 310px !important;
+  max-width: 310px !important;
+  box-sizing: border-box !important;
 }
 
-/* 4x4：高度 355px (四合一導航、4部經典、經文進度)，在加大視窗框內應用 scale(0.74) 等比縮小，更大氣飽滿、四周零切邊 */
+.preview-card-stage-container.scale-4x3 .book-list-widget-multi {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 4x4：高度 355px (四合一導航、4部經典、經文進度)，應用 scale(0.68) 等比縮小，四邊安全留白充沛，絕不切邊 */
 .preview-card-stage-container.scale-4x4 {
-  width: 330px;
+  width: 310px;
   height: 355px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transform: scale(0.74);
+  transform: scale(0.68);
   transform-origin: center center;
 }
 
-.preview-card-stage-container.scale-4x4 .preview-card-mode.size-4x4,
+.preview-card-stage-container.scale-4x4 .preview-card-mode.size-4x4 {
+  width: 310px !important;
+  max-width: 310px !important;
+  box-sizing: border-box !important;
+}
+
 .preview-card-stage-container.scale-4x4 .book-list-widget-multi,
-.preview-card-stage-container.scale-4x4 .lastread-excerpt-card-4x4 {
-  width: 330px !important;
+.preview-card-stage-container.scale-4x4 .lastread-excerpt-card-4x4,
+.preview-card-stage-container.scale-4x4 .widget-four-in-one-4x4 {
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 /* 2x2 正方形規格：148px × 148px，1:1 正方形置中 */
