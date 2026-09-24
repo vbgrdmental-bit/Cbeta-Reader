@@ -200,7 +200,7 @@ body.theme-light .wing-capsule {
 /* 🌟 被選中項：展開膠囊帶文字 + 主題色底色高亮 (呈現 4 個文字) */
 .capsule-nav-item.active,
 .wing-capsule-item.active {
-  background: #8c4b27;
+  background: var(--theme-accent, #8c4b27);
   color: #ffffff !important;
   padding: 0 13px;
   font-weight: 600;
@@ -2634,7 +2634,7 @@ body.theme-ebony .list-book-item.dragging, body.theme-ebony .grid-book-card.drag
   padding: 3px;
   border-radius: 9999px;
   background: var(--bg-library, rgba(0, 0, 0, 0.04));
-  border: 1.2px solid rgba(30, 169, 140, 0.28);
+  border: 1.2px solid var(--theme-accent-border, rgba(30, 169, 140, 0.28));
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
   user-select: none;
 }
@@ -2655,19 +2655,19 @@ body.theme-ebony .list-book-item.dragging, body.theme-ebony .grid-book-card.drag
 }
 
 .scheme-seg-btn:hover:not(.active) {
-  color: #1ea98c;
-  background: rgba(30, 169, 140, 0.08);
+  color: var(--theme-accent, #1ea98c);
+  background: var(--theme-accent-light, rgba(30, 169, 140, 0.08));
 }
 
 .scheme-seg-btn.active {
-  background: #1ea98c;
+  background: var(--theme-accent, #1ea98c);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(30, 169, 140, 0.32);
+  box-shadow: 0 2px 8px var(--theme-accent-border, rgba(30, 169, 140, 0.32));
 }
 
 body.theme-ebony .bookshelf-scheme-segmented-capsule {
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(36, 202, 168, 0.35);
+  border-color: var(--theme-accent-border, rgba(36, 202, 168, 0.35));
 }
 
 body.theme-ebony .scheme-seg-btn {
@@ -8053,14 +8053,14 @@ body.theme-comfort .reader-capsule-item .capsule-disc-icon {
 }
 
 .bookshelf-filter-capsule:hover {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.2);
+  background: var(--theme-accent-light, rgba(0, 0, 0, 0.05));
+  border-color: var(--theme-accent-border, rgba(0, 0, 0, 0.2));
 }
 
-/* 點到的反灰 (底色深灰，文字純白) */
+/* 點到的反灰 (底色同色系深色，文字純白) */
 .bookshelf-filter-capsule.active {
-  background: #363636 !important;
-  border-color: #363636 !important;
+  background: var(--theme-accent, #363636) !important;
+  border-color: var(--theme-accent, #363636) !important;
   color: #ffffff !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
   font-weight: 700;

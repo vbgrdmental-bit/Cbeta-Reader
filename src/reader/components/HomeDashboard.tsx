@@ -700,7 +700,7 @@ export function HomeDashboard({
       case 'title_4x2':
       case 'title_4x1': {
         if (size === 'size-2x2') {
-          // 💡 2x2：四大閱讀小圓圈放在最下方/置中，文字上移一點
+          // 💡 2x2：cbeta 在上，reader 在下，小圓圈放在最下方置中
           return (
             <div 
               className="widget-title-2x2"
@@ -708,9 +708,10 @@ export function HomeDashboard({
               title="點擊切換閱讀底色"
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
             >
-              <div className="title-center-content-2x2">
-                <h2 className="title-brand-heading" style={{ fontFamily: 'var(--font-rounded)', fontSize: '1.45rem', fontWeight: 800, margin: 0, lineHeight: 1.25 }}>
-                  <span style={{ color: '#1ea98c' }}>CBETA</span> <span className="title-brand-text">Reader</span>
+              <div className="title-center-content-2x2" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <h2 className="title-brand-heading" style={{ fontFamily: 'var(--font-rounded)', fontSize: '1.45rem', fontWeight: 800, margin: 0, lineHeight: 1.15, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--theme-accent, #1ea98c)' }}>CBETA</span>
+                  <span className="title-brand-text" style={{ marginTop: '0.2rem' }}>Reader</span>
                 </h2>
               </div>
               {renderMiniThemeDots('pos-bottom-center')}

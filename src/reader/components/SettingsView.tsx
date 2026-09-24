@@ -247,8 +247,8 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 })}
               </div>
 
-              {/* 中間空一段距離 */}
-              <div className="settings-theme-middle-spacer" />
+              {/* 💡 在烏木圓圈圈和自訂圓圈圈中間多一個淺灰色「|」，間距再加大一點點 */}
+              <div className="theme-swatch-vertical-divider">|</div>
 
               {/* 右邊：「自訂」圓圈圈 + 膠囊「+自訂」(淺灰色) */}
               <div className="settings-theme-custom-group">

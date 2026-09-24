@@ -71,11 +71,139 @@ export function adjustColorBrightness(hex: string, percent: number): string {
 }
 
 /**
+ * 將 RGB 轉換為 HSL
+ */
+export function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
+  const rNorm = r / 255;
+  const gNorm = g / 255;
+  const bNorm = b / 255;
+
+  const max = Math.max(rNorm, gNorm, bNorm);
+  const min = Math.min(rNorm, gNorm, bNorm);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case rNorm:
+        h = (gNorm - bNorm) / d + (gNorm < bNorm ? 6 : 0);
+        break;
+      case gNorm:
+        h = (bNorm - rNorm) / d + 2;
+        break;
+      case bNorm:
+        h = (rNorm - gNorm) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+
+  return { h: Math.round(h * 360), s, l };
+}
+
+/**
+ * 將 HSL 轉換為 Hex
+ */
+export function hslToHex(h: number, s: number, l: number): string {
+  const hNorm = h / 360;
+  const hue2rgb = (p: number, q: number, t: number) => {
+    let tNorm = t;
+    if (tNorm < 0) tNorm += 1;
+    if (tNorm > 1) tNorm -= 1;
+    if (tNorm < 1 / 6) return p + (q - p) * 6 * tNorm;
+    if (tNorm < 1 / 2) return q;
+    if (tNorm < 2 / 3) return p + (q - p) * (2 / 3 - tNorm) * 6;
+    return p;
+  };
+
+  let r: number, g: number, b: number;
+  if (s === 0) {
+    r = g = b = l;
+  } else {
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, hNorm + 1 / 3);
+    g = hue2rgb(p, q, hNorm);
+    b = hue2rgb(p, q, hNorm - 1 / 3);
+  }
+
+  const toHex = (x: number) => Math.round(x * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+/**
+ * 依據主題背景色，智慧衍生出同色系高和諧度的「深色(相關色)」與「淺色(相關色)」
+ */
+export function deriveHarmoniousPalette(hex: string): {
+  accent: string;       // 相關深色 / 選中強調色
+  accentLight: string;  // 相關淺色
+  accentBorder: string; // 相關邊框色
+} {
+  const clean = hex.toLowerCase().trim();
+
+  // 1. 若為 6 款佛光修行色，優先使用權威設計師精準同色系調配
+  if (clean === '#ebdcd9') {
+    // 蓮花粉 -> 沉香絳粉深色
+    return { accent: '#783e39', accentLight: 'rgba(120, 62, 57, 0.10)', accentBorder: 'rgba(120, 62, 57, 0.22)' };
+  }
+  if (clean === '#dcb372') {
+    // 琥珀金 -> 焦糖金棕深色
+    return { accent: '#70440f', accentLight: 'rgba(112, 68, 15, 0.10)', accentBorder: 'rgba(112, 68, 15, 0.25)' };
+  }
+  if (clean === '#8caec4') {
+    // 天青藍 -> 深海天青藍
+    return { accent: '#1e4b6e', accentLight: 'rgba(30, 75, 110, 0.10)', accentBorder: 'rgba(30, 75, 110, 0.25)' };
+  }
+  if (clean === '#8c3835') {
+    // 硃砂赤 -> 明麗硃砂赤紅
+    return { accent: '#b3433e', accentLight: 'rgba(255, 255, 255, 0.12)', accentBorder: 'rgba(255, 255, 255, 0.22)' };
+  }
+  if (clean === '#234a3b') {
+    // 青松黛 -> 蒼翠松針綠
+    return { accent: '#2e7054', accentLight: 'rgba(255, 255, 255, 0.12)', accentBorder: 'rgba(255, 255, 255, 0.22)' };
+  }
+  if (clean === '#221426') {
+    // 紫紺木 -> 甚深紫金檀
+    return { accent: '#70347a', accentLight: 'rgba(255, 255, 255, 0.12)', accentBorder: 'rgba(255, 255, 255, 0.22)' };
+  }
+
+  // 2. 自由取色器之任意顏色：使用 HSL 色相感知公式同色相衍生
+  const { r, g, b } = hexToRgb(clean);
+  const { h, s } = rgbToHsl(r, g, b);
+  const isDark = isDarkColor(clean);
+
+  if (!isDark) {
+    // 淺色底：衍生同色相之高飽和度深色
+    const sat = Math.min(0.85, Math.max(0.48, s * 1.25));
+    const accentHex = hslToHex(h, sat, 0.27);
+    const { r: ar, g: ag, b: ab } = hexToRgb(accentHex);
+    return {
+      accent: accentHex,
+      accentLight: `rgba(${ar}, ${ag}, ${ab}, 0.10)`,
+      accentBorder: `rgba(${ar}, ${ag}, ${ab}, 0.25)`
+    };
+  } else {
+    // 深色底：衍生同色相之清晰明亮色
+    const sat = Math.min(0.9, Math.max(0.5, s * 1.2));
+    const accentHex = hslToHex(h, sat, 0.48);
+    return {
+      accent: accentHex,
+      accentLight: 'rgba(255, 255, 255, 0.12)',
+      accentBorder: 'rgba(255, 255, 255, 0.22)'
+    };
+  }
+}
+
+/**
  * 全域動態注入自訂色彩至 document.body
  */
 export function applyCustomThemeToDOM(hex: string) {
   const body = document.body;
   const isDark = isDarkColor(hex);
+  const palette = deriveHarmoniousPalette(hex);
 
   // 清除現有的四大主題 class
   body.className = body.className
@@ -90,10 +218,16 @@ export function applyCustomThemeToDOM(hex: string) {
     body.classList.add('theme-custom-light', 'theme-ivory');
   }
 
-  // 設定 CSS 變數
+  // 設定 CSS 變數：背景與文字
   body.style.setProperty('--reader-bg', hex);
   body.style.setProperty('--bg-library', hex);
   body.style.setProperty('--bg-shelf', hex);
+
+  // 💡 同色系按鍵與選中色系注入 (使全站按鍵與背景一氣呵成，絕不突兀混雜)
+  body.style.setProperty('--theme-accent', palette.accent);
+  body.style.setProperty('--theme-accent-light', palette.accentLight);
+  body.style.setProperty('--theme-accent-border', palette.accentBorder);
+  body.style.setProperty('--color-wood-700', palette.accent);
 
   if (isDark) {
     body.style.setProperty('--reader-text', '#f0f3f6');
@@ -130,4 +264,8 @@ export function clearCustomThemeFromDOM() {
   body.style.removeProperty('--bg-card');
   body.style.removeProperty('--border-color');
   body.style.removeProperty('--reader-border');
+  body.style.removeProperty('--theme-accent');
+  body.style.removeProperty('--theme-accent-light');
+  body.style.removeProperty('--theme-accent-border');
+  body.style.removeProperty('--color-wood-700');
 }

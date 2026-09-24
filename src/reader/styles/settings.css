@@ -273,8 +273,21 @@ body.theme-ebony .settings-select:focus {
   width: 100%;
 }
 
-.settings-theme-middle-spacer {
-  margin-left: 1.5rem; /* 原先四個主題在左邊，中間空一段距離 */
+/* 💡 在烏木圓圈圈和自訂圓圈圈中間多一個淺灰色「|」，間距再加大一點點 */
+.theme-swatch-vertical-divider {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 16px; /* 間距加大 */
+  color: rgba(0, 0, 0, 0.22); /* 淺灰色 */
+  font-size: 0.95rem;
+  font-weight: 300;
+  user-select: none;
+  line-height: 1;
+}
+
+body.theme-ebony .theme-swatch-vertical-divider {
+  color: rgba(255, 255, 255, 0.28);
 }
 
 .settings-theme-custom-group {
@@ -289,9 +302,12 @@ body.theme-ebony .settings-select:focus {
   gap: 8px;
 }
 
+/* 💡 所有圓圈圈都一樣大 (恆定 24px，選中不放大) */
 .theme-swatch-circle {
-  width: 23px;
-  height: 23px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   border-radius: 50%;
   border: 1.5px solid rgba(0, 0, 0, 0.18);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -299,18 +315,17 @@ body.theme-ebony .settings-select:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.18s ease;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
   box-sizing: border-box;
 }
 
 .theme-swatch-circle:hover {
-  transform: scale(1.12);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
 }
 
 .theme-swatch-circle.active {
-  transform: scale(1.15);
-  border: 2px solid var(--theme-accent, #8c4b27);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border: 2.2px solid var(--theme-accent, #8c4b27);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 body.theme-ebony .theme-swatch-circle {
@@ -433,8 +448,7 @@ body.theme-ebony .sacred-color-card:hover {
 }
 
 .sacred-color-card.selected .sacred-color-swatch {
-  box-shadow: 0 0 0 2.5px #1ea98c, 0 2px 6px rgba(30, 169, 140, 0.4);
-  transform: scale(1.1);
+  box-shadow: 0 0 0 2.5px var(--theme-accent, #1ea98c), 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .sacred-color-swatch {

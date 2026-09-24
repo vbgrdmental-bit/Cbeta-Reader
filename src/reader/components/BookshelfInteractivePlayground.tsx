@@ -510,7 +510,7 @@ export function BookshelfInteractivePlayground({
                   borderRadius: '12px',
                   border: 'none',
                   background: isActive ? 'var(--bg-card, #ffffff)' : 'transparent',
-                  color: isActive ? 'var(--color-wood-700, #8c4b27)' : 'var(--text-muted)',
+                  color: isActive ? 'var(--theme-accent, #8c4b27)' : 'var(--text-muted)',
                   fontWeight: isActive ? 800 : 600,
                   cursor: 'pointer',
                   display: 'flex',
@@ -661,7 +661,7 @@ export function BookshelfInteractivePlayground({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#8c4b27' }} />
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--theme-accent, #8c4b27)' }} />
                   <span style={{ fontSize: '0.94rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
                     {groupTitle}
                   </span>
@@ -701,7 +701,7 @@ export function BookshelfInteractivePlayground({
                                 width: '38px',
                                 height: '38px',
                                 borderRadius: '8px',
-                                background: '#8c4b27',
+                                background: 'var(--theme-accent, #8c4b27)',
                                 color: '#ffffff',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -779,7 +779,7 @@ export function BookshelfInteractivePlayground({
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#8c4b27', background: 'rgba(140,75,39,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--theme-accent, #8c4b27)', background: 'var(--theme-accent-light, rgba(140,75,39,0.1))', padding: '2px 6px', borderRadius: '4px' }}>
                               {book.workId}
                             </span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -831,7 +831,7 @@ export function BookshelfInteractivePlayground({
                 width: '42px',
                 height: '42px',
                 borderRadius: '10px',
-                background: '#8c4b27',
+                background: 'var(--theme-accent, #8c4b27)',
                 color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
