@@ -2078,7 +2078,14 @@ export function HomeDashboard({
 
             {/* 5. 單層直接預覽主舞台 (全依「<」「>」巡覽所有小工具及尺寸) */}
             <div className="ios-gallery-preview-stage custom-scrollbar">
-              {/* 💡 Preview Showcase Box with < and > Navigation */}
+              {/* 💡 提到圖2視窗框外的上面：尺寸徽章 (黑色字 / 淺灰方框) */}
+              <div className="ios-preview-badge-header">
+                <span className="preview-size-badge-outer">
+                  {currentItem.sizeLabel}
+                </span>
+              </div>
+
+              {/* 💡 Preview Showcase Box with < and > Navigation (按鈕再小一點，中間視窗框上下左右再加大) */}
               <div className="ios-preview-showcase-row">
                 <button
                   type="button"
@@ -2086,15 +2093,10 @@ export function HomeDashboard({
                   onClick={handlePrevWidget}
                   title="切換上一個小工具"
                 >
-                  <ChevronLeft size={22} />
+                  <ChevronLeft size={14} strokeWidth={2.4} />
                 </button>
 
                 <div className="ios-live-preview-viewport">
-                  {/* 視窗框左上角小小字 (黑色字 / 淺灰方框) */}
-                  <div className="preview-size-badge">
-                    {currentItem.sizeLabel}
-                  </div>
-
                   {/* 等比自我縮放容器 (視窗框維持固定大小) */}
                   <div className={`preview-card-stage-container scale-${currentItem.size.replace('size-', '')}`}>
                     <div className={`widget-card preview-card-mode ${currentItem.size} ${isBookWidgetOuterHeader(currentItem.type, currentItem.size) ? 'has-outer-header' : ''} ${currentItem.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${currentItem.type === 'download_2x2' && currentItem.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''}`}>
@@ -2114,7 +2116,7 @@ export function HomeDashboard({
                   onClick={handleNextWidget}
                   title="切換下一個小工具"
                 >
-                  <ChevronRight size={22} />
+                  <ChevronRight size={14} strokeWidth={2.4} />
                 </button>
               </div>
 

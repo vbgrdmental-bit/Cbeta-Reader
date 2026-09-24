@@ -1265,16 +1265,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.5.4) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.5.5) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.5.4</span>
-                        <span className="changelog-date">(2026-09-24)</span>
+                        <span>⭐ App: v4.5.5</span>
+                        <span className="changelog-date">(2026-09-25)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 首頁卡片「上次閱讀」與「近期下載」右上角徽章數量對齊書櫃最多 9 本。</li>
-                        <li>• 小工具庫 4×3 與 4×4 預覽升級等比自適應縮放，徹底消除邊緣切邊。</li>
-                        <li>• 尺寸切換依序輪播，上次閱讀支援 4 本書與經文進度雙 4×4，標籤統一為「上次閱讀」。</li>
+                        <li>• 加入小工具預覽框上下左右加大，兩側「&lt;」「&gt;」按鈕精巧化，版面更開闊。</li>
+                        <li>• 尺寸徽章「4×4」等外置提到預覽框外部的上面，不佔用框內畫面。</li>
+                        <li>• 4×2 經書長條 Bar 依首頁圖 4 嚴格維持細長長寬比，等比縮放納入框內。</li>
                       </ul>
                     </div>
 
@@ -1297,6 +1297,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.5.4</span>
+                            <span className="changelog-date">(2026-09-24)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 首頁卡片「上次閱讀」與「近期下載」右上角徽章數量對齊書櫃最多 9 本。</li>
+                            <li>• 小工具庫 4×3 與 4×4 預覽升級等比自適應縮放，徹底消除邊緣切邊。</li>
+                            <li>• 尺寸切換依序輪播，上次閱讀支援 4 本書與經文進度雙 4×4，標籤統一為「上次閱讀」。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.5.3</span>

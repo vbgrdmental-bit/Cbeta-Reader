@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.4` (App: v4.5.4 / Builder: v2.9.12)
+- **Current Version**: `v4.5.5` (App: v4.5.5 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.5 / Builder: v2.9.12** (2026-09-25)
+  - [App] 加入小工具預覽框上下左右加大（寬 348px × 高 288px），兩側「<」「>」按鈕縮小精巧化，版面更開闊。
+  - [App] 尺寸徽章「4×4」等外置提到預覽框外部的上面，不佔用框內畫面。
+  - [App] 4×2 經書長條 Bar 依首頁圖 4 嚴格維持原生細長長寬比，等比縮放納入框內，杜絕矮胖擠壓。
 - **⭐ App: v4.5.4 / Builder: v2.9.12** (2026-09-24)
   - [App] 首頁卡片「上次閱讀」與「近期下載」右上角徽章數量上限對齊書櫃最多 9 本。
   - [App] 加入小工具 (Widget Gallery) 4×3 與 4×4 預覽加入等比自適應縮放，徹底消除邊緣切邊問題。

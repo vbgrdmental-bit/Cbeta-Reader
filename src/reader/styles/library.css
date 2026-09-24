@@ -6339,7 +6339,7 @@ body.theme-ebony .preset-pill-btn {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem 1.1rem 1.2rem 1.1rem;
+  padding: 0.5rem 0.5rem 1rem 0.5rem;
   box-sizing: border-box;
 }
 
@@ -6380,44 +6380,76 @@ body.theme-ebony .preset-pill-btn {
   line-height: 1.35;
 }
 
-/* 💡 預覽區左右配置「<」「>」切換按鈕與中間視窗框 (箭頭離外側邊界有充裕空間，絕不貼邊) */
+/* 💡 提到圖2視窗框外的上面：尺寸徽章 (黑色字 / 淺灰色方框) */
+.ios-preview-badge-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+
+.preview-size-badge-outer {
+  background: #e4e4e7;
+  color: #18181b;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  letter-spacing: 0.04em;
+  user-select: none;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+body.theme-ebony .preview-size-badge-outer {
+  background: #3f3f46;
+  color: #f4f4f5;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 💡 預覽區左右配置「<」「>」切換按鈕與中間視窗框 (按鈕再小一點，中間視窗框上下左右再加大) */
 .ios-preview-showcase-row {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 1.15rem;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
   box-sizing: border-box;
-  padding: 0 0.5rem;
+  padding: 0 0.15rem;
 }
 
 .ios-preview-nav-arrow-btn {
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  max-width: 24px;
   border-radius: 50%;
   background: var(--bg-card, #ffffff);
-  border: 1.2px solid var(--border-color, rgba(0,0,0,0.12));
+  border: 1px solid var(--border-color, rgba(0,0,0,0.12));
   color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
   flex-shrink: 0;
+  padding: 0;
 }
 
 .ios-preview-nav-arrow-btn:hover:not(:disabled) {
-  transform: scale(1.12);
+  transform: scale(1.15);
   background: #1ea98c;
   color: #ffffff;
   border-color: #1ea98c;
-  box-shadow: 0 4px 14px rgba(30, 169, 140, 0.35);
+  box-shadow: 0 3px 10px rgba(30, 169, 140, 0.35);
 }
 
 .ios-preview-nav-arrow-btn:active {
-  transform: scale(0.94);
+  transform: scale(0.92);
 }
 
 .ios-preview-nav-arrow-btn:disabled {
@@ -6428,34 +6460,34 @@ body.theme-ebony .preset-pill-btn {
 
 body.theme-ebony .ios-preview-nav-arrow-btn {
   background: #252e3b;
-  border-color: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.15);
   color: #e0e6ed;
 }
 
-/* 💡 視窗框：設定為 296px 寬 × 250px 高，左右箭頭留白舒展，卡片在框內修長大氣 */
+/* 💡 視窗框：上下左右再加大 (寬度 348px × 高度 288px)，左右箭頭更精巧，卡片在框內舒展大氣 */
 .ios-live-preview-viewport {
   position: relative;
-  width: 296px;
-  max-width: 296px;
-  height: 250px;
-  min-height: 250px;
-  max-height: 250px;
+  width: 348px;
+  max-width: calc(100vw - 64px);
+  height: 288px;
+  min-height: 288px;
+  max-height: 288px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem;
+  padding: 0.5rem;
   box-sizing: border-box;
   background: var(--bg-library, rgba(0, 0, 0, 0.025));
-  border-radius: 24px;
+  border-radius: 22px;
   border: 1.5px solid var(--border-color, rgba(0, 0, 0, 0.12));
   overflow: hidden;
   flex-shrink: 0;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 420px) {
   .ios-live-preview-viewport {
-    width: calc(100vw - 110px);
-    max-width: 296px;
+    width: calc(100vw - 62px);
+    max-width: 348px;
   }
 }
 
@@ -6464,33 +6496,11 @@ body.theme-ebony .ios-live-preview-viewport {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-/* 視窗框左上角小小字尺寸徽章 (黑色字 / 淺灰色方框) */
 .preview-size-badge {
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  z-index: 25;
-  background: #e4e4e7;
-  color: #18181b;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  font-family: var(--font-sans);
-  letter-spacing: 0.03em;
-  user-select: none;
-  pointer-events: none;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: none !important;
 }
 
-body.theme-ebony .preview-size-badge {
-  background: #3f3f46;
-  color: #f4f4f5;
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-/* 視窗框內卡片展示舞台容器 (取消全域暴力 scale 縮放，以等比原生向量還原真實首頁長寬大器感) */
+/* 視窗框內卡片展示舞台容器 (以等比原生向量還原真實首頁長寬大器感) */
 .preview-card-stage-container {
   width: 100%;
   height: 100%;
@@ -6500,78 +6510,90 @@ body.theme-ebony .preview-size-badge {
   box-sizing: border-box;
 }
 
-/* 4 欄規格 (4x1, 4x2)：寬度拉滿 278px，長度「4」完全舒展拉長，與首頁 1:1 原生向量渲染 */
+/* 4 欄規格 (4x1, 4x2)：採用首頁真實 356px 原生細長佈局 (長寬比 2.4 : 1)，等比縮放納入框內，完美還原首頁圖 4 的修長長條感！ */
 .preview-card-stage-container.scale-4x1,
 .preview-card-stage-container.scale-4x2 {
-  width: 278px;
-  max-width: 100%;
+  width: 356px;
+  max-width: 356px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transform: none;
+  transform: scale(0.84);
+  transform-origin: center center;
 }
 
-/* 4x1：高度 58px，長寬比 4.8 : 1 (修長優雅長條 Bar) */
+/* 4x1：高度 68px，修長細長條 Bar */
 .preview-card-stage-container.scale-4x1 .preview-card-mode.size-4x1 {
-  width: 278px !important;
-  height: 58px !important;
-  min-height: 58px !important;
-  max-height: 58px !important;
-  padding: 0.45rem 0.8rem !important;
+  width: 356px !important;
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  padding: 0.45rem 0.95rem !important;
 }
 
-/* 4x2：高度 122px，長寬比 2.28 : 1 (「4」完全展開拉長，與首頁真實 4x2 完美 1:1 等比！) */
+/* 4x2：高度 148px (長寬比 2.4 : 1)，「4」完全細長展開，書籍條與箭頭距離寬敞，與首頁真實圖 4 嚴格 1:1 等比神還原！ */
 .preview-card-stage-container.scale-4x2 .preview-card-mode.size-4x2 {
-  width: 278px !important;
-  height: 122px !important;
-  min-height: 122px !important;
-  max-height: 122px !important;
-  padding: 0.6rem 0.8rem !important;
+  width: 356px !important;
+  height: 148px !important;
+  min-height: 148px !important;
+  max-height: 148px !important;
+  padding: 0.45rem 0.95rem !important;
 }
 
-/* 4x3：高度 275px (3 部經典)，應用 scale(0.80) 等比縮小，100% 完整容納於視窗框內，上下左右絕不切邊 */
+.preview-card-stage-container.scale-4x2 .book-widget-card-box.box-4x2 {
+  width: 356px !important;
+  height: 148px !important;
+  min-height: 148px !important;
+  max-height: 148px !important;
+}
+
+.preview-card-stage-container.scale-4x2 .widget-outside-header-row {
+  width: 356px !important;
+}
+
+/* 4x3：高度 275px (3 部經典)，應用 scale(0.85) 等比縮小，100% 完整容納於視窗框內，上下左右絕不切邊 */
 .preview-card-stage-container.scale-4x3 {
-  width: 280px;
+  width: 330px;
   height: 275px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transform: scale(0.80);
+  transform: scale(0.86);
   transform-origin: center center;
 }
 
 .preview-card-stage-container.scale-4x3 .preview-card-mode.size-4x3,
 .preview-card-stage-container.scale-4x3 .book-list-widget-multi {
-  width: 280px !important;
+  width: 330px !important;
 }
 
-/* 4x4：高度 355px (四合一導航、4部經典、經文進度)，應用 scale(0.625) 等比縮小，完美居中，100% 完整露出，四周零切邊 */
+/* 4x4：高度 355px (四合一導航、4部經典、經文進度)，在加大視窗框內應用 scale(0.74) 等比縮小，更大氣飽滿、四周零切邊 */
 .preview-card-stage-container.scale-4x4 {
-  width: 300px;
+  width: 330px;
   height: 355px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transform: scale(0.625);
+  transform: scale(0.74);
   transform-origin: center center;
 }
 
 .preview-card-stage-container.scale-4x4 .preview-card-mode.size-4x4,
 .preview-card-stage-container.scale-4x4 .book-list-widget-multi,
 .preview-card-stage-container.scale-4x4 .lastread-excerpt-card-4x4 {
-  width: 300px !important;
+  width: 330px !important;
 }
 
-/* 2x2 正方形規格：136px × 136px，1:1 正方形置中 */
+/* 2x2 正方形規格：148px × 148px，1:1 正方形置中 */
 .preview-card-stage-container.scale-2x2 {
-  width: 136px;
-  height: 136px;
+  width: 148px;
+  height: 148px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6580,11 +6602,11 @@ body.theme-ebony .preview-size-badge {
 }
 
 .preview-card-stage-container.scale-2x2 .preview-card-mode.size-2x2 {
-  width: 136px !important;
-  height: 136px !important;
-  min-height: 136px !important;
-  max-height: 136px !important;
-  padding: 0.4rem !important;
+  width: 148px !important;
+  height: 148px !important;
+  min-height: 148px !important;
+  max-height: 148px !important;
+  padding: 0.45rem !important;
 }
 
 .preview-card-mode {
@@ -6618,29 +6640,29 @@ body.theme-ebony .preview-size-badge {
   height: 14px !important;
 }
 
-/* 💡 書籍長條 Bar 預覽細節 (書名與譯者有足夠寬度，與「→」按鈕保持優雅距離，絕不擠壓) */
+/* 💡 書籍長條 Bar 預覽細節 (依首頁圖 4 嚴格保持細長長條型，書名、作譯者與「➔」按鈕間距充沛寬敞) */
 .preview-card-mode .book-widget-card-box {
   width: 100% !important;
-  padding: 0.35rem 0.45rem !important;
+  padding: 0.45rem 0.85rem !important;
   gap: 0.45rem !important;
 }
 
 .preview-card-mode .book-stack-item-4x4 {
   width: 100% !important;
-  padding: 0.35rem 0.55rem !important;
-  gap: 0.48rem !important;
-  border-radius: 11px !important;
+  padding: 0.38rem 0.75rem !important;
+  gap: 0.65rem !important;
+  border-radius: 12px !important;
 }
 
 .preview-card-mode .book-stack-item-4x4 .book-badge {
-  width: 36px !important;
-  min-width: 36px !important;
-  max-width: 36px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  font-size: 0.74rem !important;
-  border-radius: 8px !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  font-size: 0.78rem !important;
+  border-radius: 9px !important;
   flex-shrink: 0 !important;
 }
 
@@ -6651,7 +6673,7 @@ body.theme-ebony .preview-size-badge {
 }
 
 .preview-card-mode .book-stack-item-4x4 .b-title {
-  font-size: 0.90rem !important;
+  font-size: 0.96rem !important;
   font-weight: 700 !important;
   line-height: 1.25 !important;
   white-space: nowrap !important;
@@ -6660,19 +6682,19 @@ body.theme-ebony .preview-size-badge {
 }
 
 .preview-card-mode .book-stack-item-4x4 .b-sub {
-  font-size: 0.69rem !important;
+  font-size: 0.72rem !important;
   line-height: 1.2 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  margin-top: 1px !important;
+  margin-top: 2px !important;
 }
 
 .preview-card-mode .book-stack-item-4x4 .cbeta-read-btn {
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  min-height: 28px !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
   border-radius: 50% !important;
   padding: 0 !important;
   flex-shrink: 0 !important;
