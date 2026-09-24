@@ -595,7 +595,7 @@ export function BookshelfInteractivePlayground({
           {[
             { id: 'all', label: `全部 (${activeBooksPool.length})` },
             { id: 'downloads', label: '近期下載' },
-            { id: 'recent', label: '近期閱讀' },
+            { id: 'recent', label: '上次閱讀' },
             { id: 'favorites', label: '我的最愛' }
           ].map(item => {
             const isActive = statusFilter === item.id;

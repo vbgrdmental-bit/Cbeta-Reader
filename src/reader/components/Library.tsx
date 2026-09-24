@@ -1125,7 +1125,7 @@ export function Library({
   // 獲取當前資料夾路徑麵包屑
   const getFolderPath = (folderId: string | null): string => {
     if (!folderId) return '我的書櫃';
-    if (folderId === 'virtual_recent_reads') return '近期閱讀';
+    if (folderId === 'virtual_recent_reads') return '上次閱讀';
     if (folderId === 'virtual_favorites') return '我的最愛';
     if (folderId === 'virtual_unclassified') return '近期下載';
     if (folderId === 'virtual_highlights') return '重點與筆記';
@@ -1489,7 +1489,7 @@ export function Library({
 
                   <span className="folder-path-display">
                     {currentFolderId === 'virtual_resume' ? '繼續閱讀' : 
-                     currentFolderId === 'virtual_recent_reads' ? '近期閱讀' :
+                     currentFolderId === 'virtual_recent_reads' ? '上次閱讀' :
                      currentFolderId === 'virtual_favorites' ? '我的最愛' :
                      currentFolderId === 'virtual_highlights' ? '重點與筆記' :
                      currentFolderId === 'virtual_my_folders' ? '我的書櫃' :
@@ -1517,7 +1517,7 @@ export function Library({
                     {currentFolderId === 'virtual_my_folders' ? `共${downloadedBooks.length}本` :
                      currentFolderId === 'virtual_recent_reads' ? `共${recentReadsBooks.length}本` :
                      currentFolderId === 'virtual_favorites' ? `共${favoriteBooksList.length}本` :
-                     currentFolderId === 'virtual_unclassified' ? `共${unclassifiedBooks.length}本` :
+                     currentFolderId === 'virtual_unclassified' ? `共${Math.min(unclassifiedBooks.length, 9)}本` :
                      currentFolderId === 'virtual_highlights' ? `共${allHighlights.length}則` :
                      currentFolderId === 'virtual_resume' ? `共${displayBooks.length}本` :
                      `共${getFolderTotalBookCount(currentFolderId)}本`}
@@ -1632,13 +1632,13 @@ export function Library({
                       <ChevronRight size={18} />
                     </span>
                     <span className="appstore-section-badge">
-                      {unclassifiedBooks.length}
+                      {Math.min(unclassifiedBooks.length, 9)}
                     </span>
                   </div>
                 </div>
                 {unclassifiedBooks.length > 0 && (
                   <div className="appstore-carousel-scroll custom-scrollbar">
-                    {chunkBooksInto3(unclassifiedBooks).map((colBooks, colIdx) => (
+                    {chunkBooksInto3(unclassifiedBooks.slice(0, 9)).map((colBooks, colIdx) => (
                       <div key={`unclassified-col-${colIdx}`} className="appstore-carousel-column">
                         {colBooks.map(b => renderBookCard(b, false, 'virtual_unclassified'))}
                       </div>
@@ -1647,18 +1647,18 @@ export function Library({
                 )}
               </div>
 
-              {/* 2. 下一個：近期閱讀 (最多 9 本，即 3 欄 × 3 列) */}
+              {/* 2. 下一個：上次閱讀 (最多 9 本，即 3 欄 × 3 列) */}
               {recentReadsBooks.length > 0 && (
                 <div className="appstore-section animate-fade-in">
                   <div 
                     className="appstore-section-header"
                     onClick={() => navigateToFolderWithAnimation('virtual_recent_reads')}
-                    title="點擊查看所有近期閱讀經典"
+                    title="點擊查看所有上次閱讀經典"
                   >
                     <div className="appstore-section-title-wrap">
                       <span className="appstore-section-title-capsule appstore-capsule-recent">
                         <Clock size={15} style={{ strokeWidth: 2.2 }} />
-                        <span>近期閱讀</span>
+                        <span>上次閱讀</span>
                       </span>
                       <span className="appstore-section-arrow">
                         <ChevronRight size={18} />

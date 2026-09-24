@@ -39,9 +39,9 @@ interface HomeDashboardProps {
   setIsLayoutEditMode: (val: boolean) => void;
 }
 
-// 💡 檢查是否為經書外置標題小工具 (上次閱讀之 4x2、4x1、4x4，我的最愛、近期下載之 4x2 與 4x1 規格)
+// 💡 檢查是否為經書外置標題小工具 (上次閱讀之 4x2、4x1，經文進度 4x4，我的最愛、近期下載之 4x2 與 4x1 規格)
 const isBookWidgetOuterHeader = (type: string, size: string) => 
-  ((type === 'lastread_4x2' || type === 'lastread_4x1') && (size === 'size-4x2' || size === 'size-4x1' || size === 'size-4x4')) ||
+  ((type === 'lastread_4x2' || type === 'lastread_4x1') && (size === 'size-4x2' || size === 'size-4x1')) ||
   ((type === 'favorites_4x2' || type === 'recent_downloads_4x2') && (size === 'size-4x2' || size === 'size-4x1')) ||
   (type === 'lastread_excerpt_4x4');
 
@@ -57,16 +57,16 @@ interface FlatGalleryItem {
 
 const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   // 1. 主題圖卡 (brand)
-  { id: 'b_title_4x2', type: 'title_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'brand', title: '經典大標題' },
   { id: 'b_title_4x1', type: 'title_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'brand', title: '簡約橫幅標題' },
+  { id: 'b_title_4x2', type: 'title_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'brand', title: '經典大標題' },
   { id: 'b_title_2x2', type: 'title_4x2', size: 'size-2x2', sizeLabel: '2×2', category: 'brand', title: '正方標題' },
   { id: 'b_icon_2x2', type: 'appicon_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'brand', title: '禪意圖標' },
 
   // 2. 快捷功能 (nav)
   { id: 'n_four_4x1', type: 'four_nav_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '四合一導航' },
   { id: 'n_four_4x2', type: 'four_nav_4x1', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '四合一導航' },
-  { id: 'n_four_2x2', type: 'four_nav_4x1', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '四合一導航' },
   { id: 'n_four_4x4', type: 'four_nav_4x1', size: 'size-4x4', sizeLabel: '4×4', category: 'nav', title: '四合一導航' },
+  { id: 'n_four_2x2', type: 'four_nav_4x1', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '四合一導航' },
 
   { id: 'n_dl_4x1', type: 'download_2x2', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '下載經典' },
   { id: 'n_dl_4x2', type: 'download_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '下載經典' },
@@ -88,7 +88,8 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'r_last_4x1', type: 'lastread_4x2', size: 'size-4x1', sizeLabel: '4×1', category: 'reading', title: '上次閱讀' },
   { id: 'r_last_4x2', type: 'lastread_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '上次閱讀' },
   { id: 'r_last_4x3', type: 'lastread_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'reading', title: '上次閱讀' },
-  { id: 'r_last_4x4', type: 'lastread_4x2', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '上次閱讀' },
+  { id: 'r_last_4x4', type: 'lastread_4x2', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '上次閱讀 (4本書)' },
+  { id: 'r_last_excerpt_4x4', type: 'lastread_excerpt_4x4', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '上次閱讀 (經文進度)' },
 
   { id: 'r_fav_4x1', type: 'favorites_4x2', size: 'size-4x1', sizeLabel: '4×1', category: 'reading', title: '我的最愛' },
   { id: 'r_fav_4x2', type: 'favorites_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '我的最愛' },
@@ -213,15 +214,41 @@ export function HomeDashboard({
     }
   }, [settings.homeWidgets, settings.homeLayoutPreset]);
 
-  // 切換卡片尺寸 (依據該組件支援的 ALLOWED_SIZES 輪播切換)
+  // 💡 全局尺寸標準優先輪播順序：4*1 -> 4*2 -> 4*3 -> 4*4 -> 2*2 -> 4*1...
+  const PREFERRED_SIZE_CYCLE_ORDER: HomeWidgetSize[] = ['size-4x1', 'size-4x2', 'size-4x3', 'size-4x4', 'size-2x2', 'size-2x1', 'size-1x1'];
+
+  // 切換卡片尺寸 (依據 4x1 -> 4x2 -> 4x3 -> 4x4 -> 2x2 順序輪播切換)
   const handleCycleSize = (widgetId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setWidgets(prev => prev.map(w => {
       if (w.id !== widgetId) return w;
-      const allowed = ALLOWED_SIZES_BY_TYPE[w.type] || ['size-4x1', 'size-2x2', 'size-4x2'];
-      const curIdx = allowed.indexOf(w.size);
-      const nextIdx = (curIdx + 1) % allowed.length;
-      return { ...w, size: allowed[nextIdx] };
+
+      // 💡 上次閱讀專屬：4*1 -> 4*2 -> 4*3 -> 4*4 (4本書) -> 4*4 (經文進度) -> 4*1
+      if (w.type === 'lastread_4x2' || w.type === 'lastread_excerpt_4x4') {
+        if (w.type === 'lastread_4x2') {
+          if (w.size === 'size-4x1') return { ...w, size: 'size-4x2' };
+          if (w.size === 'size-4x2') return { ...w, size: 'size-4x3' };
+          if (w.size === 'size-4x3') return { ...w, size: 'size-4x4' };
+          if (w.size === 'size-4x4') {
+            // 從 4x4 (4本書) 切換至 4x4 (經文進度卡片)
+            return { ...w, type: 'lastread_excerpt_4x4', size: 'size-4x4' };
+          }
+        } else if (w.type === 'lastread_excerpt_4x4') {
+          // 從 4x4 (經文進度卡片) 循環回到 4x1 (1本書)
+          return { ...w, type: 'lastread_4x2', size: 'size-4x1' };
+        }
+      }
+
+      const allowed = ALLOWED_SIZES_BY_TYPE[w.type] || ['size-4x1', 'size-4x2', 'size-2x2'];
+      // 依 PREFERRED_SIZE_CYCLE_ORDER 嚴格排序
+      const sortedAllowed = [...allowed].sort((a, b) => {
+        const idxA = PREFERRED_SIZE_CYCLE_ORDER.indexOf(a);
+        const idxB = PREFERRED_SIZE_CYCLE_ORDER.indexOf(b);
+        return (idxA !== -1 ? idxA : 999) - (idxB !== -1 ? idxB : 999);
+      });
+      const curIdx = sortedAllowed.indexOf(w.size);
+      const nextIdx = (curIdx + 1) % sortedAllowed.length;
+      return { ...w, size: sortedAllowed[nextIdx] };
     }));
   };
 
@@ -523,7 +550,7 @@ export function HomeDashboard({
               className="widget-outside-header-row"
               onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-              title="點擊進入書櫃「近期閱讀」"
+              title="點擊進入書櫃「上次閱讀」"
             >
               <div className="widget-outside-tag">上次閱讀 ➔</div>
               <div className="widget-outside-badge">共 0 部</div>
@@ -558,10 +585,10 @@ export function HomeDashboard({
             className="widget-outside-header-row"
             onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
             style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-            title="點擊進入書櫃「近期閱讀」"
+            title="點擊進入書櫃「上次閱讀」"
           >
             <div className="widget-outside-tag">上次閱讀 ➔</div>
-            <div className="widget-outside-badge">共 {effectiveResumeBooks.length} 部</div>
+            <div className="widget-outside-badge">共 {Math.min(effectiveResumeBooks.length, 9)} 部</div>
           </div>
 
           <div className="lastread-excerpt-card-4x4">
@@ -1181,14 +1208,9 @@ export function HomeDashboard({
         return renderLastReadExcerptCard();
       }
 
-      // 8. 上次閱讀 (支援 4x1 / 4x2 / 4x3 / 4x4：4x4 即是經文進度預覽卡片)
+      // 8. 上次閱讀 (支援 4x1 / 4x2 / 4x3 / 4x4 共 1~4 本經典)
       case 'lastread_4x2':
       case 'lastread_4x1': {
-        // 💡 圖1：4x4 規格直接渲染為經文進度預覽卡片 (包含外置標題列、4x1 經書 Bar 與 4x3 經文預覽)
-        if (size === 'size-4x4') {
-          return renderLastReadExcerptCard();
-        }
-
         const lastBook = effectiveResumeBooks[0];
         if (!lastBook) {
           if (size === 'size-4x2' || size === 'size-4x1') {
@@ -1198,7 +1220,7 @@ export function HomeDashboard({
                   className="widget-outside-header-row"
                   onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
                   style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                  title="點擊進入書櫃「近期閱讀」"
+                  title="點擊進入書櫃「上次閱讀」"
                 >
                   <div className="widget-outside-tag">上次閱讀 ➔</div>
                   <div className="widget-outside-badge">共 0 部</div>
@@ -1227,10 +1249,10 @@ export function HomeDashboard({
                 className="widget-outside-header-row"
                 onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
                 style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                title="點擊進入書櫃「近期閱讀」"
+                title="點擊進入書櫃「上次閱讀」"
               >
                 <div className="widget-outside-tag">上次閱讀 ➔</div>
-                <div className="widget-outside-badge">共 {effectiveResumeBooks.length} 部</div>
+                <div className="widget-outside-badge">共 {Math.min(effectiveResumeBooks.length, 9)} 部</div>
               </div>
 
               {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
@@ -1261,18 +1283,19 @@ export function HomeDashboard({
           );
         }
 
-        // 💡 4x3 (3部) 規格
-        const displayResumeBooks = effectiveResumeBooks.slice(0, 3);
+        // 💡 4x3 (3部) / 4x4 (4部) 規格 (4本書)
+        const maxResume = size === 'size-4x4' ? 4 : 3;
+        const displayResumeBooks = effectiveResumeBooks.slice(0, maxResume);
         return (
-          <div className="book-list-widget-multi multi-4x3">
+          <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
             <div 
               className="widget-header-row-4x4"
               onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-              title="點擊進入書櫃「近期閱讀」"
+              title="點擊進入書櫃「上次閱讀」"
             >
               <div className="widget-tag-4x4">上次閱讀 ➔</div>
-              <div className="widget-count-badge-4x4">共 {effectiveResumeBooks.length} 部</div>
+              <div className="widget-count-badge-4x4">共 {Math.min(effectiveResumeBooks.length, 9)} 部</div>
             </div>
             <div className="book-stack-4x4">
               {displayResumeBooks.map((item, idx) => (
@@ -1479,7 +1502,7 @@ export function HomeDashboard({
                 title="點擊進入書櫃「近期下載」"
               >
                 <div className="widget-outside-tag">近期下載 ➔</div>
-                <div className="widget-outside-badge">共 {recentDownloadedBooks.length} 部</div>
+                <div className="widget-outside-badge">共 {Math.min(recentDownloadedBooks.length, 9)} 部</div>
               </div>
 
               {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
@@ -1521,8 +1544,8 @@ export function HomeDashboard({
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
               title="點擊進入書櫃「近期下載」"
             >
-              <div className="widget-tag-4x4">近期下載經典 ➔</div>
-              <div className="widget-count-badge-4x4">共 {downloadedBooks.length} 部</div>
+              <div className="widget-tag-4x4">近期下載 ➔</div>
+              <div className="widget-count-badge-4x4">共 {Math.min(recentDownloadedBooks.length, 9)} 部</div>
             </div>
             <div className="book-stack-4x4">
               {displayRecent.map(b => (

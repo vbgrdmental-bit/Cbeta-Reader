@@ -87,13 +87,14 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'search_2x2', category: 'nav', name: '全文檢索卡', size: 'size-2x2', icon: '🔍', description: '已下載經文全文快速檢索（支援 2x2/4x1/4x2）' },
 
   // 3. 閱讀與進度
-  { type: 'lastread_4x2', category: 'reading', name: '上次閱讀卡', size: 'size-4x2', icon: '📕', description: '上次閱讀經典進度與經文摘錄（支援 4x1/4x2/4x3/4x4）' },
+  { type: 'lastread_4x2', category: 'reading', name: '上次閱讀卡', size: 'size-4x2', icon: '📕', description: '上次閱讀經典列表（支援 4x1/4x2/4x3/4x4 共 1~4 本）' },
+  { type: 'lastread_excerpt_4x4', category: 'reading', name: '上次閱讀經文進度卡', size: 'size-4x4', icon: '📜', description: '上次閱讀經典與當前段落經文摘錄（4x4 規格）' },
   { type: 'favorites_4x2', category: 'reading', name: '我的最愛卡', size: 'size-4x2', icon: '❤️', description: '收藏於我的最愛之經典（支援 4x1/4x2/4x3/4x4）' },
   { type: 'recent_downloads_4x2', category: 'reading', name: '近期下載卡', size: 'size-4x2', icon: '📥', description: '最新下載之經典清單（支援 4x1/4x2/4x3/4x4）' },
   { type: 'stats_2x2', category: 'reading', name: '每日閱讀日誌徽章', size: 'size-2x2', icon: '📅', description: '連續閱讀天數與累積時數統計' },
 
   // 4. 其他功能
-  { type: 'timer_2x2', category: 'other', name: '護眼計時器', size: 'size-2x2', icon: '⏱️', description: '閱讀時間倒數與溫馨提醒（支援 2x2/4x2）' },
+  { type: 'timer_2x2', category: 'other', name: '護眼計時器', size: 'size-2x2', icon: '⏱️', description: '閱讀時間倒數與溫馨提醒（支援 4x2/2x2）' },
   { type: 'theme_4x1', category: 'other', name: '四色主題快捷列', size: 'size-4x1', icon: '🎨', description: '白、紙、舒、木 4 色背景一鍵切換' },
   { type: 'zen_4x2', category: 'other', name: '佛典精進名句', size: 'size-4x2', icon: '🪷', description: '每日輪播佛典名言與法義精粹' }
 ];
@@ -137,32 +138,32 @@ export const PRESET_LAYOUTS: Record<HomeLayoutPreset, HomeWidgetConfig[]> = {
   custom: []
 };
 
-// 💡 依組件特性定義允許的合適尺寸規格，避免過度擠壓或破版
+// 💡 依組件特性定義允許的合適尺寸規格，統一順序：4x1 -> 4x2 -> 4x3 -> 4x4 -> 2x2
 export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
-  title_4x2: ['size-4x2', 'size-4x1', 'size-2x2'],
+  title_4x2: ['size-4x1', 'size-4x2', 'size-2x2'],
   title_4x1: ['size-4x1', 'size-4x2', 'size-2x2'],
   // 禪意圖標：固定為 2x2 長寬等比正方形（無 1x1）
   appicon_2x2: ['size-2x2'],
 
-  four_nav_4x1: ['size-4x1', 'size-4x2', 'size-2x2', 'size-4x4'],
+  four_nav_4x1: ['size-4x1', 'size-4x2', 'size-4x4', 'size-2x2'],
 
-  // 四大核心功能卡：支援 2x2、4x1、4x2（無 1x1，無 2x1）
-  download_2x2: ['size-2x2', 'size-4x1', 'size-4x2'],
-  shelf_2x2: ['size-2x2', 'size-4x1', 'size-4x2'],
-  notes_2x2: ['size-2x2', 'size-4x1', 'size-4x2'],
-  search_2x2: ['size-2x2', 'size-4x1', 'size-4x2'],
+  // 四大核心功能卡：支援 4x1、4x2、2x2
+  download_2x2: ['size-4x1', 'size-4x2', 'size-2x2'],
+  shelf_2x2: ['size-4x1', 'size-4x2', 'size-2x2'],
+  notes_2x2: ['size-4x1', 'size-4x2', 'size-2x2'],
+  search_2x2: ['size-4x1', 'size-4x2', 'size-2x2'],
 
-  // 上次閱讀、我的最愛、近期下載：支援 4x1、4x2、4x3、4x4（無 2x2）
-  lastread_4x2: ['size-4x2', 'size-4x1', 'size-4x3', 'size-4x4'],
+  // 上次閱讀、我的最愛、近期下載：支援 4x1、4x2、4x3、4x4
+  lastread_4x2: ['size-4x1', 'size-4x2', 'size-4x3', 'size-4x4'],
   lastread_4x1: ['size-4x1', 'size-4x2', 'size-4x3', 'size-4x4'],
   lastread_excerpt_4x4: ['size-4x4'],
-  favorites_4x2: ['size-4x2', 'size-4x1', 'size-4x3', 'size-4x4'],
-  recent_downloads_4x2: ['size-4x2', 'size-4x1', 'size-4x3', 'size-4x4'],
+  favorites_4x2: ['size-4x1', 'size-4x2', 'size-4x3', 'size-4x4'],
+  recent_downloads_4x2: ['size-4x1', 'size-4x2', 'size-4x3', 'size-4x4'],
 
   stats_2x2: ['size-2x2', 'size-2x1', 'size-1x1'],
   theme_4x1: ['size-4x1', 'size-2x2'],
-  // 護眼模式：僅支援 2x2 與 4x2（無 2x1，無 1x1）
-  timer_2x2: ['size-2x2', 'size-4x2'],
-  // 佛典精進名句：固定為 4x2（無 4x1）
+  // 護眼模式：僅支援 4x2 與 2x2
+  timer_2x2: ['size-4x2', 'size-2x2'],
+  // 佛典精進名句：固定為 4x2
   zen_4x2: ['size-4x2']
 };

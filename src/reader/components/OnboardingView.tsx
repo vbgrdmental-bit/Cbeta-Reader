@@ -595,7 +595,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                     </div>
                     <div className="mock-sys-card">
                       <div className="mock-sys-icon" style={{ backgroundColor: '#4a2c11' }}><Clock size={12} color="#fff" /></div>
-                      <div className="mock-sys-title">近期閱讀</div>
+                      <div className="mock-sys-title">上次閱讀</div>
                       <div className="mock-sys-count">0本經書</div>
                     </div>
                     <div className="mock-sys-card">
@@ -1052,7 +1052,7 @@ export function OnboardingView({ onComplete }: OnboardingViewProps) {
                     </div>
                     <div className="mock-sys-card">
                       <div className="mock-sys-icon" style={{ backgroundColor: '#4a2c11' }}><Clock size={12} color="#fff" /></div>
-                      <div className="mock-sys-title">近期閱讀</div>
+                      <div className="mock-sys-title">上次閱讀</div>
                       <div className="mock-sys-count">8本經書</div>
                     </div>
                     <div className="mock-sys-card">

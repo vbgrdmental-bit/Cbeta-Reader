@@ -36,7 +36,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.3` (App: v4.5.3 / Builder: v2.9.12)
+- **Current Version**: `v4.5.4` (App: v4.5.4 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +57,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.4 / Builder: v2.9.12** (2026-09-24)
+  - [App] 首頁卡片「上次閱讀」與「近期下載」右上角徽章數量上限對齊書櫃最多 9 本。
+  - [App] 加入小工具 (Widget Gallery) 4×3 與 4×4 預覽加入等比自適應縮放，徹底消除邊緣切邊問題。
+  - [App] 尺寸切換依序輪播（4×1→4×2→4×3→4×4→2×2），上次閱讀支援 4 本書與經文進度雙 4×4，全站標籤統一為「上次閱讀」。
 - **⭐ App: v4.5.3 / Builder: v2.9.12** (2026-09-24)
   - [App] 「上次閱讀」小工具支援 4×1/4×2/4×3/4×4 尺寸切換，4×4 為經文進度卡片（上部 4×1 經書 Bar，外置「上次閱讀 ➔」，下部 4×3 經文預覽，字級 16px、宋/明體、行高 1.8，前後「…」且隱藏原生滾動條，隨四大主題自適應）。
   - [App] 書櫃「上次閱讀」與「近期下載」設定最多 9 本，我的最愛數量不限。
