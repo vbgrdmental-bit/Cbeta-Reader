@@ -1448,7 +1448,7 @@ export function Library({
         <div className="bookshelf-section animate-slide-up" onClick={handleShelfBackgroundClick}>
           {/* 資料夾導航與麵包屑 */}
           {currentFolderId && (
-            <div className="folder-nav-wrapper">
+            <div className={`folder-nav-wrapper ${currentFolderId === 'virtual_my_folders' ? 'my-folders-nav' : ''}`}>
               <div className="folder-navigation-bar">
                 {/* 💡 深入專區/子資料夾時，左側顯示圓型「<」返回上一層（與下方書籍卡片左側對齊） */}
                 {currentFolderId && currentFolderId !== 'virtual_my_folders' && currentFolderId !== 'virtual_highlights' && (
@@ -1571,52 +1571,42 @@ export function Library({
 
           {/* === B. 「我的書櫃」（virtual_my_folders）：支援體驗 ABC 互動排版提案與原版書櫃切換 === */}
           {currentFolderId === 'virtual_my_folders' && (
-            showPlaygroundDemo ? (
-              <div className="appstore-bookshelf-container animate-fade-in" style={{ transform: 'none' }}>
-                <BookshelfInteractivePlayground
-                  downloadedBooks={downloadedBooks}
-                  favoriteWorkIds={favoriteWorkIds}
-                  recentReadsBooks={recentReadsBooks}
-                  onSelectBook={onSelectBook}
-                  onExitDemo={() => setShowPlaygroundDemo(false)}
-                  onOpenBookMenu={(book) => {
-                    setMenuTargetBook(book);
-                    setMenuTargetBookSource(currentFolderId || null);
-                  }}
-                  onToggleFavorite={(workId) => {
-                    toggleFavoriteBook(undefined as any, workId);
-                  }}
-                  onDeleteBook={(workId) => {
-                    handleDeleteBook(undefined as any, workId);
-                  }}
-                />
-              </div>
-            ) : (
-            <div className="appstore-bookshelf-container animate-slide-up">
-              {/* 返回體驗提案按鈕 */}
-              <div style={{ textAlign: 'center', margin: '0.5rem 0 1rem 0' }}>
+            <>
+              {/* 💡 統一置頂之開關膠囊按鈕：位置恆定錨定於「我的書櫃」bar 之下，切換方案時零位移、零閃跳 */}
+              <div className="bookshelf-scheme-switch-container">
                 <button
                   type="button"
-                  onClick={() => setShowPlaygroundDemo(true)}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '6px 14px',
-                    borderRadius: '20px',
-                    background: 'rgba(30, 169, 140, 0.12)',
-                    color: '#1ea98c',
-                    border: '1.2px solid #1ea98c',
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
+                  className="bookshelf-scheme-switch-btn"
+                  onClick={() => setShowPlaygroundDemo(prev => !prev)}
                 >
                   <Sparkles size={14} />
-                  <span>切換至：經藏多維度整理方案</span>
+                  <span>{showPlaygroundDemo ? '切換至：一般分類方案' : '切換至：經藏多維度整理方案'}</span>
                 </button>
               </div>
-              {/* 1. 最上面：近期下載 (未分類經書，一直都留著，若無書籍則為空) */}
+
+              {showPlaygroundDemo ? (
+                <div className="appstore-bookshelf-container animate-fade-in" style={{ transform: 'none' }}>
+                  <BookshelfInteractivePlayground
+                    downloadedBooks={downloadedBooks}
+                    favoriteWorkIds={favoriteWorkIds}
+                    recentReadsBooks={recentReadsBooks}
+                    onSelectBook={onSelectBook}
+                    onExitDemo={() => setShowPlaygroundDemo(false)}
+                    onOpenBookMenu={(book) => {
+                      setMenuTargetBook(book);
+                      setMenuTargetBookSource(currentFolderId || null);
+                    }}
+                    onToggleFavorite={(workId) => {
+                      toggleFavoriteBook(undefined as any, workId);
+                    }}
+                    onDeleteBook={(workId) => {
+                      handleDeleteBook(undefined as any, workId);
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="appstore-bookshelf-container animate-slide-up">
+                  {/* 1. 最上面：近期下載 (未分類經書，一直都留著，若無書籍則為空) */}
               <div className="appstore-section animate-fade-in">
                 <div 
                   className="appstore-section-header"
@@ -1766,8 +1756,9 @@ export function Library({
                 </div>
               )}
             </div>
-            )
           )}
+        </>
+      )}
 
           {/* === C. 進入特定資料夾/專區檢視 (非 virtual_my_folders)：垂直列表向下無限延伸 === */}
           {currentFolderId && currentFolderId !== 'virtual_my_folders' && (

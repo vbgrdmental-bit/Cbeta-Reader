@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { 
   Heart, Clock, ChevronRight, ChevronDown, 
-  Layers, BookOpen, User, Grid, List, Sparkles,
+  Layers, BookOpen, User, Grid, List,
   MoreVertical, FolderInput, Trash2
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
@@ -263,7 +263,6 @@ export function BookshelfInteractivePlayground({
   favoriteWorkIds,
   recentReadsBooks,
   onSelectBook,
-  onExitDemo,
   onOpenBookMenu,
   onToggleFavorite,
   onDeleteBook
@@ -475,32 +474,7 @@ export function BookshelfInteractivePlayground({
   };
 
   return (
-    <div className="bookshelf-playground-root animate-fade-in" style={{ padding: '0.4rem 0.85rem 3rem 0.85rem' }}>
-      
-      {/* 💡 圖2：與圖1完全統一之開關膠囊按鈕 */}
-      <div style={{ textAlign: 'center', margin: '0.5rem 0 1rem 0' }}>
-        <button
-          type="button"
-          onClick={onExitDemo}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '6px 14px',
-            borderRadius: '20px',
-            background: 'rgba(30, 169, 140, 0.12)',
-            color: '#1ea98c',
-            border: '1.2px solid #1ea98c',
-            fontSize: '0.8rem',
-            fontWeight: 700,
-            cursor: 'pointer'
-          }}
-        >
-          <Sparkles size={14} />
-          <span>切換至：一般分類方案</span>
-        </button>
-      </div>
-
+    <div className="bookshelf-playground-root animate-fade-in" style={{ padding: '0 0.85rem 3rem 0.85rem' }}>
       {/* ========================================================================= */}
       {/* 🌟 吸頂浮動控制列：4 大分類切換 + 4 大膠囊快捷過濾 (圖1/圖3 往下拉時浮於上方控制列圖2之下) */}
       {/* ========================================================================= */}

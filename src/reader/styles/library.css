@@ -2613,6 +2613,52 @@ body.theme-ebony .list-book-item.dragging, body.theme-ebony .grid-book-card.drag
   width: 100%;
 }
 
+/* 💡 我的書櫃頂部：縮小間隔，讓膠囊緊隨下方，消除多餘空白 */
+.folder-nav-wrapper.my-folders-nav {
+  margin-bottom: 0.85rem !important;
+}
+
+/* 💡 方案切換開關膠囊（置頂於「我的書櫃」bar之下，上下間隔對稱一致，切換零跳閃） */
+.bookshelf-scheme-switch-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.bookshelf-scheme-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(30, 169, 140, 0.12);
+  color: #1ea98c;
+  border: 1.2px solid #1ea98c;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.bookshelf-scheme-switch-btn:hover {
+  background: rgba(30, 169, 140, 0.18);
+  transform: translateY(-1px);
+}
+
+.bookshelf-scheme-switch-btn:active {
+  transform: scale(0.96);
+}
+
+body.theme-ebony .bookshelf-scheme-switch-btn {
+  background: rgba(30, 169, 140, 0.18);
+  border-color: #24caa8;
+  color: #24caa8;
+}
+
 .folder-navigation-bar {
   display: flex;
   justify-content: space-between;
