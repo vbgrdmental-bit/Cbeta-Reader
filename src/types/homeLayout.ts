@@ -59,7 +59,7 @@ export interface WidgetCategoryMeta {
 
 export const WIDGET_CATEGORIES: WidgetCategoryMeta[] = [
   { id: 'brand', name: '主題圖卡', sub: '經典大標題、簡約橫幅、禪意圖標' },
-  { id: 'nav', name: '快捷功能', sub: '四合一導航、下載經典、我的書櫃、重點筆記、全文檢索' },
+  { id: 'nav', name: '快捷功能', sub: '四合一導航、下載經典、我的書櫃、我的筆記、全文檢索' },
   { id: 'reading', name: '我的書櫃', sub: '上次閱讀、我的最愛、近期下載、閱讀日誌' },
   { id: 'other', name: '其他功能', sub: '護眼計時器、四色主題快捷列、佛典精進名句' }
 ];
@@ -83,7 +83,7 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'four_nav_4x1', category: 'nav', name: '四合一導航列', size: 'size-4x1', icon: '🧭', description: '下載+書櫃+筆記+搜尋四合一呈現（支援 4x1/4x2/2x2/4x4）' },
   { type: 'download_2x2', category: 'nav', name: '下載經典卡', size: 'size-2x2', icon: '＋', description: '前往 CBETA 藏經庫下載經文（支援 2x2/4x1/4x2）' },
   { type: 'shelf_2x2', category: 'nav', name: '我的書櫃卡', size: 'size-2x2', icon: '📁', description: '直達已下載的個人經文書櫃（支援 2x2/4x1/4x2）' },
-  { type: 'notes_2x2', category: 'nav', name: '重點與筆記卡', size: 'size-2x2', icon: '📖', description: '集中查看劃線重點與個人筆記（支援 2x2/4x1/4x2）' },
+  { type: 'notes_2x2', category: 'nav', name: '我的筆記卡', size: 'size-2x2', icon: '📖', description: '集中查看劃線重點與個人筆記（支援 2x2/4x1/4x2）' },
   { type: 'search_2x2', category: 'nav', name: '全文檢索卡', size: 'size-2x2', icon: '🔍', description: '已下載經文全文快速檢索（支援 2x2/4x1/4x2）' },
 
   // 3. 閱讀與進度

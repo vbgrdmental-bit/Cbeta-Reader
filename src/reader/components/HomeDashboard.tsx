@@ -76,9 +76,9 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'n_shelf_4x2', type: 'shelf_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '我的書櫃' },
   { id: 'n_shelf_2x2', type: 'shelf_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '我的書櫃' },
 
-  { id: 'n_notes_4x1', type: 'notes_2x2', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '重點與筆記' },
-  { id: 'n_notes_4x2', type: 'notes_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '重點與筆記' },
-  { id: 'n_notes_2x2', type: 'notes_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '重點與筆記' },
+  { id: 'n_notes_4x1', type: 'notes_2x2', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '我的筆記' },
+  { id: 'n_notes_4x2', type: 'notes_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '我的筆記' },
+  { id: 'n_notes_2x2', type: 'notes_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '我的筆記' },
 
   { id: 'n_search_4x1', type: 'search_2x2', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '全文檢索' },
   { id: 'n_search_4x2', type: 'search_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '全文檢索' },
@@ -806,16 +806,16 @@ export function HomeDashboard({
                 <div className="core-sub">共{effectiveDownloadedBooks.length}本書</div>
               </div>
 
-              {/* 3. 重點筆記 */}
+              {/* 3. 我的筆記 */}
               <div 
                 className="core-widget-card-embedded"
                 onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
-                title="重點筆記"
+                title="我的筆記"
               >
                 <div className="core-icon-box">
                   <Notebook size={20} color="#ffffff" />
                 </div>
-                <div className="core-title">重點與筆記</div>
+                <div className="core-title">我的筆記</div>
                 <div className="core-sub">共{effectiveHighlightsCount}則筆記</div>
               </div>
 
@@ -865,16 +865,16 @@ export function HomeDashboard({
                 <div className="compact-nav-badge-4x2">{effectiveDownloadedBooks.length} 本</div>
               </div>
 
-              {/* 3. 重點筆記 */}
+              {/* 3. 我的筆記 */}
               <div 
                 className="compact-nav-item-4x2"
                 onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
-                title="重點筆記"
+                title="我的筆記"
               >
                 <div className="compact-nav-icon-4x2">
                   <Notebook size={20} color="#ffffff" />
                 </div>
-                <div className="compact-nav-label-4x2">重點筆記</div>
+                <div className="compact-nav-label-4x2">我的筆記</div>
                 <div className="compact-nav-badge-4x2">{effectiveHighlightsCount} 則</div>
               </div>
 
@@ -922,16 +922,16 @@ export function HomeDashboard({
                 <div className="compact-nav-label-2x2">我的書櫃</div>
               </div>
 
-              {/* 3. 左下：重點筆記 */}
+              {/* 3. 左下：我的筆記 */}
               <div 
                 className="compact-nav-item-2x2"
                 onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
-                title="重點筆記"
+                title="我的筆記"
               >
                 <div className="compact-nav-icon-2x2">
                   <Notebook size={14} color="#ffffff" />
                 </div>
-                <div className="compact-nav-label-2x2">重點筆記</div>
+                <div className="compact-nav-label-2x2">我的筆記</div>
               </div>
 
               {/* 4. 右下：全文檢索 */}
@@ -949,7 +949,7 @@ export function HomeDashboard({
           );
         }
 
-        // 💡 圖2：4x1 橫排版 (順序：下載經典 → 我的書櫃 → 重點筆記 → 全文檢索，直接跳轉無左右動畫)
+        // 💡 圖2：4x1 橫排版 (順序：下載經典 → 我的書櫃 → 我的筆記 → 全文檢索，直接跳轉無左右動畫)
         return (
           <div className="widget-four-in-one-4x1">
             <div 
@@ -977,12 +977,12 @@ export function HomeDashboard({
             <div 
               className="compact-nav-item"
               onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
-              title="重點筆記"
+              title="我的筆記"
             >
               <div className="compact-nav-icon">
                 <Notebook size={16} color="#ffffff" />
               </div>
-              <div className="compact-nav-label">重點筆記</div>
+              <div className="compact-nav-label">我的筆記</div>
             </div>
 
             <div 
@@ -1125,14 +1125,14 @@ export function HomeDashboard({
         );
       }
 
-      // 6. 核心大卡：重點筆記 (2x2 / 4x1 / 4x2)
+      // 6. 核心大卡：我的筆記 (2x2 / 4x1 / 4x2)
       case 'notes_2x2': {
         if (size === 'size-4x1') {
           return (
             <div 
               className="core-widget-4x1"
               onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
-              title="重點與筆記"
+              title="我的筆記"
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
             >
               <div className="core-widget-4x1-left">
@@ -1140,7 +1140,7 @@ export function HomeDashboard({
                   <Notebook size={15} color="#ffffff" />
                 </div>
                 <div className="core-info-4x1">
-                  <span className="core-title-4x1">重點與筆記</span>
+                  <span className="core-title-4x1">我的筆記</span>
                   <span className="core-count-badge">{effectiveHighlightsCount}</span>
                 </div>
               </div>
@@ -1155,7 +1155,7 @@ export function HomeDashboard({
             <div 
               className="core-widget-4x2"
               onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
-              title="重點與筆記"
+              title="我的筆記"
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
             >
               <div className="core-widget-4x2-left">
@@ -1163,8 +1163,8 @@ export function HomeDashboard({
                   <Notebook size={22} color="#ffffff" />
                 </div>
                 <div>
-                  <div className="core-title">重點與筆記</div>
-                  <div className="core-sub">已累積 {effectiveHighlightsCount} 條劃線重點與個人筆記</div>
+                  <div className="core-title">我的筆記</div>
+                  <div className="core-sub">已累積 {effectiveHighlightsCount} 條劃線重點與個人心得</div>
                 </div>
               </div>
               <button type="button" className="cbeta-read-btn" title="查看筆記">
@@ -1177,12 +1177,12 @@ export function HomeDashboard({
           <div 
             style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
             onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
-            title="重點與筆記"
+            title="我的筆記"
           >
             <div className="core-icon-box">
               <Notebook size={20} color="#ffffff" />
             </div>
-            <div className="core-title">重點與筆記</div>
+            <div className="core-title">我的筆記</div>
             <div className="core-sub">共{effectiveHighlightsCount}則筆記</div>
           </div>
         );

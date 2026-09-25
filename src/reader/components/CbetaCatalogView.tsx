@@ -1090,7 +1090,7 @@ export function CbetaCatalogView({
               <span className="capsule-label">我的書櫃</span>
             </button>
 
-            {/* 重點與筆記 */}
+            {/* 我的筆記 */}
             <button
               className="capsule-nav-item"
               onClick={() => {
@@ -1100,10 +1100,10 @@ export function CbetaCatalogView({
                   onBackToLibrary();
                 }
               }}
-              title="重點與筆記"
+              title="我的筆記"
             >
               <Notebook size={16} />
-              <span className="capsule-label">重點筆記</span>
+              <span className="capsule-label">我的筆記</span>
             </button>
 
             {/* 全文搜尋 */}

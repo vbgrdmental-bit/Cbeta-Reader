@@ -1345,16 +1345,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.5.8) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.5.9) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.5.8</span>
+                        <span>⭐ App: v4.5.9</span>
                         <span className="changelog-date">(2026-09-26)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 重點與筆記升級「依書籍檢視」與「法義多維度」雙分段切換。</li>
-                        <li>• 導入純客觀關鍵字交叉聚合演算法，跨經出現 ≥ 3 次自動成群對照。</li>
-                        <li>• 支援全部/有心得/純重點/近期標註 4 快捷過濾與命中詞柔和高亮。</li>
+                        <li>• 全站統一更名為「我的筆記」，包含頂部膠囊、首頁卡片與資料夾導航。</li>
+                        <li>• 「我的筆記」對齊書櫃排版：雙分段切換、4 大維度分類與 4 快捷膠囊。</li>
+                        <li>• 支援部類/冊別/作譯者/朝代折疊卡分組，與客觀文字法義多維度交叉聚合。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1377,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.5.8</span>
+                            <span className="changelog-date">(2026-09-26)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 重點與筆記升級「依書籍檢視」與「法義多維度」雙分段切換。</li>
+                            <li>• 導入純客觀關鍵字交叉聚合演算法，跨經出現 ≥ 3 次自動成群對照。</li>
+                            <li>• 支援全部/有心得/純重點/近期標註 4 快捷過濾與命中詞柔和高亮。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.5.7</span>

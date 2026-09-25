@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.8` (App: v4.5.8 / Builder: v2.9.12)
+- **Current Version**: `v4.5.9` (App: v4.5.9 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.9 / Builder: v2.9.12** (2026-09-26)
+  - [App] 全站介面語彙整齊統一更名為「我的筆記」（頂部統一微膠囊、首頁卡片與資料夾導航列）。
+  - [App] 「我的筆記」依書櫃圖1、圖2、圖3標準規範全面對齊：雙分段切換膠囊（依書籍檢視/法義多維度）、4 大維度分類（依部類/依冊別/依作譯者/依朝代）與 4 快捷過濾膠囊（全部/有心得/純重點/近期標註）。
+  - [App] 依書籍檢視支援 4 大維度折疊卡（依部類、冊別、作譯者、朝代）分組呈現，與客觀文字法義多維度交叉聚合。
 - **⭐ App: v4.5.8 / Builder: v2.9.12** (2026-09-26)
   - [App] 重點與筆記升級「依書籍檢視」與「法義多維度」雙分段切換架構，全站介面語彙整齊統一。
   - [App] 依 Core Doctrine 0.1 導入純客觀關鍵字交叉聚合演算法，跨經出現 ≥ 3 次自動成群對照。
