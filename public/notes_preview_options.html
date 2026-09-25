@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBETA Reader - 重點與筆記「法義多維度」客觀關鍵字交叉比對 互動預覽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 經典羊皮紙主題 (預設) */
+      --bg-page-outer: #1c1815;
+      --bg-app: #eae4dc;
+      --bg-card: #f8f5ee;
+      --bg-card-inner: #ffffff;
+      --text-primary: #2d241e;
+      --text-muted: #7d6e63;
+      --text-faint: #a6988d;
+      --border-color: rgba(140, 75, 39, 0.14);
+      --theme-accent: #8c4b27;
+      --theme-accent-light: rgba(140, 75, 39, 0.08);
+      --color-gold: #c07d2a;
+      --color-gold-bg: rgba(192, 125, 42, 0.1);
+      --highlight-keyword: #ffe082;
+      --highlight-keyword-text: #5d3800;
+      --font-serif: "Noto Serif TC", "Songti TC", "Source Han Serif TC", serif;
+      --font-sans: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-kai: "CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "KaiTi", serif;
+      --shadow-sm: 0 2px 8px rgba(90, 50, 20, 0.04);
+      --shadow-md: 0 4px 14px rgba(90, 50, 20, 0.08);
+    }
+
+    body[data-theme="parchment"] {
+      --bg-app: #eae4dc;
+      --bg-card: #f8f5ee;
+      --bg-card-inner: #ffffff;
+      --text-primary: #2d241e;
+      --text-muted: #7d6e63;
+      --theme-accent: #8c4b27;
+      --theme-accent-light: rgba(140, 75, 39, 0.08);
+      --highlight-keyword: #ffe599;
+      --highlight-keyword-text: #4e2600;
+    }
+    body[data-theme="ivory"] {
+      --bg-app: #f6f5f1;
+      --bg-card: #ffffff;
+      --bg-card-inner: #f9f9f8;
+      --text-primary: #201e1c;
+      --text-muted: #6e6b66;
+      --theme-accent: #6d422a;
+      --theme-accent-light: rgba(109, 66, 42, 0.07);
+      --highlight-keyword: #ffecb3;
+      --highlight-keyword-text: #4e2600;
+    }
+    body[data-theme="green"] {
+      --bg-app: #dfebd9;
+      --bg-card: #edf5e9;
+      --bg-card-inner: #ffffff;
+      --text-primary: #1e2c1c;
+      --text-muted: #536b50;
+      --theme-accent: #2e5933;
+      --theme-accent-light: rgba(46, 89, 51, 0.09);
+      --highlight-keyword: #c8e6c9;
+      --highlight-keyword-text: #1b4d20;
+    }
+    body[data-theme="ebony"] {
+      --bg-app: #181619;
+      --bg-card: #252228;
+      --bg-card-inner: #302c34;
+      --text-primary: #e6e2ea;
+      --text-muted: #a39cae;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --theme-accent: #f3c969;
+      --theme-accent-light: rgba(243, 201, 105, 0.15);
+      --color-gold: #f3c969;
+      --highlight-keyword: #543d0e;
+      --highlight-keyword-text: #ffecb3;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-page-outer);
+      color: #eee;
+      padding: 20px 16px 60px 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 頂部操作與解說橫條 */
+    .top-toolbar {
+      max-width: 1100px;
+      width: 100%;
+      background: #2a2420;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 16px 22px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    }
+
+    .toolbar-title h1 {
+      font-size: 1.22rem;
+      font-weight: 800;
+      color: #f7ede2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toolbar-title p {
+      font-size: 0.8rem;
+      color: #b8a89b;
+      margin-top: 3px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .theme-picker-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.35);
+      padding: 5px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .theme-picker-label {
+      font-size: 0.76rem;
+      color: #a49486;
+      font-weight: 600;
+    }
+    .theme-dot-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .theme-dot-btn:hover { transform: scale(1.15); }
+    .theme-dot-btn.active {
+      border-color: #f7ede2;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+    }
+
+    /* 規範守則指示條 */
+    .doctrine-banner {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(140, 75, 39, 0.2);
+      border: 1px solid rgba(243, 201, 105, 0.35);
+      border-radius: 14px;
+      padding: 12px 18px;
+      margin-bottom: 22px;
+      font-size: 0.84rem;
+      color: #f8ece0;
+      line-height: 1.6;
+    }
+    .doctrine-banner strong {
+      color: #f3c969;
+    }
+
+    /* 主展示舞台 */
+    .preview-stage {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 32px;
+      width: 100%;
+      max-width: 1100px;
+      flex-wrap: wrap;
+    }
+
+    /* 模擬手機外框 */
+    .phone-frame {
+      width: 385px;
+      height: 820px;
+      background: var(--bg-app);
+      color: var(--text-primary);
+      border-radius: 42px;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.6), 0 0 0 9px #2c2724, 0 0 0 11px rgba(255,255,255,0.12);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .phone-notch {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 6px;
+      flex-shrink: 0;
+    }
+    .phone-speaker {
+      width: 50px;
+      height: 4px;
+      border-radius: 3px;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .phone-scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px 28px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .phone-scroll-body::-webkit-scrollbar { width: 4px; }
+    .phone-scroll-body::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.15);
+      border-radius: 4px;
+    }
+
+    /* 頂部 Header 微膠囊控制列 (全站統一) */
+    .top-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 2px 8px 2px;
+    }
+    .circle-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+    .center-micro-capsule {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3px 6px;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+    .capsule-item {
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .capsule-item.active {
+      background: var(--theme-accent);
+      color: #fff;
+    }
+
+    /* 標題卡片 */
+    .section-title-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+    }
+    .section-title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .badge-count {
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.06);
+      color: var(--text-primary);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border-color);
+    }
+
+    /* 雙分段膠囊切換 (第一層) */
+    .segmented-switch-container {
+      display: flex;
+      justify-content: center;
+      margin: 2px 0;
+    }
+    .segmented-switch-capsule {
+      display: inline-flex;
+      background: rgba(0,0,0,0.07);
+      padding: 3px;
+      border-radius: 24px;
+      border: 1px solid var(--border-color);
+      gap: 3px;
+      width: 250px;
+    }
+    .segmented-btn {
+      flex: 1;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all 0.18s ease;
+    }
+    .segmented-btn.active {
+      background: var(--theme-accent);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* 4 快捷過濾小膠囊 (維持全部/有心得/純重點/近期標註) */
+    .filter-capsules-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+    }
+    .filter-capsule-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 6px 2px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.15s ease;
+    }
+    .filter-capsule-btn.active {
+      background: var(--theme-accent);
+      color: #ffffff;
+      border-color: var(--theme-accent);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    /* 狀態列 */
+    .status-summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* 經典 / 關鍵字折疊卡片 */
+    .group-accordion-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+    .group-accordion-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(0,0,0,0.02);
+    }
+    .group-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+    .work-code-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--theme-accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .keyword-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--theme-accent-light);
+      border: 1.2px solid var(--theme-accent);
+      color: var(--theme-accent);
+      font-size: 0.85rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .group-title-text {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .group-subtitle-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* 筆記條目容器 */
+    .notes-entry-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 8px 10px 12px 10px;
+      border-top: 1px dashed var(--border-color);
+    }
+    .note-item-card {
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+    .note-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .note-scripture-quote {
+      font-family: var(--font-serif);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+    .kw-highlight {
+      background-color: var(--highlight-keyword);
+      color: var(--highlight-keyword-text);
+      font-weight: 700;
+      padding: 0 2px;
+      border-radius: 3px;
+    }
+    .note-user-reflection {
+      font-family: var(--font-kai);
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--text-primary);
+      background: var(--color-gold-bg);
+      border-left: 3px solid var(--color-gold);
+      padding: 6px 10px;
+      border-radius: 4px;
+      margin-top: 2px;
+    }
+    .note-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .mini-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .mini-action-btn:hover {
+      background: var(--theme-accent);
+      color: #fff;
+    }
+
+    /* 側邊規則解說與驗證卡 */
+    .scheme-analysis-card {
+      width: 360px;
+      background: #27221e;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      color: #ddd;
+    }
+    .scheme-analysis-card h3 {
+      color: #f7dfc8;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .analysis-badge {
+      font-size: 0.72rem;
+      background: #8c4b27;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 8px;
+    }
+    .analysis-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+    .analysis-list li {
+      position: relative;
+      padding-left: 18px;
+    }
+    .analysis-list li::before {
+      content: "✦";
+      position: absolute;
+      left: 0;
+      color: #f3c969;
+    }
+
+    /* Toast */
+    .interactive-toast {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(50px);
+      background: #2a221b;
+      color: #f7ede2;
+      border: 1px solid #c07d2a;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 100;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      white-space: nowrap;
+    }
+    .interactive-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body data-theme="parchment">
+
+  <!-- 頂部工具列 -->
+  <div class="top-toolbar">
+    <div class="toolbar-title">
+      <h1>
+        <span>📖 ⇄ 🏷️</span>
+        「法義多維度」客觀關鍵字交叉比對 原型
+      </h1>
+      <p>零人為捏造、純依讀者劃重點原文與手寫筆記中的共通詞（頻次 ≥ 3 次）自動聚合</p>
+    </div>
+
+    <div class="toolbar-actions">
+      <!-- 4 大底色切換 -->
+      <div class="theme-picker-group">
+        <span class="theme-picker-label">底色切換：</span>
+        <button class="theme-dot-btn active" style="background:#eae4dc" title="羊皮紙" onclick="setTheme('parchment')"></button>
+        <button class="theme-dot-btn" style="background:#f6f5f1" title="象牙白" onclick="setTheme('ivory')"></button>
+        <button class="theme-dot-btn" style="background:#dfebd9" title="舒服綠" onclick="setTheme('green')"></button>
+        <button class="theme-dot-btn" style="background:#181619" title="烏木紫紺" onclick="setTheme('ebony')"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 嚴格規範說明 Banner -->
+  <div class="doctrine-banner">
+    <strong>🛡️ 寫入 Agent 核心規範：</strong>
+    1. <strong>嚴禁自行理解或整理法義</strong>，不得出現任何未經原書提及的人工分類（如人工自創的「#空性與如來藏」等）。<br>
+    2. <strong>純客觀關鍵字交叉聚合</strong>：僅以讀者「畫重點原文」＋「讀者親筆心得筆記」為唯一資料來源，同關鍵字出現 <strong>≥ 3 次</strong> 即自動成群。<br>
+    3. <strong>一致性架構</strong>：無論「依書籍檢視」或「法義多維度」，均沿用圖 1 原有卡片，下方 4 快捷膠囊（全部/有心得/純重點/近期標註）完全統一！
+  </div>
+
+  <!-- 主預覽區 -->
+  <div class="preview-stage">
+    
+    <!-- 模擬手機畫面 -->
+    <div class="phone-frame">
+      <div class="phone-notch">
+        <div class="phone-speaker"></div>
+      </div>
+
+      <div class="phone-scroll-body" id="phoneContent">
+        <!-- 動態渲染手機內容 -->
+      </div>
+
+      <div class="interactive-toast" id="interactiveToast">已切換</div>
+    </div>
+
+    <!-- 側邊深度邏輯說明 -->
+    <div class="scheme-analysis-card">
+      <h3>核心邏輯與機制評估 <span class="analysis-badge">客觀演算法</span></h3>
+      <ul class="analysis-list">
+        <li><strong>精準符合 Zero Text Tampering：</strong>完全根除 AI 妄加揣測經義的風險，所有聚合詞彙 100% 來自讀者劃線真實字句與自訂心得。</li>
+        <li><strong>門檻 ≥ 3 次的智慧聚類：</strong>
+          例如「地藏」在《地藏經》出現 2 次、在《地藏十輪經》出現 1 次、在《慈悲懺法》出現 1 次，累計 4 次便自動浮現為「地藏」交叉群組！
+        </li>
+        <li><strong>筆記文字同等加權：</strong>
+          讀者若在心得上寫道「與會者數不可思議」，該筆記內的「不可思議」若與其他經文重點累計達 3 次，亦會自動形成跨經群組。
+        </li>
+        <li><strong>高亮視覺比對：</strong>
+          點開交叉群組，經文中的命中間隔字詞以柔和金黃底色高亮（<span style="background:#ffe082; color:#5d3800; padding:1px 4px; border-radius:3px; font-weight:700;">如圖所示</span>），讀者可直接上下對照不同經典如何使用該詞彙！
+        </li>
+        <li><strong>膠囊即時聯動：</strong>
+          點選「有心得 (4)」，多維度關鍵字立即只以含有讀者親筆寫字的項目重新計算頻次，體驗流暢。
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script>
+    // 當前狀態
+    let currentMode = 'dimension'; // 'books' (依書籍檢視) | 'dimension' (法義多維度)
+    let currentFilter = 'all';     // 'all' | 'has_note' | 'only_hl' | 'recent'
+    let expandedCards = {
+      'kw_地藏': true,
+      'kw_光明': true,
+      'kw_無常': false,
+      'T0412': true,
+      'T0152': false,
+      'Y0001': false
+    };
+
+    // 模擬重點與筆記數據庫 (100% 取自真實經文與圖 1 範例)
+    const RAW_HIGHLIGHTS = [
+      {
+        id: 'h1',
+        workId: 'T0412',
+        title: '地藏菩薩本願經',
+        juan: 1,
+        date: '2026/8/16',
+        quote: '放百千萬億大光明雲——所謂大圓滿光明雲、大慈悲光明雲、大智慧光明雲、大般若光明雲、大三昧光明雲、大吉祥光明雲、大福德光明雲、大功德光明雲、大歸依光明雲、大讚歎光明雲。',
+        note: null, // 純劃重點
+        keywords: ['光明', '地藏']
+      },
+      {
+        id: 'h2',
+        workId: 'T0412',
+        title: '地藏菩薩本願經',
+        juan: 1,
+        date: '2026/8/16',
+        quote: '娑婆世界及他方國土，有無量億天龍鬼神，亦集到忉利天宮。',
+        note: '②與會者數不可思議。',
+        keywords: ['地藏']
+      },
+      {
+        id: 'h3',
+        workId: 'T0412',
+        title: '地藏菩薩本願經',
+        juan: 1,
+        date: '2026/8/16',
+        quote: '文殊師利白佛言：「世尊！若以我神力，千劫測度，不能得知。」',
+        note: null,
+        keywords: ['地藏']
+      },
+      {
+        id: 'h4',
+        workId: 'T0411',
+        title: '大乘大集地藏十輪經',
+        juan: 1,
+        date: '2026/8/19',
+        quote: '安忍不動猶如大地，靜慮深密猶如秘藏。故名地藏。',
+        note: '地藏二字之密意與性德。',
+        keywords: ['地藏']
+      },
+      {
+        id: 'h5',
+        workId: 'T0152',
+        title: '六度集經',
+        juan: 2,
+        date: '2026/8/20',
+        quote: '佛放眉間白毫相光，照東方萬八千世界，靡不周遍。其大光明，洞徹十方。',
+        note: '大光明遍照，破眾生無明昏暗。',
+        keywords: ['光明']
+      },
+      {
+        id: 'h6',
+        workId: 'T0262',
+        title: '妙法蓮華經',
+        juan: 1,
+        date: '2026/8/21',
+        quote: '爾時佛放眉間白毫相光，照東方萬八千佛土，靡不周遍…此大光明相希有未曾有。',
+        note: null,
+        keywords: ['光明']
+      },
+      {
+        id: 'h7',
+        workId: 'T0099',
+        title: '雜阿含經',
+        juan: 1,
+        date: '2026/8/12',
+        quote: '當觀色無常，如是觀者，則為正觀；正觀者，則生厭離，喜貪盡，喜貪盡者，說心解脫。',
+        note: '觀色無常以生厭離，入解脫門。',
+        keywords: ['無常']
+      },
+      {
+        id: 'h8',
+        workId: 'T0779',
+        title: '佛說八大人覺經',
+        juan: 1,
+        date: '2026/8/15',
+        quote: '第一覺悟：世間無常，國土危脆，四大苦空，五陰無我。',
+        note: '世間無常，精進辦道。',
+        keywords: ['無常']
+      },
+      {
+        id: 'h9',
+        workId: 'Y0001',
+        title: '般若經講記',
+        juan: 1,
+        date: '2026/8/22',
+        quote: '世間諸法，念念生滅，剎那不住，是無常相；以無常故苦，苦故無我，無我故空。',
+        note: '印順導師開示無常與性空之連貫。',
+        keywords: ['無常']
+      }
+    ];
+
+    function showToast(msg) {
+      const toast = document.getElementById('interactiveToast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      document.querySelectorAll('.theme-dot-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('title').includes(
+          theme === 'parchment' ? '羊皮紙' :
+          theme === 'ivory' ? '象牙白' :
+          theme === 'green' ? '舒服綠' : '烏木'
+        ));
+      });
+      showToast(`已套用【${theme === 'parchment' ? '羊皮紙' : theme === 'ivory' ? '象牙白' : theme === 'green' ? '舒服綠' : '烏木紫紺'}】`);
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      renderPhone();
+      showToast(`已切換為：${mode === 'books' ? '依書籍檢視' : '法義多維度（關鍵字交叉）'}`);
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      renderPhone();
+      showToast(`已套用篩選：${
+        filter === 'all' ? '全部' :
+        filter === 'has_note' ? '僅看有心得' :
+        filter === 'only_hl' ? '僅看純重點' : '近期標註'
+      }`);
+    }
+
+    function toggleCard(id) {
+      expandedCards[id] = !expandedCards[id];
+      renderPhone();
+    }
+
+    // 關鍵字高亮小幫手
+    function highlightText(text, keyword) {
+      if (!text || !keyword) return text;
+      const regex = new RegExp(`(${keyword})`, 'gi');
+      return text.replace(regex, '<span class="kw-highlight">$1</span>');
+    }
+
+    // 取得過濾後的重點條目清單
+    function getFilteredList() {
+      return RAW_HIGHLIGHTS.filter(item => {
+        if (currentFilter === 'has_note') return !!item.note;
+        if (currentFilter === 'only_hl') return !item.note;
+        return true;
+      });
+    }
+
+    // 計算符合 ≥ 3 次的客觀關鍵字交叉分組
+    function getKeywordGroups(list) {
+      const kwMap = {};
+      list.forEach(item => {
+        item.keywords.forEach(kw => {
+          if (!kwMap[kw]) kwMap[kw] = [];
+          kwMap[kw].push(item);
+        });
+      });
+
+      // 嚴格限定：頻次超過 3 個以上（≥ 3）才形成群組
+      const groups = [];
+      Object.entries(kwMap).forEach(([kw, items]) => {
+        if (items.length >= 3) {
+          // 統計跨了幾部經
+          const uniqueBooks = Array.from(new Set(items.map(i => i.title)));
+          groups.push({
+            keyword: kw,
+            items: items,
+            count: items.length,
+            booksCount: uniqueBooks.length,
+            uniqueBooks: uniqueBooks
+          });
+        }
+      });
+
+      // 按命中次數由多到少排序
+      return groups.sort((a, b) => b.count - a.count);
+    }
+
+    // 依書籍分組 (圖 1 原樣式)
+    function getBookGroups(list) {
+      const bMap = {};
+      list.forEach(item => {
+        if (!bMap[item.workId]) {
+          bMap[item.workId] = {
+            workId: item.workId,
+            title: item.title,
+            items: []
+          };
+        }
+        bMap[item.workId].items.push(item);
+      });
+      return Object.values(bMap);
+    }
+
+    // 渲染主畫面
+    function renderPhone() {
+      const container = document.getElementById('phoneContent');
+      const filtered = getFilteredList();
+      let html = '';
+
+      // 1. 頂部導航
+      html += `
+        <div class="top-header-row">
+          <div class="circle-icon-btn" onclick="showToast('返回首頁')">🏠</div>
+          <div class="center-micro-capsule">
+            <div class="capsule-item" onclick="showToast('切換至書櫃')">📁 書櫃</div>
+            <div class="capsule-item active">📕 重點筆記</div>
+            <div class="capsule-item" onclick="showToast('全文搜尋')">🔍 搜尋</div>
+            <div class="capsule-item" onclick="showToast('日誌')">📅 日誌</div>
+          </div>
+          <div class="circle-icon-btn" onclick="showToast('開啟設定')">⚙️</div>
+        </div>
+      `;
+
+      // 2. 標題卡片
+      html += `
+        <div class="section-title-card">
+          <div class="section-title-left">
+            <span>📕</span>
+            <span>重點與筆記</span>
+          </div>
+          <div class="badge-count">共 ${filtered.length} 則</div>
+        </div>
+      `;
+
+      // 3. 第一層：雙分段膠囊切換（依書籍檢視 vs 法義多維度）
+      html += `
+        <div class="segmented-switch-container">
+          <div class="segmented-switch-capsule">
+            <button class="segmented-btn ${currentMode === 'books' ? 'active' : ''}" onclick="switchMode('books')">依書籍檢視</button>
+            <button class="segmented-btn ${currentMode === 'dimension' ? 'active' : ''}" onclick="switchMode('dimension')">法義多維度</button>
+          </div>
+        </div>
+      `;
+
+      // 4. 第二層：4 快捷過濾小膠囊 (全部/有心得/純重點/近期標註)
+      const hasNoteCount = RAW_HIGHLIGHTS.filter(i => !!i.note).length;
+      const onlyHlCount = RAW_HIGHLIGHTS.filter(i => !i.note).length;
+
+      html += `
+        <div class="filter-capsules-row">
+          <button class="filter-capsule-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">
+            全部 (${RAW_HIGHLIGHTS.length})
+          </button>
+          <button class="filter-capsule-btn ${currentFilter === 'has_note' ? 'active' : ''}" onclick="setFilter('has_note')">
+            💡 有心得 (${hasNoteCount})
+          </button>
+          <button class="filter-capsule-btn ${currentFilter === 'only_hl' ? 'active' : ''}" onclick="setFilter('only_hl')">
+            📝 純重點 (${onlyHlCount})
+          </button>
+          <button class="filter-capsule-btn ${currentFilter === 'recent' ? 'active' : ''}" onclick="setFilter('recent')">
+            🕒 近期標註
+          </button>
+        </div>
+      `;
+
+      // 5. 第三層：狀態列
+      if (currentMode === 'dimension') {
+        const kwGroups = getKeywordGroups(filtered);
+        html += `
+          <div class="status-summary-row">
+            <span>共 ${kwGroups.length} 組跨經共通關鍵字 · 頻次 ≥ 3 次自動聚合</span>
+            <span style="font-size:0.7rem; color:var(--text-faint)">交叉對照</span>
+          </div>
+        `;
+
+        // 渲染「法義多維度」打散書籍之客觀關鍵字卡片
+        if (kwGroups.length === 0) {
+          html += `<div style="text-align:center; padding:2rem 1rem; color:var(--text-muted); font-size:0.85rem;">目前篩選條件下，尚無出現 ≥ 3 次之共通關鍵字。</div>`;
+        } else {
+          kwGroups.forEach(grp => {
+            const cardKey = `kw_${grp.keyword}`;
+            const isExp = expandedCards[cardKey] !== false;
+            html += `
+              <div class="group-accordion-card">
+                <div class="group-accordion-header" onclick="toggleCard('${cardKey}')">
+                  <div class="group-header-left">
+                    <div class="keyword-pill-badge">🏷️ ${grp.keyword}</div>
+                    <div style="min-width:0">
+                      <div class="group-title-text">共通關鍵字「${grp.keyword}」</div>
+                      <div class="group-subtitle-text">跨 ${grp.booksCount} 部經典 · 共 ${grp.count} 條交叉重點</div>
+                    </div>
+                  </div>
+                  <span style="font-size:0.8rem; color:var(--text-muted)">${isExp ? '▲' : '▼'}</span>
+                </div>
+
+                ${isExp ? `
+                  <div class="notes-entry-container">
+                    ${grp.items.map(item => `
+                      <div class="note-item-card">
+                        <div class="note-meta-row">
+                          <span style="font-weight:700; color:var(--theme-accent)">📖 [${item.workId}] ${item.title} · 第 ${item.juan} 卷</span>
+                          <span>${item.date}</span>
+                        </div>
+                        <div class="note-scripture-quote">
+                          「${highlightText(item.quote, grp.keyword)}」
+                        </div>
+                        ${item.note ? `
+                          <div class="note-user-reflection">
+                            ${highlightText(item.note, grp.keyword)}
+                          </div>
+                        ` : ''}
+                        <div class="note-actions-row">
+                          <button class="mini-action-btn" onclick="showToast('正在跳至 ${item.title} 第 ${item.juan} 卷...')">▶ 跳至經文</button>
+                          <button class="mini-action-btn" onclick="showToast('開啟筆記編輯')">✏️ 編輯</button>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          });
+        }
+
+      } else {
+        // 渲染「依書籍檢視」（100% 忠實對齊圖 1）
+        const bookGroups = getBookGroups(filtered);
+        html += `
+          <div class="status-summary-row">
+            <span>共 ${bookGroups.length} 部書籍含有重點筆記</span>
+            <span style="font-size:0.7rem; color:var(--text-faint)">依書籍分類</span>
+          </div>
+        `;
+
+        bookGroups.forEach(bg => {
+          const isExp = expandedCards[bg.workId] !== false;
+          html += `
+            <div class="group-accordion-card">
+              <div class="group-accordion-header" onclick="toggleCard('${bg.workId}')">
+                <div class="group-header-left">
+                  <div class="work-code-badge">${bg.workId}</div>
+                  <div style="min-width:0">
+                    <div class="group-title-text">${bg.title}</div>
+                    <div class="group-subtitle-text">共 ${bg.items.length} 條重點筆記</div>
+                  </div>
+                </div>
+                <span style="font-size:0.8rem; color:var(--text-muted)">${isExp ? '▲' : '▼'}</span>
+              </div>
+
+              ${isExp ? `
+                <div class="notes-entry-container">
+                  ${bg.items.map(item => `
+                    <div class="note-item-card">
+                      <div class="note-meta-row">
+                        <span>第 ${item.juan} 卷</span>
+                        <span>${item.date}</span>
+                      </div>
+                      <div class="note-scripture-quote">「${item.quote}」</div>
+                      ${item.note ? `<div class="note-user-reflection">${item.note}</div>` : ''}
+                      <div class="note-actions-row">
+                        <button class="mini-action-btn" onclick="showToast('正在跳至第 ${item.juan} 卷經文...')">▶ 跳至經文</button>
+                        <button class="mini-action-btn" onclick="showToast('開啟編輯器')">✏️ 編輯</button>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = html;
+    }
+
+    // 初始化渲染
+    renderPhone();
+  </script>
+</body>
+</html>

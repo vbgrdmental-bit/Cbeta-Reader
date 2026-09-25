@@ -14,6 +14,21 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 >    - **寧可不提供內容**（跳出連線超時提示並引導讀者稍後重試），也**絕對不可**提供任何經簡化、摘錄、不完整或經修改的偽段落。
 > 3. **離線套件標準**：所有置於離線快取之經文套件，必須是 100% 來自 CBETA 官方原版且經 Parser 完全解析校對之真跡正文（包含所有卷數、品名、序文與完整段落）。
 
+### 0.1 Core Doctrine: Objective Notes Cross-Comparison Policy (重點筆記客觀文字交叉比對原則)
+
+> [!IMPORTANT]
+> **「法義多維度」嚴格介定標準：純客觀文字驅動，絕不人為理解或擅立抽象標籤！**
+> 1. **絕不自行理解經文或擅作法義分類**：
+>    - 嚴禁系統或 Agent 自行詮釋經文微言大義、不得擅自揣測或人工創造經文未提及的抽象法義分類標籤（例如絕對禁止自行捏造「#空性與如來藏」等人工標籤）。
+> 2. **純客觀關鍵字交叉聚合來源**：
+>    - 必須嚴格以**讀者實際劃重點的原文字句（`highlight.text`）**以及**讀者親筆手寫心得筆記（`highlight.note`）**作為唯一客觀比對來源。
+> 3. **門檻頻次規則（≥ 3 次自動成群）**：
+>    - 跨書籍之劃線經文或手寫筆記中，命中相同之客觀關鍵字**超過 3 次以上（≥ 3 則）**，方可自動聚合成一個「共通關鍵字交叉比對群組」，以供讀者進行跨經典上下對照。
+> 4. **筆記文字同等加權原則**：
+>    - 讀者在書寫筆記的心得文字與劃重點原文同等權重，均納入客觀關鍵字比對池。
+> 5. **架構一致性原則**：
+>    - 無論「依書籍檢視」或「法義多維度」，均沿用一致的折疊卡片排版樣式，下方 4 快捷膠囊（「全部」、「有心得」、「純重點」、「近期標註」）維持完全一致。
+
 ---
 
 ## 1. Git Branching & Local Testing Workflow
@@ -36,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.7` (App: v4.5.7 / Builder: v2.9.12)
+- **Current Version**: `v4.5.8` (App: v4.5.8 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -57,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.5.8 / Builder: v2.9.12** (2026-09-26)
+  - [App] 重點與筆記升級「依書籍檢視」與「法義多維度」雙分段切換架構，全站介面語彙整齊統一。
+  - [App] 依 Core Doctrine 0.1 導入純客觀關鍵字交叉聚合演算法，跨經出現 ≥ 3 次自動成群對照。
+  - [App] 支援全部/有心得/純重點/近期標註 4 快捷過濾小膠囊，經文與心得命中間隔字詞柔和高亮。
 - **⭐ App: v4.5.7 / Builder: v2.9.12** (2026-09-25)
   - [App] 紫紺木全面升級經典「紫紺金字」泥金佛光 Accent（`#f3c969`），根除深底死黑吃字，書櫃徽章、日誌大數字清晰明亮。
   - [App] 閱讀頁微膠囊導入動態 `--theme-accent-contrast`，自適應深淺底色切換純白/深黑高對比字體，絕不再有暗底黑字。

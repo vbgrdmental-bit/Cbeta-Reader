@@ -8174,6 +8174,43 @@ body.theme-ebony .bookshelf-sticky-controls-header,
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* ============================================================ */
+/* 🏷️ 法義多維度：客觀關鍵字交叉比對徽章與文字高亮樣式           */
+/* ============================================================ */
+.kw-matched-highlight {
+  background-color: rgba(243, 201, 105, 0.4);
+  color: var(--text-primary);
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 1px 3px;
+}
+
+body.theme-ebony .kw-matched-highlight {
+  background-color: rgba(243, 201, 105, 0.3);
+  color: #f3c969;
+}
+
+.keyword-cross-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.08));
+  border: 1.2px solid var(--theme-accent, #8c4b27);
+  color: var(--theme-accent, #8c4b27);
+  font-size: 0.8rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+body.theme-ebony .keyword-cross-badge {
+  border-color: rgba(243, 201, 105, 0.5);
+  color: #f3c969;
+  background: rgba(243, 201, 105, 0.12);
+}
+
 
 
 

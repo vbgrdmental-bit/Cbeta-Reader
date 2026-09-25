@@ -1345,16 +1345,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.5.7) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.5.8) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.5.7</span>
-                        <span className="changelog-date">(2026-09-25)</span>
+                        <span>⭐ App: v4.5.8</span>
+                        <span className="changelog-date">(2026-09-26)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 紫紺木全面升級泥金佛光高對比字色，根治深底吃字問題。</li>
-                        <li>• 主題顏色圓圈間距加大，手機手指極易精準點擊。</li>
-                        <li>• 「+ 自訂」膠囊像素級對齊預覽框右邊線，排版協調俐落。</li>
+                        <li>• 重點與筆記升級「依書籍檢視」與「法義多維度」雙分段切換。</li>
+                        <li>• 導入純客觀關鍵字交叉聚合演算法，跨經出現 ≥ 3 次自動成群對照。</li>
+                        <li>• 支援全部/有心得/純重點/近期標註 4 快捷過濾與命中詞柔和高亮。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1377,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.5.7</span>
+                            <span className="changelog-date">(2026-09-25)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 紫紺木全面升級泥金佛光高對比字色，根治深底吃字問題。</li>
+                            <li>• 主題顏色圓圈間距加大，手機手指極易精準點擊。</li>
+                            <li>• 「+ 自訂」膠囊像素級對齊預覽框右邊線，排版協調俐落。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.5.5</span>

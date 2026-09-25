@@ -3,11 +3,12 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, X, Download,
   Home, Search, CalendarDays,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw, Tag
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
+import { buildKeywordComparisonGroups } from '../../utils/notesCrossComparison';
 import { IndexBuilder, FEATURED_BOOKS, sanitizeCreators } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
@@ -965,9 +966,39 @@ export function Library({
   const [editingHighlightInLibrary, setEditingHighlightInLibrary] = useState<BookHighlight | null>(null);
   const [editingNoteTextInLibrary, setEditingNoteTextInLibrary] = useState('');
 
+  // 💡 重點與筆記：雙分段切換（'books' 依書籍檢視 vs 'dimensions' 法義多維度）與 4 快捷膠囊
+  const [notesViewMode, setNotesViewMode] = useState<'books' | 'dimensions'>('books');
+  const [notesFilterStatus, setNotesFilterStatus] = useState<'all' | 'has_note' | 'only_hl' | 'recent'>('all');
+  const [expandedKeywordGroups, setExpandedKeywordGroups] = useState<Record<string, boolean>>({});
+
+  const toggleKeywordGroup = (kw: string) => {
+    setExpandedKeywordGroups(prev => ({
+      ...prev,
+      [kw]: prev[kw] === false ? true : false
+    }));
+  };
+
+  // 快捷膠囊計數
+  const notesHasNoteCount = useMemo(() => allHighlights.filter(h => !!h.note).length, [allHighlights]);
+  const notesOnlyHlCount = useMemo(() => allHighlights.filter(h => !h.note).length, [allHighlights]);
+
+  // 依 4 快捷膠囊過濾重點條目池
+  const filteredHighlights = useMemo(() => {
+    return allHighlights.filter(hl => {
+      if (notesFilterStatus === 'has_note') return !!hl.note;
+      if (notesFilterStatus === 'only_hl') return !hl.note;
+      if (notesFilterStatus === 'recent') {
+        const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+        return hl.createdAt >= thirtyDaysAgo;
+      }
+      return true;
+    });
+  }, [allHighlights, notesFilterStatus]);
+
+  // 依書籍分組 (根據 filteredHighlights 排序)
   const groupedHighlights = useMemo(() => {
     const map = new Map<string, { workId: string; title: string; list: BookHighlight[] }>();
-    allHighlights.forEach(hl => {
+    filteredHighlights.forEach(hl => {
       if (!map.has(hl.workId)) {
         const bookMeta = downloadedBooks.find(b => b.workId === hl.workId);
         const title = bookMeta ? bookMeta.title : hl.workId;
@@ -997,7 +1028,30 @@ export function Library({
     });
 
     return groups;
-  }, [allHighlights, downloadedBooks]);
+  }, [filteredHighlights, downloadedBooks]);
+
+  // 🌟 法義多維度：客觀文字關鍵字交叉聚合 (頻次 ≥ 3 次自動成群)
+  const keywordComparisonGroups = useMemo(() => {
+    return buildKeywordComparisonGroups(filteredHighlights);
+  }, [filteredHighlights]);
+
+  // 關鍵字高亮渲染輔助函式
+  const renderMatchedKeywordText = (text: string, keyword: string) => {
+    if (!text || !keyword) return text;
+    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, idx) => {
+      if (part.toLowerCase() === keyword.toLowerCase()) {
+        return (
+          <span key={idx} className="kw-matched-highlight">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
 
   const loadAllHighlights = async () => {
     try {
@@ -1777,170 +1831,426 @@ export function Library({
           {/* === C. 進入特定資料夾/專區檢視 (非 virtual_my_folders)：垂直列表向下無限延伸 === */}
           {currentFolderId && currentFolderId !== 'virtual_my_folders' && (
             <div className="shelf-list">
-              {/* 💡 溫習庫：專屬劃線與筆記清單 */}
+              {/* 💡 溫習庫：專屬劃線與筆記清單（支援「依書籍檢視」與「法義多維度」雙分段 + 4 快捷膠囊） */}
               {currentFolderId === 'virtual_highlights' && (
-                <div className="highlights-review-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%' }}>
-                  {groupedHighlights.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
-                      <Notebook size={36} style={{ opacity: 0.4, marginBottom: '0.6rem' }} />
-                      <p>目前尚無任何劃線重點或感悟隨筆。</p>
-                      <p style={{ fontSize: '0.82rem', opacity: 0.7, marginTop: '0.3rem' }}>在閱讀經典時選取文字即可畫重點與寫心得筆記。</p>
+                <div className="highlights-review-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%' }}>
+                  
+                  {/* 1. 雙分段切換膠囊（左：「依書籍檢視」 / 右：「法義多維度」） */}
+                  <div className="bookshelf-scheme-switch-container" style={{ marginBottom: '0.35rem' }}>
+                    <div className="bookshelf-scheme-segmented-capsule">
+                      <button
+                        type="button"
+                        className={`scheme-seg-btn ${notesViewMode === 'books' ? 'active' : ''}`}
+                        onClick={() => setNotesViewMode('books')}
+                        title="依書籍檢視劃線與筆記"
+                      >
+                        依書籍檢視
+                      </button>
+                      <button
+                        type="button"
+                        className={`scheme-seg-btn ${notesViewMode === 'dimensions' ? 'active' : ''}`}
+                        onClick={() => setNotesViewMode('dimensions')}
+                        title="法義多維度客觀關鍵字交叉比對"
+                      >
+                        法義多維度
+                      </button>
                     </div>
-                  ) : (
-                    groupedHighlights.map((group) => {
-                      const isExpanded = !!expandedBookGroups[group.workId];
-                      const isCollapsed = !isExpanded;
-                      const cleanTitle = (group.title || group.workId).replace(/[《》]/g, '').trim();
+                  </div>
 
-                      return (
-                        <div 
-                          key={group.workId}
-                          className="highlight-card"
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '0.6rem',
-                            width: '100%',
-                            borderRadius: '12px',
-                            padding: '0.8rem 1rem',
-                            boxSizing: 'border-box'
-                          } as React.CSSProperties}
-                        >
+                  {/* 2. 4 快捷過濾小膠囊（全部 / 有心得 / 純重點 / 近期標註） */}
+                  <div 
+                    style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(4, 1fr)', 
+                      gap: '6px', 
+                      marginBottom: '0.4rem' 
+                    }}
+                  >
+                    {[
+                      { id: 'all', label: `全部 (${allHighlights.length})` },
+                      { id: 'has_note', label: `有心得 (${notesHasNoteCount})` },
+                      { id: 'only_hl', label: `純重點 (${notesOnlyHlCount})` },
+                      { id: 'recent', label: '近期標註' }
+                    ].map(item => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={`bookshelf-filter-capsule ${notesFilterStatus === item.id ? 'active' : ''}`}
+                        onClick={() => setNotesFilterStatus(item.id as any)}
+                      >
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* 3. 狀態提示列 */}
+                  <div 
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0 4px',
+                      marginBottom: '0.2rem',
+                      fontSize: '0.78rem',
+                      color: 'var(--text-muted)',
+                      fontWeight: 600
+                    }}
+                  >
+                    <div>
+                      {notesViewMode === 'books' ? (
+                        <>共 {groupedHighlights.length} 部經典 · 共 {filteredHighlights.length} 條重點</>
+                      ) : (
+                        <>共 {keywordComparisonGroups.length} 組跨經共通關鍵字 · 頻次 ≥ 3 次客觀交叉聚合</>
+                      )}
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-faint)' }}>
+                      {notesViewMode === 'books' ? '依書籍歸納' : '客觀交叉對照'}
+                    </div>
+                  </div>
+
+                  {/* 4. 內容區：依書籍檢視 vs 法義多維度 */}
+                  {notesViewMode === 'books' ? (
+                    /* === A. 依書籍檢視 (圖 1 原樣式) === */
+                    groupedHighlights.length === 0 ? (
+                      <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
+                        <Notebook size={36} style={{ opacity: 0.4, marginBottom: '0.6rem' }} />
+                        <p>目前篩選條件下尚無劃線重點或筆記。</p>
+                        <p style={{ fontSize: '0.82rem', opacity: 0.7, marginTop: '0.3rem' }}>切換「全部」或在閱讀經典時選取文字即可加入重點。</p>
+                      </div>
+                    ) : (
+                      groupedHighlights.map((group) => {
+                        const isExpanded = !!expandedBookGroups[group.workId];
+                        const isCollapsed = !isExpanded;
+                        const cleanTitle = (group.title || group.workId).replace(/[《》]/g, '').trim();
+
+                        return (
                           <div 
-                            style={{ 
-                              display: 'flex', 
-                              alignItems: 'center', 
-                              justifyContent: 'space-between',
-                              cursor: 'pointer',
-                              userSelect: 'none'
-                            }}
-                            onClick={() => toggleBookGroup(group.workId)}
+                            key={group.workId}
+                            className="highlight-card"
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '0.6rem',
+                              width: '100%',
+                              borderRadius: '12px',
+                              padding: '0.8rem 1rem',
+                              boxSizing: 'border-box'
+                            } as React.CSSProperties}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexGrow: 1, minWidth: 0 }}>
-                              <div 
-                                className="horizontal-book-badge" 
-                                style={{ 
-                                  background: getBookCoverGradient(group.workId),
-                                  width: '32px',
-                                  height: '32px',
-                                  minWidth: '32px',
-                                  minHeight: '32px',
-                                  fontSize: '0.72rem',
-                                  borderRadius: '6px'
-                                }}
-                              >
-                                {group.workId}
-                              </div>
-                              <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                                <div style={{ fontSize: '0.96rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                  {cleanTitle}
-                                </div>
-                                <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                                  共 {group.list.length} 條重點筆記
-                                </div>
-                              </div>
-                            </div>
-
-                            <button 
-                              type="button"
+                            <div 
                               style={{ 
-                                background: 'transparent', 
-                                border: 'none', 
-                                color: 'var(--text-muted)', 
-                                padding: '4px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'space-between',
+                                cursor: 'pointer',
+                                userSelect: 'none'
                               }}
+                              onClick={() => toggleBookGroup(group.workId)}
                             >
-                              {isCollapsed ? <ChevronRight size={18} /> : <ChevronDown size={18} />}
-                            </button>
-                          </div>
-
-                          {/* 展開後的重點與筆記卡片清單 */}
-                          {!isCollapsed && (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.4rem', borderTop: '1px dashed var(--border-color, rgba(140,75,39,0.1))', paddingTop: '0.6rem' }}>
-                              {group.list.map((hl) => (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexGrow: 1, minWidth: 0 }}>
                                 <div 
-                                  key={hl.id}
-                                  className="highlight-entry-card"
-                                  style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '0.4rem',
-                                    padding: '0.6rem 0.8rem',
-                                    borderRadius: '8px'
+                                  className="horizontal-book-badge" 
+                                  style={{ 
+                                    background: getBookCoverGradient(group.workId),
+                                    width: '32px',
+                                    height: '32px',
+                                    minWidth: '32px',
+                                    minHeight: '32px',
+                                    fontSize: '0.72rem',
+                                    borderRadius: '6px'
                                   }}
                                 >
-                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                    <span>第 {hl.juan} 卷</span>
-                                    <span>{new Date(hl.createdAt).toLocaleDateString()}</span>
+                                  {group.workId}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                                  <div style={{ fontSize: '0.96rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {cleanTitle}
                                   </div>
-
-                                  <div style={{ fontSize: '0.9rem', lineHeight: 1.5, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
-                                    「{hl.text}」
-                                  </div>
-
-                                  {hl.note && (
-                                    <div 
-                                      className="highlight-note-content"
-                                      style={{
-                                        fontSize: '0.95rem',
-                                        lineHeight: 1.6,
-                                        color: 'var(--text-primary)',
-                                        backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.08))',
-                                        borderLeft: '3px solid var(--color-gold-500, #c07d2a)',
-                                        padding: '0.45rem 0.7rem',
-                                        borderRadius: '4px',
-                                        fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
-                                        whiteSpace: 'pre-wrap',
-                                        wordBreak: 'break-word'
-                                      }}
-                                    >
-                                      {hl.note}
-                                    </div>
-                                  )}
-
-                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.2rem' }}>
-                                    <button
-                                      className="batch-btn batch-btn-secondary"
-                                      style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
-                                      onClick={() => onSelectBook(hl.workId, hl.segmentId)}
-                                    >
-                                      <Play size={10} fill="currentColor" /> 跳至經文
-                                    </button>
-                                    <button
-                                      className="batch-btn batch-btn-secondary"
-                                      style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
-                                      onClick={() => {
-                                        setEditingHighlightInLibrary(hl);
-                                        setEditingNoteTextInLibrary(hl.note || '');
-                                      }}
-                                    >
-                                      <Edit3 size={11} /> 編輯
-                                    </button>
-                                    <button
-                                      className="batch-btn batch-btn-secondary"
-                                      style={{ fontSize: '0.75rem', padding: '0.25rem 0.45rem', color: 'var(--text-muted)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                      title="刪除重點"
-                                      onClick={async () => {
-                                        if (window.confirm('確定要刪除這條劃線重點嗎？')) {
-                                          await deleteHighlight(hl.id);
-                                          await loadAllHighlights();
-                                        }
-                                      }}
-                                    >
-                                      <Trash2 size={12} />
-                                    </button>
+                                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                                    共 {group.list.length} 條重點筆記
                                   </div>
                                 </div>
-                              ))}
+                              </div>
+
+                              <button 
+                                type="button"
+                                style={{ 
+                                  background: 'transparent', 
+                                  border: 'none', 
+                                  color: 'var(--text-muted)', 
+                                  padding: '4px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}
+                              >
+                                {isCollapsed ? <ChevronRight size={18} /> : <ChevronDown size={18} />}
+                              </button>
                             </div>
-                          )}
-                        </div>
-                      );
-                    })
+
+                            {/* 展開後的重點與筆記卡片清單 */}
+                            {!isCollapsed && (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.4rem', borderTop: '1px dashed var(--border-color, rgba(140,75,39,0.1))', paddingTop: '0.6rem' }}>
+                                {group.list.map((hl) => (
+                                  <div 
+                                    key={hl.id}
+                                    className="highlight-entry-card"
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      gap: '0.4rem',
+                                      padding: '0.6rem 0.8rem',
+                                      borderRadius: '8px'
+                                    }}
+                                  >
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                      <span>第 {hl.juan} 卷</span>
+                                      <span>{new Date(hl.createdAt).toLocaleDateString()}</span>
+                                    </div>
+
+                                    <div style={{ fontSize: '0.9rem', lineHeight: 1.5, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
+                                      「{hl.text}」
+                                    </div>
+
+                                    {hl.note && (
+                                      <div 
+                                        className="highlight-note-content"
+                                        style={{
+                                          fontSize: '0.95rem',
+                                          lineHeight: 1.6,
+                                          color: 'var(--text-primary)',
+                                          backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.08))',
+                                          borderLeft: '3px solid var(--color-gold-500, #c07d2a)',
+                                          padding: '0.45rem 0.7rem',
+                                          borderRadius: '4px',
+                                          fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
+                                          whiteSpace: 'pre-wrap',
+                                          wordBreak: 'break-word'
+                                        }}
+                                      >
+                                        {hl.note}
+                                      </div>
+                                    )}
+
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.2rem' }}>
+                                      <button
+                                        className="batch-btn batch-btn-secondary"
+                                        style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
+                                        onClick={() => onSelectBook(hl.workId, hl.segmentId)}
+                                      >
+                                        <Play size={10} fill="currentColor" /> 跳至經文
+                                      </button>
+                                      <button
+                                        className="batch-btn batch-btn-secondary"
+                                        style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
+                                        onClick={() => {
+                                          setEditingHighlightInLibrary(hl);
+                                          setEditingNoteTextInLibrary(hl.note || '');
+                                        }}
+                                      >
+                                        <Edit3 size={11} /> 編輯
+                                      </button>
+                                      <button
+                                        className="batch-btn batch-btn-secondary"
+                                        style={{ fontSize: '0.75rem', padding: '0.25rem 0.45rem', color: 'var(--text-muted)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                        title="刪除重點"
+                                        onClick={async () => {
+                                          if (window.confirm('確定要刪除這條劃線重點嗎？')) {
+                                            await deleteHighlight(hl.id);
+                                            await loadAllHighlights();
+                                          }
+                                        }}
+                                      >
+                                        <Trash2 size={12} />
+                                      </button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    )
+                  ) : (
+                    /* === B. 法義多維度：客觀關鍵字交叉比對 (頻次 ≥ 3 次) === */
+                    keywordComparisonGroups.length === 0 ? (
+                      <div style={{ textAlign: 'center', padding: '3rem 1.5rem', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
+                        <Tag size={36} style={{ opacity: 0.35, marginBottom: '0.6rem' }} />
+                        <p style={{ fontWeight: 700, marginBottom: '0.3rem' }}>目前尚無命中 ≥ 3 次之跨經共通關鍵字</p>
+                        <p style={{ fontSize: '0.8rem', opacity: 0.75, lineHeight: 1.5 }}>
+                          當您在不同經典中劃重點或撰寫心得，且出現相同客觀詞彙達 3 次以上時，系統將自動在此聚集成群供您上下交叉比對。
+                        </p>
+                      </div>
+                    ) : (
+                      keywordComparisonGroups.map((grp) => {
+                        const isExpanded = expandedKeywordGroups[grp.keyword] !== false; // 預設展開
+                        return (
+                          <div 
+                            key={grp.keyword}
+                            className="highlight-card"
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '0.6rem',
+                              width: '100%',
+                              borderRadius: '12px',
+                              padding: '0.8rem 1rem',
+                              boxSizing: 'border-box'
+                            } as React.CSSProperties}
+                          >
+                            {/* 關鍵字分組標題列 */}
+                            <div 
+                              style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'space-between',
+                                cursor: 'pointer',
+                                userSelect: 'none'
+                              }}
+                              onClick={() => toggleKeywordGroup(grp.keyword)}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexGrow: 1, minWidth: 0 }}>
+                                <div className="keyword-cross-badge">
+                                  🏷️ {grp.keyword}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                                  <div style={{ fontSize: '0.96rem', fontWeight: 800, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    共通詞「{grp.keyword}」
+                                  </div>
+                                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                                    跨 {grp.booksCount} 部經典 · 共 {grp.totalCount} 條交叉重點
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button 
+                                type="button"
+                                style={{ 
+                                  background: 'transparent', 
+                                  border: 'none', 
+                                  color: 'var(--text-muted)', 
+                                  padding: '4px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}
+                              >
+                                {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                              </button>
+                            </div>
+
+                            {/* 展開後的跨經交叉重點清單 */}
+                            {isExpanded && (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.4rem', borderTop: '1px dashed var(--border-color, rgba(140,75,39,0.1))', paddingTop: '0.6rem' }}>
+                                {grp.highlights.map((hl) => {
+                                  const bookMeta = downloadedBooks.find(b => b.workId === hl.workId);
+                                  const cleanTitle = (bookMeta?.title || hl.workId).replace(/[《》]/g, '').trim();
+
+                                  return (
+                                    <div 
+                                      key={hl.id}
+                                      className="highlight-entry-card"
+                                      style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '0.4rem',
+                                        padding: '0.6rem 0.8rem',
+                                        borderRadius: '8px'
+                                      }}
+                                    >
+                                      {/* 上方經典與卷次定位標籤 */}
+                                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', minWidth: 0 }}>
+                                          <span 
+                                            style={{
+                                              fontWeight: 800,
+                                              color: 'var(--theme-accent, #8c4b27)',
+                                              background: 'var(--theme-accent-light, rgba(140,75,39,0.08))',
+                                              padding: '1px 5px',
+                                              borderRadius: '4px',
+                                              fontSize: '0.7rem'
+                                            }}
+                                          >
+                                            {hl.workId}
+                                          </span>
+                                          <span style={{ fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {cleanTitle}
+                                          </span>
+                                          <span>· 第 {hl.juan} 卷</span>
+                                        </div>
+                                        <span style={{ flexShrink: 0 }}>{new Date(hl.createdAt).toLocaleDateString()}</span>
+                                      </div>
+
+                                      {/* 經文引言 (關鍵字柔和高亮) */}
+                                      <div style={{ fontSize: '0.9rem', lineHeight: 1.55, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
+                                        「{renderMatchedKeywordText(hl.text, grp.keyword)}」
+                                      </div>
+
+                                      {/* 讀者手寫心得筆記 (關鍵字柔和高亮) */}
+                                      {hl.note && (
+                                        <div 
+                                          className="highlight-note-content"
+                                          style={{
+                                            fontSize: '0.95rem',
+                                            lineHeight: 1.6,
+                                            color: 'var(--text-primary)',
+                                            backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.08))',
+                                            borderLeft: '3px solid var(--color-gold-500, #c07d2a)',
+                                            padding: '0.45rem 0.7rem',
+                                            borderRadius: '4px',
+                                            fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
+                                            whiteSpace: 'pre-wrap',
+                                            wordBreak: 'break-word'
+                                          }}
+                                        >
+                                          {renderMatchedKeywordText(hl.note, grp.keyword)}
+                                        </div>
+                                      )}
+
+                                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.2rem' }}>
+                                        <button
+                                          className="batch-btn batch-btn-secondary"
+                                          style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
+                                          onClick={() => onSelectBook(hl.workId, hl.segmentId)}
+                                        >
+                                          <Play size={10} fill="currentColor" /> 跳至經文
+                                        </button>
+                                        <button
+                                          className="batch-btn batch-btn-secondary"
+                                          style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', opacity: 0.85 }}
+                                          onClick={() => {
+                                            setEditingHighlightInLibrary(hl);
+                                            setEditingNoteTextInLibrary(hl.note || '');
+                                          }}
+                                        >
+                                          <Edit3 size={11} /> 編輯
+                                        </button>
+                                        <button
+                                          className="batch-btn batch-btn-secondary"
+                                          style={{ fontSize: '0.75rem', padding: '0.25rem 0.45rem', color: 'var(--text-muted)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                          title="刪除重點"
+                                          onClick={async () => {
+                                            if (window.confirm('確定要刪除這條劃線重點嗎？')) {
+                                              await deleteHighlight(hl.id);
+                                              await loadAllHighlights();
+                                            }
+                                          }}
+                                        >
+                                          <Trash2 size={12} />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    )
                   )}
+
                 </div>
               )}
 
