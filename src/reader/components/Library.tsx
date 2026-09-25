@@ -1893,35 +1893,34 @@ export function Library({
         </>
       )}
 
-          {/* === C. 進入特定資料夾/專區檢視 (非 virtual_my_folders)：垂直列表向下無限延伸 === */}
-          {currentFolderId && currentFolderId !== 'virtual_my_folders' && (
-            <div className="shelf-list">
-              {/* 💡 溫習庫：專屬劃線與筆記清單（支援「依書籍檢視」與「法義多維度」雙分段 + 4 快捷膠囊） */}
-              {currentFolderId === 'virtual_highlights' && (
-                <div className="highlights-review-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%' }}>
-                  
-                  {/* 1. 雙分段切換膠囊（左：「依書籍檢視」 / 右：「法義多維度」） */}
-                  <div className="bookshelf-scheme-switch-container">
-                    <div className="bookshelf-scheme-segmented-capsule">
-                      <button
-                        type="button"
-                        className={`scheme-seg-btn ${notesViewMode === 'books' ? 'active' : ''}`}
-                        onClick={() => setNotesViewMode('books')}
-                        title="依書籍檢視劃線與筆記"
-                      >
-                        依書籍檢視
-                      </button>
-                      <button
-                        type="button"
-                        className={`scheme-seg-btn ${notesViewMode === 'dimensions' ? 'active' : ''}`}
-                        onClick={() => setNotesViewMode('dimensions')}
-                        title="法義多維度客觀關鍵字交叉比對"
-                      >
-                        法義多維度
-                      </button>
-                    </div>
-                  </div>
+          {/* === C. 「我的筆記」（virtual_highlights）：支援「依書籍檢視」與「法義多維度」雙分段 + 4 維度分類 + 4 快捷膠囊 (與「我的書櫃」完全一致對齊) === */}
+          {currentFolderId === 'virtual_highlights' && (
+            <>
+              {/* 1. 雙分段切換膠囊（左：「依書籍檢視」 / 右：「法義多維度」） */}
+              <div className="bookshelf-scheme-switch-container">
+                <div className="bookshelf-scheme-segmented-capsule">
+                  <button
+                    type="button"
+                    className={`scheme-seg-btn ${notesViewMode === 'books' ? 'active' : ''}`}
+                    onClick={() => setNotesViewMode('books')}
+                    title="依書籍檢視劃線與筆記"
+                  >
+                    依書籍檢視
+                  </button>
+                  <button
+                    type="button"
+                    className={`scheme-seg-btn ${notesViewMode === 'dimensions' ? 'active' : ''}`}
+                    onClick={() => setNotesViewMode('dimensions')}
+                    title="法義多維度客觀關鍵字交叉比對"
+                  >
+                    法義多維度
+                  </button>
+                </div>
+              </div>
 
+              {/* 2. 主容器：使用與「我的書櫃」完全一致之 appstore-bookshelf-container + bookshelf-playground-root */}
+              <div className="appstore-bookshelf-container animate-fade-in" style={{ transform: 'none' }}>
+                <div className="bookshelf-playground-root animate-fade-in" style={{ padding: '0 0.85rem 3rem 0.85rem' }}>
                   {/* 🌟 吸頂浮動控制列：4 大分類切換 + 4 大膠囊快捷過濾 (比照書櫃圖1、圖2、圖3像素級對齊) */}
                   <div className="bookshelf-sticky-controls-header">
                     {/* 2. 第一層 (圖2)：4 大分類切換 (依部類 / 依冊別 / 依作譯者 / 依朝代) */}
@@ -2005,7 +2004,7 @@ export function Library({
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      margin: '0.2rem 0.2rem 0.65rem 0.2rem',
+                      margin: '0.2rem 0.2rem 0.75rem 0.2rem',
                       fontSize: '0.8rem',
                       color: 'var(--text-muted)',
                       fontWeight: 600
@@ -2421,10 +2420,14 @@ export function Library({
                       })
                     )
                   )}
-
                 </div>
-              )}
+              </div>
+            </>
+          )}
 
+          {/* === D. 進入特定資料夾/專區檢視 (非 virtual_my_folders 且非 virtual_highlights)：垂直列表向下無限延伸 === */}
+          {currentFolderId && currentFolderId !== 'virtual_my_folders' && currentFolderId !== 'virtual_highlights' && (
+            <div className="shelf-list">
               {/* === A. 渲染使用者自訂子資料夾清單 (若有子資料夾) === */}
               {displayFolders.length > 0 && (
                 <div className="folders-grid-container">
