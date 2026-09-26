@@ -26,7 +26,8 @@ interface CbetaCatalogViewProps {
   hideHeader?: boolean;
   targetCategory?: {
     tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time';
-    node: CatalogNode;
+    node?: CatalogNode;
+    stack?: CatalogNode[];
   } | null;
   onClearTargetCategory?: () => void;
 }
@@ -134,7 +135,7 @@ export async function fetchCreatorsData(): Promise<CreatorStrokeCategory[]> {
 }
 
 // CBETA 官方權威 37 個歷史時間與朝代完整列表 (包含「金 (7)」項目)
-const HISTORICAL_DYNASTIES = [
+export const HISTORICAL_DYNASTIES = [
   { name: '東漢 (80)', years: '25 CE ~ 220 CE', query: '東漢' },
   { name: '曹魏 (6)', years: '220 CE ~ 265 CE', query: '曹魏' },
   { name: '吳 (61)', years: '229 CE ~ 280 CE', query: '吳' },
@@ -705,38 +706,48 @@ export function CbetaCatalogView({
     }
   };
 
-  // 💡 當外部傳入跳轉目標分類（如從我的書櫃「依部類」點選特定部類文字進入）時自動導航並展開
+  // 💡 當外部傳入跳轉目標分類（如從我的書櫃「依部類/依冊別/依作譯者/依朝代」點選特定分類文字進入）時自動導航並展開
   useEffect(() => {
     if (!targetCategory) return;
-    const { tab, node } = targetCategory;
+    const { tab, node, stack } = targetCategory;
     setActiveTab(tab);
     setOnlineResults([]);
     setIsTextSearchActive(false);
     setIsCategoriesExpanded(true);
     setIsSearchExpanded(false);
 
-    let rootNode: CatalogNode;
-    switch (tab) {
-      case 'dept':
-        rootNode = { id: 'CBETA', label: '依部類' };
-        break;
-      case 'vol':
-        rootNode = { id: 'orig', label: '依冊別' };
-        break;
-      case 'creator':
-        rootNode = { id: 'creator_root', label: '依作譯者' };
-        break;
-      case 'time':
-        rootNode = { id: 'time_root', label: '依朝代' };
-        break;
-      default:
-        rootNode = { id: 'favorite_root', label: '常用經典' };
+    if (stack && stack.length > 0) {
+      setHistoryStack(stack);
+      setHistoryIndex(stack.length - 1);
+      fetchCatalog(stack[stack.length - 1].id);
+      onClearTargetCategory?.();
+      return;
     }
 
-    setHistoryStack([rootNode, node]);
-    setHistoryIndex(1);
-    fetchCatalog(node.id);
-    onClearTargetCategory?.();
+    if (node) {
+      let rootNode: CatalogNode;
+      switch (tab) {
+        case 'dept':
+          rootNode = { id: 'CBETA', label: '依部類' };
+          break;
+        case 'vol':
+          rootNode = { id: 'orig', label: '依冊別' };
+          break;
+        case 'creator':
+          rootNode = { id: 'creator_root', label: '依作譯者' };
+          break;
+        case 'time':
+          rootNode = { id: 'time_root', label: '依朝代' };
+          break;
+        default:
+          rootNode = { id: 'favorite_root', label: '常用經典' };
+      }
+
+      setHistoryStack([rootNode, node]);
+      setHistoryIndex(1);
+      fetchCatalog(node.id);
+      onClearTargetCategory?.();
+    }
   }, [targetCategory]);
 
   // 切換 5 個頁籤 (常用經典、依部類、依冊別、依作譯者、依朝代)

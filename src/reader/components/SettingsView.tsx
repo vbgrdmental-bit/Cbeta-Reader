@@ -1348,13 +1348,13 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 最新 App 版本 (v4.6.1) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.6.2</span>
+                        <span>⭐ App: v4.6.3</span>
                         <span className="changelog-date">(2026-09-27)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 書櫃「依部類」文字支援直接點擊，秒速直達對應 CBETA 部類藏經目錄。</li>
-                        <li>• 支援 23 大部類點擊跳轉並自動展開類別與麵包屑，返回導航無縫順暢。</li>
-                        <li>• 分組標題點擊與卡片折疊箭頭精確分離，兼具流暢閱讀與探索體驗。</li>
+                        <li>• 書櫃「依冊別」點擊藏經名稱（如大正藏），秒速直達對應冊別目錄。</li>
+                        <li>• 書櫃「依作譯者」點擊大師法號（如支婁迦讖），自動直達 4 層專屬經文庫。</li>
+                        <li>• 書櫃「依朝代」點擊歷史朝代，無縫直達著述年代經典目錄。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1377,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.2</span>
+                            <span className="changelog-date">(2026-09-27)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 書櫃「依部類」文字支援直接點擊，秒速直達對應 CBETA 部類藏經目錄。</li>
+                            <li>• 支援 23 大部類點擊跳轉並自動展開類別與麵包屑，返回導航無縫順暢。</li>
+                            <li>• 分組標題點擊與卡片折疊箭頭精確分離，兼具流暢閱讀與探索體驗。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.6.1</span>

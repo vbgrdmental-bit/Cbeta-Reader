@@ -18,7 +18,13 @@ import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { SearchPanel } from './SearchPanel';
 import { ReadingLogView } from './ReadingLogView';
 import { HomeDashboard } from './HomeDashboard';
-import { CbetaCatalogView, STATIC_DEPT_CATEGORIES } from './CbetaCatalogView';
+import { 
+  CbetaCatalogView, 
+  STATIC_DEPT_CATEGORIES, 
+  STATIC_VOL_CATEGORIES, 
+  HISTORICAL_DYNASTIES, 
+  fetchCreatorsData 
+} from './CbetaCatalogView';
 import { BookshelfInteractivePlayground, getDeptCategoryInfo, getCanonCategoryInfo, parseCreators } from './BookshelfInteractivePlayground';
 import { updateHashRoute } from '../../App';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
@@ -62,15 +68,17 @@ export function Library({
   const [isLayoutEditMode, setIsLayoutEditMode] = useState(false);
   const [showPlaygroundDemo, setShowPlaygroundDemo] = useState(true);
 
-  // 💡 目錄外部跳轉目標（由書櫃/筆記分組標題點擊跳轉特定部類）
+  // 💡 目錄外部跳轉目標（由書櫃/筆記分組標題點擊跳轉特定部類/冊別/作譯者/朝代）
   const [catalogTargetCategory, setCatalogTargetCategory] = useState<{
     tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time';
-    node: { id: string; label: string };
+    node?: { id: string; label: string };
+    stack?: Array<{ id: string; label: string }>;
   } | null>(null);
 
   const handleNavigateToCatalogCategory = (target: {
     tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time';
-    node: { id: string; label: string };
+    node?: { id: string; label: string };
+    stack?: Array<{ id: string; label: string }>;
   }) => {
     setCatalogTargetCategory(target);
     setActiveTab('cbeta');
@@ -1114,6 +1122,105 @@ export function Library({
     return sortedEntries;
   }, [groupedHighlights, downloadedBooks, notesClassificationMode]);
 
+  // 💡 點擊「我的筆記」分組標題文字（依部類 / 依冊別 / 依作譯者 / 依朝代），精確導航至 CBETA 藏經庫對應目錄
+  const handleNotesGroupTitleClick = async (e: React.MouseEvent, groupTitle: string) => {
+    e.stopPropagation();
+
+    if (notesClassificationMode === 'category') {
+      const code = groupTitle.slice(0, 2);
+      const deptMatch = STATIC_DEPT_CATEGORIES.find(c => 
+        c.id === `CBETA.0${code}` || c.label.startsWith(groupTitle) || c.label.startsWith(code)
+      );
+      if (deptMatch) {
+        handleNavigateToCatalogCategory({
+          tab: 'dept',
+          node: { id: deptMatch.id, label: deptMatch.label }
+        });
+      }
+    } else if (notesClassificationMode === 'volume') {
+      const volMatch = STATIC_VOL_CATEGORIES.find(c => 
+        c.label === groupTitle || 
+        c.label.startsWith(groupTitle) || 
+        groupTitle.startsWith(c.label.slice(0, 4)) ||
+        (groupTitle.startsWith('T ') && c.id === 'orig-T') ||
+        (groupTitle.startsWith('X ') && c.id === 'orig-X') ||
+        (groupTitle.startsWith('D ') && c.id === 'orig-D') ||
+        (groupTitle.startsWith('N ') && c.id === 'orig-N')
+      );
+      if (volMatch) {
+        handleNavigateToCatalogCategory({
+          tab: 'vol',
+          node: { id: volMatch.id, label: volMatch.label }
+        });
+      }
+    } else if (notesClassificationMode === 'author') {
+      const cleanAuthor = groupTitle.trim();
+      if (!cleanAuthor || cleanAuthor === '佚名') return;
+
+      try {
+        const creatorsData = await fetchCreatorsData();
+        let matchedStrokeCat: any = null;
+        let matchedGroup: any = null;
+        let matchedPerson: any = null;
+
+        for (const strokeCat of creatorsData) {
+          for (const g of strokeCat.groups) {
+            for (const c of g.creators) {
+              if (
+                c.name === cleanAuthor ||
+                c.displayName.startsWith(cleanAuthor) ||
+                c.name.includes(cleanAuthor) ||
+                cleanAuthor.includes(c.name)
+              ) {
+                matchedStrokeCat = strokeCat;
+                matchedGroup = g;
+                matchedPerson = c;
+                break;
+              }
+            }
+            if (matchedPerson) break;
+          }
+          if (matchedPerson) break;
+        }
+
+        if (matchedPerson && matchedGroup && matchedStrokeCat) {
+          handleNavigateToCatalogCategory({
+            tab: 'creator',
+            stack: [
+              { id: 'creator_root', label: '依作譯者' },
+              { id: `creator_stroke_${matchedStrokeCat.stroke}`, label: matchedStrokeCat.label },
+              { id: `creator_group_${matchedStrokeCat.stroke}_${matchedGroup.firstChar}`, label: matchedGroup.firstChar },
+              { id: `creator_person_${matchedPerson.creatorId}`, label: matchedPerson.displayName }
+            ]
+          });
+        } else {
+          handleNavigateToCatalogCategory({
+            tab: 'creator',
+            stack: [
+              { id: 'creator_root', label: '依作譯者' },
+              { id: `creator_search_${cleanAuthor}`, label: cleanAuthor }
+            ]
+          });
+        }
+      } catch (err) {
+        console.error('Failed to resolve author stack in notes:', err);
+      }
+    } else if (notesClassificationMode === 'dynasty') {
+      const cleanDynasty = groupTitle.trim();
+      const dynastyMatch = HISTORICAL_DYNASTIES.find(d => 
+        cleanDynasty.includes(d.query) || 
+        d.name.includes(cleanDynasty) || 
+        d.query.includes(cleanDynasty.replace(/[朝代]/g, ''))
+      );
+      if (dynastyMatch) {
+        handleNavigateToCatalogCategory({
+          tab: 'time',
+          node: { id: `time_search_${dynastyMatch.query}`, label: dynastyMatch.name }
+        });
+      }
+    }
+  };
+
   // 關鍵字高亮渲染輔助函式
   const renderMatchedKeywordText = (text: string, keyword: string) => {
     if (!text || !keyword) return text;
@@ -2056,12 +2163,7 @@ export function Library({
                         {notesDimensionGroups.map(([groupTitle, groupData]) => {
                           const isGroupExpanded = expandedDimensionGroups[groupTitle] !== false; // 預設展開
                           const totalHlsInGroup = groupData.books.reduce((acc, b) => acc + b.list.length, 0);
-                          const deptMatch = notesClassificationMode === 'category'
-                            ? STATIC_DEPT_CATEGORIES.find(c => {
-                                const code = groupTitle.slice(0, 2);
-                                return c.id === `CBETA.0${code}` || c.label.startsWith(groupTitle) || c.label.startsWith(code);
-                              })
-                            : null;
+                          const isLinkable = groupTitle !== '未分類' && groupTitle !== '佚名' && groupTitle !== '其他';
 
                           return (
                             <div 
@@ -2091,14 +2193,10 @@ export function Library({
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--theme-accent, #8c4b27)' }} />
                                   <span 
-                                    className={deptMatch ? "bookshelf-group-title-link" : ""}
+                                    className={isLinkable ? "bookshelf-group-title-link" : ""}
                                     onClick={(e) => {
-                                      if (deptMatch) {
-                                        e.stopPropagation();
-                                        handleNavigateToCatalogCategory({
-                                          tab: 'dept',
-                                          node: { id: deptMatch.id, label: deptMatch.label }
-                                        });
+                                      if (isLinkable) {
+                                        handleNotesGroupTitleClick(e, groupTitle);
                                       }
                                     }}
                                     style={{ 
@@ -2106,9 +2204,9 @@ export function Library({
                                       fontWeight: 800, 
                                       color: 'var(--text-primary)', 
                                       fontFamily: 'var(--font-serif)',
-                                      cursor: deptMatch ? 'pointer' : 'inherit'
+                                      cursor: isLinkable ? 'pointer' : 'inherit'
                                     }}
-                                    title={deptMatch ? `前往 CBETA 藏經庫瀏覽「${groupTitle}」` : undefined}
+                                    title={isLinkable ? `前往 CBETA 藏經庫瀏覽「${groupTitle}」` : undefined}
                                   >
                                     {groupTitle}
                                   </span>

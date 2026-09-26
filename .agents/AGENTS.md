@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.2` (App: v4.6.2 / Builder: v2.9.12)
+- **Current Version**: `v4.6.3` (App: v4.6.3 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.3 / Builder: v2.9.12** (2026-09-27)
+  - [App] 書櫃與筆記四大分類（依部類、依冊別、依作譯者、依朝代）分組標題全面支援直接點擊，秒速直達 CBETA 藏經庫對應目錄。
+  - [App] 「依冊別」點擊藏經名稱（如「T 大正新脩大藏經」）直達冊次清單，支援 6 大藏經分類無縫對照。
+  - [App] 「依作譯者」點擊作譯者姓名（如「支婁迦讖」）自動多層解析，精準直達 4 層完整作譯者經典作品庫（含筆劃與首字麵包屑路徑）。
+  - [App] 「依朝代」點擊歷史朝代（如「東漢」）無縫直達著述年代經典目錄。
 - **⭐ App: v4.6.2 / Builder: v2.9.12** (2026-09-27)
   - [App] 書櫃「依部類」分組標題文字（如「04 法華部類」、「08 大集部類」等）支援直接點擊，秒速直達並展開對應 CBETA 部類藏經目錄（全 23 部類通用）。
   - [App] 點擊標題文字跳轉時與折疊卡片展開/收折精確分離（`e.stopPropagation()`），點擊箭頭或卡片其他位置維持正常折疊。

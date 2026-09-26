@@ -5,7 +5,12 @@ import {
   MoreVertical, FolderInput, Trash2
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
-import { STATIC_DEPT_CATEGORIES } from './CbetaCatalogView';
+import { 
+  STATIC_DEPT_CATEGORIES, 
+  STATIC_VOL_CATEGORIES, 
+  HISTORICAL_DYNASTIES, 
+  fetchCreatorsData 
+} from './CbetaCatalogView';
 
 interface BookshelfInteractivePlaygroundProps {
   downloadedBooks: BookMetadata[];
@@ -18,7 +23,8 @@ interface BookshelfInteractivePlaygroundProps {
   onDeleteBook?: (workId: string) => void;
   onNavigateToCatalogCategory?: (target: {
     tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time';
-    node: { id: string; label: string };
+    node?: { id: string; label: string };
+    stack?: Array<{ id: string; label: string }>;
   }) => void;
 }
 
@@ -472,6 +478,107 @@ export function BookshelfInteractivePlayground({
     }));
   };
 
+  // 💡 點擊書櫃分組標題文字（依部類 / 依冊別 / 依作譯者 / 依朝代），精確導航至 CBETA 藏經庫對應目錄
+  const handleGroupTitleClick = async (e: React.MouseEvent, groupTitle: string) => {
+    if (!onNavigateToCatalogCategory) return;
+    e.stopPropagation();
+
+    if (classificationMode === 'category') {
+      const code = groupTitle.slice(0, 2);
+      const deptMatch = STATIC_DEPT_CATEGORIES.find(c => 
+        c.id === `CBETA.0${code}` || c.label.startsWith(groupTitle) || c.label.startsWith(code)
+      );
+      if (deptMatch) {
+        onNavigateToCatalogCategory({
+          tab: 'dept',
+          node: { id: deptMatch.id, label: deptMatch.label }
+        });
+      }
+    } else if (classificationMode === 'volume') {
+      const volMatch = STATIC_VOL_CATEGORIES.find(c => 
+        c.label === groupTitle || 
+        c.label.startsWith(groupTitle) || 
+        groupTitle.startsWith(c.label.slice(0, 4)) ||
+        (groupTitle.startsWith('T ') && c.id === 'orig-T') ||
+        (groupTitle.startsWith('X ') && c.id === 'orig-X') ||
+        (groupTitle.startsWith('D ') && c.id === 'orig-D') ||
+        (groupTitle.startsWith('N ') && c.id === 'orig-N')
+      );
+      if (volMatch) {
+        onNavigateToCatalogCategory({
+          tab: 'vol',
+          node: { id: volMatch.id, label: volMatch.label }
+        });
+      }
+    } else if (classificationMode === 'author') {
+      const cleanAuthor = groupTitle.trim();
+      if (!cleanAuthor || cleanAuthor === '佚名') return;
+
+      try {
+        const creatorsData = await fetchCreatorsData();
+        let matchedStrokeCat: any = null;
+        let matchedGroup: any = null;
+        let matchedPerson: any = null;
+
+        for (const strokeCat of creatorsData) {
+          for (const g of strokeCat.groups) {
+            for (const c of g.creators) {
+              if (
+                c.name === cleanAuthor ||
+                c.displayName.startsWith(cleanAuthor) ||
+                c.name.includes(cleanAuthor) ||
+                cleanAuthor.includes(c.name)
+              ) {
+                matchedStrokeCat = strokeCat;
+                matchedGroup = g;
+                matchedPerson = c;
+                break;
+              }
+            }
+            if (matchedPerson) break;
+          }
+          if (matchedPerson) break;
+        }
+
+        if (matchedPerson && matchedGroup && matchedStrokeCat) {
+          onNavigateToCatalogCategory({
+            tab: 'creator',
+            stack: [
+              { id: 'creator_root', label: '依作譯者' },
+              { id: `creator_stroke_${matchedStrokeCat.stroke}`, label: matchedStrokeCat.label },
+              { id: `creator_group_${matchedStrokeCat.stroke}_${matchedGroup.firstChar}`, label: matchedGroup.firstChar },
+              { id: `creator_person_${matchedPerson.creatorId}`, label: matchedPerson.displayName }
+            ]
+          });
+        } else {
+          // 若本機資料庫無收錄則備用搜尋模式
+          onNavigateToCatalogCategory({
+            tab: 'creator',
+            stack: [
+              { id: 'creator_root', label: '依作譯者' },
+              { id: `creator_search_${cleanAuthor}`, label: cleanAuthor }
+            ]
+          });
+        }
+      } catch (err) {
+        console.error('Failed to resolve author stack:', err);
+      }
+    } else if (classificationMode === 'dynasty') {
+      const cleanDynasty = groupTitle.trim();
+      const dynastyMatch = HISTORICAL_DYNASTIES.find(d => 
+        cleanDynasty.includes(d.query) || 
+        d.name.includes(cleanDynasty) || 
+        d.query.includes(cleanDynasty.replace(/[朝代]/g, ''))
+      );
+      if (dynastyMatch) {
+        onNavigateToCatalogCategory({
+          tab: 'time',
+          node: { id: `time_search_${dynastyMatch.query}`, label: dynastyMatch.name }
+        });
+      }
+    }
+  };
+
   // 點擊書籍右側「…」按鈕
   const handleOpenBookOptions = (book: BookMetadata) => {
     if (onOpenBookMenu) {
@@ -643,12 +750,7 @@ export function BookshelfInteractivePlayground({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
         {Object.entries(groupedData).map(([groupTitle, books]) => {
           const isExpanded = expandedGroups[groupTitle] !== false; // 預設全部展開
-          const deptMatch = classificationMode === 'category'
-            ? STATIC_DEPT_CATEGORIES.find(c => {
-                const code = groupTitle.slice(0, 2);
-                return c.id === `CBETA.0${code}` || c.label.startsWith(groupTitle) || c.label.startsWith(code);
-              })
-            : null;
+          const isLinkable = !!onNavigateToCatalogCategory && groupTitle !== '未分類' && groupTitle !== '佚名' && groupTitle !== '其他';
 
           return (
             <div 
@@ -678,14 +780,10 @@ export function BookshelfInteractivePlayground({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--theme-accent, #8c4b27)' }} />
                   <span 
-                    className={deptMatch ? "bookshelf-group-title-link" : ""}
+                    className={isLinkable ? "bookshelf-group-title-link" : ""}
                     onClick={(e) => {
-                      if (deptMatch && onNavigateToCatalogCategory) {
-                        e.stopPropagation();
-                        onNavigateToCatalogCategory({
-                          tab: 'dept',
-                          node: { id: deptMatch.id, label: deptMatch.label }
-                        });
+                      if (isLinkable) {
+                        handleGroupTitleClick(e, groupTitle);
                       }
                     }}
                     style={{ 
@@ -693,9 +791,9 @@ export function BookshelfInteractivePlayground({
                       fontWeight: 800, 
                       color: 'var(--text-primary)', 
                       fontFamily: 'var(--font-serif)',
-                      cursor: deptMatch ? 'pointer' : 'inherit'
+                      cursor: isLinkable ? 'pointer' : 'inherit'
                     }}
-                    title={deptMatch ? `前往 CBETA 藏經庫瀏覽「${groupTitle}」` : undefined}
+                    title={isLinkable ? `前往 CBETA 藏經庫瀏覽「${groupTitle}」` : undefined}
                   >
                     {groupTitle}
                   </span>
