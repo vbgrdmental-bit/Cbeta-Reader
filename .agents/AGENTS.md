@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.5` (App: v4.6.5 / Builder: v2.9.12)
+- **Current Version**: `v4.6.6` (App: v4.6.6 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.6 / Builder: v2.9.12** (2026-09-27)
+  - [App] 閱讀設定「主題顏色」面板預設將「+ 自訂」抽屜設為收合狀態，排版精緻清爽。
+  - [App] 「快速套用風格範本」新增「版型1 極簡」（簡約橫幅 + 下載經典 4×1 + 三合一閱讀卡 4×4）。
+  - [App] 將「版型1 極簡」設為全站權威預設版型（`PRESET_LAYOUTS.default`），新讀者進入時預設以此版型呈現。
 - **⭐ App: v4.6.5 / Builder: v2.9.12** (2026-09-27)
   - [App] 新增「三合一閱讀卡」(4×4)，集合近期下載、上次閱讀、我的最愛各 1 本經典，一體化垂直呈現。
   - [App] 各區塊獨立配置外置標題列與直達按鈕，點擊標題直接進入書櫃對應分類。

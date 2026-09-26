@@ -103,13 +103,9 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
 
 export const PRESET_LAYOUTS: Record<HomeLayoutPreset, HomeWidgetConfig[]> = {
   default: [
-    { id: 'w_title', type: 'title_4x2', size: 'size-4x2' },
-    { id: 'w_download', type: 'download_2x2', size: 'size-2x2' },
-    { id: 'w_shelf', type: 'shelf_2x2', size: 'size-2x2' },
-    { id: 'w_notes', type: 'notes_2x2', size: 'size-2x2' },
-    { id: 'w_search', type: 'search_2x2', size: 'size-2x2' },
-    { id: 'w_lastread', type: 'lastread_4x2', size: 'size-4x2' },
-    { id: 'w_zen', type: 'zen_4x2', size: 'size-4x2' }
+    { id: 'w_title', type: 'title_4x1', size: 'size-4x1' },
+    { id: 'w_download', type: 'download_2x2', size: 'size-4x1' },
+    { id: 'w_triple', type: 'triple_reading_4x4', size: 'size-4x4' }
   ],
   compact: [
     { id: 'w_title', type: 'title_4x1', size: 'size-4x1' },

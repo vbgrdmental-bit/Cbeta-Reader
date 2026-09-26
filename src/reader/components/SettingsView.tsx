@@ -30,7 +30,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
   const [storageStats, setStorageStats] = useState<StorageStats | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
   const [storageMsg, setStorageMsg] = useState('');
-  const [showCustomThemeDrawer, setShowCustomThemeDrawer] = useState(settings.theme === 'custom');
+  const [showCustomThemeDrawer, setShowCustomThemeDrawer] = useState(false);
 
   // 💡 版本紀錄對話框捲動位置重置 Refs
   const changelogBodyRef = useRef<HTMLDivElement>(null);
@@ -924,7 +924,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                         </div>
                         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', width: '100%' }}>
                           {(['default', 'compact', 'focus', 'zen'] as const).map(presetKey => {
-                            const names = { default: '經典原味', compact: '極簡精巧 (4x1)', focus: '每日精進', zen: '禪修護眼' };
+                            const names = { default: '版型1 極簡', compact: '極簡精巧 (4x1)', focus: '每日精進', zen: '禪修護眼' };
                             const isSelected = (settings.homeLayoutPreset || 'default') === presetKey;
                             return (
                               <button
@@ -1345,16 +1345,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.6.5) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.6.6) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.6.5</span>
+                        <span>⭐ App: v4.6.6</span>
                         <span className="changelog-date">(2026-09-27)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 新增「三合一閱讀卡」(4×4)，集合近期下載、上次閱讀、我的最愛各 1 本經典。</li>
-                        <li>• 各區塊獨立配置外置標題列與直達按鈕，點擊標題直接進入書櫃對應分類。</li>
-                        <li>• 各經書長條 Bar 支援即時開啟閱讀與進度接續，全尺寸適配四大主題色。</li>
+                        <li>• 主題顏色面板「+ 自訂」預設為收合狀態，排版更精巧俐落。</li>
+                        <li>• 快速套用風格範本設定「版型1 極簡」（橫幅+下載+三合一卡）。</li>
+                        <li>• 將「版型1 極簡」設為讀者首次進入時之首頁權威預設版型。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1377,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.5</span>
+                            <span className="changelog-date">(2026-09-27)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 新增「三合一閱讀卡」(4×4)，集合近期下載、上次閱讀、我的最愛各 1 本經典。</li>
+                            <li>• 各區塊獨立配置外置標題列與直達按鈕，點擊標題直接進入書櫃對應分類。</li>
+                            <li>• 各經書長條 Bar 支援即時開啟閱讀與進度接續，全尺寸適配四大主題色。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.6.4</span>
