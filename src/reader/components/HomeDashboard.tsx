@@ -638,9 +638,9 @@ export function HomeDashboard({
                 </div>
               </div>
 
-              {/* 右側操作群：整合「‹ 1/6 ›」切換器與圓形閱讀按鈕 */}
-              <div className="lastread-excerpt-header-actions" onClick={(e) => e.stopPropagation()}>
-                {maxCount > 1 && (
+              {/* 右側：獨立切換膠囊 (點擊切換上一部/下一部經書預覽) */}
+              {maxCount > 1 && (
+                <div className="lastread-excerpt-header-actions" onClick={(e) => e.stopPropagation()}>
                   <div className="excerpt-bar-nav-group">
                     <button 
                       type="button" 
@@ -666,19 +666,8 @@ export function HomeDashboard({
                       <ChevronRight size={13} strokeWidth={2.4} />
                     </button>
                   </div>
-                )}
-                <button 
-                  type="button" 
-                  className="cbeta-read-btn" 
-                  title="繼續閱讀"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleContinueRead();
-                  }}
-                >
-                  <ArrowRight size={17} strokeWidth={2.4} />
-                </button>
-              </div>
+                </div>
+              )}
             </div>
 
             {/* 下部分 4*3：直接是上次閱讀到的經文文字（16px、宋/明體、間距1.8，隨四大主題色變更，閱讀預覽不顯示滾動條） */}
