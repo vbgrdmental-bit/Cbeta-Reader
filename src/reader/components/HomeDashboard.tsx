@@ -614,58 +614,62 @@ export function HomeDashboard({
           </div>
 
           <div className="lastread-excerpt-card-4x4">
-            {/* 上部分 4*1：維持如圖1樣式（經號徽章 + 經名與作譯者 + 整合切換器 + 圓形「➔」按鈕） */}
-            <div 
-              className="lastread-excerpt-header-4x1"
-              onClick={handleContinueRead}
-              title="點擊繼續閱讀"
-            >
-              <div className="lastread-excerpt-header-left">
-                <div 
-                  className="book-badge" 
-                  style={{ background: getBookCoverGradient(currentBook.book.workId) }}
-                >
-                  {currentBook.book.workId}
-                </div>
-                <div className="book-info">
-                  <div className="b-title" title={currentBook.book.title}>
-                    {currentBook.book.title}
+            {/* 上部分：頂部獨立橫排（左側為經書獨立長 Bar，右側為獨立「< | >」切換膠囊） */}
+            <div className="lastread-excerpt-top-row">
+              <div 
+                className="lastread-excerpt-book-bar"
+                onClick={handleContinueRead}
+                title="點擊繼續閱讀"
+              >
+                <div className="lastread-excerpt-header-left">
+                  <div 
+                    className="book-badge" 
+                    style={{ background: getBookCoverGradient(currentBook.book.workId) }}
+                  >
+                    {currentBook.book.workId}
                   </div>
-                  <div className="b-sub">
-                    {currentBook.progress?.juan ? `第 ${currentBook.progress.juan} 卷` : (currentBook.book.juansCount ? `全 ${currentBook.book.juansCount} 卷` : '閱讀中')}
-                    {currentBook.book.creators ? ` · ${sanitizeCreators(currentBook.book.creators)}` : ''}
+                  <div className="book-info">
+                    <div className="b-title" title={currentBook.book.title}>
+                      {currentBook.book.title}
+                    </div>
+                    <div className="b-sub">
+                      {currentBook.progress?.juan ? `第 ${currentBook.progress.juan} 卷` : (currentBook.book.juansCount ? `全 ${currentBook.book.juansCount} 卷` : '閱讀中')}
+                      {currentBook.book.creators ? ` · ${sanitizeCreators(currentBook.book.creators)}` : ''}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* 右側：獨立切換膠囊 (點擊切換上一部/下一部經書預覽) */}
+              {/* 右側：獨立「< | >」極簡切換膠囊 (不包在經書 Bar 內) */}
               {maxCount > 1 && (
-                <div className="lastread-excerpt-header-actions" onClick={(e) => e.stopPropagation()}>
-                  <div className="excerpt-bar-nav-group">
-                    <button 
-                      type="button" 
-                      className="excerpt-bar-nav-btn" 
-                      title="切換上一部經書預覽"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedExcerptIndex(prev => (prev - 1 + maxCount) % maxCount);
-                      }}
-                    >
-                      <ChevronLeft size={13} strokeWidth={2.4} />
-                    </button>
-                    <span className="excerpt-bar-nav-counter">{safeIndex + 1}/{maxCount}</span>
-                    <button 
-                      type="button" 
-                      className="excerpt-bar-nav-btn" 
-                      title="切換下一部經書預覽"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedExcerptIndex(prev => (prev + 1) % maxCount);
-                      }}
-                    >
-                      <ChevronRight size={13} strokeWidth={2.4} />
-                    </button>
-                  </div>
+                <div 
+                  className="lastread-excerpt-nav-pill" 
+                  onClick={(e) => e.stopPropagation()}
+                  title={`切換經書預覽 (${safeIndex + 1}/${maxCount})`}
+                >
+                  <button 
+                    type="button" 
+                    className="nav-pill-btn" 
+                    title="切換上一部經書預覽"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedExcerptIndex(prev => (prev - 1 + maxCount) % maxCount);
+                    }}
+                  >
+                    <ChevronLeft size={14} strokeWidth={2.4} />
+                  </button>
+                  <div className="nav-pill-divider" />
+                  <button 
+                    type="button" 
+                    className="nav-pill-btn" 
+                    title="切換下一部經書預覽"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedExcerptIndex(prev => (prev + 1) % maxCount);
+                    }}
+                  >
+                    <ChevronRight size={14} strokeWidth={2.4} />
+                  </button>
                 </div>
               )}
             </div>

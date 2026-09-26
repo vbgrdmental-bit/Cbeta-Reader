@@ -5621,15 +5621,27 @@ body.theme-ebony .lastread-excerpt-card-4x4 {
   font-weight: 600;
 }
 
-/* 上部分 4*1：維持如圖1樣式 (經號徽章 + 經名作譯者 + 圓形「➔」) */
-.lastread-excerpt-header-4x1 {
+/* 💡 4x4 經文進度卡片：頂部橫向排列列 (左側經書獨立長 Bar + 右側獨立「< | >」膠囊) */
+.lastread-excerpt-top-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.5rem;
   width: 100%;
   height: 58px;
   min-height: 58px;
   max-height: 58px;
+  box-sizing: border-box;
+}
+
+/* 左邊：經書獨立長 Bar (點擊進入閱讀) */
+.lastread-excerpt-book-bar,
+.lastread-excerpt-header-4x1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
   padding: 0.35rem 0.65rem;
   border-radius: 14px;
   background: rgba(0, 0, 0, 0.025);
@@ -5639,16 +5651,19 @@ body.theme-ebony .lastread-excerpt-card-4x4 {
   transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.lastread-excerpt-book-bar:hover,
 .lastread-excerpt-header-4x1:hover {
   background: rgba(0, 0, 0, 0.045);
   transform: translateY(-1px);
 }
 
+body.theme-ebony .lastread-excerpt-book-bar,
 body.theme-ebony .lastread-excerpt-header-4x1 {
   background: rgba(255, 255, 255, 0.035);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
+body.theme-ebony .lastread-excerpt-book-bar:hover,
 body.theme-ebony .lastread-excerpt-header-4x1:hover {
   background: rgba(255, 255, 255, 0.065);
 }
@@ -5704,51 +5719,46 @@ body.theme-ebony .lastread-excerpt-header-4x1:hover {
   margin-top: 3px;
 }
 
-/* 💡 4x4 經書 Bar 右側：獨立精緻切換微膠囊 (圖4樣式) */
-.lastread-excerpt-header-actions {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  margin-left: 0.5rem;
-}
-
-.excerpt-bar-nav-group {
+/* 💡 右邊：獨立「< | >」極簡切換微膠囊 (完全不包在經書 Bar 內) */
+.lastread-excerpt-nav-pill {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  height: 38px;
   border-radius: 999px;
-  padding: 2px 6px;
-  height: 28px;
-  user-select: none;
+  background: rgba(0, 0, 0, 0.045);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 0 3px;
   box-sizing: border-box;
+  user-select: none;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.excerpt-bar-nav-group:hover {
-  background: rgba(0, 0, 0, 0.075);
+.lastread-excerpt-nav-pill:hover {
+  background: rgba(0, 0, 0, 0.07);
   border-color: rgba(0, 0, 0, 0.1);
 }
 
-body.theme-ebony .excerpt-bar-nav-group {
-  background: rgba(255, 255, 255, 0.08);
+body.theme-ebony .lastread-excerpt-nav-pill {
+  background: rgba(255, 255, 255, 0.07);
   border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
 }
 
-body.theme-ebony .excerpt-bar-nav-group:hover {
+body.theme-ebony .lastread-excerpt-nav-pill:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.18);
 }
 
-.excerpt-bar-nav-btn {
-  width: 20px;
-  height: 20px;
+.nav-pill-btn {
+  width: 28px;
+  height: 32px;
   border-radius: 999px;
   border: none;
   background: transparent;
   color: var(--text-primary);
-  opacity: 0.7;
+  opacity: 0.75;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5757,29 +5767,30 @@ body.theme-ebony .excerpt-bar-nav-group:hover {
   transition: all 0.15s ease;
 }
 
-.excerpt-bar-nav-btn:hover {
+.nav-pill-btn:hover {
   opacity: 1;
-  background: rgba(0, 0, 0, 0.08);
-  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.06);
+  transform: scale(1.08);
 }
 
-body.theme-ebony .excerpt-bar-nav-btn {
+body.theme-ebony .nav-pill-btn {
   color: #ffffff;
 }
 
-body.theme-ebony .excerpt-bar-nav-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+body.theme-ebony .nav-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.excerpt-bar-nav-counter {
-  font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  opacity: 0.8;
-  padding: 0 4px;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+/* 膠囊中央細微分隔線 「 | 」 */
+.nav-pill-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.14);
+  flex-shrink: 0;
+}
+
+body.theme-ebony .nav-pill-divider {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* 下部分 4*3：直接是上次閱讀到的經文文字（16px、宋/明體、間距1.8，隨四大主題色變更，閱讀預覽不顯示滾動條） */
