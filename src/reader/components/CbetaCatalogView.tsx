@@ -24,14 +24,19 @@ interface CbetaCatalogViewProps {
   isActive?: boolean;
   onNavigateToLibrarySection?: (section: 'home' | 'shelf' | 'notes' | 'search' | 'reading-log' | 'cbeta') => void;
   hideHeader?: boolean;
+  targetCategory?: {
+    tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time';
+    node: CatalogNode;
+  } | null;
+  onClearTargetCategory?: () => void;
 }
 
-interface CatalogNode {
+export interface CatalogNode {
   id: string; // e.g. "CBETA", "CBETA.001", "orig-T", etc.
   label: string; // Breadcrumb title
 }
 
-interface CatalogItem {
+export interface CatalogItem {
   id: string;
   label: string;
   subLabel?: string; // e.g. "25 CE ~ 220 CE"
@@ -230,7 +235,9 @@ export function CbetaCatalogView({
   settings,
   isActive,
   onNavigateToLibrarySection,
-  hideHeader
+  hideHeader,
+  targetCategory,
+  onClearTargetCategory
 }: CbetaCatalogViewProps) {
   // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代) - 預設開啟「常用經典」
   const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('favorite');
@@ -697,6 +704,40 @@ export function CbetaCatalogView({
       setIsLoadingCatalog(false);
     }
   };
+
+  // 💡 當外部傳入跳轉目標分類（如從我的書櫃「依部類」點選特定部類文字進入）時自動導航並展開
+  useEffect(() => {
+    if (!targetCategory) return;
+    const { tab, node } = targetCategory;
+    setActiveTab(tab);
+    setOnlineResults([]);
+    setIsTextSearchActive(false);
+    setIsCategoriesExpanded(true);
+    setIsSearchExpanded(false);
+
+    let rootNode: CatalogNode;
+    switch (tab) {
+      case 'dept':
+        rootNode = { id: 'CBETA', label: '依部類' };
+        break;
+      case 'vol':
+        rootNode = { id: 'orig', label: '依冊別' };
+        break;
+      case 'creator':
+        rootNode = { id: 'creator_root', label: '依作譯者' };
+        break;
+      case 'time':
+        rootNode = { id: 'time_root', label: '依朝代' };
+        break;
+      default:
+        rootNode = { id: 'favorite_root', label: '常用經典' };
+    }
+
+    setHistoryStack([rootNode, node]);
+    setHistoryIndex(1);
+    fetchCatalog(node.id);
+    onClearTargetCategory?.();
+  }, [targetCategory]);
 
   // 切換 5 個頁籤 (常用經典、依部類、依冊別、依作譯者、依朝代)
   const handleTabSelect = (tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time') => {

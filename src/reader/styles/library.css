@@ -8312,6 +8312,23 @@ body.theme-ebony .keyword-cross-badge {
   background: rgba(243, 201, 105, 0.12);
 }
 
+/* 📚 書櫃與筆記依部類分組標題點擊連結樣式 */
+.bookshelf-group-title-link {
+  transition: color 0.15s ease, opacity 0.15s ease, text-decoration 0.15s ease;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.bookshelf-group-title-link:hover {
+  color: var(--theme-accent, #1ea98c) !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bookshelf-group-title-link:active {
+  opacity: 0.75;
+}
+
 
 
 

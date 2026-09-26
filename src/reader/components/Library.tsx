@@ -18,7 +18,7 @@ import { BuilderProgressOverlay } from './BuilderProgressOverlay';
 import { SearchPanel } from './SearchPanel';
 import { ReadingLogView } from './ReadingLogView';
 import { HomeDashboard } from './HomeDashboard';
-import { CbetaCatalogView } from './CbetaCatalogView';
+import { CbetaCatalogView, STATIC_DEPT_CATEGORIES } from './CbetaCatalogView';
 import { BookshelfInteractivePlayground, getDeptCategoryInfo, getCanonCategoryInfo, parseCreators } from './BookshelfInteractivePlayground';
 import { updateHashRoute } from '../../App';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
@@ -61,6 +61,20 @@ export function Library({
   const [progressUpdatedTrigger, setProgressUpdatedTrigger] = useState(0);
   const [isLayoutEditMode, setIsLayoutEditMode] = useState(false);
   const [showPlaygroundDemo, setShowPlaygroundDemo] = useState(true);
+
+  // 💡 目錄外部跳轉目標（由書櫃/筆記分組標題點擊跳轉特定部類）
+  const [catalogTargetCategory, setCatalogTargetCategory] = useState<{
+    tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time';
+    node: { id: string; label: string };
+  } | null>(null);
+
+  const handleNavigateToCatalogCategory = (target: {
+    tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time';
+    node: { id: string; label: string };
+  }) => {
+    setCatalogTargetCategory(target);
+    setActiveTab('cbeta');
+  };
 
   const [isBackup, setIsBackup] = useState(isBackupMode());
 
@@ -1735,6 +1749,7 @@ export function Library({
                     onDeleteBook={(workId) => {
                       handleDeleteBook(undefined as any, workId);
                     }}
+                    onNavigateToCatalogCategory={handleNavigateToCatalogCategory}
                   />
                 </div>
               ) : (
@@ -2041,6 +2056,12 @@ export function Library({
                         {notesDimensionGroups.map(([groupTitle, groupData]) => {
                           const isGroupExpanded = expandedDimensionGroups[groupTitle] !== false; // 預設展開
                           const totalHlsInGroup = groupData.books.reduce((acc, b) => acc + b.list.length, 0);
+                          const deptMatch = notesClassificationMode === 'category'
+                            ? STATIC_DEPT_CATEGORIES.find(c => {
+                                const code = groupTitle.slice(0, 2);
+                                return c.id === `CBETA.0${code}` || c.label.startsWith(groupTitle) || c.label.startsWith(code);
+                              })
+                            : null;
 
                           return (
                             <div 
@@ -2069,7 +2090,26 @@ export function Library({
                               >
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--theme-accent, #8c4b27)' }} />
-                                  <span style={{ fontSize: '0.94rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
+                                  <span 
+                                    className={deptMatch ? "bookshelf-group-title-link" : ""}
+                                    onClick={(e) => {
+                                      if (deptMatch) {
+                                        e.stopPropagation();
+                                        handleNavigateToCatalogCategory({
+                                          tab: 'dept',
+                                          node: { id: deptMatch.id, label: deptMatch.label }
+                                        });
+                                      }
+                                    }}
+                                    style={{ 
+                                      fontSize: '0.94rem', 
+                                      fontWeight: 800, 
+                                      color: 'var(--text-primary)', 
+                                      fontFamily: 'var(--font-serif)',
+                                      cursor: deptMatch ? 'pointer' : 'inherit'
+                                    }}
+                                    title={deptMatch ? `前往 CBETA 藏經庫瀏覽「${groupTitle}」` : undefined}
+                                  >
                                     {groupTitle}
                                   </span>
                                   <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', background: 'rgba(0,0,0,0.06)', padding: '2px 7px', borderRadius: '10px' }}>
@@ -2526,6 +2566,8 @@ export function Library({
         <CbetaCatalogView
           hideHeader={true}
           isActive={activeTab === 'cbeta'}
+          targetCategory={catalogTargetCategory}
+          onClearTargetCategory={() => setCatalogTargetCategory(null)}
           onBackToLibrary={() => {
             setActiveTab('shelf');
             setCurrentFolderId(null);

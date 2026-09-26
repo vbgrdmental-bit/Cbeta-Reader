@@ -5,6 +5,7 @@ import {
   MoreVertical, FolderInput, Trash2
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
+import { STATIC_DEPT_CATEGORIES } from './CbetaCatalogView';
 
 interface BookshelfInteractivePlaygroundProps {
   downloadedBooks: BookMetadata[];
@@ -15,6 +16,10 @@ interface BookshelfInteractivePlaygroundProps {
   onOpenBookMenu?: (book: BookMetadata) => void;
   onToggleFavorite?: (workId: string) => void;
   onDeleteBook?: (workId: string) => void;
+  onNavigateToCatalogCategory?: (target: {
+    tab: 'favorite' | 'dept' | 'vol' | 'creator' | 'time';
+    node: { id: string; label: string };
+  }) => void;
 }
 
 // 💡 120 部正統 CBETA 大藏經海量模擬經典資料庫 (涵蓋阿含、般若、法華、華嚴、本生、密教、論疏、近代新編等)
@@ -348,7 +353,8 @@ export function BookshelfInteractivePlayground({
   onSelectBook,
   onOpenBookMenu,
   onToggleFavorite,
-  onDeleteBook
+  onDeleteBook,
+  onNavigateToCatalogCategory
 }: BookshelfInteractivePlaygroundProps) {
   // === 1. 頂部四大藏經分類切換：'category' (依部類) | 'volume' (依冊別) | 'author' (依作譯者) | 'dynasty' (依朝代) ===
   const [classificationMode, setClassificationMode] = useState<'category' | 'volume' | 'author' | 'dynasty'>('category');
@@ -637,6 +643,13 @@ export function BookshelfInteractivePlayground({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
         {Object.entries(groupedData).map(([groupTitle, books]) => {
           const isExpanded = expandedGroups[groupTitle] !== false; // 預設全部展開
+          const deptMatch = classificationMode === 'category'
+            ? STATIC_DEPT_CATEGORIES.find(c => {
+                const code = groupTitle.slice(0, 2);
+                return c.id === `CBETA.0${code}` || c.label.startsWith(groupTitle) || c.label.startsWith(code);
+              })
+            : null;
+
           return (
             <div 
               key={groupTitle}
@@ -664,7 +677,26 @@ export function BookshelfInteractivePlayground({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--theme-accent, #8c4b27)' }} />
-                  <span style={{ fontSize: '0.94rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
+                  <span 
+                    className={deptMatch ? "bookshelf-group-title-link" : ""}
+                    onClick={(e) => {
+                      if (deptMatch && onNavigateToCatalogCategory) {
+                        e.stopPropagation();
+                        onNavigateToCatalogCategory({
+                          tab: 'dept',
+                          node: { id: deptMatch.id, label: deptMatch.label }
+                        });
+                      }
+                    }}
+                    style={{ 
+                      fontSize: '0.94rem', 
+                      fontWeight: 800, 
+                      color: 'var(--text-primary)', 
+                      fontFamily: 'var(--font-serif)',
+                      cursor: deptMatch ? 'pointer' : 'inherit'
+                    }}
+                    title={deptMatch ? `前往 CBETA 藏經庫瀏覽「${groupTitle}」` : undefined}
+                  >
                     {groupTitle}
                   </span>
                   <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', background: 'rgba(0,0,0,0.06)', padding: '2px 7px', borderRadius: '10px' }}>

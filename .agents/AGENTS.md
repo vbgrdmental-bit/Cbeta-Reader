@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.1` (App: v4.6.1 / Builder: v2.9.12)
+- **Current Version**: `v4.6.2` (App: v4.6.2 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.2 / Builder: v2.9.12** (2026-09-27)
+  - [App] 書櫃「依部類」分組標題文字（如「04 法華部類」、「08 大集部類」等）支援直接點擊，秒速直達並展開對應 CBETA 部類藏經目錄（全 23 部類通用）。
+  - [App] 點擊標題文字跳轉時與折疊卡片展開/收折精確分離（`e.stopPropagation()`），點擊箭頭或卡片其他位置維持正常折疊。
+  - [App] 跳轉進入藏經庫後自動同步麵包屑導航路徑（如 `< 依部類 » 04 法華部類...`），點擊 `<` 即可無縫返回部類根目錄。
 - **⭐ App: v4.6.1 / Builder: v2.9.12** (2026-09-26)
   - [App] 4×4 經文進度卡片外置標題列全面去除按鍵，消除多卡片排在一起時箭頭堆疊之視覺混亂。
   - [App] 經書切換器「‹ 1/6 ›」無縫整合至上方經書長條 Bar 右側，與圓形「➔」閱讀按鈕形成一體化經書操作群。
