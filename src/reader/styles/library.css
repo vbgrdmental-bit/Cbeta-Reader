@@ -6748,7 +6748,8 @@ body.theme-ebony .ios-live-preview-viewport {
 
 .preview-card-stage-container.scale-4x4 .book-list-widget-multi,
 .preview-card-stage-container.scale-4x4 .lastread-excerpt-card-4x4,
-.preview-card-stage-container.scale-4x4 .widget-four-in-one-4x4 {
+.preview-card-stage-container.scale-4x4 .widget-four-in-one-4x4,
+.preview-card-stage-container.scale-4x4 .triple-reading-card-4x4 {
   width: 100% !important;
   box-sizing: border-box !important;
 }
@@ -7963,6 +7964,24 @@ body.theme-ebony .book-widget-card-box {
 
 body.theme-ebony .book-widget-card-box .book-stack-item-4x4 {
   border: none;
+}
+
+/* 💡 近期下載、上次閱讀、我的最愛 三合一卡片 (4x4 規格) */
+.triple-reading-card-4x4 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.triple-reading-card-4x4 .triple-section-row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.triple-reading-card-4x4 .triple-section-row:not(:last-child) {
+  margin-bottom: 0.65rem;
 }
 
 /* 💡 閱讀頁中央統一微膠囊（整合「字 / 筆刷 / 搜尋」） */

@@ -1345,16 +1345,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.6.4) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.6.5) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.6.4</span>
+                        <span>⭐ App: v4.6.5</span>
                         <span className="changelog-date">(2026-09-27)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 閱讀頁經典與版權資訊新增「時代：」欄位，忠實呈現經文著述朝代。</li>
-                        <li>• 作譯者智慧分離朝代與作者，若僅有朝代無作譯者（如 X1487）作譯者顯示為空。</li>
-                        <li>• 書櫃與筆記分類修正純朝代經典，杜絕將朝代名稱誤歸為作者群組。</li>
+                        <li>• 新增「三合一閱讀卡」(4×4)，集合近期下載、上次閱讀、我的最愛各 1 本經典。</li>
+                        <li>• 各區塊獨立配置外置標題列與直達按鈕，點擊標題直接進入書櫃對應分類。</li>
+                        <li>• 各經書長條 Bar 支援即時開啟閱讀與進度接續，全尺寸適配四大主題色。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1377,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.4</span>
+                            <span className="changelog-date">(2026-09-27)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 閱讀頁經典與版權資訊新增「時代：」欄位，忠實呈現經文著述朝代。</li>
+                            <li>• 作譯者智慧分離朝代與作者，若僅有朝代無作譯者（如 X1487）作譯者顯示為空。</li>
+                            <li>• 書櫃與筆記分類修正純朝代經典，杜絕將朝代名稱誤歸為作者群組。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.6.3</span>

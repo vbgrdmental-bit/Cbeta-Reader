@@ -39,11 +39,12 @@ interface HomeDashboardProps {
   setIsLayoutEditMode: (val: boolean) => void;
 }
 
-// 💡 檢查是否為經書外置標題小工具 (上次閱讀之 4x2、4x1，經文進度 4x4，我的最愛、近期下載之 4x2 與 4x1 規格)
+// 💡 檢查是否為經書外置標題小工具 (上次閱讀之 4x2、4x1，經文進度 4x4，三合一卡 4x4，我的最愛、近期下載之 4x2 與 4x1 規格)
 const isBookWidgetOuterHeader = (type: string, size: string) => 
   ((type === 'lastread_4x2' || type === 'lastread_4x1') && (size === 'size-4x2' || size === 'size-4x1')) ||
   ((type === 'favorites_4x2' || type === 'recent_downloads_4x2') && (size === 'size-4x2' || size === 'size-4x1')) ||
-  (type === 'lastread_excerpt_4x4');
+  (type === 'lastread_excerpt_4x4') ||
+  (type === 'triple_reading_4x4');
 
 // 💡 扁平化全小工具線性巡覽清單 (全由「<」「>」依序瀏覽所有分類與規格)
 interface FlatGalleryItem {
@@ -90,6 +91,7 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'r_last_4x3', type: 'lastread_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'reading', title: '上次閱讀' },
   { id: 'r_last_4x4', type: 'lastread_4x2', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '上次閱讀 (4本書)' },
   { id: 'r_last_excerpt_4x4', type: 'lastread_excerpt_4x4', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '上次閱讀 (經文進度)' },
+  { id: 'r_triple_4x4', type: 'triple_reading_4x4', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '三合一閱讀卡' },
 
   { id: 'r_fav_4x1', type: 'favorites_4x2', size: 'size-4x1', sizeLabel: '4×1', category: 'reading', title: '我的最愛' },
   { id: 'r_fav_4x2', type: 'favorites_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '我的最愛' },
@@ -689,6 +691,168 @@ export function HomeDashboard({
       );
     };
 
+    // 💡 🌟 近期下載、上次閱讀、我的最愛 三合一卡片 (4x4 規格，各 1 本書垂直排列，依圖 1 規格)
+    const renderTripleReadingCard = () => {
+      // 1. 近期下載 (最新 1 本)
+      const actualRecent = [...downloadedBooks].reverse();
+      const recentBook = (isPreview && actualRecent.length === 0) 
+        ? DEMO_PREVIEW_RESUME[0]?.book 
+        : actualRecent[0];
+
+      // 2. 上次閱讀 (最新 1 本)
+      const lastReadItem = effectiveResumeBooks[0] || (isPreview ? DEMO_PREVIEW_RESUME[1] : null);
+
+      // 3. 我的最愛 (最新 1 本)
+      const favoriteWorkIds: string[] = (() => {
+        try {
+          const saved = localStorage.getItem('favorite_work_ids');
+          return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+          return [];
+        }
+      })();
+      const actualFavs = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
+      const favBook = (isPreview && actualFavs.length === 0) 
+        ? DEMO_PREVIEW_RESUME[2]?.book 
+        : actualFavs[0];
+
+      return (
+        <div className="triple-reading-card-4x4">
+          {/* === 1. 近期下載 === */}
+          <div className="triple-section-row">
+            <div className="widget-outside-header-row">
+              <div 
+                className="widget-outside-tag"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「近期下載」"
+              >
+                近期下載 ➔
+              </div>
+            </div>
+            <div className="book-widget-card-box box-4x1">
+              {recentBook ? (
+                <div 
+                  className="book-stack-item-4x4"
+                  onClick={!isLayoutEditMode ? () => onSelectBook(recentBook.workId) : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                >
+                  <div className="book-badge" style={{ background: getBookCoverGradient(recentBook.workId) }}>
+                    {recentBook.workId}
+                  </div>
+                  <div className="book-info">
+                    <div className="b-title" title={recentBook.title}>{recentBook.title}</div>
+                    <div className="b-sub">
+                      {recentBook.juansCount ? `全 ${recentBook.juansCount} 卷` : ''}
+                      {recentBook.creators ? ` · ${sanitizeCreators(recentBook.creators)}` : ''}
+                    </div>
+                  </div>
+                  <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                    <ArrowRight size={17} strokeWidth={2.4} />
+                  </button>
+                </div>
+              ) : (
+                <div 
+                  style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+                >
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>近期下載：暫無已下載經典 (點擊進入書櫃)</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* === 2. 上次閱讀 === */}
+          <div className="triple-section-row">
+            <div className="widget-outside-header-row">
+              <div 
+                className="widget-outside-tag"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「上次閱讀」"
+              >
+                上次閱讀 ➔
+              </div>
+            </div>
+            <div className="book-widget-card-box box-4x1">
+              {lastReadItem ? (
+                <div 
+                  className="book-stack-item-4x4"
+                  onClick={!isLayoutEditMode ? () => onSelectBook(lastReadItem.book.workId, lastReadItem.progress?.segmentId, undefined, 'resume') : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                >
+                  <div className="book-badge" style={{ background: getBookCoverGradient(lastReadItem.book.workId) }}>
+                    {lastReadItem.book.workId}
+                  </div>
+                  <div className="book-info">
+                    <div className="b-title" title={lastReadItem.book.title}>{lastReadItem.book.title}</div>
+                    <div className="b-sub">
+                      {lastReadItem.progress?.juan ? `第 ${lastReadItem.progress.juan} 卷` : (lastReadItem.book.juansCount ? `全 ${lastReadItem.book.juansCount} 卷` : '閱讀中')}
+                      {lastReadItem.book.creators ? ` · ${sanitizeCreators(lastReadItem.book.creators)}` : ''}
+                    </div>
+                  </div>
+                  <button type="button" className="cbeta-read-btn" title="繼續閱讀">
+                    <ArrowRight size={17} strokeWidth={2.4} />
+                  </button>
+                </div>
+              ) : (
+                <div 
+                  style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                >
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>上次閱讀：尚無閱讀進度 (點擊進入書櫃)</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* === 3. 我的最愛 === */}
+          <div className="triple-section-row">
+            <div className="widget-outside-header-row">
+              <div 
+                className="widget-outside-tag"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「我的最愛」"
+              >
+                我的最愛 ➔
+              </div>
+            </div>
+            <div className="book-widget-card-box box-4x1">
+              {favBook ? (
+                <div 
+                  className="book-stack-item-4x4"
+                  onClick={!isLayoutEditMode ? () => onSelectBook(favBook.workId) : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                >
+                  <div className="book-badge" style={{ background: getBookCoverGradient(favBook.workId) }}>
+                    {favBook.workId}
+                  </div>
+                  <div className="book-info">
+                    <div className="b-title" title={favBook.title}>{favBook.title}</div>
+                    <div className="b-sub">
+                      {favBook.juansCount ? `全 ${favBook.juansCount} 卷` : ''}
+                      {favBook.creators ? ` · ${sanitizeCreators(favBook.creators)}` : ''}
+                    </div>
+                  </div>
+                  <button type="button" className="cbeta-read-btn" title="閱讀經典">
+                    <ArrowRight size={17} strokeWidth={2.4} />
+                  </button>
+                </div>
+              ) : (
+                <div 
+                  style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+                >
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>我的最愛：尚未收藏任何經典 (點擊進入書櫃)</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
     switch (type) {
       // 1. 品牌標題組件 (title_4x2 / title_4x1)
       case 'title_4x2':
@@ -1250,6 +1414,11 @@ export function HomeDashboard({
       // 8-0. 🌟 上次閱讀 · 經文進度獨立組件 (4x4 規格)
       case 'lastread_excerpt_4x4': {
         return renderLastReadExcerptCard();
+      }
+
+      // 8-0-1. 🌟 近期下載、上次閱讀、我的最愛 三合一卡片 (4x4 規格)
+      case 'triple_reading_4x4': {
+        return renderTripleReadingCard();
       }
 
       // 8. 上次閱讀 (支援 4x1 / 4x2 / 4x3 / 4x4 共 1~4 本經典)

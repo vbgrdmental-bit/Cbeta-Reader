@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.4` (App: v4.6.4 / Builder: v2.9.12)
+- **Current Version**: `v4.6.5` (App: v4.6.5 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.5 / Builder: v2.9.12** (2026-09-27)
+  - [App] 新增「三合一閱讀卡」(4×4)，集合近期下載、上次閱讀、我的最愛各 1 本經典，一體化垂直呈現。
+  - [App] 各區塊獨立配置外置標題列與直達按鈕，點擊標題直接進入書櫃對應分類。
+  - [App] 各經書長條 Bar 支援即時開啟閱讀與進度接續，全尺寸自適應四大主題色。
 - **⭐ App: v4.6.4 / Builder: v2.9.12** (2026-09-27)
   - [App] 閱讀頁抽屜底端「經典與版權資訊」新增「時代：」獨立欄位，忠實呈現經文所屬朝代歷史。
   - [App] 升級作譯者智慧解析引擎，精確分離朝代與作者，若經典僅有朝代無作者（如 X1487《慈悲地藏菩薩懺法》）作譯者顯示為空，時代顯示「清朝」，徹底杜絕將朝代名稱誤認為作譯者。
