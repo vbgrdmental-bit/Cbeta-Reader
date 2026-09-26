@@ -1345,16 +1345,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.6.0) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.6.1) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.6.0</span>
+                        <span>⭐ App: v4.6.1</span>
                         <span className="changelog-date">(2026-09-26)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 2×2「CBETA」字體顏色與字距完全對齊 4×1 與 4×2 翡翠綠與圓體規範。</li>
-                        <li>• 四合一導航 4×2 按鍵淡色背景上下長度縮減，視覺呈現精緻端正正方形。</li>
-                        <li>• 上次閱讀、近期閱讀與我的最愛移除右上角部數徽章，限定點文字進入書櫃。</li>
+                        <li>• 4×4 經文卡片外置標題列全面去除按鍵，排版純粹乾淨。</li>
+                        <li>• 經書切換器「‹ 1/6 ›」無縫整合至經書 Bar 內，操作聚焦自然。</li>
+                        <li>• 徹底根除多卡片堆疊時箭頭過多之混亂感，視覺協調美觀。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1377,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.0</span>
+                            <span className="changelog-date">(2026-09-26)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 2×2「CBETA」字體顏色與字距完全對齊 4×1 與 4×2 翡翠綠與圓體規範。</li>
+                            <li>• 四合一導航 4×2 按鍵淡色背景上下長度縮減，視覺呈現精緻端正正方形。</li>
+                            <li>• 上次閱讀、近期閱讀與我的最愛移除右上角部數徽章，限定點文字進入書櫃。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.5.9</span>

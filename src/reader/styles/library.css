@@ -5704,6 +5704,71 @@ body.theme-ebony .lastread-excerpt-header-4x1:hover {
   margin-top: 3px;
 }
 
+/* 💡 4x4 經書 Bar 右側操作組：整合「‹ 1/6 ›」切換器與「➔」按鈕 */
+.lastread-excerpt-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.excerpt-bar-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 9px;
+  padding: 2px 4px;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+body.theme-ebony .excerpt-bar-nav-group {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.excerpt-bar-nav-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #555555);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.excerpt-bar-nav-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+  transform: scale(1.08);
+}
+
+body.theme-ebony .excerpt-bar-nav-btn {
+  color: #cccccc;
+}
+
+body.theme-ebony .excerpt-bar-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.excerpt-bar-nav-counter {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 0 4px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
 /* 下部分 4*3：直接是上次閱讀到的經文文字（16px、宋/明體、間距1.8，隨四大主題色變更，閱讀預覽不顯示滾動條） */
 .lastread-excerpt-body-4x3 {
   flex: 1;

@@ -601,7 +601,7 @@ export function HomeDashboard({
 
       return (
         <>
-          {/* 卡片外、上方加上「上次閱讀→」，右邊為「<」「>」切換按鍵 */}
+          {/* 卡片外、上方純粹標題，完全無按鍵 */}
           <div className="widget-outside-header-row">
             <div 
               className="widget-outside-tag"
@@ -611,40 +611,10 @@ export function HomeDashboard({
             >
               上次閱讀 ➔
             </div>
-            {maxCount > 1 && (
-              <div 
-                className="excerpt-nav-btn-group" 
-                onClick={(e) => e.stopPropagation()}
-                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                <button 
-                  type="button" 
-                  className="excerpt-nav-btn" 
-                  title="切換上一部經書預覽"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedExcerptIndex(prev => (prev - 1 + maxCount) % maxCount);
-                  }}
-                >
-                  <ChevronLeft size={13} strokeWidth={2.4} />
-                </button>
-                <button 
-                  type="button" 
-                  className="excerpt-nav-btn" 
-                  title="切換下一部經書預覽"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedExcerptIndex(prev => (prev + 1) % maxCount);
-                  }}
-                >
-                  <ChevronRight size={13} strokeWidth={2.4} />
-                </button>
-              </div>
-            )}
           </div>
 
           <div className="lastread-excerpt-card-4x4">
-            {/* 上部分 4*1：維持如圖1樣式（經號徽章 + 經名與作譯者 + 圓形「➔」按鈕） */}
+            {/* 上部分 4*1：維持如圖1樣式（經號徽章 + 經名與作譯者 + 整合切換器 + 圓形「➔」按鈕） */}
             <div 
               className="lastread-excerpt-header-4x1"
               onClick={handleContinueRead}
@@ -667,17 +637,48 @@ export function HomeDashboard({
                   </div>
                 </div>
               </div>
-              <button 
-                type="button" 
-                className="cbeta-read-btn" 
-                title="繼續閱讀"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleContinueRead();
-                }}
-              >
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </button>
+
+              {/* 右側操作群：整合「‹ 1/6 ›」切換器與圓形閱讀按鈕 */}
+              <div className="lastread-excerpt-header-actions" onClick={(e) => e.stopPropagation()}>
+                {maxCount > 1 && (
+                  <div className="excerpt-bar-nav-group">
+                    <button 
+                      type="button" 
+                      className="excerpt-bar-nav-btn" 
+                      title="切換上一部經書預覽"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedExcerptIndex(prev => (prev - 1 + maxCount) % maxCount);
+                      }}
+                    >
+                      <ChevronLeft size={13} strokeWidth={2.4} />
+                    </button>
+                    <span className="excerpt-bar-nav-counter">{safeIndex + 1}/{maxCount}</span>
+                    <button 
+                      type="button" 
+                      className="excerpt-bar-nav-btn" 
+                      title="切換下一部經書預覽"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedExcerptIndex(prev => (prev + 1) % maxCount);
+                      }}
+                    >
+                      <ChevronRight size={13} strokeWidth={2.4} />
+                    </button>
+                  </div>
+                )}
+                <button 
+                  type="button" 
+                  className="cbeta-read-btn" 
+                  title="繼續閱讀"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleContinueRead();
+                  }}
+                >
+                  <ArrowRight size={17} strokeWidth={2.4} />
+                </button>
+              </div>
             </div>
 
             {/* 下部分 4*3：直接是上次閱讀到的經文文字（16px、宋/明體、間距1.8，隨四大主題色變更，閱讀預覽不顯示滾動條） */}

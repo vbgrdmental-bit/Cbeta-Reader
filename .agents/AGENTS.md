@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.0` (App: v4.6.0 / Builder: v2.9.12)
+- **Current Version**: `v4.6.1` (App: v4.6.1 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,9 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.1 / Builder: v2.9.12** (2026-09-26)
+  - [App] 4×4 經文進度卡片外置標題列全面去除按鍵，消除多卡片排在一起時箭頭堆疊之視覺混亂。
+  - [App] 經書切換器「‹ 1/6 ›」無縫整合至上方經書長條 Bar 右側，與圓形「➔」閱讀按鈕形成一體化經書操作群。
 - **⭐ App: v4.6.0 / Builder: v2.9.12** (2026-09-26)
   - [App] 2×2 品牌標題「CBETA」字體顏色與 letter-spacing 完全對齊 4×1 與 4×2 規格之 `#1ea98c` 翡翠綠與圓體字型規範。
   - [App] 首頁四合一導航 4×2 按鍵淡色背景上下長度縮減（aspect-ratio: 1 / 1.05），卡片內垂直置中呈現端正精緻之大致正方形。
