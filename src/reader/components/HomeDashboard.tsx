@@ -562,14 +562,15 @@ export function HomeDashboard({
       if (maxCount === 0) {
         return (
           <>
-            <div 
-              className="widget-outside-header-row"
-              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-              title="點擊進入書櫃「上次閱讀」"
-            >
-              <div className="widget-outside-tag">上次閱讀 ➔</div>
-              <div className="widget-outside-badge">共 0 部</div>
+            <div className="widget-outside-header-row">
+              <div 
+                className="widget-outside-tag"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「上次閱讀」"
+              >
+                上次閱讀 ➔
+              </div>
             </div>
             <div 
               className="lastread-excerpt-card-4x4 empty"
@@ -600,47 +601,46 @@ export function HomeDashboard({
 
       return (
         <>
-          {/* 卡片外、上方加上「上次閱讀→」，右邊為「<」「>」切換按鍵與「共 X 部」徽章 */}
-          <div 
-            className="widget-outside-header-row"
-            onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-            style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-            title="點擊進入書櫃「上次閱讀」"
-          >
-            <div className="widget-outside-tag">上次閱讀 ➔</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              {maxCount > 1 && (
-                <div 
-                  className="excerpt-nav-btn-group" 
-                  onClick={(e) => e.stopPropagation()}
-                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <button 
-                    type="button" 
-                    className="excerpt-nav-btn" 
-                    title="切換上一部經書預覽"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedExcerptIndex(prev => (prev - 1 + maxCount) % maxCount);
-                    }}
-                  >
-                    <ChevronLeft size={13} strokeWidth={2.4} />
-                  </button>
-                  <button 
-                    type="button" 
-                    className="excerpt-nav-btn" 
-                    title="切換下一部經書預覽"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedExcerptIndex(prev => (prev + 1) % maxCount);
-                    }}
-                  >
-                    <ChevronRight size={13} strokeWidth={2.4} />
-                  </button>
-                </div>
-              )}
-              <div className="widget-outside-badge">共 {maxCount} 部</div>
+          {/* 卡片外、上方加上「上次閱讀→」，右邊為「<」「>」切換按鍵 */}
+          <div className="widget-outside-header-row">
+            <div 
+              className="widget-outside-tag"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+              title="點擊進入書櫃「上次閱讀」"
+            >
+              上次閱讀 ➔
             </div>
+            {maxCount > 1 && (
+              <div 
+                className="excerpt-nav-btn-group" 
+                onClick={(e) => e.stopPropagation()}
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                <button 
+                  type="button" 
+                  className="excerpt-nav-btn" 
+                  title="切換上一部經書預覽"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedExcerptIndex(prev => (prev - 1 + maxCount) % maxCount);
+                  }}
+                >
+                  <ChevronLeft size={13} strokeWidth={2.4} />
+                </button>
+                <button 
+                  type="button" 
+                  className="excerpt-nav-btn" 
+                  title="切換下一部經書預覽"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedExcerptIndex(prev => (prev + 1) % maxCount);
+                  }}
+                >
+                  <ChevronRight size={13} strokeWidth={2.4} />
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="lastread-excerpt-card-4x4">
@@ -709,9 +709,9 @@ export function HomeDashboard({
               style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
             >
               <div className="title-center-content-2x2" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <h2 className="title-brand-heading" style={{ fontFamily: 'var(--font-rounded)', fontSize: '1.45rem', fontWeight: 800, margin: 0, lineHeight: 1.15, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--theme-accent, #1ea98c)' }}>CBETA</span>
-                  <span className="title-brand-text" style={{ marginTop: '0.2rem' }}>Reader</span>
+                <h2 className="title-brand-heading" style={{ fontFamily: 'var(--font-rounded, sans-serif)', fontSize: '1.45rem', fontWeight: 800, margin: 0, lineHeight: 1.15, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span style={{ color: '#1ea98c', letterSpacing: '0.04em' }}>CBETA</span>
+                  <span className="title-brand-text" style={{ marginTop: '0.2rem', letterSpacing: '0.04em' }}>Reader</span>
                 </h2>
               </div>
               {renderMiniThemeDots('pos-bottom-center')}
@@ -1266,14 +1266,15 @@ export function HomeDashboard({
           if (size === 'size-4x2' || size === 'size-4x1') {
             return (
               <>
-                <div 
-                  className="widget-outside-header-row"
-                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                  title="點擊進入書櫃「上次閱讀」"
-                >
-                  <div className="widget-outside-tag">上次閱讀 ➔</div>
-                  <div className="widget-outside-badge">共 0 部</div>
+                <div className="widget-outside-header-row">
+                  <div 
+                    className="widget-outside-tag"
+                    onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                    style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                    title="點擊進入書櫃「上次閱讀」"
+                  >
+                    上次閱讀 ➔
+                  </div>
                 </div>
                 <div className={`book-widget-card-box box-${size.replace('size-', '')}`} style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>上次閱讀：尚無閱讀進度</span>
@@ -1295,14 +1296,15 @@ export function HomeDashboard({
           return (
             <>
               {/* 1. 卡片外面的上方標題列 */}
-              <div 
-                className="widget-outside-header-row"
-                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                title="點擊進入書櫃「上次閱讀」"
-              >
-                <div className="widget-outside-tag">上次閱讀 ➔</div>
-                <div className="widget-outside-badge">共 {Math.min(effectiveResumeBooks.length, 9)} 部</div>
+              <div className="widget-outside-header-row">
+                <div 
+                  className="widget-outside-tag"
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  title="點擊進入書櫃「上次閱讀」"
+                >
+                  上次閱讀 ➔
+                </div>
               </div>
 
               {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
@@ -1338,14 +1340,15 @@ export function HomeDashboard({
         const displayResumeBooks = effectiveResumeBooks.slice(0, maxResume);
         return (
           <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
-            <div 
-              className="widget-header-row-4x4"
-              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-              title="點擊進入書櫃「上次閱讀」"
-            >
-              <div className="widget-tag-4x4">上次閱讀 ➔</div>
-              <div className="widget-count-badge-4x4">共 {Math.min(effectiveResumeBooks.length, 9)} 部</div>
+            <div className="widget-header-row-4x4">
+              <div 
+                className="widget-tag-4x4"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「上次閱讀」"
+              >
+                上次閱讀 ➔
+              </div>
             </div>
             <div className="book-stack-4x4">
               {displayResumeBooks.map((item, idx) => (
@@ -1391,14 +1394,15 @@ export function HomeDashboard({
           if (size === 'size-4x2' || size === 'size-4x1') {
             return (
               <>
-                <div 
-                  className="widget-outside-header-row"
-                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
-                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                  title="點擊進入書櫃「我的最愛」"
-                >
-                  <div className="widget-outside-tag">我的最愛 ➔</div>
-                  <div className="widget-outside-badge">共 0 部</div>
+                <div className="widget-outside-header-row">
+                  <div 
+                    className="widget-outside-tag"
+                    onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+                    style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                    title="點擊進入書櫃「我的最愛」"
+                  >
+                    我的最愛 ➔
+                  </div>
                 </div>
                 <div className={`book-widget-card-box box-${size.replace('size-', '')}`} style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>我的最愛：尚未收藏任何經典 (點擊進入書櫃)</span>
@@ -1424,14 +1428,15 @@ export function HomeDashboard({
           return (
             <>
               {/* 1. 卡片外面的上方標題列 */}
-              <div 
-                className="widget-outside-header-row"
-                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
-                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                title="點擊進入書櫃「我的最愛」"
-              >
-                <div className="widget-outside-tag">我的最愛 ➔</div>
-                <div className="widget-outside-badge">共 {favoriteBooks.length} 部</div>
+              <div className="widget-outside-header-row">
+                <div 
+                  className="widget-outside-tag"
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  title="點擊進入書櫃「我的最愛」"
+                >
+                  我的最愛 ➔
+                </div>
               </div>
 
               {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
@@ -1467,14 +1472,15 @@ export function HomeDashboard({
         const displayFavs = favoriteBooks.slice(0, maxFavs);
         return (
           <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
-            <div 
-              className="widget-header-row-4x4"
-              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
-              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-              title="點擊進入書櫃「我的最愛」"
-            >
-              <div className="widget-tag-4x4">我的最愛 ➔</div>
-              <div className="widget-count-badge-4x4">共 {favoriteBooks.length} 部</div>
+            <div className="widget-header-row-4x4">
+              <div 
+                className="widget-tag-4x4"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「我的最愛」"
+              >
+                我的最愛 ➔
+              </div>
             </div>
             <div className="book-stack-4x4">
               {displayFavs.map(b => (
@@ -1512,14 +1518,15 @@ export function HomeDashboard({
           if (size === 'size-4x2' || size === 'size-4x1') {
             return (
               <>
-                <div 
-                  className="widget-outside-header-row"
-                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
-                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                  title="點擊進入書櫃「近期下載」"
-                >
-                  <div className="widget-outside-tag">近期下載 ➔</div>
-                  <div className="widget-outside-badge">共 0 部</div>
+                <div className="widget-outside-header-row">
+                  <div 
+                    className="widget-outside-tag"
+                    onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+                    style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                    title="點擊進入書櫃「近期下載」"
+                  >
+                    近期下載 ➔
+                  </div>
                 </div>
                 <div className={`book-widget-card-box box-${size.replace('size-', '')}`} style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>近期下載：暫無已下載經典 (點擊進入書櫃)</span>
@@ -1545,14 +1552,15 @@ export function HomeDashboard({
           return (
             <>
               {/* 1. 卡片外面的上方標題列 */}
-              <div 
-                className="widget-outside-header-row"
-                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
-                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-                title="點擊進入書櫃「近期下載」"
-              >
-                <div className="widget-outside-tag">近期下載 ➔</div>
-                <div className="widget-outside-badge">共 {Math.min(recentDownloadedBooks.length, 9)} 部</div>
+              <div className="widget-outside-header-row">
+                <div 
+                  className="widget-outside-tag"
+                  onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+                  style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                  title="點擊進入書櫃「近期下載」"
+                >
+                  近期下載 ➔
+                </div>
               </div>
 
               {/* 2. 卡片本體 (4x2 高度 148px 放 2 本書；4x1 高度 68px 放 1 本書) */}
@@ -1588,14 +1596,15 @@ export function HomeDashboard({
         const displayRecent = recentDownloadedBooks.slice(0, maxRecent);
         return (
           <div className={`book-list-widget-multi multi-${size.replace('size-', '')}`}>
-            <div 
-              className="widget-header-row-4x4"
-              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
-              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
-              title="點擊進入書櫃「近期下載」"
-            >
-              <div className="widget-tag-4x4">近期下載 ➔</div>
-              <div className="widget-count-badge-4x4">共 {Math.min(recentDownloadedBooks.length, 9)} 部</div>
+            <div className="widget-header-row-4x4">
+              <div 
+                className="widget-tag-4x4"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+                style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+                title="點擊進入書櫃「近期下載」"
+              >
+                近期下載 ➔
+              </div>
             </div>
             <div className="book-stack-4x4">
               {displayRecent.map(b => (

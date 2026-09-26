@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.5.9` (App: v4.5.9 / Builder: v2.9.12)
+- **Current Version**: `v4.6.0` (App: v4.6.0 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.0 / Builder: v2.9.12** (2026-09-26)
+  - [App] 2×2 品牌標題「CBETA」字體顏色與 letter-spacing 完全對齊 4×1 與 4×2 規格之 `#1ea98c` 翡翠綠與圓體字型規範。
+  - [App] 首頁四合一導航 4×2 按鍵淡色背景上下長度縮減（aspect-ratio: 1 / 1.05），卡片內垂直置中呈現端正精緻之大致正方形。
+  - [App] 首頁「上次閱讀」、「近期閱讀（近期下載）」、「我的最愛」卡片全面移除右上角「共X部」徽章，且點擊範圍精確限定為文字標籤（「上次閱讀 ➔」等）時才進入「我的書櫃」對應分類。
 - **⭐ App: v4.5.9 / Builder: v2.9.12** (2026-09-26)
   - [App] 全站介面語彙整齊統一更名為「我的筆記」（頂部統一微膠囊、首頁卡片與資料夾導航列）。
   - [App] 「我的筆記」依書櫃圖1、圖2、圖3標準規範全面對齊：雙分段切換膠囊（依書籍檢視/法義多維度）、4 大維度分類（依部類/依冊別/依作譯者/依朝代）與 4 快捷過濾膠囊（全部/有心得/純重點/近期標註）。
