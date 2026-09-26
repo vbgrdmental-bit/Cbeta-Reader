@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.6` (App: v4.6.6 / Builder: v2.9.12)
+- **Current Version**: `v4.6.7` (App: v4.6.7 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.7 / Builder: v2.9.12** (2026-09-27)
+  - [App] 首頁新增「自訂便籤小卡」，支援 `2×2`、`4×2`、`4×3`、`4×4`、`4×1` 共 5 種自由規格。
+  - [App] 讀者可自由填寫經文佳句、自選法義或修行座右銘與署名出處，自適應全站四大主題底色。
+  - [App] 點擊卡片彈出排版控制台（圖 2 膠囊列），支援自訂字體（宋明/黑體/楷體）、字級（A- / A+）、行高（1.6/1.8/2）與邊距（5%/10%/15%），並提供即時視覺預覽。
 - **⭐ App: v4.6.6 / Builder: v2.9.12** (2026-09-27)
   - [App] 閱讀設定「主題顏色」面板預設將「+ 自訂」抽屜設為收合狀態，排版精緻清爽。
   - [App] 「快速套用風格範本」新增「版型1 極簡」（簡約橫幅 + 下載經典 4×1 + 三合一閱讀卡 4×4）。

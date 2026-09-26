@@ -8348,9 +8348,365 @@ body.theme-ebony .keyword-cross-badge {
   opacity: 0.75;
 }
 
+/* ==========================================================================
+   自訂便籤小卡與圖 2 排版控制台 (Custom Memo Widget & Figure 2 Console)
+   ========================================================================== */
+.custom-memo-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
 
+.custom-memo-card.is-preview {
+  pointer-events: none;
+}
 
+.memo-vertical-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
 
+.memo-lotus-icon {
+  margin-bottom: 0.45rem;
+  opacity: 0.85;
+  color: var(--theme-accent, #8c4b27);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.memo-body-text {
+  color: var(--text-primary);
+  text-align: center;
+  letter-spacing: 0.04em;
+  word-break: break-word;
+  width: 100%;
+  max-width: 95%;
+}
 
+.memo-author-text {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 0.45rem;
+  text-align: center;
+}
 
+/* 4x1 橫條規格 */
+.memo-4x1-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+.memo-lotus-mini {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--theme-accent, #8c4b27);
+  opacity: 0.85;
+}
+
+.memo-text-single {
+  color: var(--text-primary);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 65%;
+}
+
+.memo-author-single {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* 右上角極細微編輯筆記指示 */
+.memo-edit-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  opacity: 0.35;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  pointer-events: none;
+}
+
+.custom-memo-card:hover .memo-edit-indicator {
+  opacity: 0.85;
+  background: var(--bg-hover, rgba(0, 0, 0, 0.04));
+}
+
+/* 📱 自訂便籤編輯彈窗 (Custom Memo Modal) */
+.custom-memo-sheet {
+  width: 92%;
+  max-width: 480px;
+  max-height: 88vh;
+  background: var(--reader-bg);
+  border: 1px solid var(--reader-border);
+  border-radius: var(--radius-xl, 24px);
+  box-shadow: var(--shadow-xl, 0 16px 36px rgba(0, 0, 0, 0.2));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp var(--transition-normal, 0.25s) forwards;
+}
+
+.custom-memo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.25rem 0.5rem;
+}
+
+.custom-memo-title {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-rounded, sans-serif);
+}
+
+.custom-memo-body {
+  padding: 0.75rem 1.25rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.memo-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.memo-field-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.memo-field-textarea {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border-radius: 12px;
+  border: 1.2px solid var(--reader-border);
+  background: var(--bg-hover, rgba(0, 0, 0, 0.03));
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.memo-field-textarea:focus {
+  border-color: #1ea98c;
+}
+
+.memo-field-input {
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  border-radius: 10px;
+  border: 1.2px solid var(--reader-border);
+  background: var(--bg-hover, rgba(0, 0, 0, 0.03));
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.memo-field-input:focus {
+  border-color: #1ea98c;
+}
+
+/* 🌟 圖 2 控制台 (4 組膠囊排版按鈕) */
+.memo-console-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.3rem 0;
+  box-sizing: border-box;
+}
+
+.memo-capsule-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.memo-capsule-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  border: 1.2px solid rgba(0, 0, 0, 0.15);
+  border-radius: 9999px;
+  padding: 3px 4px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.02);
+  min-height: 40px;
+}
+
+body.theme-ebony .memo-capsule-group {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.memo-capsule-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 6px 6px;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.memo-capsule-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+body.theme-ebony .memo-capsule-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.memo-capsule-btn.active {
+  background: #e4e1db;
+  color: #1a1a1a;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-ebony .memo-capsule-btn.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.memo-capsule-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 44px;
+  text-align: center;
+}
+
+.memo-step-btn {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+/* 即時預覽區 */
+.memo-preview-wrapper {
+  background: var(--bg-hover, rgba(0, 0, 0, 0.02));
+  border-radius: 16px;
+  padding: 0.75rem;
+  border: 1px dashed var(--reader-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.memo-preview-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.memo-preview-wrapper .widget-card.preview-card-mode {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* 底部動作列 */
+.custom-memo-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.25rem 1.1rem;
+  border-top: 1px solid var(--reader-border);
+}
+
+.memo-btn-reset {
+  background: none;
+  border: none;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0;
+}
+
+.memo-btn-reset:hover {
+  color: var(--text-primary);
+}
+
+.memo-footer-right {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.memo-btn-cancel {
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--reader-border);
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.memo-btn-save {
+  padding: 0.45rem 1.35rem;
+  border-radius: 9999px;
+  border: none;
+  background: #1ea98c;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(30, 169, 140, 0.25);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.memo-btn-save:hover {
+  background: #18967b;
+  transform: translateY(-1px);
+}

@@ -16,7 +16,8 @@ export type HomeWidgetType =
   | 'stats_2x2'
   | 'theme_4x1'
   | 'timer_2x2'
-  | 'zen_4x2';
+  | 'zen_4x2'
+  | 'custom_memo';
 
 export type HomeWidgetSize = 
   | 'size-4x1'
@@ -33,6 +34,13 @@ export interface HomeWidgetConfig {
   type: HomeWidgetType;
   size: HomeWidgetSize;
   iconIndex?: number; // 1 ~ 10
+  // 自訂座右銘便籤相關排版設定
+  memoText?: string;
+  memoAuthor?: string;
+  memoFont?: 'serif' | 'sans' | 'kai';
+  memoFontSize?: number;
+  memoLineHeight?: number;
+  memoPadding?: number;
 }
 
 export const ZEN_ICONS_LIST = [
@@ -98,7 +106,8 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   // 4. 其他功能
   { type: 'timer_2x2', category: 'other', name: '護眼計時器', size: 'size-2x2', icon: '⏱️', description: '閱讀時間倒數與溫馨提醒（支援 4x2/2x2）' },
   { type: 'theme_4x1', category: 'other', name: '四色主題快捷列', size: 'size-4x1', icon: '🎨', description: '白、紙、舒、木 4 色背景一鍵切換' },
-  { type: 'zen_4x2', category: 'other', name: '佛典精進名句', size: 'size-4x2', icon: '🪷', description: '每日輪播佛典名言與法義精粹' }
+  { type: 'zen_4x2', category: 'other', name: '佛典精進名句', size: 'size-4x2', icon: '🪷', description: '每日輪播佛典名言與法義精粹' },
+  { type: 'custom_memo', category: 'other', name: '自訂便籤小卡', size: 'size-4x2', icon: '📝', description: '讀者可自由輸入自選文字、法義或座右銘，支援自訂字體、字級、行高與邊距' }
 ];
 
 export const PRESET_LAYOUTS: Record<HomeLayoutPreset, HomeWidgetConfig[]> = {
@@ -164,5 +173,7 @@ export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
   // 護眼模式：僅支援 4x2 與 2x2
   timer_2x2: ['size-4x2', 'size-2x2'],
   // 佛典精進名句：固定為 4x2
-  zen_4x2: ['size-4x2']
+  zen_4x2: ['size-4x2'],
+  // 自訂便籤小卡：限定尺寸 2x2 / 4x2 / 4x3 / 4x4 / 4x1
+  custom_memo: ['size-4x2', 'size-4x3', 'size-4x4', 'size-2x2', 'size-4x1']
 };

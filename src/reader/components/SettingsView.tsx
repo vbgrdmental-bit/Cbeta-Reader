@@ -1345,16 +1345,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.6.6) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.6.7) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.6.6</span>
+                        <span>⭐ App: v4.6.7</span>
                         <span className="changelog-date">(2026-09-27)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 主題顏色面板「+ 自訂」預設為收合狀態，排版更精巧俐落。</li>
-                        <li>• 快速套用風格範本設定「版型1 極簡」（橫幅+下載+三合一卡）。</li>
-                        <li>• 將「版型1 極簡」設為讀者首次進入時之首頁權威預設版型。</li>
+                        <li>• 新增「自訂便籤卡」，支援 2×2/4×2/4×3/4×4/4×1 尺寸。</li>
+                        <li>• 讀者可自由填寫經文佳句、生活座右銘或修行發願文與署名。</li>
+                        <li>• 點擊卡片彈出排版控制台，支援自訂字體、字級、行高與邊距。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1377,18 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.6</span>
+                            <span className="changelog-date">(2026-09-27)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 主題顏色面板「+ 自訂」預設為收合狀態，排版更精巧俐落。</li>
+                            <li>• 快速套用風格範本設定「版型1 極簡」（橫幅+下載+三合一卡）。</li>
+                            <li>• 將「版型1 極簡」設為讀者首次進入時之首頁權威預設版型。</li>
+                          </ul>
+                        </div>
+
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.6.5</span>

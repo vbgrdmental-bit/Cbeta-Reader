@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Search, Folder, Notebook, ChevronRight, ChevronLeft, Check, X,
-  Maximize2, Sliders, CalendarDays, ArrowRight
+  Maximize2, Sliders, CalendarDays, ArrowRight, Edit3
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
 import { getBook } from '../../utils/db';
@@ -110,7 +110,13 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'o_timer_2x2', type: 'timer_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'other', title: '護眼計時器' },
   { id: 'o_theme_4x1', type: 'theme_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'other', title: '四色主題' },
   { id: 'o_theme_2x2', type: 'theme_4x1', size: 'size-2x2', sizeLabel: '2×2', category: 'other', title: '四色主題' },
-  { id: 'o_zen_4x2', type: 'zen_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '佛典精進名句' }
+  { id: 'o_zen_4x2', type: 'zen_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '佛典精進名句' },
+
+  { id: 'o_memo_4x2', type: 'custom_memo', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '自訂便籤卡' },
+  { id: 'o_memo_4x3', type: 'custom_memo', size: 'size-4x3', sizeLabel: '4×3', category: 'other', title: '自訂便籤卡' },
+  { id: 'o_memo_4x4', type: 'custom_memo', size: 'size-4x4', sizeLabel: '4×4', category: 'other', title: '自訂便籤卡' },
+  { id: 'o_memo_2x2', type: 'custom_memo', size: 'size-2x2', sizeLabel: '2×2', category: 'other', title: '自訂便籤卡' },
+  { id: 'o_memo_4x1', type: 'custom_memo', size: 'size-4x1', sizeLabel: '4×1', category: 'other', title: '自訂便籤卡' }
 ];
 
 // 💡 預覽展示專用之 CBETA 官方經典示範資料 (確保在無歷史進度時亦能真實預覽卡片排版與長條Bar)
@@ -199,6 +205,52 @@ export function HomeDashboard({
   // 護眼計時器即時狀態訂閱
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
 
+  // 💡 自訂便籤卡片編輯彈窗狀態
+  const [editingMemoWidget, setEditingMemoWidget] = useState<HomeWidgetConfig | null>(null);
+  const [draftMemoText, setDraftMemoText] = useState('');
+  const [draftMemoAuthor, setDraftMemoAuthor] = useState('');
+  const [draftMemoFont, setDraftMemoFont] = useState<'serif' | 'sans' | 'kai'>('serif');
+  const [draftMemoFontSize, setDraftMemoFontSize] = useState<number>(22);
+  const [draftMemoLineHeight, setDraftMemoLineHeight] = useState<number>(1.8);
+  const [draftMemoPadding, setDraftMemoPadding] = useState<number>(10);
+
+  const handleOpenMemoEditor = (widget: HomeWidgetConfig, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (isLayoutEditMode) return;
+    setEditingMemoWidget(widget);
+    setDraftMemoText(widget.memoText ?? '「由聞知諸法，由聞遮眾惡，由聞斷無義，由聞得涅槃。」');
+    setDraftMemoAuthor(widget.memoAuthor !== undefined ? widget.memoAuthor : '印順導師 《成佛之道》 Y0040');
+    setDraftMemoFont(widget.memoFont ?? 'serif');
+    setDraftMemoFontSize(widget.memoFontSize ?? 22);
+    setDraftMemoLineHeight(widget.memoLineHeight ?? 1.8);
+    setDraftMemoPadding(widget.memoPadding ?? 10);
+  };
+
+  const handleSaveMemoEditor = () => {
+    if (!editingMemoWidget) return;
+    const updated = widgets.map(w => {
+      if (w.id === editingMemoWidget.id) {
+        return {
+          ...w,
+          memoText: draftMemoText,
+          memoAuthor: draftMemoAuthor,
+          memoFont: draftMemoFont,
+          memoFontSize: draftMemoFontSize,
+          memoLineHeight: draftMemoLineHeight,
+          memoPadding: draftMemoPadding
+        };
+      }
+      return w;
+    });
+    setWidgets(updated);
+    onSaveSettings({
+      ...settings,
+      customHomeLayoutEnabled: true,
+      homeWidgets: updated
+    });
+    setEditingMemoWidget(null);
+  };
+
   useEffect(() => {
     return readingTimer.subscribe(setTimerState);
   }, []);
@@ -268,7 +320,15 @@ export function HomeDashboard({
       id: `w_${type}_${Date.now()}`,
       type,
       size: chosenSize,
-      iconIndex: iconIndex || 1
+      iconIndex: iconIndex || 1,
+      ...(type === 'custom_memo' ? {
+        memoText: '「由聞知諸法，由聞遮眾惡，由聞斷無義，由聞得涅槃。」',
+        memoAuthor: '印順導師 《成佛之道》 Y0040',
+        memoFont: 'serif',
+        memoFontSize: 22,
+        memoLineHeight: 1.8,
+        memoPadding: 10
+      } : {})
     };
     setWidgets(prev => [newWidget, ...prev]);
     setIsGalleryOpen(false);
@@ -547,6 +607,104 @@ export function HomeDashboard({
       cancelled = true;
     };
   }, [resumeBooks, selectedExcerptIndex, excerptCache]);
+
+  // 💡 自訂便籤卡片渲染函數 (首頁、Gallery、編輯彈窗即時預覽通用)
+  const renderCustomMemoCard = (targetWidget: HomeWidgetConfig, isPreview: boolean = false) => {
+    const text = targetWidget.memoText ?? '「由聞知諸法，由聞遮眾惡，由聞斷無義，由聞得涅槃。」';
+    const author = targetWidget.memoAuthor !== undefined ? targetWidget.memoAuthor : '印順導師 《成佛之道》 Y0040';
+    const font = targetWidget.memoFont ?? 'serif';
+    const baseFontSize = targetWidget.memoFontSize ?? 22;
+    const lineHeight = targetWidget.memoLineHeight ?? 1.8;
+    const paddingPercent = targetWidget.memoPadding ?? 10;
+    const curSize = targetWidget.size || 'size-4x2';
+
+    const fontFamily = font === 'sans'
+      ? 'var(--font-sans, "Noto Sans TC", sans-serif)'
+      : font === 'kai'
+      ? '"Kaiti TC", "BiauKai", "DFKai-SB", "KaiTi", serif'
+      : 'var(--font-serif, "Noto Serif TC", serif)';
+
+    let effectiveFontSize = baseFontSize;
+    if (curSize === 'size-2x2') {
+      effectiveFontSize = Math.min(baseFontSize, 15);
+    } else if (curSize === 'size-4x1') {
+      effectiveFontSize = Math.min(baseFontSize, 14);
+    }
+
+    const effectivePadding = curSize === 'size-4x1'
+      ? '0.35rem 0.8rem'
+      : curSize === 'size-2x2'
+      ? '0.6rem 0.6rem'
+      : `${paddingPercent * 1.5}px ${paddingPercent * 2}px`;
+
+    return (
+      <div 
+        className={`custom-memo-card memo-${curSize.replace('size-', '')} ${isPreview ? 'is-preview' : ''}`}
+        style={{ 
+          fontFamily,
+          padding: effectivePadding,
+          cursor: (!isLayoutEditMode && !isPreview) ? 'pointer' : 'default'
+        }}
+        onClick={(!isLayoutEditMode && !isPreview) ? (e) => handleOpenMemoEditor(targetWidget, e) : undefined}
+        title={(!isLayoutEditMode && !isPreview) ? '點擊編輯便籤文字與排版' : undefined}
+      >
+        {!isLayoutEditMode && !isPreview && (
+          <div className="memo-edit-indicator" title="點擊編輯">
+            <Edit3 size={12} />
+          </div>
+        )}
+
+        {curSize === 'size-4x1' ? (
+          <div className="memo-4x1-layout">
+            <div className="memo-lotus-mini">
+              <svg width="18" height="15" viewBox="0 0 24 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.75, color: 'var(--theme-accent, #8c4b27)' }}>
+                <path d="M12 2C12 2 8 8 8 13C8 16 10 18 12 18C14 18 16 16 16 13C16 8 12 2 12 2Z" />
+                <path d="M12 18C7.5 18 4 14.5 4 11C4 8.5 6 6 8 5" />
+                <path d="M12 18C16.5 18 20 14.5 20 11C20 8.5 18 6 16 5" />
+                <path d="M2 18C5 18 8 17.5 12 17.5C16 17.5 19 18 22 18" />
+              </svg>
+            </div>
+            <div 
+              className="memo-text-single"
+              style={{ fontSize: `${effectiveFontSize}px`, lineHeight: 1.4 }}
+            >
+              {text}
+            </div>
+            {author && (
+              <div className="memo-author-single">
+                {author}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="memo-vertical-layout">
+            <div className="memo-lotus-icon">
+              <svg width={curSize === 'size-2x2' ? 18 : 22} height={curSize === 'size-2x2' ? 15 : 18} viewBox="0 0 24 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.75, color: 'var(--theme-accent, #8c4b27)' }}>
+                <path d="M12 2C12 2 8 8 8 13C8 16 10 18 12 18C14 18 16 16 16 13C16 8 12 2 12 2Z" />
+                <path d="M12 18C7.5 18 4 14.5 4 11C4 8.5 6 6 8 5" />
+                <path d="M12 18C16.5 18 20 14.5 20 11C20 8.5 18 6 16 5" />
+                <path d="M2 18C5 18 8 17.5 12 17.5C16 17.5 19 18 22 18" />
+              </svg>
+            </div>
+            <div 
+              className="memo-body-text"
+              style={{ 
+                fontSize: `${effectiveFontSize}px`, 
+                lineHeight: lineHeight 
+              }}
+            >
+              {text}
+            </div>
+            {author && (
+              <div className="memo-author-text">
+                {author}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   // 渲染各類型小工具組件
   const renderWidgetContent = (widget: HomeWidgetConfig) => {
@@ -2020,6 +2178,11 @@ export function HomeDashboard({
         );
       }
 
+      // 13. 自訂便籤小卡 (支援 2x2 / 4x2 / 4x3 / 4x4 / 4x1)
+      case 'custom_memo': {
+        return renderCustomMemoCard(widget);
+      }
+
       default:
         return <div>小工具組件</div>;
     }
@@ -2315,6 +2478,216 @@ export function HomeDashboard({
                 >
                   <Plus size={19} strokeWidth={2.6} />
                   <span>加入小工具</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================================================
+          自訂便籤編輯彈窗 (含圖 2 排版控制台)
+          ========================================================================== */}
+      {editingMemoWidget && (
+        <div className="ios-gallery-overlay animate-fade-in" onClick={() => setEditingMemoWidget(null)}>
+          <div className="custom-memo-sheet animate-slide-up" onClick={(e) => e.stopPropagation()}>
+            {/* Grabber */}
+            <div className="ios-gallery-grabber" />
+
+            {/* Header */}
+            <div className="custom-memo-header">
+              <div className="custom-memo-title">編輯自訂便籤</div>
+              <button 
+                type="button" 
+                className="ios-gallery-close-btn" 
+                onClick={() => setEditingMemoWidget(null)}
+                title="關閉"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="custom-memo-body custom-scrollbar">
+              {/* 1. 文字輸入區 */}
+              <div className="memo-field-group">
+                <label className="memo-field-label">便籤內容</label>
+                <textarea
+                  className="memo-field-textarea"
+                  rows={3}
+                  placeholder="請輸入經文佳句、自選法義或生活座右銘..."
+                  value={draftMemoText}
+                  onChange={(e) => setDraftMemoText(e.target.value)}
+                />
+              </div>
+
+              <div className="memo-field-group">
+                <label className="memo-field-label">出處／作者（選填）</label>
+                <input
+                  type="text"
+                  className="memo-field-input"
+                  placeholder="例：印順導師 《成佛之道》 Y0040"
+                  value={draftMemoAuthor}
+                  onChange={(e) => setDraftMemoAuthor(e.target.value)}
+                />
+              </div>
+
+              {/* 2. 🌟 圖 2 控制台 (4 組膠囊排版按鈕) */}
+              <div className="memo-console-card">
+                {/* 第一行：字體膠囊 + 字級膠囊 */}
+                <div className="memo-capsule-row">
+                  {/* 字體膠囊 */}
+                  <div className="memo-capsule-group">
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoFont === 'serif' ? 'active' : ''}`}
+                      onClick={() => setDraftMemoFont('serif')}
+                    >
+                      宋/明
+                    </button>
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoFont === 'sans' ? 'active' : ''}`}
+                      onClick={() => setDraftMemoFont('sans')}
+                    >
+                      黑體
+                    </button>
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoFont === 'kai' ? 'active' : ''}`}
+                      onClick={() => setDraftMemoFont('kai')}
+                    >
+                      楷體
+                    </button>
+                  </div>
+
+                  {/* 字級膠囊 */}
+                  <div className="memo-capsule-group">
+                    <button
+                      type="button"
+                      className="memo-capsule-btn memo-step-btn"
+                      onClick={() => setDraftMemoFontSize(prev => Math.max(14, prev - 2))}
+                      title="縮小字級"
+                    >
+                      A-
+                    </button>
+                    <span className="memo-capsule-value">
+                      {draftMemoFontSize}px
+                    </span>
+                    <button
+                      type="button"
+                      className="memo-capsule-btn memo-step-btn"
+                      onClick={() => setDraftMemoFontSize(prev => Math.min(36, prev + 2))}
+                      title="放大字級"
+                    >
+                      A+
+                    </button>
+                  </div>
+                </div>
+
+                {/* 第二行：行高膠囊 + 邊距膠囊 */}
+                <div className="memo-capsule-row">
+                  {/* 行高膠囊 */}
+                  <div className="memo-capsule-group">
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoLineHeight === 1.6 ? 'active' : ''}`}
+                      onClick={() => setDraftMemoLineHeight(1.6)}
+                    >
+                      1.6
+                    </button>
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoLineHeight === 1.8 ? 'active' : ''}`}
+                      onClick={() => setDraftMemoLineHeight(1.8)}
+                    >
+                      1.8
+                    </button>
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoLineHeight === 2.0 ? 'active' : ''}`}
+                      onClick={() => setDraftMemoLineHeight(2.0)}
+                    >
+                      2
+                    </button>
+                  </div>
+
+                  {/* 邊距膠囊 */}
+                  <div className="memo-capsule-group">
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoPadding === 5 ? 'active' : ''}`}
+                      onClick={() => setDraftMemoPadding(5)}
+                    >
+                      5%
+                    </button>
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoPadding === 10 ? 'active' : ''}`}
+                      onClick={() => setDraftMemoPadding(10)}
+                    >
+                      10%
+                    </button>
+                    <button
+                      type="button"
+                      className={`memo-capsule-btn ${draftMemoPadding === 15 ? 'active' : ''}`}
+                      onClick={() => setDraftMemoPadding(15)}
+                    >
+                      15%
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. 即時外觀預覽 */}
+              <div className="memo-preview-wrapper">
+                <div className="memo-preview-label">即時預覽</div>
+                <div className={`widget-card preview-card-mode ${editingMemoWidget.size}`}>
+                  {renderCustomMemoCard({
+                    id: 'temp-preview',
+                    type: 'custom_memo',
+                    size: editingMemoWidget.size,
+                    memoText: draftMemoText,
+                    memoAuthor: draftMemoAuthor,
+                    memoFont: draftMemoFont,
+                    memoFontSize: draftMemoFontSize,
+                    memoLineHeight: draftMemoLineHeight,
+                    memoPadding: draftMemoPadding
+                  }, true)}
+                </div>
+              </div>
+            </div>
+
+            {/* 4. 底部動作列 */}
+            <div className="custom-memo-footer">
+              <button
+                type="button"
+                className="memo-btn-reset"
+                onClick={() => {
+                  setDraftMemoText('「由聞知諸法，由聞遮眾惡，由聞斷無義，由聞得涅槃。」');
+                  setDraftMemoAuthor('印順導師 《成佛之道》 Y0040');
+                  setDraftMemoFont('serif');
+                  setDraftMemoFontSize(22);
+                  setDraftMemoLineHeight(1.8);
+                  setDraftMemoPadding(10);
+                }}
+              >
+                重設
+              </button>
+
+              <div className="memo-footer-right">
+                <button
+                  type="button"
+                  className="memo-btn-cancel"
+                  onClick={() => setEditingMemoWidget(null)}
+                >
+                  取消
+                </button>
+                <button
+                  type="button"
+                  className="memo-btn-save"
+                  onClick={handleSaveMemoEditor}
+                >
+                  儲存
                 </button>
               </div>
             </div>
