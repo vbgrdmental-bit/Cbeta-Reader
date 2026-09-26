@@ -41,7 +41,7 @@ const SIMULATED_120_BOOKS: BookMetadata[] = [
   { workId: 'T0412', title: '地藏菩薩本願經', canon: 'T', vol: 'T13', creators: '唐 實叉難陀譯', juansCount: 2, category: '本緣部類', cjkChars: 17200 },
   { workId: 'T0411', title: '大乘大集地藏十輪經', canon: 'T', vol: 'T13', creators: '唐 玄奘譯', juansCount: 10, category: '大集部類', cjkChars: 85300 },
   { workId: 'T0839', title: '占察善惡業報經', canon: 'T', vol: 'T17', creators: '隋 菩提燈譯', juansCount: 2, category: '經集部類', cjkChars: 18900 },
-  { workId: 'X1487', title: '慈悲地藏菩薩懺法', canon: 'X', vol: 'X74', creators: '清 知源等述', juansCount: 3, category: '事彙部類', cjkChars: 24100 },
+  { workId: 'X1487', title: '慈悲地藏菩薩懺法', canon: 'X', vol: 'X74', creators: '清', juansCount: 3, category: '大集部類', cjkChars: 14282 },
 
   // 般若部 (大正藏 第 5~8 冊)
   { workId: 'T0251', title: '般若波羅蜜多心經', canon: 'T', vol: 'T08', creators: '唐 玄奘譯', juansCount: 1, category: '般若部類', cjkChars: 260 },
@@ -304,8 +304,14 @@ export const HISTORICAL_CHRONOLOGY = [
 // 輔助函式：從 creators 智慧提取朝代與作譯者名稱 (精準解析「彌勒菩薩說 · 唐 玄奘譯」等造論與譯者多層結構)
 export function parseCreators(creatorsStr?: string) {
   const raw = (creatorsStr || '').trim();
-  if (!raw) {
-    return { dynastyName: '其他', dynastyOrder: 99, authorName: '佚名' };
+  if (!raw || raw === 'CBETA' || raw === 'CBETA 大藏經' || raw === '未知' || raw === 'unknown') {
+    return { 
+      dynastyName: '其他', 
+      dynastyOrder: 99, 
+      dynastyDisplay: '', 
+      authorName: '佚名', 
+      authorDisplay: '' 
+    };
   }
 
   // 1. 如果有造論者（包含 · 或 /），優先提取實際翻譯者段落
@@ -323,6 +329,7 @@ export function parseCreators(creatorsStr?: string) {
   let matchedAlias = '';
 
   for (const d of HISTORICAL_CHRONOLOGY) {
+    if (d.name === '其他') continue;
     const sortedAliases = [...d.aliases].sort((a, b) => b.length - a.length);
     for (const alias of sortedAliases) {
       if (translationPart.includes(alias)) {
@@ -334,21 +341,31 @@ export function parseCreators(creatorsStr?: string) {
     if (matchedAlias) break;
   }
 
-  // 3. 提取純粹作譯者名稱
-  let authorName = translationPart;
+  // 3. 提取作譯者文字與純粹作譯者名稱
+  // 3a. 作譯者顯示字串（保留動作如「玄奘譯」、「慧菀述」，但去除朝代）
+  let authorDisplay = translationPart;
   if (matchedAlias) {
-    authorName = authorName.replace(matchedAlias, '').trim();
+    const aliasRegex = new RegExp(`^${matchedAlias}\\s*|\\s*${matchedAlias}\\s*`, 'g');
+    authorDisplay = authorDisplay.replace(aliasRegex, '').trim();
   }
-  // 移除常見字尾 (如「譯」、「述」、「造」、「說」、「撰」、「等譯」、「共譯」等)
-  authorName = authorName.replace(/(等?[譯述造說撰集錄編纂著]+|等)$/g, '').trim();
+
+  // 3b. 純粹作譯者名稱（去除「譯/述/造/撰」等，供目錄分組使用）
+  let authorName = authorDisplay.replace(/(等?[譯述造說撰集錄編纂著]+|等)$/g, '').trim();
+
+  // 若扣除朝代後已無作者（例如 creators 僅標記朝代如「清」、「唐」）
   if (!authorName) {
-    authorName = translationPart || '佚名';
+    authorName = '佚名';
+    authorDisplay = '';
   }
+
+  const dynastyDisplay = matchedDynasty.name !== '其他' ? matchedDynasty.name : '';
 
   return { 
     dynastyName: matchedDynasty.name, 
     dynastyOrder: matchedDynasty.order, 
-    authorName 
+    dynastyDisplay,
+    authorName, 
+    authorDisplay 
   };
 }
 
@@ -520,14 +537,14 @@ export function BookshelfInteractivePlayground({
         let matchedGroup: any = null;
         let matchedPerson: any = null;
 
+        // 1. 第一優先：完全精確匹配 (避免「竺法護」被子字串模糊匹配至「法護」)
         for (const strokeCat of creatorsData) {
           for (const g of strokeCat.groups) {
             for (const c of g.creators) {
               if (
                 c.name === cleanAuthor ||
-                c.displayName.startsWith(cleanAuthor) ||
-                c.name.includes(cleanAuthor) ||
-                cleanAuthor.includes(c.name)
+                c.displayName === cleanAuthor ||
+                c.displayName.startsWith(`${cleanAuthor} (`)
               ) {
                 matchedStrokeCat = strokeCat;
                 matchedGroup = g;
@@ -538,6 +555,42 @@ export function BookshelfInteractivePlayground({
             if (matchedPerson) break;
           }
           if (matchedPerson) break;
+        }
+
+        // 2. 次要優先：首字與前綴開頭完全相符
+        if (!matchedPerson) {
+          for (const strokeCat of creatorsData) {
+            for (const g of strokeCat.groups) {
+              for (const c of g.creators) {
+                if (c.name.startsWith(cleanAuthor) || c.displayName.startsWith(cleanAuthor)) {
+                  matchedStrokeCat = strokeCat;
+                  matchedGroup = g;
+                  matchedPerson = c;
+                  break;
+                }
+              }
+              if (matchedPerson) break;
+            }
+            if (matchedPerson) break;
+          }
+        }
+
+        // 3. 第三優先：若 cleanAuthor 含有敬稱或綴字（例如「玄奘大師」-> c.name === '玄奘'）
+        if (!matchedPerson) {
+          for (const strokeCat of creatorsData) {
+            for (const g of strokeCat.groups) {
+              for (const c of g.creators) {
+                if (cleanAuthor.startsWith(c.name) && c.name.length >= 2) {
+                  matchedStrokeCat = strokeCat;
+                  matchedGroup = g;
+                  matchedPerson = c;
+                  break;
+                }
+              }
+              if (matchedPerson) break;
+            }
+            if (matchedPerson) break;
+          }
         }
 
         if (matchedPerson && matchedGroup && matchedStrokeCat) {

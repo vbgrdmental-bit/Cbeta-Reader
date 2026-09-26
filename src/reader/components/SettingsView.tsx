@@ -1345,16 +1345,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.6.1) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.6.4) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.6.3</span>
+                        <span>⭐ App: v4.6.4</span>
                         <span className="changelog-date">(2026-09-27)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 書櫃「依冊別」點擊藏經名稱（如大正藏），秒速直達對應冊別目錄。</li>
-                        <li>• 書櫃「依作譯者」點擊大師法號（如支婁迦讖），自動直達 4 層專屬經文庫。</li>
-                        <li>• 書櫃「依朝代」點擊歷史朝代，無縫直達著述年代經典目錄。</li>
+                        <li>• 閱讀頁經典與版權資訊新增「時代：」欄位，忠實呈現經文著述朝代。</li>
+                        <li>• 作譯者智慧分離朝代與作者，若僅有朝代無作譯者（如 X1487）作譯者顯示為空。</li>
+                        <li>• 書櫃與筆記分類修正純朝代經典，杜絕將朝代名稱誤歸為作者群組。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1377,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.3</span>
+                            <span className="changelog-date">(2026-09-27)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 書櫃「依冊別」點擊藏經名稱（如大正藏），秒速直達對應冊別目錄。</li>
+                            <li>• 書櫃「依作譯者」優先完全精確匹配（如竺法護與法護精確區隔），直達 4 層經文庫。</li>
+                            <li>• 書櫃「依朝代」點擊歷史朝代，無縫直達著述年代經典目錄。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.6.2</span>

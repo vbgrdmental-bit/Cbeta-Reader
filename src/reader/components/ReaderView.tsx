@@ -11,6 +11,7 @@ import { IndexBuilder, sanitizeCreators, FEATURED_BOOKS } from '../../builder/In
 import { PackageBuilder } from '../../builder/PackageBuilder';
 import { useTTS } from '../hooks/useTTS';
 import { SettingsView } from './SettingsView';
+import { parseCreators } from './BookshelfInteractivePlayground';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
 import { loadEduKaiFontOnDemand } from '../../utils/fontLoader';
 import type { ReadingTimerState } from '../../utils/readingTimer';
@@ -2090,9 +2091,14 @@ export function ReaderView({
                 </div>
               )}
               <h1 className="reader-book-title">{book.metadata.title}</h1>
-              {sanitizeCreators(book.metadata.creators) && (
-                <div className="reader-book-author">{sanitizeCreators(book.metadata.creators)}</div>
-              )}
+              {(() => {
+                const parsed = parseCreators(book.metadata.creators);
+                // 若僅有朝代而無作譯者（如 X1487 僅有朝代「清」），卷首經題下方不懸掛單一朝代字，避免誤認為作譯者
+                if (!parsed.authorDisplay) return null;
+                return (
+                  <div className="reader-book-author">{sanitizeCreators(book.metadata.creators)}</div>
+                );
+              })()}
             </>
           )}
 
@@ -2593,15 +2599,20 @@ export function ReaderView({
               <span className="toggle-symbol">{isCopyrightExpanded ? '−' : '+'}</span>
             </div>
             
-            {isCopyrightExpanded && (
-              <div className="drawer-footer-content animate-fade-in">
-                <div className="info-item"><strong>經名：</strong>{book.metadata.title}</div>
-                <div className="info-item"><strong>作譯者：</strong>{sanitizeCreators(book.metadata.creators)}</div>
-                <div className="info-item"><strong>經號：</strong>CBETA No. {book.metadata.workId}</div>
-                <div className="info-item"><strong>部類：</strong>{book.metadata.category}</div>
-                {book.metadata.vol && (
-                  <div className="info-item"><strong>冊別：</strong>{book.metadata.vol}</div>
-                )}
+            {isCopyrightExpanded && (() => {
+              const { dynastyDisplay, authorDisplay } = parseCreators(book.metadata.creators);
+              return (
+                <div className="drawer-footer-content animate-fade-in">
+                  <div className="info-item"><strong>經名：</strong>{book.metadata.title}</div>
+                  {dynastyDisplay && (
+                    <div className="info-item"><strong>時代：</strong>{dynastyDisplay}</div>
+                  )}
+                  <div className="info-item"><strong>作譯者：</strong>{authorDisplay}</div>
+                  <div className="info-item"><strong>經號：</strong>CBETA No. {book.metadata.workId}</div>
+                  <div className="info-item"><strong>部類：</strong>{book.metadata.category}</div>
+                  {book.metadata.vol && (
+                    <div className="info-item"><strong>冊別：</strong>{book.metadata.vol}</div>
+                  )}
                 {(() => {
                   const feat = FEATURED_BOOKS.find(b => b.workId === book.metadata.workId);
                   const count = (feat?.cjkChars && feat.cjkChars > 0) 
@@ -2632,7 +2643,8 @@ export function ReaderView({
                   經典來源：財團法人佛教電子佛典基金會(CBETA)
                 </div>
               </div>
-            )}
+            );
+          })()}
           </div>
         </div>
       )}

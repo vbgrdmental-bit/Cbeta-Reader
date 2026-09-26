@@ -1163,14 +1163,14 @@ export function Library({
         let matchedGroup: any = null;
         let matchedPerson: any = null;
 
+        // 1. 第一優先：完全精確匹配 (避免「竺法護」被子字串模糊匹配至「法護」)
         for (const strokeCat of creatorsData) {
           for (const g of strokeCat.groups) {
             for (const c of g.creators) {
               if (
                 c.name === cleanAuthor ||
-                c.displayName.startsWith(cleanAuthor) ||
-                c.name.includes(cleanAuthor) ||
-                cleanAuthor.includes(c.name)
+                c.displayName === cleanAuthor ||
+                c.displayName.startsWith(`${cleanAuthor} (`)
               ) {
                 matchedStrokeCat = strokeCat;
                 matchedGroup = g;
@@ -1181,6 +1181,42 @@ export function Library({
             if (matchedPerson) break;
           }
           if (matchedPerson) break;
+        }
+
+        // 2. 次要優先：首字與前綴開頭完全相符
+        if (!matchedPerson) {
+          for (const strokeCat of creatorsData) {
+            for (const g of strokeCat.groups) {
+              for (const c of g.creators) {
+                if (c.name.startsWith(cleanAuthor) || c.displayName.startsWith(cleanAuthor)) {
+                  matchedStrokeCat = strokeCat;
+                  matchedGroup = g;
+                  matchedPerson = c;
+                  break;
+                }
+              }
+              if (matchedPerson) break;
+            }
+            if (matchedPerson) break;
+          }
+        }
+
+        // 3. 第三優先：若 cleanAuthor 含有敬稱或綴字（例如「玄奘大師」-> c.name === '玄奘'）
+        if (!matchedPerson) {
+          for (const strokeCat of creatorsData) {
+            for (const g of strokeCat.groups) {
+              for (const c of g.creators) {
+                if (cleanAuthor.startsWith(c.name) && c.name.length >= 2) {
+                  matchedStrokeCat = strokeCat;
+                  matchedGroup = g;
+                  matchedPerson = c;
+                  break;
+                }
+              }
+              if (matchedPerson) break;
+            }
+            if (matchedPerson) break;
+          }
         }
 
         if (matchedPerson && matchedGroup && matchedStrokeCat) {
