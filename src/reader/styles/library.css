@@ -8351,6 +8351,13 @@ body.theme-ebony .keyword-cross-badge {
 /* ==========================================================================
    自訂便籤小卡與圖 2 排版控制台 (Custom Memo Widget & Figure 2 Console)
    ========================================================================== */
+/* 首頁與預覽卡片若為自訂便籤，取消外部死板的硬性 padding，由讀者設定的邊距 (5%/10%/15%) 完全主導 */
+.widget-card.custom-memo-widget {
+  padding: 0 !important;
+  justify-content: stretch !important;
+  align-items: stretch !important;
+}
+
 .custom-memo-card {
   position: relative;
   display: flex;
@@ -8359,9 +8366,10 @@ body.theme-ebony .keyword-cross-badge {
   justify-content: center;
   width: 100%;
   height: 100%;
+  min-height: 100%;
   box-sizing: border-box;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, padding 0.2s ease;
   overflow: hidden;
 }
 
@@ -8386,22 +8394,27 @@ body.theme-ebony .keyword-cross-badge {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .memo-body-text {
-  color: var(--text-primary);
+  color: var(--reader-text, #2c2016);
   text-align: center;
   letter-spacing: 0.04em;
   word-break: break-word;
+  white-space: pre-wrap; /* 🌟 支援換行與詩偈排版 */
   width: 100%;
-  max-width: 95%;
+  max-width: 96%;
+  box-sizing: border-box;
+  transition: font-size 0.18s ease, line-height 0.18s ease;
 }
 
 .memo-author-text {
   font-size: 0.76rem;
-  color: var(--text-muted);
+  color: var(--reader-text-muted, #7a6652);
   margin-top: 0.45rem;
   text-align: center;
+  flex-shrink: 0;
 }
 
 /* 4x1 橫條規格 */
@@ -8425,7 +8438,7 @@ body.theme-ebony .keyword-cross-badge {
 }
 
 .memo-text-single {
-  color: var(--text-primary);
+  color: var(--reader-text, #2c2016);
   letter-spacing: 0.03em;
   white-space: nowrap;
   overflow: hidden;
@@ -8436,7 +8449,7 @@ body.theme-ebony .keyword-cross-badge {
 .memo-author-single {
   flex-shrink: 0;
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: var(--reader-text-muted, #7a6652);
 }
 
 /* 右上角極細微編輯筆記指示 */
@@ -8640,7 +8653,7 @@ body.theme-ebony .memo-capsule-btn.active {
   border: 1px dashed var(--reader-border);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .memo-preview-label {
@@ -8649,9 +8662,30 @@ body.theme-ebony .memo-capsule-btn.active {
   color: var(--text-muted);
 }
 
-.memo-preview-wrapper .widget-card.preview-card-mode {
+.memo-preview-card-box {
   width: 100%;
-  margin: 0 auto;
+  min-height: 155px;
+  background: var(--bg-card, #ffffff);
+  border: 1.5px solid var(--border-color, rgba(140, 75, 39, 0.14));
+  border-radius: 20px;
+  box-shadow: 0 4px 14px rgba(90, 50, 20, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.memo-preview-card-box .custom-memo-card {
+  height: auto;
+  min-height: 155px;
+}
+
+body.theme-ebony .memo-preview-card-box {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 /* 底部動作列 */

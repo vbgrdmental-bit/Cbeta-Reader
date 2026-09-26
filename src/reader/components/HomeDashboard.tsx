@@ -624,18 +624,19 @@ export function HomeDashboard({
       ? '"Kaiti TC", "BiauKai", "DFKai-SB", "KaiTi", serif'
       : 'var(--font-serif, "Noto Serif TC", serif)';
 
+    // 字級：在預覽彈窗或 4x2/4x3/4x4 下真實 1:1 反映調整數值
     let effectiveFontSize = baseFontSize;
-    if (curSize === 'size-2x2') {
-      effectiveFontSize = Math.min(baseFontSize, 15);
-    } else if (curSize === 'size-4x1') {
-      effectiveFontSize = Math.min(baseFontSize, 14);
+    if (!isPreview) {
+      if (curSize === 'size-2x2') {
+        effectiveFontSize = Math.min(baseFontSize, 18);
+      } else if (curSize === 'size-4x1') {
+        effectiveFontSize = Math.min(baseFontSize, 15);
+      }
     }
 
-    const effectivePadding = curSize === 'size-4x1'
-      ? '0.35rem 0.8rem'
-      : curSize === 'size-2x2'
-      ? '0.6rem 0.6rem'
-      : `${paddingPercent * 1.5}px ${paddingPercent * 2}px`;
+    // 邊距與左右寬度：真實對應 5% / 10% / 15% 左右呼吸空間
+    const vPadding = curSize === 'size-4x1' ? '6px' : curSize === 'size-2x2' ? '10px' : '14px';
+    const effectivePadding = `${vPadding} ${paddingPercent}%`;
 
     return (
       <div 
@@ -2253,7 +2254,7 @@ export function HomeDashboard({
           return (
             <div
               key={widget.id}
-              className={`widget-card ${widget.size} ${isBookWidgetOuterHeader(widget.type, widget.size) ? 'has-outer-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${widget.type === 'four_nav_4x1' && widget.size === 'size-4x2' ? 'four-nav-card-4x2' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
+              className={`widget-card ${widget.size} ${widget.type === 'custom_memo' ? 'custom-memo-widget' : ''} ${isBookWidgetOuterHeader(widget.type, widget.size) ? 'has-outer-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${widget.type === 'four_nav_4x1' && widget.size === 'size-4x2' ? 'four-nav-card-4x2' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
               draggable={isLayoutEditMode}
               onDragStart={(e) => handleDragStart(e, widget.id)}
               onDragOver={(e) => handleDragOver(e, widget.id)}
@@ -2641,7 +2642,7 @@ export function HomeDashboard({
               {/* 3. 即時外觀預覽 */}
               <div className="memo-preview-wrapper">
                 <div className="memo-preview-label">即時預覽</div>
-                <div className={`widget-card preview-card-mode ${editingMemoWidget.size}`}>
+                <div className="memo-preview-card-box">
                   {renderCustomMemoCard({
                     id: 'temp-preview',
                     type: 'custom_memo',
