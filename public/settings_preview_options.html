@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBETA Reader - 「其他設定」版面優化方案 互動式預覽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #1a1614;
+      --bg-app: #eae4dc;
+      --bg-card: #f8f5ee;
+      --bg-unified-card: rgba(0, 0, 0, 0.028);
+      --bg-unified-card-inner: #ffffff;
+      --text-primary: #2d241e;
+      --text-muted: #7d6e63;
+      --text-faint: #a6988d;
+      --border-color: rgba(60, 42, 26, 0.12);
+      --theme-accent: #8c4b27;
+      --theme-accent-rgb: 140, 75, 39;
+      --switch-active: #8c4b27;
+      --font-serif: "Noto Serif TC", serif;
+      --font-sans: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body[data-theme="parchment"] {
+      --bg-app: #eae4dc;
+      --bg-card: #f8f5ee;
+      --bg-unified-card: rgba(255, 255, 255, 0.42);
+      --text-primary: #2d241e;
+      --text-muted: #7d6e63;
+      --border-color: rgba(60, 42, 26, 0.12);
+      --theme-accent: #8c4b27;
+      --theme-accent-rgb: 140, 75, 39;
+      --switch-active: #8c4b27;
+    }
+
+    body[data-theme="ivory"] {
+      --bg-app: #f7f6f2;
+      --bg-card: #ffffff;
+      --bg-unified-card: rgba(0, 0, 0, 0.03);
+      --text-primary: #22201e;
+      --text-muted: #6e6b66;
+      --border-color: rgba(0, 0, 0, 0.09);
+      --theme-accent: #1ea98c;
+      --theme-accent-rgb: 30, 169, 140;
+      --switch-active: #1ea98c;
+    }
+
+    body[data-theme="green"] {
+      --bg-app: #dfebd9;
+      --bg-card: #eaf3e5;
+      --bg-unified-card: rgba(0, 0, 0, 0.03);
+      --text-primary: #1e2c1c;
+      --text-muted: #536b51;
+      --border-color: rgba(30, 60, 30, 0.12);
+      --theme-accent: #2e7d32;
+      --theme-accent-rgb: 46, 125, 50;
+      --switch-active: #2e7d32;
+    }
+
+    body[data-theme="ebony"] {
+      --bg-app: #12161a;
+      --bg-card: #1a1e24;
+      --bg-unified-card: rgba(255, 255, 255, 0.04);
+      --text-primary: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
+      --border-color: rgba(255, 255, 255, 0.09);
+      --theme-accent: #fbbf24;
+      --theme-accent-rgb: 251, 191, 36;
+      --switch-active: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: #e5e5e5;
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+
+    /* 頂部控制列 */
+    .preview-header {
+      width: 100%;
+      max-width: 520px;
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .preview-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .preview-badge {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(30, 169, 140, 0.2);
+      color: #2dd4bf;
+      border: 1px solid rgba(45, 212, 191, 0.3);
+      font-weight: 600;
+    }
+
+    /* 主題切換按鈕組 */
+    .theme-selector-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 6px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .theme-selector-label {
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-right: 4px;
+    }
+
+    .theme-btn {
+      flex: 1;
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: transparent;
+      color: #ccc;
+      transition: all 0.15s ease;
+    }
+
+    .theme-btn.active {
+      background: #ffffff;
+      color: #111;
+      border-color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    /* 方案切換膠囊列 */
+    .option-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .option-tab {
+      padding: 8px 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+    }
+
+    .option-tab small {
+      font-size: 0.65rem;
+      opacity: 0.7;
+      font-weight: normal;
+    }
+
+    .option-tab.active {
+      background: var(--theme-accent, #1ea98c);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .option-tab.active small {
+      opacity: 0.95;
+    }
+
+    /* 手機模擬外框 */
+    .mobile-mockup {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--bg-app);
+      border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      transition: background-color 0.25s ease;
+    }
+
+    /* 面板 Header */
+    .modal-header {
+      padding: 1rem 1.15rem 0.65rem 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-card);
+    }
+
+    .modal-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .modal-close {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* 內容捲動區 */
+    .modal-body {
+      padding: 1rem 1rem 1.75rem 1rem;
+      max-height: 78vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.45rem;
+      border-left: 3.5px solid var(--theme-accent);
+      padding-left: 7px;
+    }
+
+    .section-title span.sub {
+      font-size: 0.72rem;
+      font-weight: normal;
+      color: var(--text-muted);
+    }
+
+    /* 一體化卡片樣式 (與上方完全同步) */
+    .unified-card {
+      width: 100%;
+      padding: 0.75rem 0.65rem;
+      border-radius: 16px;
+      background: var(--bg-unified-card);
+      border: 1px solid var(--border-color);
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+
+    /* 6 欄網格 */
+    .grid-6col {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      align-items: center;
+    }
+
+    .grid-col-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .mock-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      box-shadow: 0 1.5px 3.5px rgba(0, 0, 0, 0.08);
+    }
+
+    .mock-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .mock-divider {
+      font-size: 1.15rem;
+      font-weight: 300;
+      color: rgba(0, 0, 0, 0.22);
+      text-align: center;
+    }
+
+    body[data-theme="ebony"] .mock-divider {
+      color: rgba(255, 255, 255, 0.28);
+    }
+
+    /* ─── 開關 Slider Switch ─── */
+    .switch-ui {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.16);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    body[data-theme="ebony"] .switch-ui {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .switch-ui.on {
+      background: var(--switch-active);
+    }
+
+    .switch-ui::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .switch-ui.on::after {
+      left: 22px;
+    }
+
+    body[data-theme="ebony"] .switch-ui.on::after {
+      background: #12161a;
+    }
+
+    /* ─── 方案內容顯示區 ─── */
+    .scheme-view {
+      display: none;
+      flex-direction: column;
+      gap: 0.85rem;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    .scheme-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 方案說明 Banner */
+    .scheme-banner {
+      background: rgba(var(--theme-accent-rgb), 0.08);
+      border: 1px dashed var(--theme-accent);
+      border-radius: 12px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.76rem;
+      color: var(--text-primary);
+      line-height: 1.45;
+    }
+
+    .scheme-banner strong {
+      color: var(--theme-accent);
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.8rem;
+    }
+
+    /* ── 方案 0：原版平鋪 ── */
+    .original-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .original-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .original-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .original-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    /* ── 方案 1：雙分組一體化卡片 (微圖示 + 簡潔標題小標) ── */
+    .grouped-card {
+      background: var(--bg-unified-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      padding: 0.25rem 0;
+    }
+
+    .grouped-card-header {
+      padding: 0.55rem 0.85rem 0.35rem 0.85rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--theme-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.9;
+    }
+
+    .grouped-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      position: relative;
+    }
+
+    .grouped-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 3.2rem;
+      right: 0.85rem;
+      height: 1px;
+      background: var(--border-color);
+      opacity: 0.6;
+    }
+
+    .grouped-item:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    body[data-theme="ebony"] .grouped-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      flex: 1;
+      padding-right: 8px;
+    }
+
+    .icon-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(var(--theme-accent-rgb), 0.1);
+      color: var(--theme-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    body[data-theme="ebony"] .icon-badge {
+      background: rgba(251, 191, 36, 0.14);
+      color: #fbbf24;
+    }
+
+    .item-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .item-title {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .item-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+
+    /* ── 方案 2：iOS 控制中心資訊磁貼小卡 (2×2 網格) ── */
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .tile-card {
+      background: var(--bg-unified-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 0.85rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 86px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+
+    .tile-card:hover {
+      transform: translateY(-1.5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .tile-card.on {
+      border-color: var(--theme-accent);
+      background: rgba(var(--theme-accent-rgb), 0.08);
+    }
+
+    body[data-theme="ebony"] .tile-card.on {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: #fbbf24;
+    }
+
+    .tile-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .tile-icon {
+      font-size: 18px;
+      color: var(--theme-accent);
+    }
+
+    .tile-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.18);
+      transition: all 0.2s ease;
+    }
+
+    .tile-card.on .tile-dot {
+      background: var(--theme-accent);
+      box-shadow: 0 0 6px var(--theme-accent);
+    }
+
+    body[data-theme="ebony"] .tile-card.on .tile-dot {
+      background: #fbbf24;
+      box-shadow: 0 0 6px #fbbf24;
+    }
+
+    .tile-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 0.5rem;
+      line-height: 1.25;
+    }
+
+    .tile-status {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .tile-card.on .tile-status {
+      color: var(--theme-accent);
+    }
+
+    body[data-theme="ebony"] .tile-card.on .tile-status {
+      color: #fbbf24;
+    }
+
+    /* ── 方案 3：智能合併極簡 3 項 ── */
+    .merged-card {
+      background: var(--bg-unified-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 0.8rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .merged-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .merged-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: rgba(var(--theme-accent-rgb), 0.12);
+      color: var(--theme-accent);
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    /* 底部操作回饋 */
+    .footer-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #777;
+      margin-top: 1.25rem;
+    }
+  </style>
+</head>
+<body data-theme="parchment">
+
+  <!-- 頂部切換面板 -->
+  <div class="preview-header">
+    <div class="preview-title">
+      <span>閱讀設定「其他設定」方案比較</span>
+      <span class="preview-badge">可互動操作</span>
+    </div>
+
+    <!-- 主題底色切換 -->
+    <div class="theme-selector-bar">
+      <span class="theme-selector-label">底色切換：</span>
+      <button class="theme-btn" onclick="setTheme('ivory')">象牙白</button>
+      <button class="theme-btn active" onclick="setTheme('parchment')">羊皮紙</button>
+      <button class="theme-btn" onclick="setTheme('green')">舒服綠</button>
+      <button class="theme-btn" onclick="setTheme('ebony')">烏木黑</button>
+    </div>
+
+    <!-- 方案選擇 Tab -->
+    <div class="option-tabs">
+      <button class="option-tab" onclick="setOption('opt0')">
+        <span>原版現況</span>
+        <small>5列純條列</small>
+      </button>
+      <button class="option-tab active" onclick="setOption('opt1')">
+        <span>方案 1 ★</span>
+        <small>雙分組微圖卡</small>
+      </button>
+      <button class="option-tab" onclick="setOption('opt2')">
+        <span>方案 2</span>
+        <small>iOS 磁貼小卡</small>
+      </button>
+      <button class="option-tab" onclick="setOption('opt3')">
+        <span>方案 3</span>
+        <small>極簡 3 項合併</small>
+      </button>
+    </div>
+  </div>
+
+  <!-- 手機外框容器 -->
+  <div class="mobile-mockup">
+    <!-- 頂部 Header -->
+    <div class="modal-header">
+      <div class="modal-title">閱讀設定</div>
+      <div class="modal-close">✕</div>
+    </div>
+
+    <!-- 滾動內容區 -->
+    <div class="modal-body">
+
+      <!-- 1. 主題顏色 (已完成的一體化卡片，作為視覺參照基準) -->
+      <div>
+        <div class="section-title">主題顏色</div>
+        <div class="unified-card">
+          <div class="grid-6col">
+            <div class="grid-col-item">
+              <div class="mock-swatch" style="background:#faf7f0;"></div>
+              <div class="mock-label">象牙白</div>
+            </div>
+            <div class="grid-col-item">
+              <div class="mock-swatch" style="background:#f4ecd8; border-color:var(--theme-accent); box-shadow:0 0 0 2px var(--theme-accent);">✓</div>
+              <div class="mock-label">羊皮紙</div>
+            </div>
+            <div class="grid-col-item">
+              <div class="mock-swatch" style="background:#eaf2e5;"></div>
+              <div class="mock-label">舒服綠</div>
+            </div>
+            <div class="grid-col-item">
+              <div class="mock-swatch" style="background:#12161a;"></div>
+              <div class="mock-label">烏木黑</div>
+            </div>
+            <div class="mock-divider">|</div>
+            <div class="grid-col-item">
+              <div class="mock-swatch" style="background:#ebdcd9;">+</div>
+              <div class="mock-label">自訂</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 設定閱讀時間 (護眼模式) (已完成的一體化卡片，作為視覺參照基準) -->
+      <div>
+        <div class="section-title">
+          <span>設定閱讀時間</span>
+          <span class="sub">(護眼模式)</span>
+        </div>
+        <div class="unified-card">
+          <div class="grid-6col">
+            <div class="grid-col-item">
+              <div class="mock-swatch">⏱</div>
+              <div class="mock-label">10分</div>
+            </div>
+            <div class="grid-col-item">
+              <div class="mock-swatch">⏱</div>
+              <div class="mock-label">20分</div>
+            </div>
+            <div class="grid-col-item">
+              <div class="mock-swatch">⏱</div>
+              <div class="mock-label">30分</div>
+            </div>
+            <div class="grid-col-item">
+              <div class="mock-swatch">⏱</div>
+              <div class="mock-label">40分</div>
+            </div>
+            <div class="mock-divider">|</div>
+            <div class="grid-col-item">
+              <div class="mock-swatch" style="background:var(--theme-accent); color:#fff; border-color:var(--theme-accent);">✓</div>
+              <div class="mock-label">120分</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 【焦點區】其他設定 -->
+      <div>
+        <div class="section-title">其他設定</div>
+
+        <!-- 方案 0：原版現況 -->
+        <div id="opt0" class="scheme-view">
+          <div class="scheme-banner">
+            <strong>目前原版：5 項純文字清單</strong>
+            垂直排列 5 行，文字量大且缺乏視覺錨點，需要讀者逐行閱讀文字理解。
+          </div>
+          <div class="original-list">
+            <div class="original-row" onclick="toggleSwitch('sw0_1')">
+              <div>
+                <div class="original-title">閱讀頁上下控制列</div>
+                <div class="original-desc">開啟時顯示頂部與底部工具列，關閉時隱藏以提供全螢幕閱讀體驗</div>
+              </div>
+              <div id="sw0_1" class="switch-ui on"></div>
+            </div>
+            <div class="original-row" onclick="toggleSwitch('sw0_2')">
+              <div>
+                <div class="original-title">自動接續閱讀</div>
+                <div class="original-desc">開啟經文時自動回到上次閱讀段落，關閉時一律從頭開始閱讀</div>
+              </div>
+              <div id="sw0_2" class="switch-ui on"></div>
+            </div>
+            <div class="original-row" onclick="toggleSwitch('sw0_3')">
+              <div>
+                <div class="original-title">顯示筆記內容</div>
+                <div class="original-desc">於經文段落下直接顯示您隨文記錄的感悟筆記與心得</div>
+              </div>
+              <div id="sw0_3" class="switch-ui on"></div>
+            </div>
+            <div class="original-row" onclick="toggleSwitch('sw0_4')">
+              <div>
+                <div class="original-title">每日閱讀日誌</div>
+                <div class="original-desc">自動記錄每日閱讀時長與天數，並於首頁提供行事曆日誌入口</div>
+              </div>
+              <div id="sw0_4" class="switch-ui on"></div>
+            </div>
+            <div class="original-row" onclick="toggleSwitch('sw0_5')">
+              <div>
+                <div class="original-title">顯示閱讀頁經文經題</div>
+                <div class="original-desc">下滑閱讀時於頂部顯示當前經名膠囊，滑回頂部時自動隱藏</div>
+              </div>
+              <div id="sw0_5" class="switch-ui on"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 方案 1：★ 雙分組一體化卡片 (推薦) -->
+        <div id="opt1" class="scheme-view active">
+          <div class="scheme-banner">
+            <strong>方案 1：雙分組一體化卡片（微圖示 + 簡潔標題小標）★ 推薦</strong>
+            延續上方一體化卡片圓角風格，按「閱讀介面顯示」與「進度與日誌」分成 2 張精美卡片。佐以專屬 Icon 與一句話小標，清晰秒懂！
+          </div>
+
+          <!-- 分組 1：閱讀介面與顯示 -->
+          <div class="grouped-card">
+            <div class="grouped-card-header">
+              <span>閱讀介面與顯示</span>
+            </div>
+            <div class="grouped-item" onclick="toggleSwitch('sw1_1')">
+              <div class="item-left">
+                <div class="icon-badge">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/><line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></svg>
+                </div>
+                <div class="item-texts">
+                  <div class="item-title">上方控制工具列</div>
+                  <div class="item-subtitle">開啟顯示頂部控制列，關閉即全螢幕讀經</div>
+                </div>
+              </div>
+              <div id="sw1_1" class="switch-ui on"></div>
+            </div>
+            <div class="grouped-item" onclick="toggleSwitch('sw1_2')">
+              <div class="item-left">
+                <div class="icon-badge">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></svg>
+                </div>
+                <div class="item-texts">
+                  <div class="item-title">頂部浮動經題</div>
+                  <div class="item-subtitle">下滑閱讀時於頂部浮動顯示經題膠囊</div>
+                </div>
+              </div>
+              <div id="sw1_2" class="switch-ui on"></div>
+            </div>
+            <div class="grouped-item" onclick="toggleSwitch('sw1_3')">
+              <div class="item-left">
+                <div class="icon-badge">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5"/><polyline points="14 2 14 8 20 8"/><path d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l1-3.95 5.42-5.44Z"/></svg>
+                </div>
+                <div class="item-texts">
+                  <div class="item-title">經文隨文筆記</div>
+                  <div class="item-subtitle">經文段落下方直接顯示手寫感悟心得</div>
+                </div>
+              </div>
+              <div id="sw1_3" class="switch-ui on"></div>
+            </div>
+          </div>
+
+          <!-- 分組 2：進度與閱讀日誌 -->
+          <div class="grouped-card">
+            <div class="grouped-card-header">
+              <span>進度與閱讀日誌</span>
+            </div>
+            <div class="grouped-item" onclick="toggleSwitch('sw1_4')">
+              <div class="item-left">
+                <div class="icon-badge">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+                </div>
+                <div class="item-texts">
+                  <div class="item-title">自動接續進度</div>
+                  <div class="item-subtitle">開啟經典自動精確跳轉至上次閱讀段落</div>
+                </div>
+              </div>
+              <div id="sw1_4" class="switch-ui on"></div>
+            </div>
+            <div class="grouped-item" onclick="toggleSwitch('sw1_5')">
+              <div class="item-left">
+                <div class="icon-badge">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="item-texts">
+                  <div class="item-title">每日閱讀日誌</div>
+                  <div class="item-subtitle">記錄每日閱讀時間與修行天數足跡</div>
+                </div>
+              </div>
+              <div id="sw1_5" class="switch-ui on"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 方案 2：iOS 控制中心資訊磁貼小卡 -->
+        <div id="opt2" class="scheme-view">
+          <div class="scheme-banner">
+            <strong>方案 2：iOS 控制中心資訊磁貼小卡 (2×2 網格 + 觸控切換)</strong>
+            類似手機控制中心按鍵，點擊整張磁貼直接切換開關，字少圖大，手機單手盲按體驗極佳。
+          </div>
+          <div class="tiles-grid">
+            <div class="tile-card on" onclick="toggleTile(this)">
+              <div class="tile-top">
+                <span class="tile-icon">🖥️</span>
+                <span class="tile-dot"></span>
+              </div>
+              <div>
+                <div class="tile-title">上下控制列</div>
+                <div class="tile-status">已開啟</div>
+              </div>
+            </div>
+
+            <div class="tile-card on" onclick="toggleTile(this)">
+              <div class="tile-top">
+                <span class="tile-icon">📌</span>
+                <span class="tile-dot"></span>
+              </div>
+              <div>
+                <div class="tile-title">浮動經名</div>
+                <div class="tile-status">已開啟</div>
+              </div>
+            </div>
+
+            <div class="tile-card on" onclick="toggleTile(this)">
+              <div class="tile-top">
+                <span class="tile-icon">✍️</span>
+                <span class="tile-dot"></span>
+              </div>
+              <div>
+                <div class="tile-title">段落筆記</div>
+                <div class="tile-status">已開啟</div>
+              </div>
+            </div>
+
+            <div class="tile-card on" onclick="toggleTile(this)">
+              <div class="tile-top">
+                <span class="tile-icon">🔖</span>
+                <span class="tile-dot"></span>
+              </div>
+              <div>
+                <div class="tile-title">接續閱讀</div>
+                <div class="tile-status">已開啟</div>
+              </div>
+            </div>
+
+            <div class="tile-card on" style="grid-column: span 2;" onclick="toggleTile(this)">
+              <div class="tile-top">
+                <span class="tile-icon">📅 每日閱讀日誌</span>
+                <span class="tile-dot"></span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:0.4rem;">
+                <span style="font-size:0.75rem; color:var(--text-muted);">自動記錄每日閱讀時長與天數</span>
+                <span class="tile-status">已開啟</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 方案 3：智能合併極簡 3 項 -->
+        <div id="opt3" class="scheme-view">
+          <div class="scheme-banner">
+            <strong>方案 3：同類項智能合併（極簡 3 大項）</strong>
+            將關聯強烈的選項合而為一（如工具列與經題合併為「沉浸全螢幕」；進度與日誌合併為「進度與足跡」），將項目總數從 5 個降到 3 個！
+          </div>
+          <div class="merged-card">
+            <div class="merged-row" onclick="toggleSwitch('sw3_1')">
+              <div class="item-left">
+                <div class="icon-badge">✨</div>
+                <div class="item-texts">
+                  <div class="item-title">沉浸式全螢幕閱讀 <span class="merged-tag">合併</span></div>
+                  <div class="item-subtitle">隱藏頂底工具列與浮動經題，專注純粹經典</div>
+                </div>
+              </div>
+              <div id="sw3_1" class="switch-ui on"></div>
+            </div>
+
+            <div class="merged-row" onclick="toggleSwitch('sw3_2')">
+              <div class="item-left">
+                <div class="icon-badge">✍️</div>
+                <div class="item-texts">
+                  <div class="item-title">經文隨文筆記</div>
+                  <div class="item-subtitle">直接於經文段落下顯示讀者手寫感悟心得</div>
+                </div>
+              </div>
+              <div id="sw3_2" class="switch-ui on"></div>
+            </div>
+
+            <div class="merged-row" onclick="toggleSwitch('sw3_3')">
+              <div class="item-left">
+                <div class="icon-badge">🔖</div>
+                <div class="item-texts">
+                  <div class="item-title">閱讀進度與修行日誌 <span class="merged-tag">合併</span></div>
+                  <div class="item-subtitle">自動定位上次段落，並記錄每日讀經時長</div>
+                </div>
+              </div>
+              <div id="sw3_3" class="switch-ui on"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-note">
+    💡 本頁面支援即時點擊開關 Toggle、主題底色切換與方案對照
+  </div>
+
+  <script>
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(theme));
+      });
+    }
+
+    function setOption(optId) {
+      document.querySelectorAll('.option-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.getAttribute('onclick').includes(optId));
+      });
+      document.querySelectorAll('.scheme-view').forEach(view => {
+        view.classList.toggle('active', view.id === optId);
+      });
+    }
+
+    function toggleSwitch(id) {
+      const sw = document.getElementById(id);
+      if (sw) {
+        sw.classList.toggle('on');
+      }
+    }
+
+    function toggleTile(card) {
+      card.classList.toggle('on');
+      const statusText = card.querySelector('.tile-status');
+      if (statusText) {
+        statusText.textContent = card.classList.contains('on') ? '已開啟' : '已關閉';
+      }
+    }
+  </script>
+</body>
+</html>
