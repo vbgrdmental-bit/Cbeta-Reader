@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.7` (App: v4.6.7 / Builder: v2.9.12)
+- **Current Version**: `v4.6.9` (App: v4.6.9 / Builder: v2.9.12)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,17 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.9 / Builder: v2.9.12** (2026-09-28)
+  - [App] 「設定閱讀時間 (護眼模式)」升級為「一體化卡片」：與主題顏色上下 6 欄像素級對稱對齊，背景、高度與邊界完全比照圖 1。
+  - [App] 6 欄架構：前 4 個維持 10/20/30/40 分時鐘不變，第 5 欄改為「|」垂直分隔線（完美重合上方區隔線），第 6 欄改為自訂時間按鈕（預設「+」、選定「✓」，顯示目前自訂分鐘數）。
+  - [App] 自訂閱讀時間抽屜：點擊第 6 欄展開/收合抽屜，支援「上下按（±5 分鐘步進器）」與「手機左右滑動條（5~180分鐘）」，並內建常用快捷時長膠囊與倒數中即時同步連動。
+  - [App] 智能收合機制：讀者上下滑動/捲動設定面板時，主題顏色與自訂時間抽屜自動平滑收合，立即回復到極簡清爽頁面。
+  - [App] 「其他設定」升級為「雙分組一體化卡片」：依場景分為「閱讀介面與顯示」與「進度與修行日誌」2 張精美卡片，全項目改採簡潔線條符號徽章（SlidersHorizontal、Bookmark、FileEdit、History、Calendar），搭配加粗主標與一句話精簡小標。
+- **⭐ App: v4.6.8 / Builder: v2.9.12** (2026-09-27)
+  - [App] 閱讀設定面板精簡：暫時隱藏版面預覽與劃線樣式設定，聚焦閱讀頁核心控制列。
+  - [App] 主題顏色升級為「一體化卡片」：第 5 欄改為「|」垂直分隔線完美區隔，第 6 欄為自訂色圓圈（預設「+」、選中「✓」），文字自動連動 6 大佛光色名或「自訂」。
+  - [App] 點擊自訂圓圈即可切換底色並平滑展開/收合佛光色盤，上下 6 欄達成像素級垂直對齊。
+  - [App] 「Cbeta Reader 簡易功能導覽」升級為精緻膠囊型式並移至「進階功能」之下。
 - **⭐ App: v4.6.7 / Builder: v2.9.12** (2026-09-27)
   - [App] 首頁新增「自訂便籤小卡」，支援 `2×2`、`4×2`、`4×3`、`4×4`、`4×1` 共 5 種自由規格。
   - [App] 讀者可自由填寫經文佳句、自選法義或修行座右銘與署名出處，自適應全站四大主題底色。

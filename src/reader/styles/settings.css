@@ -267,76 +267,200 @@ body.theme-ebony .settings-select:focus {
   margin-bottom: 0.85rem;
 }
 
-.settings-theme-under-row {
+/* ── 💡 最頂部：一體化主題顏色卡片 (上下 6 欄 1:1 像素級垂直對齊) ── */
+.settings-theme-unified-card {
+  width: 100%;
+  padding: 0.75rem 0.65rem;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+}
+
+body.theme-parchment .settings-theme-unified-card {
+  background: rgba(255, 255, 255, 0.38);
+  border-color: rgba(60, 42, 26, 0.1);
+}
+
+body.theme-ebony .settings-theme-unified-card,
+body.theme-dark .settings-theme-unified-card,
+body.theme-custom-dark .settings-theme-unified-card {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* 💡 上半部 6 欄 Grid (與下半部 sacred-palette-grid 採用完全相同的 repeat(6, 1fr) 與 gap，確保 1:1 垂直對齊) */
+.theme-swatches-grid-6col {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+/* 💡 上半部色彩項目 (上圓圈、下文字，與下半部完全同構) */
+.theme-color-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 1px;
+  border-radius: 10px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.theme-color-card:hover {
+  background: rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
+}
+
+body.theme-ebony .theme-color-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* 💡 上半部圓圈色票 (28px × 28px，精確匹配下半部 sacred-color-swatch) */
+.theme-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 💡 兩端對齊，讓「+自訂」膠囊剛好切齊預覽框右邊緣 */
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 1.5px 3.5px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  box-sizing: border-box;
+}
+
+body.theme-ebony .theme-color-swatch {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+/* 選中狀態尊貴雙環光環 */
+.theme-color-card.selected .theme-color-swatch {
+  box-shadow: 0 0 0 2.5px var(--theme-accent, #1ea98c), 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+body.theme-ebony .theme-color-card.selected .theme-color-swatch {
+  box-shadow: 0 0 0 2.5px #fbbf24, 0 2px 8px rgba(251, 191, 36, 0.3);
+}
+
+body.theme-custom-dark .theme-color-card.selected .theme-color-swatch {
+  box-shadow: 0 0 0 2.5px #f3c969, 0 2px 8px rgba(243, 201, 105, 0.3);
+}
+
+/* 色彩名稱文字 (0.72rem，與下半部 sacred-color-name 一致) */
+.theme-color-name {
+  font-size: 0.72rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 💡 第 5 欄：垂直分隔線單元格 (完美區隔經典色與自訂色，對齊下方第 5 欄青松黛) */
+.theme-divider-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  user-select: none;
+}
+
+.theme-divider-text {
+  font-size: 1.15rem;
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.22);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -2px;
+}
+
+body.theme-ebony .theme-divider-text,
+body.theme-dark .theme-divider-text,
+body.theme-custom-dark .theme-divider-text {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* 💡 一體化展開抽屜區域 */
+.theme-unified-drawer-section {
   width: 100%;
   box-sizing: border-box;
 }
 
-.settings-theme-swatches-cluster {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 3.8vw, 18px); /* 💡 圈圈左右間距再加大，手機手指極易精準點擊 */
+/* 細膩虛線分隔線 */
+.theme-unified-divider {
+  width: 100%;
+  border-top: 1px dashed rgba(0, 0, 0, 0.12);
+  margin: 0.65rem 0 0.75rem 0;
 }
 
-.preview-theme-swatches {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 3.8vw, 18px); /* 💡 圈圈間距加大，手機手指更好點擊 */
+body.theme-ebony .theme-unified-divider {
+  border-top-color: rgba(255, 255, 255, 0.15);
 }
 
-/* 💡 在烏木圓圈圈和自訂圓圈圈中間多一個淺灰色「|」 */
-.theme-swatch-vertical-divider {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 1px;
-  color: rgba(0, 0, 0, 0.22); /* 淺灰色 */
-  font-size: 0.95rem;
-  font-weight: 300;
-  user-select: none;
-  line-height: 1;
+.theme-unified-subdivider {
+  width: 100%;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  margin: 0.5rem 0 0.65rem 0;
 }
 
-body.theme-ebony .theme-swatch-vertical-divider,
-body.theme-custom-dark .theme-swatch-vertical-divider {
-  color: rgba(255, 255, 255, 0.32);
+body.theme-ebony .theme-unified-subdivider {
+  border-top-color: rgba(255, 255, 255, 0.12);
 }
 
-/* 💡 所有圓圈圈都一樣大 (恆定 24px，選中不放大) */
+/* 💡 所有圓圈圈精緻微浮雕感與飽滿尺寸 (26px，雙層微邊框與微陰影) */
 .theme-swatch-circle {
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  min-height: 24px;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
   border-radius: 50%;
-  border: 1.5px solid rgba(0, 0, 0, 0.18);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1.5px solid rgba(0, 0, 0, 0.14);
+  box-shadow: 0 1.5px 3.5px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.6);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
+  position: relative;
 }
 
 .theme-swatch-circle:hover {
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1.5px) scale(1.05);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
 }
 
+/* 💡 選中時精緻雙環光環 (Dual-Ring Halo)，極致精美呼吸感 */
 .theme-swatch-circle.active {
-  border: 2.2px solid var(--theme-accent, #8c4b27);
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  outline: 2.5px solid var(--theme-accent, #8c4b27);
+  outline-offset: 2.5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
 }
 
 body.theme-ebony .theme-swatch-circle {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.12);
 }
 
 body.theme-ebony .theme-swatch-circle.active {
-  border-color: #fbbf24;
+  border-color: rgba(255, 255, 255, 0.2);
+  outline-color: #fbbf24; /* 泥金佛光金色光環 */
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+}
+
+body.theme-custom-dark .theme-swatch-circle.active {
+  outline-color: #f3c969;
 }
 
 /* 💡 小膠囊「+ 自訂」按鍵：顏色淺灰色，點一下展開，再點一下收合 */
@@ -344,19 +468,19 @@ body.theme-ebony .theme-swatch-circle.active {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 12px;
+  padding: 4.5px 12px;
   border-radius: 9999px;
   background: #ece8e1; /* 淺灰色 */
   border: 1.2px solid rgba(0, 0, 0, 0.12);
   color: #4a443d;
   font-family: var(--font-sans);
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s ease;
   user-select: none;
   white-space: nowrap;
-  flex-shrink: 0; /* 💡 確保膠囊完美切齊預覽框右邊線且不被壓縮 */
+  flex-shrink: 0;
 }
 
 .settings-custom-theme-pill:hover {
@@ -377,6 +501,53 @@ body.theme-ebony .settings-custom-theme-pill {
 
 body.theme-ebony .settings-custom-theme-pill:hover {
   background: rgba(255, 255, 255, 0.22);
+}
+
+/* ── 💡 簡易功能導覽精緻膠囊 (移到進階功能之下) ── */
+.settings-guide-pill-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 1.15rem 0 0.4rem 0;
+}
+
+.settings-guide-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.52rem 1.6rem;
+  border-radius: 9999px; /* 💡 完整膠囊型式 */
+  border: 1.2px solid var(--theme-accent-border, rgba(140, 75, 39, 0.28));
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.06));
+  color: var(--theme-accent, #8c4b27);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  user-select: none;
+}
+
+.settings-guide-pill-btn:hover {
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  border-color: var(--theme-accent, #8c4b27);
+  box-shadow: 0 2px 8px rgba(140, 75, 39, 0.25);
+  transform: translateY(-1px);
+}
+
+body.theme-ebony .settings-guide-pill-btn {
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+  color: #fbbf24;
+}
+
+body.theme-ebony .settings-guide-pill-btn:hover {
+  background: #fbbf24;
+  color: #12161a;
+  border-color: #fbbf24;
+  box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
 }
 
 body.theme-ebony .settings-custom-theme-pill.expanded {
@@ -422,13 +593,8 @@ body.theme-ebony .custom-theme-drawer-panel {
   grid-template-columns: repeat(6, 1fr);
   gap: 6px;
   margin-bottom: 0.75rem;
-}
-
-@media (max-width: 420px) {
-  .sacred-palette-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px 6px;
-  }
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sacred-color-card {
@@ -534,6 +700,422 @@ body.theme-ebony .sacred-color-swatch {
 body.theme-ebony .custom-color-hex-tag {
   background: rgba(255, 255, 255, 0.08);
   color: #a1a1aa;
+}
+
+/* ── 💡 閱讀時間一體化卡片時鐘圓圈樣式 (與主題顏色圓圈 1:1 像素級垂直對齊) ── */
+.timer-clock-swatch {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+body.theme-parchment .timer-clock-swatch {
+  background: rgba(60, 42, 26, 0.06);
+}
+
+body.theme-ebony .timer-clock-swatch,
+body.theme-dark .timer-clock-swatch,
+body.theme-custom-dark .timer-clock-swatch {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+}
+
+/* 選中狀態高亮時鐘圓圈 */
+.theme-color-card.selected .timer-clock-swatch {
+  background: var(--theme-accent, #1ea98c);
+  color: #ffffff;
+  border-color: var(--theme-accent, #1ea98c);
+}
+
+body.theme-ebony .theme-color-card.selected .timer-clock-swatch {
+  background: #fbbf24;
+  color: #12161a;
+  border-color: #fbbf24;
+}
+
+body.theme-custom-dark .theme-color-card.selected .timer-clock-swatch {
+  background: #f3c969;
+  color: #1a1622;
+  border-color: #f3c969;
+}
+
+/* ── 💡 自訂閱讀時間抽屜樣式 (步進器 + 滑動條 + 快捷膠囊) ── */
+.custom-timer-stepper-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin: 0.25rem 0 0.85rem 0;
+}
+
+.custom-timer-step-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.custom-timer-step-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.custom-timer-step-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.custom-timer-step-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+body.theme-parchment .custom-timer-step-btn {
+  background: rgba(60, 42, 26, 0.06);
+  border-color: rgba(60, 42, 26, 0.15);
+}
+
+body.theme-ebony .custom-timer-step-btn,
+body.theme-dark .custom-timer-step-btn,
+body.theme-custom-dark .custom-timer-step-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+}
+
+body.theme-ebony .custom-timer-step-btn:hover:not(:disabled),
+body.theme-dark .custom-timer-step-btn:hover:not(:disabled),
+body.theme-custom-dark .custom-timer-step-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* 中央大數字徽章 */
+.custom-timer-display-pill {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  padding: 0.35rem 1.1rem;
+  border-radius: 22px;
+  background: rgba(var(--theme-accent-rgb, 30, 169, 140), 0.1);
+  border: 1.5px solid var(--theme-accent, #1ea98c);
+  color: var(--theme-accent, #1ea98c);
+  min-width: 96px;
+  box-sizing: border-box;
+}
+
+body.theme-ebony .custom-timer-display-pill {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: #fbbf24;
+  color: #fbbf24;
+}
+
+body.theme-custom-dark .custom-timer-display-pill {
+  background: rgba(243, 201, 105, 0.12);
+  border-color: #f3c969;
+  color: #f3c969;
+}
+
+.custom-timer-number {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.custom-timer-unit {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* 滑動條列 (支援手機滑動調整) */
+.custom-timer-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0 0.5rem;
+  margin-bottom: 0.85rem;
+  box-sizing: border-box;
+}
+
+.custom-timer-slider-bound {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.custom-timer-range-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.12);
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+body.theme-ebony .custom-timer-range-slider,
+body.theme-dark .custom-timer-range-slider,
+body.theme-custom-dark .custom-timer-range-slider {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.custom-timer-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--theme-accent, #1ea98c);
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.1s ease;
+}
+
+.custom-timer-range-slider::-webkit-slider-thumb:hover,
+.custom-timer-range-slider::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+}
+
+body.theme-ebony .custom-timer-range-slider::-webkit-slider-thumb {
+  background: #fbbf24;
+  border-color: #12161a;
+}
+
+body.theme-custom-dark .custom-timer-range-slider::-webkit-slider-thumb {
+  background: #f3c969;
+  border-color: #1a1622;
+}
+
+/* 快捷時間膠囊與操作按鈕 */
+.custom-timer-quick-capsules {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.custom-timer-quick-chip {
+  padding: 0.22rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.custom-timer-quick-chip:hover {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.custom-timer-quick-chip.active {
+  background: var(--theme-accent, #1ea98c);
+  color: #ffffff;
+  border-color: var(--theme-accent, #1ea98c);
+}
+
+body.theme-ebony .custom-timer-quick-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}
+
+body.theme-ebony .custom-timer-quick-chip.active {
+  background: #fbbf24;
+  color: #12161a;
+  border-color: #fbbf24;
+}
+
+body.theme-custom-dark .custom-timer-quick-chip.active {
+  background: #f3c969;
+  color: #1a1622;
+  border-color: #f3c969;
+}
+
+.custom-timer-stop-chip {
+  padding: 0.22rem 0.65rem;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.custom-timer-stop-chip:hover {
+  background: rgba(239, 68, 68, 0.16);
+}
+
+body.theme-ebony .custom-timer-stop-chip,
+body.theme-dark .custom-timer-stop-chip,
+body.theme-custom-dark .custom-timer-stop-chip {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #f87171;
+}
+
+/* ── 💡 其他設定：雙分組一體化卡片樣式 (方案 1) ── */
+.settings-other-groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.settings-grouped-card {
+  padding: 0.35rem 0.25rem 0.25rem 0.25rem;
+  overflow: hidden;
+}
+
+.settings-group-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0.65rem 0.3rem 0.65rem;
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: var(--theme-accent, #1ea98c);
+  letter-spacing: 0.03em;
+  opacity: 0.95;
+}
+
+body.theme-ebony .settings-group-card-header {
+  color: #fbbf24;
+}
+
+body.theme-custom-dark .settings-group-card-header {
+  color: #f3c969;
+}
+
+.settings-group-header-icon {
+  opacity: 0.85;
+}
+
+.settings-grouped-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.settings-grouped-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.65rem;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.settings-grouped-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 2.95rem;
+  right: 0.65rem;
+  height: 1px;
+  background: var(--border-color, rgba(0, 0, 0, 0.08));
+  opacity: 0.65;
+}
+
+body.theme-ebony .settings-grouped-item:not(:last-child)::after,
+body.theme-dark .settings-grouped-item:not(:last-child)::after,
+body.theme-custom-dark .settings-grouped-item:not(:last-child)::after {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.settings-grouped-item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+body.theme-ebony .settings-grouped-item:hover,
+body.theme-dark .settings-grouped-item:hover,
+body.theme-custom-dark .settings-grouped-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.settings-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  padding-right: 10px;
+}
+
+/* 簡潔線條符號圓角徽章 (28px × 28px) */
+.settings-symbol-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(var(--theme-accent-rgb, 30, 169, 140), 0.1);
+  color: var(--theme-accent, #1ea98c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+body.theme-parchment .settings-symbol-badge {
+  background: rgba(140, 75, 39, 0.1);
+  color: #8c4b27;
+}
+
+body.theme-ebony .settings-symbol-badge {
+  background: rgba(251, 191, 36, 0.14);
+  color: #fbbf24;
+}
+
+body.theme-custom-dark .settings-symbol-badge {
+  background: rgba(243, 201, 105, 0.14);
+  color: #f3c969;
+}
+
+.settings-item-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-item-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.settings-item-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.25;
 }
 
 /* ── 閱讀版面預覽與 2x2 一體化設定工作台 ── */

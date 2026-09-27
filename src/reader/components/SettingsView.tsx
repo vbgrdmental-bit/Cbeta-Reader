@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Database, FileText, HelpCircle, RotateCw, CheckCircle2, Check, Sparkles } from 'lucide-react';
+import { X, Database, FileText, HelpCircle, RotateCw, CheckCircle2, Check, Plus, Minus, SlidersHorizontal, PanelTop, FileEdit, History, Calendar } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
 import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks, saveSettings, DEFAULT_SETTINGS } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
@@ -31,6 +31,24 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
   const [isCompressing, setIsCompressing] = useState(false);
   const [storageMsg, setStorageMsg] = useState('');
   const [showCustomThemeDrawer, setShowCustomThemeDrawer] = useState(false);
+  
+  // 💡 自訂閱讀時間狀態（以 5 分鐘為單位，預設 60 分鐘，記憶於 localStorage）
+  const [customTimerMinutes, setCustomTimerMinutes] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('cbeta_custom_timer_mins');
+      const parsed = saved ? parseInt(saved, 10) : 60;
+      return !isNaN(parsed) && parsed > 0 ? parsed : 60;
+    } catch {
+      return 60;
+    }
+  });
+  const [showCustomTimerDrawer, setShowCustomTimerDrawer] = useState(false);
+
+  // 💡 自訂主題名稱：若選取 6 大佛光色之一則自動帶入名稱，否則顯示「自訂」
+  const matchedSacred = SACRED_THEME_PALETTE.find(
+    c => c.hex.toLowerCase() === (settings.customThemeColor || '#ebdcd9').toLowerCase()
+  );
+  const customColorLabel = matchedSacred ? matchedSacred.name : '自訂';
 
   // 💡 版本紀錄對話框捲動位置重置 Refs
   const changelogBodyRef = useRef<HTMLDivElement>(null);
@@ -201,6 +219,41 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
     });
   };
 
+  // 💡 當讀者上下滑動/捲動設定面板時，自動收合主題顏色與自訂時間抽屜（回復簡潔頁面）
+  const lastScrollTopRef = useRef(0);
+  const touchStartYRef = useRef<number | null>(null);
+  const touchStartXRef = useRef<number | null>(null);
+
+  const handleBodyScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const currentScrollTop = e.currentTarget.scrollTop;
+    const diff = Math.abs(currentScrollTop - lastScrollTopRef.current);
+    if (diff > 8) {
+      if (showCustomThemeDrawer) setShowCustomThemeDrawer(false);
+      if (showCustomTimerDrawer) setShowCustomTimerDrawer(false);
+      lastScrollTopRef.current = currentScrollTop;
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 1) {
+      touchStartYRef.current = e.touches[0].clientY;
+      touchStartXRef.current = e.touches[0].clientX;
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartYRef.current === null || touchStartXRef.current === null) return;
+    if (e.touches.length === 1) {
+      const deltaY = Math.abs(e.touches[0].clientY - touchStartYRef.current);
+      const deltaX = Math.abs(e.touches[0].clientX - touchStartXRef.current);
+      // 確保是上下滑動（垂直位移 > 10px 且垂直位移大於水平位移，防止讀者水平滑動時間條時誤觸收合）
+      if (deltaY > 10 && deltaY > deltaX * 1.15) {
+        if (showCustomThemeDrawer) setShowCustomThemeDrawer(false);
+        if (showCustomTimerDrawer) setShowCustomTimerDrawer(false);
+      }
+    }
+  };
+
   return (
     <div className="settings-panel-overlay" onClick={onClose}>
       <div className="settings-card animate-slide-up" onClick={e => e.stopPropagation()}>
@@ -211,399 +264,164 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
           </button>
         </div>
 
-        <div className="settings-body custom-scrollbar">
-          {/* 💡 1. 獨立的主題顏色模式分區 (放最上面的第一個) */}
+        <div 
+          className="settings-body custom-scrollbar"
+          onScroll={handleBodyScroll}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+        >
+          {/* 💡 1. 獨立的主題顏色模式分區：一體化卡片 (上下對齊，預設收起下半部，按「+自訂」整卡打開) */}
           <div className="settings-theme-palette-section">
             <div className="settings-section-title" style={{ marginBottom: '0.45rem' }}>主題顏色</div>
 
-            {/* 放在文字「主題顏色」之下的一整行 (圖2) */}
-            <div className="settings-theme-under-row">
-              {/* 左側：四個主題圈圈 + 分隔線 + 自訂圈圈 (左右間距加大，手機手指極易精準點擊) */}
-              <div className="settings-theme-swatches-cluster">
-                <div className="preview-theme-swatches">
-                  {[
-                    { id: 'ivory', label: '象牙白', bg: '#faf7f0' },
-                    { id: 'parchment', label: '羊皮紙', bg: '#f1e5c9' },
-                    { id: 'comfort', label: '舒服綠', bg: '#e3ebd9' },
-                    { id: 'ebony', label: '烏木黑', bg: '#12161a' }
-                  ].map(t => {
-                    const isActive = settings.theme === t.id;
-                    return (
-                      <div
-                        key={`preview-theme-${t.id}`}
-                        onClick={() => onSave({ ...settings, theme: t.id as AppSettings['theme'] })}
-                        title={t.label}
-                        className={`theme-swatch-circle ${isActive ? 'active' : ''}`}
-                        style={{ backgroundColor: t.bg }}
-                      >
-                        {isActive && (
-                          <Check 
-                            size={12} 
-                            strokeWidth={3.5} 
-                            style={{ color: t.id === 'ebony' ? '#fbbf24' : '#2c2016' }} 
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* 💡 在烏木圓圈圈和自訂圓圈圈中間多一個淺灰色「|」 */}
-                <div className="theme-swatch-vertical-divider">|</div>
-
-                {/* 第 5 個：自訂主題圓圈圈 (大小與前 4 個完全一致) */}
+            {/* 一體化卡片：上下完全垂直對齊 */}
+            <div className="settings-theme-unified-card">
+              {/* 上半部：6 欄常態列 (上圓圈、下字，上下精準對齊，自訂圓圈對齊青松黛) */}
+              <div className="theme-swatches-grid-6col">
+                {/* 1. 象牙白 */}
                 <div
-                  onClick={() => onSave({ ...settings, theme: 'custom', customThemeColor: settings.customThemeColor || '#ebdcd9' })}
-                  title="自訂底色"
-                  className={`theme-swatch-circle ${settings.theme === 'custom' ? 'active' : ''}`}
-                  style={{ backgroundColor: settings.customThemeColor || '#ebdcd9' }}
+                  className={`theme-color-card ${settings.theme === 'ivory' ? 'selected' : ''}`}
+                  onClick={() => onSave({ ...settings, theme: 'ivory' })}
+                  title="象牙白"
                 >
-                  {settings.theme === 'custom' && (
-                    <Check 
-                      size={12} 
-                      strokeWidth={3.5} 
-                      style={{ color: isDarkColor(settings.customThemeColor || '#ebdcd9') ? '#ffffff' : '#2c2016' }} 
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* 右側：膠囊「+自訂」(淺灰色，剛好切在右邊邊緣，與閱讀版面預覽框右邊線完全切齊) */}
-              <button
-                type="button"
-                className={`settings-custom-theme-pill ${showCustomThemeDrawer ? 'expanded' : ''}`}
-                onClick={() => setShowCustomThemeDrawer(prev => !prev)}
-                title="點擊展開/收合自訂顏色盤"
-              >
-                <Sparkles size={13} strokeWidth={2.2} />
-                <span>+ 自訂</span>
-              </button>
-            </div>
-
-            {/* 💡 展開的自訂佛光光譜抽屜 (刪除頂部「禪修佛光…」文字，直接展示 6 款光譜色) */}
-            {showCustomThemeDrawer && (
-              <div className="custom-theme-drawer-panel animate-fade-in">
-                {/* 6 大尊貴修行佛光色票 (由淺到深排列) */}
-                <div className="sacred-palette-grid">
-                  {SACRED_THEME_PALETTE.map(c => {
-                    const isSelected = settings.theme === 'custom' && settings.customThemeColor === c.hex;
-                    return (
-                      <div
-                        key={`sacred-${c.id}`}
-                        className={`sacred-color-card ${isSelected ? 'selected' : ''}`}
-                        onClick={() => onSave({ ...settings, theme: 'custom', customThemeColor: c.hex })}
-                        title={`${c.name} (${c.sub})`}
-                      >
-                        <div className="sacred-color-swatch" style={{ backgroundColor: c.hex }}>
-                          {isSelected && <Check size={14} strokeWidth={3.2} color={isDarkColor(c.hex) ? '#ffffff' : '#261c14'} />}
-                        </div>
-                        <div className="sacred-color-name">{c.name}</div>
-                      </div>
-                    );
-                  })}
+                  <div className="theme-color-swatch" style={{ backgroundColor: '#faf7f0' }}>
+                    {settings.theme === 'ivory' && (
+                      <Check size={13} strokeWidth={3.5} style={{ color: '#2c2016' }} />
+                    )}
+                  </div>
+                  <div className="theme-color-name">象牙白</div>
                 </div>
 
-                {/* 自由取色器：提供顏色光譜選擇 */}
-                <div className="custom-color-picker-row">
-                  <label className="custom-picker-label">
-                    <span>自由光譜微調：</span>
-                    <div className="custom-color-input-wrapper" style={{ backgroundColor: settings.customThemeColor || '#ebdcd9' }}>
-                      <input
-                        type="color"
-                        className="custom-native-color-picker"
-                        value={settings.customThemeColor || '#ebdcd9'}
-                        onChange={(e) => onSave({ ...settings, theme: 'custom', customThemeColor: e.target.value })}
-                        title="點擊展開全光譜取色盤"
+                {/* 2. 羊皮紙 */}
+                <div
+                  className={`theme-color-card ${settings.theme === 'parchment' ? 'selected' : ''}`}
+                  onClick={() => onSave({ ...settings, theme: 'parchment' })}
+                  title="羊皮紙"
+                >
+                  <div className="theme-color-swatch" style={{ backgroundColor: '#f1e5c9' }}>
+                    {settings.theme === 'parchment' && (
+                      <Check size={13} strokeWidth={3.5} style={{ color: '#2c2016' }} />
+                    )}
+                  </div>
+                  <div className="theme-color-name">羊皮紙</div>
+                </div>
+
+                {/* 3. 舒服綠 */}
+                <div
+                  className={`theme-color-card ${settings.theme === 'comfort' ? 'selected' : ''}`}
+                  onClick={() => onSave({ ...settings, theme: 'comfort' })}
+                  title="舒服綠"
+                >
+                  <div className="theme-color-swatch" style={{ backgroundColor: '#e3ebd9' }}>
+                    {settings.theme === 'comfort' && (
+                      <Check size={13} strokeWidth={3.5} style={{ color: '#2c2016' }} />
+                    )}
+                  </div>
+                  <div className="theme-color-name">舒服綠</div>
+                </div>
+
+                {/* 4. 烏木黑 */}
+                <div
+                  className={`theme-color-card ${settings.theme === 'ebony' ? 'selected' : ''}`}
+                  onClick={() => onSave({ ...settings, theme: 'ebony' })}
+                  title="烏木黑"
+                >
+                  <div className="theme-color-swatch" style={{ backgroundColor: '#12161a' }}>
+                    {settings.theme === 'ebony' && (
+                      <Check size={13} strokeWidth={3.5} style={{ color: '#fbbf24' }} />
+                    )}
+                  </div>
+                  <div className="theme-color-name">烏木黑</div>
+                </div>
+
+                {/* 5. 分隔線「|」 (居中區隔經典色與自訂色) */}
+                <div className="theme-divider-cell" title="區隔線">
+                  <span className="theme-divider-text">|</span>
+                </div>
+
+                {/* 6. 自訂主題圓圈 (取代原先的「+自訂」按鈕，預設顯示「+」，選定後顯示「✓」，選中佛光色帶入名稱，自由微調帶入「自訂」) */}
+                <div
+                  className={`theme-color-card ${settings.theme === 'custom' ? 'selected' : ''}`}
+                  onClick={() => {
+                    onSave({ ...settings, theme: 'custom', customThemeColor: settings.customThemeColor || '#ebdcd9' });
+                    setShowCustomThemeDrawer(prev => !prev);
+                  }}
+                  title={`自訂底色：${customColorLabel} (點擊切換並展開/收合色盤)`}
+                >
+                  <div
+                    className="theme-color-swatch"
+                    style={{ backgroundColor: settings.customThemeColor || '#ebdcd9' }}
+                  >
+                    {settings.theme === 'custom' ? (
+                      <Check 
+                        size={13} 
+                        strokeWidth={3.5} 
+                        style={{ color: isDarkColor(settings.customThemeColor || '#ebdcd9') ? '#ffffff' : '#2c2016' }} 
                       />
-                    </div>
-                  </label>
-                  <span className="custom-color-hex-tag">{settings.customThemeColor || '#ebdcd9'}</span>
+                    ) : (
+                      <Plus 
+                        size={13} 
+                        strokeWidth={2.8} 
+                        style={{ color: isDarkColor(settings.customThemeColor || '#ebdcd9') ? '#ffffff' : '#2c2016' }} 
+                      />
+                    )}
+                  </div>
+                  <div className="theme-color-name">{customColorLabel}</div>
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* 💡 2. 閱讀版面預覽標題列 */}
-          <div 
-            className="reading-preview-top-bar"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '0.65rem'
-            }}
-          >
-            <div className="settings-section-title" style={{ margin: 0 }}>閱讀版面預覽</div>
-          </div>
+              {/* 💡 下半部：展開的自訂佛光光譜抽屜 (預設收合，按「+自訂」整個打開來) */}
+              {showCustomThemeDrawer && (
+                <div className="theme-unified-drawer-section animate-fade-in">
+                  {/* 細膩虛線分隔線 */}
+                  <div className="theme-unified-divider" />
 
-          {/* 閱讀版面預覽與 2x2 對稱分段膠囊工作台 */}
-          <div className="reading-layout-card">
-            {/* 即時經文預覽框 (完整模擬主題、字體、字級、行高、邊距) */}
-            <div 
-              className="reading-preview-content-box custom-scrollbar"
-              style={{
-                display: 'block',
-                minHeight: '110px',
-                maxHeight: '155px',
-                overflowY: 'auto',
-                boxSizing: 'border-box',
-                backgroundColor: settings.theme === 'ivory' 
-                  ? '#faf7f0' 
-                  : settings.theme === 'parchment' 
-                  ? '#f1e5c9' 
-                  : settings.theme === 'comfort' 
-                  ? '#e3ebd9' 
-                  : settings.theme === 'custom'
-                  ? (settings.customThemeColor || '#dcb372')
-                  : '#12161a',
-                color: settings.theme === 'custom'
-                  ? (isDarkColor(settings.customThemeColor || '#dcb372') ? '#f0f3f6' : '#261c14')
-                  : (settings.theme === 'ebony' ? '#d8dec9' : settings.theme === 'comfort' ? '#23351d' : settings.theme === 'parchment' ? '#3c2a1a' : '#2c2016'),
-                fontFamily: (settings.fontFamily === 'jhenghei') ? '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' : (settings.fontFamily === 'iansui') ? '"Iansui", "Klee One", serif' : (settings.fontFamily === 'kaiti' || settings.fontFamily === 'yuanti' || settings.fontFamily === 'fangsong' || settings.fontFamily === 'wenkai' || settings.fontFamily === 'iansui-zy' || settings.fontFamily === 'iansui-bold') ? '"CBETASupplement", "MOE-EduKai", "TW-Kai-98", "TW-Kai", "標楷體", "BiauKai", "DFKai-SB", "STKaiti", "KaiTi", "Kaiti SC", "Kaiti TC", serif' : 'var(--font-serif)',
-                lineHeight: settings.lineHeight || 1.8,
-                padding: `0.9rem ${settings.padding || 10}%`,
-                fontSize: `${settings.fontSize || 22}px`,
-                textAlign: 'justify',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <div style={{ fontWeight: 'bold', marginBottom: '0.5em' }}>如是我聞：</div>
-              <div>
-                一時，佛在忉利天，為母說法。爾時，十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。讚歎釋迦牟尼佛，能於五濁惡世，現不可思議大智慧神通之力，調伏剛彊眾生，知苦樂法，各遣侍者，問訊世尊。是時，
-              </div>
-            </div>
+                  {/* 6 大尊貴修行佛光色票 (6 欄，與上半部 1:1 像素級垂直對齊) */}
+                  <div className="sacred-palette-grid">
+                    {SACRED_THEME_PALETTE.map(c => {
+                      const isSelected = settings.theme === 'custom' && settings.customThemeColor === c.hex;
+                      return (
+                        <div
+                          key={`sacred-${c.id}`}
+                          className={`sacred-color-card ${isSelected ? 'selected' : ''}`}
+                          onClick={() => onSave({ ...settings, theme: 'custom', customThemeColor: c.hex })}
+                          title={`${c.name} (${c.sub})`}
+                        >
+                          <div className="sacred-color-swatch" style={{ backgroundColor: c.hex }}>
+                            {isSelected && <Check size={13} strokeWidth={3.5} color={isDarkColor(c.hex) ? '#ffffff' : '#261c14'} />}
+                          </div>
+                          <div className="sacred-color-name">{c.name}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
 
-            {/* 2x2 對稱膠囊控制列 */}
-            <div className="reading-controls-grid-2x2">
-              {/* Row 1, Left: 字體膠囊 [ 宋/明 | 黑體 | 楷體 ] */}
-              <div className="segmented-pill-capsule">
-                {[
-                  { id: 'default', name: '宋/明', fontFamily: 'var(--font-serif)' },
-                  { id: 'jhenghei', name: '黑體', fontFamily: '"Microsoft JhengHei", "PingFang TC", "STHeiti", sans-serif' },
-                  { id: 'kaiti', name: '楷體', fontFamily: '"CBETASupplement", "MOE-EduKai", "TW-Kai-98", "TW-Kai", "標楷體", "BiauKai", "DFKai-SB", "STKaiti", "KaiTi", serif' }
-                ].map(f => {
-                  const rawFont = settings.fontFamily || 'default';
-                  const currentFont = (rawFont === 'yuanti' || rawFont === 'fangsong' || rawFont === 'wenkai' || rawFont === 'iansui-zy' || rawFont === 'iansui-bold' || rawFont === 'kaiti') ? 'kaiti' : (rawFont === 'jhenghei' ? 'jhenghei' : 'default');
-                  const isActive = currentFont === f.id;
-                  return (
-                    <button
-                      key={`pill-font-${f.id}`}
-                      type="button"
-                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
-                      onClick={() => {
-                        if (f.id === 'kaiti') {
-                          loadEduKaiFontOnDemand();
-                        }
-                        onSave({ ...settings, fontFamily: f.id as any });
-                      }}
-                      style={{ fontFamily: f.fontFamily }}
-                    >
-                      {f.name}
-                    </button>
-                  );
-                })}
-              </div>
+                  {/* 虛線分隔線 */}
+                  <div className="theme-unified-subdivider" />
 
-              {/* Row 1, Right: 大小膠囊 [ A- | 24px | A+ ] */}
-              <div className="segmented-pill-capsule">
-                <button
-                  type="button"
-                  className="segmented-pill-btn"
-                  onClick={() => onSave({ ...settings, fontSize: Math.max(12, (settings.fontSize || 22) - 1) })}
-                  title="縮小字體 (A-)"
-                  style={{ fontWeight: 700 }}
-                >
-                  A-
-                </button>
-                <div className="segmented-pill-val">
-                  {settings.fontSize || 22}px
-                </div>
-                <button
-                  type="button"
-                  className="segmented-pill-btn"
-                  onClick={() => onSave({ ...settings, fontSize: Math.min(36, (settings.fontSize || 22) + 1) })}
-                  title="放大字體 (A+)"
-                  style={{ fontWeight: 700 }}
-                >
-                  A+
-                </button>
-              </div>
-
-              {/* Row 2, Left: 行高膠囊 [ 1.6 | 1.8 | 2.0 ] */}
-              <div className="segmented-pill-capsule">
-                {[1.6, 1.8, 2.0].map(lh => {
-                  const isActive = settings.lineHeight === lh || (lh === 2.0 && settings.lineHeight > 1.9);
-                  return (
-                    <button
-                      key={`pill-lh-${lh}`}
-                      type="button"
-                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
-                      onClick={() => onSave({ ...settings, lineHeight: lh })}
-                    >
-                      {lh.toFixed(1)}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Row 2, Right: 邊距膠囊 [ 5% | 10% | 15% ] */}
-              <div className="segmented-pill-capsule">
-                {[5, 10, 15].map(p => {
-                  const isActive = settings.padding === p || (p === 15 && settings.padding >= 15);
-                  return (
-                    <button
-                      key={`pill-pad-${p}`}
-                      type="button"
-                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
-                      onClick={() => onSave({ ...settings, padding: p })}
-                    >
-                      {p}%
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* 3. 畫重點設定 (左右 1:1 對稱分段膠囊 + 即時同步筆刷色) */}
-          <div className="settings-section">
-            <div className="settings-section-title">畫重點設定</div>
-            
-            <div 
-              className="highlight-controls-grid-2col"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '0.65rem',
-                width: '100%',
-                boxSizing: 'border-box'
-              }}
-            >
-              {/* 左側：4 色圓潤膠囊列 */}
-              <div className="segmented-pill-capsule">
-                {(['yellow', 'red', 'gray', 'blue'] as const).map((color) => {
-                  const colorMap = {
-                    yellow: '#fbbf24',
-                    red: '#f87171',
-                    gray: '#9ca3af',
-                    blue: '#60a5fa'
-                  };
-                  const labelMap = {
-                    yellow: '淺黃',
-                    red: '淺紅',
-                    gray: '淺灰',
-                    blue: '淺藍'
-                  };
-                  const isActive = settings.highlightColor === color;
-                  return (
-                    <button
-                      key={`hl-pill-color-${color}`}
-                      type="button"
-                      className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
-                      onClick={() => onSave({ ...settings, highlightColor: color })}
-                      title={labelMap[color]}
-                      style={{ padding: '0.35rem 0.1rem' }}
-                    >
-                      <div
-                        style={{
-                          width: '18px',
-                          height: '18px',
-                          borderRadius: '50%',
-                          backgroundColor: colorMap[color],
-                          border: isActive ? '1.5px solid var(--text-primary)' : '1px solid var(--reader-border)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.15)' : 'none'
-                        }}
-                      >
-                        {isActive && (
-                          <Check 
-                            size={10} 
-                            strokeWidth={3.5} 
-                            style={{ color: color === 'yellow' ? '#2c2016' : '#ffffff' }} 
-                          />
-                        )}
+                  {/* 自由光譜微調：提供全光譜取色微調 */}
+                  <div className="custom-color-picker-row">
+                    <label className="custom-picker-label">
+                      <span>自由光譜微調：</span>
+                      <div className="custom-color-input-wrapper" style={{ backgroundColor: settings.customThemeColor || '#ebdcd9' }}>
+                        <input
+                          type="color"
+                          className="custom-native-color-picker"
+                          value={settings.customThemeColor || '#ebdcd9'}
+                          onChange={(e) => onSave({ ...settings, theme: 'custom', customThemeColor: e.target.value })}
+                          title="點擊展開全光譜取色盤"
+                        />
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* 右側：標註模式 4 分段膠囊 (依左側顏色即時同步呈現相應樣式) */}
-              <div className="segmented-pill-capsule">
-                {(() => {
-                  const hlHex = 
-                    settings.highlightColor === 'yellow' ? '#fbbf24' :
-                    settings.highlightColor === 'red' ? '#f87171' :
-                    settings.highlightColor === 'gray' ? '#9ca3af' : '#60a5fa';
-
-                  const hlRgba = 
-                    settings.highlightColor === 'yellow' ? 'rgba(250, 204, 21, 0.65)' :
-                    settings.highlightColor === 'red' ? 'rgba(248, 113, 113, 0.65)' :
-                    settings.highlightColor === 'gray' ? 'rgba(156, 163, 175, 0.65)' : 'rgba(96, 165, 250, 0.65)';
-
-                  return (['underline', 'bottom-half', 'full', 'border'] as const).map((style) => {
-                    const labelMap = {
-                      underline: '底線',
-                      'bottom-half': '半塗',
-                      full: '全塗',
-                      border: '方框'
-                    };
-                    const isActive = settings.highlightStyle === style;
-
-                    const renderStyleContent = () => {
-                      switch (style) {
-                        case 'underline':
-                          return (
-                            <span style={{ borderBottom: `2.5px solid ${hlHex}`, paddingBottom: '1px' }}>
-                              底線
-                            </span>
-                          );
-                        case 'bottom-half':
-                          return (
-                            <span style={{ background: `linear-gradient(180deg, transparent 52%, ${hlRgba} 52%)`, padding: '0 2px', borderRadius: '2px' }}>
-                              半塗
-                            </span>
-                          );
-                        case 'full':
-                          return (
-                            <span style={{ backgroundColor: hlRgba, borderRadius: '3px', padding: '1px 3px', color: (settings.highlightColor === 'yellow' && settings.theme === 'ebony') ? '#000000' : 'inherit' }}>
-                              全塗
-                            </span>
-                          );
-                        case 'border':
-                          return (
-                            <span style={{ border: `1.8px solid ${hlHex}`, borderRadius: '3px', padding: '0 2px' }}>
-                              方框
-                            </span>
-                          );
-                      }
-                    };
-
-                    return (
-                      <button
-                        key={`hl-style-${style}`}
-                        type="button"
-                        className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
-                        onClick={() => onSave({ ...settings, highlightStyle: style })}
-                        title={labelMap[style]}
-                        style={{
-                          padding: '0.42rem 0.1rem',
-                          fontSize: '0.8rem',
-                          fontWeight: isActive ? 700 : 500
-                        }}
-                      >
-                        {renderStyleContent()}
-                      </button>
-                    );
-                  });
-                })()}
-              </div>
+                    </label>
+                    <span className="custom-color-hex-tag">{settings.customThemeColor || '#ebdcd9'}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* 💡 設定閱讀時間 (10~60 分鐘 6 個時段，圓潤膠囊直排時鐘繪圖) */}
+
+          {/* 💡 設定閱讀時間 (護眼模式) - 6 欄一體化卡片，與上方主題顏色卡片 1:1 像素級垂直對齊 */}
           <div className="settings-section">
             <div className="settings-section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span>設定閱讀時間 <span style={{ fontSize: '0.8rem', opacity: 0.75, fontWeight: 'normal' }}>(護眼模式)</span></span>
@@ -613,239 +431,381 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                 </span>
               )}
             </div>
-            <div className="segmented-pill-capsule" style={{ padding: '3px' }}>
-              {([10, 20, 30, 40, 50, 60] as const).map((mins) => {
-                const isActive = timerState.duration === mins && timerState.remainingSeconds > 0;
-                
-                // 依據 10/20/30/40/50/60 繪製專屬扇形與時針
-                const renderClockSvg = () => {
-                  switch (mins) {
-                    case 10:
-                      return (
-                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
-                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
-                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 29.26 11.5 Z" fill="currentColor" opacity="0.35" />
-                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <line x1="18" y1="18" x2="25.8" y2="13.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
-                        </svg>
-                      );
-                    case 20:
-                      return (
-                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
-                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
-                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 29.26 24.5 Z" fill="currentColor" opacity="0.35" />
-                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <line x1="18" y1="18" x2="25.8" y2="22.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
-                        </svg>
-                      );
-                    case 30:
-                      return (
-                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
-                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
-                          <path d="M 18 18 L 18 5 A 13 13 0 0 1 18 31 Z" fill="currentColor" opacity="0.35" />
-                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <line x1="18" y1="18" x2="18" y2="27" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
-                        </svg>
-                      );
-                    case 40:
-                      return (
-                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
-                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
-                          <path d="M 18 18 L 18 5 A 13 13 0 1 1 6.74 24.5 Z" fill="currentColor" opacity="0.35" />
-                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <line x1="18" y1="18" x2="10.2" y2="22.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
-                        </svg>
-                      );
-                    case 50:
-                      return (
-                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
-                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
-                          <path d="M 18 18 L 18 5 A 13 13 0 1 1 6.74 11.5 Z" fill="currentColor" opacity="0.35" />
-                          <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <line x1="18" y1="18" x2="10.2" y2="13.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
-                        </svg>
-                      );
-                    case 60:
-                      return (
-                        <svg viewBox="0 0 36 36" style={{ width: '20px', height: '20px', color: 'currentColor' }}>
-                          <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
-                          <circle cx="18" cy="18" r="13" fill="currentColor" opacity="0.35" />
-                          <line x1="18" y1="18" x2="18" y2="7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                          <circle cx="18" cy="18" r="1.5" fill="currentColor" />
-                        </svg>
-                      );
-                  }
-                };
 
-                return (
-                  <button
-                    key={`timer-${mins}`}
-                    type="button"
-                    className={`segmented-pill-btn ${isActive ? 'active' : ''}`}
-                    onClick={() => readingTimer.setTimer(mins)}
-                    title={isActive ? `取消 ${mins} 分鐘閱讀計時` : `設定 ${mins} 分鐘閱讀計時`}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '2px',
-                      padding: '0.45rem 0.15rem'
-                    }}
-                  >
-                    {renderClockSvg()}
-                    <span style={{ fontSize: '0.72rem', fontWeight: isActive ? 700 : 500 }}>
-                      {mins}分
-                    </span>
-                  </button>
-                );
-              })}
+            {/* 💡 一體化卡片：外觀、高度與背景比照圖 1 主題顏色 */}
+            <div className="settings-theme-unified-card">
+              {/* 💡 上半部 6 欄 Grid (10分、20分、30分、40分、|、自訂時間) */}
+              <div className="theme-swatches-grid-6col">
+                {([10, 20, 30, 40] as const).map((mins) => {
+                  const isActive = timerState.duration === mins && timerState.remainingSeconds > 0;
+                  
+                  // 依據 10/20/30/40 繪製專屬扇形與時針
+                  const renderClockSvg = () => {
+                    switch (mins) {
+                      case 10:
+                        return (
+                          <svg viewBox="0 0 36 36" style={{ width: '18px', height: '18px', color: 'currentColor' }}>
+                            <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                            <path d="M 18 18 L 18 5 A 13 13 0 0 1 29.26 11.5 Z" fill="currentColor" opacity="0.35" />
+                            <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                            <line x1="18" y1="18" x2="25.8" y2="13.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                            <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                          </svg>
+                        );
+                      case 20:
+                        return (
+                          <svg viewBox="0 0 36 36" style={{ width: '18px', height: '18px', color: 'currentColor' }}>
+                            <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                            <path d="M 18 18 L 18 5 A 13 13 0 0 1 29.26 24.5 Z" fill="currentColor" opacity="0.35" />
+                            <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                            <line x1="18" y1="18" x2="25.8" y2="22.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                            <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                          </svg>
+                        );
+                      case 30:
+                        return (
+                          <svg viewBox="0 0 36 36" style={{ width: '18px', height: '18px', color: 'currentColor' }}>
+                            <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                            <path d="M 18 18 L 18 5 A 13 13 0 0 1 18 31 Z" fill="currentColor" opacity="0.35" />
+                            <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                            <line x1="18" y1="18" x2="18" y2="27" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                            <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                          </svg>
+                        );
+                      case 40:
+                        return (
+                          <svg viewBox="0 0 36 36" style={{ width: '18px', height: '18px', color: 'currentColor' }}>
+                            <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.65" />
+                            <path d="M 18 18 L 18 5 A 13 13 0 1 1 6.74 24.5 Z" fill="currentColor" opacity="0.35" />
+                            <line x1="18" y1="18" x2="18" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                            <line x1="18" y1="18" x2="10.2" y2="22.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                            <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+                          </svg>
+                        );
+                    }
+                  };
+
+                  return (
+                    <div
+                      key={`timer-${mins}`}
+                      className={`theme-color-card ${isActive ? 'selected' : ''}`}
+                      onClick={() => readingTimer.setTimer(mins)}
+                      title={isActive ? `取消 ${mins} 分鐘閱讀計時` : `設定 ${mins} 分鐘閱讀計時`}
+                    >
+                      <div className="theme-color-swatch timer-clock-swatch">
+                        {renderClockSvg()}
+                      </div>
+                      <div className="theme-color-name">
+                        {mins}分
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* 5. 分隔線「|」 (居中區隔預設時間與自訂時間，對齊上方主題區隔線) */}
+                <div className="theme-divider-cell" title="區隔線">
+                  <span className="theme-divider-text">|</span>
+                </div>
+
+                {/* 6. 自訂時間圓圈 (預設顯示「+」，選定後顯示「✓」，點擊切換並展開/收合時間自訂抽屜) */}
+                {(() => {
+                  const isCustomActive = timerState.duration !== null && 
+                    timerState.remainingSeconds > 0 && 
+                    ![10, 20, 30, 40].includes(timerState.duration);
+                  const displayMins = isCustomActive && timerState.duration 
+                    ? timerState.duration 
+                    : customTimerMinutes;
+
+                  return (
+                    <div
+                      className={`theme-color-card ${isCustomActive ? 'selected' : ''}`}
+                      onClick={() => {
+                        if (!isCustomActive) {
+                          readingTimer.setTimer(customTimerMinutes);
+                          setShowCustomTimerDrawer(true);
+                        } else {
+                          setShowCustomTimerDrawer(prev => !prev);
+                        }
+                      }}
+                      title={`自訂時間：${displayMins}分鐘 (點擊設定並展開/收合抽屜)`}
+                    >
+                      <div className="theme-color-swatch timer-clock-swatch">
+                        {isCustomActive ? (
+                          <Check size={13} strokeWidth={3.5} />
+                        ) : (
+                          <Plus size={13} strokeWidth={2.8} />
+                        )}
+                      </div>
+                      <div className="theme-color-name">{displayMins}分</div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* 💡 下半部：展開的自訂時間抽屜 (以 5 分鐘為單位，支援上下按與手機滑動) */}
+              {showCustomTimerDrawer && (
+                <div className="theme-unified-drawer-section animate-fade-in">
+                  {/* 細膩虛線分隔線 */}
+                  <div className="theme-unified-divider" />
+
+                  {/* 1. 上下按步進器 (Stepper Row，支援 5 分鐘步進) */}
+                  <div className="custom-timer-stepper-row">
+                    <button
+                      type="button"
+                      className="custom-timer-step-btn"
+                      onClick={() => {
+                        const newMins = Math.max(5, customTimerMinutes - 5);
+                        setCustomTimerMinutes(newMins);
+                        try { localStorage.setItem('cbeta_custom_timer_mins', String(newMins)); } catch {}
+                        if (timerState.duration !== null && ![10, 20, 30, 40].includes(timerState.duration) && timerState.remainingSeconds > 0) {
+                          readingTimer.extendTimer(newMins);
+                        }
+                      }}
+                      disabled={customTimerMinutes <= 5}
+                      title="減少 5 分鐘"
+                    >
+                      <Minus size={13} strokeWidth={2.8} />
+                      <span>5分</span>
+                    </button>
+
+                    <div className="custom-timer-display-pill">
+                      <span className="custom-timer-number">{customTimerMinutes}</span>
+                      <span className="custom-timer-unit">分鐘</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="custom-timer-step-btn"
+                      onClick={() => {
+                        const newMins = Math.min(180, customTimerMinutes + 5);
+                        setCustomTimerMinutes(newMins);
+                        try { localStorage.setItem('cbeta_custom_timer_mins', String(newMins)); } catch {}
+                        if (timerState.duration !== null && ![10, 20, 30, 40].includes(timerState.duration) && timerState.remainingSeconds > 0) {
+                          readingTimer.extendTimer(newMins);
+                        }
+                      }}
+                      disabled={customTimerMinutes >= 180}
+                      title="增加 5 分鐘"
+                    >
+                      <Plus size={13} strokeWidth={2.8} />
+                      <span>5分</span>
+                    </button>
+                  </div>
+
+                  {/* 2. 手機/觸控滑動條 (Range Slider Row，以 5 分鐘為單位) */}
+                  <div className="custom-timer-slider-row">
+                    <span className="custom-timer-slider-bound">5分</span>
+                    <input
+                      type="range"
+                      min={5}
+                      max={180}
+                      step={5}
+                      value={customTimerMinutes}
+                      onChange={(e) => {
+                        const newMins = parseInt(e.target.value, 10);
+                        setCustomTimerMinutes(newMins);
+                        try { localStorage.setItem('cbeta_custom_timer_mins', String(newMins)); } catch {}
+                        if (timerState.duration !== null && ![10, 20, 30, 40].includes(timerState.duration) && timerState.remainingSeconds > 0) {
+                          readingTimer.extendTimer(newMins);
+                        }
+                      }}
+                      className="custom-timer-range-slider"
+                      title={`滑動調整時間：${customTimerMinutes}分鐘`}
+                    />
+                    <span className="custom-timer-slider-bound">180分</span>
+                  </div>
+
+                  {/* 3. 快捷時長膠囊與結束按鈕 */}
+                  <div className="custom-timer-quick-capsules">
+                    {[15, 30, 45, 60, 75, 90, 120].map((quickMins) => {
+                      const isQuickSelected = customTimerMinutes === quickMins;
+                      return (
+                        <button
+                          key={`quick-${quickMins}`}
+                          type="button"
+                          className={`custom-timer-quick-chip ${isQuickSelected ? 'active' : ''}`}
+                          onClick={() => {
+                            setCustomTimerMinutes(quickMins);
+                            try { localStorage.setItem('cbeta_custom_timer_mins', String(quickMins)); } catch {}
+                            readingTimer.setTimer(quickMins);
+                          }}
+                        >
+                          {quickMins}分
+                        </button>
+                      );
+                    })}
+
+                    {timerState.duration !== null && timerState.remainingSeconds > 0 && (
+                      <button
+                        type="button"
+                        className="custom-timer-stop-chip"
+                        onClick={() => readingTimer.setTimer(null)}
+                        title="結束當前閱讀計時"
+                      >
+                        結束計時
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* 6. 其他設定 */}
+          {/* 6. 其他設定 (方案 1：雙分組一體化卡片，採用簡潔線條符號與清晰標題小標) */}
           <div className="settings-section">
             <div className="settings-section-title">其他設定</div>
-            <div className="settings-toggle-group">
-              {/* 1. 閱讀頁上下控制列 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => handleCheckboxChange('showReaderControls')}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">閱讀頁上下控制列</div>
-                  <div className="settings-toggle-desc">開啟時顯示頂部與底部工具列，關閉時隱藏以提供全螢幕閱讀體驗</div>
+
+            <div className="settings-other-groups-container">
+              {/* 分組一：閱讀介面與顯示 */}
+              <div className="settings-theme-unified-card settings-grouped-card">
+                <div className="settings-group-card-header">
+                  <span>閱讀介面與顯示</span>
                 </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.customVisibleElements?.showReaderControls ?? true} 
-                    onChange={() => handleCheckboxChange('showReaderControls')}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
+
+                <div className="settings-grouped-list">
+                  {/* 1. 上方控制工具列 */}
+                  <div 
+                    className="settings-grouped-item"
+                    onClick={() => handleCheckboxChange('showReaderControls')}
+                  >
+                    <div className="settings-item-left">
+                      <div className="settings-symbol-badge">
+                        <SlidersHorizontal size={15} strokeWidth={2.2} />
+                      </div>
+                      <div className="settings-item-texts">
+                        <div className="settings-item-title">上方控制工具列</div>
+                        <div className="settings-item-subtitle">開啟顯示頂部控制列，關閉即全螢幕讀經</div>
+                      </div>
+                    </div>
+                    <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                      <input 
+                        type="checkbox" 
+                        checked={settings.customVisibleElements?.showReaderControls ?? true} 
+                        onChange={() => handleCheckboxChange('showReaderControls')}
+                      />
+                      <span className="settings-switch-slider" />
+                    </label>
+                  </div>
+
+                  {/* 2. 頂部浮動經題 */}
+                  <div 
+                    className="settings-grouped-item"
+                    onClick={() => handleCheckboxChange('showFloatingTitle')}
+                  >
+                    <div className="settings-item-left">
+                      <div className="settings-symbol-badge">
+                        <PanelTop size={15} strokeWidth={2.2} />
+                      </div>
+                      <div className="settings-item-texts">
+                        <div className="settings-item-title">頂部浮動經題</div>
+                        <div className="settings-item-subtitle">下滑閱讀時於頂部浮動顯示經題膠囊</div>
+                      </div>
+                    </div>
+                    <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                      <input 
+                        type="checkbox" 
+                        checked={settings.customVisibleElements?.showFloatingTitle ?? false} 
+                        onChange={() => handleCheckboxChange('showFloatingTitle')}
+                      />
+                      <span className="settings-switch-slider" />
+                    </label>
+                  </div>
+
+                  {/* 3. 經文隨文筆記 */}
+                  <div 
+                    className="settings-grouped-item"
+                    onClick={() => handleCheckboxChange('showNoteInText')}
+                  >
+                    <div className="settings-item-left">
+                      <div className="settings-symbol-badge">
+                        <FileEdit size={15} strokeWidth={2.2} />
+                      </div>
+                      <div className="settings-item-texts">
+                        <div className="settings-item-title">經文隨文筆記</div>
+                        <div className="settings-item-subtitle">經文段落下方直接顯示手寫感悟心得</div>
+                      </div>
+                    </div>
+                    <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                      <input 
+                        type="checkbox" 
+                        checked={settings.customVisibleElements?.showNoteInText ?? false} 
+                        onChange={() => handleCheckboxChange('showNoteInText')}
+                      />
+                      <span className="settings-switch-slider" />
+                    </label>
+                  </div>
+                </div>
               </div>
 
-              {/* 2. 自動接續閱讀 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => handleCheckboxChange('autoResumeProgress')}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">自動接續閱讀</div>
-                  <div className="settings-toggle-desc">開啟經文時自動回到上次閱讀段落，關閉時一律從頭開始閱讀</div>
+              {/* 分組二：進度與閱讀日誌 */}
+              <div className="settings-theme-unified-card settings-grouped-card">
+                <div className="settings-group-card-header">
+                  <span>進度與閱讀日誌</span>
                 </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
-                    onChange={() => handleCheckboxChange('autoResumeProgress')}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
-              </div>
 
-              {/* 3. 顯示筆記內容 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => handleCheckboxChange('showNoteInText')}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">顯示筆記內容</div>
-                  <div className="settings-toggle-desc">於經文段落下直接顯示您隨文記錄的感悟筆記與心得</div>
-                </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.customVisibleElements?.showNoteInText ?? false} 
-                    onChange={() => handleCheckboxChange('showNoteInText')}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
-              </div>
+                <div className="settings-grouped-list">
+                  {/* 4. 自動接續進度 */}
+                  <div 
+                    className="settings-grouped-item"
+                    onClick={() => handleCheckboxChange('autoResumeProgress')}
+                  >
+                    <div className="settings-item-left">
+                      <div className="settings-symbol-badge">
+                        <History size={15} strokeWidth={2.2} />
+                      </div>
+                      <div className="settings-item-texts">
+                        <div className="settings-item-title">自動接續進度</div>
+                        <div className="settings-item-subtitle">開啟經典自動精確跳轉至上次閱讀段落</div>
+                      </div>
+                    </div>
+                    <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                      <input 
+                        type="checkbox" 
+                        checked={settings.customVisibleElements?.autoResumeProgress ?? true} 
+                        onChange={() => handleCheckboxChange('autoResumeProgress')}
+                      />
+                      <span className="settings-switch-slider" />
+                    </label>
+                  </div>
 
-              {/* 4. 每日閱讀日誌 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => {
-                  const updated = {
-                    ...settings,
-                    readingLogEnabled: !(settings.readingLogEnabled ?? false)
-                  };
-                  onSave(updated);
-                }}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">每日閱讀日誌</div>
-                  <div className="settings-toggle-desc">自動記錄每日閱讀時長與天數，並於首頁提供行事曆日誌入口</div>
-                </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.readingLogEnabled ?? false} 
-                    onChange={() => {
+                  {/* 5. 每日閱讀日誌 */}
+                  <div 
+                    className="settings-grouped-item"
+                    onClick={() => {
                       const updated = {
                         ...settings,
                         readingLogEnabled: !(settings.readingLogEnabled ?? false)
                       };
                       onSave(updated);
                     }}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
-              </div>
-
-              {/* 5. 顯示閱讀頁經文經題 */}
-              <div 
-                className="settings-toggle-row"
-                onClick={() => handleCheckboxChange('showFloatingTitle')}
-              >
-                <div className="settings-toggle-info">
-                  <div className="settings-toggle-title">顯示閱讀頁經文經題</div>
-                  <div className="settings-toggle-desc">下滑閱讀時於頂部顯示當前經名膠囊，滑回頂部時自動隱藏</div>
+                  >
+                    <div className="settings-item-left">
+                      <div className="settings-symbol-badge">
+                        <Calendar size={15} strokeWidth={2.2} />
+                      </div>
+                      <div className="settings-item-texts">
+                        <div className="settings-item-title">每日閱讀日誌</div>
+                        <div className="settings-item-subtitle">記錄每日閱讀時間與修行天數足跡</div>
+                      </div>
+                    </div>
+                    <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                      <input 
+                        type="checkbox" 
+                        checked={settings.readingLogEnabled ?? false} 
+                        onChange={() => {
+                          const updated = {
+                            ...settings,
+                            readingLogEnabled: !(settings.readingLogEnabled ?? false)
+                          };
+                          onSave(updated);
+                        }}
+                      />
+                      <span className="settings-switch-slider" />
+                    </label>
+                  </div>
                 </div>
-                <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    checked={settings.customVisibleElements?.showFloatingTitle ?? false} 
-                    onChange={() => handleCheckboxChange('showFloatingTitle')}
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
               </div>
             </div>
-
-            {/* Cbeta Reader 簡易功能導覽 按鈕 */}
-            {onReplayOnboarding && (
-              <div style={{ marginTop: '0.75rem', width: '100%' }}>
-                <button
-                  type="button"
-                  onClick={onReplayOnboarding}
-                  style={{
-                    width: '100%',
-                    padding: '0.6rem 0.8rem',
-                    borderRadius: '8px',
-                    border: '1.2px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25))',
-                    backgroundColor: 'var(--theme-accent-light, rgba(140, 75, 39, 0.05))',
-                    color: 'var(--theme-accent, #8c4b27)',
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.45rem',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  <span>📖 Cbeta Reader 簡易功能導覽</span>
-                </button>
-              </div>
-            )}
           </div>
 
           {/* 7. 進階功能 (可點選 + / - 平滑展開與收合，預設收合) */}
@@ -1091,6 +1051,21 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
               </div>
             )}
           </div>
+
+          {/* 💡 📖 Cbeta Reader 簡易功能導覽 (精緻膠囊型式，移至「進階功能」之下) */}
+          {onReplayOnboarding && (
+            <div className="settings-guide-pill-wrapper">
+              <button
+                type="button"
+                className="settings-guide-pill-btn"
+                onClick={onReplayOnboarding}
+                title="開啟 Cbeta Reader 簡易功能導覽"
+              >
+                <span className="guide-pill-icon">📖</span>
+                <span>Cbeta Reader 簡易功能導覽</span>
+              </button>
+            </div>
+          )}
 
           {/* 5. 版本資訊與說明列 */}
           <div className="settings-version-row">
@@ -1345,16 +1320,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.6.7) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.6.8) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.6.7</span>
-                        <span className="changelog-date">(2026-09-27)</span>
+                        <span>⭐ App: v4.6.9</span>
+                        <span className="changelog-date">(2026-09-28)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 新增「自訂便籤卡」，支援 2×2/4×2/4×3/4×4/4×1 尺寸。</li>
-                        <li>• 讀者可自由填寫經文佳句、生活座右銘或修行發願文與署名。</li>
-                        <li>• 點擊卡片彈出排版控制台，支援自訂字體、字級、行高與邊距。</li>
+                        <li>• 主題顏色升級一體化卡片：第 5 欄為「|」區隔線，第 6 欄自訂圓圈（未選「+」、選中「✓」）。</li>
+                        <li>• 閱讀時間升級一體化卡片：上下 6 欄像素級對稱對齊，前 4 個為時鐘，第 5 欄為「|」，第 6 欄為自訂。</li>
+                        <li>• 時間抽屜支援 ±5 分步進器與手機滑動條：以 5 分鐘為單位自訂調節，提供快捷時間膠囊。</li>
                       </ul>
                     </div>
 
@@ -1377,6 +1352,28 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.8</span>
+                            <span className="changelog-date">(2026-09-27)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 簡化閱讀設定面板，暫時隱藏版面預覽與劃線樣式，聚焦閱讀頁核心控制。</li>
+                            <li>• 升級主題顏色 5 色圓圈精緻雙環光澤，第 5 圓圈與「+自訂」緊鄰靠攏。</li>
+                            <li>• 「Cbeta Reader 簡易功能導覽」升級為精緻膠囊並移至進階功能之下。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.7</span>
+                            <span className="changelog-date">(2026-09-27)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 首頁新增「自訂便籤小卡」，支援 2×2、4×2、4×3、4×4、4×1 自由規格。</li>
+                            <li>• 讀者可自由填寫經文佳句、自選法義或修行座右銘與署名出處。</li>
+                            <li>• 點擊卡片彈出排版控制台，支援自訂字體、字級、行高與邊距並即時預覽。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.6.6</span>

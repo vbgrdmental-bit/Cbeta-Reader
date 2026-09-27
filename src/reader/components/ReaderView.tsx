@@ -2487,8 +2487,8 @@ export function ReaderView({
         )}
       </div>
 
-      {/* ⏱️ 閱讀時間倒數計時浮動標籤 (若有設定閱讀時間) */}
-      {timerState.duration && timerState.remainingSeconds > 0 && (
+      {/* ⏱️ 閱讀時間倒數計時浮動標籤 (若有設定閱讀時間，且開啟「上方控制工具列」並處於顯示狀態) */}
+      {(settings.customVisibleElements?.showReaderControls ?? true) && showToolbar && timerState.duration && timerState.remainingSeconds > 0 && (
         <div 
           className="floating-bar-timer"
           style={{
