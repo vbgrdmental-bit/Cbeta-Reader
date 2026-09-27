@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.9` (App: v4.6.9 / Builder: v2.9.12)
+- **Current Version**: `v4.6.9` (App: v4.6.9 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.6.9 / Builder: v2.9.13** (2026-09-28)
+  - [Builder] 消除清單段落雙重重複：修復清單項目（`li` / `item`）內部包含 `<p>` 時外層與內層重複提取的 Bug，徹底根除《太虛大師年譜》(Y0013) 等經典相同段落重複出現兩次之問題。
+  - [Builder] 升級 `isAtStartOfContainer` 深度回溯演算法：精準沿著 DOM 樹向上追查非空文字，徹底杜絕段落中途換行之 `line_space` 被誤當成開頭縮排而轉成全形空格（如「本位　　者」、「腐化著　　手」等），還原 100% 正統流暢經文原文。
+  - [Builder] 經文段落全面相容清單縮排層級繼承，自動對齊 CBETA 權威編者附言與條列式註解格式。
 - **⭐ App: v4.6.9 / Builder: v2.9.12** (2026-09-28)
   - [App] 「設定閱讀時間 (護眼模式)」升級為「一體化卡片」：與主題顏色上下 6 欄像素級對稱對齊，背景、高度與邊界完全比照圖 1。
   - [App] 6 欄架構：前 4 個維持 10/20/30/40 分時鐘不變，第 5 欄改為「|」垂直分隔線（完美重合上方區隔線），第 6 欄改為自訂時間按鈕（預設「+」、選定「✓」，顯示目前自訂分鐘數）。

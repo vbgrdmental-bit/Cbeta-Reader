@@ -471,25 +471,27 @@ export class ReaderBuilder {
       return 0;
     };
     const isAtStartOfContainer = (container: HTMLElement, target: HTMLElement): boolean => {
-      const childNodes = Array.from(container.childNodes);
-      const targetIdx = childNodes.findIndex(node => node === target || node.contains(target));
-      if (targetIdx <= 0) return true;
-      
-      for (let i = 0; i < targetIdx; i++) {
-        const node = childNodes[i];
-        if (node.nodeType === Node.TEXT_NODE) {
-          if (node.textContent?.trim() !== '') {
-            return false;
+      // 深度向前追溯：從 target 開始沿著 DOM 樹向上巡查至 container
+      // 只要在 target 之前出現過任何實質文字（排除 lb 行號與校勘錨點），即代表 target 不在容器開頭
+      let curr: Node | null = target;
+      while (curr && curr !== container) {
+        let prev = curr.previousSibling;
+        while (prev) {
+          if (prev.nodeType === 3 /* Node.TEXT_NODE */) {
+            if (prev.textContent && prev.textContent.trim().length > 0) {
+              return false;
+            }
+          } else if (prev.nodeType === 1 /* Node.ELEMENT_NODE */) {
+            const htmlEl = prev as HTMLElement;
+            const isNoteOrAnchor = htmlEl.classList.contains('noteAnchor') || htmlEl.classList.contains('note') || htmlEl.tagName === 'A';
+            const isLb = htmlEl.classList.contains('lb') || htmlEl.id?.startsWith('p') || htmlEl.hasAttribute('line');
+            if (!isNoteOrAnchor && !isLb && htmlEl.textContent && htmlEl.textContent.trim().length > 0) {
+              return false;
+            }
           }
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-          const htmlEl = node as HTMLElement;
-          if (htmlEl.classList.contains('noteAnchor') || htmlEl.classList.contains('note') || htmlEl.tagName === 'A') {
-            continue;
-          }
-          if (htmlEl.textContent?.trim() !== '') {
-            return false;
-          }
+          prev = prev.previousSibling;
         }
+        curr = curr.parentNode;
       }
       return true;
     };
@@ -583,10 +585,12 @@ export class ReaderBuilder {
 
       // 列表 (UL/OL/LI/ITEM/P.lg) 處理原則：
       //   - <ul/ol/p.lg> 若有 <li>/<item>/<p.lg> 子行 → 跳過容器本身，讓子項目各自生成段落
-      //   - <li>/<item> 元素 → 各自建立獨立的清單段落，完整保留內嵌註解與標籤
+      //   - <li>/<item> 若內部有 <p>, <div.p>, <lg> 等段落子行 → 跳過清單容器本身，讓內部段落各自生成段落（徹底防止段落雙重重複！）
+      //   - <li>/<item> 元素無段落子行時 → 各自建立獨立的清單段落，完整保留內嵌註解與標籤
       const isListContainer = tagName === 'UL' || tagName === 'OL' || tagName === 'LIST' || (tagName === 'P' && el.classList.contains('lg')) || (tagName === 'DIV' && el.classList.contains('lg'));
       const hasListItemChildren = isListContainer && (!!el.querySelector('li, .li, item, .item') || (el.querySelectorAll('p.lg, .lg').length > 0));
       const isListItem = tagName === 'LI' || el.classList.contains('li') || tagName === 'ITEM' || el.classList.contains('item');
+      const hasParagraphChildren = isListItem && (!!el.querySelector('p, .p, div.p, lg, .lg, l, .l'));
 
       // 附圖/圖表/雜項 (div-figure, figure, div-other) 處理原則：
       //   - 若內部有 <p>, <li>, <lg> 等段落子行 → 跳過容器本身，讓子行各自生成段落
@@ -595,7 +599,7 @@ export class ReaderBuilder {
       const hasChildParagraphs = isFigureContainer && (!!el.querySelector('p, .p, lg, .lg, l, .l, li, .li, item, .item, figure, .figure, .div-figure'));
 
       // 若為有子項目的容器，直接跳過容器本身（讓子項目各自生成段落）
-      if (hasVerseLineChildren || hasListItemChildren || hasChildParagraphs) {
+      if (hasVerseLineChildren || hasListItemChildren || hasParagraphChildren || hasChildParagraphs) {
         currentNode = iterator.nextNode();
         continue;
       }
@@ -799,15 +803,17 @@ export class ReaderBuilder {
           }
 
           // 💡 清單 (LI/ITEM) 項目縮排與標籤樣式優化 (層級遞進全形空格縮排)
-          if (isListItem) {
+          const isInsideListItem = !!el.closest('li, item, .li, .item');
+          const isItemOrInsideItem = isListItem || (isInsideListItem && tagName === 'P');
+          if (isItemOrInsideItem) {
             const trimmed = cleanContent.replace(/^[ 　\t]+/, '');
             
-            // 計算當前 <item>/<li> 在 HTML 結構中的嵌套層級 depth
+            // 計算當前元素在 HTML 結構中的嵌套層級 depth
             let depth = 0;
-            let curr = el.parentElement;
+            let curr: HTMLElement | null = el.parentElement;
             while (curr && curr.tagName.toUpperCase() !== 'BODY') {
               const tag = curr.tagName.toUpperCase();
-              if (tag === 'UL' || tag === 'OL' || tag === 'LIST' || tag === 'ITEM' || (tag === 'P' && curr.classList.contains('lg')) || curr.classList.contains('lg')) {
+              if (tag === 'UL' || tag === 'OL' || tag === 'LIST' || tag === 'ITEM' || tag === 'LI' || (tag === 'P' && curr.classList.contains('lg')) || curr.classList.contains('lg')) {
                 depth++;
               }
               curr = curr.parentElement;
@@ -820,10 +826,16 @@ export class ReaderBuilder {
             const hasNumeralOrHeader = /^[一二三四五六七八九十百千萬0-9１２３４５６７８９０上下中第]+/.test(trimmed) || 
                                        /^[•◦\-－(（]/.test(trimmed);
 
+            const isSubParagraphInItem = isInsideListItem && el.previousElementSibling !== null;
+
             if (hasNumeralOrHeader) {
               cleanContent = `${baseIndent}${trimmed}`;
             } else if (trimmed) {
-              cleanContent = `${baseIndent}• ${trimmed}`;
+              if (isSubParagraphInItem) {
+                cleanContent = `${baseIndent}　 ${trimmed}`;
+              } else {
+                cleanContent = `${baseIndent}• ${trimmed}`;
+              }
             }
           }
 
