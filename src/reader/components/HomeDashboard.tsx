@@ -2261,8 +2261,6 @@ export function HomeDashboard({
         const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
         const currentWeekday = weekdays[now.getDay()];
         const currentDay = now.getDate();
-        const currentMonth = now.getMonth() + 1;
-        const currentYear = now.getFullYear();
         const lunarInfo = getLunarInfo(now);
 
         if (size === 'size-1x1') {
@@ -2285,12 +2283,11 @@ export function HomeDashboard({
               onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('reading-log') : undefined}
               title="點擊查看每日閱讀日誌"
             >
-              {/* 左側：iOS 經典日曆方塊 */}
+              {/* 左側：iOS 經典日曆方塊（已簡化：省略西元年月，突顯星期、當日與農曆） */}
               <div className="cal-left-block">
                 <div className="cal-weekday-label">{currentWeekday}</div>
                 <div className="cal-day-number">{currentDay}</div>
-                <div className="cal-month-year">{currentYear}年 {currentMonth}月</div>
-                <div className="cal-lunar-label" title={lunarInfo.festival || (lunarInfo.isZhai ? '十齋日' : undefined)}>
+                <div className="cal-lunar-label" title={lunarInfo.noteDetail}>
                   農曆{lunarInfo.fullStr}{lunarInfo.festival ? ` · ${lunarInfo.cellLabel}` : (lunarInfo.isZhai ? ' · 十齋' : '')}
                 </div>
                 <div className={`cal-bottom-tag ${isToday ? 'active' : ''}`}>
@@ -2350,21 +2347,20 @@ export function HomeDashboard({
           );
         }
 
-        // 預設 2x2 正方形規格：iOS 月曆小卡樣式 (當日日期 + 1~2 則經書摘要)
+        // 預設 2x2 正方形規格：iOS 月曆小卡樣式 (已簡化：省略月份，當日日期 + 小小字農曆 + 1~2 則經書摘要)
         return (
           <div 
             className="ios-calendar-widget-2x2"
             onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('reading-log') : undefined}
             title="點擊查看每日閱讀日誌"
           >
-            {/* 上部：經典 iOS 日期頭部 */}
+            {/* 上部：經典 iOS 日期頭部（省略月份，29 旁配置農曆標籤） */}
             <div className="cal-2x2-header">
               <div className="cal-2x2-date-box">
                 <div className="cal-2x2-weekday">{currentWeekday}</div>
                 <div className="cal-2x2-day-row">
                   <span className="cal-2x2-day">{currentDay}</span>
-                  <span className="cal-2x2-month">{currentMonth}月</span>
-                  <span className="cal-2x2-lunar-badge" title={lunarInfo.festival || (lunarInfo.isZhai ? '十齋日' : undefined)}>
+                  <span className="cal-2x2-lunar-badge" title={lunarInfo.noteDetail}>
                     農曆{lunarInfo.fullStr}{lunarInfo.festival ? ` · ${lunarInfo.cellLabel}` : (lunarInfo.isZhai ? ' · 十齋' : '')}
                   </span>
                 </div>

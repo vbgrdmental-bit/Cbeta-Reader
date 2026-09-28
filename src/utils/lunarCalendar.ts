@@ -8,13 +8,15 @@ export interface LunarInfo {
   lunarMonth: number;
   lunarDay: number;
   isLeapMonth: boolean;
+  monthDays: number;     // 該農曆月總天數 (29 為小月，30 為大月)
   monthStr: string;      // 例如 "八月"、"閏六月"
   dayStr: string;        // 例如 "初一"、"十九"、"三十"
   fullStr: string;       // 例如 "八月十九"
   cellLabel: string;     // 月曆格子下方精簡展示（例如 "觀音誕"、"十齋"、"十九"）
-  festival?: string;     // 佛菩薩聖誕或紀念日
+  festival?: string;     // 佛菩薩聖誕或紀念日（例如 "藥師如來誕"）
   isZhai: boolean;       // 是否為十齋日
-  zhaiName?: string;     // 齋日名稱（例如 "十齋日"、"朔望齋"）
+  zhaiName?: string;     // 齋日名稱（例如 "十齋日"）
+  noteDetail: string;    // 下方備註完整文字（例如 "農曆九月三十 · 藥師如來誕 · 十齋日"）
 }
 
 // 漢傳佛教常用佛菩薩聖誕與重要修持紀念日（農曆月份-日期）
@@ -53,8 +55,18 @@ const LUNAR_DAY_NAMES = [
   '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'
 ];
 
-// 《地藏經》十齋日：每月初一、初八、十四、十五、十八、廿三、廿四、廿八、廿九、三十
-const TEN_ZHAI_DAYS = new Set([1, 8, 14, 15, 18, 23, 24, 28, 29, 30]);
+/** 判定指定公曆日期所屬之農曆月為大月(30天)或小月(29天) */
+function getLunarMonthLength(date: Date, curDay: number, curMonthRaw: string): number {
+  const test30 = new Date(date);
+  test30.setDate(date.getDate() + (30 - curDay));
+  const parts30 = new Intl.DateTimeFormat('zh-TW-u-ca-chinese', { 
+    month: 'numeric', 
+    day: 'numeric' 
+  }).formatToParts(test30);
+  const day30 = parseInt(parts30.find(p => p.type === 'day')?.value || '1', 10);
+  const month30 = parts30.find(p => p.type === 'month')?.value || '1';
+  return (month30 === curMonthRaw && day30 === 30) ? 30 : 29;
+}
 
 /** 快取近期日期的農曆計算結果，避免重複格式化 */
 const lunarCache = new Map<string, LunarInfo>();
@@ -86,38 +98,35 @@ export function getLunarInfo(date: Date): LunarInfo {
     const dName = LUNAR_DAY_NAMES[dayNum] || `${dayNum}日`;
     const fullStr = `${mName}${dName}`;
 
+    // 計算該農曆月是大月(30天)還是小月(29天)
+    const monthDays = getLunarMonthLength(date, dayNum, mPart);
+
     // 檢查是否有節日
     const festKey = `${monthNum}-${dayNum}`;
     let festival = BUDDHIST_FESTIVALS[festKey];
 
-    // 特殊情況：若無三十日，七月廿九可視為地藏誕，九月廿九可視為藥師誕
-    if (!festival && dayNum === 29) {
-      // 判斷次日是否為初一
-      const nextDay = new Date(date);
-      nextDay.setDate(date.getDate() + 1);
-      const nextParts = new Intl.DateTimeFormat('zh-TW-u-ca-chinese', { day: 'numeric' }).formatToParts(nextDay);
-      const nextDayNum = parseInt(nextParts.find(p => p.type === 'day')?.value || '1', 10);
-      if (nextDayNum === 1) {
-        if (monthNum === 7) festival = '地藏菩薩誕';
-        if (monthNum === 9) festival = '藥師如來誕';
-      }
+    // 特殊情況：若為小月無三十日，七月廿九可視為地藏菩薩誕，九月廿九可視為藥師如來誕
+    if (!festival && monthDays === 29 && dayNum === 29) {
+      if (monthNum === 7) festival = '地藏菩薩誕';
+      if (monthNum === 9) festival = '藥師如來誕';
     }
 
-    const isZhai = TEN_ZHAI_DAYS.has(dayNum);
-    let zhaiName: string | undefined = undefined;
-    if (isZhai) {
-      zhaiName = (dayNum === 1 || dayNum === 15) ? '朔望齋' : '十齋日';
-    }
+    // 💡 依《地藏經》十齋日：初一、初八、十四、十五、十八、二三、二四、月底三日
+    // 月底三日有大小月之分：大月為二八、二九、三十；小月為二七、二八、二九
+    const zhaiDaysSet = monthDays === 30 
+      ? new Set([1, 8, 14, 15, 18, 23, 24, 28, 29, 30])
+      : new Set([1, 8, 14, 15, 18, 23, 24, 27, 28, 29]);
 
-    // 月曆格子下方精簡展示 (小字)：
-    // 1. 若有佛菩薩紀念日，優先顯示（如 "觀音誕"、"地藏誕"）
-    // 2. 若為初一，顯示月份朔日（如 "八月初一" 或 "初一"）
-    // 3. 若為十五，顯示 "十五望" 或 "十五"
-    // 4. 若為十齋日，顯示 "十齋"
-    // 5. 一般日子顯示農曆日（如 "十九"、"廿二"）
+    const isZhai = zhaiDaysSet.has(dayNum);
+    const zhaiName = isZhai ? '十齋日' : undefined;
+
+    // 💡 月曆格子下方精簡展示 (小字)：
+    // 1. 若十齋日有遇到佛教常用日期，則月曆上優先顯示佛教常用日期（如 "藥師誕"、"觀音誕"）
+    // 2. 若無節日且為十齋日，顯示 "十齋"（初一顯示 "初一·齋"、十五顯示 "十五·齋"）
+    // 3. 一般日子顯示農曆日（如 "十九"、"廿二"）
     let cellLabel = dName;
     if (festival) {
-      // 精簡名稱至 3~4 字
+      // 精簡名稱至 3~4 字呈現於月曆小格中
       cellLabel = festival.replace('菩薩', '').replace('如來', '').replace('古佛', '');
     } else if (dayNum === 1) {
       cellLabel = isZhai ? '初一·齋' : '初一';
@@ -127,18 +136,30 @@ export function getLunarInfo(date: Date): LunarInfo {
       cellLabel = '十齋';
     }
 
+    // 💡 下方備註接續二則並陳（例如：農曆九月三十 · 藥師如來誕 · 十齋日）
+    const noteParts = [`農曆${fullStr}`];
+    if (festival) {
+      noteParts.push(festival);
+    }
+    if (isZhai) {
+      noteParts.push('十齋日');
+    }
+    const noteDetail = noteParts.join(' · ');
+
     const res: LunarInfo = {
       lunarYear: y,
       lunarMonth: monthNum,
       lunarDay: dayNum,
       isLeapMonth: isLeap,
+      monthDays,
       monthStr: mName,
       dayStr: dName,
       fullStr,
       cellLabel,
       festival,
       isZhai,
-      zhaiName
+      zhaiName,
+      noteDetail
     };
 
     lunarCache.set(cacheKey, res);
@@ -150,11 +171,13 @@ export function getLunarInfo(date: Date): LunarInfo {
       lunarMonth: m,
       lunarDay: d,
       isLeapMonth: false,
+      monthDays: 30,
       monthStr: `${m}月`,
       dayStr: `${d}日`,
       fullStr: `${m}月${d}日`,
       cellLabel: `${d}日`,
-      isZhai: false
+      isZhai: false,
+      noteDetail: `農曆${m}月${d}日`
     };
     return fallback;
   }

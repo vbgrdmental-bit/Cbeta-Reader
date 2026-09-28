@@ -423,7 +423,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                     </span>
                     <span 
                       className={`cal-cell-lunar ${lunar.festival ? 'festival' : lunar.isZhai ? 'zhai' : ''}`}
-                      title={`${lunar.fullStr}${lunar.festival ? `（${lunar.festival}）` : ''}${lunar.isZhai ? `【${lunar.zhaiName || '十齋日'}】` : ''}`}
+                      title={lunar.noteDetail}
                     >
                       {lunar.cellLabel}
                     </span>
@@ -446,41 +446,88 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
 
           {/* 💡 3. 當日閱讀明細清單 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-            {/* 明細清單標題 */}
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between',
-              padding: '0 0.2rem' 
-            }}>
-              <span style={{ 
-                fontSize: '0.92rem', 
-                fontWeight: 700, 
-                color: 'var(--text-primary)',
-                fontFamily: 'var(--font-serif)',
-                display: 'flex',
-                alignItems: 'baseline',
+            {/* 明細清單標題（遇十齋日或佛教紀念日，二則並陳且將「閱讀記錄」移至下一行） */}
+            {selectedDateLunar && (selectedDateLunar.festival || selectedDateLunar.isZhai) ? (
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
                 gap: '4px',
-                flexWrap: 'wrap'
+                padding: '0 0.2rem' 
               }}>
-                <span>📜 {selectedDate}</span>
-                {selectedDateLunar && (
+                {/* 第一行：日期與農曆/節日/十齋日備註（接續二則並陳） */}
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
                   <span style={{ 
-                    fontSize: '0.76rem', 
-                    fontWeight: 600, 
-                    color: selectedDateLunar.festival ? '#c0392b' : 'var(--text-muted)' 
+                    fontSize: '0.92rem', 
+                    fontWeight: 700, 
+                    color: 'var(--text-primary)',
+                    fontFamily: 'var(--font-serif)'
                   }}>
-                    （農曆{selectedDateLunar.fullStr}{selectedDateLunar.festival ? ` · ${selectedDateLunar.festival}` : (selectedDateLunar.isZhai ? ` · ${selectedDateLunar.zhaiName || '十齋日'}` : '')}）
+                    📜 {selectedDate}
+                  </span>
+                  <span style={{ 
+                    fontSize: '0.78rem', 
+                    fontWeight: 600, 
+                    color: selectedDateLunar.festival ? '#c0392b' : 'var(--theme-accent, #8b5a2b)' 
+                  }}>
+                    （{selectedDateLunar.noteDetail}）
+                  </span>
+                </div>
+                {/* 第二行：將「閱讀記錄」移至下一行，並陳累計筆數與時數 */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  marginTop: '1px'
+                }}>
+                  <span style={{ 
+                    fontSize: '0.88rem', 
+                    fontWeight: 700, 
+                    color: 'var(--text-primary)',
+                    fontFamily: 'var(--font-serif)'
+                  }}>
+                    閱讀記錄
+                  </span>
+                  {selectedDateLogs.length > 0 && (
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                      共 {selectedDateLogs.length} 筆 • 累計 {formatDuration(selectedDateTotalMinutes)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ) : (
+              /* 平常日：單行排版 */
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                padding: '0 0.2rem' 
+              }}>
+                <span style={{ 
+                  fontSize: '0.92rem', 
+                  fontWeight: 700, 
+                  color: 'var(--text-primary)',
+                  fontFamily: 'var(--font-serif)',
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: '5px',
+                  flexWrap: 'wrap'
+                }}>
+                  <span>📜 {selectedDate}</span>
+                  {selectedDateLunar && (
+                    <span style={{ fontSize: '0.78rem', fontWeight: 500, color: 'var(--text-muted)' }}>
+                      （{selectedDateLunar.noteDetail}）
+                    </span>
+                  )}
+                  <span>閱讀記錄</span>
+                </span>
+                {selectedDateLogs.length > 0 && (
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                    共 {selectedDateLogs.length} 筆 • 累計 {formatDuration(selectedDateTotalMinutes)}
                   </span>
                 )}
-                <span>閱讀記錄</span>
-              </span>
-              {selectedDateLogs.length > 0 && (
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  共 {selectedDateLogs.length} 筆 • 累計 {formatDuration(selectedDateTotalMinutes)}
-                </span>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* 明細項目列表 */}
             {selectedDateLogs.length === 0 ? (

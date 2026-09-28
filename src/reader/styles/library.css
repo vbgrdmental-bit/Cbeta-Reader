@@ -6457,21 +6457,21 @@ body.theme-ebony .timer-circle::before {
 
 /* 💡 圖1：2x2 與 4x2 當日小小字農曆標籤 */
 .cal-2x2-lunar-badge {
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 600;
   color: var(--text-muted);
-  margin-left: 6px;
-  line-height: 1;
+  margin-left: 5px;
+  line-height: 1.2;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
 .cal-lunar-label {
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 600;
   color: var(--text-muted);
-  margin-top: 3px;
-  line-height: 1.1;
+  margin-top: 4px;
+  line-height: 1.2;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
