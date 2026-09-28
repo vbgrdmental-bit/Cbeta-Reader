@@ -6428,6 +6428,77 @@ body.theme-ebony .timer-circle::before {
   margin-top: 1px;
 }
 
+/* 💡 圖1：首頁日誌小卡經書右側小小的「→」(圓型/淺灰)，可以直接點到閱讀 */
+.cal-book-action-btn {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  border-radius: 50%;
+  background: var(--bg-hover, rgba(0, 0, 0, 0.05));
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 6px;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.cal-book-action-btn:hover {
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  border-color: transparent;
+  transform: scale(1.1);
+}
+
+/* 💡 圖1：2x2 與 4x2 當日小小字農曆標籤 */
+.cal-2x2-lunar-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 6px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.cal-lunar-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 3px;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* 💡 圖2：月曆網格當日日期下方之佛教常用農曆小字標籤 */
+.cal-cell-lunar {
+  font-size: 0.58rem;
+  line-height: 1;
+  margin-top: 2px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  padding: 0 1px;
+}
+
+.cal-cell-lunar.festival {
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.cal-cell-lunar.zhai {
+  color: var(--theme-accent, #8b5a2b);
+  font-weight: 700;
+}
+
 .zen-quote-4x2 {
   text-align: center;
   align-items: center;

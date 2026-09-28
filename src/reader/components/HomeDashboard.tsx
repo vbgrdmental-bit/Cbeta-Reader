@@ -24,6 +24,7 @@ import {
   ALLOWED_SIZES_BY_TYPE,
   ZEN_ICONS_LIST
 } from '../../types/homeLayout';
+import { getLunarInfo } from '../../utils/lunarCalendar';
 
 interface HomeDashboardProps {
   downloadedBooks: BookMetadata[];
@@ -2262,6 +2263,7 @@ export function HomeDashboard({
         const currentDay = now.getDate();
         const currentMonth = now.getMonth() + 1;
         const currentYear = now.getFullYear();
+        const lunarInfo = getLunarInfo(now);
 
         if (size === 'size-1x1') {
           return (
@@ -2288,6 +2290,9 @@ export function HomeDashboard({
                 <div className="cal-weekday-label">{currentWeekday}</div>
                 <div className="cal-day-number">{currentDay}</div>
                 <div className="cal-month-year">{currentYear}年 {currentMonth}月</div>
+                <div className="cal-lunar-label" title={lunarInfo.festival || (lunarInfo.isZhai ? '十齋日' : undefined)}>
+                  農曆{lunarInfo.fullStr}{lunarInfo.festival ? ` · ${lunarInfo.cellLabel}` : (lunarInfo.isZhai ? ' · 十齋' : '')}
+                </div>
                 <div className={`cal-bottom-tag ${isToday ? 'active' : ''}`}>
                   {isToday ? (totalTodayMinutes && totalTodayMinutes > 0 ? `今日 ${totalTodayMinutes}分鐘` : '今日修持') : '每日日誌'}
                 </div>
@@ -2315,6 +2320,19 @@ export function HomeDashboard({
                           <div className="cal-event-name">{item.title}</div>
                           <div className="cal-event-detail">{item.detail}</div>
                         </div>
+                        {!isLayoutEditMode && (
+                          <button
+                            type="button"
+                            className="cal-book-action-btn"
+                            title="直接開啟此經閱讀"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelectBook(item.workId, undefined, undefined, 'resume');
+                            }}
+                          >
+                            <ArrowRight size={12} strokeWidth={2.4} />
+                          </button>
+                        )}
                       </div>
                     ))
                   ) : (
@@ -2346,6 +2364,9 @@ export function HomeDashboard({
                 <div className="cal-2x2-day-row">
                   <span className="cal-2x2-day">{currentDay}</span>
                   <span className="cal-2x2-month">{currentMonth}月</span>
+                  <span className="cal-2x2-lunar-badge" title={lunarInfo.festival || (lunarInfo.isZhai ? '十齋日' : undefined)}>
+                    農曆{lunarInfo.fullStr}{lunarInfo.festival ? ` · ${lunarInfo.cellLabel}` : (lunarInfo.isZhai ? ' · 十齋' : '')}
+                  </span>
                 </div>
               </div>
               <div className={`cal-2x2-status-pill ${isToday ? 'active' : ''}`}>
@@ -2363,6 +2384,19 @@ export function HomeDashboard({
                       <div className="cal-2x2-title">{item.title}</div>
                       <div className="cal-2x2-sub">{item.detail}</div>
                     </div>
+                    {!isLayoutEditMode && (
+                      <button
+                        type="button"
+                        className="cal-book-action-btn"
+                        title="直接開啟此經閱讀"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectBook(item.workId, undefined, undefined, 'resume');
+                        }}
+                      >
+                        <ArrowRight size={11} strokeWidth={2.4} />
+                      </button>
+                    )}
                   </div>
                 ))
               ) : (

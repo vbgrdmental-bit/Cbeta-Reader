@@ -9,6 +9,7 @@ import {
   clearAllReadingLogs,
   type ReadingLogEntry 
 } from '../../utils/db';
+import { getLunarInfo } from '../../utils/lunarCalendar';
 
 interface ReadingLogViewProps {
   onClose?: () => void;
@@ -153,6 +154,14 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
   const selectedDateTotalMinutes = useMemo(() => {
     return selectedDateLogs.reduce((acc, cur) => acc + (cur.durationMinutes || 0), 0);
   }, [selectedDateLogs]);
+
+  // 選中日期的農曆與佛教資訊
+  const selectedDateLunar = useMemo(() => {
+    if (!selectedDate) return null;
+    const parts = selectedDate.split('-').map(Number);
+    if (parts.length !== 3 || isNaN(parts[0]) || isNaN(parts[1]) || isNaN(parts[2])) return null;
+    return getLunarInfo(new Date(parts[0], parts[1] - 1, parts[2]));
+  }, [selectedDate]);
 
   // ── 月曆網格計算（以星期一為每週首日）──────────────────────────
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -360,7 +369,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
             }}>
               {/* 前置空格 */}
               {Array.from({ length: firstDayOffset }).map((_, i) => (
-                <div key={`empty-${i}`} style={{ height: '46px' }} />
+                <div key={`empty-${i}`} style={{ height: '48px' }} />
               ))}
 
               {/* 當月日期 */}
@@ -371,13 +380,15 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                 const isToday = dateStr === todayStr;
                 const minutes = dateMinutesMap.get(dateStr) || 0;
                 const hasRecord = minutes > 0;
+                const cellDate = new Date(currentYear, currentMonth, dayNum);
+                const lunar = getLunarInfo(cellDate);
 
                 return (
                   <button
                     key={dateStr}
                     onClick={() => setSelectedDate(dateStr)}
                     style={{
-                      height: '46px',
+                      height: '48px',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -397,22 +408,30 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                         ? 'var(--theme-accent, #8b5a2b)' 
                         : 'var(--text-primary)',
                       cursor: 'pointer',
-                      padding: '2px',
+                      padding: '2px 1px',
                       position: 'relative',
-                      transition: 'all 0.15s ease'
+                      transition: 'all 0.15s ease',
+                      overflow: 'hidden'
                     }}
                   >
                     <span style={{ 
-                      fontSize: '0.86rem', 
-                      fontWeight: isSelected || isToday || hasRecord ? 700 : 400 
+                      fontSize: '0.82rem', 
+                      lineHeight: 1.1,
+                      fontWeight: isSelected || isToday || hasRecord ? 700 : 500 
                     }}>
                       {dayNum}
                     </span>
+                    <span 
+                      className={`cal-cell-lunar ${lunar.festival ? 'festival' : lunar.isZhai ? 'zhai' : ''}`}
+                      title={`${lunar.fullStr}${lunar.festival ? `（${lunar.festival}）` : ''}${lunar.isZhai ? `【${lunar.zhaiName || '十齋日'}】` : ''}`}
+                    >
+                      {lunar.cellLabel}
+                    </span>
                     {hasRecord && (
                       <span style={{ 
-                        fontSize: '0.62rem', 
+                        fontSize: '0.56rem', 
                         color: 'var(--theme-accent, #8b5a2b)',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         lineHeight: 1,
                         marginTop: '1px'
                       }}>
@@ -438,9 +457,23 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                 fontSize: '0.92rem', 
                 fontWeight: 700, 
                 color: 'var(--text-primary)',
-                fontFamily: 'var(--font-serif)'
+                fontFamily: 'var(--font-serif)',
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: '4px',
+                flexWrap: 'wrap'
               }}>
-                📜 {selectedDate} 閱讀記錄
+                <span>📜 {selectedDate}</span>
+                {selectedDateLunar && (
+                  <span style={{ 
+                    fontSize: '0.76rem', 
+                    fontWeight: 600, 
+                    color: selectedDateLunar.festival ? '#c0392b' : 'var(--text-muted)' 
+                  }}>
+                    （農曆{selectedDateLunar.fullStr}{selectedDateLunar.festival ? ` · ${selectedDateLunar.festival}` : (selectedDateLunar.isZhai ? ` · ${selectedDateLunar.zhaiName || '十齋日'}` : '')}）
+                  </span>
+                )}
+                <span>閱讀記錄</span>
               </span>
               {selectedDateLogs.length > 0 && (
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
