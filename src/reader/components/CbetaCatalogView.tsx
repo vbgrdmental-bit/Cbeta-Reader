@@ -952,25 +952,6 @@ export function CbetaCatalogView({
     }
   };
 
-  const openBatchDownloadModal = (defaultName: string) => {
-    const storedFolders = localStorage.getItem('cbeta_reader_folders');
-    let loadedFolders: any[] = [];
-    if (storedFolders) {
-      try {
-        loadedFolders = JSON.parse(storedFolders);
-        setFolders(loadedFolders);
-        if (loadedFolders.length > 0) {
-          setSelectedExistingFolderId(prev => prev && loadedFolders.some(f => f.id === prev) ? prev : loadedFolders[0].id);
-        }
-      } catch {
-        // ignore
-      }
-    }
-    setBatchFolderName(defaultName);
-    setBatchFolderMode('unclassified'); // 💡 依讀者需求，預設為「放入 我的書櫃/近期下載」
-    setShowBatchDownloadModal(true);
-  };
-
   // 執行批量下載
   const handleExecuteBatchDownload = async () => {
     if (selectedOnlineWorkIds.length === 0) return;
@@ -1406,12 +1387,12 @@ export function CbetaCatalogView({
                         className="batch-btn batch-btn-primary"
                         disabled={selectedOnlineWorkIds.length === 0}
                         onClick={() => {
-                          openBatchDownloadModal(onlineSearchQuery.trim() || '下載經典');
+                          handleExecuteBatchDownload();
                         }}
                         style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-rounded)' }}
                       >
                         <Download size={15} />
-                        批量下載與收納 ({selectedOnlineWorkIds.length})
+                        開始批量下載 ({selectedOnlineWorkIds.length})
                       </button>
                     </div>
                   </div>
@@ -1553,13 +1534,12 @@ export function CbetaCatalogView({
                         className="batch-btn batch-btn-primary"
                         disabled={selectedOnlineWorkIds.length === 0}
                         onClick={() => {
-                          const currentNode = historyStack[historyIndex];
-                          openBatchDownloadModal(currentNode ? currentNode.label : '下載經典');
+                          handleExecuteBatchDownload();
                         }}
                         style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-rounded)' }}
                       >
                         <Download size={14} />
-                        批量下載與收納 ({selectedOnlineWorkIds.length})
+                        開始批量下載 ({selectedOnlineWorkIds.length})
                       </button>
                     </div>
                   </div>
@@ -1679,8 +1659,8 @@ export function CbetaCatalogView({
         )}
       </main>
 
-      {/* 批量下載與自動資料夾收納對話框 */}
-      {showBatchDownloadModal && (
+      {/* 批量下載與自動資料夾收納對話框 (目前暫時用不到，已隱藏) */}
+      {false && showBatchDownloadModal && (
         <div className="search-dialog-overlay" style={{ zIndex: 1250 }} onClick={() => setShowBatchDownloadModal(false)}>
           <div className="changelog-dialog-card animate-slide-up" style={{ width: '92%', maxWidth: '380px' }} onClick={e => e.stopPropagation()}>
             <div className="dialog-header">

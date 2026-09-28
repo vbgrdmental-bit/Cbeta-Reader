@@ -2855,18 +2855,12 @@ export function Library({
                     className="batch-btn batch-btn-primary"
                     disabled={selectedOnlineWorkIds.length === 0}
                     onClick={() => {
-                      const defaultName = onlineSearchQuery.trim() || '常用經典';
-                      setBatchFolderName(defaultName);
-                      setBatchFolderMode('unclassified'); // 預設為近期下載
-                      if (folders.length > 0) {
-                        setSelectedExistingFolderId(prev => prev && folders.some(f => f.id === prev) ? prev : folders[0].id);
-                      }
-                      setShowBatchDownloadModal(true);
+                      handleExecuteBatchDownload();
                     }}
                     style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
                   >
                     <Download size={14} />
-                    批量下載與收納
+                    開始批量下載 ({selectedOnlineWorkIds.length})
                   </button>
                 </div>
               )}
@@ -2934,8 +2928,8 @@ export function Library({
         </div>
       )}
 
-      {/* 💡 批量下載與自動資料夾收納確認對話框 */}
-      {showBatchDownloadModal && (
+      {/* 💡 批量下載與自動資料夾收納確認對話框 (目前暫時用不到，已隱藏) */}
+      {false && showBatchDownloadModal && (
         <div className="search-dialog-overlay" style={{ zIndex: 1250 }} onClick={() => setShowBatchDownloadModal(false)}>
           <div className="changelog-dialog-card animate-slide-up" style={{ width: '92%', maxWidth: '380px' }} onClick={e => e.stopPropagation()}>
             <div className="dialog-header">
