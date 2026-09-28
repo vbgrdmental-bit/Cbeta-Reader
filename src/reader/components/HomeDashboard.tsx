@@ -209,18 +209,37 @@ export function HomeDashboard({
   // 💡 閱讀日誌即時紀錄（用於 2x2 / 4x2 iOS 月曆小卡即時展示當日讀經摘要）
   const [todayReadingLogs, setTodayReadingLogs] = useState<ReadingLogEntry[]>([]);
 
-  useEffect(() => {
-    let isMounted = true;
+  // 取得本地日期字串 "YYYY-MM-DD"（避免 UTC 時區偏差導致午夜 00:00~08:00 判定為前一日）
+  const getTodayDateStr = () => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
+  const refreshTodayLogs = () => {
     getAllReadingLogs().then(logs => {
-      if (!isMounted) return;
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = getTodayDateStr();
       const todayLogs = (logs || []).filter(l => l.date === todayStr);
+      // 依閱讀時間由近到遠排序
+      todayLogs.sort((a, b) => (b.endTime || b.startTime || 0) - (a.endTime || a.startTime || 0));
       setTodayReadingLogs(todayLogs);
     }).catch(err => {
       console.warn('Failed to load reading logs for widget', err);
     });
-    return () => { isMounted = false; };
-  }, []);
+  };
+
+  useEffect(() => {
+    refreshTodayLogs();
+    const handleUpdate = () => refreshTodayLogs();
+    window.addEventListener('cbeta_reading_log_saved', handleUpdate);
+    window.addEventListener('focus', handleUpdate);
+    return () => {
+      window.removeEventListener('cbeta_reading_log_saved', handleUpdate);
+      window.removeEventListener('focus', handleUpdate);
+    };
+  }, [resumeBooks]);
 
   // 💡 計算 iOS 月曆小卡所需的讀經摘要（優先顯示今日已讀，無則平滑銜接近日閱讀經典）
   const getCalendarWidgetItems = () => {
@@ -228,36 +247,45 @@ export function HomeDashboard({
     
     if (todayLogs.length > 0) {
       // 依 workId 聚合今日閱讀
-      const workIdMap = new Map<string, { title: string; totalMinutes: number; book?: BookMetadata }>();
+      const workIdMap = new Map<string, { title: string; totalMinutes: number; latestTime: number; book?: BookMetadata }>();
       todayLogs.forEach(l => {
         const existing = workIdMap.get(l.workId);
         const mins = l.durationMinutes || 0;
+        const timeKey = l.endTime || l.startTime || 0;
         if (existing) {
           existing.totalMinutes += mins;
+          if (timeKey > existing.latestTime) {
+            existing.latestTime = timeKey;
+          }
         } else {
           const book = downloadedBooks.find(b => b.workId === l.workId) || 
                        resumeBooks.find(r => r.book.workId === l.workId)?.book;
           workIdMap.set(l.workId, {
             title: l.title || book?.title || l.workId,
             totalMinutes: mins,
+            latestTime: timeKey,
             book
           });
         }
       });
-      const items = Array.from(workIdMap.entries()).map(([workId, val]) => {
-        const creator = val.book?.creators ? sanitizeCreators(val.book.creators) : '';
-        const detailParts = [];
-        if (val.totalMinutes > 0) detailParts.push(`已讀 ${val.totalMinutes} 分鐘`);
-        if (creator) detailParts.push(creator);
-        return {
-          workId,
-          title: val.title,
-          book: val.book,
-          detail: detailParts.join(' · ') || '今日已讀',
-          isToday: true
-        };
-      });
-      return { isToday: true, items };
+      // 依最近閱讀時間遞減排序（最新讀過的排在第 1 則）
+      const items = Array.from(workIdMap.entries())
+        .sort((a, b) => b[1].latestTime - a[1].latestTime)
+        .map(([workId, val]) => {
+          const creator = val.book?.creators ? sanitizeCreators(val.book.creators) : '';
+          const detailParts = [];
+          if (val.totalMinutes > 0) detailParts.push(`已讀 ${val.totalMinutes} 分鐘`);
+          if (creator) detailParts.push(creator);
+          return {
+            workId,
+            title: val.title,
+            book: val.book,
+            detail: detailParts.join(' · ') || '今日已讀',
+            isToday: true
+          };
+        });
+      const totalTodayMinutes = todayLogs.reduce((sum, l) => sum + (l.durationMinutes || 0), 0);
+      return { isToday: true, items, totalTodayMinutes };
     }
 
     // 次之：由 resumeBooks (近日閱讀進度) 提取
@@ -2227,7 +2255,7 @@ export function HomeDashboard({
 
       // 11. 每日閱讀日誌 (比照 iOS 月曆樣式：支援 2x2 與 4x2 規格)
       case 'stats_2x2': {
-        const { isToday, items } = getCalendarWidgetItems();
+        const { isToday, items, totalTodayMinutes } = getCalendarWidgetItems();
         const now = new Date();
         const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
         const currentWeekday = weekdays[now.getDay()];
@@ -2261,7 +2289,7 @@ export function HomeDashboard({
                 <div className="cal-day-number">{currentDay}</div>
                 <div className="cal-month-year">{currentYear}年 {currentMonth}月</div>
                 <div className={`cal-bottom-tag ${isToday ? 'active' : ''}`}>
-                  {isToday ? '今日修持' : '每日日誌'}
+                  {isToday ? (totalTodayMinutes && totalTodayMinutes > 0 ? `今日 ${totalTodayMinutes}分鐘` : '今日修持') : '每日日誌'}
                 </div>
               </div>
 
@@ -2321,7 +2349,7 @@ export function HomeDashboard({
                 </div>
               </div>
               <div className={`cal-2x2-status-pill ${isToday ? 'active' : ''}`}>
-                {isToday ? '今日已讀' : '閱讀日誌'}
+                {isToday ? (totalTodayMinutes && totalTodayMinutes > 0 ? `已讀 ${totalTodayMinutes}分` : '今日已讀') : '閱讀日誌'}
               </div>
             </div>
 

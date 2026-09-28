@@ -135,9 +135,15 @@ class ReadingLogManager {
     };
 
     // 非同步寫入，不阻塞 UI
-    saveReadingLog(entry).catch(e =>
-      console.warn('[ReadingLogManager] Failed to save reading log:', e)
-    );
+    saveReadingLog(entry)
+      .then(() => {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cbeta_reading_log_saved'));
+        }
+      })
+      .catch(e =>
+        console.warn('[ReadingLogManager] Failed to save reading log:', e)
+      );
   }
 
   /** 儲存進行中 session 至 localStorage（應對意外關閉） */
@@ -189,9 +195,15 @@ class ReadingLogManager {
         durationMinutes: Math.round(totalMs / 60000),
         date: toDateStr(startTime),
       };
-      saveReadingLog(entry).catch(e =>
-        console.warn('[ReadingLogManager] Failed to recover pending session:', e)
-      );
+      saveReadingLog(entry)
+        .then(() => {
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('cbeta_reading_log_saved'));
+          }
+        })
+        .catch(e =>
+          console.warn('[ReadingLogManager] Failed to recover pending session:', e)
+        );
     } catch (e) {
       // ignore
     }
