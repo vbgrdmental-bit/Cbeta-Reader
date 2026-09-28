@@ -735,12 +735,25 @@
       </div>
     </div>
 
+    <!-- 🌟 新增：標頭 Bar 刪除與否切換比對 -->
+    <div class="control-row">
+      <div class="control-label">標頭卡片：</div>
+      <div class="pill-group">
+        <button id="toggle-header-hide-btn" class="pill-btn active" style="background:#1ea98c;" onclick="toggleHeaderCard(false)">
+          🌟 刪除標頭卡片，整個上提 (用戶新提議)
+        </button>
+        <button id="toggle-header-show-btn" class="pill-btn" onclick="toggleHeaderCard(true)">
+          保留原標頭卡片 (我的書櫃/筆記)
+        </button>
+      </div>
+    </div>
+
     <!-- 規格特色說明 -->
     <div class="spec-summary-banner" id="spec-banner-text">
-      <strong>圖 1「我的書櫃」單行設計：</strong><br>
-      • 左側：4 個快捷過濾膠囊（全部 (14) / 近期下載 / 上次閱讀 / 我的最愛）<br>
-      • 最右側：點選切換 4 個分類 <code>[ • 依部類 ▾ ]</code>（點開可選「依部類、依冊別、依作譯者、依朝代」）<br>
-      • 整個頁面高度省下 120px 以上，無任何抽屜層級，極度清爽流暢！
+      <strong>🌟 刪除標頭卡片後極致上提效果：</strong><br>
+      • 頂部微膠囊已清晰顯示「我的書櫃 / 我的筆記」，下方的卡片完全重複且耗費空間。<br>
+      • 刪除後，單行水平過濾膠囊直接貼齊頂部控制列，經文書籍/筆記整整向上提昇 55px！<br>
+      • 數量「共14本 / 共4則」由下方「全部 (14) / 全部 (4)」完美承接，畫面乾淨開闊！
     </div>
   </div>
 
@@ -840,10 +853,89 @@
         <!-- JS 動態插入 -->
       </div>
 
+      <!-- 🌟 書籍選項 Modal (右上角愛心 + 底部雙膠囊) -->
+      <div id="preview-book-modal-overlay" class="backdrop-overlay" style="z-index: 150; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; padding: 16px;" onclick="closeBookModal()">
+        <div class="search-dialog-card animate-slide-up" style="max-width: 330px; width: 100%; border-radius: 20px; padding: 1.25rem; background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: 0 16px 40px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem;">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 1.12rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-serif); min-width: 0; padding-right: 8px;">
+              <span style="font-size: 18px; color: var(--theme-accent);">📖</span>
+              <span id="modal-book-title" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">正法華經</span>
+            </div>
+            <!-- 右上角愛心 -->
+            <button id="modal-fav-btn" type="button" class="modal-fav-heart-btn" onclick="toggleModalFav()" title="加入/取消我的最愛">
+              <span id="modal-fav-heart-icon" style="font-size: 16px; color: var(--text-muted);">♡</span>
+            </button>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.86rem; color: var(--text-primary); opacity: 0.9; padding: 0 0.2rem;">
+            <div><span style="color: var(--text-muted);">作譯者 : </span><span id="modal-book-author">西晉 竺法護譯</span></div>
+            <div><span style="color: var(--text-muted);">經號 : </span>CBETA No. <span id="modal-book-workid">T0263</span></div>
+            <div><span style="color: var(--text-muted);">部類 : </span><span id="modal-book-dept">法華部類</span></div>
+            <div><span style="color: var(--text-muted);">冊別 : </span><span id="modal-book-vol">T</span></div>
+            <div><span style="color: var(--text-muted);">字數 : </span><span id="modal-book-chars">80,000 字</span></div>
+            <div><span style="color: var(--text-muted);">預計閱讀時間 : </span><span id="modal-book-time">6 小時 40 分</span></div>
+          </div>
+
+          <div style="margin: 0.95rem 0 0.85rem 0; border-top: 1px solid var(--border-color, rgba(0,0,0,0.1));"></div>
+
+          <!-- 底部操作膠囊列 (刪除經文 + 接續閱讀) -->
+          <div class="modal-action-capsules-row">
+            <button type="button" class="modal-capsule-btn delete-capsule" onclick="alert('已模擬刪除此經典！'); closeBookModal();">
+              <span style="font-size: 14px;">🗑</span>
+              <span>刪除經文</span>
+            </button>
+            <button type="button" class="modal-capsule-btn resume-capsule" onclick="alert('接續閱讀此經典！'); closeBookModal();">
+              <span style="font-size: 13px;">▶</span>
+              <span>接續閱讀</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script>
+    let isModalFavorite = false;
+
+    function openBookModal(workId, title, author, dept, vol, chars, time) {
+      document.getElementById('modal-book-workid').textContent = workId;
+      document.getElementById('modal-book-title').textContent = title;
+      document.getElementById('modal-book-author').textContent = author;
+      document.getElementById('modal-book-dept').textContent = dept;
+      document.getElementById('modal-book-vol').textContent = vol;
+      document.getElementById('modal-book-chars').textContent = chars;
+      document.getElementById('modal-book-time').textContent = time;
+
+      isModalFavorite = (workId === 'T0263');
+      updateModalFavIcon();
+
+      const overlay = document.getElementById('preview-book-modal-overlay');
+      overlay.style.display = 'flex';
+    }
+
+    function closeBookModal() {
+      document.getElementById('preview-book-modal-overlay').style.display = 'none';
+    }
+
+    function toggleModalFav() {
+      isModalFavorite = !isModalFavorite;
+      updateModalFavIcon();
+    }
+
+    function updateModalFavIcon() {
+      const btn = document.getElementById('modal-fav-btn');
+      const icon = document.getElementById('modal-fav-heart-icon');
+      if (isModalFavorite) {
+        btn.classList.add('is-favorite');
+        icon.textContent = '♥';
+        icon.style.color = '#e53e3e';
+      } else {
+        btn.classList.remove('is-favorite');
+        icon.textContent = '♡';
+        icon.style.color = 'var(--text-muted)';
+      }
+    }
     // 狀態設定
     let currentTheme = 'parchment';
     let currentView = 'shelf'; // 'shelf' (圖1) | 'notes' (圖2)
@@ -860,6 +952,25 @@
 
     // 選單彈出狀態
     let openPopover = null; // null | 'dimension' | 'mode'
+
+    // 🌟 是否顯示標頭卡片 (預設為 false，即刪除標頭卡片整個上提)
+    let showHeaderCard = false;
+
+    function toggleHeaderCard(show) {
+      showHeaderCard = show;
+      document.getElementById('toggle-header-hide-btn').classList.toggle('active', !show);
+      document.getElementById('toggle-header-show-btn').classList.toggle('active', show);
+      
+      const headerCard = document.querySelector('.header-card');
+      if (headerCard) {
+        headerCard.style.display = show ? 'flex' : 'none';
+      }
+
+      const smartBarContainer = document.querySelector('.unified-smart-bar-container');
+      if (smartBarContainer) {
+        smartBarContainer.style.marginTop = show ? '0px' : '4px';
+      }
+    }
 
     // 折疊群組狀態
     let groupOpen = { g1: true, g2: true };
@@ -1131,7 +1242,7 @@
                       <div class="book-info-sub">西晉 竺法護譯 · 10卷</div>
                     </div>
                   </div>
-                  <div class="book-more-btn">⋮</div>
+                  <div class="book-more-btn" onclick="openBookModal('T0263', '正法華經', '西晉 竺法護譯', '法華部類', 'T', '80,000 字', '6 小時 40 分')">⋮</div>
                 </div>
               </div>
             ` : ''}
@@ -1157,7 +1268,7 @@
                       <div class="book-info-sub">東漢 支婁迦讖 · 2卷</div>
                     </div>
                   </div>
-                  <div class="book-more-btn">⋮</div>
+                  <div class="book-more-btn" onclick="openBookModal('T0313', '阿閦佛國經', '東漢 支婁迦讖', '寶積部類', 'T', '32,000 字', '2 小時 40 分')">⋮</div>
                 </div>
                 <div class="book-item-card">
                   <div class="book-item-left">
@@ -1167,7 +1278,7 @@
                       <div class="book-info-sub">西晉 竺法護 · 1卷</div>
                     </div>
                   </div>
-                  <div class="book-more-btn">⋮</div>
+                  <div class="book-more-btn" onclick="openBookModal('T0315a', '佛說普門品經', '西晉 竺法護', '寶積部類', 'T', '12,500 字', '1 小時 05 分')">⋮</div>
                 </div>
               </div>
             ` : ''}
@@ -1323,6 +1434,7 @@
     // 初始化渲染
     renderSmartBar();
     renderContent();
+    toggleHeaderCard(false); // 預設刪除標頭卡片，整個上提
   </script>
 </body>
 </html>

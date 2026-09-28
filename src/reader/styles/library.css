@@ -8923,3 +8923,87 @@ body.theme-ebony .bookshelf-dim-popover-item.active,
   color: #181619;
 }
 
+/* ============================================================ */
+/* ── 💡 經書選項 Modal：右上角愛心按鈕與底部雙膠囊樣式 ───────── */
+/* ============================================================ */
+.modal-fav-heart-btn {
+  border: 1px solid var(--border-color, rgba(0,0,0,0.1));
+  background: var(--bg-card, rgba(0,0,0,0.04));
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+.modal-fav-heart-btn:hover {
+  transform: scale(1.08);
+}
+.modal-fav-heart-btn.is-favorite {
+  background: rgba(229, 62, 62, 0.12);
+  border-color: rgba(229, 62, 62, 0.3);
+}
+
+.modal-action-capsules-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0.85rem;
+}
+
+.modal-capsule-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  border-radius: 9999px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.modal-capsule-btn.delete-capsule {
+  flex: 1;
+  background: rgba(229, 62, 62, 0.08);
+  border: 1.2px solid rgba(229, 62, 62, 0.3);
+  color: #e53e3e;
+}
+.modal-capsule-btn.delete-capsule:hover {
+  background: rgba(229, 62, 62, 0.16);
+  border-color: #e53e3e;
+}
+
+.modal-capsule-btn.resume-capsule {
+  flex: 1.5;
+  background: var(--theme-accent, #8c4b27);
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.modal-capsule-btn.resume-capsule:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+body.theme-ebony .modal-capsule-btn.delete-capsule,
+.theme-ebony .modal-capsule-btn.delete-capsule {
+  background: rgba(229, 62, 62, 0.15);
+  border-color: rgba(229, 62, 62, 0.4);
+  color: #ff6b6b;
+}
+
+body.theme-ebony .modal-capsule-btn.resume-capsule,
+.theme-ebony .modal-capsule-btn.resume-capsule {
+  background: #f3c969;
+  color: #181619;
+  font-weight: 800;
+}
+
+

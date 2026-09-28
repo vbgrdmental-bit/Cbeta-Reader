@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { 
   Heart, Clock, ChevronRight, ChevronDown, Check,
   Layers, BookOpen, User, Grid, List,
-  MoreVertical, FolderInput, Trash2
+  MoreVertical, Play, Trash2
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
 import { 
@@ -1032,72 +1032,60 @@ export function BookshelfInteractivePlayground({
             style={{ width: '90%', maxWidth: '340px' }} 
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
-              <div style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '10px',
-                background: 'var(--theme-accent, #8c4b27)',
-                color: '#ffffff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.8rem',
-                fontWeight: 800,
-                flexShrink: 0
-              }}>
-                {localTargetBook.workId}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
+                <div style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  background: 'var(--theme-accent, #8c4b27)',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.76rem',
+                  fontWeight: 800,
+                  flexShrink: 0
+                }}>
+                  {localTargetBook.workId}
+                </div>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <h3 style={{ margin: 0, fontSize: '0.96rem', fontWeight: 800, fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {localTargetBook.title}
+                  </h3>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    {localTargetBook.creators} · {localTargetBook.juansCount}卷
+                  </p>
+                </div>
               </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
-                  {localTargetBook.title}
-                </h3>
-                <p style={{ margin: '4px 0 0 0', fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                  {localTargetBook.creators} · {localTargetBook.juansCount}卷
-                </p>
-              </div>
+
+              {/* 右上角愛心收藏按鈕 */}
+              <button
+                type="button"
+                className={`modal-fav-heart-btn ${isFavorite(localTargetBook.workId) ? 'is-favorite' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onToggleFavorite) {
+                    onToggleFavorite(localTargetBook.workId);
+                  }
+                }}
+                title={isFavorite(localTargetBook.workId) ? '已加入我的最愛 (點擊取消)' : '加入我的最愛'}
+              >
+                <Heart 
+                  size={18} 
+                  fill={isFavorite(localTargetBook.workId) ? "#e53e3e" : "none"} 
+                  color={isFavorite(localTargetBook.workId) ? "#e53e3e" : "var(--text-muted)"} 
+                />
+              </button>
             </div>
 
             <div style={{ margin: '0.75rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.1))' }} />
 
-            {/* 3 個按鈕：移至資料夾 (淺灰禁用) | 加入我的最愛 | 刪除經文 */}
-            <div className="action-buttons-grid-3">
-              {/* 1. 移至資料夾 (淺灰，暫不開啟這個功能) */}
+            {/* 雙膠囊按鈕：刪除經文 | 接續閱讀 */}
+            <div className="modal-action-capsules-row" style={{ marginTop: '0.65rem' }}>
               <button 
-                className="action-grid-btn"
-                disabled={true}
-                style={{ opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)', color: 'var(--text-muted)' }}
-                title="移至資料夾 (暫未開啟)"
-              >
-                <FolderInput size={20} />
-                <span style={{ color: 'var(--text-muted)' }}>移至資料夾</span>
-              </button>
-
-              <div className="action-grid-divider" />
-
-              {/* 2. 我的最愛 */}
-              <button 
-                className="action-grid-btn"
-                onClick={() => {
-                  if (onToggleFavorite) {
-                    onToggleFavorite(localTargetBook.workId);
-                  }
-                  setLocalTargetBook(null);
-                }}
-              >
-                <Heart 
-                  size={20} 
-                  fill={isFavorite(localTargetBook.workId) ? "#e53e3e" : "none"} 
-                  color={isFavorite(localTargetBook.workId) ? "#e53e3e" : "currentColor"} 
-                />
-                <span>{isFavorite(localTargetBook.workId) ? '取消最愛' : '加入最愛'}</span>
-              </button>
-
-              <div className="action-grid-divider" />
-
-              {/* 3. 刪除經文 */}
-              <button 
-                className="action-grid-btn delete-action"
+                type="button"
+                className="modal-capsule-btn delete-capsule"
                 onClick={() => {
                   if (onDeleteBook) {
                     onDeleteBook(localTargetBook.workId);
@@ -1105,8 +1093,20 @@ export function BookshelfInteractivePlayground({
                   setLocalTargetBook(null);
                 }}
               >
-                <Trash2 size={20} />
+                <Trash2 size={15} />
                 <span>刪除經文</span>
+              </button>
+
+              <button 
+                type="button"
+                className="modal-capsule-btn resume-capsule"
+                onClick={() => {
+                  onSelectBook(localTargetBook.workId);
+                  setLocalTargetBook(null);
+                }}
+              >
+                <Play size={15} fill="currentColor" />
+                <span>接續閱讀</span>
               </button>
             </div>
           </div>

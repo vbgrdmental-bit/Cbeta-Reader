@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, X, Download,
   Home, Search, CalendarDays,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, RotateCcw, Tag,
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, Tag,
   Layers, User
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
@@ -1736,21 +1736,19 @@ export function Library({
         {activeTab === 'shelf' ? (
         /* 書架主畫面 */
         <div className="bookshelf-section animate-slide-up" onClick={handleShelfBackgroundClick}>
-          {/* 資料夾導航與麵包屑 */}
-          {currentFolderId && (
-            <div className={`folder-nav-wrapper ${(currentFolderId === 'virtual_my_folders' || currentFolderId === 'virtual_highlights') ? 'my-folders-nav' : ''}`}>
+          {/* 資料夾導航與麵包屑 (根目錄「我的書櫃」與「我的筆記」已極致精簡上提，不顯示多餘卡片) */}
+          {currentFolderId && currentFolderId !== 'virtual_my_folders' && currentFolderId !== 'virtual_highlights' && (
+            <div className="folder-nav-wrapper">
               <div className="folder-navigation-bar">
                 {/* 💡 深入專區/子資料夾時，左側顯示圓型「<」返回上一層（與下方書籍卡片左側對齊） */}
-                {currentFolderId && currentFolderId !== 'virtual_my_folders' && currentFolderId !== 'virtual_highlights' && (
-                  <button 
-                    type="button"
-                    className="folder-back-circle-btn"
-                    onClick={handleGoBack}
-                    title="返回上一層"
-                  >
-                    <ChevronLeft size={18} strokeWidth={2.6} />
-                  </button>
-                )}
+                <button 
+                  type="button"
+                  className="folder-back-circle-btn"
+                  onClick={handleGoBack}
+                  title="返回上一層"
+                >
+                  <ChevronLeft size={18} strokeWidth={2.6} />
+                </button>
                 <div className="folder-nav-middle" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   {/* 💡 專區/資料夾同款識別圖示 Badge */}
                   <div 
@@ -3557,17 +3555,35 @@ export function Library({
         </div>
       )}
 
-      {/* 📖 經典 「...」選項 Modal (上半部經文詳細資訊 + 下半部功能鍵) */}
+      {/* 📖 經典 「...」選項 Modal (右上角愛心收藏 + 下半部刪除與接續閱讀雙膠囊) */}
       {menuTargetBook && (
         <div className="search-dialog-overlay" onClick={() => setMenuTargetBook(null)}>
-          <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '340px', borderRadius: '16px', padding: '1.2rem' }}>
+          <div className="search-dialog-card action-menu-card animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '340px', borderRadius: '20px', padding: '1.25rem 1.25rem 1.15rem 1.25rem' }}>
             
             {/* 💡 【上半部份：經文資訊】 */}
             <div>
-              {/* 經名標題 (簡潔圖示 + 經名) */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.8rem', fontFamily: 'var(--font-serif)' }}>
-                <BookOpen size={20} style={{ color: '#5b82a6', flexShrink: 0 }} />
-                <span>{menuTargetBook.title}</span>
+              {/* 經名標題 (簡潔圖示 + 經名) 與 右上角愛心收藏按鈕 */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.12rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', minWidth: 0, paddingRight: '8px' }}>
+                  <BookOpen size={20} style={{ color: 'var(--theme-accent, #8c4b27)', flexShrink: 0 }} />
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{menuTargetBook.title}</span>
+                </div>
+                {/* 右上角愛心收藏按鈕 */}
+                <button
+                  type="button"
+                  className={`modal-fav-heart-btn ${favoriteWorkIds.includes(menuTargetBook.workId) ? 'is-favorite' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavoriteBook(e, menuTargetBook.workId);
+                  }}
+                  title={favoriteWorkIds.includes(menuTargetBook.workId) ? '已加入我的最愛 (點擊取消)' : '加入我的最愛'}
+                >
+                  <Heart 
+                    size={18} 
+                    fill={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "none"} 
+                    color={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "var(--text-muted)"} 
+                  />
+                </button>
               </div>
 
               {/* 詳細經文資訊 */}
@@ -3589,108 +3605,52 @@ export function Library({
             </div>
 
             {/* 💡 【細細分隔線】 */}
-            <div style={{ margin: '0.9rem 0 0.7rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.12))' }} />
+            <div style={{ margin: '0.95rem 0 0.85rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.1))' }} />
 
-            {/* 💡 【下半部份：功能鍵 (1 列 3 個圖示按鈕)】 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            {/* 💡 【下半部份：操作膠囊列 (刪除經文 + 接續閱讀)】 */}
+            {(() => {
+              const isTransitionFolder = menuTargetBookSource === 'virtual_recent_reads' || menuTargetBookSource === 'virtual_favorites';
+              return (
+                <div className="modal-action-capsules-row">
+                  {/* 1. 刪除經文膠囊 */}
+                  <button 
+                    type="button"
+                    className="modal-capsule-btn delete-capsule"
+                    disabled={isTransitionFolder}
+                    style={isTransitionFolder ? { opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)' } : undefined}
+                    onClick={(e) => {
+                      if (isTransitionFolder) return;
+                      const b = menuTargetBook;
+                      setMenuTargetBook(null);
+                      if (currentFolderId === 'virtual_resume') {
+                        handleDeleteProgress(e, b.workId);
+                      } else {
+                        handleDeleteBook(e, b.workId);
+                      }
+                    }}
+                    title={isTransitionFolder ? '過渡專區不可刪除，請至原資料夾操作' : '刪除經文'}
+                  >
+                    <Trash2 size={16} color={isTransitionFolder ? 'var(--text-muted)' : '#e53e3e'} />
+                    <span>刪除經文</span>
+                  </button>
 
-              {/* 1 列 3 個按鈕：移至資料夾 | 加入我的最愛 | 刪除經文 (等寬 1:1:1 佐以細分隔線) */}
-              {(() => {
-                const isTransitionFolder = menuTargetBookSource === 'virtual_recent_reads' || menuTargetBookSource === 'virtual_favorites';
-                return (
-                  <div className="action-buttons-grid-3">
-                    {/* 1. 移至資料夾 (改為淺灰，暫不開啟這個功能) */}
-                    <button 
-                      className="action-grid-btn"
-                      disabled={true}
-                      style={{ opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)', color: 'var(--text-muted)' }}
-                      onClick={() => {}}
-                      title="移至資料夾 (暫未開放)"
-                    >
-                      <FolderInput size={20} />
-                      <span style={{ color: 'var(--text-muted)' }}>移至資料夾</span>
-                    </button>
-
-                    {/* 分隔線 1 */}
-                    <div className="action-grid-divider" />
-
-                    {/* 2. 加入我的最愛 */}
-                    <button 
-                      className="action-grid-btn"
-                      onClick={(e) => {
-                        toggleFavoriteBook(e, menuTargetBook.workId);
-                      }}
-                      title={favoriteWorkIds.includes(menuTargetBook.workId) ? '取消最愛' : '加入我的最愛'}
-                    >
-                      <Heart 
-                        size={20} 
-                        fill={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "none"} 
-                        color={favoriteWorkIds.includes(menuTargetBook.workId) ? "#e53e3e" : "currentColor"} 
-                      />
-                      <span>{favoriteWorkIds.includes(menuTargetBook.workId) ? '取消最愛' : '加入我的最愛'}</span>
-                    </button>
-
-                    {/* 分隔線 2 */}
-                    <div className="action-grid-divider" />
-
-                    {/* 3. 刪除經文 */}
-                    <button 
-                      className="action-grid-btn delete-action"
-                      disabled={isTransitionFolder}
-                      style={isTransitionFolder ? { opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(1)' } : undefined}
-                      onClick={(e) => {
-                        if (isTransitionFolder) return;
-                        const b = menuTargetBook;
-                        setMenuTargetBook(null);
-                        if (currentFolderId === 'virtual_resume') {
-                          handleDeleteProgress(e, b.workId);
-                        } else {
-                          handleDeleteBook(e, b.workId);
-                        }
-                      }}
-                      title={isTransitionFolder ? '過渡專區不可刪除，請至原資料夾操作' : '刪除經文'}
-                    >
-                      <Trash2 size={20} color={isTransitionFolder ? 'var(--text-muted)' : '#e53e3e'} />
-                      <span style={{ color: isTransitionFolder ? 'var(--text-muted)' : '#e53e3e' }}>刪除經文</span>
-                    </button>
-                  </div>
-                );
-              })()}
-
-              {/* 閱讀控制按鈕 (維持「從頭開始閱讀」與「接續閱讀」雙欄按鈕) */}
-
-              {/* 6. 開始閱讀：分二個按鈕「從頭開始閱讀」與「接續閱讀」 */}
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.2rem' }}>
-                <button 
-                  className="dialog-btn-cancel"
-                  style={{ flex: 1, padding: '0.65rem 0.3rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-                  onClick={() => {
-                    const b = menuTargetBook;
-                    setMenuTargetBook(null);
-                    localStorage.removeItem(`reader_progress_${b.workId}`);
-                    onSelectBook(b.workId, '', '', 'restart');
-                  }}
-                  title="從頭開始閱讀 (清空歷史進度)"
-                >
-                  <RotateCcw size={14} />
-                  <span>從頭開始閱讀</span>
-                </button>
-
-                <button 
-                  className="dialog-btn-confirm"
-                  style={{ flex: 1, padding: '0.65rem 0.3rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-                  onClick={() => {
-                    const b = menuTargetBook;
-                    setMenuTargetBook(null);
-                    onSelectBook(b.workId, '', '', 'resume');
-                  }}
-                  title="接續上一次的閱讀位置"
-                >
-                  <Play size={14} />
-                  <span>接續閱讀</span>
-                </button>
-              </div>
-            </div>
+                  {/* 2. 接續閱讀膠囊 */}
+                  <button 
+                    type="button"
+                    className="modal-capsule-btn resume-capsule"
+                    onClick={() => {
+                      const b = menuTargetBook;
+                      setMenuTargetBook(null);
+                      onSelectBook(b.workId, '', '', 'resume');
+                    }}
+                    title="接續閱讀此經典"
+                  >
+                    <Play size={16} fill="currentColor" />
+                    <span>接續閱讀</span>
+                  </button>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
