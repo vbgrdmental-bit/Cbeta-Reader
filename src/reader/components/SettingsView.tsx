@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.7.0) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.7.1) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.7.0</span>
-                        <span className="changelog-date">(2026-09-28)</span>
+                        <span>⭐ App: v4.7.1</span>
+                        <span className="changelog-date">(2026-09-29)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 「我的書櫃」升級單行極致精簡列：左側快捷過濾，最右側「• 依部類 ▾」點擊切換 4 分類。</li>
-                        <li>• 「我的筆記」升級單行精簡流：刪除心得/重點膠囊，支援點選切換書籍檢視與法義交叉。</li>
-                        <li>• 徹底消除雙分段與大卡片堆疊，垂直節省 70% 空間，開啟頁面直擊經文與筆記。</li>
+                        <li>• 「每日閱讀日誌」小卡比照 iOS 月曆升級：2×2 與 4×2 醒目大日期搭配今日/近日讀經摘要。</li>
+                        <li>• 窄螢幕手機自適應換行：書櫃與筆記膠囊列彈性換行，首頁點擊直達書櫃篩選視圖。</li>
+                        <li>• 禪意圖標輪播精簡為 6 款精選小圖，支援點擊即時循環切換。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.7.0</span>
+                            <span className="changelog-date">(2026-09-28)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 「我的書櫃」升級單行極致精簡列：左側快捷過濾，最右側「• 依部類 ▾」點擊切換 4 分類。</li>
+                            <li>• 「我的筆記」升級單行精簡流：刪除心得/重點膠囊，支援點選切換書籍檢視與法義交叉。</li>
+                            <li>• 徹底消除雙分段與大卡片堆疊，垂直節省 70% 空間，開啟頁面直擊經文與筆記。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.6.9</span>

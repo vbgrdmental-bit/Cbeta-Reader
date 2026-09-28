@@ -6133,6 +6133,301 @@ body.theme-ebony .timer-circle::before {
 .stats-title { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
 .stats-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.15rem; }
 
+/* ==========================================================================
+   iOS Calendar Widget (每日閱讀日誌 2x2 與 4x2 規格)
+   ========================================================================== */
+
+/* 2x2 小卡樣式 (比照 iOS 月曆小組件) */
+.ios-calendar-widget-2x2 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  box-sizing: border-box;
+  padding: 0.1rem 0.1rem;
+  overflow: hidden;
+  user-select: none;
+}
+
+.cal-2x2-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border-color, rgba(0,0,0,0.08));
+}
+
+.cal-2x2-date-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-2x2-weekday {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #e05344;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.cal-2x2-day-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 1px;
+}
+
+.cal-2x2-day {
+  font-size: 1.95rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-primary);
+  font-family: var(--font-rounded, -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+.cal-2x2-month {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.cal-2x2-status-pill {
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-hover, rgba(0,0,0,0.05));
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.cal-2x2-status-pill.active {
+  color: var(--theme-accent-contrast, #ffffff);
+  background: var(--theme-accent, #8c4b27);
+}
+
+.cal-2x2-summary-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 0.35rem;
+  flex: 1;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cal-2x2-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.cal-2x2-stripe {
+  width: 3px;
+  min-width: 3px;
+  height: 24px;
+  border-radius: 2px;
+  background: #e05344;
+  flex-shrink: 0;
+}
+
+.cal-2x2-stripe.stripe-1 {
+  background: #1ea98c;
+}
+
+.cal-2x2-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.cal-2x2-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.cal-2x2-sub {
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+/* 4x2 規格樣式 (比照 iOS 月曆與日程中號組件) */
+.ios-calendar-widget-4x2 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  text-align: left;
+  box-sizing: border-box;
+  padding: 0.15rem 0.2rem;
+  user-select: none;
+}
+
+.cal-left-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  min-width: 90px;
+  border-right: 1px solid var(--border-color, rgba(0,0,0,0.08));
+  padding-right: 12px;
+  text-align: center;
+}
+
+.cal-weekday-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #e05344;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
+
+.cal-day-number {
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-primary);
+  margin: 2px 0;
+  font-family: var(--font-rounded, -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+.cal-month-year {
+  font-size: 0.70rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  line-height: 1.1;
+}
+
+.cal-bottom-tag {
+  margin-top: 5px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-hover, rgba(0,0,0,0.05));
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.cal-bottom-tag.active {
+  color: var(--theme-accent-contrast, #ffffff);
+  background: var(--theme-accent, #8c4b27);
+}
+
+.cal-right-block {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 0.1rem 0;
+}
+
+.cal-right-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed var(--border-color, rgba(0,0,0,0.08));
+}
+
+.cal-right-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cal-right-more {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--theme-accent, #8c4b27);
+}
+
+.cal-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 6px;
+  flex: 1;
+  justify-content: center;
+}
+
+.cal-event-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.cal-empty-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.cal-event-stripe {
+  width: 3.5px;
+  min-width: 3.5px;
+  height: 28px;
+  border-radius: 2px;
+  background: #e05344;
+  flex-shrink: 0;
+}
+
+.cal-event-stripe.stripe-1 {
+  background: #1ea98c;
+}
+
+.cal-event-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.cal-event-name {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.cal-event-detail {
+  font-size: 0.70rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
 .zen-quote-4x2 {
   text-align: center;
   align-items: center;

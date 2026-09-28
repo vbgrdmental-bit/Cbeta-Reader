@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.7.0` (App: v4.7.0 / Builder: v2.9.13)
+- **Current Version**: `v4.7.1` (App: v4.7.1 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.7.1 / Builder: v2.9.13** (2026-09-29)
+  - [App] 「每日閱讀日誌」小卡全面比照 iOS 月曆樣式升級：2×2 小卡頂部配置醒目星期與大字號當日日期，下部直觀呈現 1~2 則今日或近日閱讀經書摘要；4×2 寬版卡片左側配置經典日曆 Pad，右側呈現完整經名、卷數與讀誦時數清單。
+  - [App] 窄螢幕手機自適應彈性換行：在書櫃與筆記單行膠囊列中導入 `flex-wrap: wrap; row-gap: 6px;`，手機螢幕較窄時右側膠囊優雅換至次行，徹底消除邊緣切字與擠壓。
+  - [App] 首頁直達書櫃篩選視圖：首頁點擊「近期下載 ➔」、「上次閱讀 ➔」、「我的最愛 ➔」無縫直達書櫃並自動選定對應膠囊，直接呈現 CBETA 權威多維度折疊卡。
+  - [App] 2×2 禪意圖標輪放精簡：精準保留 6 款精選小圖（01、04、05、06、07、09），點擊圖標即時循環切換。
 - **⭐ App: v4.7.0 / Builder: v2.9.13** (2026-09-28)
   - [App] 「我的書櫃」升級單行極致精簡流：徹底消除雙分段與四大卡片堆疊，高度由原本 160px 壓縮至 38px；左側保留全部/近期下載/上次閱讀/我的最愛 4 快捷膠囊，最右側配置「• 依部類 ▾」微下拉膠囊，點擊彈出輕量選單秒切換 4 分類（依部類、依冊別、依作譯者、依朝代）。
   - [App] 「我的筆記」升級單行極致精簡流：刪除冗餘的「有心得」與「純重點」膠囊，左側保留「全部」與「近期標註」；右側配置「📖 依書籍檢視 ▾」模式膠囊（點擊切換書籍檢視與法義交叉）以及最右側「• 依部類 ▾」維度膠囊。

@@ -4,7 +4,7 @@ import {
   Maximize2, Sliders, CalendarDays, ArrowRight, Edit3
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
-import { getBook } from '../../utils/db';
+import { getBook, getAllReadingLogs, type ReadingLogEntry } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { sanitizeCreators } from '../../builder/IndexBuilder';
 import { getBookCoverGradient } from '../../utils/bookColors';
@@ -104,6 +104,7 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'r_down_4x4', type: 'recent_downloads_4x2', size: 'size-4x4', sizeLabel: '4×4', category: 'reading', title: '近期下載' },
 
   { id: 'r_stats_2x2', type: 'stats_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'reading', title: '每日閱讀日誌' },
+  { id: 'r_stats_4x2', type: 'stats_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '每日閱讀日誌' },
 
   // 4. 其他功能 (other)
   { id: 'o_timer_4x2', type: 'timer_2x2', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '護眼計時器' },
@@ -204,6 +205,97 @@ export function HomeDashboard({
 
   // 護眼計時器即時狀態訂閱
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
+
+  // 💡 閱讀日誌即時紀錄（用於 2x2 / 4x2 iOS 月曆小卡即時展示當日讀經摘要）
+  const [todayReadingLogs, setTodayReadingLogs] = useState<ReadingLogEntry[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getAllReadingLogs().then(logs => {
+      if (!isMounted) return;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const todayLogs = (logs || []).filter(l => l.date === todayStr);
+      setTodayReadingLogs(todayLogs);
+    }).catch(err => {
+      console.warn('Failed to load reading logs for widget', err);
+    });
+    return () => { isMounted = false; };
+  }, []);
+
+  // 💡 計算 iOS 月曆小卡所需的讀經摘要（優先顯示今日已讀，無則平滑銜接近日閱讀經典）
+  const getCalendarWidgetItems = () => {
+    const todayLogs = todayReadingLogs || [];
+    
+    if (todayLogs.length > 0) {
+      // 依 workId 聚合今日閱讀
+      const workIdMap = new Map<string, { title: string; totalMinutes: number; book?: BookMetadata }>();
+      todayLogs.forEach(l => {
+        const existing = workIdMap.get(l.workId);
+        const mins = l.durationMinutes || 0;
+        if (existing) {
+          existing.totalMinutes += mins;
+        } else {
+          const book = downloadedBooks.find(b => b.workId === l.workId) || 
+                       resumeBooks.find(r => r.book.workId === l.workId)?.book;
+          workIdMap.set(l.workId, {
+            title: l.title || book?.title || l.workId,
+            totalMinutes: mins,
+            book
+          });
+        }
+      });
+      const items = Array.from(workIdMap.entries()).map(([workId, val]) => {
+        const creator = val.book?.creators ? sanitizeCreators(val.book.creators) : '';
+        const detailParts = [];
+        if (val.totalMinutes > 0) detailParts.push(`已讀 ${val.totalMinutes} 分鐘`);
+        if (creator) detailParts.push(creator);
+        return {
+          workId,
+          title: val.title,
+          book: val.book,
+          detail: detailParts.join(' · ') || '今日已讀',
+          isToday: true
+        };
+      });
+      return { isToday: true, items };
+    }
+
+    // 次之：由 resumeBooks (近日閱讀進度) 提取
+    if (resumeBooks && resumeBooks.length > 0) {
+      const items = resumeBooks.slice(0, 3).map(r => {
+        const creator = r.book.creators ? sanitizeCreators(r.book.creators) : '';
+        const juanStr = r.progress?.juan ? `第 ${r.progress.juan} 卷` : (r.book.juansCount ? `全 ${r.book.juansCount} 卷` : '');
+        const detail = [juanStr, creator].filter(Boolean).join(' · ') || '近日閱讀';
+        return {
+          workId: r.book.workId,
+          title: r.book.title,
+          book: r.book,
+          detail,
+          isToday: false
+        };
+      });
+      return { isToday: false, items };
+    }
+
+    // 再次：由 downloadedBooks (已下載經文) 提取
+    if (downloadedBooks && downloadedBooks.length > 0) {
+      const items = downloadedBooks.slice(0, 2).map(b => {
+        const creator = b.creators ? sanitizeCreators(b.creators) : '';
+        const juanStr = b.juansCount ? `全 ${b.juansCount} 卷` : '';
+        const detail = [juanStr, creator].filter(Boolean).join(' · ') || '已下載經典';
+        return {
+          workId: b.workId,
+          title: b.title,
+          book: b,
+          detail,
+          isToday: false
+        };
+      });
+      return { isToday: false, items };
+    }
+
+    return { isToday: false, items: [] };
+  };
 
   // 💡 自訂便籤卡片編輯彈窗狀態
   const [editingMemoWidget, setEditingMemoWidget] = useState<HomeWidgetConfig | null>(null);
@@ -339,18 +431,18 @@ export function HomeDashboard({
     }, 100);
   };
 
-  // 💡 點擊禪意 App Icon：循環更換 10 款蓮花圖標 (01 -> 02 -> ... -> 10 -> 01)
+  // 💡 點擊禪意 App Icon：循環更換蓮花圖標 (共 6 款精選小圖)
   const handleCycleZenIcon = (widgetId: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     if (widgetId === 'preview-instance') {
-      setPreviewIconIndex(prev => (prev % 10) + 1);
+      setPreviewIconIndex(prev => (prev % ZEN_ICONS_LIST.length) + 1);
       return;
     }
     setWidgets(prev => {
       const updated = prev.map(w => {
         if (w.id !== widgetId) return w;
         const curIcon = w.iconIndex || 1;
-        const nextIcon = (curIcon % 10) + 1;
+        const nextIcon = (curIcon % ZEN_ICONS_LIST.length) + 1;
         return { ...w, iconIndex: nextIcon };
       });
       if (!isLayoutEditMode) {
@@ -1070,7 +1162,7 @@ export function HomeDashboard({
         );
       }
 
-      // 2. 禪意 App Icon (純淨正方形圓角圖片，點擊循環換圖 01~10，等比 2x2 正方形)
+      // 2. 禪意 App Icon (純淨正方形圓角圖片，點擊循環換圖，等比 2x2 正方形)
       case 'appicon_2x2': {
         const iconIdx = widget.iconIndex || 1;
         const iconSrc = ZEN_ICONS_LIST[(iconIdx - 1) % ZEN_ICONS_LIST.length];
@@ -1079,7 +1171,7 @@ export function HomeDashboard({
           <div 
             className="widget-pure-zen-icon"
             onClick={!isLayoutEditMode ? (e) => handleCycleZenIcon(widget.id, e) : undefined}
-            title="點擊切換禪心蓮花圖標 (共 10 款)"
+            title={`點擊切換禪心蓮花圖標 (共 ${ZEN_ICONS_LIST.length} 款)`}
             style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default', width: '100%', height: '100%', padding: 0 }}
           >
             <img 
@@ -2133,30 +2225,128 @@ export function HomeDashboard({
         );
       }
 
-      // 11. 每日閱讀日誌徽章 (2x2 / 2x1 / 1x1)
+      // 11. 每日閱讀日誌 (比照 iOS 月曆樣式：支援 2x2 與 4x2 規格)
       case 'stats_2x2': {
+        const { isToday, items } = getCalendarWidgetItems();
+        const now = new Date();
+        const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        const currentWeekday = weekdays[now.getDay()];
+        const currentDay = now.getDate();
+        const currentMonth = now.getMonth() + 1;
+        const currentYear = now.getFullYear();
+
         if (size === 'size-1x1') {
           return (
             <div 
               className="core-widget-1x1"
               onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('reading-log') : undefined}
             >
-              <CalendarDays size={20} style={{ color: '#1ea98c', marginBottom: 2 }} />
+              <CalendarDays size={20} style={{ color: 'var(--color-gold, #c07d2a)', marginBottom: 2 }} />
               <div className="core-title-small">閱讀日誌</div>
             </div>
           );
         }
+
+        // 4x2 規格：iOS 月曆與讀經日程寬版小卡
+        if (size === 'size-4x2') {
+          return (
+            <div 
+              className="ios-calendar-widget-4x2"
+              onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('reading-log') : undefined}
+              title="點擊查看每日閱讀日誌"
+            >
+              {/* 左側：iOS 經典日曆方塊 */}
+              <div className="cal-left-block">
+                <div className="cal-weekday-label">{currentWeekday}</div>
+                <div className="cal-day-number">{currentDay}</div>
+                <div className="cal-month-year">{currentYear}年 {currentMonth}月</div>
+                <div className={`cal-bottom-tag ${isToday ? 'active' : ''}`}>
+                  {isToday ? '今日修持' : '每日日誌'}
+                </div>
+              </div>
+
+              {/* 右側：完整經名與讀經摘要列表 */}
+              <div className="cal-right-block">
+                <div className="cal-right-header">
+                  <div className="cal-right-title">
+                    <CalendarDays size={13} style={{ color: 'var(--color-gold, #c07d2a)' }} />
+                    <span>{isToday ? '今日讀經' : '近日閱讀'}</span>
+                  </div>
+                  <div className="cal-right-more">
+                    <span>日誌</span>
+                    <ArrowRight size={11} />
+                  </div>
+                </div>
+
+                <div className="cal-events-list">
+                  {items.length > 0 ? (
+                    items.slice(0, 2).map((item, idx) => (
+                      <div key={item.workId + idx} className="cal-event-row">
+                        <div className={`cal-event-stripe ${idx % 2 === 1 ? 'stripe-1' : ''}`} />
+                        <div className="cal-event-info">
+                          <div className="cal-event-name">{item.title}</div>
+                          <div className="cal-event-detail">{item.detail}</div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="cal-empty-state">
+                      <div className="cal-event-stripe" />
+                      <div className="cal-event-info">
+                        <div className="cal-event-name">今日靜心讀經</div>
+                        <div className="cal-event-detail">點擊開啟經典修持 ➔</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        // 預設 2x2 正方形規格：iOS 月曆小卡樣式 (當日日期 + 1~2 則經書摘要)
         return (
           <div 
-            className="stats-2x2"
+            className="ios-calendar-widget-2x2"
             onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('reading-log') : undefined}
             title="點擊查看每日閱讀日誌"
           >
-            <div className="stats-num">
-              <CalendarDays size={22} style={{ color: '#1ea98c', marginBottom: 2 }} />
+            {/* 上部：經典 iOS 日期頭部 */}
+            <div className="cal-2x2-header">
+              <div className="cal-2x2-date-box">
+                <div className="cal-2x2-weekday">{currentWeekday}</div>
+                <div className="cal-2x2-day-row">
+                  <span className="cal-2x2-day">{currentDay}</span>
+                  <span className="cal-2x2-month">{currentMonth}月</span>
+                </div>
+              </div>
+              <div className={`cal-2x2-status-pill ${isToday ? 'active' : ''}`}>
+                {isToday ? '今日已讀' : '閱讀日誌'}
+              </div>
             </div>
-            <div className="stats-title">每日閱讀日誌</div>
-            <div className="stats-sub">點擊查看日曆與記錄</div>
+
+            {/* 下部：1~2 則經書摘要 */}
+            <div className="cal-2x2-summary-box">
+              {items.length > 0 ? (
+                items.slice(0, 2).map((item, idx) => (
+                  <div key={item.workId + idx} className="cal-2x2-item">
+                    <div className={`cal-2x2-stripe ${idx % 2 === 1 ? 'stripe-1' : ''}`} />
+                    <div className="cal-2x2-text">
+                      <div className="cal-2x2-title">{item.title}</div>
+                      <div className="cal-2x2-sub">{item.detail}</div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="cal-2x2-item">
+                  <div className="cal-2x2-stripe" />
+                  <div className="cal-2x2-text">
+                    <div className="cal-2x2-title">今日靜心讀經</div>
+                    <div className="cal-2x2-sub">點擊查看閱讀日誌 ➔</div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         );
       }

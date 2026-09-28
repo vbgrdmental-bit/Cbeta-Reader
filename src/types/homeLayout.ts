@@ -45,15 +45,11 @@ export interface HomeWidgetConfig {
 
 export const ZEN_ICONS_LIST = [
   '/zen-icons/zen_01.jpg',
-  '/zen-icons/zen_02.png',
-  '/zen-icons/zen_03.png',
   '/zen-icons/zen_04.png',
   '/zen-icons/zen_05.jpg',
   '/zen-icons/zen_06.jpg',
   '/zen-icons/zen_07.png',
-  '/zen-icons/zen_08.jpg',
-  '/zen-icons/zen_09.png',
-  '/zen-icons/zen_10.png'
+  '/zen-icons/zen_09.png'
 ];
 
 export type HomeLayoutPreset = 'default' | 'compact' | 'focus' | 'zen' | 'custom';
@@ -86,7 +82,7 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   // 1. 品牌標題
   { type: 'title_4x2', category: 'brand', name: '經典大標題', size: 'size-4x2', icon: '🏷️', description: 'CBETA Reader 經典大標題與副標' },
   { type: 'title_4x1', category: 'brand', name: '簡約橫幅標題', size: 'size-4x1', icon: '🔖', description: '水平單行緊湊品牌標題' },
-  { type: 'appicon_2x2', category: 'brand', name: '禪意 App Icon', size: 'size-2x2', icon: '🪷', description: '點擊可循環切換 10 款精選禪心蓮花圖標 (01~10)' },
+  { type: 'appicon_2x2', category: 'brand', name: '禪意 App Icon', size: 'size-2x2', icon: '🪷', description: '點擊可循環切換 6 款精選禪心蓮花圖標' },
 
   // 2. 系統導航
   { type: 'four_nav_4x1', category: 'nav', name: '四合一導航列', size: 'size-4x1', icon: '🧭', description: '下載+書櫃+筆記+搜尋四合一呈現（支援 4x1/4x2/2x2/4x4）' },
@@ -101,7 +97,7 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'triple_reading_4x4', category: 'reading', name: '三合一閱讀卡', size: 'size-4x4', icon: '📚', description: '集合「近期下載」、「上次閱讀」、「我的最愛」各 1 本經典之三合一卡片（4×4 規格）' },
   { type: 'favorites_4x2', category: 'reading', name: '我的最愛卡', size: 'size-4x2', icon: '❤️', description: '收藏於我的最愛之經典（支援 4x1/4x2/4x3/4x4）' },
   { type: 'recent_downloads_4x2', category: 'reading', name: '近期下載卡', size: 'size-4x2', icon: '📥', description: '最新下載之經典清單（支援 4x1/4x2/4x3/4x4）' },
-  { type: 'stats_2x2', category: 'reading', name: '每日閱讀日誌徽章', size: 'size-2x2', icon: '📅', description: '連續閱讀天數與累積時數統計' },
+  { type: 'stats_2x2', category: 'reading', name: '每日閱讀日誌', size: 'size-2x2', icon: '📅', description: '比照 iOS 月曆樣式，顯示當日日期與讀經摘要（支援 2x2/4x2 規格）' },
 
   // 4. 其他功能
   { type: 'timer_2x2', category: 'other', name: '護眼計時器', size: 'size-2x2', icon: '⏱️', description: '閱讀時間倒數與溫馨提醒（支援 4x2/2x2）' },
@@ -168,7 +164,7 @@ export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
   favorites_4x2: ['size-4x1', 'size-4x2', 'size-4x3', 'size-4x4'],
   recent_downloads_4x2: ['size-4x1', 'size-4x2', 'size-4x3', 'size-4x4'],
 
-  stats_2x2: ['size-2x2', 'size-2x1', 'size-1x1'],
+  stats_2x2: ['size-2x2', 'size-4x2', 'size-1x1'],
   theme_4x1: ['size-4x1', 'size-2x2'],
   // 護眼模式：僅支援 4x2 與 2x2
   timer_2x2: ['size-4x2', 'size-2x2'],
