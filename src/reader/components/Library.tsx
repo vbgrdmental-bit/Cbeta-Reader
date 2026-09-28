@@ -1001,9 +1001,6 @@ export function Library({
     }));
   };
 
-  // 快捷膠囊計數
-  const notesHasNoteCount = useMemo(() => allHighlights.filter(h => !!h.note).length, [allHighlights]);
-  const notesOnlyHlCount = useMemo(() => allHighlights.filter(h => !h.note).length, [allHighlights]);
 
   // 依 4 快捷膠囊過濾重點條目池
   const filteredHighlights = useMemo(() => {
@@ -1061,6 +1058,19 @@ export function Library({
   // 💡 「我的筆記」4 大維度分類（依部類 / 依冊別 / 依作譯者 / 依朝代）
   const [notesClassificationMode, setNotesClassificationMode] = useState<'category' | 'volume' | 'author' | 'dynasty'>('category');
   const [expandedDimensionGroups, setExpandedDimensionGroups] = useState<Record<string, boolean>>({});
+
+  // 🌟 方案 B：我的筆記單行 Popover 狀態 (模式切換 / 維度切換)
+  const [showNotesDimPopover, setShowNotesDimPopover] = useState(false);
+  const [showNotesModePopover, setShowNotesModePopover] = useState(false);
+
+  useEffect(() => {
+    const handleGlobalClick = () => {
+      setShowNotesDimPopover(false);
+      setShowNotesModePopover(false);
+    };
+    window.addEventListener('click', handleGlobalClick);
+    return () => window.removeEventListener('click', handleGlobalClick);
+  }, []);
 
   const toggleDimensionGroup = (groupTitle: string) => {
     setExpandedDimensionGroups(prev => ({
@@ -1849,31 +1859,9 @@ export function Library({
             </div>
           )}
 
-          {/* === B. 「我的書櫃」（virtual_my_folders）：支援體驗 ABC 互動排版提案與原版書櫃切換 === */}
+          {/* === B. 「我的書櫃」（virtual_my_folders）：方案 B 單行極致精簡多維度書櫃 === */}
           {currentFolderId === 'virtual_my_folders' && (
             <>
-              {/* 💡 方案切換左右雙分段膠囊（左：「讀者分類」 / 右：「多維度分類」） */}
-              <div className="bookshelf-scheme-switch-container">
-                <div className="bookshelf-scheme-segmented-capsule">
-                  <button
-                    type="button"
-                    className={`scheme-seg-btn ${!showPlaygroundDemo ? 'active' : ''}`}
-                    onClick={() => setShowPlaygroundDemo(false)}
-                    title="切換至讀者分類（一般資料夾方案）"
-                  >
-                    讀者分類
-                  </button>
-                  <button
-                    type="button"
-                    className={`scheme-seg-btn ${showPlaygroundDemo ? 'active' : ''}`}
-                    onClick={() => setShowPlaygroundDemo(true)}
-                    title="切換至多維度分類（經藏多維度整理方案）"
-                  >
-                    多維度分類
-                  </button>
-                </div>
-              </div>
-
               {showPlaygroundDemo ? (
                 <div className="appstore-bookshelf-container animate-fade-in" style={{ transform: 'none' }}>
                   <BookshelfInteractivePlayground
@@ -2051,108 +2039,169 @@ export function Library({
         </>
       )}
 
-          {/* === C. 「我的筆記」（virtual_highlights）：支援「依書籍檢視」與「法義多維度」雙分段 + 4 維度分類 + 4 快捷膠囊 (與「我的書櫃」完全一致對齊) === */}
+          {/* === C. 「我的筆記」（virtual_highlights）：方案 B 單行極致精簡水平膠囊列 (高度約 38px) === */}
           {currentFolderId === 'virtual_highlights' && (
             <>
-              {/* 1. 雙分段切換膠囊（左：「依書籍檢視」 / 右：「法義多維度」） */}
-              <div className="bookshelf-scheme-switch-container">
-                <div className="bookshelf-scheme-segmented-capsule">
-                  <button
-                    type="button"
-                    className={`scheme-seg-btn ${notesViewMode === 'books' ? 'active' : ''}`}
-                    onClick={() => setNotesViewMode('books')}
-                    title="依書籍檢視劃線與筆記"
-                  >
-                    依書籍檢視
-                  </button>
-                  <button
-                    type="button"
-                    className={`scheme-seg-btn ${notesViewMode === 'dimensions' ? 'active' : ''}`}
-                    onClick={() => setNotesViewMode('dimensions')}
-                    title="法義多維度客觀關鍵字交叉比對"
-                  >
-                    法義多維度
-                  </button>
-                </div>
-              </div>
-
-              {/* 2. 主容器：使用與「我的書櫃」完全一致之 appstore-bookshelf-container + bookshelf-playground-root */}
+              {/* 主容器：使用與「我的書櫃」完全一致之 appstore-bookshelf-container + bookshelf-playground-root */}
               <div className="appstore-bookshelf-container animate-fade-in" style={{ transform: 'none' }}>
                 <div className="bookshelf-playground-root animate-fade-in" style={{ padding: '0 0.85rem 3rem 0.85rem' }}>
-                  {/* 🌟 吸頂浮動控制列：4 大分類切換 + 4 大膠囊快捷過濾 (比照書櫃圖1、圖2、圖3像素級對齊) */}
+                  {/* 🌟 吸頂浮動控制列：方案 B 單行極致精簡水平膠囊列 */}
                   <div className="bookshelf-sticky-controls-header">
-                    {/* 2. 第一層 (圖2)：4 大分類切換 (依部類 / 依冊別 / 依作譯者 / 依朝代) */}
-                    <div 
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(4, 1fr)',
-                        background: 'rgba(0, 0, 0, 0.05)',
-                        borderRadius: '16px',
-                        padding: '4px',
-                        marginBottom: '0.55rem',
-                        border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-                        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)'
-                      }}
-                    >
-                      {[
-                        { id: 'category', label: '依部類', icon: Layers },
-                        { id: 'volume', label: '依冊別', icon: BookOpen },
-                        { id: 'author', label: '依作譯者', icon: User },
-                        { id: 'dynasty', label: '依朝代', icon: Clock }
-                      ].map(item => {
-                        const isActive = notesClassificationMode === item.id;
-                        const IconComp = item.icon;
-                        return (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => setNotesClassificationMode(item.id as any)}
-                            style={{
-                              padding: '0.55rem 0.2rem',
-                              borderRadius: '12px',
-                              border: 'none',
-                              background: isActive ? 'var(--bg-card, #ffffff)' : 'transparent',
-                              color: isActive ? 'var(--theme-accent, #8c4b27)' : 'var(--text-muted)',
-                              fontWeight: isActive ? 800 : 600,
-                              cursor: 'pointer',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                              gap: '4px',
-                              transition: 'all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.1)' : 'none'
+                    <div className="bookshelf-single-row-bar">
+                      {/* 左側：2 個快捷過濾膠囊 (全部 / 近期標註) [已刪除有心得與純重點] */}
+                      <div className="bookshelf-single-row-left">
+                        <button
+                          type="button"
+                          className={`bookshelf-filter-capsule ${notesFilterStatus === 'all' ? 'active' : ''}`}
+                          onClick={() => setNotesFilterStatus('all')}
+                        >
+                          <span>全部 ({allHighlights.length})</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`bookshelf-filter-capsule ${notesFilterStatus === 'recent' ? 'active' : ''}`}
+                          onClick={() => setNotesFilterStatus('recent')}
+                        >
+                          <span>近期標註</span>
+                        </button>
+                      </div>
+
+                      {/* 右側：模式切換膠囊 + 維度切換膠囊 */}
+                      <div className="bookshelf-single-row-right">
+                        {/* 1. 筆記模式切換膠囊 (依書籍檢視 / 法義多維度) */}
+                        <button
+                          type="button"
+                          className={`notes-mode-dropdown-btn ${showNotesModePopover ? 'active-open' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowNotesModePopover(!showNotesModePopover);
+                            setShowNotesDimPopover(false);
+                          }}
+                          title="切換筆記整理模式"
+                        >
+                          <span>{notesViewMode === 'books' ? '📖 依書籍檢視' : '✦ 法義多維度'}</span>
+                          <ChevronDown 
+                            size={10} 
+                            style={{ 
+                              transform: showNotesModePopover ? 'rotate(180deg)' : 'none', 
+                              transition: 'transform 0.2s ease' 
+                            }} 
+                          />
+                        </button>
+
+                        {/* 模式切換輕量 Popover 浮動選單 */}
+                        {showNotesModePopover && (
+                          <div 
+                            className="bookshelf-dim-popover-menu animate-fade-in"
+                            style={{ right: notesViewMode === 'books' ? '90px' : '0' }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div
+                              className={`bookshelf-dim-popover-item ${notesViewMode === 'books' ? 'active' : ''}`}
+                              onClick={() => {
+                                setNotesViewMode('books');
+                                setShowNotesModePopover(false);
+                              }}
+                            >
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <BookOpen size={13} />
+                                <span>依書籍檢視</span>
+                              </span>
+                              {notesViewMode === 'books' && <Check size={12} strokeWidth={2.5} />}
+                            </div>
+                            <div
+                              className={`bookshelf-dim-popover-item ${notesViewMode === 'dimensions' ? 'active' : ''}`}
+                              onClick={() => {
+                                setNotesViewMode('dimensions');
+                                setShowNotesModePopover(false);
+                              }}
+                            >
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Tag size={13} />
+                                <span>法義多維度</span>
+                              </span>
+                              {notesViewMode === 'dimensions' && <Check size={12} strokeWidth={2.5} />}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 2. 最右側：分類維度切換膠囊 (在依書籍檢視時顯示) */}
+                        {notesViewMode === 'books' ? (
+                          <>
+                            <button
+                              type="button"
+                              className={`bookshelf-dim-dropdown-btn ${showNotesDimPopover ? 'active-open' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowNotesDimPopover(!showNotesDimPopover);
+                                setShowNotesModePopover(false);
+                              }}
+                              title="切換分類維度"
+                            >
+                              <span>• {
+                                notesClassificationMode === 'category' ? '依部類' :
+                                notesClassificationMode === 'volume' ? '依冊別' :
+                                notesClassificationMode === 'author' ? '依作譯者' : '依朝代'
+                              }</span>
+                              <ChevronDown 
+                                size={11} 
+                                style={{ 
+                                  transform: showNotesDimPopover ? 'rotate(180deg)' : 'none', 
+                                  transition: 'transform 0.2s ease' 
+                                }} 
+                              />
+                            </button>
+
+                            {/* 4 分類維度輕量 Popover 浮動選單 */}
+                            {showNotesDimPopover && (
+                              <div 
+                                className="bookshelf-dim-popover-menu animate-fade-in"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {[
+                                  { id: 'category', label: '依部類', icon: Layers },
+                                  { id: 'volume', label: '依冊別', icon: BookOpen },
+                                  { id: 'author', label: '依作譯者', icon: User },
+                                  { id: 'dynasty', label: '依朝代', icon: Clock }
+                                ].map(item => {
+                                  const isActive = notesClassificationMode === item.id;
+                                  const IconComp = item.icon;
+                                  return (
+                                    <div
+                                      key={item.id}
+                                      className={`bookshelf-dim-popover-item ${isActive ? 'active' : ''}`}
+                                      onClick={() => {
+                                        setNotesClassificationMode(item.id as any);
+                                        setShowNotesDimPopover(false);
+                                      }}
+                                    >
+                                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <IconComp size={13} />
+                                        <span>{item.label}</span>
+                                      </span>
+                                      {isActive && <Check size={12} strokeWidth={2.5} />}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div 
+                            style={{ 
+                              fontSize: '0.72rem', 
+                              color: 'var(--color-gold, #c07d2a)', 
+                              fontWeight: 700, 
+                              padding: '4px 8px', 
+                              background: 'var(--color-gold-bg, rgba(192,125,42,0.1))', 
+                              borderRadius: '12px', 
+                              whiteSpace: 'nowrap' 
                             }}
                           >
-                            <IconComp size={18} strokeWidth={isActive ? 2.3 : 1.8} />
-                            <span style={{ fontSize: '0.8rem', letterSpacing: '0.02em' }}>{item.label}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* 3. 第二層 (圖3)：4 大膠囊快捷過濾 (全部 / 有心得 / 純重點 / 近期標註) */}
-                    <div 
-                      style={{ 
-                        display: 'grid', 
-                        gridTemplateColumns: 'repeat(4, 1fr)', 
-                        gap: '6px' 
-                      }}
-                    >
-                      {[
-                        { id: 'all', label: `全部 (${allHighlights.length})` },
-                        { id: 'has_note', label: `有心得 (${notesHasNoteCount})` },
-                        { id: 'only_hl', label: `純重點 (${notesOnlyHlCount})` },
-                        { id: 'recent', label: '近期標註' }
-                      ].map(item => (
-                        <button
-                          key={item.id}
-                          type="button"
-                          className={`bookshelf-filter-capsule ${notesFilterStatus === item.id ? 'active' : ''}`}
-                          onClick={() => setNotesFilterStatus(item.id as any)}
-                        >
-                          <span>{item.label}</span>
-                        </button>
-                      ))}
+                            客觀關鍵字比對
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 

@@ -8744,3 +8744,182 @@ body.theme-ebony .memo-preview-card-box {
   background: #18967b;
   transform: translateY(-1px);
 }
+
+/* ============================================================ */
+/* 🌟 方案 B：單行極致精簡水平膠囊列 (高度約 38px)             */
+/* ============================================================ */
+.bookshelf-single-row-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 38px;
+  background: transparent;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bookshelf-single-row-left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.bookshelf-single-row-left::-webkit-scrollbar {
+  display: none;
+}
+
+.bookshelf-single-row-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* 維度切換下拉膠囊 (• 依部類 ▾) */
+.bookshelf-dim-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.08));
+  border: 1px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25));
+  color: var(--theme-accent, #8c4b27);
+  transition: all 0.16s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.bookshelf-dim-dropdown-btn:hover {
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.15));
+}
+
+.bookshelf-dim-dropdown-btn.active-open {
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  border-color: var(--theme-accent, #8c4b27);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+body.theme-ebony .bookshelf-dim-dropdown-btn,
+.theme-ebony .bookshelf-dim-dropdown-btn {
+  background: rgba(243, 201, 105, 0.12);
+  border-color: rgba(243, 201, 105, 0.3);
+  color: #f3c969;
+}
+body.theme-ebony .bookshelf-dim-dropdown-btn.active-open,
+.theme-ebony .bookshelf-dim-dropdown-btn.active-open {
+  background: #f3c969;
+  color: #181619;
+  border-color: #f3c969;
+}
+
+/* 筆記模式切換膠囊 (📖 依書籍檢視 ▾) */
+.notes-mode-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 9px;
+  border-radius: 9999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  color: var(--text-primary, #333333);
+  transition: all 0.16s ease;
+}
+
+body.theme-ebony .notes-mode-dropdown-btn,
+.theme-ebony .notes-mode-dropdown-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text-primary, #e6e2ea);
+}
+
+.notes-mode-dropdown-btn:hover {
+  border-color: var(--theme-accent, #8c4b27);
+}
+
+.notes-mode-dropdown-btn.active-open {
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  border-color: var(--theme-accent, #8c4b27);
+}
+body.theme-ebony .notes-mode-dropdown-btn.active-open,
+.theme-ebony .notes-mode-dropdown-btn.active-open {
+  background: #f3c969;
+  color: #181619;
+  border-color: #f3c969;
+}
+
+/* 輕量 Popover 浮動選單 */
+.bookshelf-dim-popover-menu {
+  position: absolute;
+  top: 38px;
+  right: 0;
+  z-index: 100;
+  min-width: 145px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  border-radius: 12px;
+  padding: 5px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  animation: popoverFadeIn 0.15s ease-out;
+}
+
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body.theme-ebony .bookshelf-dim-popover-menu,
+.theme-ebony .bookshelf-dim-popover-menu {
+  background: #252228;
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.bookshelf-dim-popover-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary, #2d241e);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  user-select: none;
+}
+
+.bookshelf-dim-popover-item:hover {
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.08));
+  color: var(--theme-accent, #8c4b27);
+}
+
+.bookshelf-dim-popover-item.active {
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  font-weight: 700;
+}
+body.theme-ebony .bookshelf-dim-popover-item.active,
+.theme-ebony .bookshelf-dim-popover-item.active {
+  background: #f3c969;
+  color: #181619;
+}
+

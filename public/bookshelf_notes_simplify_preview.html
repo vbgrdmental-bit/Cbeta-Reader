@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBETA Reader - 單行極致精簡流 (方案 B) 互動試用與確認</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 經典羊皮紙主題 (預設) */
+      --bg-page-outer: #1c1815;
+      --bg-app: #eae4dc;
+      --bg-card: #f8f5ee;
+      --bg-card-inner: #ffffff;
+      --text-primary: #2d241e;
+      --text-muted: #7d6e63;
+      --text-faint: #a6988d;
+      --border-color: rgba(140, 75, 39, 0.14);
+      --theme-accent: #8c4b27;
+      --theme-accent-light: rgba(140, 75, 39, 0.09);
+      --theme-accent-contrast: #ffffff;
+      --color-gold: #c07d2a;
+      --font-serif: "Noto Serif TC", "Songti TC", "Source Han Serif TC", serif;
+      --font-sans: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --shadow-sm: 0 2px 8px rgba(90, 50, 20, 0.04);
+      --shadow-md: 0 6px 18px rgba(90, 50, 20, 0.09);
+    }
+
+    body[data-theme="parchment"] {
+      --bg-app: #eae4dc;
+      --bg-card: #f8f5ee;
+      --bg-card-inner: #ffffff;
+      --text-primary: #2d241e;
+      --text-muted: #7d6e63;
+      --theme-accent: #8c4b27;
+      --theme-accent-light: rgba(140, 75, 39, 0.09);
+      --theme-accent-contrast: #ffffff;
+    }
+    body[data-theme="ivory"] {
+      --bg-app: #f6f5f1;
+      --bg-card: #ffffff;
+      --bg-card-inner: #f9f9f8;
+      --text-primary: #201e1c;
+      --text-muted: #6e6b66;
+      --theme-accent: #6d422a;
+      --theme-accent-light: rgba(109, 66, 42, 0.08);
+      --theme-accent-contrast: #ffffff;
+    }
+    body[data-theme="green"] {
+      --bg-app: #dfebd9;
+      --bg-card: #edf5e9;
+      --bg-card-inner: #ffffff;
+      --text-primary: #1e2c1c;
+      --text-muted: #536b50;
+      --theme-accent: #2e5933;
+      --theme-accent-light: rgba(46, 89, 51, 0.1);
+      --theme-accent-contrast: #ffffff;
+    }
+    body[data-theme="ebony"] {
+      --bg-app: #181619;
+      --bg-card: #252228;
+      --bg-card-inner: #302c34;
+      --text-primary: #e6e2ea;
+      --text-muted: #a39cae;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --theme-accent: #f3c969;
+      --theme-accent-light: rgba(243, 201, 105, 0.15);
+      --theme-accent-contrast: #181619;
+      --color-gold: #f3c969;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-page-outer);
+      color: #eee;
+      padding: 16px 12px 60px 12px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 頂部操作控制面板 */
+    .top-control-panel {
+      max-width: 860px;
+      width: 100%;
+      background: #25201d;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 12px;
+    }
+
+    .panel-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #f7ede2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-switches {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .theme-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .theme-btn.active {
+      transform: scale(1.18);
+      border-color: #fff;
+      box-shadow: 0 0 10px rgba(255,255,255,0.4);
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .control-label {
+      font-size: 0.85rem;
+      color: #b0a69d;
+      min-width: 80px;
+      font-weight: 600;
+    }
+
+    .pill-group {
+      display: inline-flex;
+      background: rgba(0,0,0,0.35);
+      padding: 3px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.08);
+      gap: 4px;
+    }
+
+    .pill-btn {
+      border: none;
+      background: transparent;
+      color: #c9c0b7;
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 0.84rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .pill-btn:hover { color: #fff; }
+    .pill-btn.active {
+      background: #2a69ac;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .spec-summary-banner {
+      background: rgba(42, 105, 172, 0.12);
+      border-left: 3px solid #2a69ac;
+      padding: 10px 14px;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #dfd8cf;
+      margin-top: 8px;
+    }
+
+    /* 模擬手機容器 */
+    .phone-container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-app);
+      color: var(--text-primary);
+      border-radius: 32px;
+      overflow: visible;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 8px #2b2623;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    /* 頂部全域 App Bar (微膠囊) */
+    .app-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 14px 8px 14px;
+      background: var(--bg-app);
+      border-radius: 32px 32px 0 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .circle-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 15px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .top-nav-capsule {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3px 5px;
+      gap: 3px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-item-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 9px;
+      border-radius: 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-weight: 500;
+    }
+    .nav-item-btn.active {
+      background: var(--theme-accent);
+      color: var(--theme-accent-contrast) !important;
+      font-weight: 700;
+    }
+
+    /* 頁面主要滾動區域 */
+    .app-scroll-content {
+      padding: 4px 14px 40px 14px;
+      min-height: 560px;
+      position: relative;
+    }
+
+    /* 標頭卡片：我的書櫃 / 我的筆記 */
+    .header-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-card-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-icon-box {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: var(--theme-accent);
+      color: var(--theme-accent-contrast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .header-title-text {
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: var(--text-primary);
+    }
+
+    .count-badge {
+      background: rgba(140, 75, 39, 0.1);
+      color: var(--theme-accent);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    /* ========================================================= */
+    /* 🌟 核心：單行水平整合膠囊列 (高度僅 38px)                  */
+    /* ========================================================= */
+    .unified-smart-bar-container {
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .unified-smart-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      height: 38px;
+      background: transparent;
+      overflow-x: auto;
+      scrollbar-width: none; /* Firefox */
+      -webkit-overflow-scrolling: touch;
+      padding: 1px 2px;
+    }
+    .unified-smart-bar::-webkit-scrollbar { display: none; }
+
+    .smart-bar-left-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .smart-bar-right-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    /* 左側快捷過濾膠囊 (與用戶圖 1/2 樣式 100% 相同) */
+    .filter-capsule {
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .filter-capsule:hover {
+      border-color: var(--theme-accent);
+    }
+    .filter-capsule.active {
+      background: var(--theme-accent);
+      color: var(--theme-accent-contrast);
+      border-color: var(--theme-accent);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      font-weight: 700;
+    }
+
+    /* 右側維度切換下拉膠囊 (如用戶附圖：• 依部類 ▾) */
+    .dropdown-capsule {
+      background: rgba(140, 75, 39, 0.1);
+      border: 1px solid rgba(140, 75, 39, 0.2);
+      color: var(--theme-accent);
+      padding: 5px 11px;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: all 0.16s ease;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .dropdown-capsule:hover {
+      background: rgba(140, 75, 39, 0.18);
+    }
+    .dropdown-capsule.active-open {
+      background: var(--theme-accent);
+      color: var(--theme-accent-contrast);
+      border-color: var(--theme-accent);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    .dropdown-capsule .arrow-icon {
+      font-size: 9px;
+      transition: transform 0.2s ease;
+    }
+    .dropdown-capsule.active-open .arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    /* 筆記特有：檢視模式膠囊 (依書籍檢視 / 法義多維度) */
+    .mode-switch-capsule {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: all 0.16s;
+    }
+    .mode-switch-capsule:hover {
+      border-color: var(--theme-accent);
+    }
+    .mode-switch-capsule.active-open {
+      background: var(--theme-accent);
+      color: var(--theme-accent-contrast);
+      border-color: var(--theme-accent);
+    }
+
+    /* ========================================================= */
+    /* 輕量 Popover 浮動選單 (點選膠囊時彈出)                     */
+    /* ========================================================= */
+    .popover-menu-card {
+      position: absolute;
+      top: 42px;
+      right: 2px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+      z-index: 100;
+      padding: 6px;
+      min-width: 155px;
+      display: none;
+      animation: popoverDrop 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .popover-menu-card.show { display: block; }
+
+    @keyframes popoverDrop {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .popover-header-title {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 4px 8px 3px 8px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 4px;
+    }
+
+    .popover-item {
+      padding: 7px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .popover-item:hover {
+      background: var(--theme-accent-light);
+      color: var(--theme-accent);
+    }
+    .popover-item.active {
+      background: var(--theme-accent);
+      color: var(--theme-accent-contrast);
+      font-weight: 700;
+    }
+
+    /* 統計資訊行 */
+    .stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+    .view-toggle-btns {
+      display: flex;
+      gap: 4px;
+    }
+    .view-icon-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .view-icon-btn.active {
+      background: var(--theme-accent);
+      color: var(--theme-accent-contrast);
+    }
+
+    /* 經文書籍 / 筆記折疊卡片 */
+    .group-accordion {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .accordion-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+    .accordion-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .dot-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--theme-accent);
+    }
+    .accordion-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .accordion-badge {
+      background: rgba(0,0,0,0.06);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+    .accordion-arrow {
+      color: var(--text-muted);
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+    .accordion-arrow.rotated {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      padding: 4px 12px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* 書籍卡片 */
+    .book-item-card {
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .book-item-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    }
+    .book-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .book-thumb-badge {
+      width: 44px;
+      height: 38px;
+      background: #2e5933;
+      color: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .book-thumb-badge.brown { background: #8c4b27; }
+    .book-thumb-badge.gold { background: #b87a28; }
+
+    .book-info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .book-info-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+    }
+    .book-info-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .book-more-btn {
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 4px;
+    }
+
+    /* 筆記卡片 */
+    .note-item-card {
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .note-book-ref {
+      font-size: 0.72rem;
+      color: var(--theme-accent);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .note-text-body {
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-primary);
+      border-left: 2px solid var(--theme-accent);
+      padding-left: 8px;
+      margin: 2px 0;
+    }
+    .note-user-thought {
+      background: rgba(140, 75, 39, 0.05);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    /* 法義多維度客觀交叉標籤 */
+    .cross-tag-badge {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(192, 125, 42, 0.12);
+      color: var(--color-gold);
+      border: 1px solid rgba(192, 125, 42, 0.25);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    /* 點擊遮罩 (關閉 popover) */
+    .backdrop-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 80;
+      display: none;
+    }
+    .backdrop-overlay.show { display: block; }
+  </style>
+</head>
+<body data-theme="parchment">
+
+  <!-- 全域透明點擊遮罩 -->
+  <div id="global-backdrop" class="backdrop-overlay" onclick="closeAllPopovers()"></div>
+
+  <!-- 頂部操作控制面板 -->
+  <div class="top-control-panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span>⚡ 方案 B【極致精簡單行流】互動確認</span>
+      </div>
+      <div class="theme-switches" title="切換四大主題底色">
+        <span style="font-size:0.76rem; color:#aaa; margin-right:4px;">底色：</span>
+        <button class="theme-btn active" style="background:#eae4dc;" onclick="setTheme('parchment')" title="經典羊皮紙"></button>
+        <button class="theme-btn" style="background:#f6f5f1;" onclick="setTheme('ivory')" title="象牙白"></button>
+        <button class="theme-btn" style="background:#dfebd9;" onclick="setTheme('green')" title="舒服綠"></button>
+        <button class="theme-btn" style="background:#181619;" onclick="setTheme('ebony')" title="紫紺木"></button>
+      </div>
+    </div>
+
+    <!-- 頁面切換 -->
+    <div class="control-row">
+      <div class="control-label">切換體驗：</div>
+      <div class="pill-group">
+        <button id="view-shelf-btn" class="pill-btn active" onclick="switchView('shelf')">
+          📁 圖1「我的書櫃」
+        </button>
+        <button id="view-notes-btn" class="pill-btn" onclick="switchView('notes')">
+          📖 圖2「我的筆記」
+        </button>
+      </div>
+    </div>
+
+    <!-- 規格特色說明 -->
+    <div class="spec-summary-banner" id="spec-banner-text">
+      <strong>圖 1「我的書櫃」單行設計：</strong><br>
+      • 左側：4 個快捷過濾膠囊（全部 (14) / 近期下載 / 上次閱讀 / 我的最愛）<br>
+      • 最右側：點選切換 4 個分類 <code>[ • 依部類 ▾ ]</code>（點開可選「依部類、依冊別、依作譯者、依朝代」）<br>
+      • 整個頁面高度省下 120px 以上，無任何抽屜層級，極度清爽流暢！
+    </div>
+  </div>
+
+  <!-- 模擬手機畫面容器 -->
+  <div class="phone-container">
+    
+    <!-- 頂部導航膠囊列 (微膠囊) -->
+    <div class="app-top-bar">
+      <div class="circle-icon-btn" title="回首頁">⌂</div>
+      <div class="top-nav-capsule">
+        <button class="nav-item-btn" title="從 CBETA 下載">＋ 下載經典</button>
+        <button id="nav-pill-shelf" class="nav-item-btn active" onclick="switchView('shelf')">📁 我的書櫃</button>
+        <button id="nav-pill-notes" class="nav-item-btn" onclick="switchView('notes')">📖 我的筆記</button>
+        <button class="nav-item-btn">🔍</button>
+        <button class="nav-item-btn">📅</button>
+      </div>
+      <div class="circle-icon-btn" title="設定">⚙</div>
+    </div>
+
+    <!-- 頁面可滾動內容 -->
+    <div class="app-scroll-content">
+
+      <!-- ======================================================= -->
+      <!-- 標頭卡片 (Header Card)                                 -->
+      <!-- ======================================================= -->
+      <div class="header-card">
+        <div class="header-card-left">
+          <div class="header-icon-box" id="header-icon">📁</div>
+          <span class="header-title-text" id="header-title">我的書櫃</span>
+          <span class="count-badge" id="header-badge">共14本</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px;">
+          <!-- 更多管理按鈕 ⋮ -->
+          <div style="color:var(--text-muted); cursor:pointer; font-size:15px; padding:0 4px;" title="分類資料夾管理">⋮</div>
+        </div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- 🌟 單行水平膠囊列 (高度僅 38px，不增加抽屜層級)        -->
+      <!-- ======================================================= -->
+      <div class="unified-smart-bar-container">
+        <div class="unified-smart-bar" id="smart-capsule-bar">
+          <!-- JS 動態插入單行膠囊 -->
+        </div>
+
+        <!-- 4 分類維度彈出選單 (依部類 / 依冊別 / 依作譯者 / 依朝代) -->
+        <div id="popover-dimension-menu" class="popover-menu-card">
+          <div class="popover-header-title">經藏分類維度</div>
+          <div class="popover-item active" id="pop-dim-category" onclick="changeDimension('category')">
+            <span>📚 依部類</span>
+            <span class="check-mark">✓</span>
+          </div>
+          <div class="popover-item" id="pop-dim-volume" onclick="changeDimension('volume')">
+            <span>📖 依冊別</span>
+            <span class="check-mark"></span>
+          </div>
+          <div class="popover-item" id="pop-dim-author" onclick="changeDimension('author')">
+            <span>👤 依作譯者</span>
+            <span class="check-mark"></span>
+          </div>
+          <div class="popover-item" id="pop-dim-dynasty" onclick="changeDimension('dynasty')">
+            <span>🕒 依朝代</span>
+            <span class="check-mark"></span>
+          </div>
+        </div>
+
+        <!-- 筆記特有：檢視模式彈出選單 (依書籍檢視 / 法義多維度) -->
+        <div id="popover-mode-menu" class="popover-menu-card" style="right: auto; left: 140px;">
+          <div class="popover-header-title">筆記整理模式</div>
+          <div class="popover-item active" id="pop-mode-books" onclick="changeNoteMode('books')">
+            <span>📖 依書籍檢視</span>
+            <span class="check-mark">✓</span>
+          </div>
+          <div class="popover-item" id="pop-mode-dimensions" onclick="changeNoteMode('dimensions')">
+            <span>✦ 法義多維度</span>
+            <span class="check-mark"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- 統計資訊與條列 / 網格切換列                             -->
+      <!-- ======================================================= -->
+      <div class="stat-row">
+        <span id="stat-text-line">共 14 部經典 · 自動依部類歸納</span>
+        <div class="view-toggle-btns" id="view-toggle-group">
+          <button class="view-icon-btn active" title="清單檢視">☰</button>
+          <button class="view-icon-btn" title="網格卡片">▦</button>
+        </div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- 內容清單區 (折疊分組與經文 / 筆記)                      -->
+      <!-- ======================================================= -->
+      <div id="items-content-mount">
+        <!-- JS 動態插入 -->
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 狀態設定
+    let currentTheme = 'parchment';
+    let currentView = 'shelf'; // 'shelf' (圖1) | 'notes' (圖2)
+
+    // 書櫃篩選：'all' | 'downloads' | 'recent' | 'favorites'
+    // 筆記篩選：'all' | 'thoughts' | 'pure' | 'recent'
+    let selectedFilter = 'all';
+
+    // 4 大分類維度：'category' (依部類) | 'volume' (依冊別) | 'author' (依作譯者) | 'dynasty' (依朝代)
+    let selectedDimension = 'category';
+
+    // 筆記特有整理模式：'books' (依書籍檢視) | 'dimensions' (法義多維度)
+    let selectedNoteMode = 'books';
+
+    // 選單彈出狀態
+    let openPopover = null; // null | 'dimension' | 'mode'
+
+    // 折疊群組狀態
+    let groupOpen = { g1: true, g2: true };
+
+    // 設定主題底色
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.body.setAttribute('data-theme', theme);
+      document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.theme-btn')).find(b => b.getAttribute('onclick').includes(theme));
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    // 切換頁面 (圖1 書櫃 vs 圖2 筆記)
+    function switchView(view) {
+      currentView = view;
+      selectedFilter = 'all';
+      closeAllPopovers();
+
+      // 更新頂部按鈕狀態
+      document.getElementById('view-shelf-btn').classList.toggle('active', view === 'shelf');
+      document.getElementById('view-notes-btn').classList.toggle('active', view === 'notes');
+      document.getElementById('nav-pill-shelf').classList.toggle('active', view === 'shelf');
+      document.getElementById('nav-pill-notes').classList.toggle('active', view === 'notes');
+
+      // 更新標頭卡片
+      if (view === 'shelf') {
+        document.getElementById('header-icon').textContent = '📁';
+        document.getElementById('header-title').textContent = '我的書櫃';
+        document.getElementById('header-badge').textContent = '共14本';
+        document.getElementById('spec-banner-text').innerHTML = `
+          <strong>圖 1「我的書櫃」單行設計：</strong><br>
+          • 左側：4 個快捷過濾膠囊（全部 (14) / 近期下載 / 上次閱讀 / 我的最愛）<br>
+          • 最右側：點選切換 4 個分類 <code>[ • 依部類 ▾ ]</code>（點開可選「依部類、依冊別、依作譯者、依朝代」）<br>
+          • 整個頁面高度省下 120px 以上，無任何抽屜層級，極度清爽流暢！
+        `;
+      } else {
+        document.getElementById('header-icon').textContent = '📖';
+        document.getElementById('header-title').textContent = '我的筆記';
+        document.getElementById('header-badge').textContent = '共4則';
+        document.getElementById('spec-banner-text').innerHTML = `
+          <strong>圖 2「我的筆記」單行設計：</strong><br>
+          • 左側：2 個快捷過濾膠囊（全部 (4) / 近期標註）[已刪除「有心得」與「純重點」，版面更為舒展簡潔]<br>
+          • 中間多一個膠囊：<code>[ 📖 依書籍檢視 ▾ ]</code>（可點選切換「依書籍檢視」與「法義多維度」）<br>
+          • 最右側：點選切換 4 個分類 <code>[ • 依部類 ▾ ]</code>（點開可選「依部類、依冊別、依作譯者、依朝代」）
+        `;
+      }
+
+      renderSmartBar();
+      renderContent();
+    }
+
+    // 關閉所有彈出選單
+    function closeAllPopovers() {
+      openPopover = null;
+      document.getElementById('popover-dimension-menu').classList.remove('show');
+      document.getElementById('popover-mode-menu').classList.remove('show');
+      document.getElementById('global-backdrop').classList.remove('show');
+      
+      const dimBtn = document.getElementById('btn-dropdown-dim');
+      if (dimBtn) dimBtn.classList.remove('active-open');
+      const modeBtn = document.getElementById('btn-dropdown-mode');
+      if (modeBtn) modeBtn.classList.remove('active-open');
+    }
+
+    // 切換維度 Popover
+    function toggleDimensionPopover(e) {
+      if (e) e.stopPropagation();
+      if (openPopover === 'dimension') {
+        closeAllPopovers();
+      } else {
+        closeAllPopovers();
+        openPopover = 'dimension';
+        document.getElementById('popover-dimension-menu').classList.add('show');
+        document.getElementById('global-backdrop').classList.add('show');
+        const dimBtn = document.getElementById('btn-dropdown-dim');
+        if (dimBtn) dimBtn.classList.add('active-open');
+      }
+    }
+
+    // 切換模式 Popover (筆記專用)
+    function toggleModePopover(e) {
+      if (e) e.stopPropagation();
+      if (openPopover === 'mode') {
+        closeAllPopovers();
+      } else {
+        closeAllPopovers();
+        openPopover = 'mode';
+        document.getElementById('popover-mode-menu').classList.add('show');
+        document.getElementById('global-backdrop').classList.add('show');
+        const modeBtn = document.getElementById('btn-dropdown-mode');
+        if (modeBtn) modeBtn.classList.add('active-open');
+      }
+    }
+
+    // 變更維度 (依部類 / 依冊別 / 依作譯者 / 依朝代)
+    function changeDimension(dim) {
+      selectedDimension = dim;
+      closeAllPopovers();
+
+      // 更新 Popover 選取狀態
+      ['category', 'volume', 'author', 'dynasty'].forEach(id => {
+        const item = document.getElementById(`pop-dim-${id}`);
+        if (item) {
+          item.classList.toggle('active', id === dim);
+          item.querySelector('.check-mark').textContent = id === dim ? '✓' : '';
+        }
+      });
+
+      renderSmartBar();
+      renderContent();
+    }
+
+    // 變更筆記檢視模式 (依書籍檢視 / 法義多維度)
+    function changeNoteMode(mode) {
+      selectedNoteMode = mode;
+      closeAllPopovers();
+
+      ['books', 'dimensions'].forEach(id => {
+        const item = document.getElementById(`pop-mode-${id}`);
+        if (item) {
+          item.classList.toggle('active', id === mode);
+          item.querySelector('.check-mark').textContent = id === mode ? '✓' : '';
+        }
+      });
+
+      renderSmartBar();
+      renderContent();
+    }
+
+    function selectFilter(filter) {
+      selectedFilter = filter;
+      renderSmartBar();
+      renderContent();
+    }
+
+    function toggleGroup(groupKey) {
+      groupOpen[groupKey] = !groupOpen[groupKey];
+      renderContent();
+    }
+
+    // 渲染【單行水平膠囊列】
+    function renderSmartBar() {
+      const container = document.getElementById('smart-capsule-bar');
+      const isShelf = currentView === 'shelf';
+
+      const dimLabelMap = {
+        category: '依部類',
+        volume: '依冊別',
+        author: '依作譯者',
+        dynasty: '依朝代'
+      };
+
+      const modeLabelMap = {
+        books: '依書籍檢視',
+        dimensions: '法義多維度'
+      };
+
+      let html = '';
+
+      if (isShelf) {
+        // =======================================================
+        // 圖 1「我的書櫃」：
+        // 左側：4 個快捷膠囊 (全部 / 近期下載 / 上次閱讀 / 我的最愛)
+        // 最右側：[ • 依部類 ▾ ] (點選切換 4 分類)
+        // =======================================================
+        html = `
+          <!-- 左側快捷過濾膠囊 (全部 14 / 近期下載 / 上次閱讀 / 我的最愛) -->
+          <div class="smart-bar-left-group">
+            <button class="filter-capsule ${selectedFilter === 'all' ? 'active' : ''}" onclick="selectFilter('all')">
+              全部 (14)
+            </button>
+            <button class="filter-capsule ${selectedFilter === 'downloads' ? 'active' : ''}" onclick="selectFilter('downloads')">
+              近期下載
+            </button>
+            <button class="filter-capsule ${selectedFilter === 'recent' ? 'active' : ''}" onclick="selectFilter('recent')">
+              上次閱讀
+            </button>
+            <button class="filter-capsule ${selectedFilter === 'favorites' ? 'active' : ''}" onclick="selectFilter('favorites')">
+              我的最愛
+            </button>
+          </div>
+
+          <!-- 最右側：點選切換 4 個分類 (依部類 / 依冊別 / 依作譯者 / 依朝代) -->
+          <div class="smart-bar-right-group">
+            <button id="btn-dropdown-dim" class="dropdown-capsule" onclick="toggleDimensionPopover(event)" title="切換經藏分類維度">
+              <span>• ${dimLabelMap[selectedDimension]}</span>
+              <span class="arrow-icon">▾</span>
+            </button>
+          </div>
+        `;
+      } else {
+        // =======================================================
+        // 圖 2「我的筆記」：
+        // 左側：2 個快捷膠囊 (全部 / 近期標註) [依指示刪除有心得與純重點]
+        // 右側：
+        //   1. 膠囊：[ 📖 依書籍檢視 ▾ ] (可切換 依書籍檢視 / 法義多維度)
+        //   2. 最右邊膠囊：[ • 依部類 ▾ ] (若為書籍檢視，可切換 4 個分類)
+        // =======================================================
+        html = `
+          <!-- 左側快捷過濾膠囊 (全部 4 / 近期標註) [已精簡移除有心得與純重點] -->
+          <div class="smart-bar-left-group">
+            <button class="filter-capsule ${selectedFilter === 'all' ? 'active' : ''}" onclick="selectFilter('all')">
+              全部 (4)
+            </button>
+            <button class="filter-capsule ${selectedFilter === 'recent' ? 'active' : ''}" onclick="selectFilter('recent')">
+              近期標註
+            </button>
+          </div>
+
+          <!-- 右側操作群 -->
+          <div class="smart-bar-right-group">
+            <!-- 筆記多一個膠囊：[ 依書籍檢視 / 法義多維度 ▾ ] -->
+            <button id="btn-dropdown-mode" class="mode-switch-capsule" onclick="toggleModePopover(event)" title="切換筆記整理模式">
+              <span>${selectedNoteMode === 'books' ? '📖' : '✦'} ${modeLabelMap[selectedNoteMode]}</span>
+              <span style="font-size:9px;">▾</span>
+            </button>
+
+            <!-- 最右側：點選切換 4 個分類 (在依書籍檢視時可用) -->
+            ${selectedNoteMode === 'books' ? `
+              <button id="btn-dropdown-dim" class="dropdown-capsule" onclick="toggleDimensionPopover(event)" title="切換分類維度">
+                <span>• ${dimLabelMap[selectedDimension]}</span>
+                <span class="arrow-icon">▾</span>
+              </button>
+            ` : `
+              <div style="font-size:0.72rem; color:var(--color-gold); font-weight:700; padding:4px 8px; background:rgba(192,125,42,0.1); border-radius:12px; white-space:nowrap;">
+                客觀關鍵字比對
+              </div>
+            `}
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    // 渲染正文內容清單
+    function renderContent() {
+      const mount = document.getElementById('items-content-mount');
+      const isShelf = currentView === 'shelf';
+
+      const statLine = document.getElementById('stat-text-line');
+      const dimName = getDimName();
+
+      let html = '';
+
+      if (isShelf) {
+        // === 書櫃資料 ===
+        statLine.textContent = `共 14 部經典 · 自動依${dimName}歸納`;
+
+        html = `
+          <!-- 分組 1 -->
+          <div class="group-accordion">
+            <div class="accordion-header" onclick="toggleGroup('g1')">
+              <div class="accordion-title-wrap">
+                <span class="dot-indicator"></span>
+                <span class="accordion-title">${getShelfGroupTitle1()}</span>
+                <span class="accordion-badge">1 部</span>
+              </div>
+              <span class="accordion-arrow ${groupOpen.g1 ? 'rotated' : ''}">▼</span>
+            </div>
+            ${groupOpen.g1 ? `
+              <div class="accordion-body">
+                <div class="book-item-card">
+                  <div class="book-item-left">
+                    <div class="book-thumb-badge">T0263</div>
+                    <div class="book-info-col">
+                      <div class="book-info-title">正法華經</div>
+                      <div class="book-info-sub">西晉 竺法護譯 · 10卷</div>
+                    </div>
+                  </div>
+                  <div class="book-more-btn">⋮</div>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- 分組 2 -->
+          <div class="group-accordion">
+            <div class="accordion-header" onclick="toggleGroup('g2')">
+              <div class="accordion-title-wrap">
+                <span class="dot-indicator"></span>
+                <span class="accordion-title">${getShelfGroupTitle2()}</span>
+                <span class="accordion-badge">5 部</span>
+              </div>
+              <span class="accordion-arrow ${groupOpen.g2 ? 'rotated' : ''}">▼</span>
+            </div>
+            ${groupOpen.g2 ? `
+              <div class="accordion-body">
+                <div class="book-item-card">
+                  <div class="book-item-left">
+                    <div class="book-thumb-badge">T0313</div>
+                    <div class="book-info-col">
+                      <div class="book-info-title">阿閦佛國經</div>
+                      <div class="book-info-sub">東漢 支婁迦讖 · 2卷</div>
+                    </div>
+                  </div>
+                  <div class="book-more-btn">⋮</div>
+                </div>
+                <div class="book-item-card">
+                  <div class="book-item-left">
+                    <div class="book-thumb-badge">T0315a</div>
+                    <div class="book-info-col">
+                      <div class="book-info-title">佛說普門品經</div>
+                      <div class="book-info-sub">西晉 竺法護 · 1卷</div>
+                    </div>
+                  </div>
+                  <div class="book-more-btn">⋮</div>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      } else {
+        // === 筆記資料 ===
+        if (selectedNoteMode === 'books') {
+          statLine.textContent = `共 2 部經典 · 自動依${dimName}歸納 (共 4 條重點)`;
+
+          html = `
+            <!-- 筆記分組 1 (依書籍) -->
+            <div class="group-accordion">
+              <div class="accordion-header" onclick="toggleGroup('g1')">
+                <div class="accordion-title-wrap">
+                  <span class="dot-indicator"></span>
+                  <span class="accordion-title">${getNoteGroupTitle1()}</span>
+                  <span class="accordion-badge">1 部 · 3 則</span>
+                </div>
+                <span class="accordion-arrow ${groupOpen.g1 ? 'rotated' : ''}">▼</span>
+              </div>
+              ${groupOpen.g1 ? `
+                <div class="accordion-body">
+                  <div class="note-item-card">
+                    <div class="note-book-ref">📖 地藏菩薩本願經 卷上 · 忉利天宮神通品第一</div>
+                    <div class="note-text-body">「如是我聞。一時佛在忉利天，為母說法。爾時十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。」</div>
+                  </div>
+                  <div class="note-item-card">
+                    <div class="note-book-ref">📖 地藏菩薩本願經 卷上 · 閻浮眾生業感品第四</div>
+                    <div class="note-text-body">「若遇殺生者，說宿殃短命報；若遇竊盜者，說貧窮苦楚報；若遇邪淫者，說雀鴿鴛鴦報。」</div>
+                    <div class="note-user-thought">💡 個人心得：因果業報絲毫不爽，行菩薩道當深信因果。</div>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- 筆記分組 2 -->
+            <div class="group-accordion">
+              <div class="accordion-header" onclick="toggleGroup('g2')">
+                <div class="accordion-title-wrap">
+                  <span class="dot-indicator"></span>
+                  <span class="accordion-title">${getNoteGroupTitle2()}</span>
+                  <span class="accordion-badge">1 部 · 1 則</span>
+                </div>
+                <span class="accordion-arrow ${groupOpen.g2 ? 'rotated' : ''}">▼</span>
+              </div>
+              ${groupOpen.g2 ? `
+                <div class="accordion-body">
+                  <div class="note-item-card">
+                    <div class="note-book-ref">📖 太虛大師年譜 · 民國十七年</div>
+                    <div class="note-text-body">「大師遊化歐美，宣揚佛法真理，啟迪西方學人對於東方大乘佛學之正解。」</div>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        } else {
+          // === 筆記：法義多維度 (客觀關鍵字交叉聚合群組) ===
+          statLine.textContent = `命中客觀共通關鍵字 (≥ 3 則) · 共 2 個法義交叉比對群組`;
+
+          html = `
+            <!-- 交叉群組 1 -->
+            <div class="group-accordion">
+              <div class="accordion-header" onclick="toggleGroup('g1')">
+                <div class="accordion-title-wrap">
+                  <span class="cross-tag-badge">✦ #菩提心</span>
+                  <span class="accordion-title" style="margin-left:4px;">跨 2 部經典客觀比對</span>
+                  <span class="accordion-badge">3 則</span>
+                </div>
+                <span class="accordion-arrow ${groupOpen.g1 ? 'rotated' : ''}">▼</span>
+              </div>
+              ${groupOpen.g1 ? `
+                <div class="accordion-body">
+                  <div class="note-item-card">
+                    <div class="note-book-ref">📖 地藏菩薩本願經 卷上</div>
+                    <div class="note-text-body">「我今盡未來劫，皆當度脫如是罪苦眾生，令得解脫，我方成佛。此即發無上<mark style="background:#ffe082; padding:0 2px;">菩提心</mark>。」</div>
+                  </div>
+                  <div class="note-item-card">
+                    <div class="note-book-ref">📖 太虛大師年譜</div>
+                    <div class="note-text-body">「菩薩修行以<mark style="background:#ffe082; padding:0 2px;">菩提心</mark>為先導，以大悲願力深入人間，行菩薩道。」</div>
+                    <div class="note-user-thought">💡 個人心得：太虛大師倡導的人生佛教，核心即為菩提心之踐行。</div>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- 交叉群組 2 -->
+            <div class="group-accordion">
+              <div class="accordion-header" onclick="toggleGroup('g2')">
+                <div class="accordion-title-wrap">
+                  <span class="cross-tag-badge">✦ #因果報應</span>
+                  <span class="accordion-title" style="margin-left:4px;">跨經典客觀比對</span>
+                  <span class="accordion-badge">3 則</span>
+                </div>
+                <span class="accordion-arrow ${groupOpen.g2 ? 'rotated' : ''}">▼</span>
+              </div>
+              ${groupOpen.g2 ? `
+                <div class="accordion-body">
+                  <div class="note-item-card">
+                    <div class="note-book-ref">📖 地藏菩薩本願經 卷上</div>
+                    <div class="note-text-body">「閻浮提眾生，舉止動念，無不是業，無不是罪。業力甚大，能障聖道。」</div>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+      }
+
+      mount.innerHTML = html;
+    }
+
+    function getDimName() {
+      if (selectedDimension === 'category') return '部類';
+      if (selectedDimension === 'volume') return '冊別';
+      if (selectedDimension === 'author') return '作譯者';
+      if (selectedDimension === 'dynasty') return '朝代';
+      return '部類';
+    }
+
+    function getShelfGroupTitle1() {
+      if (selectedDimension === 'category') return '04 法華部類';
+      if (selectedDimension === 'volume') return 'T 大正新脩大藏經 (第09冊)';
+      if (selectedDimension === 'author') return '竺法護 (西晉)';
+      if (selectedDimension === 'dynasty') return '西晉時期';
+      return '04 法華部類';
+    }
+
+    function getShelfGroupTitle2() {
+      if (selectedDimension === 'category') return '06 寶積部類';
+      if (selectedDimension === 'volume') return 'T 大正新脩大藏經 (第11冊)';
+      if (selectedDimension === 'author') return '支婁迦讖 (東漢)';
+      if (selectedDimension === 'dynasty') return '東漢時期';
+      return '06 寶積部類';
+    }
+
+    function getNoteGroupTitle1() {
+      if (selectedDimension === 'category') return '08 大集部類';
+      if (selectedDimension === 'volume') return 'T 大正新脩大藏經 (第13冊)';
+      if (selectedDimension === 'author') return '實叉難陀 (唐)';
+      if (selectedDimension === 'dynasty') return '唐朝時期';
+      return '08 大集部類';
+    }
+
+    function getNoteGroupTitle2() {
+      if (selectedDimension === 'category') return '23 新編部類';
+      if (selectedDimension === 'volume') return '近代新編文獻 (Y系列)';
+      if (selectedDimension === 'author') return '印順導師撰';
+      if (selectedDimension === 'dynasty') return '民國近代';
+      return '23 新編部類';
+    }
+
+    // 初始化渲染
+    renderSmartBar();
+    renderContent();
+  </script>
+</body>
+</html>

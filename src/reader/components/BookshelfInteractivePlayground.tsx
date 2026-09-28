@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { 
-  Heart, Clock, ChevronRight, ChevronDown, 
+  Heart, Clock, ChevronRight, ChevronDown, Check,
   Layers, BookOpen, User, Grid, List,
   MoreVertical, FolderInput, Trash2
 } from 'lucide-react';
@@ -397,6 +397,24 @@ export function BookshelfInteractivePlayground({
   // === 6. 本地經典選單彈窗（若外部未傳入 onOpenBookMenu 時之 Fallback） ===
   const [localTargetBook, setLocalTargetBook] = useState<BookMetadata | null>(null);
 
+  // === 7. 方案 B：維度切換輕量 Popover 浮動選單狀態 ===
+  const [showDimPopover, setShowDimPopover] = useState(false);
+
+  useEffect(() => {
+    const handleGlobalClick = () => {
+      if (showDimPopover) setShowDimPopover(false);
+    };
+    window.addEventListener('click', handleGlobalClick);
+    return () => window.removeEventListener('click', handleGlobalClick);
+  }, [showDimPopover]);
+
+  const classificationLabels: Record<string, string> = {
+    category: '依部類',
+    volume: '依冊別',
+    author: '依作譯者',
+    dynasty: '依朝代'
+  };
+
   // 決定當前資料來源池
   const activeBooksPool = useMemo(() => {
     if (dataScale === 'mass') {
@@ -644,84 +662,87 @@ export function BookshelfInteractivePlayground({
   return (
     <div className="bookshelf-playground-root animate-fade-in" style={{ padding: '0 0.85rem 3rem 0.85rem' }}>
       {/* ========================================================================= */}
-      {/* 🌟 吸頂浮動控制列：4 大分類切換 + 4 大膠囊快捷過濾 (圖1/圖3 往下拉時浮於上方控制列圖2之下) */}
+      {/* 🌟 吸頂浮動控制列：方案 B 單行極致精簡水平膠囊列 (高度約 38px)             */}
       {/* ========================================================================= */}
       <div className="bookshelf-sticky-controls-header">
-        {/* 🌟 1. 頂部第一層：4 大分類切換 (依部類 / 依冊別 / 依作譯者 / 依朝代) */}
-        <div 
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            background: 'rgba(0, 0, 0, 0.05)',
-            borderRadius: '16px',
-            padding: '4px',
-            marginBottom: '0.55rem',
-            border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)'
-          }}
-        >
-          {[
-            { id: 'category', label: '依部類', icon: Layers },
-            { id: 'volume', label: '依冊別', icon: BookOpen },
-            { id: 'author', label: '依作譯者', icon: User },
-            { id: 'dynasty', label: '依朝代', icon: Clock }
-          ].map(item => {
-            const isActive = classificationMode === item.id;
-            const IconComp = item.icon;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setClassificationMode(item.id as any)}
-                style={{
-                  padding: '0.55rem 0.2rem',
-                  borderRadius: '12px',
-                  border: 'none',
-                  background: isActive ? 'var(--bg-card, #ffffff)' : 'transparent',
-                  color: isActive ? 'var(--theme-accent, #8c4b27)' : 'var(--text-muted)',
-                  fontWeight: isActive ? 800 : 600,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '4px',
-                  transition: 'all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                  boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.1)' : 'none'
-                }}
-              >
-                <IconComp size={18} strokeWidth={isActive ? 2.3 : 1.8} />
-                <span style={{ fontSize: '0.8rem', letterSpacing: '0.02em' }}>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
+        <div className="bookshelf-single-row-bar">
+          {/* 左側：4 大膠囊快捷過濾 (全部 / 近期下載 / 上次閱讀 / 我的最愛) */}
+          <div className="bookshelf-single-row-left">
+            {[
+              { id: 'all', label: `全部 (${activeBooksPool.length})` },
+              { id: 'downloads', label: '近期下載' },
+              { id: 'recent', label: '上次閱讀' },
+              { id: 'favorites', label: '我的最愛' }
+            ].map(item => {
+              const isActive = statusFilter === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`bookshelf-filter-capsule ${isActive ? 'active' : ''}`}
+                  onClick={() => setStatusFilter(item.id as any)}
+                >
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-        {/* 🏷️ 2. 第二層：4 大膠囊快捷過濾 (圖5型式：膠囊小、文字小、單行不分兩行、點到的反灰深灰底) */}
-        <div 
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '6px'
-          }}
-        >
-          {[
-            { id: 'all', label: `全部 (${activeBooksPool.length})` },
-            { id: 'downloads', label: '近期下載' },
-            { id: 'recent', label: '上次閱讀' },
-            { id: 'favorites', label: '我的最愛' }
-          ].map(item => {
-            const isActive = statusFilter === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className={`bookshelf-filter-capsule ${isActive ? 'active' : ''}`}
-                onClick={() => setStatusFilter(item.id as any)}
+          {/* 最右側：點選切換 4 個分類 (• 依部類 ▾) */}
+          <div className="bookshelf-single-row-right">
+            <button
+              type="button"
+              className={`bookshelf-dim-dropdown-btn ${showDimPopover ? 'active-open' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDimPopover(!showDimPopover);
+              }}
+              title="切換經藏分類維度"
+            >
+              <span>• {classificationLabels[classificationMode]}</span>
+              <ChevronDown 
+                size={11} 
+                style={{ 
+                  transform: showDimPopover ? 'rotate(180deg)' : 'none', 
+                  transition: 'transform 0.2s ease' 
+                }} 
+              />
+            </button>
+
+            {/* 4 分類維度輕量 Popover 浮動選單 */}
+            {showDimPopover && (
+              <div 
+                className="bookshelf-dim-popover-menu animate-fade-in"
+                onClick={(e) => e.stopPropagation()}
               >
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
+                {[
+                  { id: 'category', label: '依部類', icon: Layers },
+                  { id: 'volume', label: '依冊別', icon: BookOpen },
+                  { id: 'author', label: '依作譯者', icon: User },
+                  { id: 'dynasty', label: '依朝代', icon: Clock }
+                ].map(item => {
+                  const isActive = classificationMode === item.id;
+                  const IconComp = item.icon;
+                  return (
+                    <div
+                      key={item.id}
+                      className={`bookshelf-dim-popover-item ${isActive ? 'active' : ''}`}
+                      onClick={() => {
+                        setClassificationMode(item.id as any);
+                        setShowDimPopover(false);
+                      }}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <IconComp size={13} />
+                        <span>{item.label}</span>
+                      </span>
+                      {isActive && <Check size={12} strokeWidth={2.5} />}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.6.9` (App: v4.6.9 / Builder: v2.9.13)
+- **Current Version**: `v4.7.0` (App: v4.7.0 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.7.0 / Builder: v2.9.13** (2026-09-28)
+  - [App] 「我的書櫃」升級單行極致精簡流：徹底消除雙分段與四大卡片堆疊，高度由原本 160px 壓縮至 38px；左側保留全部/近期下載/上次閱讀/我的最愛 4 快捷膠囊，最右側配置「• 依部類 ▾」微下拉膠囊，點擊彈出輕量選單秒切換 4 分類（依部類、依冊別、依作譯者、依朝代）。
+  - [App] 「我的筆記」升級單行極致精簡流：刪除冗餘的「有心得」與「純重點」膠囊，左側保留「全部」與「近期標註」；右側配置「📖 依書籍檢視 ▾」模式膠囊（點擊切換書籍檢視與法義交叉）以及最右側「• 依部類 ▾」維度膠囊。
+  - [App] 書櫃與筆記全面告別多重套娃與視覺壓迫，垂直空間節省達 70% 以上，讀者一開啟頁面立刻直擊經文與劃線筆記。
 - **⭐ App: v4.6.9 / Builder: v2.9.13** (2026-09-28)
   - [Builder] 消除清單段落雙重重複：修復清單項目（`li` / `item`）內部包含 `<p>` 時外層與內層重複提取的 Bug，徹底根除《太虛大師年譜》(Y0013) 等經典相同段落重複出現兩次之問題。
   - [Builder] 升級 `isAtStartOfContainer` 深度回溯演算法：精準沿著 DOM 樹向上追查非空文字，徹底杜絕段落中途換行之 `line_space` 被誤當成開頭縮排而轉成全形空格（如「本位　　者」、「腐化著　　手」等），還原 100% 正統流暢經文原文。

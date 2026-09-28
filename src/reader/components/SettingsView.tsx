@@ -1320,16 +1320,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.6.8) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.7.0) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.6.9</span>
+                        <span>⭐ App: v4.7.0</span>
                         <span className="changelog-date">(2026-09-28)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 主題顏色升級一體化卡片：第 5 欄為「|」區隔線，第 6 欄自訂圓圈（未選「+」、選中「✓」）。</li>
-                        <li>• 閱讀時間升級一體化卡片：上下 6 欄像素級對稱對齊，前 4 個為時鐘，第 5 欄為「|」，第 6 欄為自訂。</li>
-                        <li>• 時間抽屜支援 ±5 分步進器與手機滑動條：以 5 分鐘為單位自訂調節，提供快捷時間膠囊。</li>
+                        <li>• 「我的書櫃」升級單行極致精簡列：左側快捷過濾，最右側「• 依部類 ▾」點擊切換 4 分類。</li>
+                        <li>• 「我的筆記」升級單行精簡流：刪除心得/重點膠囊，支援點選切換書籍檢視與法義交叉。</li>
+                        <li>• 徹底消除雙分段與大卡片堆疊，垂直節省 70% 空間，開啟頁面直擊經文與筆記。</li>
                       </ul>
                     </div>
 
@@ -1352,6 +1352,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.6.9</span>
+                            <span className="changelog-date">(2026-09-28)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 主題顏色升級一體化卡片：第 5 欄為「|」區隔線，第 6 欄自訂圓圈（未選「+」、選中「✓」）。</li>
+                            <li>• 閱讀時間升級一體化卡片：上下 6 欄像素級對稱對齊，前 4 個為時鐘，第 5 欄為「|」，第 6 欄為自訂。</li>
+                            <li>• 時間抽屜支援 ±5 分步進器與手機滑動條：以 5 分鐘為單位自訂調節，提供快捷時間膠囊。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.6.8</span>
