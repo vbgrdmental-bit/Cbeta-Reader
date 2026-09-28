@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Database, FileText, HelpCircle, RotateCw, CheckCircle2, Check, Plus, Minus, SlidersHorizontal, PanelTop, FileEdit, History, Calendar } from 'lucide-react';
+import { X, Database, FileText, HelpCircle, RotateCw, CheckCircle2, Check, Plus, Minus, SlidersHorizontal, PanelTop, FileEdit, History, Calendar, LayoutGrid, Sparkles, Edit2 } from 'lucide-react';
 import type { AppSettings, StorageStats } from '../../utils/db';
 import { getStorageStats, clearHttpCacheStorage, compressAllBooks, clearAllBooks, saveSettings, DEFAULT_SETTINGS } from '../../utils/db';
 import { BUILDER_VERSION, APP_VERSION } from '../../builder/version';
@@ -805,6 +805,154 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                   </div>
                 </div>
               </div>
+
+              {/* 分組三：首頁版面自訂 (4 格 Widget 系統) */}
+              <div className="settings-theme-unified-card settings-grouped-card">
+                <div className="settings-group-card-header">
+                  <span>首頁版面自訂 (4 格 Widget 系統)</span>
+                </div>
+
+                <div className="settings-grouped-list">
+                  {/* 1. 自訂首頁版面 */}
+                  <div 
+                    className="settings-grouped-item"
+                    onClick={() => {
+                      const nextEnabled = !settings.customHomeLayoutEnabled;
+                      onSave({
+                        ...settings,
+                        customHomeLayoutEnabled: nextEnabled,
+                        homeLayoutPreset: nextEnabled ? (settings.homeLayoutPreset || 'default') : 'default',
+                        homeWidgets: nextEnabled ? (settings.homeWidgets || PRESET_LAYOUTS.default) : undefined
+                      });
+                    }}
+                  >
+                    <div className="settings-item-left">
+                      <div className="settings-symbol-badge">
+                        <LayoutGrid size={15} strokeWidth={2.2} />
+                      </div>
+                      <div className="settings-item-texts">
+                        <div className="settings-item-title">自訂首頁版面</div>
+                        <div className="settings-item-subtitle">自由排序、調整卡片尺寸與快捷功能</div>
+                      </div>
+                    </div>
+                    <label className="settings-switch" onClick={e => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={!!settings.customHomeLayoutEnabled}
+                        onChange={(e) => {
+                          const enabled = e.target.checked;
+                          onSave({
+                            ...settings,
+                            customHomeLayoutEnabled: enabled,
+                            homeLayoutPreset: enabled ? (settings.homeLayoutPreset || 'default') : 'default',
+                            homeWidgets: enabled ? (settings.homeWidgets || PRESET_LAYOUTS.default) : undefined
+                          });
+                        }}
+                      />
+                      <span className="settings-switch-slider" />
+                    </label>
+                  </div>
+
+                  {/* 2. 快速套用風格範本 */}
+                  {settings.customHomeLayoutEnabled && (
+                    <div className="settings-grouped-item" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.65rem', cursor: 'default' }} onClick={e => e.stopPropagation()}>
+                      <div className="settings-item-left" style={{ width: '100%', paddingRight: 0 }}>
+                        <div className="settings-symbol-badge">
+                          <Sparkles size={15} strokeWidth={2.2} />
+                        </div>
+                        <div className="settings-item-texts">
+                          <div className="settings-item-title">快速套用風格範本</div>
+                          <div className="settings-item-subtitle">一鍵快速更換首頁版面風格</div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', width: '100%', paddingLeft: '2.4rem' }}>
+                        {(['default', 'compact', 'focus', 'zen', 'custom'] as const).map(presetKey => {
+                          const isSelected = (settings.homeLayoutPreset || 'default') === presetKey;
+                          const defaultNames: Record<string, string> = {
+                            default: '版型1 極簡',
+                            compact: '極簡精巧 (4x1)',
+                            focus: '每日精進',
+                            zen: '禪修護眼',
+                            custom: settings.customPresetName?.trim() || '自訂'
+                          };
+                          const displayName = defaultNames[presetKey];
+
+                          return (
+                            <button
+                              key={presetKey}
+                              type="button"
+                              className={`advanced-action-pill-btn ${isSelected ? 'active' : ''}`}
+                              style={{
+                                background: isSelected ? 'var(--theme-accent, #8c4b27)' : 'transparent',
+                                color: isSelected ? '#ffffff' : 'inherit',
+                                borderColor: isSelected ? 'var(--theme-accent, #8c4b27)' : 'var(--border-color)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                              }}
+                              onClick={() => {
+                                const nextWidgets = presetKey === 'custom'
+                                  ? (settings.homeWidgets && settings.homeWidgets.length > 0 ? settings.homeWidgets : PRESET_LAYOUTS.default)
+                                  : PRESET_LAYOUTS[presetKey];
+                                onSave({
+                                  ...settings,
+                                  customHomeLayoutEnabled: true,
+                                  homeLayoutPreset: presetKey,
+                                  homeWidgets: nextWidgets
+                                });
+                              }}
+                            >
+                              <span>{displayName}</span>
+                              {presetKey === 'custom' && isSelected && (
+                                <Edit2 size={11} style={{ opacity: 0.85 }} />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* 當選取「自訂」時，提供文字自訂輸入列 */}
+                      {settings.homeLayoutPreset === 'custom' && (
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          width: '100%',
+                          paddingLeft: '2.4rem',
+                          marginTop: '2px',
+                          fontSize: '0.82rem'
+                        }}>
+                          <span style={{ color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>自訂名稱：</span>
+                          <input
+                            type="text"
+                            maxLength={12}
+                            placeholder="自訂 (例如：修持專用)"
+                            value={settings.customPresetName || ''}
+                            onChange={(e) => {
+                              onSave({
+                                ...settings,
+                                customPresetName: e.target.value
+                              });
+                            }}
+                            style={{
+                              flex: 1,
+                              maxWidth: '180px',
+                              padding: '4px 8px',
+                              borderRadius: '8px',
+                              border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
+                              background: 'var(--input-bg, rgba(255,255,255,0.7))',
+                              color: 'var(--text-primary)',
+                              fontSize: '0.82rem',
+                              outline: 'none'
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -833,87 +981,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
 
             {isAdvancedOpen && (
               <div className="advanced-cards-container animate-fade-in">
-                {/* 第零組：首頁版面自訂 */}
-                <div className="advanced-group-card">
-                  <div className="advanced-group-header">
-                    <div className="advanced-group-title">首頁版面自訂 (4 格 Widget 系統)</div>
-                  </div>
 
-                  <div className="advanced-action-list">
-                    {/* 項目: 開啟自訂首頁 */}
-                    <div 
-                      className="advanced-action-item"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => {
-                        const nextEnabled = !settings.customHomeLayoutEnabled;
-                        onSave({
-                          ...settings,
-                          customHomeLayoutEnabled: nextEnabled,
-                          homeLayoutPreset: nextEnabled ? (settings.homeLayoutPreset || 'default') : 'default',
-                          homeWidgets: nextEnabled ? (settings.homeWidgets || PRESET_LAYOUTS.default) : undefined
-                        });
-                      }}
-                    >
-                      <div className="advanced-action-info">
-                        <div className="advanced-action-title">自訂首頁版面</div>
-                        <div className="advanced-action-desc">支援 4 格卡片自由拖曳排序、切換尺寸 (4x1 / 2x2 / 4x2 / 4x4) 與捷徑配置</div>
-                      </div>
-                      <label className="settings-switch" onClick={e => e.stopPropagation()}>
-                        <input
-                          type="checkbox"
-                          checked={!!settings.customHomeLayoutEnabled}
-                          onChange={(e) => {
-                            const enabled = e.target.checked;
-                            onSave({
-                              ...settings,
-                              customHomeLayoutEnabled: enabled,
-                              homeLayoutPreset: enabled ? (settings.homeLayoutPreset || 'default') : 'default',
-                              homeWidgets: enabled ? (settings.homeWidgets || PRESET_LAYOUTS.default) : undefined
-                            });
-                          }}
-                        />
-                        <span className="settings-switch-slider" />
-                      </label>
-                    </div>
-
-                    {settings.customHomeLayoutEnabled && (
-                      <div className="advanced-action-item" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.6rem' }}>
-                        <div className="advanced-action-info">
-                          <div className="advanced-action-title">快速套用風格範本</div>
-                          <div className="advanced-action-desc">一鍵更換精心調配之首頁版面配置</div>
-                        </div>
-                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', width: '100%' }}>
-                          {(['default', 'compact', 'focus', 'zen'] as const).map(presetKey => {
-                            const names = { default: '版型1 極簡', compact: '極簡精巧 (4x1)', focus: '每日精進', zen: '禪修護眼' };
-                            const isSelected = (settings.homeLayoutPreset || 'default') === presetKey;
-                            return (
-                              <button
-                                key={presetKey}
-                                type="button"
-                                className={`advanced-action-pill-btn ${isSelected ? 'active' : ''}`}
-                                style={{
-                                  background: isSelected ? 'var(--theme-accent, #8c4b27)' : 'transparent',
-                                  color: isSelected ? '#ffffff' : 'inherit',
-                                  borderColor: isSelected ? 'var(--theme-accent, #8c4b27)' : 'var(--border-color)'
-                                }}
-                                onClick={() => {
-                                  onSave({
-                                    ...settings,
-                                    customHomeLayoutEnabled: true,
-                                    homeLayoutPreset: presetKey,
-                                    homeWidgets: PRESET_LAYOUTS[presetKey]
-                                  });
-                                }}
-                              >
-                                {names[presetKey]}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
 
                 {/* 第一組：書籍與儲存空間 */}
                 <div className="advanced-group-card">

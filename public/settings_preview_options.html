@@ -524,6 +524,37 @@
       line-height: 1.25;
     }
 
+    .preset-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.32rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-primary);
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .preset-pill-btn:hover {
+      border-color: var(--theme-accent);
+      color: var(--theme-accent);
+    }
+    .preset-pill-btn.active {
+      background: var(--theme-accent);
+      color: #ffffff;
+      border-color: var(--theme-accent);
+    }
+    body[data-theme="ebony"] .preset-pill-btn.active {
+      background: #fbbf24;
+      color: #181619;
+      border-color: #fbbf24;
+    }
+
     /* ── 方案 2：iOS 控制中心資訊磁貼小卡 (2×2 網格) ── */
     .tiles-grid {
       display: grid;
@@ -895,6 +926,63 @@
               <div id="sw1_5" class="switch-ui on"></div>
             </div>
           </div>
+
+          <!-- 分組 3：首頁版面自訂 (4 格 Widget 系統) -->
+          <div class="grouped-card">
+            <div class="grouped-card-header">
+              <span>首頁版面自訂 (4 格 Widget 系統)</span>
+            </div>
+            <div class="grouped-item" onclick="toggleSwitch('sw1_home'); toggleHomeLayoutOptions();">
+              <div class="item-left">
+                <div class="icon-badge">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                </div>
+                <div class="item-texts">
+                  <div class="item-title">自訂首頁版面</div>
+                  <div class="item-subtitle">自由排序、調整卡片尺寸與快捷功能</div>
+                </div>
+              </div>
+              <div id="sw1_home" class="switch-ui on"></div>
+            </div>
+
+            <!-- 快速套用風格範本 -->
+            <div id="home-presets-section" class="grouped-item" style="flex-direction: column; align-items: flex-start; gap: 0.65rem; cursor: default;">
+              <div class="item-left" style="width: 100%; padding-right: 0;">
+                <div class="icon-badge">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                </div>
+                <div class="item-texts">
+                  <div class="item-title">快速套用風格範本</div>
+                  <div class="item-subtitle">一鍵快速更換首頁版面風格</div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; width: 100%; padding-left: 2.4rem;">
+                <button type="button" class="preset-pill-btn active" onclick="selectPreset(this, 'default')">版型1 極簡</button>
+                <button type="button" class="preset-pill-btn" onclick="selectPreset(this, 'compact')">極簡精巧 (4x1)</button>
+                <button type="button" class="preset-pill-btn" onclick="selectPreset(this, 'focus')">每日精進</button>
+                <button type="button" class="preset-pill-btn" onclick="selectPreset(this, 'zen')">禪修護眼</button>
+                <button id="custom-preset-btn" type="button" class="preset-pill-btn" onclick="selectPreset(this, 'custom')">
+                  <span id="custom-preset-text">自訂</span>
+                  <span style="font-size: 10px; opacity: 0.8; margin-left: 2px;">✏️</span>
+                </button>
+              </div>
+
+              <!-- 自訂文字輸入列 -->
+              <div id="custom-name-row" style="display: none; align-items: center; gap: 8px; width: 100%; padding-left: 2.4rem; margin-top: 2px; font-size: 0.82rem;">
+                <span style="color: var(--text-muted); white-space: nowrap;">自訂名稱：</span>
+                <input
+                  id="custom-name-input"
+                  type="text"
+                  maxlength="12"
+                  placeholder="自訂 (例如：修持專用)"
+                  value="自訂"
+                  oninput="updateCustomPresetText(this.value)"
+                  style="flex: 1; max-width: 180px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-color, rgba(0,0,0,0.15)); background: var(--bg-card, #ffffff); color: var(--text-primary); font-size: 0.82rem; outline: none;"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- 方案 2：iOS 控制中心資訊磁貼小卡 -->
@@ -1041,6 +1129,34 @@
       const statusText = card.querySelector('.tile-status');
       if (statusText) {
         statusText.textContent = card.classList.contains('on') ? '已開啟' : '已關閉';
+      }
+    }
+
+    function toggleHomeLayoutOptions() {
+      const sw = document.getElementById('sw1_home');
+      const section = document.getElementById('home-presets-section');
+      if (section && sw) {
+        section.style.display = sw.classList.contains('on') ? 'flex' : 'none';
+      }
+    }
+
+    function selectPreset(btn, preset) {
+      document.querySelectorAll('.preset-pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const customRow = document.getElementById('custom-name-row');
+      if (customRow) {
+        customRow.style.display = (preset === 'custom') ? 'flex' : 'none';
+        if (preset === 'custom') {
+          const input = document.getElementById('custom-name-input');
+          if (input) input.focus();
+        }
+      }
+    }
+
+    function updateCustomPresetText(text) {
+      const label = document.getElementById('custom-preset-text');
+      if (label) {
+        label.textContent = text.trim() || '自訂';
       }
     }
   </script>

@@ -277,6 +277,7 @@ export interface AppSettings {
   readingLogEnabled?: boolean; // 💡 每日閱讀記錄（預設關閉）
   customHomeLayoutEnabled?: boolean; // 💡 自訂首頁 4 格卡片版面（預設關閉）
   homeLayoutPreset?: 'default' | 'compact' | 'focus' | 'zen' | 'custom';
+  customPresetName?: string; // 💡 自訂風格範本名稱（可自訂文字，預設「自訂」）
   homeWidgets?: Array<{ id: string; type: string; size: string }>;
 }
 
