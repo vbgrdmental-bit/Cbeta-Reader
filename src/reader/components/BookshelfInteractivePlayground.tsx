@@ -26,6 +26,8 @@ interface BookshelfInteractivePlaygroundProps {
     node?: { id: string; label: string };
     stack?: Array<{ id: string; label: string }>;
   }) => void;
+  statusFilter?: 'all' | 'downloads' | 'recent' | 'favorites';
+  onStatusFilterChange?: (filter: 'all' | 'downloads' | 'recent' | 'favorites') => void;
 }
 
 // 💡 120 部正統 CBETA 大藏經海量模擬經典資料庫 (涵蓋阿含、般若、法華、華嚴、本生、密教、論疏、近代新編等)
@@ -377,13 +379,30 @@ export function BookshelfInteractivePlayground({
   onOpenBookMenu,
   onToggleFavorite,
   onDeleteBook,
-  onNavigateToCatalogCategory
+  onNavigateToCatalogCategory,
+  statusFilter: propStatusFilter,
+  onStatusFilterChange
 }: BookshelfInteractivePlaygroundProps) {
   // === 1. 頂部四大藏經分類切換：'category' (依部類) | 'volume' (依冊別) | 'author' (依作譯者) | 'dynasty' (依朝代) ===
   const [classificationMode, setClassificationMode] = useState<'category' | 'volume' | 'author' | 'dynasty'>('category');
 
   // === 2. 次層 4 大膠囊快捷過濾：'all' (全部) | 'downloads' (近期下載) | 'recent' (近期閱讀) | 'favorites' (我的最愛) ===
-  const [statusFilter, setStatusFilter] = useState<'all' | 'downloads' | 'recent' | 'favorites'>('all');
+  const [internalStatusFilter, setInternalStatusFilter] = useState<'all' | 'downloads' | 'recent' | 'favorites'>(propStatusFilter || 'all');
+
+  useEffect(() => {
+    if (propStatusFilter !== undefined) {
+      setInternalStatusFilter(propStatusFilter);
+    }
+  }, [propStatusFilter]);
+
+  const statusFilter = propStatusFilter !== undefined ? propStatusFilter : internalStatusFilter;
+
+  const handleStatusFilterChange = (newFilter: 'all' | 'downloads' | 'recent' | 'favorites') => {
+    setInternalStatusFilter(newFilter);
+    if (onStatusFilterChange) {
+      onStatusFilterChange(newFilter);
+    }
+  };
 
   // === 3. 視圖切換 (圖2)：條列式 (list) vs 卡片式 (grid) ===
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
@@ -680,7 +699,7 @@ export function BookshelfInteractivePlayground({
                   key={item.id}
                   type="button"
                   className={`bookshelf-filter-capsule ${isActive ? 'active' : ''}`}
-                  onClick={() => setStatusFilter(item.id as any)}
+                  onClick={() => handleStatusFilterChange(item.id as any)}
                 >
                   <span>{item.label}</span>
                 </button>

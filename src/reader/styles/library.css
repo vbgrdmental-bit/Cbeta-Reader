@@ -8187,6 +8187,7 @@ body.theme-comfort .reader-capsule-item .capsule-disc-icon {
   border: 1px solid rgba(0, 0, 0, 0.13);
   color: var(--text-secondary, #444444);
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .bookshelf-filter-capsule:hover {
@@ -8750,9 +8751,11 @@ body.theme-ebony .memo-preview-card-box {
 /* ============================================================ */
 .bookshelf-single-row-bar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 6px;
+  row-gap: 6px;
+  flex-wrap: wrap;
   min-height: 38px;
   background: transparent;
   position: relative;
@@ -8764,21 +8767,20 @@ body.theme-ebony .memo-preview-card-box {
   display: flex;
   align-items: center;
   gap: 5px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-.bookshelf-single-row-left::-webkit-scrollbar {
-  display: none;
+  row-gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .bookshelf-single-row-right {
   display: flex;
   align-items: center;
   gap: 5px;
+  row-gap: 6px;
+  flex-wrap: wrap;
   flex-shrink: 0;
   position: relative;
+  margin-left: auto;
 }
 
 /* 維度切換下拉膠囊 (• 依部類 ▾) */
@@ -8799,6 +8801,7 @@ body.theme-ebony .memo-preview-card-box {
   color: var(--theme-accent, #8c4b27);
   transition: all 0.16s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  flex-shrink: 0;
 }
 
 .bookshelf-dim-dropdown-btn:hover {
@@ -8841,6 +8844,7 @@ body.theme-ebony .bookshelf-dim-dropdown-btn.active-open,
   border: 1px solid rgba(0, 0, 0, 0.13);
   color: var(--text-primary, #333333);
   transition: all 0.16s ease;
+  flex-shrink: 0;
 }
 
 body.theme-ebony .notes-mode-dropdown-btn,

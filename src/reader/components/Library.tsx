@@ -103,18 +103,31 @@ export function Library({
 
   const [folders, setFolders] = useState<BookFolder[]>([]);
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const [bookshelfStatusFilter, setBookshelfStatusFilter] = useState<'all' | 'downloads' | 'recent' | 'favorites'>('all');
 
   // 💡 資料夾瀏覽歷史紀錄，用於支援正方形上一頁（<）與下一頁（>）導航按鈕
   const [folderHistory, setFolderHistory] = useState<Array<string | null>>([null]);
   const [historyIndex, setHistoryIndex] = useState(0);
 
   const navigateToFolder = (folderId: string | null) => {
+    let targetFolderId = folderId;
+    if (folderId === 'virtual_unclassified') {
+      setBookshelfStatusFilter('downloads');
+      targetFolderId = 'virtual_my_folders';
+    } else if (folderId === 'virtual_recent_reads') {
+      setBookshelfStatusFilter('recent');
+      targetFolderId = 'virtual_my_folders';
+    } else if (folderId === 'virtual_favorites') {
+      setBookshelfStatusFilter('favorites');
+      targetFolderId = 'virtual_my_folders';
+    }
+
     // 當使用者手動點選資料夾時，截斷並寫入新歷史
     const newHistory = folderHistory.slice(0, historyIndex + 1);
-    newHistory.push(folderId);
+    newHistory.push(targetFolderId);
     setFolderHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
-    setCurrentFolderId(folderId);
+    setCurrentFolderId(targetFolderId);
   };
 
   const handleGoBack = () => {
@@ -149,6 +162,7 @@ export function Library({
     } else if (targetSection.section === 'shelf') {
       setActiveTab('shelf');
       setCurrentFolderId('virtual_my_folders');
+      setBookshelfStatusFilter('all');
       setFolderHistory(['virtual_my_folders']);
       setHistoryIndex(0);
     } else if (targetSection.section === 'notes') {
@@ -462,7 +476,11 @@ export function Library({
 
   // 💡 點選進入專區/資料夾時的平滑推進動畫 (CBETA 式整頁飛出)
   const navigateToFolderWithAnimation = (targetFolderId: string | null) => {
-    if (currentFolderId === targetFolderId) return;
+    let mappedTarget = targetFolderId;
+    if (targetFolderId === 'virtual_unclassified' || targetFolderId === 'virtual_recent_reads' || targetFolderId === 'virtual_favorites') {
+      mappedTarget = 'virtual_my_folders';
+    }
+    if (currentFolderId === mappedTarget && currentFolderId !== 'virtual_my_folders') return;
     const goForward = true; // 點擊進入資料夾 = 向左推進
 
     if (swipeContainerRef.current) {
@@ -1662,6 +1680,7 @@ export function Library({
           <button
             className={`capsule-nav-item ${activeTab === 'shelf' && (currentFolderId === 'virtual_my_folders' || (currentFolderId && currentFolderId !== 'virtual_highlights')) ? 'active' : ''}`}
             onClick={() => {
+              setBookshelfStatusFilter('all');
               setActiveTab('shelf');
               navigateToFolder('virtual_my_folders');
               updateHashRoute('library');
@@ -1828,6 +1847,7 @@ export function Library({
                 onOpenCbetaCatalog={onOpenCbetaCatalog || handleOpenCbetaCatalogWithAnimation}
                 onNavigateToLibrarySection={(section) => {
                   if (section === 'shelf') {
+                    setBookshelfStatusFilter('all');
                     setActiveTab('shelf');
                     navigateToFolder('virtual_my_folders');
                     updateHashRoute('library');
@@ -1879,6 +1899,8 @@ export function Library({
                       handleDeleteBook(undefined as any, workId);
                     }}
                     onNavigateToCatalogCategory={handleNavigateToCatalogCategory}
+                    statusFilter={bookshelfStatusFilter}
+                    onStatusFilterChange={setBookshelfStatusFilter}
                   />
                 </div>
               ) : (
@@ -2193,7 +2215,8 @@ export function Library({
                               padding: '4px 8px', 
                               background: 'var(--color-gold-bg, rgba(192,125,42,0.1))', 
                               borderRadius: '12px', 
-                              whiteSpace: 'nowrap' 
+                              whiteSpace: 'nowrap',
+                              flexShrink: 0
                             }}
                           >
                             客觀關鍵字比對

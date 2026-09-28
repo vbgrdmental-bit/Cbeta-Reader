@@ -326,14 +326,14 @@
 
     .unified-smart-bar {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 5px;
-      height: 38px;
+      gap: 6px;
+      row-gap: 6px;
+      min-height: 38px;
+      height: auto;
       background: transparent;
-      overflow-x: auto;
-      scrollbar-width: none; /* Firefox */
-      -webkit-overflow-scrolling: touch;
+      flex-wrap: wrap;
       padding: 1px 2px;
     }
     .unified-smart-bar::-webkit-scrollbar { display: none; }
@@ -342,14 +342,19 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      flex-shrink: 0;
+      row-gap: 6px;
+      flex-wrap: wrap;
+      min-width: 0;
     }
 
     .smart-bar-right-group {
       display: flex;
       align-items: center;
       gap: 5px;
+      row-gap: 6px;
+      flex-wrap: wrap;
       flex-shrink: 0;
+      margin-left: auto;
     }
 
     /* 左側快捷過濾膠囊 (與用戶圖 1/2 樣式 100% 相同) */
@@ -369,6 +374,7 @@
       display: flex;
       align-items: center;
       gap: 2px;
+      flex-shrink: 0;
     }
     .filter-capsule:hover {
       border-color: var(--theme-accent);
