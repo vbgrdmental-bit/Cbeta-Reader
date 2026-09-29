@@ -8715,6 +8715,50 @@ body.theme-ebony .keyword-cross-badge {
   opacity: 0.75;
 }
 
+/* 🏷️ 書櫃與筆記經書項目編號徽章 (38px 方角標籤) */
+.bookshelf-book-badge {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 8px;
+  background: var(--theme-accent, #8c4b27);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+/* 🌟 紫柑木(紫紺木)/深色模式：比照圖 2 頂部微膠囊底色 (#d4a373) 與黑色文字 (#1a1513)，徹底根除白字看不清 */
+body.theme-ebony .bookshelf-book-badge,
+body.theme-dark .bookshelf-book-badge {
+  background: #d4a373 !important;
+  color: #1a1513 !important;
+  font-weight: 900;
+}
+
+/* 卡片式檢視 (Grid) 經典編號小標籤 */
+.bookshelf-grid-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--theme-accent, #8c4b27);
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.1));
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+body.theme-ebony .bookshelf-grid-tag,
+body.theme-dark .bookshelf-grid-tag {
+  background: #d4a373 !important;
+  color: #1a1513 !important;
+  font-weight: 900;
+}
+
 /* ==========================================================================
    自訂便籤小卡與圖 2 排版控制台 (Custom Memo Widget & Figure 2 Console)
    ========================================================================== */

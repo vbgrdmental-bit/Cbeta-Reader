@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.7.6` (App: v4.7.6 / Builder: v2.9.13)
+- **Current Version**: `v4.7.7` (App: v4.7.7 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,8 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.7.7 / Builder: v2.9.13** (2026-09-30)
+  - [App] 修復「紫柑木/紫紺木」模式經書標籤對比度：將書櫃與筆記條列/卡片式之經書編號徽章（T0235 等）統一升級為泥金檀木底色（`#d4a373`）搭配清晰純黑文字（`#1a1513`），徹底根除亮黃底白字吃字問題。
 - **⭐ App: v4.7.6 / Builder: v2.9.13** (2026-09-30)
   - [App] 修復首頁便籤編輯抽屜：導入 createPortal 直掛 body，徹底解除父層 `willChange: transform` 導致的包含塊座標系劫持，抽屜穩定由螢幕下向上滑出。
   - [App] 點擊編輯時卡片本體自動平滑捲動置中，遮罩優化為輕柔半透明景深，達成卡片本體 100% 毫秒級即時預覽與連動。

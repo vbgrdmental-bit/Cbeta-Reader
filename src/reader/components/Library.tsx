@@ -2371,23 +2371,7 @@ export function Library({
                                           onClick={() => toggleBookGroup(group.workId)}
                                         >
                                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0, flex: 1 }}>
-                                            <div 
-                                              style={{ 
-                                                width: '38px',
-                                                height: '38px',
-                                                minWidth: '38px',
-                                                minHeight: '38px',
-                                                borderRadius: '8px',
-                                                background: 'var(--theme-accent, #8c4b27)',
-                                                color: '#ffffff',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                fontSize: '0.72rem',
-                                                fontWeight: 800,
-                                                flexShrink: 0
-                                              }}
-                                            >
+                                            <div className="bookshelf-book-badge">
                                               {group.workId}
                                             </div>
                                             <div style={{ minWidth: 0, flex: 1, paddingRight: '6px' }}>

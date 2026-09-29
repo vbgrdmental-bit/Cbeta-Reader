@@ -924,21 +924,7 @@ export function BookshelfInteractivePlayground({
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0, flex: 1 }}>
-                            <div 
-                              style={{
-                                width: '38px',
-                                height: '38px',
-                                borderRadius: '8px',
-                                background: 'var(--theme-accent, #8c4b27)',
-                                color: '#ffffff',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '0.72rem',
-                                fontWeight: 800,
-                                flexShrink: 0
-                              }}
-                            >
+                            <div className="bookshelf-book-badge">
                               {book.workId}
                             </div>
                             <div style={{ minWidth: 0, flex: 1, paddingRight: '6px' }}>
@@ -1007,7 +993,7 @@ export function BookshelfInteractivePlayground({
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--theme-accent, #8c4b27)', background: 'var(--theme-accent-light, rgba(140,75,39,0.1))', padding: '2px 6px', borderRadius: '4px' }}>
+                            <span className="bookshelf-grid-tag">
                               {book.workId}
                             </span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -1056,19 +1042,7 @@ export function BookshelfInteractivePlayground({
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-                <div style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'var(--theme-accent, #8c4b27)',
-                  color: '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.76rem',
-                  fontWeight: 800,
-                  flexShrink: 0
-                }}>
+                <div className="bookshelf-book-badge" style={{ borderRadius: '10px', fontSize: '0.76rem' }}>
                   {localTargetBook.workId}
                 </div>
                 <div style={{ minWidth: 0, flex: 1 }}>
