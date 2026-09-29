@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.7.3` (App: v4.7.3 / Builder: v2.9.13)
+- **Current Version**: `v4.7.4` (App: v4.7.4 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.7.4 / Builder: v2.9.13** (2026-09-30)
+  - [App] 修復書櫃「• 依部類 ▾」下拉選單：解除外層容器 `overflow-x: auto` 導致的 y 軸溢出裁切隱形問題，改由左側膠囊列獨立支援窄螢幕水平滑動，右側下拉選單設定最高層級 `z-index: 99999`，點擊即順暢展開 4 分類。
+  - [App] 修復筆記「依書籍檢視 ▾」下拉選單：獨立配置父容器 relative 定位，點擊正常彈出書籍檢視與法義多維度切換選單。
+  - [App] 依指示徹底移除「依書籍檢視」按鈕左側的圖示符號，保持純文字簡約優雅樣式。
 - **⭐ App: v4.7.3 / Builder: v2.9.13** (2026-09-30)
   - [App] 點擊便籤卡片左上方或右上方編輯符號，由螢幕下向上平滑滑出控制抽屜（Bottom Drawer），卡片本體 100% 毫秒級即時更新與預覽，配置典雅「取消」與「完成」膠囊按鍵。
   - [App] 卡片架構三合一解構：頂部符號（提供無符號 ∅ 及 6 款禪意/盛開清蓮等 SVG 圖示）、文字小卡本體、下方出處（選填，留空則不顯示）。

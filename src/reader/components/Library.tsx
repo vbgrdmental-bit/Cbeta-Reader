@@ -2108,66 +2108,62 @@ export function Library({
 
                       {/* 右側：模式切換膠囊 + 維度切換膠囊 */}
                       <div className="bookshelf-single-row-right">
-                        {/* 1. 筆記模式切換膠囊 (依書籍檢視 / 法義多維度) */}
-                        <button
-                          type="button"
-                          className={`notes-mode-dropdown-btn ${showNotesModePopover ? 'active-open' : ''}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowNotesModePopover(!showNotesModePopover);
-                            setShowNotesDimPopover(false);
-                          }}
-                          title="切換筆記整理模式"
-                        >
-                          <span>{notesViewMode === 'books' ? '📖 依書籍檢視' : '✦ 法義多維度'}</span>
-                          <ChevronDown 
-                            size={10} 
-                            style={{ 
-                              transform: showNotesModePopover ? 'rotate(180deg)' : 'none', 
-                              transition: 'transform 0.2s ease' 
-                            }} 
-                          />
-                        </button>
-
-                        {/* 模式切換輕量 Popover 浮動選單 */}
-                        {showNotesModePopover && (
-                          <div 
-                            className="bookshelf-dim-popover-menu animate-fade-in"
-                            style={{ right: notesViewMode === 'books' ? '90px' : '0' }}
-                            onClick={(e) => e.stopPropagation()}
+                        {/* 1. 筆記模式切換膠囊 (依書籍檢視 / 法義多維度，左側符號已刪除) */}
+                        <div style={{ position: 'relative', display: 'inline-flex' }}>
+                          <button
+                            type="button"
+                            className={`notes-mode-dropdown-btn ${showNotesModePopover ? 'active-open' : ''}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowNotesModePopover(!showNotesModePopover);
+                              setShowNotesDimPopover(false);
+                            }}
+                            title="切換筆記整理模式"
                           >
-                            <div
-                              className={`bookshelf-dim-popover-item ${notesViewMode === 'books' ? 'active' : ''}`}
-                              onClick={() => {
-                                setNotesViewMode('books');
-                                setShowNotesModePopover(false);
-                              }}
+                            <span>{notesViewMode === 'books' ? '依書籍檢視' : '法義多維度'}</span>
+                            <ChevronDown 
+                              size={10} 
+                              style={{ 
+                                transform: showNotesModePopover ? 'rotate(180deg)' : 'none', 
+                                transition: 'transform 0.2s ease' 
+                              }} 
+                            />
+                          </button>
+
+                          {/* 模式切換輕量 Popover 浮動選單 */}
+                          {showNotesModePopover && (
+                            <div 
+                              className="bookshelf-dim-popover-menu animate-fade-in"
+                              style={{ right: '0' }}
+                              onClick={(e) => e.stopPropagation()}
                             >
-                              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <BookOpen size={13} />
+                              <div
+                                className={`bookshelf-dim-popover-item ${notesViewMode === 'books' ? 'active' : ''}`}
+                                onClick={() => {
+                                  setNotesViewMode('books');
+                                  setShowNotesModePopover(false);
+                                }}
+                              >
                                 <span>依書籍檢視</span>
-                              </span>
-                              {notesViewMode === 'books' && <Check size={12} strokeWidth={2.5} />}
-                            </div>
-                            <div
-                              className={`bookshelf-dim-popover-item ${notesViewMode === 'dimensions' ? 'active' : ''}`}
-                              onClick={() => {
-                                setNotesViewMode('dimensions');
-                                setShowNotesModePopover(false);
-                              }}
-                            >
-                              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <Tag size={13} />
+                                {notesViewMode === 'books' && <Check size={12} strokeWidth={2.5} />}
+                              </div>
+                              <div
+                                className={`bookshelf-dim-popover-item ${notesViewMode === 'dimensions' ? 'active' : ''}`}
+                                onClick={() => {
+                                  setNotesViewMode('dimensions');
+                                  setShowNotesModePopover(false);
+                                }}
+                              >
                                 <span>法義多維度</span>
-                              </span>
-                              {notesViewMode === 'dimensions' && <Check size={12} strokeWidth={2.5} />}
+                                {notesViewMode === 'dimensions' && <Check size={12} strokeWidth={2.5} />}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
 
                         {/* 2. 最右側：分類維度切換膠囊 (僅在「依書籍檢視」時顯示；若切換至「法義多維度」則替換為「全部收合/全部打開」符號按鈕) */}
                         {notesViewMode === 'books' ? (
-                          <>
+                          <div style={{ position: 'relative', display: 'inline-flex' }}>
                             <button
                               type="button"
                               className={`bookshelf-dim-dropdown-btn ${showNotesDimPopover ? 'active-open' : ''}`}
@@ -2196,6 +2192,7 @@ export function Library({
                             {showNotesDimPopover && (
                               <div 
                                 className="bookshelf-dim-popover-menu animate-fade-in"
+                                style={{ right: '0' }}
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 {[
@@ -2225,7 +2222,7 @@ export function Library({
                                 })}
                               </div>
                             )}
-                          </>
+                          </div>
                         ) : (
                           /* 法義多維度：全部收合 / 全部打開 關鍵字 符號按鈕 */
                           <button

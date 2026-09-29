@@ -709,58 +709,61 @@ export function BookshelfInteractivePlayground({
 
           {/* 最右側：點選切換 4 個分類 (• 依部類 ▾) */}
           <div className="bookshelf-single-row-right">
-            <button
-              type="button"
-              className={`bookshelf-dim-dropdown-btn ${showDimPopover ? 'active-open' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowDimPopover(!showDimPopover);
-              }}
-              title="切換經藏分類維度"
-            >
-              <span>• {classificationLabels[classificationMode]}</span>
-              <ChevronDown 
-                size={11} 
-                style={{ 
-                  transform: showDimPopover ? 'rotate(180deg)' : 'none', 
-                  transition: 'transform 0.2s ease' 
-                }} 
-              />
-            </button>
-
-            {/* 4 分類維度輕量 Popover 浮動選單 */}
-            {showDimPopover && (
-              <div 
-                className="bookshelf-dim-popover-menu animate-fade-in"
-                onClick={(e) => e.stopPropagation()}
+            <div style={{ position: 'relative', display: 'inline-flex' }}>
+              <button
+                type="button"
+                className={`bookshelf-dim-dropdown-btn ${showDimPopover ? 'active-open' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDimPopover(!showDimPopover);
+                }}
+                title="切換經藏分類維度"
               >
-                {[
-                  { id: 'category', label: '依部類', icon: Layers },
-                  { id: 'volume', label: '依冊別', icon: BookOpen },
-                  { id: 'author', label: '依作譯者', icon: User },
-                  { id: 'dynasty', label: '依朝代', icon: Clock }
-                ].map(item => {
-                  const isActive = classificationMode === item.id;
-                  const IconComp = item.icon;
-                  return (
-                    <div
-                      key={item.id}
-                      className={`bookshelf-dim-popover-item ${isActive ? 'active' : ''}`}
-                      onClick={() => {
-                        setClassificationMode(item.id as any);
-                        setShowDimPopover(false);
-                      }}
-                    >
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <IconComp size={13} />
-                        <span>{item.label}</span>
-                      </span>
-                      {isActive && <Check size={12} strokeWidth={2.5} />}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+                <span>• {classificationLabels[classificationMode]}</span>
+                <ChevronDown 
+                  size={11} 
+                  style={{ 
+                    transform: showDimPopover ? 'rotate(180deg)' : 'none', 
+                    transition: 'transform 0.2s ease' 
+                  }} 
+                />
+              </button>
+
+              {/* 4 分類維度輕量 Popover 浮動選單 */}
+              {showDimPopover && (
+                <div 
+                  className="bookshelf-dim-popover-menu animate-fade-in"
+                  style={{ right: '0' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {[
+                    { id: 'category', label: '依部類', icon: Layers },
+                    { id: 'volume', label: '依冊別', icon: BookOpen },
+                    { id: 'author', label: '依作譯者', icon: User },
+                    { id: 'dynasty', label: '依朝代', icon: Clock }
+                  ].map(item => {
+                    const isActive = classificationMode === item.id;
+                    const IconComp = item.icon;
+                    return (
+                      <div
+                        key={item.id}
+                        className={`bookshelf-dim-popover-item ${isActive ? 'active' : ''}`}
+                        onClick={() => {
+                          setClassificationMode(item.id as any);
+                          setShowDimPopover(false);
+                        }}
+                      >
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <IconComp size={13} />
+                          <span>{item.label}</span>
+                        </span>
+                        {isActive && <Check size={12} strokeWidth={2.5} />}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

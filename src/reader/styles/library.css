@@ -9303,12 +9303,7 @@ body.theme-ebony .memo-capsule-btn.active {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.bookshelf-single-row-bar::-webkit-scrollbar {
-  display: none;
+  overflow: visible !important;
 }
 
 .bookshelf-single-row-left {
@@ -9317,7 +9312,13 @@ body.theme-ebony .memo-capsule-btn.active {
   gap: 4px;
   flex-wrap: nowrap;
   min-width: 0;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.bookshelf-single-row-left::-webkit-scrollbar {
+  display: none;
 }
 
 .bookshelf-single-row-right {
@@ -9328,6 +9329,7 @@ body.theme-ebony .memo-capsule-btn.active {
   flex-shrink: 0;
   position: relative;
   margin-left: auto;
+  overflow: visible !important;
 }
 
 /* 維度切換下拉膠囊 (• 依部類 ▾) */
@@ -9375,7 +9377,7 @@ body.theme-ebony .bookshelf-dim-dropdown-btn.active-open,
   border-color: #f3c969;
 }
 
-/* 筆記模式切換膠囊 (📖 依書籍檢視 ▾) */
+/* 筆記模式切換膠囊 (依書籍檢視 ▾) */
 .notes-mode-dropdown-btn {
   display: inline-flex;
   align-items: center;
@@ -9418,18 +9420,18 @@ body.theme-ebony .notes-mode-dropdown-btn.active-open,
   border-color: #f3c969;
 }
 
-/* 輕量 Popover 浮動選單 */
+/* 輕量 Popover 浮動選單 (最高層級，防止被遮擋) */
 .bookshelf-dim-popover-menu {
   position: absolute;
-  top: 38px;
+  top: calc(100% + 5px);
   right: 0;
-  z-index: 100;
+  z-index: 99999 !important;
   min-width: 145px;
   background: var(--bg-card, #ffffff);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.14));
   border-radius: 12px;
   padding: 5px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
   animation: popoverFadeIn 0.15s ease-out;
 }
 

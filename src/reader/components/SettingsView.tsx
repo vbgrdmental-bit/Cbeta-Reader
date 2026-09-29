@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.7.3) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.7.4) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.7.3</span>
+                        <span>⭐ App: v4.7.4</span>
                         <span className="changelog-date">(2026-09-30)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 編輯便籤由螢幕下向上滑出控制抽屜，卡片本體即時預覽，配置「取消」與「完成」膠囊。</li>
-                        <li>• 新增 6 款禪意蓮花符號與無符號切換；便籤分符號、文字本體與出處 3 部份（出處選填）。</li>
-                        <li>• 文字支援分行獨立字體字級；4 規格（4×1/2×2/4×2/4×3）設字級臨界點，達極限自動停按。</li>
+                        <li>• 修復書櫃「• 依部類 ▾」因 overflow 裁切無法彈出之問題，選單浮於最上層。</li>
+                        <li>• 修復筆記「依書籍檢視 ▾」無法彈出之問題，並徹底刪除按鈕文字左側圖示符號。</li>
+                        <li>• 膠囊列改由左側按鈕區自適應水平滑動，確保右側彈出選單完整呈現不被遮切。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.7.3</span>
+                            <span className="changelog-date">(2026-09-30)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 編輯便籤由螢幕下向上滑出控制抽屜，卡片本體即時預覽，配置「取消」與「完成」膠囊。</li>
+                            <li>• 新增 6 款禪意蓮花符號與無符號切換；便籤分符號、文字本體與出處 3 部份（出處選填）。</li>
+                            <li>• 文字支援分行獨立字體字級；4 規格（4×1/2×2/4×2/4×3）設字級臨界點，達極限自動停按。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.7.2</span>
