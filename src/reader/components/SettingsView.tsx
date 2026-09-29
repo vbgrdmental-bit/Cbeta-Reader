@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.7.2) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.7.3) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.7.2</span>
+                        <span>⭐ App: v4.7.3</span>
                         <span className="changelog-date">(2026-09-30)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 書櫃與筆記頂部膠囊列適配窄版手機：微調字級與內距，確保全部排在同一行。</li>
-                        <li>• 「我的筆記」全面對齊「我的書櫃」卡片尺寸、38px 綠色標籤與間距，視覺完全一致。</li>
-                        <li>• 法義多維度語詞演算法升級：排除非語詞碎片，新增「全部展開/收合」符號，並隱藏 4 分類。</li>
+                        <li>• 編輯便籤由螢幕下向上滑出控制抽屜，卡片本體即時預覽，配置「取消」與「完成」膠囊。</li>
+                        <li>• 新增 6 款禪意蓮花符號與無符號切換；便籤分符號、文字本體與出處 3 部份（出處選填）。</li>
+                        <li>• 文字支援分行獨立字體字級；4 規格（4×1/2×2/4×2/4×3）設字級臨界點，達極限自動停按。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.7.2</span>
+                            <span className="changelog-date">(2026-09-30)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 書櫃與筆記頂部膠囊列適配窄版手機：微調字級與內距，確保全部排在同一行。</li>
+                            <li>• 「我的筆記」全面對齊「我的書櫃」卡片尺寸、38px 綠色標籤與間距，視覺完全一致。</li>
+                            <li>• 法義多維度語詞演算法升級：排除非語詞碎片，新增「全部展開/收合」符號，並隱藏 4 分類。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.7.1</span>

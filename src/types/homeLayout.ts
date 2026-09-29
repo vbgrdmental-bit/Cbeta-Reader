@@ -29,6 +29,12 @@ export type HomeWidgetSize =
   | 'size-2x4'
   | 'size-4x4';
 
+export interface MemoLineConfig {
+  text: string;
+  font?: 'serif' | 'sans' | 'kai';
+  fontSize?: number;
+}
+
 export interface HomeWidgetConfig {
   id: string;
   type: HomeWidgetType;
@@ -41,6 +47,8 @@ export interface HomeWidgetConfig {
   memoFontSize?: number;
   memoLineHeight?: number;
   memoPadding?: number;
+  memoIconIndex?: number; // 0: 無符號, 1~6: 禪意小圖標
+  memoLines?: MemoLineConfig[]; // 分行獨立字體字級排版
 }
 
 export const ZEN_ICONS_LIST = [

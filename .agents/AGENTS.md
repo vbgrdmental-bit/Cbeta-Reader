@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.7.2` (App: v4.7.2 / Builder: v2.9.13)
+- **Current Version**: `v4.7.3` (App: v4.7.3 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.7.3 / Builder: v2.9.13** (2026-09-30)
+  - [App] 點擊便籤卡片左上方或右上方編輯符號，由螢幕下向上平滑滑出控制抽屜（Bottom Drawer），卡片本體 100% 毫秒級即時更新與預覽，配置典雅「取消」與「完成」膠囊按鍵。
+  - [App] 卡片架構三合一解構：頂部符號（提供無符號 ∅ 及 6 款禪意/盛開清蓮等 SVG 圖示）、文字小卡本體、下方出處（選填，留空則不顯示）。
+  - [App] 文字內容允許自由分行，上下行支援獨立字體（宋明/黑體/楷體）與獨立字級排版；2×2、4×1、4×2、4×3 尺寸嚴格設字級臨界點，達極限自動停按 A-/A+。
 - **⭐ App: v4.7.2 / Builder: v2.9.13** (2026-09-30)
   - [App] 頂部單行膠囊列極致緊湊：優化字級（0.69rem）與左右間距（6~7px），手機窄螢幕一律單行並排不換行，溢出支援平滑水平滑動。
   - [App] 「我的書櫃」與「我的筆記」版面規範像素級統一：全面以圖1為權威基準，筆記下方改採標準經書 Bar（38px 典雅標籤、0.94rem 主標、一致間距與圓角）。
