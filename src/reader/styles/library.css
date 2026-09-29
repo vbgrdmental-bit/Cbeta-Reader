@@ -8541,7 +8541,7 @@ body.theme-comfort .reader-capsule-item .capsule-disc-icon {
   height: 28px;
   min-height: 28px;
   max-height: 28px;
-  padding: 0 6px;
+  padding: 0 7px;
   border-radius: 9999px;
   font-size: 0.69rem;
   font-weight: 600;
@@ -8549,43 +8549,61 @@ body.theme-comfort .reader-capsule-item .capsule-disc-icon {
   white-space: nowrap;
   letter-spacing: 0;
   transition: all 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.13);
-  color: var(--text-secondary, #444444);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(140, 75, 39, 0.22);
+  color: var(--text-primary, #3c2a1a);
   box-sizing: border-box;
   flex-shrink: 0;
 }
 
+.bookshelf-filter-capsule span {
+  color: inherit;
+}
+
 .bookshelf-filter-capsule:hover {
-  background: var(--theme-accent-light, rgba(0, 0, 0, 0.05));
-  border-color: var(--theme-accent-border, rgba(0, 0, 0, 0.2));
+  background: var(--theme-accent-light, rgba(140, 75, 39, 0.12));
+  border-color: var(--theme-accent-border, rgba(140, 75, 39, 0.35));
+  color: var(--theme-accent, #8c4b27);
 }
 
 /* 點到的反灰 (底色同色系深色，文字純白) */
 .bookshelf-filter-capsule.active {
-  background: var(--theme-accent, #363636) !important;
-  border-color: var(--theme-accent, #363636) !important;
+  background: var(--theme-accent, #8c4b27) !important;
+  border-color: var(--theme-accent, #8c4b27) !important;
   color: #ffffff !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
   font-weight: 700;
 }
 
-/* 烏木深色主題下的膠囊適配 */
+/* 深色模式下的膠囊適配（紫紺木/烏木/深色/自訂深色） */
 .theme-ebony .bookshelf-filter-capsule,
-body.theme-ebony .bookshelf-filter-capsule {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.16);
-  color: var(--text-muted, #9ca3af);
+body.theme-ebony .bookshelf-filter-capsule,
+.theme-dark .bookshelf-filter-capsule,
+body.theme-dark .bookshelf-filter-capsule,
+.theme-custom-dark .bookshelf-filter-capsule,
+body.theme-custom-dark .bookshelf-filter-capsule {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #cbd5e1;
 }
 
 .theme-ebony .bookshelf-filter-capsule:hover,
-body.theme-ebony .bookshelf-filter-capsule:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.25);
+body.theme-ebony .bookshelf-filter-capsule:hover,
+.theme-dark .bookshelf-filter-capsule:hover,
+body.theme-dark .bookshelf-filter-capsule:hover,
+.theme-custom-dark .bookshelf-filter-capsule:hover,
+body.theme-custom-dark .bookshelf-filter-capsule:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
 }
 
 .theme-ebony .bookshelf-filter-capsule.active,
-body.theme-ebony .bookshelf-filter-capsule.active {
+body.theme-ebony .bookshelf-filter-capsule.active,
+.theme-dark .bookshelf-filter-capsule.active,
+body.theme-dark .bookshelf-filter-capsule.active,
+.theme-custom-dark .bookshelf-filter-capsule.active,
+body.theme-custom-dark .bookshelf-filter-capsule.active {
   background: #454d55 !important;
   border-color: rgba(255, 255, 255, 0.3) !important;
   color: #ffffff !important;

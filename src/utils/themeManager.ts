@@ -271,8 +271,11 @@ export function clearCustomThemeFromDOM() {
   body.style.removeProperty('--bg-card');
   body.style.removeProperty('--border-color');
   body.style.removeProperty('--reader-border');
+  body.style.removeProperty('--text-main');
+  body.style.removeProperty('--text-secondary');
   body.style.removeProperty('--theme-accent');
   body.style.removeProperty('--theme-accent-light');
   body.style.removeProperty('--theme-accent-border');
+  body.style.removeProperty('--theme-accent-contrast');
   body.style.removeProperty('--color-wood-700');
 }

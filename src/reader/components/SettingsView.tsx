@@ -1388,15 +1388,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.7.7) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.7.8) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.7.7</span>
+                        <span>⭐ App: v4.7.8</span>
                         <span className="changelog-date">(2026-09-30)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 優化紫柑木（紫紺木）模式經書標籤對比度：採用經典泥金底色（#d4a373）配純黑字體。</li>
-                        <li>• 徹底根除亮黃底配白字吃字問題，書櫃與筆記經典編號徽章清晰明亮易讀。</li>
+                        <li>• 修復淺色系書櫃與筆記膠囊文字對比度：修正未選定膠囊文字為高對比深褐色。</li>
+                        <li>• 徹底根除淺色系下未選膠囊呈現淡藍白底吃字問題，文字清晰明瞭易讀。</li>
                       </ul>
                     </div>
 
@@ -1419,6 +1419,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.7.7</span>
+                            <span className="changelog-date">(2026-09-30)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 優化紫柑木（紫紺木）模式經書標籤對比度：採用經典泥金底色（#d4a373）配純黑字體。</li>
+                            <li>• 徹底根除亮黃底配白字吃字問題，書櫃與筆記經典編號徽章清晰明亮易讀。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.7.6</span>

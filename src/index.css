@@ -142,6 +142,7 @@
   --bg-library: radial-gradient(circle at center, #fefcf8 0%, #f8f3ea 100%);
   --bg-shelf: linear-gradient(180deg, #ede8dd 0%, #dfd8cb 100%);
   --text-primary: #2c2016;
+  --text-secondary: #5c4b37;
   --text-muted: #6a5a48;
   --bg-card: #fcfaf6;
   --border-color: rgba(140, 106, 70, 0.14);
@@ -156,6 +157,7 @@
   --bg-library: radial-gradient(circle at center, #fdfcf9 0%, #f5eee0 100%);
   --bg-shelf: linear-gradient(180deg, #eddcb8 0%, #dec18c 100%);
   --text-primary: #3c2a1a;
+  --text-secondary: #5c4b37;
   --text-muted: #7a6652;
   --bg-card: #faf4e6;
   --border-color: rgba(140, 75, 39, 0.14);
@@ -170,6 +172,7 @@
   --bg-library: radial-gradient(circle at center, #f6faf0 0%, #ecf3e2 100%);
   --bg-shelf: linear-gradient(180deg, #d3e1c2 0%, #bdcda7 100%);
   --text-primary: #23351d;
+  --text-secondary: #42553b;
   --text-muted: #596b52;
   --bg-card: #f3f8f0;
   --border-color: rgba(69, 122, 88, 0.15);
@@ -184,6 +187,7 @@
   --bg-library: radial-gradient(circle at center, #1b2229 0%, #0d1114 100%);
   --bg-shelf: linear-gradient(180deg, #25333f 0%, #141c22 100%);
   --text-primary: #d8dec9;
+  --text-secondary: #9ca3af;
   --text-muted: #727c69;
   --bg-card: rgba(255, 255, 255, 0.06);
   --border-color: rgba(255, 255, 255, 0.16);
