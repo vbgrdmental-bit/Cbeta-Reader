@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.7.1` (App: v4.7.1 / Builder: v2.9.13)
+- **Current Version**: `v4.7.2` (App: v4.7.2 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.7.2 / Builder: v2.9.13** (2026-09-30)
+  - [App] 頂部單行膠囊列極致緊湊：優化字級（0.69rem）與左右間距（6~7px），手機窄螢幕一律單行並排不換行，溢出支援平滑水平滑動。
+  - [App] 「我的書櫃」與「我的筆記」版面規範像素級統一：全面以圖1為權威基準，筆記下方改採標準經書 Bar（38px 典雅標籤、0.94rem 主標、一致間距與圓角）。
+  - [App] 筆記模式動態分類與一鍵全收合/展開：「依書籍檢視」保留 4 分類下拉；切換至「法義多維度」自動隱藏 4 分類，並新增一鍵全部展開/收合關鍵字卡片按鈕。
+  - [App] 法義客觀關鍵字語義過濾強化：導入繁體原生分詞器與停用詞/白名單，徹底排除「所以」、「思議」、「的佛」等虛詞與非獨立詞片，確保名相純淨有義。
 - **⭐ App: v4.7.1 / Builder: v2.9.13** (2026-09-29)
   - [App] 「每日閱讀日誌」小卡全面比照 iOS 月曆樣式升級：2×2 小卡頂部配置醒目星期與大字號當日日期，下部直觀呈現 1~2 則今日或近日閱讀經書摘要；4×2 寬版卡片左側配置經典日曆 Pad，右側呈現完整經名、卷數與讀誦時數清單。
   - [App] 窄螢幕手機自適應彈性換行：在書櫃與筆記單行膠囊列中導入 `flex-wrap: wrap; row-gap: 6px;`，手機螢幕較窄時右側膠囊優雅換至次行，徹底消除邊緣切字與擠壓。

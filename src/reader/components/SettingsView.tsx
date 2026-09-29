@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.7.1) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.7.2) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.7.1</span>
-                        <span className="changelog-date">(2026-09-29)</span>
+                        <span>⭐ App: v4.7.2</span>
+                        <span className="changelog-date">(2026-09-30)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 「每日閱讀日誌」小卡比照 iOS 月曆升級：2×2 與 4×2 醒目大日期搭配今日/近日讀經摘要。</li>
-                        <li>• 窄螢幕手機自適應換行：書櫃與筆記膠囊列彈性換行，首頁點擊直達書櫃篩選視圖。</li>
-                        <li>• 禪意圖標輪播精簡為 6 款精選小圖，支援點擊即時循環切換。</li>
+                        <li>• 書櫃與筆記頂部膠囊列適配窄版手機：微調字級與內距，確保全部排在同一行。</li>
+                        <li>• 「我的筆記」全面對齊「我的書櫃」卡片尺寸、38px 綠色標籤與間距，視覺完全一致。</li>
+                        <li>• 法義多維度語詞演算法升級：排除非語詞碎片，新增「全部展開/收合」符號，並隱藏 4 分類。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.7.1</span>
+                            <span className="changelog-date">(2026-09-29)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 「每日閱讀日誌」小卡比照 iOS 月曆升級：2×2 與 4×2 醒目大日期搭配今日/近日讀經摘要。</li>
+                            <li>• 窄螢幕手機自適應換行：書櫃與筆記膠囊列彈性換行，首頁點擊直達書櫃篩選視圖。</li>
+                            <li>• 禪意圖標輪播精簡為 6 款精選小圖，支援點擊即時循環切換。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.7.0</span>

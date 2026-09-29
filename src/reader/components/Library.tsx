@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, X, Download,
   Home, Search, CalendarDays,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, Tag,
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ChevronsDown, ChevronsUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, Tag,
   Layers, User
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
@@ -1019,7 +1019,6 @@ export function Library({
     }));
   };
 
-
   // 依 4 快捷膠囊過濾重點條目池
   const filteredHighlights = useMemo(() => {
     return allHighlights.filter(hl => {
@@ -1072,6 +1071,27 @@ export function Library({
   const keywordComparisonGroups = useMemo(() => {
     return buildKeywordComparisonGroups(filteredHighlights);
   }, [filteredHighlights]);
+
+  // 判斷當前是否所有關鍵字卡片皆已收合
+  const isAllKeywordsCollapsed = useMemo(() => {
+    if (keywordComparisonGroups.length === 0) return false;
+    return keywordComparisonGroups.every(grp => expandedKeywordGroups[grp.keyword] === false);
+  }, [keywordComparisonGroups, expandedKeywordGroups]);
+
+  // 一鍵全部展開 / 全部收合
+  const toggleAllKeywordGroups = () => {
+    if (isAllKeywordsCollapsed) {
+      // 全部打開
+      setExpandedKeywordGroups({});
+    } else {
+      // 全部收合
+      const collapsedMap: Record<string, boolean> = {};
+      keywordComparisonGroups.forEach(grp => {
+        collapsedMap[grp.keyword] = false;
+      });
+      setExpandedKeywordGroups(collapsedMap);
+    }
+  };
 
   // 💡 「我的筆記」4 大維度分類（依部類 / 依冊別 / 依作譯者 / 依朝代）
   const [notesClassificationMode, setNotesClassificationMode] = useState<'category' | 'volume' | 'author' | 'dynasty'>('category');
@@ -2145,7 +2165,7 @@ export function Library({
                           </div>
                         )}
 
-                        {/* 2. 最右側：分類維度切換膠囊 (在依書籍檢視時顯示) */}
+                        {/* 2. 最右側：分類維度切換膠囊 (僅在「依書籍檢視」時顯示；若切換至「法義多維度」則替換為「全部收合/全部打開」符號按鈕) */}
                         {notesViewMode === 'books' ? (
                           <>
                             <button
@@ -2207,20 +2227,19 @@ export function Library({
                             )}
                           </>
                         ) : (
-                          <div 
-                            style={{ 
-                              fontSize: '0.72rem', 
-                              color: 'var(--color-gold, #c07d2a)', 
-                              fontWeight: 700, 
-                              padding: '4px 8px', 
-                              background: 'var(--color-gold-bg, rgba(192,125,42,0.1))', 
-                              borderRadius: '12px', 
-                              whiteSpace: 'nowrap',
-                              flexShrink: 0
-                            }}
+                          /* 法義多維度：全部收合 / 全部打開 關鍵字 符號按鈕 */
+                          <button
+                            type="button"
+                            className="bookshelf-dim-dropdown-btn"
+                            onClick={toggleAllKeywordGroups}
+                            title={isAllKeywordsCollapsed ? "全部展開所有關鍵字" : "全部收合所有關鍵字"}
+                            style={{ cursor: 'pointer' }}
                           >
-                            客觀關鍵字比對
-                          </div>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                              {isAllKeywordsCollapsed ? <ChevronsDown size={11} /> : <ChevronsUp size={11} />}
+                              <span>{isAllKeywordsCollapsed ? '全部展開' : '全部收合'}</span>
+                            </span>
+                          </button>
                         )}
                       </div>
                     </div>
@@ -2325,7 +2344,7 @@ export function Library({
 
                               {/* 分組內容：組內書籍折疊卡 */}
                               {isGroupExpanded && (
-                                <div style={{ padding: '0.55rem 0.65rem', display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+                                <div style={{ padding: '0.55rem 0.65rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
                                   {groupData.books.map((group) => {
                                     const isBookExpanded = !!expandedBookGroups[group.workId];
                                     const isBookCollapsed = !isBookExpanded;
@@ -2334,16 +2353,18 @@ export function Library({
                                     return (
                                       <div 
                                         key={group.workId}
-                                        className="highlight-card"
+                                        className="bookshelf-book-row"
                                         style={{
                                           display: 'flex',
                                           flexDirection: 'column',
-                                          gap: '0.6rem',
-                                          width: '100%',
+                                          gap: isBookExpanded ? '0.5rem' : '0',
+                                          padding: '0.5rem 0.65rem',
                                           borderRadius: '12px',
-                                          padding: '0.8rem 1rem',
+                                          background: 'rgba(0,0,0,0.02)',
+                                          border: '1px solid rgba(0,0,0,0.05)',
+                                          transition: 'all 0.15s ease',
                                           boxSizing: 'border-box'
-                                        } as React.CSSProperties}
+                                        }}
                                       >
                                         <div 
                                           style={{ 
@@ -2351,54 +2372,64 @@ export function Library({
                                             alignItems: 'center', 
                                             justifyContent: 'space-between',
                                             cursor: 'pointer',
-                                            userSelect: 'none'
+                                            userSelect: 'none',
+                                            width: '100%'
                                           }}
                                           onClick={() => toggleBookGroup(group.workId)}
                                         >
-                                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexGrow: 1, minWidth: 0 }}>
+                                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0, flex: 1 }}>
                                             <div 
-                                              className="horizontal-book-badge" 
                                               style={{ 
-                                                background: getBookCoverGradient(group.workId),
-                                                width: '32px',
-                                                height: '32px',
-                                                minWidth: '32px',
-                                                minHeight: '32px',
+                                                width: '38px',
+                                                height: '38px',
+                                                minWidth: '38px',
+                                                minHeight: '38px',
+                                                borderRadius: '8px',
+                                                background: 'var(--theme-accent, #8c4b27)',
+                                                color: '#ffffff',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
                                                 fontSize: '0.72rem',
-                                                borderRadius: '6px'
+                                                fontWeight: 800,
+                                                flexShrink: 0
                                               }}
                                             >
                                               {group.workId}
                                             </div>
-                                            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                                              <div style={{ fontSize: '0.96rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            <div style={{ minWidth: 0, flex: 1, paddingRight: '6px' }}>
+                                              <div style={{ 
+                                                fontSize: '0.94rem', 
+                                                fontWeight: 700, 
+                                                color: 'var(--text-primary)', 
+                                                fontFamily: 'var(--font-serif)',
+                                                whiteSpace: 'nowrap', 
+                                                overflow: 'hidden', 
+                                                textOverflow: 'ellipsis' 
+                                              }}>
                                                 {cleanTitle}
                                               </div>
-                                              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                                              <div style={{ 
+                                                fontSize: '0.72rem', 
+                                                color: 'var(--text-muted)', 
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                marginTop: '2px' 
+                                              }}>
                                                 共 {group.list.length} 條重點筆記
                                               </div>
                                             </div>
                                           </div>
 
-                                          <button 
-                                            type="button" 
-                                            style={{ 
-                                              background: 'transparent', 
-                                              border: 'none', 
-                                              color: 'var(--text-muted)', 
-                                              padding: '4px',
-                                              display: 'flex',
-                                              alignItems: 'center',
-                                              justifyContent: 'center'
-                                            }}
-                                          >
+                                          <div style={{ display: 'flex', alignItems: 'center', color: 'var(--text-muted)', flexShrink: 0 }}>
                                             {isBookCollapsed ? <ChevronRight size={18} /> : <ChevronDown size={18} />}
-                                          </button>
+                                          </div>
                                         </div>
 
                                         {/* 展開後的重點與筆記卡片清單 */}
-                                        {!isBookCollapsed && (
-                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.4rem', borderTop: '1px dashed var(--border-color, rgba(140,75,39,0.1))', paddingTop: '0.6rem' }}>
+                                        {isBookExpanded && (
+                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.3rem', borderTop: '1px dashed var(--border-color, rgba(140,75,39,0.1))', paddingTop: '0.5rem' }}>
                                             {group.list.map((hl) => (
                                               <div 
                                                 key={hl.id}
@@ -2502,61 +2533,52 @@ export function Library({
                         return (
                           <div 
                             key={grp.keyword}
-                            className="highlight-card"
+                            className="bookshelf-group-card"
                             style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '0.6rem',
-                              width: '100%',
-                              borderRadius: '12px',
-                              padding: '0.8rem 1rem',
-                              boxSizing: 'border-box'
-                            } as React.CSSProperties}
+                              background: 'var(--bg-card, #ffffff)',
+                              borderRadius: '18px',
+                              border: '1.2px solid var(--border-color, rgba(0,0,0,0.1))',
+                              overflow: 'hidden',
+                              boxShadow: '0 4px 14px rgba(0,0,0,0.03)'
+                            }}
                           >
                             {/* 關鍵字分組標題列 */}
                             <div 
                               style={{ 
+                                padding: '0.75rem 1rem',
                                 display: 'flex', 
                                 alignItems: 'center', 
                                 justifyContent: 'space-between',
                                 cursor: 'pointer',
-                                userSelect: 'none'
+                                userSelect: 'none',
+                                background: 'rgba(140, 75, 39, 0.03)',
+                                borderBottom: isExpanded ? '1px solid rgba(0,0,0,0.06)' : 'none'
                               }}
                               onClick={() => toggleKeywordGroup(grp.keyword)}
                             >
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexGrow: 1, minWidth: 0 }}>
-                                <div className="keyword-cross-badge">
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexGrow: 1, minWidth: 0 }}>
+                                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--theme-accent, #8c4b27)' }} />
+                                <div className="keyword-cross-badge" style={{ margin: 0 }}>
                                   🏷️ {grp.keyword}
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                                  <div style={{ fontSize: '0.96rem', fontWeight: 800, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                  <div style={{ fontSize: '0.94rem', fontWeight: 800, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: 'var(--font-serif)' }}>
                                     共通詞「{grp.keyword}」
                                   </div>
-                                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
                                     跨 {grp.booksCount} 部經典 · 共 {grp.totalCount} 條交叉重點
                                   </div>
                                 </div>
                               </div>
 
-                              <button 
-                                type="button"
-                                style={{ 
-                                  background: 'transparent', 
-                                  border: 'none', 
-                                  color: 'var(--text-muted)', 
-                                  padding: '4px',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center'
-                                }}
-                              >
+                              <div style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
                                 {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-                              </button>
+                              </div>
                             </div>
 
                             {/* 展開後的跨經交叉重點清單 */}
                             {isExpanded && (
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.4rem', borderTop: '1px dashed var(--border-color, rgba(140,75,39,0.1))', paddingTop: '0.6rem' }}>
+                              <div style={{ padding: '0.55rem 0.65rem', display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
                                 {grp.highlights.map((hl) => {
                                   const bookMeta = downloadedBooks.find(b => b.workId === hl.workId);
                                   const cleanTitle = (bookMeta?.title || hl.workId).replace(/[《》]/g, '').trim();

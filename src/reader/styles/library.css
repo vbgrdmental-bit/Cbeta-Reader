@@ -8538,16 +8538,16 @@ body.theme-comfort .reader-capsule-item .capsule-disc-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
   padding: 0 6px;
   border-radius: 9999px;
-  font-size: 0.74rem;
+  font-size: 0.69rem;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   transition: all 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
   background: rgba(0, 0, 0, 0.02);
   border: 1px solid rgba(0, 0, 0, 0.13);
@@ -9117,33 +9117,37 @@ body.theme-ebony .memo-preview-card-box {
 /* ============================================================ */
 .bookshelf-single-row-bar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  row-gap: 6px;
-  flex-wrap: wrap;
-  min-height: 38px;
+  gap: 4px;
+  flex-wrap: nowrap;
+  min-height: 34px;
   background: transparent;
   position: relative;
   width: 100%;
   box-sizing: border-box;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.bookshelf-single-row-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .bookshelf-single-row-left {
   display: flex;
   align-items: center;
-  gap: 5px;
-  row-gap: 6px;
-  flex-wrap: wrap;
+  gap: 4px;
+  flex-wrap: nowrap;
   min-width: 0;
+  flex-shrink: 0;
 }
 
 .bookshelf-single-row-right {
   display: flex;
   align-items: center;
-  gap: 5px;
-  row-gap: 6px;
-  flex-wrap: wrap;
+  gap: 4px;
+  flex-wrap: nowrap;
   flex-shrink: 0;
   position: relative;
   margin-left: auto;
@@ -9153,15 +9157,15 @@ body.theme-ebony .memo-preview-card-box {
 .bookshelf-dim-dropdown-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 32px;
-  padding: 0 10px;
+  gap: 3px;
+  height: 28px;
+  padding: 0 7px;
   border-radius: 9999px;
-  font-size: 0.74rem;
+  font-size: 0.69rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   background: var(--theme-accent-light, rgba(140, 75, 39, 0.08));
   border: 1px solid var(--theme-accent-border, rgba(140, 75, 39, 0.25));
   color: var(--theme-accent, #8c4b27);
@@ -9198,14 +9202,15 @@ body.theme-ebony .bookshelf-dim-dropdown-btn.active-open,
 .notes-mode-dropdown-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 32px;
-  padding: 0 9px;
+  gap: 3px;
+  height: 28px;
+  padding: 0 7px;
   border-radius: 9999px;
-  font-size: 0.74rem;
+  font-size: 0.69rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+  letter-spacing: 0;
   background: var(--bg-card, #ffffff);
   border: 1px solid rgba(0, 0, 0, 0.13);
   color: var(--text-primary, #333333);
