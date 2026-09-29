@@ -2242,34 +2242,30 @@ export function Library({
                     </div>
                   </div>
 
-                  {/* 4. 狀態提示列 (第三層) */}
-                  <div 
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      margin: '0.2rem 0.2rem 0.75rem 0.2rem',
-                      fontSize: '0.8rem',
-                      color: 'var(--text-muted)',
-                      fontWeight: 600
-                    }}
-                  >
-                    <div>
-                      {notesViewMode === 'books' ? (
-                        <>
-                          共 {groupedHighlights.length} 部經典 · 自動依
-                          {notesClassificationMode === 'category' ? '部類' :
-                           notesClassificationMode === 'volume' ? '冊別' :
-                           notesClassificationMode === 'author' ? '作譯者' : '朝代'}歸納
-                        </>
-                      ) : (
-                        <>共 {keywordComparisonGroups.length} 組跨經共通關鍵字 · 頻次 ≥ 3 次客觀交叉聚合</>
-                      )}
+                  {/* 4. 狀態提示列 (僅在依書籍檢視時顯示；法義多維度依指示徹底移除) */}
+                  {notesViewMode === 'books' && (
+                    <div 
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        margin: '0.2rem 0.2rem 0.75rem 0.2rem',
+                        fontSize: '0.8rem',
+                        color: 'var(--text-muted)',
+                        fontWeight: 600
+                      }}
+                    >
+                      <div>
+                        共 {groupedHighlights.length} 部經典 · 自動依
+                        {notesClassificationMode === 'category' ? '部類' :
+                         notesClassificationMode === 'volume' ? '冊別' :
+                         notesClassificationMode === 'author' ? '作譯者' : '朝代'}歸納
+                      </div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                        共 {filteredHighlights.length} 條重點
+                      </div>
                     </div>
-                    <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                      {notesViewMode === 'books' ? `共 ${filteredHighlights.length} 條重點` : '客觀交叉對照'}
-                    </div>
-                  </div>
+                  )}
 
                   {/* 5. 內容區：依書籍檢視 vs 法義多維度 */}
                   {notesViewMode === 'books' ? (
@@ -2556,7 +2552,7 @@ export function Library({
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexGrow: 1, minWidth: 0 }}>
                                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--theme-accent, #8c4b27)' }} />
                                 <div className="keyword-cross-badge" style={{ margin: 0 }}>
-                                  🏷️ {grp.keyword}
+                                  {grp.keyword}
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                                   <div style={{ fontSize: '0.94rem', fontWeight: 800, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: 'var(--font-serif)' }}>

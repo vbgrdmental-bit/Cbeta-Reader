@@ -1388,16 +1388,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.7.4) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.7.5) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.7.4</span>
+                        <span>⭐ App: v4.7.5</span>
                         <span className="changelog-date">(2026-09-30)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 修復書櫃「• 依部類 ▾」因 overflow 裁切無法彈出之問題，選單浮於最上層。</li>
-                        <li>• 修復筆記「依書籍檢視 ▾」無法彈出之問題，並徹底刪除按鈕文字左側圖示符號。</li>
-                        <li>• 膠囊列改由左側按鈕區自適應水平滑動，確保右側彈出選單完整呈現不被遮切。</li>
+                        <li>• 刪除筆記法義多維度頂部「共 X 組跨經共通關鍵字……客觀交叉對照」統計說明列。</li>
+                        <li>• 刪除法義多維度關鍵字卡片前方之「🏷️」標籤符號，保持純文字簡約優雅樣式。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1419,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.7.4</span>
+                            <span className="changelog-date">(2026-09-30)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 修復書櫃「• 依部類 ▾」因 overflow 裁切無法彈出之問題，選單浮於最上層。</li>
+                            <li>• 修復筆記「依書籍檢視 ▾」無法彈出之問題，並徹底刪除按鈕文字左側圖示符號。</li>
+                            <li>• 膠囊列改由左側按鈕區自適應水平滑動，確保右側彈出選單完整呈現不被遮切。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.7.3</span>
