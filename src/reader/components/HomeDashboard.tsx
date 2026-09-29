@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Plus, Search, Folder, Notebook, ChevronRight, ChevronLeft, Check, X,
   Maximize2, Sliders, CalendarDays, ArrowRight, Edit3
@@ -379,12 +380,16 @@ export function HomeDashboard({
     setDraftMemoLineHeight(widget.memoLineHeight ?? 1.8);
     setDraftMemoPadding(widget.memoPadding ?? 10);
 
-    // 平滑滾動讓該卡片在視窗中露出完整檢視
-    const el = document.getElementById(`widget-${widget.id}`);
-    if (el) {
+    // 💡 自動平滑捲動該便籤卡片至可視區域上半部，確保不被底部彈出的抽屜遮擋，達成 100% 直觀即時預覽
+    if (typeof window !== 'undefined') {
       setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 150);
+        const el = document.getElementById(`widget-${widget.id}`) ||
+                   document.querySelector(`.widget-card[data-widget-id="${widget.id}"]`) ||
+                   document.querySelector('.custom-memo-card.is-editing-target');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 120);
     }
   };
 
@@ -2683,6 +2688,8 @@ export function HomeDashboard({
           return (
             <div
               key={widget.id}
+              id={`widget-${widget.id}`}
+              data-widget-id={widget.id}
               className={`widget-card ${widget.size} ${widget.type === 'custom_memo' ? 'custom-memo-widget' : ''} ${isBookWidgetOuterHeader(widget.type, widget.size) ? 'has-outer-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${widget.type === 'four_nav_4x1' && widget.size === 'size-4x2' ? 'four-nav-card-4x2' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
               draggable={isLayoutEditMode}
               onDragStart={(e) => handleDragStart(e, widget.id)}
@@ -2917,17 +2924,19 @@ export function HomeDashboard({
 
       {/* ==========================================================================
           自訂便籤底部排版控制台抽屜 (Bottom Drawer：圖 2 控制台 + 符號選擇 + 多行編輯)
+          💡 使用 createPortal 掛載至 document.body，徹底脫離父層 transform/will-change 座標系約束
           ========================================================================== */}
-      {editingMemoWidget && (() => {
-        const limits = getMemoFontSizeLimits(editingMemoWidget.size);
-        const currentLine = draftMemoLines[draftActiveLineIdx] || draftMemoLines[0];
-        const curFontSize = currentLine?.fontSize ?? limits.default;
-        const isMinSizeReached = curFontSize <= limits.min;
-        const isMaxSizeReached = curFontSize >= limits.max;
+      {editingMemoWidget && typeof document !== 'undefined' && createPortal(
+        (() => {
+          const limits = getMemoFontSizeLimits(editingMemoWidget.size);
+          const currentLine = draftMemoLines[draftActiveLineIdx] || draftMemoLines[0];
+          const curFontSize = currentLine?.fontSize ?? limits.default;
+          const isMinSizeReached = curFontSize <= limits.min;
+          const isMaxSizeReached = curFontSize >= limits.max;
 
-        return (
-          <div className="custom-memo-bottom-overlay animate-fade-in" onClick={handleCancelMemoEditor}>
-            <div className="custom-memo-bottom-drawer animate-slide-up" onClick={(e) => e.stopPropagation()}>
+          return (
+            <div className="custom-memo-bottom-overlay animate-fade-in" onClick={handleCancelMemoEditor}>
+              <div className="custom-memo-bottom-drawer animate-slide-up" onClick={(e) => e.stopPropagation()}>
               {/* 頂部抓手 */}
               <div className="custom-memo-drawer-grabber" />
 
@@ -3167,7 +3176,9 @@ export function HomeDashboard({
             </div>
           </div>
         );
-      })()}
+      })(),
+      document.body
+    )}
     </div>
   );
 }

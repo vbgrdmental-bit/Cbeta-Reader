@@ -8892,28 +8892,38 @@ body.theme-ebony .keyword-cross-badge {
 .custom-memo-bottom-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1200;
-  background: rgba(0, 0, 0, 0.28);
-  backdrop-filter: blur(2px);
+  z-index: 999999 !important;
+  background: rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  pointer-events: auto;
 }
 
 .custom-memo-bottom-drawer {
   width: 100%;
   max-width: 580px;
   margin: 0 auto;
-  background: var(--reader-bg, #f7f5f0);
-  border-top: 1px solid var(--reader-border, rgba(0, 0, 0, 0.12));
+  background: var(--bg-card, #ffffff);
+  border-top: 1.5px solid var(--border-color, rgba(0, 0, 0, 0.12));
   border-top-left-radius: 26px;
   border-top-right-radius: 26px;
-  box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.28);
   display: flex;
   flex-direction: column;
-  max-height: 58vh;
+  max-height: 54vh;
   box-sizing: border-box;
   animation: slideUpMemoDrawer 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 1000000 !important;
+}
+
+body.theme-ebony .custom-memo-bottom-drawer {
+  background: #1c232d;
+  color: #f0f4f8;
+  border-top-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.65);
 }
 
 @keyframes slideUpMemoDrawer {
