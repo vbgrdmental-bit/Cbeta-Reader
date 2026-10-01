@@ -1388,15 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.7.8) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.8.1) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.7.8</span>
-                        <span className="changelog-date">(2026-09-30)</span>
+                        <span>⭐ App: v4.8.1</span>
+                        <span className="changelog-date">(2026-10-02)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 修復淺色系書櫃與筆記膠囊文字對比度：修正未選定膠囊文字為高對比深褐色。</li>
-                        <li>• 徹底根除淺色系下未選膠囊呈現淡藍白底吃字問題，文字清晰明瞭易讀。</li>
+                        <li>• 便籤 Spotlight 聚焦升級：全螢幕半透明景深模糊，唯獨編輯中的卡片亮起凸顯。</li>
+                        <li>• 局部字級與楷體完整修復：縮放嚴格限定反白文字不影響全卡，完整相容標楷體。</li>
+                        <li>• 清雅線條蓮花與極簡介面：移除卡片角落符號，導入圖1三瓣線條清蓮 SVG。</li>
                       </ul>
                     </div>
 
@@ -1419,6 +1420,37 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.0</span>
+                            <span className="changelog-date">(2026-10-01)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 原地直編模式：點擊卡片直接打字與修改出處，按 Enter 換行，即時預覽。</li>
+                            <li>• Word 膠囊列升級：依序整合文字大小、字體、粗體、間距與符號（含卍字）。</li>
+                            <li>• 反白防呆保護：必須選取文字時字級、字體與粗體才生效，未選字時安全防誤觸。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.7.9</span>
+                            <span className="changelog-date">(2026-10-01)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 升級便籤 Spotlight 卡片直接編輯：灰黑背景唯獨卡片亮起，直接在卡片上打字修改與預覽。</li>
+                            <li>• Word 風格單列膠囊控制列：由左至右整合符號標誌、字體、文字大小、間距四鍵彈出選單。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.7.8</span>
+                            <span className="changelog-date">(2026-09-30)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 修復淺色系書櫃與筆記膠囊文字對比度：修正未選定膠囊文字為高對比深褐色。</li>
+                            <li>• 徹底根除淺色系下未選膠囊呈現淡藍白底吃字問題，文字清晰明瞭易讀。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.7.7</span>

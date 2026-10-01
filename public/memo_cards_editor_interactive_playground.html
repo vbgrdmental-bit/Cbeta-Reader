@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBETA Reader - 方案 A 升級版：便籤文字自訂與排版互動試作台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Klee+One:wght@400;600&family=LXGW+WenKai+TC:wght@400;700&family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-desktop: #f2ece1;
+      --phone-bg: #fcfaf2;
+      --text-main: #2c221e;
+      --text-muted: #7d6f66;
+      --theme-accent: #8c4b27;
+      --theme-green: #1ea98c;
+      --card-bg: #f7f3e8;
+      --card-border: rgba(140, 75, 39, 0.24);
+      --card-shadow: 0 4px 18px rgba(74, 44, 23, 0.08);
+      --font-serif: 'Noto Serif TC', serif;
+      --font-sans: 'Noto Sans TC', sans-serif;
+      --font-kai: 'MOE-EduKai', 'TW-Kai-98', 'LXGW WenKai TC', 'Klee One', 'DFKai-SB', 'BiauKai', 'Kaiti TC', 'KaiTi', 楷體, serif;
+    }
+
+    /* 4 大主題底色切換 */
+    body.theme-ivory { --phone-bg: #fcfaf2; --card-bg: #f7f3e8; --text-main: #2c221e; --text-muted: #7d6f66; --theme-accent: #8c4b27; }
+    body.theme-parchment { --phone-bg: #f5eedb; --card-bg: #eee4cc; --text-main: #2c2016; --text-muted: #7b6956; --theme-accent: #8c4b27; }
+    body.theme-comfort { --phone-bg: #eaf3ec; --card-bg: #ddece0; --text-main: #1f2d24; --text-muted: #5e7565; --theme-accent: #2e6b4d; }
+    body.theme-ebony { --phone-bg: #14171c; --card-bg: #1e242d; --text-main: #e2e8f0; --text-muted: #8b9bb0; --theme-accent: #f3c969; --card-border: rgba(243, 201, 105, 0.25); }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-desktop);
+      font-family: var(--font-sans);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 80px;
+    }
+
+    header.top-banner {
+      max-width: 980px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    header h1 {
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
+      color: #3d2c20;
+      margin-bottom: 6px;
+    }
+    header p {
+      font-size: 0.92rem;
+      color: #6d5b4e;
+      line-height: 1.5;
+    }
+
+    /* 頂部控制面板 */
+    .controls-panel {
+      max-width: 980px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      padding: 14px 20px;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ctrl-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .ctrl-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #634b3b;
+      min-width: 95px;
+    }
+    .capsule-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .capsule-btn {
+      padding: 5px 13px;
+      border-radius: 9999px;
+      border: 1px solid #dcd4c8;
+      background: #faf8f5;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #554438;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .capsule-btn:hover { background: #f0eae1; border-color: #baa996; }
+    .capsule-btn.active {
+      background: #1ea98c;
+      color: #ffffff;
+      border-color: #1ea98c;
+      box-shadow: 0 2px 8px rgba(30, 169, 140, 0.35);
+    }
+    .theme-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.18s ease;
+    }
+    .theme-dot:hover { transform: scale(1.15); }
+    .theme-dot.active { border-color: #1ea98c; transform: scale(1.15); }
+
+    /* 主工作台：左側功能規則說明 + 右側手機互動試作 */
+    .playground-main {
+      max-width: 980px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 26px;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) {
+      .playground-main { grid-template-columns: 1fr; justify-items: center; }
+    }
+
+    /* 左側規格說明卡 */
+    .specs-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .specs-badge {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: #edf7f4;
+      color: #18866f;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .specs-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      color: #2c2016;
+    }
+    .features-guide-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      font-size: 0.86rem;
+      color: #554438;
+      line-height: 1.6;
+    }
+    .features-guide-list li {
+      position: relative;
+      padding-left: 22px;
+    }
+    .features-guide-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: #1ea98c;
+      font-size: 0.9rem;
+    }
+    .features-guide-list strong { color: #2c2016; }
+
+    /* 手機模擬器外框 (440px 寬，模擬 App 畫面) */
+    .phone-mockup {
+      width: 100%;
+      max-width: 440px;
+      background: var(--phone-bg);
+      border-radius: 36px;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.18), 0 0 0 10px #2a2522;
+      overflow: hidden;
+      min-height: 590px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.25s ease;
+    }
+    .phone-status-bar {
+      padding: 12px 20px 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .phone-content {
+      flex: 1;
+      padding: 14px 18px 95px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      position: relative;
+    }
+
+    .demo-hint-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--theme-accent);
+      background: rgba(140,75,39,0.08);
+      padding: 2px 10px;
+      border-radius: 9999px;
+    }
+
+    /* Spotlight 全螢幕遮罩與首頁其他卡片模糊淡化效果 */
+    .memo-spotlight-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.46);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 850;
+      border-radius: 40px;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+    .mock-home-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px 16px;
+      opacity: 0.12;
+      filter: blur(5px) grayscale(0.8);
+      transition: opacity 0.3s ease, filter 0.3s ease;
+      user-select: none;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+
+    /* 便籤小卡本體 */
+    .custom-memo-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 2px dashed #1ea98c;
+      border-radius: 20px;
+      box-shadow: 0 0 0 4px rgba(30, 169, 140, 0.35), 0 20px 48px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: all 0.25s ease;
+      cursor: text;
+      user-select: text;
+    }
+
+    /* 尺寸高度 */
+    .memo-size-4x1 { min-height: 68px; padding: 10px 16px; flex-direction: row; justify-content: space-between; }
+    .memo-size-4x2 { min-height: 148px; padding: 16px 20px; }
+    .memo-size-4x3 { min-height: 228px; padding: 20px 24px; }
+    .memo-size-4x4 { min-height: 308px; padding: 24px 28px; }
+    .memo-size-2x2 { width: 175px; min-height: 165px; padding: 14px 14px; }
+
+    /* 文字本體 (contentEditable) */
+    .memo-text-surface {
+      width: 100%;
+      color: var(--text-main);
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.8;
+      outline: none;
+      word-break: break-word;
+      caret-color: #1ea98c;
+      text-align: center;
+    }
+    .memo-text-surface:empty::before {
+      content: '點此開始打字，按 Enter 自然分行...';
+      color: var(--text-muted);
+      opacity: 0.55;
+      font-style: italic;
+    }
+    .memo-text-surface p, .memo-text-surface div { margin: 0; padding: 0; line-height: inherit; }
+
+    /* 出處直接作為內部可編輯行 */
+    .memo-text-surface .memo-author-line {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      margin-top: 10px;
+    }
+
+    .memo-size-4x1 .memo-text-surface {
+      font-size: 14px;
+      line-height: 1.4;
+      text-align: left;
+      flex: 1;
+    }
+    .memo-size-4x1 .memo-text-surface .memo-author-line {
+      display: inline-block;
+      margin-top: 0;
+      margin-left: 8px;
+      font-size: 12px;
+    }
+
+    /* ============================================================ */
+    /* 🌟 方案 A：升級版單列 Word 控制列 (手機內部絕對置中)         */
+    /* ============================================================ */
+    .floating-word-toolbar {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 412px;
+      background: rgba(30, 32, 38, 0.95);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.2px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      padding: 7px 10px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 999;
+      animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp { from { transform: translate(-50%, 40px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2px;
+    }
+    .bar-title { font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); }
+    .bar-action-btn {
+      padding: 3px 12px;
+      border-radius: 9999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+    }
+    .bar-action-btn.cancel { background: rgba(255,255,255,0.14); color: #fff; }
+    .bar-action-btn.save { background: #1ea98c; color: #fff; }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: nowrap;
+      position: relative;
+    }
+
+    .word-tool-btn {
+      height: 28px;
+      padding: 0 9px;
+      border-radius: 9999px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.92);
+      color: #1a1a1a;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .word-tool-btn:hover:not(:disabled) { background: #ffffff; }
+    .word-tool-btn.active { background: #1ea98c; color: #fff; border-color: #1ea98c; }
+    .word-tool-btn.bold-btn { font-family: var(--font-serif); font-weight: 900; min-width: 32px; justify-content: center; font-size: 0.86rem; }
+
+    /* 當沒有反白選取文字時的停用狀態 */
+    .word-tool-btn:disabled, .stepper-capsule.disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+    }
+    .stepper-capsule.disabled button {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .stepper-capsule {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255,255,255,0.92);
+      border-radius: 9999px;
+      padding: 0 4px;
+      border: 1px solid rgba(0,0,0,0.12);
+      flex-shrink: 0;
+      user-select: none;
+      transition: opacity 0.15s ease;
+    }
+    .step-btn {
+      border: none;
+      background: transparent;
+      padding: 2px 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #1a1a1a;
+    }
+    .step-btn:hover { background: rgba(0,0,0,0.08); border-radius: 9999px; }
+    .step-val {
+      font-size: 0.74rem;
+      font-weight: 700;
+      min-width: 34px;
+      text-align: center;
+      color: #1a1a1a;
+    }
+
+    /* 輕量提示 Toast */
+    .selection-toast {
+      position: absolute;
+      top: -38px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.82);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      font-size: 0.74rem;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1008;
+    }
+    .selection-toast.show {
+      opacity: 1;
+      transform: translate(-50%, -4px);
+    }
+
+    /* 展開 Popover (向上展開) */
+    .word-popover {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffff;
+      color: #1a1a1a;
+      border-radius: 14px;
+      padding: 8px 10px;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.3);
+      border: 1px solid rgba(0,0,0,0.1);
+      z-index: 1005;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      box-sizing: border-box;
+      animation: popFade 0.15s ease;
+    }
+    @keyframes popFade { from { opacity: 0; transform: translate(-50%, 6px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+    /* 符號面板 (只出現 無 + 6 個符號) */
+    .popover-symbols {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .symbol-opt-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid #dcd4c8;
+      background: #faf8f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: #8c4b27;
+      user-select: none;
+    }
+    .symbol-opt-btn:hover { background: #1ea98c; color: #fff; border-color: #1ea98c; transform: scale(1.1); }
+    .symbol-opt-btn.none-opt { font-size: 0.8rem; font-weight: 700; color: #666; }
+
+    /* 字體面板 (無多餘空白，緊湊三選項) */
+    .popover-font-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 100px;
+    }
+    .popover-font-item {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .popover-font-item:hover { background: #f0eae1; }
+    .popover-font-item.active { background: #1ea98c; color: #fff; }
+
+    /* 間距面板 (寬鬆、適中、緊密) */
+    .popover-spacing-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 110px;
+    }
+    .popover-spacing-item {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .popover-spacing-item:hover { background: #f0eae1; }
+    .popover-spacing-item.active { background: #1ea98c; color: #fff; }
+  </style>
+</head>
+<body class="theme-ivory">
+
+  <header class="top-banner">
+    <h1>CBETA 自訂便籤小卡 · 方案 A 精化版互動試作台</h1>
+    <p>依您的要求更新：必須反白文字才可放大縮小、粗體與換字體；出處全面納入卡片內部可自由打字編輯。</p>
+  </header>
+
+  <!-- 頂部控制面板 -->
+  <section class="controls-panel">
+    <!-- 尺寸切換 -->
+    <div class="ctrl-row">
+      <div class="ctrl-title">1. 卡片規格尺寸：</div>
+      <div class="capsule-group" id="sizeSelector">
+        <button class="capsule-btn" data-size="4x1">4×1 橫條版 (單行)</button>
+        <button class="capsule-btn active" data-size="4x2">4×2 黃金比例 (預設推薦)</button>
+        <button class="capsule-btn" data-size="4x3">4×3 寬裕多行 (偈頌排版)</button>
+        <button class="capsule-btn" data-size="4x4">4×4 全幅大座右銘</button>
+        <button class="capsule-btn" data-size="2x2">2×2 正方形 (精巧禪心)</button>
+      </div>
+    </div>
+
+    <!-- 內容型態 -->
+    <div class="ctrl-row">
+      <div class="ctrl-title">2. 初始文字型態：</div>
+      <div class="capsule-group" id="stateSelector">
+        <button class="capsule-btn active" data-state="filled">預設經文佳句 (示範字詞)</button>
+        <button class="capsule-btn" data-state="blank">全新空白小卡 (新加入狀態)</button>
+      </div>
+    </div>
+
+    <!-- 閱讀底色 -->
+    <div class="ctrl-row">
+      <div class="ctrl-title">3. 閱讀底色切換：</div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <div class="theme-dot active" data-theme="ivory" style="background: #fcfaf2; border: 1.5px solid #d4c5b3;" title="象牙白"></div>
+        <div class="theme-dot" data-theme="parchment" style="background: #f5eedb; border: 1.5px solid #c9b99f;" title="羊皮紙"></div>
+        <div class="theme-dot" data-theme="comfort" style="background: #eaf3ec; border: 1.5px solid #a9c6b0;" title="舒服綠"></div>
+        <div class="theme-dot" data-theme="ebony" style="background: #14171c; border: 1.5px solid #3a4454;" title="紫紺/烏木"></div>
+        <span style="font-size: 0.8rem; color: #777; margin-left: 6px;" id="themeLabel">目前主題：象牙白</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 主工作台 -->
+  <main class="playground-main">
+
+    <!-- 左側：功能規範對齊說明 -->
+    <article class="specs-card">
+      <div class="specs-badge">方案 A 最新調整與直覺輸入規範</div>
+      <h3>便籤小卡文字輸入與格式調整行為</h3>
+
+      <ul class="features-guide-list">
+        <li>
+          <strong>全新按鍵排列順序</strong>：<br>
+          工具列由左至右緊湊呈現：<strong>【文字大小】</strong>、<strong>【字體】</strong>、<strong>【粗體】</strong>、<strong>【間距】</strong>、<strong>【符號】</strong>。
+        </li>
+        <li>
+          <strong>「粗體」按鈕名稱</strong>：<br>
+          按鍵直接標記中文<strong>「粗體」</strong>，選取文字後點擊直接加粗或取消粗體。
+        </li>
+        <li>
+          <strong>「間距」直接文字切換</strong>：<br>
+          按鈕直接標示當前等級<strong>「適中 ▾」</strong>（預設），點開提供<strong>「寬鬆」</strong> (2.2)、<strong>「適中」</strong> (1.8)、<strong>「緊密」</strong> (1.4) 三等級快速切換。
+        </li>
+        <li>
+          <strong>「符號」加入吉祥「卍」字</strong>：<br>
+          提供<strong>「無 (∅) + 卍 + 6款精選符號」</strong>（卍、☸、🪷、✧、🧘、📿、🏮），游標點到哪插到哪，大小隨游標處字級，Backspace 可隨時刪除。
+        </li>
+        <li>
+          <strong>「文字反白」才可套用樣式（嚴格防呆）</strong>：<br>
+          <strong>【文字大小】</strong>、<strong>【字體】</strong>、<strong>【粗體】</strong>必須反白文字才生效！若無反白文字，按鈕呈無效狀態並輕巧提示，絕不誤改全卡。
+        </li>
+        <li>
+          <strong>出處「印順導師 《成佛之道》」可自由編輯</strong>：<br>
+          直接置於卡片編輯區內，讀者點一下就能<strong>修改文字、刪除、改字級、反白加粗或換字體</strong>，完全自由。
+        </li>
+      </ul>
+
+      <div style="font-size: 0.82rem; background: #faf8f5; border: 1px dashed #dcd4c8; padding: 12px; border-radius: 12px; color: #6d5b4e; line-height: 1.5;">
+        👉 <strong>現在就試試看！</strong><br>
+        1. <strong>試試沒反白時點【粗體】或【A+】</strong>：按鈕呈現無效並提醒「請先反白選取文字」。<br>
+        2. <strong>試著反白文字點【粗體】</strong>：立即局部加粗！<br>
+        3. <strong>點擊【間距】切換</strong>：點選「寬鬆 / 適中 / 緊密」即時切換行間距。<br>
+        4. <strong>游標處點【符號】插入「卍」</strong>：秒速在游標處插入吉祥卍字。
+      </div>
+    </article>
+
+    <!-- 右側：手機實機操作模擬器 -->
+    <div class="phone-mockup">
+      <div class="phone-status-bar">
+        <span>09:41</span>
+        <span>CBETA Reader</span>
+        <span>100%</span>
+      </div>
+
+      <div class="phone-content" id="phoneContainer">
+        <!-- 🌟 Spotlight 全螢幕聚焦半透明遮罩 (點擊保存/關閉) -->
+        <div class="memo-spotlight-backdrop" id="spotlightBackdrop" onclick="alert('點擊遮罩空白處自動完成並保存！')"></div>
+
+        <!-- 首頁其他卡片 1：品牌與搜尋 (景深模糊淡化中) -->
+        <div class="mock-home-card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:800; color:#1ea98c; font-size:1.05rem;">CBETA <span style="color:var(--text-main);">Reader</span></span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">已下載 12 部</span>
+          </div>
+        </div>
+
+        <div class="demo-hint-tag" style="position:relative; z-index:910;">✨ 唯獨本卡片 100% 清晰亮起 · 其他卡片柔和景深模糊</div>
+
+        <!-- 小卡本體 (支援 contentEditable，出處已直接放入內部支援自由編輯) -->
+        <div class="custom-memo-card memo-size-4x2" id="memoCardTarget">
+          <div class="memo-text-surface" id="cardSurface" contenteditable="true" spellcheck="false">
+            <p>由聞知諸法，由聞<strong style="color: #1ea98c; font-size: 21px;">遮眾惡</strong>，</p>
+            <p>由聞斷無義，由聞得涅槃。 卍</p>
+            <p class="memo-author-line">印順導師 《成佛之道》 Y0040</p>
+          </div>
+        </div>
+
+        <!-- 首頁其他卡片 2：上次閱讀與日誌 (景深模糊淡化中) -->
+        <div class="mock-home-card">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:3px;">上次閱讀 ➔</div>
+          <div style="font-size:0.84rem; font-weight:600; color:var(--text-main);">《成佛之道》第 1 卷 · 印順導師</div>
+        </div>
+
+        <!-- 方案 A 升級版 Word 控制列 (手機內部絕對居中) -->
+        <div class="floating-word-toolbar" id="toolbarA">
+          <!-- 輕量提示 -->
+          <div class="selection-toast" id="selectionToast">請先反白選取文字</div>
+
+          <div class="bar-header">
+            <button class="bar-action-btn cancel" onclick="alert('已取消編輯！')">取消</button>
+            <div class="bar-title">便籤文字排版</div>
+            <button class="bar-action-btn save" onclick="alert('已儲存便籤！')">完成</button>
+          </div>
+
+          <div class="bar-row">
+            <!-- 1. 文字大小 (A- 18px A+，8~30px，需選字才生效) -->
+            <div class="stepper-capsule disabled" id="stepperFontSize">
+              <button class="step-btn" id="btnStepMinus" title="縮小字級 (需選取文字)">A-</button>
+              <span class="step-val" id="fontSizeLabel">18px</span>
+              <button class="step-btn" id="btnStepPlus" title="放大字級 (需選取文字)">A+</button>
+            </div>
+
+            <!-- 2. 字體 (後方無任何多餘空白，需選字才生效) -->
+            <button class="word-tool-btn" id="btnToggleFont" title="選取文字後切換字體" disabled>
+              <span id="fontDisplayLabel">宋/明體 ▾</span>
+            </button>
+            <!-- 字體 Popover -->
+            <div class="word-popover" id="popoverFont">
+              <div class="popover-font-list">
+                <button class="popover-font-item active" data-font="serif">宋/明體</button>
+                <button class="popover-font-item" data-font="sans">黑體</button>
+                <button class="popover-font-item" data-font="kai">楷體</button>
+              </div>
+            </div>
+
+            <!-- 3. 粗體 (文字改為「粗體」，需選字才生效) -->
+            <button class="word-tool-btn bold-btn" id="btnBold" title="選取文字後切換粗體" disabled>
+              粗體
+            </button>
+
+            <!-- 4. 間距 (直接顯示文字「寬鬆/適中/緊密」，預設適中) -->
+            <button class="word-tool-btn" id="btnToggleSpacing" title="切換行間距">
+              <span id="spacingDisplayLabel">適中 ▾</span>
+            </button>
+            <!-- 間距 Popover -->
+            <div class="word-popover" id="popoverSpacing">
+              <div class="popover-spacing-list">
+                <button class="popover-spacing-item" data-sp="loose" data-lh="2.2">寬鬆</button>
+                <button class="popover-spacing-item active" data-sp="medium" data-lh="1.8">適中</button>
+                <button class="popover-spacing-item" data-sp="tight" data-lh="1.4">緊密</button>
+              </div>
+            </div>
+
+            <!-- 5. 符號 (點開出 無 + 卍 + 簡潔標示，游標點到哪插到哪) -->
+            <button class="word-tool-btn" id="btnToggleSymbol" title="在游標處插入符號">
+              <span id="currentSymbolDisplay">卍</span>
+              <span>符號 ▾</span>
+            </button>
+            <!-- 符號 Popover -->
+            <div class="word-popover" id="popoverSymbol">
+              <div class="popover-symbols">
+                <button class="symbol-opt-btn none-opt" data-sym="none" title="無符號">無</button>
+                <button class="symbol-opt-btn" data-sym="卍" title="吉祥卍字">卍</button>
+                <button class="symbol-opt-btn" data-sym="☸" title="法輪">☸</button>
+                <button class="symbol-opt-btn" data-sym="lotus" title="經典清蓮 (圖1線條標示)">
+                  <svg width="18" height="16" viewBox="0 0 24 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;">
+                    <path d="M12 2.5C12 2.5 9.2 7.5 9.2 12.8C9.2 16.2 10.5 18.2 12 18.2C13.5 18.2 14.8 16.2 14.8 12.8C14.8 7.5 12 2.5 12 2.5Z"/>
+                    <path d="M10.8 18C6.8 17.5 4 14 4 9.8C4 7 5.8 4.8 7.5 3.8"/>
+                    <path d="M13.2 18C17.2 17.5 20 14 20 9.8C20 7 18.2 4.8 16.5 3.8"/>
+                    <path d="M3 18.5H21"/>
+                  </svg>
+                </button>
+                <button class="symbol-opt-btn" data-sym="✿" title="清雅妙華">✿</button>
+                <button class="symbol-opt-btn" data-sym="✧" title="菩提心光">✧</button>
+                <button class="symbol-opt-btn" data-sym="◯" title="禪心圓相">◯</button>
+                <button class="symbol-opt-btn" data-sym="❖" title="金剛智印">❖</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let currentSize = '4x2';
+    let currentState = 'filled';
+    let currentFontSize = 18;
+    let currentFont = 'serif';
+    let currentLineHeight = 1.8;
+    let savedRange = null;
+    let hasTextSelection = false;
+
+    const FILLED_TEXT = `<p>由聞知諸法，由聞<strong style="color: #1ea98c; font-size: 21px;">遮眾惡</strong>，</p><p>由聞斷無義，由聞得涅槃。 卍</p><p class="memo-author-line">印順導師 《成佛之道》 Y0040</p>`;
+    const BLANK_TEXT = ``;
+
+    const cardSurface = document.getElementById('cardSurface');
+    const cardTarget = document.getElementById('memoCardTarget');
+    const btnToggleFont = document.getElementById('btnToggleFont');
+    const btnBold = document.getElementById('btnBold');
+    const stepperFontSize = document.getElementById('stepperFontSize');
+    const selectionToast = document.getElementById('selectionToast');
+
+    function showSelectionToast(msg = '請先反白選取要調整的文字') {
+      selectionToast.textContent = msg;
+      selectionToast.classList.add('show');
+      setTimeout(() => {
+        selectionToast.classList.remove('show');
+      }, 1600);
+    }
+
+    // 檢查目前是否有反白選取文字（且反白範圍在卡片內）
+    function checkSelectionState() {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+        hasTextSelection = false;
+      } else {
+        const text = sel.toString();
+        // 確保選取的節點在 cardSurface 之內
+        const anchorNode = sel.anchorNode;
+        const isInsideCard = cardSurface.contains(anchorNode);
+        hasTextSelection = isInsideCard && text.length > 0;
+      }
+
+      // 更新按鈕啟用/停用狀態
+      if (hasTextSelection) {
+        btnToggleFont.removeAttribute('disabled');
+        btnBold.removeAttribute('disabled');
+        stepperFontSize.classList.remove('disabled');
+
+        // 偵測目前選字是否有粗體
+        try {
+          const isB = document.queryCommandState('bold');
+          btnBold.classList.toggle('active', isB);
+        } catch(e) {}
+
+        // 自動偵測目前選字實際字級，同步至步進器顯示
+        try {
+          const r = sel.getRangeAt(0);
+          const el = r.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+            ? r.commonAncestorContainer
+            : r.commonAncestorContainer.parentElement;
+          if (el) {
+            const comp = window.getComputedStyle(el).fontSize;
+            const parsed = parseInt(comp, 10);
+            if (!isNaN(parsed) && parsed >= 8 && parsed <= 40) {
+              currentFontSize = parsed;
+              document.getElementById('fontSizeLabel').textContent = `${parsed}px`;
+            }
+          }
+        } catch (_) {}
+      } else {
+        btnToggleFont.setAttribute('disabled', 'true');
+        btnBold.setAttribute('disabled', 'true');
+        btnBold.classList.remove('active');
+        stepperFontSize.classList.add('disabled');
+      }
+    }
+
+    // 儲存選區
+    function saveSelection() {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        const r = sel.getRangeAt(0);
+        if (cardSurface.contains(r.commonAncestorContainer)) {
+          savedRange = r.cloneRange();
+        }
+      }
+      checkSelectionState();
+    }
+
+    function restoreSelection() {
+      if (savedRange) {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(savedRange);
+      }
+    }
+
+    cardSurface.addEventListener('keyup', saveSelection);
+    cardSurface.addEventListener('mouseup', saveSelection);
+    cardSurface.addEventListener('touchend', saveSelection);
+    document.addEventListener('selectionchange', () => {
+      // 避免正在點按鈕時清除 savedRange
+      checkSelectionState();
+    });
+
+    // 阻止工具列點擊導致卡片輸入失焦與清除選區
+    document.querySelectorAll('.floating-word-toolbar button, .floating-word-toolbar div, .word-popover').forEach(el => {
+      el.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+      });
+    });
+
+    // 關閉所有彈出選單
+    function closeAllPopovers() {
+      document.querySelectorAll('.word-popover').forEach(p => p.style.display = 'none');
+    }
+
+    // 針對反白文字個別套用行內樣式 (字級與字體)
+    function applyInlineStyle(styleProp, styleVal) {
+      if (!savedRange || savedRange.collapsed) return;
+      cardSurface.focus();
+      restoreSelection();
+
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
+      const range = sel.getRangeAt(0);
+
+      const commonNode = range.commonAncestorContainer;
+      const commonEl = (commonNode.nodeType === Node.ELEMENT_NODE ? commonNode : commonNode.parentElement);
+
+      // 若整段選取剛好就是某個已存在的 span
+      if (commonEl && commonEl.tagName === 'SPAN' && cardSurface.contains(commonEl) && commonEl.innerText.trim() === range.toString().trim()) {
+        if (styleProp === 'fontSize') commonEl.style.fontSize = styleVal;
+        if (styleProp === 'fontFamily') commonEl.style.fontFamily = styleVal;
+        const newRange = document.createRange();
+        newRange.selectNodeContents(commonEl);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+        savedRange = newRange.cloneRange();
+        return;
+      }
+
+      try {
+        const fragment = range.extractContents();
+        if (fragment.querySelectorAll) {
+          fragment.querySelectorAll('span').forEach(s => {
+            if (styleProp === 'fontSize') s.style.fontSize = '';
+            if (styleProp === 'fontFamily') s.style.fontFamily = '';
+            if (!s.getAttribute('style') || s.getAttribute('style').trim() === '') {
+              const parent = s.parentNode;
+              if (parent) {
+                while (s.firstChild) parent.insertBefore(s.firstChild, s);
+                parent.removeChild(s);
+              }
+            }
+          });
+        }
+
+        const wrapper = document.createElement('span');
+        if (styleProp === 'fontSize') wrapper.style.fontSize = styleVal;
+        if (styleProp === 'fontFamily') wrapper.style.fontFamily = styleVal;
+        wrapper.appendChild(fragment);
+
+        range.insertNode(wrapper);
+        const newRange = document.createRange();
+        newRange.selectNodeContents(wrapper);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+        savedRange = newRange.cloneRange();
+      } catch (err) {
+        console.warn('applyInlineStyle error:', err);
+      }
+    }
+
+    // 1. 符號選單切換 (游標點到哪插到哪，不強制反白)
+    const btnToggleSymbol = document.getElementById('btnToggleSymbol');
+    const popoverSymbol = document.getElementById('popoverSymbol');
+    btnToggleSymbol.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = popoverSymbol.style.display === 'flex';
+      closeAllPopovers();
+      if (!isOpen) popoverSymbol.style.display = 'flex';
+    });
+
+    // 符號點選：在游標位置直接插入符號 (若選無則清除，選蓮花則插入圖1線條標示)
+    document.querySelectorAll('.symbol-opt-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const sym = btn.dataset.sym;
+        cardSurface.focus();
+        restoreSelection();
+
+        const sel = window.getSelection();
+        const range = (sel && sel.rangeCount > 0) ? sel.getRangeAt(0) : savedRange;
+
+        if (sym === 'none') {
+          if (range && !range.collapsed) {
+            range.deleteContents();
+          }
+          document.getElementById('currentSymbolDisplay').textContent = '∅';
+        } else if (sym === 'lotus') {
+          // 插入圖1經典清蓮線條 SVG
+          const span = document.createElement('span');
+          span.className = 'memo-inline-lotus-wrapper';
+          span.style.display = 'inline-flex';
+          span.style.alignItems = 'center';
+          span.style.verticalAlign = 'middle';
+          span.style.margin = '0 3px';
+          span.innerHTML = `<svg width="1.2em" height="1.1em" viewBox="0 0 24 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M12 2.5C12 2.5 9.2 7.5 9.2 12.8C9.2 16.2 10.5 18.2 12 18.2C13.5 18.2 14.8 16.2 14.8 12.8C14.8 7.5 12 2.5 12 2.5Z"/><path d="M10.8 18C6.8 17.5 4 14 4 9.8C4 7 5.8 4.8 7.5 3.8"/><path d="M13.2 18C17.2 17.5 20 14 20 9.8C20 7 18.2 4.8 16.5 3.8"/><path d="M3 18.5H21"/></svg>`;
+
+          if (range) {
+            range.deleteContents();
+            range.insertNode(span);
+            const newRange = document.createRange();
+            newRange.setStartAfter(span);
+            newRange.collapse(true);
+            if (sel) {
+              sel.removeAllRanges();
+              sel.addRange(newRange);
+            }
+            savedRange = newRange.cloneRange();
+          } else {
+            cardSurface.appendChild(span);
+          }
+          document.getElementById('currentSymbolDisplay').textContent = '蓮花';
+        } else {
+          const textNode = document.createTextNode(` ${sym} `);
+          if (range) {
+            range.deleteContents();
+            range.insertNode(textNode);
+            const newRange = document.createRange();
+            newRange.setStartAfter(textNode);
+            newRange.collapse(true);
+            if (sel) {
+              sel.removeAllRanges();
+              sel.addRange(newRange);
+            }
+            savedRange = newRange.cloneRange();
+          } else {
+            cardSurface.appendChild(textNode);
+          }
+          document.getElementById('currentSymbolDisplay').textContent = sym;
+        }
+        closeAllPopovers();
+        saveSelection();
+      });
+    });
+
+    // 2. 字體選單切換 (必須反白文字才有效)
+    const popoverFont = document.getElementById('popoverFont');
+    btnToggleFont.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!hasTextSelection) {
+        showSelectionToast();
+        return;
+      }
+      const isOpen = popoverFont.style.display === 'flex';
+      closeAllPopovers();
+      if (!isOpen) popoverFont.style.display = 'flex';
+    });
+
+    const fontMap = {
+      serif: "'Noto Serif TC', serif",
+      sans: "'Noto Sans TC', sans-serif",
+      kai: "'MOE-EduKai', 'TW-Kai-98', 'LXGW WenKai TC', 'Klee One', 'DFKai-SB', 'BiauKai', 'Kaiti TC', 'KaiTi', 楷體, serif"
+    };
+    const fontNames = { serif: '宋/明體', sans: '黑體', kai: '楷體' };
+
+    document.querySelectorAll('.popover-font-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!hasTextSelection) {
+          showSelectionToast();
+          closeAllPopovers();
+          return;
+        }
+        const f = btn.dataset.font;
+        currentFont = f;
+        document.querySelectorAll('.popover-font-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('fontDisplayLabel').textContent = `${fontNames[f]} ▾`;
+
+        applyInlineStyle('fontFamily', fontMap[f]);
+        closeAllPopovers();
+      });
+    });
+
+    // 3. 粗體 (B) 切換 (必須反白文字才有效)
+    btnBold.addEventListener('click', () => {
+      if (!hasTextSelection) {
+        showSelectionToast();
+        return;
+      }
+      cardSurface.focus();
+      restoreSelection();
+      document.execCommand('bold', false);
+      const isB = document.queryCommandState('bold');
+      btnBold.classList.toggle('active', isB);
+      saveSelection();
+    });
+
+    // 4. 字體大小步進器 (A- / A+，8~36px，嚴格限定只放大/縮小反白所選之文字)
+    document.getElementById('btnStepMinus').addEventListener('click', () => {
+      adjustFontSize(-1);
+    });
+    document.getElementById('btnStepPlus').addEventListener('click', () => {
+      adjustFontSize(1);
+    });
+
+    function adjustFontSize(delta) {
+      if (!hasTextSelection) {
+        showSelectionToast();
+        return;
+      }
+      currentFontSize = Math.min(36, Math.max(8, currentFontSize + delta));
+      document.getElementById('fontSizeLabel').textContent = `${currentFontSize}px`;
+      applyInlineStyle('fontSize', `${currentFontSize}px`);
+    }
+
+    // 5. 間距選單切換 (緊密 / 適中 / 寬鬆)
+    const btnToggleSpacing = document.getElementById('btnToggleSpacing');
+    const popoverSpacing = document.getElementById('popoverSpacing');
+    btnToggleSpacing.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = popoverSpacing.style.display === 'flex';
+      closeAllPopovers();
+      if (!isOpen) popoverSpacing.style.display = 'flex';
+    });
+
+    const spacingNames = { tight: '緊密', medium: '適中', loose: '寬鬆' };
+    document.querySelectorAll('.popover-spacing-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const sp = btn.dataset.sp;
+        const lh = parseFloat(btn.dataset.lh);
+        currentLineHeight = lh;
+        document.querySelectorAll('.popover-spacing-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('spacingDisplayLabel').textContent = `${spacingNames[sp]} ▾`;
+        cardSurface.style.lineHeight = lh;
+        closeAllPopovers();
+      });
+    });
+
+    // 點擊頁面其他地方關閉選單
+    document.addEventListener('click', () => {
+      closeAllPopovers();
+    });
+
+    // 尺寸切換
+    document.querySelectorAll('#sizeSelector .capsule-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#sizeSelector .capsule-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentSize = btn.dataset.size;
+        cardTarget.className = `custom-memo-card memo-size-${currentSize}`;
+      });
+    });
+
+    // 內容狀態切換
+    document.querySelectorAll('#stateSelector .capsule-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#stateSelector .capsule-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentState = btn.dataset.state;
+        if (currentState === 'blank') {
+          cardSurface.innerHTML = BLANK_TEXT;
+        } else {
+          cardSurface.innerHTML = FILLED_TEXT;
+        }
+        checkSelectionState();
+      });
+    });
+
+    // 主題底色切換
+    document.querySelectorAll('.theme-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        const theme = dot.dataset.theme;
+        document.body.className = `theme-${theme}`;
+        const labels = { ivory: '象牙白', parchment: '羊皮紙', comfort: '舒服綠', ebony: '紫紺/烏木' };
+        document.getElementById('themeLabel').textContent = `目前主題：${labels[theme]}`;
+      });
+    });
+  </script>
+</body>
+</html>

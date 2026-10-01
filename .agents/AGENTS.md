@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.7.8` (App: v4.7.8 / Builder: v2.9.13)
+- **Current Version**: `v4.8.1` (App: v4.8.1 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,18 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.8.1 / Builder: v2.9.13** (2026-10-02)
+  - [App] Spotlight 景深聚焦：全螢幕半透明灰黑遮罩鋪設，首頁其他卡片 100% 柔和景深模糊（`blur(6px)`）與淡化，唯獨當前編輯卡片 100% 清晰亮起在遮罩之上，點擊遮罩空白處自動平滑保存並退出。
+  - [App] 局部字級與楷體完整修復：A- / A+ 嚴格限定只縮放反白所選文字，自動剝除內層衝突樣式，基準字級不再被覆蓋；整合教育部標準楷書、全字庫標楷體、LXGW WenKai TC 與 Windows/Mac 原生楷書，選取即生效。
+  - [App] 圖1清蓮與極簡卡片：徹底刪除卡片角落多餘編輯符號；符號選單「蓮花」全面升級為圖 1 經典三瓣線條清蓮 SVG，隨字級與主題色流暢縮放。
+- **⭐ App: v4.8.0 / Builder: v2.9.13** (2026-10-01)
+  - [App] 升級便籤 Spotlight 原地直編：點擊便籤卡片全螢幕鋪設半透明遮罩，唯獨編輯中的卡片亮起，讀者直接在卡片上點擊文字打字，按 Enter 自然換行，最下方出處亦可直接打字修改或刪除，100% 毫秒級原地預覽。
+  - [App] Word 單列膠囊控制列：由左至右緊湊整合【文字大小 (A- 18px A+)】、【字體 (宋/明/黑/楷)】、【粗體】、【間距 (寬鬆/適中/緊密)】、【符號 (無+卍+6款禪意圖示)】5 組按鍵，定錨於螢幕正下方中央。
+  - [App] 反白防呆保護機制：文字大小、字體與粗體嚴格限定在反白選取文字時生效，未選字時按鈕自動呈無效狀態並輕量提示「請先反白選取文字」，絕不誤動全卡；符號支援在游標處隨點隨插。
+- **⭐ App: v4.7.9 / Builder: v2.9.13** (2026-10-01)
+  - [App] 升級便籤 Spotlight 卡片直接編輯：徹底廢除舊版臃腫底部抽屜，點擊編輯時全螢幕鋪設灰黑半透明遮罩，唯獨編輯中的便籤小卡亮起，讀者直接在卡片上點擊文字打字，選中行呈現淡色微光背景與綠色虛線，100% 毫秒級直接預覽。
+  - [App] Word 風格單列膠囊控制列：由左至右緊湊整合【符號標誌】、【字體】、【文字大小】、【間距】4 個膠囊按鍵，點擊展開輕量 Popover 選單，選完即時套用且絕不遮蔽卡片。
+  - [App] 符號標誌靈活性升級：支援符號置頂、獨立成行、置底與一鍵插入文字中，支援 16/22/28/34px 尺寸調整；邊距固定黃金比例，徹底移除左右幅度控制與出處欄位。
 - **⭐ App: v4.7.8 / Builder: v2.9.13** (2026-09-30)
   - [App] 修復淺色系書櫃與筆記膠囊文字對比度：修正未選定膠囊（近期下載/上次閱讀/我的最愛/近期標註）文字顏色為高對比深褐色（`#3c2a1a`），徹底根除淺色系下淡藍色白底吃字問題。
   - [App] 補全 `clearCustomThemeFromDOM` 之 `--text-secondary`、`--text-main`、`--theme-accent-contrast` 清理邏輯，杜絕暗色變量污染淺色模式。

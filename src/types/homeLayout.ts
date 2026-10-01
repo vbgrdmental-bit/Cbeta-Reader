@@ -49,6 +49,7 @@ export interface HomeWidgetConfig {
   memoPadding?: number;
   memoIconIndex?: number; // 0: 無符號, 1~6: 禪意小圖標
   memoLines?: MemoLineConfig[]; // 分行獨立字體字級排版
+  memoHtml?: string; // 富文本 HTML 格式 (方案 A 原地編輯持久化)
 }
 
 export const ZEN_ICONS_LIST = [

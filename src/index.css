@@ -70,6 +70,7 @@
   /* Fonts */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, 'CBETASupplement';
   --font-serif: 'Noto Serif TC', 'CBETASupplement', "PingFang TC", "Songti TC", "Noto Sans CJK TC", "Microsoft JhengHei", serif;
+  --font-kai: 'TW-Kai', 'MOE-EduKai', 'TW-Kai-98', 'LXGW WenKai TC', 'Klee One', 'DFKai-SB', 'BiauKai', 'Kaiti TC', 'KaiTi', 楷體, serif;
 
   /* Theme: Wood & Ivory (Default Library Theme) */
   --color-wood-50: #fbf8f3;
