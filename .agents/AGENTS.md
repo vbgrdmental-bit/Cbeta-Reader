@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.8.1` (App: v4.8.1 / Builder: v2.9.13)
+- **Current Version**: `v4.8.2` (App: v4.8.2 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.8.2 / Builder: v2.9.13** (2026-10-03)
+  - [App] 排版控制列懸浮靠合便籤下緣：控制列解除固定底部，動態緊貼於便籤卡片下方邊緣下方（間距 10px），不論 4*1、4*2、4*3、4*4、2*2 尺寸均完美靠合，手機輸入法彈出絕不遮擋。
+  - [App] 雙重防誤觸機制：首頁便籤卡片需連續點 2 下（雙擊）方能進入編輯模式，單擊不再誤觸；編輯模式下點擊遮罩或外部不退出，唯有主動點擊「取消」或「完成」按鈕才離開編輯回到首頁。
+  - [App] 符號選單精簡更新：按鈕改為純文字「符號 ▾」無圖示；選單內徹底刪除「無」及圖4之舊法輪與清蓮 SVG，全面加入「☸︎」、「●」、「★」、「☆」、「◌」，並採用雙排居中排列與向下展開。
 - **⭐ App: v4.8.1 / Builder: v2.9.13** (2026-10-02)
   - [App] Spotlight 景深聚焦：全螢幕半透明灰黑遮罩鋪設，首頁其他卡片 100% 柔和景深模糊（`blur(6px)`）與淡化，唯獨當前編輯卡片 100% 清晰亮起在遮罩之上，點擊遮罩空白處自動平滑保存並退出。
   - [App] 局部字級與楷體完整修復：A- / A+ 嚴格限定只縮放反白所選文字，自動剝除內層衝突樣式，基準字級不再被覆蓋；整合教育部標準楷書、全字庫標楷體、LXGW WenKai TC 與 Windows/Mac 原生楷書，選取即生效。

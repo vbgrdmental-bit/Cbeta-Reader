@@ -8940,7 +8940,7 @@ body.theme-dark .bookshelf-grid-tag {
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   z-index: 850;
-  cursor: pointer;
+  cursor: default;
   transition: opacity 0.3s ease;
 }
 
@@ -9039,10 +9039,6 @@ body.theme-ebony .custom-memo-card.is-editing-target {
 /* 📱 方案 A 升級版單列 Word 控制列 (手機內部絕對置中) */
 .memo-word-toolbar {
   position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 24px);
   max-width: 440px;
   background: rgba(30, 32, 38, 0.95);
   backdrop-filter: blur(14px);
@@ -9055,12 +9051,12 @@ body.theme-ebony .custom-memo-card.is-editing-target {
   flex-direction: column;
   gap: 6px;
   z-index: 99999 !important;
-  animation: slideUpMemoToolbar 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInMemoToolbar 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes slideUpMemoToolbar {
-  from { transform: translate(-50%, 40px); opacity: 0; }
-  to { transform: translate(-50%, 0); opacity: 1; }
+@keyframes fadeInMemoToolbar {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .memo-word-toolbar .bar-header {
@@ -9224,17 +9220,18 @@ body.theme-ebony .custom-memo-card.is-editing-target {
   transform: translate(-50%, -4px);
 }
 
-/* 展開 Popover (向上展開) */
+/* 展開 Popover (向下展開，避免遮擋便籤文字) */
 .word-popover {
   position: absolute;
-  bottom: calc(100% + 8px);
+  top: calc(100% + 8px);
+  bottom: auto;
   left: 50%;
   transform: translateX(-50%);
   background: #ffffff;
   color: #1a1a1a;
   border-radius: 14px;
   padding: 8px 10px;
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(0, 0, 0, 0.1);
   z-index: 1005;
   display: flex;
@@ -9245,15 +9242,19 @@ body.theme-ebony .custom-memo-card.is-editing-target {
 }
 
 @keyframes popFadeToolbar {
-  from { opacity: 0; transform: translate(-50%, 6px); }
+  from { opacity: 0; transform: translate(-50%, -6px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-/* 符號面板 (無 + 卍 + 6個符號) */
+/* 符號面板 (卍 + 9款精選符號，雙排優雅居中排列) */
 .popover-symbols {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 230px;
+  padding: 2px;
 }
 
 .symbol-opt-btn {

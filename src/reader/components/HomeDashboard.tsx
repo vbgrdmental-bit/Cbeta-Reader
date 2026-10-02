@@ -332,13 +332,14 @@ export function HomeDashboard({
   const editorRef = useRef<HTMLDivElement | null>(null);
   const savedRangeRef = useRef<Range | null>(null);
   const [hasTextSelection, setHasTextSelection] = useState<boolean>(false);
-  const [currentSymbolDisplay, setCurrentSymbolDisplay] = useState<string>('卍');
   const [currentFontLabel, setCurrentFontLabel] = useState<string>('宋/明體 ▾');
   const [currentSpacingLabel, setCurrentSpacingLabel] = useState<string>('適中 ▾');
   const [currentFontSize, setCurrentFontSize] = useState<number>(18);
   const [activePopover, setActivePopover] = useState<'symbol' | 'font' | 'spacing' | null>(null);
   const [selectionToast, setSelectionToast] = useState<string | null>(null);
   const toastTimeoutRef = useRef<any>(null);
+  const [toolbarStyle, setToolbarStyle] = useState<{ top: number; left: number; width: number } | null>(null);
+  const lastMemoClickRef = useRef<{ id: string; time: number }>({ id: '', time: 0 });
 
   const showSelectionToast = (msg: string = '請先反白選取要調整的文字') => {
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
@@ -523,6 +524,20 @@ export function HomeDashboard({
     }
   };
 
+  // 💡 防誤觸機制：便籤卡片需連續點 2 下（間隔 < 500ms）方能進入編輯模式
+  const handleMemoCardClick = (widget: HomeWidgetConfig, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isLayoutEditMode || editingMemoWidget?.id === widget.id) return;
+    const now = Date.now();
+    const diff = now - lastMemoClickRef.current.time;
+    if (lastMemoClickRef.current.id === widget.id && diff > 0 && diff < 500) {
+      lastMemoClickRef.current = { id: '', time: 0 };
+      handleOpenMemoEditor(widget, e);
+    } else {
+      lastMemoClickRef.current = { id: widget.id, time: now };
+    }
+  };
+
   // 當切換或開啟編輯便籤時，單次初始化 contentEditable 內容
   useEffect(() => {
     if (editingMemoWidget && editorRef.current) {
@@ -570,28 +585,86 @@ export function HomeDashboard({
     setActivePopover(null);
   };
 
-  // 點擊卡片與控制列以外的區域時自動保存退出
+  // 點擊控制列與選單以外的區域時，只關閉打開的 popover 選單，絕不退出編輯（避免誤觸）
   useEffect(() => {
     if (!editingMemoWidget) return;
     const handlePointerDownOutside = (e: PointerEvent) => {
       const target = e.target as HTMLElement;
-      if (
-        target.closest('.memo-word-toolbar') || 
-        target.closest('.word-popover') || 
-        target.closest('.custom-memo-card.is-editing-target')
-      ) {
+      if (target.closest('.word-popover') || target.closest('.word-tool-btn')) {
         return;
       }
-      handleSaveMemoEditor();
+      setActivePopover(null);
     };
-    const timer = setTimeout(() => {
-      document.addEventListener('pointerdown', handlePointerDownOutside);
-    }, 120);
+    document.addEventListener('pointerdown', handlePointerDownOutside);
     return () => {
-      clearTimeout(timer);
       document.removeEventListener('pointerdown', handlePointerDownOutside);
     };
-  }, [editingMemoWidget, currentFontSize, currentSpacingLabel, widgets]);
+  }, [editingMemoWidget]);
+
+  // 🌟 動態將文字排版控制列錨定並懸浮於便籤卡片下方邊緣下方（適用 4x1, 4x2, 4x3, 4x4, 2x2 等所有尺寸）
+  useEffect(() => {
+    if (!editingMemoWidget) {
+      setToolbarStyle(null);
+      return;
+    }
+
+    const updatePosition = () => {
+      const widgetCard = document.getElementById(`widget-${editingMemoWidget.id}`) ||
+                         document.querySelector(`.widget-card[data-widget-id="${editingMemoWidget.id}"]`);
+      if (!widgetCard) return;
+
+      const rect = widgetCard.getBoundingClientRect();
+      const screenWidth = window.innerWidth;
+
+      // 控制列寬度：最大 440px，兩側至少各留 12px
+      const toolbarWidth = Math.min(screenWidth - 24, 440);
+
+      // 垂直位置：緊靠在便籤卡片下方邊緣下方（間距 10px）
+      const top = rect.bottom + 10;
+
+      // 水平位置：以卡片水平中心為基準，並限制在左右安全邊界內（不超出螢幕左右 12px）
+      let left = rect.left + (rect.width / 2) - (toolbarWidth / 2);
+      left = Math.max(12, Math.min(screenWidth - toolbarWidth - 12, left));
+
+      setToolbarStyle({
+        top,
+        left,
+        width: toolbarWidth,
+      });
+    };
+
+    updatePosition();
+
+    window.addEventListener('scroll', updatePosition, { passive: true });
+    window.addEventListener('resize', updatePosition, { passive: true });
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updatePosition);
+      window.visualViewport.addEventListener('scroll', updatePosition);
+    }
+
+    const widgetCard = document.getElementById(`widget-${editingMemoWidget.id}`);
+    let ro: ResizeObserver | null = null;
+    if (widgetCard && typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => updatePosition());
+      ro.observe(widgetCard);
+    }
+
+    const interval = setInterval(updatePosition, 60);
+    const stopTimer = setTimeout(() => clearInterval(interval), 1000);
+
+    return () => {
+      window.removeEventListener('scroll', updatePosition);
+      window.removeEventListener('resize', updatePosition);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updatePosition);
+        window.visualViewport.removeEventListener('scroll', updatePosition);
+      }
+      if (ro) ro.disconnect();
+      clearInterval(interval);
+      clearTimeout(stopTimer);
+    };
+  }, [editingMemoWidget]);
 
   // 工具列指令處理：使用純原生 Range 操作，徹底解決跨段落與跨瀏覽器樣式失效問題
   // 💡 嚴格限定只放大/縮小反白所選之文字，絕不影響卡片內其他文字
@@ -673,58 +746,22 @@ export function HomeDashboard({
     if (!editorRef.current) return;
     editorRef.current.focus();
 
-    if (sym === 'none') {
-      const range = getActiveOrSavedRange();
-      if (range && !range.collapsed) {
-        range.deleteContents();
+    const range = getActiveOrSavedRange();
+    const textNode = document.createTextNode(` ${sym} `);
+    if (range) {
+      range.deleteContents();
+      range.insertNode(textNode);
+      const newRange = document.createRange();
+      newRange.setStartAfter(textNode);
+      newRange.collapse(true);
+      const sel = window.getSelection();
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(newRange);
       }
-      setCurrentSymbolDisplay('∅');
-    } else if (sym === 'lotus') {
-      // 插入圖 1 經典清蓮 (線條 SVG 標示，隨文字大小顏色縮放)
-      const range = getActiveOrSavedRange();
-      const span = document.createElement('span');
-      span.className = 'memo-inline-lotus-wrapper';
-      span.style.display = 'inline-flex';
-      span.style.alignItems = 'center';
-      span.style.verticalAlign = 'middle';
-      span.style.margin = '0 3px';
-      span.innerHTML = `<svg width="1.2em" height="1.1em" viewBox="0 0 24 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M12 2.5C12 2.5 9.2 7.5 9.2 12.8C9.2 16.2 10.5 18.2 12 18.2C13.5 18.2 14.8 16.2 14.8 12.8C14.8 7.5 12 2.5 12 2.5Z"/><path d="M10.8 18C6.8 17.5 4 14 4 9.8C4 7 5.8 4.8 7.5 3.8"/><path d="M13.2 18C17.2 17.5 20 14 20 9.8C20 7 18.2 4.8 16.5 3.8"/><path d="M3 18.5H21"/></svg>`;
-
-      if (range) {
-        range.deleteContents();
-        range.insertNode(span);
-        const newRange = document.createRange();
-        newRange.setStartAfter(span);
-        newRange.collapse(true);
-        const sel = window.getSelection();
-        if (sel) {
-          sel.removeAllRanges();
-          sel.addRange(newRange);
-        }
-        savedRangeRef.current = newRange.cloneRange();
-      } else {
-        editorRef.current.appendChild(span);
-      }
-      setCurrentSymbolDisplay('蓮花');
+      savedRangeRef.current = newRange.cloneRange();
     } else {
-      const range = getActiveOrSavedRange();
-      const textNode = document.createTextNode(` ${sym} `);
-      if (range) {
-        range.deleteContents();
-        range.insertNode(textNode);
-        const newRange = document.createRange();
-        newRange.setStartAfter(textNode);
-        newRange.collapse(true);
-        const sel = window.getSelection();
-        if (sel) {
-          sel.removeAllRanges();
-          sel.addRange(newRange);
-        }
-        savedRangeRef.current = newRange.cloneRange();
-      } else {
-        editorRef.current.appendChild(textNode);
-      }
-      setCurrentSymbolDisplay(sym);
+      editorRef.current.appendChild(textNode);
     }
     setActivePopover(null);
   };
@@ -1113,8 +1150,12 @@ export function HomeDashboard({
         style={{ 
           cursor: (!isLayoutEditMode && !isPreview && !isBeingEdited) ? 'pointer' : 'text'
         }}
-        onClick={(!isLayoutEditMode && !isPreview && !isBeingEdited) ? (e) => handleOpenMemoEditor(targetWidget, e) : undefined}
-        title={(!isLayoutEditMode && !isPreview && !isBeingEdited) ? '點擊編輯便籤文字與排版' : undefined}
+        onClick={(!isLayoutEditMode && !isPreview && !isBeingEdited) ? (e) => handleMemoCardClick(targetWidget, e) : undefined}
+        onDoubleClick={(!isLayoutEditMode && !isPreview && !isBeingEdited) ? (e) => {
+          e.stopPropagation();
+          handleOpenMemoEditor(targetWidget, e);
+        } : undefined}
+        title={(!isLayoutEditMode && !isPreview && !isBeingEdited) ? '連續點兩下編輯便籤文字與排版' : undefined}
       >
         {isBeingEdited ? (
           /* 🌟 原地直編 contentEditable 畫布 (由 useEffect 單次注入，且字級由選字個別套用，外層維持基準字級) */
@@ -2796,7 +2837,10 @@ export function HomeDashboard({
       {editingMemoWidget && (
         <div 
           className="memo-spotlight-backdrop animate-fade-in"
-          onClick={handleSaveMemoEditor}
+          onClick={(e) => {
+            e.stopPropagation();
+            setActivePopover(null);
+          }}
         />
       )}
 
@@ -3092,9 +3136,17 @@ export function HomeDashboard({
           🌟 方案 A：便籤 Spotlight 原地直編與 Word 單列膠囊控制列
           ========================================================================== */}
       {editingMemoWidget && typeof document !== 'undefined' && createPortal(
-        /* 單列 Word 風格控制列 (手機內部絕對居中，首頁 100% 無遮罩且保持明亮) */
+        /* 單列 Word 風格控制列 (懸浮並靠在便籤下方邊緣下方) */
         <div 
           className="memo-word-toolbar" 
+          style={{
+            position: 'fixed',
+            top: toolbarStyle ? `${toolbarStyle.top}px` : undefined,
+            left: toolbarStyle ? `${toolbarStyle.left}px` : '50%',
+            width: toolbarStyle ? `${toolbarStyle.width}px` : undefined,
+            bottom: toolbarStyle ? 'auto' : undefined,
+            transform: toolbarStyle ? 'none' : 'translateX(-50%)',
+          }}
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.preventDefault()}
         >
@@ -3253,7 +3305,7 @@ export function HomeDashboard({
                     </div>
                   )}
 
-                  {/* 5. 符號 (點開出 無 + 卍 + 法輪 + 蓮花 + 簡潔標示，游標點到哪插到哪) */}
+                  {/* 5. 符號 (純文字「符號 ▾」，在游標處插入符號) */}
                   <button 
                     type="button" 
                     className="word-tool-btn" 
@@ -3264,38 +3316,17 @@ export function HomeDashboard({
                     }}
                     title="在游標處插入符號"
                   >
-                    <span>
-                      {currentSymbolDisplay === 'lotus' || currentSymbolDisplay === '蓮花' ? (
-                        <svg width="15" height="13" viewBox="0 0 24 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-                          <path d="M12 2.5C12 2.5 9.2 7.5 9.2 12.8C9.2 16.2 10.5 18.2 12 18.2C13.5 18.2 14.8 16.2 14.8 12.8C14.8 7.5 12 2.5 12 2.5Z" />
-                          <path d="M10.8 18C6.8 17.5 4 14 4 9.8C4 7 5.8 4.8 7.5 3.8" />
-                          <path d="M13.2 18C17.2 17.5 20 14 20 9.8C20 7 18.2 4.8 16.5 3.8" />
-                          <path d="M3 18.5H21" />
-                        </svg>
-                      ) : currentSymbolDisplay}
-                    </span>
                     <span>符號 ▾</span>
                   </button>
                   {activePopover === 'symbol' && (
                     <div className="word-popover" onMouseDown={(e) => e.preventDefault()}>
                       <div className="popover-symbols">
-                        <button type="button" className="symbol-opt-btn none-opt" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('none')} title="無符號">無</button>
                         <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('卍')} title="吉祥卍字">卍</button>
-                        <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('☸')} title="法輪">☸</button>
-                        <button 
-                          type="button" 
-                          className="symbol-opt-btn" 
-                          onMouseDown={(e) => e.preventDefault()} 
-                          onClick={() => handleToolbarInsertSymbol('lotus')} 
-                          title="經典清蓮 (圖1線條標示)"
-                        >
-                          <svg width="20" height="18" viewBox="0 0 24 22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 2.5C12 2.5 9.2 7.5 9.2 12.8C9.2 16.2 10.5 18.2 12 18.2C13.5 18.2 14.8 16.2 14.8 12.8C14.8 7.5 12 2.5 12 2.5Z" />
-                            <path d="M10.8 18C6.8 17.5 4 14 4 9.8C4 7 5.8 4.8 7.5 3.8" />
-                            <path d="M13.2 18C17.2 17.5 20 14 20 9.8C20 7 18.2 4.8 16.5 3.8" />
-                            <path d="M3 18.5H21" />
-                          </svg>
-                        </button>
+                        <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('☸︎')} title="法輪">☸︎</button>
+                        <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('●')} title="黑圓">●</button>
+                        <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('★')} title="實心星">★</button>
+                        <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('☆')} title="空心星">☆</button>
+                        <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('◌')} title="虛線圓">◌</button>
                         <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('✿')} title="清淨妙華">✿</button>
                         <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('✧')} title="菩提心光">✧</button>
                         <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('◯')} title="禪心圓相">◯</button>

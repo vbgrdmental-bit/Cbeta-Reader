@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.8.1) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.8.2) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.8.1</span>
-                        <span className="changelog-date">(2026-10-02)</span>
+                        <span>⭐ App: v4.8.2</span>
+                        <span className="changelog-date">(2026-10-03)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 便籤 Spotlight 聚焦升級：全螢幕半透明景深模糊，唯獨編輯中的卡片亮起凸顯。</li>
-                        <li>• 局部字級與楷體完整修復：縮放嚴格限定反白文字不影響全卡，完整相容標楷體。</li>
-                        <li>• 清雅線條蓮花與極簡介面：移除卡片角落符號，導入圖1三瓣線條清蓮 SVG。</li>
+                        <li>• 便籤排版懸浮靠合：文字控制列懸浮緊靠便籤下方邊緣，支援全尺寸，輸入法不遮擋。</li>
+                        <li>• 雙重防誤觸機制：便籤連續點兩下才進入編輯，必須按「取消」或「完成」離開。</li>
+                        <li>• 符號選單精簡更新：符號鈕改為純文字，移除舊符號，加入「☸︎」「●」「★」「☆」「◌」。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.1</span>
+                            <span className="changelog-date">(2026-10-02)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 便籤 Spotlight 聚焦升級：全螢幕半透明景深模糊，唯獨編輯中的卡片亮起凸顯。</li>
+                            <li>• 局部字級與楷體完整修復：縮放嚴格限定反白文字不影響全卡，完整相容標楷體。</li>
+                            <li>• 清雅線條蓮花與極簡介面：移除卡片角落符號，導入圖1三瓣線條清蓮 SVG。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.8.0</span>
