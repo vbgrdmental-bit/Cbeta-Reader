@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { 
   Plus, Search, Folder, Notebook, ChevronRight, ChevronLeft, Check, X,
-  Maximize2, Sliders, CalendarDays, ArrowRight
+  Maximize2, Sliders, CalendarDays, ArrowRight, Download, Clock, Heart
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
 import { getBook, getAllReadingLogs, type ReadingLogEntry } from '../../utils/db';
@@ -66,6 +66,8 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'b_icon_2x2', type: 'appicon_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'brand', title: '禪意圖標' },
 
   // 2. 快捷功能 (nav)
+  { id: 'n_quick_4x3', type: 'quick_nav_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'nav', title: '快捷功能' },
+  { id: 'n_quick_4x2', type: 'quick_nav_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '快捷功能' },
   { id: 'n_four_4x1', type: 'four_nav_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '四合一導航' },
   { id: 'n_four_4x2', type: 'four_nav_4x1', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '四合一導航' },
   { id: 'n_four_4x4', type: 'four_nav_4x1', size: 'size-4x4', sizeLabel: '4×4', category: 'nav', title: '四合一導航' },
@@ -738,6 +740,56 @@ export function HomeDashboard({
       clearTimeout(stopTimer);
     };
   }, [editingMemoWidget]);
+
+  // 🌟 便籤編輯時鎖定背景滾動容器（禁止自由拉升滾軸），並支援在卡片與控制列外「連續點 2 下」自動完成儲存退出
+  useEffect(() => {
+    if (!editingMemoWidget) return;
+
+    const scrollContainer = document.querySelector('.library-content-area') as HTMLElement | null;
+    const originalContainerOverflow = scrollContainer ? scrollContainer.style.overflow : '';
+    const originalBodyOverflow = document.body.style.overflow;
+
+    if (scrollContainer) {
+      scrollContainer.style.overflow = 'hidden';
+    }
+    document.body.style.overflow = 'hidden';
+
+    let lastGlobalClickTime = 0;
+    const handleGlobalClick = (evt: MouseEvent) => {
+      const target = evt.target as HTMLElement;
+      // 點擊在正在編輯的卡片內或排版工具列內，不觸發自動完成
+      if (target.closest('.is-editing-memo-widget') || target.closest('.memo-word-toolbar')) {
+        return;
+      }
+      const now = Date.now();
+      const diff = now - lastGlobalClickTime;
+      if (diff > 0 && diff < 450) {
+        lastGlobalClickTime = 0;
+        handleSaveMemoEditor();
+      } else {
+        lastGlobalClickTime = now;
+      }
+    };
+
+    const handleGlobalDblClick = (evt: MouseEvent) => {
+      const target = evt.target as HTMLElement;
+      if (!target.closest('.is-editing-memo-widget') && !target.closest('.memo-word-toolbar')) {
+        handleSaveMemoEditor();
+      }
+    };
+
+    document.addEventListener('click', handleGlobalClick, true);
+    document.addEventListener('dblclick', handleGlobalDblClick, true);
+
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.style.overflow = originalContainerOverflow;
+      }
+      document.body.style.overflow = originalBodyOverflow;
+      document.removeEventListener('click', handleGlobalClick, true);
+      document.removeEventListener('dblclick', handleGlobalDblClick, true);
+    };
+  }, [editingMemoWidget, widgets]);
 
   // 工具列指令處理：使用純原生 Range 操作，徹底解決跨段落與跨瀏覽器樣式失效問題
   // 💡 嚴格限定只放大/縮小反白所選之文字，絕不影響卡片內其他文字
@@ -2875,6 +2927,89 @@ export function HomeDashboard({
       // 13. 自訂便籤小卡 (支援 2x2 / 4x2 / 4x3 / 4x4 / 4x1)
       case 'custom_memo': {
         return renderCustomMemoCard(widget);
+      }
+
+      // 14. 快捷功能卡片（六合一快捷按鍵：支援 4x3 與 4x2）
+      case 'quick_nav_4x2': {
+        const is4x3 = widget.size === 'size-4x3';
+        const iconSize = is4x3 ? 22 : 18;
+        return (
+          <div className={`widget-six-nav-4x2 ${is4x3 ? 'mode-4x3' : 'mode-4x2'}`}>
+            {/* 上排 3 個 */}
+            {/* 1. 近期下載 */}
+            <div 
+              className="six-nav-item item-downloads"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+              title="查看近期下載之經典"
+            >
+              <div className="six-nav-icon icon-downloads">
+                <Download size={iconSize} strokeWidth={2.4} />
+              </div>
+              <span className="six-nav-label">近期下載</span>
+            </div>
+
+            {/* 2. 近期閱讀 */}
+            <div 
+              className="six-nav-item item-history"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+              title="查看近期閱讀歷史"
+            >
+              <div className="six-nav-icon icon-history">
+                <Clock size={iconSize} strokeWidth={2.4} />
+              </div>
+              <span className="six-nav-label">近期閱讀</span>
+            </div>
+
+            {/* 3. 我的最愛 */}
+            <div 
+              className="six-nav-item item-favorites"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+              title="查看收藏之最愛經典"
+            >
+              <div className="six-nav-icon icon-favorites">
+                <Heart size={iconSize} strokeWidth={2.4} />
+              </div>
+              <span className="six-nav-label">我的最愛</span>
+            </div>
+
+            {/* 下排 3 個 */}
+            {/* 4. 我的書櫃 */}
+            <div 
+              className="six-nav-item item-shelf"
+              onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('shelf') : undefined}
+              title="直達我的書櫃全部經典"
+            >
+              <div className="six-nav-icon icon-shelf">
+                <Folder size={iconSize} strokeWidth={2.4} />
+              </div>
+              <span className="six-nav-label">我的書櫃</span>
+            </div>
+
+            {/* 5. 我的筆記 */}
+            <div 
+              className="six-nav-item item-notes"
+              onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
+              title="查看重點劃線與個人筆記"
+            >
+              <div className="six-nav-icon icon-notes">
+                <Notebook size={iconSize} strokeWidth={2.4} />
+              </div>
+              <span className="six-nav-label">我的筆記</span>
+            </div>
+
+            {/* 6. 關鍵字搜尋 */}
+            <div 
+              className="six-nav-item item-search"
+              onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('search') : undefined}
+              title="全文檢索已下載經典"
+            >
+              <div className="six-nav-icon icon-search">
+                <Search size={iconSize} strokeWidth={2.4} />
+              </div>
+              <span className="six-nav-label">關鍵字搜尋</span>
+            </div>
+          </div>
+        );
       }
 
       default:

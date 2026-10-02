@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.8.3` (App: v4.8.3 / Builder: v2.9.13)
+- **Current Version**: `v4.8.5` (App: v4.8.5 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,14 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.8.5 / Builder: v2.9.13** (2026-10-03)
+  - [App] 快捷功能卡片升級 4*3 規格：垂直空間擴充達 275px，6 個按鈕（近期下載/閱讀/最愛、書櫃/筆記/搜尋）文字與圖標完全舒展，徹底根除文字底部被遮擋裁切問題。
+  - [App] 便籤編輯置頂與鎖定滾軸：卡片在編輯狀態下以 fixed 精準置頂錨定於頂部主控制列正下方（間距 10px），滾動容器背景全面鎖定（`overflow: hidden`），右側滾軸不可拉升，排版控制列懸浮靠合下緣，手機輸入法彈出絕不遮擋。
+  - [App] 外部雙擊自動完成退出：在便籤卡片與排版列之外的頁面區域連續「點 2 下」，自動觸發完成編輯並儲存退出。
+- **⭐ App: v4.8.4 / Builder: v2.9.13** (2026-10-03)
+  - [App] 新增 4*2 快捷功能卡片：全新 4*2 六合一快捷鍵卡片（上排：近期下載、近期閱讀、我的最愛；下排：我的書櫃、我的筆記、關鍵字搜尋），精緻高對比色彩圖標與點擊直達。
+  - [App] 便籤編輯一律自動置頂：進入便籤編輯模式時，卡片一律自動平滑滾動置頂於頂部主控制列正下方（間距 10px），文字排版控制條緊貼下方，手機輸入法彈出絕不遮擋。
+  - [App] 外部雙擊自動完成：在便籤編輯遮罩與小工具版面編輯模式下，於頁面外空白處連續「點 2 下」，均自動觸發「完成」並自動儲存退出。
 - **⭐ App: v4.8.3 / Builder: v2.9.13** (2026-10-03)
   - [App] 便籤編輯一律自動置頂：進入便籤編輯模式時，卡片一律自動平滑滾動置頂於頂部主控制列正下方（間距 10px），文字排版控制條緊貼下方，手機輸入法彈出絕不遮擋。
   - [App] 便籤外部雙擊自動完成：在便籤編輯遮罩或頁面外空白處連續「點 2 下」，自動判定為「完成」編輯並自動儲存退出，單擊僅關閉彈出選單。

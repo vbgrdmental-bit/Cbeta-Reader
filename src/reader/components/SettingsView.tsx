@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.8.3) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.8.5) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.8.3</span>
+                        <span>⭐ App: v4.8.5</span>
                         <span className="changelog-date">(2026-10-03)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 便籤編輯一律自動置頂：進入編輯時卡片一律置頂於主控制列下方，輸入法完全不遮擋。</li>
-                        <li>• 便籤外部雙擊自動完成：在便籤頁面外連續點2下表示完成編輯，自動儲存並退出。</li>
-                        <li>• 首頁版面雙擊自動完成：在小工具版面編輯時，於頁面外連續點2下即自動儲存並退出。</li>
+                        <li>• 快捷功能升級 4*3 規格：6 快捷鍵垂直空間大幅擴充，文字與圖標大方舒展，絕不遮擋。</li>
+                        <li>• 便籤編輯置頂與鎖定滾軸：編輯時卡片以 fixed 精準置頂於主控制列正下方，滾軸鎖定不可拉升。</li>
+                        <li>• 外部雙擊自動完成退出：在便籤卡片或控制條外連續點 2 下，自動完成儲存並退出編輯。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,28 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.4</span>
+                            <span className="changelog-date">(2026-10-03)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 新增 4*2 快捷功能卡片：雙排 6 快捷鍵（近期下載/閱讀/最愛、書櫃/筆記/搜尋）。</li>
+                            <li>• 便籤編輯一律自動置頂：進入編輯時卡片一律置頂於主控制列下方，輸入法完全不遮擋。</li>
+                            <li>• 外部雙擊自動完成：便籤與小工具編輯模式下，頁面外連續點2下均自動儲存並退出。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.3</span>
+                            <span className="changelog-date">(2026-10-03)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 便籤編輯一律自動置頂：進入編輯時卡片一律置頂於主控制列下方，輸入法完全不遮擋。</li>
+                            <li>• 便籤外部雙擊自動完成：在便籤頁面外連續點2下表示完成編輯，自動儲存並退出。</li>
+                            <li>• 首頁版面雙擊自動完成：在小工具版面編輯時，於頁面外連續點2下即自動儲存並退出。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.8.2</span>
