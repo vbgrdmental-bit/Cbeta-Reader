@@ -66,6 +66,8 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'b_icon_2x2', type: 'appicon_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'brand', title: '禪意圖標' },
 
   // 2. 快捷功能 (nav)
+  { id: 'n_shelf_quick_4x2', type: 'shelf_quick_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '書櫃快捷' },
+  { id: 'n_system_nav_4x2', type: 'system_nav_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '系統導航' },
   { id: 'n_quick_4x3', type: 'quick_nav_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'nav', title: '快捷功能' },
   { id: 'n_quick_4x2', type: 'quick_nav_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '快捷功能' },
   { id: 'n_four_4x1', type: 'four_nav_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '四合一導航' },
@@ -2929,7 +2931,93 @@ export function HomeDashboard({
         return renderCustomMemoCard(widget);
       }
 
-      // 14. 快捷功能卡片（六合一快捷按鍵：支援 4x3 與 4x2）
+      // 14. 圖1單獨 4x2 卡片：書櫃快捷卡（近期下載、近期閱讀、我的最愛，無滑動直接進入）
+      case 'shelf_quick_4x2': {
+        return (
+          <div className="widget-three-nav-4x2 shelf-quick-card">
+            {/* 1. 近期下載 */}
+            <div 
+              className="three-nav-item item-downloads"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+              title="查看近期下載之經典"
+            >
+              <div className="three-nav-icon icon-downloads">
+                <Download size={22} strokeWidth={2.4} />
+              </div>
+              <span className="three-nav-label">近期下載</span>
+            </div>
+
+            {/* 2. 近期閱讀 */}
+            <div 
+              className="three-nav-item item-history"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+              title="查看近期閱讀歷史"
+            >
+              <div className="three-nav-icon icon-history">
+                <Clock size={22} strokeWidth={2.4} />
+              </div>
+              <span className="three-nav-label">近期閱讀</span>
+            </div>
+
+            {/* 3. 我的最愛 */}
+            <div 
+              className="three-nav-item item-favorites"
+              onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+              title="查看收藏之最愛經典"
+            >
+              <div className="three-nav-icon icon-favorites">
+                <Heart size={22} strokeWidth={2.4} />
+              </div>
+              <span className="three-nav-label">我的最愛</span>
+            </div>
+          </div>
+        );
+      }
+
+      // 15. 圖2單獨 4x2 卡片：系統導航卡（我的書櫃、我的筆記、關鍵字搜尋，秒速直達）
+      case 'system_nav_4x2': {
+        return (
+          <div className="widget-three-nav-4x2 system-nav-card">
+            {/* 1. 我的書櫃 */}
+            <div 
+              className="three-nav-item item-shelf"
+              onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('shelf') : undefined}
+              title="直達我的書櫃全部經典"
+            >
+              <div className="three-nav-icon icon-shelf">
+                <Folder size={22} strokeWidth={2.4} />
+              </div>
+              <span className="three-nav-label">我的書櫃</span>
+            </div>
+
+            {/* 2. 我的筆記 */}
+            <div 
+              className="three-nav-item item-notes"
+              onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
+              title="查看重點劃線與個人筆記"
+            >
+              <div className="three-nav-icon icon-notes">
+                <Notebook size={22} strokeWidth={2.4} />
+              </div>
+              <span className="three-nav-label">我的筆記</span>
+            </div>
+
+            {/* 3. 關鍵字搜尋 */}
+            <div 
+              className="three-nav-item item-search"
+              onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('search') : undefined}
+              title="全文檢索已下載經典"
+            >
+              <div className="three-nav-icon icon-search">
+                <Search size={22} strokeWidth={2.4} />
+              </div>
+              <span className="three-nav-label">關鍵字搜尋</span>
+            </div>
+          </div>
+        );
+      }
+
+      // 16. 六合一快捷功能卡片（六合一快捷按鍵：支援 4x3 與 4x2）
       case 'quick_nav_4x2': {
         const is4x3 = widget.size === 'size-4x3';
         const iconSize = is4x3 ? 22 : 18;

@@ -18,7 +18,9 @@ export type HomeWidgetType =
   | 'timer_2x2'
   | 'zen_4x2'
   | 'custom_memo'
-  | 'quick_nav_4x2';
+  | 'quick_nav_4x2'
+  | 'shelf_quick_4x2'
+  | 'system_nav_4x2';
 
 export type HomeWidgetSize = 
   | 'size-4x1'
@@ -95,7 +97,9 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'appicon_2x2', category: 'brand', name: '禪意 App Icon', size: 'size-2x2', icon: '🪷', description: '點擊可循環切換 6 款精選禪心蓮花圖標' },
 
   // 2. 系統導航
-  { type: 'quick_nav_4x2', category: 'nav', name: '快捷功能卡', size: 'size-4x3', icon: '⚡', description: '六合一快捷按鍵（上排：近期下載+近期閱讀+我的最愛；下排：我的書櫃+我的筆記+關鍵字搜尋，4×3規格文字更舒展）' },
+  { type: 'shelf_quick_4x2', category: 'nav', name: '書櫃快捷卡 (4×2)', size: 'size-4x2', icon: '📥', description: '三合一書櫃快捷鍵（近期下載、近期閱讀、我的最愛），直接進入無滑動' },
+  { type: 'system_nav_4x2', category: 'nav', name: '系統導航卡 (4×2)', size: 'size-4x2', icon: '🧭', description: '三合一系統導航鍵（我的書櫃、我的筆記、關鍵字搜尋），秒速直達' },
+  { type: 'quick_nav_4x2', category: 'nav', name: '快捷功能卡 (4×3)', size: 'size-4x3', icon: '⚡', description: '六合一快捷按鍵（上排：近期下載+近期閱讀+我的最愛；下排：我的書櫃+我的筆記+關鍵字搜尋，4×3規格文字更舒展）' },
   { type: 'four_nav_4x1', category: 'nav', name: '四合一導航列', size: 'size-4x1', icon: '🧭', description: '下載+書櫃+筆記+搜尋四合一呈現（支援 4x1/4x2/2x2/4x4）' },
   { type: 'download_2x2', category: 'nav', name: '下載經典卡', size: 'size-2x2', icon: '＋', description: '前往 CBETA 藏經庫下載經文（支援 2x2/4x1/4x2）' },
   { type: 'shelf_2x2', category: 'nav', name: '我的書櫃卡', size: 'size-2x2', icon: '📁', description: '直達已下載的個人經文書櫃（支援 2x2/4x1/4x2）' },
@@ -184,5 +188,9 @@ export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
   // 自訂便籤小卡：限定尺寸 2x2 / 4x2 / 4x3 / 4x4 / 4x1
   custom_memo: ['size-4x2', 'size-4x3', 'size-4x4', 'size-2x2', 'size-4x1'],
   // 快捷功能卡片：4x3 與 4x2
-  quick_nav_4x2: ['size-4x3', 'size-4x2']
+  quick_nav_4x2: ['size-4x3', 'size-4x2'],
+  // 書櫃快捷卡：4x2
+  shelf_quick_4x2: ['size-4x2'],
+  // 系統導航卡：4x2
+  system_nav_4x2: ['size-4x2']
 };

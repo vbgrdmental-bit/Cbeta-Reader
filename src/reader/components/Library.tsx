@@ -1890,7 +1890,7 @@ export function Library({
                     updateHashRoute('library');
                   }
                 }}
-                onOpenFolder={navigateToFolderWithAnimation}
+                onOpenFolder={navigateToFolder}
                 isLayoutEditMode={isLayoutEditMode}
                 setIsLayoutEditMode={setIsLayoutEditMode}
               />

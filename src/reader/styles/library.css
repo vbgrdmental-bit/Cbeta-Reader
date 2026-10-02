@@ -5579,6 +5579,130 @@ body.theme-ebony .compact-nav-badge-4x2 {
   color: #a1a1aa;
 }
 
+/* 💡 🌟 單排 3 快捷功能卡片（4x2 規格：書櫃快捷卡 / 系統導航卡） */
+.widget-card.size-4x2:has(.widget-three-nav-4x2) {
+  padding: 0.65rem 0.6rem;
+}
+
+.widget-three-nav-4x2 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 0.55rem;
+  box-sizing: border-box;
+}
+
+.three-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.6rem 0.2rem;
+  border-radius: 16px;
+  background: rgba(140, 75, 39, 0.04);
+  border: 1px solid rgba(140, 75, 39, 0.08);
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.three-nav-item:hover {
+  background: rgba(140, 75, 39, 0.08);
+  border-color: rgba(140, 75, 39, 0.16);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(140, 75, 39, 0.11);
+}
+
+.three-nav-item:active {
+  transform: scale(0.97);
+}
+
+body.theme-ebony .three-nav-item,
+body.theme-dark .three-nav-item {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.theme-ebony .three-nav-item:hover,
+body.theme-dark .three-nav-item:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+}
+
+.three-nav-icon {
+  width: clamp(38px, 8.5vw, 46px);
+  height: clamp(38px, 8.5vw, 46px);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.three-nav-item:hover .three-nav-icon {
+  transform: scale(1.08);
+}
+
+/* 經典專屬漸層與微光陰影 */
+.three-nav-icon.icon-downloads {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.32);
+}
+
+.three-nav-icon.icon-history {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 3px 10px rgba(217, 119, 6, 0.32);
+}
+
+.three-nav-icon.icon-favorites {
+  background: linear-gradient(135deg, #f43f5e, #e11d48);
+  box-shadow: 0 3px 10px rgba(225, 29, 72, 0.32);
+}
+
+.three-nav-icon.icon-shelf {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.32);
+}
+
+.three-nav-icon.icon-notes {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.32);
+}
+
+.three-nav-icon.icon-search {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  box-shadow: 0 3px 10px rgba(8, 145, 178, 0.32);
+}
+
+.three-nav-label {
+  font-family: var(--font-rounded, var(--font-sans));
+  font-size: clamp(0.78rem, 2.4vw, 0.88rem);
+  font-weight: 700;
+  color: var(--text-primary, #2c1810);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  max-width: 100%;
+  overflow: visible;
+  line-height: 1.35;
+}
+
+body.theme-ebony .three-nav-label,
+body.theme-dark .three-nav-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 /* 💡 🌟 快捷功能卡片（六合一快捷按鍵：上排 3 個 + 下排 3 個，支援 4x3 與 4x2 尺寸） */
 .widget-card.size-4x3:has(.widget-six-nav-4x2) {
   padding: 0.75rem 0.65rem;

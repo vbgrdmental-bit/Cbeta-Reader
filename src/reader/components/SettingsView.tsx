@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.8.5) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.8.6) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.8.5</span>
+                        <span>⭐ App: v4.8.6</span>
                         <span className="changelog-date">(2026-10-03)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 快捷功能升級 4*3 規格：6 快捷鍵垂直空間大幅擴充，文字與圖標大方舒展，絕不遮擋。</li>
-                        <li>• 便籤編輯置頂與鎖定滾軸：編輯時卡片以 fixed 精準置頂於主控制列正下方，滾軸鎖定不可拉升。</li>
-                        <li>• 外部雙擊自動完成退出：在便籤卡片或控制條外連續點 2 下，自動完成儲存並退出編輯。</li>
+                        <li>• 近期/最愛點擊直接進入：點入書櫃專區時全面移除滑動動畫，零延遲直接切換進入。</li>
+                        <li>• 新增單獨 4*2 書櫃快捷卡：單排 3 按鈕（近期下載、近期閱讀、我的最愛），空間極致舒展。</li>
+                        <li>• 新增單獨 4*2 系統導航卡：單排 3 按鈕（我的書櫃、我的筆記、關鍵字搜尋），秒速直達。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.5</span>
+                            <span className="changelog-date">(2026-10-03)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 快捷功能升級 4*3 規格：6 快捷鍵垂直空間大幅擴充，文字與圖標大方舒展，絕不遮擋。</li>
+                            <li>• 便籤編輯置頂與鎖定滾軸：編輯時卡片以 fixed 精準置頂於主控制列正下方，滾軸鎖定不可拉升。</li>
+                            <li>• 外部雙擊自動完成退出：在便籤卡片或控制條外連續點 2 下，自動完成儲存並退出編輯。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.8.4</span>
