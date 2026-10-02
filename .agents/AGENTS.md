@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.8.2` (App: v4.8.2 / Builder: v2.9.13)
+- **Current Version**: `v4.8.3` (App: v4.8.3 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.8.3 / Builder: v2.9.13** (2026-10-03)
+  - [App] 便籤編輯一律自動置頂：進入便籤編輯模式時，卡片一律自動平滑滾動置頂於頂部主控制列正下方（間距 10px），文字排版控制條緊貼下方，手機輸入法彈出絕不遮擋。
+  - [App] 便籤外部雙擊自動完成：在便籤編輯遮罩或頁面外空白處連續「點 2 下」，自動判定為「完成」編輯並自動儲存退出，單擊僅關閉彈出選單。
+  - [App] 首頁版面雙擊自動完成：在圖3小工具版面編輯模式下，於頁面外空白處連續「點 2 下」，自動觸發「✓ 完成」並自動儲存版面設定退出。
 - **⭐ App: v4.8.2 / Builder: v2.9.13** (2026-10-03)
   - [App] 排版控制列懸浮靠合便籤下緣：控制列解除固定底部，動態緊貼於便籤卡片下方邊緣下方（間距 10px），不論 4*1、4*2、4*3、4*4、2*2 尺寸均完美靠合，手機輸入法彈出絕不遮擋。
   - [App] 雙重防誤觸機制：首頁便籤卡片需連續點 2 下（雙擊）方能進入編輯模式，單擊不再誤觸；編輯模式下點擊遮罩或外部不退出，唯有主動點擊「取消」或「完成」按鈕才離開編輯回到首頁。

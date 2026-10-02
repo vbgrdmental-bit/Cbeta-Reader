@@ -340,6 +340,8 @@ export function HomeDashboard({
   const toastTimeoutRef = useRef<any>(null);
   const [toolbarStyle, setToolbarStyle] = useState<{ top: number; left: number; width: number } | null>(null);
   const lastMemoClickRef = useRef<{ id: string; time: number }>({ id: '', time: 0 });
+  const lastBackdropClickTimeRef = useRef<number>(0);
+  const lastLayoutOutsideClickTimeRef = useRef<number>(0);
 
   const showSelectionToast = (msg: string = '請先反白選取要調整的文字') => {
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
@@ -502,15 +504,34 @@ export function HomeDashboard({
       widget.memoLineHeight === 1.4 ? '緊密 ▾' : widget.memoLineHeight === 2.2 ? '寬鬆 ▾' : '適中 ▾'
     );
 
-    // 平滑滾動至卡片中央，並初始化 contentEditable 內容
+    // 🌟 一律自動置頂於頂部主控制列(圖2)下方編輯，並初始化 contentEditable 內容
     if (typeof window !== 'undefined') {
-      setTimeout(() => {
+      const doScrollToTop = () => {
         const el = document.getElementById(`widget-${widget.id}`) ||
                    document.querySelector(`.widget-card[data-widget-id="${widget.id}"]`) ||
                    document.querySelector('.custom-memo-card.is-editing-target');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const scrollContainer = document.querySelector('.library-content-area');
+        const header = document.querySelector('.library-header');
+        const headerHeight = header ? header.getBoundingClientRect().height : 56;
+
+        if (el && scrollContainer) {
+          const elRect = el.getBoundingClientRect();
+          const containerRect = scrollContainer.getBoundingClientRect();
+          const currentScrollTop = scrollContainer.scrollTop;
+          const targetTop = currentScrollTop + (elRect.top - containerRect.top) - 10;
+          scrollContainer.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        } else if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          window.scrollBy({ top: -headerHeight - 10, behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+      };
+
+      setTimeout(doScrollToTop, 50);
+      setTimeout(doScrollToTop, 160);
+
+      setTimeout(() => {
         if (editorRef.current) {
           const initialHtml = widget.memoHtml || (
             widget.memoText
@@ -585,21 +606,73 @@ export function HomeDashboard({
     setActivePopover(null);
   };
 
-  // 點擊控制列與選單以外的區域時，只關閉打開的 popover 選單，絕不退出編輯（避免誤觸）
+  // 點擊控制列與選單以外的區域時：單擊關閉打開的選單，連續「點 2 下」表示「完成」編輯並自動儲存
   useEffect(() => {
     if (!editingMemoWidget) return;
     const handlePointerDownOutside = (e: PointerEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest('.word-popover') || target.closest('.word-tool-btn')) {
+      if (
+        target.closest('.memo-word-toolbar') || 
+        target.closest('.word-popover') || 
+        target.closest('.custom-memo-card.is-editing-target')
+      ) {
         return;
       }
       setActivePopover(null);
+
+      const now = Date.now();
+      const diff = now - lastBackdropClickTimeRef.current;
+      if (diff > 0 && diff < 500) {
+        lastBackdropClickTimeRef.current = 0;
+        handleSaveMemoEditor();
+      } else {
+        lastBackdropClickTimeRef.current = now;
+      }
     };
-    document.addEventListener('pointerdown', handlePointerDownOutside);
+    const timer = setTimeout(() => {
+      document.addEventListener('pointerdown', handlePointerDownOutside);
+    }, 100);
     return () => {
+      clearTimeout(timer);
       document.removeEventListener('pointerdown', handlePointerDownOutside);
     };
-  }, [editingMemoWidget]);
+  }, [editingMemoWidget, currentFontSize, currentSpacingLabel, widgets]);
+
+  // 💡 圖3 小工具版面編輯模式：在頁面外連續「點 2 下」表示「✓ 完成」並自動儲存退出
+  useEffect(() => {
+    if (!isLayoutEditMode) return;
+
+    const handleLayoutOutsideClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // 若點擊在卡片內部、加入小工具按鈕、尺寸切換按鈕、刪除按鈕、頂部橫幅內部，則不視為頁面外
+      if (
+        target.closest('.widget-card') ||
+        target.closest('.home-edit-top-banner') ||
+        target.closest('.ios-gallery-backdrop') ||
+        target.closest('.ios-gallery-modal')
+      ) {
+        return;
+      }
+
+      const now = Date.now();
+      const diff = now - lastLayoutOutsideClickTimeRef.current;
+      if (diff > 0 && diff < 500) {
+        lastLayoutOutsideClickTimeRef.current = 0;
+        handleSaveAndExit();
+      } else {
+        lastLayoutOutsideClickTimeRef.current = now;
+      }
+    };
+
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleLayoutOutsideClick);
+    }, 120);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', handleLayoutOutsideClick);
+    };
+  }, [isLayoutEditMode, widgets, settings]);
 
   // 🌟 動態將文字排版控制列錨定並懸浮於便籤卡片下方邊緣下方（適用 4x1, 4x2, 4x3, 4x4, 2x2 等所有尺寸）
   useEffect(() => {
@@ -2832,7 +2905,16 @@ export function HomeDashboard({
   };
 
   return (
-    <div className={`home-custom-dashboard-wrapper ${isLayoutEditMode ? 'edit-mode' : ''} ${editingMemoWidget ? 'has-memo-editing' : ''}`}>
+    <div 
+      className={`home-custom-dashboard-wrapper ${isLayoutEditMode ? 'edit-mode' : ''} ${editingMemoWidget ? 'has-memo-editing' : ''}`}
+      onDoubleClick={(e) => {
+        if (!isLayoutEditMode) return;
+        const target = e.target as HTMLElement;
+        if (!target.closest('.widget-card') && !target.closest('.home-edit-top-banner') && !target.closest('.ios-gallery-backdrop')) {
+          handleSaveAndExit();
+        }
+      }}
+    >
       {/* 🌟 Spotlight 聚焦全螢幕半透明遮罩：首頁其他所有卡片與元素柔和暗化模糊，唯獨編輯中的卡片亮起 */}
       {editingMemoWidget && (
         <div 
@@ -2840,7 +2922,20 @@ export function HomeDashboard({
           onClick={(e) => {
             e.stopPropagation();
             setActivePopover(null);
+            const now = Date.now();
+            const diff = now - lastBackdropClickTimeRef.current;
+            if (diff > 0 && diff < 500) {
+              lastBackdropClickTimeRef.current = 0;
+              handleSaveMemoEditor();
+            } else {
+              lastBackdropClickTimeRef.current = now;
+            }
           }}
+          onDoubleClick={(e) => {
+            e.stopPropagation();
+            handleSaveMemoEditor();
+          }}
+          title="在頁面外連續點兩下完成編輯並儲存"
         />
       )}
 
@@ -2862,6 +2957,7 @@ export function HomeDashboard({
           <div className="home-edit-top-hint">
             <span>✦ 拖曳卡片即可排序</span>
             <span className="hint-sub">· 點 ⛶ 切換尺寸</span>
+            <span className="hint-sub">· 頁面外點2下完成</span>
           </div>
 
           <button 

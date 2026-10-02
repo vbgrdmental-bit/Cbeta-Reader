@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.8.2) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.8.3) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.8.2</span>
+                        <span>⭐ App: v4.8.3</span>
                         <span className="changelog-date">(2026-10-03)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 便籤排版懸浮靠合：文字控制列懸浮緊靠便籤下方邊緣，支援全尺寸，輸入法不遮擋。</li>
-                        <li>• 雙重防誤觸機制：便籤連續點兩下才進入編輯，必須按「取消」或「完成」離開。</li>
-                        <li>• 符號選單精簡更新：符號鈕改為純文字，移除舊符號，加入「☸︎」「●」「★」「☆」「◌」。</li>
+                        <li>• 便籤編輯一律自動置頂：進入編輯時卡片一律置頂於主控制列下方，輸入法完全不遮擋。</li>
+                        <li>• 便籤外部雙擊自動完成：在便籤頁面外連續點2下表示完成編輯，自動儲存並退出。</li>
+                        <li>• 首頁版面雙擊自動完成：在小工具版面編輯時，於頁面外連續點2下即自動儲存並退出。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.2</span>
+                            <span className="changelog-date">(2026-10-03)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 便籤排版懸浮靠合：文字控制列懸浮緊靠便籤下方邊緣，支援全尺寸，輸入法不遮擋。</li>
+                            <li>• 雙重防誤觸機制：便籤連續點兩下才進入編輯，必須按「取消」或「完成」離開。</li>
+                            <li>• 符號選單精簡更新：符號鈕改為純文字，移除舊符號，加入「☸︎」「●」「★」「☆」「◌」。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.8.1</span>
