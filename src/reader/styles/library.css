@@ -5714,6 +5714,67 @@ body.theme-dark .download-strip-arrow {
   box-sizing: border-box;
 }
 
+/* 💡 4x2 規格專屬適配（高度 148px 下上排精簡橫條、下排 3 按鈕完美舒展） */
+.widget-card.size-4x2:has(.widget-download-shelf-4x3) {
+  padding: 0.35rem 0.45rem;
+}
+
+.widget-download-shelf-4x3.mode-4x2 {
+  gap: 0.3rem;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .download-shelf-top-strip {
+  height: 38px;
+  min-height: 38px;
+  max-height: 38px;
+  border-radius: 12px;
+  padding: 0 0.5rem;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .download-strip-center-group {
+  gap: 0.45rem;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .download-strip-icon-box {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .download-strip-title {
+  font-size: 0.82rem;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .download-strip-sub {
+  font-size: 0.68rem;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .download-strip-arrow {
+  width: 22px;
+  height: 22px;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .download-shelf-bottom-grid {
+  gap: 0.35rem;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .three-nav-item {
+  gap: 0.28rem;
+  padding: 0.35rem 0.15rem;
+  border-radius: 12px;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .three-nav-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+
+.widget-download-shelf-4x3.mode-4x2 .three-nav-label {
+  font-size: 0.72rem;
+  line-height: 1.15;
+}
+
 /* 💡 🌟 單排 3 快捷功能卡片（4x2 規格：書櫃快捷卡 / 系統導航卡） */
 .widget-card.size-4x2:has(.widget-three-nav-4x2) {
   padding: 0.65rem 0.6rem;

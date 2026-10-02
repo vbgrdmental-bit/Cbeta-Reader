@@ -66,6 +66,7 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'b_icon_2x2', type: 'appicon_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'brand', title: '禪意圖標' },
 
   // 2. 快捷功能 (nav)
+  { id: 'n_download_shelf_4x2', type: 'download_shelf_4x3', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '下載與書櫃' },
   { id: 'n_download_shelf_4x3', type: 'download_shelf_4x3', size: 'size-4x3', sizeLabel: '4×3', category: 'nav', title: '下載與書櫃' },
   { id: 'n_shelf_quick_4x2', type: 'shelf_quick_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '書櫃快捷' },
   { id: 'n_system_nav_4x2', type: 'system_nav_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '系統導航' },
@@ -2932,10 +2933,14 @@ export function HomeDashboard({
         return renderCustomMemoCard(widget);
       }
 
-      // 14. 下載與書櫃 4x3 卡片（依圖1編排：下載經典在上且內容整體置中，3個快捷按鍵在下）
+      // 14. 下載與書櫃卡（支援 4x2 與 4x3：依圖1編排：下載經典在上且內容整體置中，3個快捷按鍵在下）
       case 'download_shelf_4x3': {
+        const is4x2 = widget.size === 'size-4x2';
+        const iconSize = is4x2 ? 18 : 22;
+        const plusSize = is4x2 ? 13 : 16;
+        const arrowSize = is4x2 ? 14 : 16;
         return (
-          <div className="widget-download-shelf-4x3">
+          <div className={`widget-download-shelf-4x3 ${is4x2 ? 'mode-4x2' : 'mode-4x3'}`}>
             {/* 上半部：下載經典（符號「+」和文字「下載經典」(及小標)、「→」整體置中） */}
             <div 
               className="download-shelf-top-strip"
@@ -2945,14 +2950,14 @@ export function HomeDashboard({
             >
               <div className="download-strip-center-group">
                 <div className="download-strip-icon-box">
-                  <Plus size={16} color="#ffffff" style={{ strokeWidth: 2.6 }} />
+                  <Plus size={plusSize} color="#ffffff" style={{ strokeWidth: 2.6 }} />
                 </div>
                 <div className="download-strip-text">
                   <span className="download-strip-title">下載經典</span>
                   <span className="download-strip-sub">· 從CBETA資料庫下載</span>
                 </div>
                 <div className="download-strip-arrow" title="前往下載">
-                  <ArrowRight size={16} strokeWidth={2.4} />
+                  <ArrowRight size={arrowSize} strokeWidth={2.4} />
                 </div>
               </div>
             </div>
@@ -2966,7 +2971,7 @@ export function HomeDashboard({
                 title="查看近期下載之經典"
               >
                 <div className="three-nav-icon icon-downloads">
-                  <Download size={22} strokeWidth={2.4} />
+                  <Download size={iconSize} strokeWidth={2.4} />
                 </div>
                 <span className="three-nav-label">近期下載</span>
               </div>
@@ -2978,7 +2983,7 @@ export function HomeDashboard({
                 title="查看近期閱讀歷史"
               >
                 <div className="three-nav-icon icon-history">
-                  <Clock size={22} strokeWidth={2.4} />
+                  <Clock size={iconSize} strokeWidth={2.4} />
                 </div>
                 <span className="three-nav-label">近期閱讀</span>
               </div>
@@ -2990,7 +2995,7 @@ export function HomeDashboard({
                 title="查看收藏之最愛經典"
               >
                 <div className="three-nav-icon icon-favorites">
-                  <Heart size={22} strokeWidth={2.4} />
+                  <Heart size={iconSize} strokeWidth={2.4} />
                 </div>
                 <span className="three-nav-label">我的最愛</span>
               </div>
