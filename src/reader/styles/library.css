@@ -5579,6 +5579,141 @@ body.theme-ebony .compact-nav-badge-4x2 {
   color: #a1a1aa;
 }
 
+/* 💡 🌟 下載與書櫃 4x3 卡片（依圖1編排：下載經典在上整體置中，3 快捷按鈕在下） */
+.widget-card.size-4x3:has(.widget-download-shelf-4x3) {
+  padding: 0.65rem 0.6rem;
+}
+
+.widget-download-shelf-4x3 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  gap: 0.6rem;
+  box-sizing: border-box;
+}
+
+/* 上半部：下載經典置中精簡列 */
+.download-shelf-top-strip {
+  width: 100%;
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  border-radius: 16px;
+  border: 1.5px dashed rgba(35, 139, 105, 0.45);
+  background: rgba(35, 139, 105, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 0.8rem;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+}
+
+.download-shelf-top-strip:hover {
+  background: rgba(35, 139, 105, 0.09);
+  border-color: rgba(35, 139, 105, 0.7);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 14px rgba(35, 139, 105, 0.12);
+}
+
+.download-shelf-top-strip:active {
+  transform: scale(0.985);
+}
+
+body.theme-ebony .download-shelf-top-strip,
+body.theme-dark .download-shelf-top-strip {
+  border-color: rgba(35, 139, 105, 0.55);
+  background: rgba(35, 139, 105, 0.1);
+}
+
+/* 核心置中群組：+、文字、→ 整體置中 */
+.download-strip-center-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.download-strip-icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #238b69;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(35, 139, 105, 0.35);
+}
+
+.download-strip-text {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.download-strip-title {
+  font-family: var(--font-rounded, var(--font-sans));
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--text-primary, #2c1810);
+  letter-spacing: -0.01em;
+}
+
+body.theme-ebony .download-strip-title,
+body.theme-dark .download-strip-title {
+  color: #f4ede4;
+}
+
+.download-strip-sub {
+  font-size: 0.74rem;
+  color: var(--reader-text-muted, #7a6652);
+  white-space: nowrap;
+}
+
+body.theme-ebony .download-strip-sub,
+body.theme-dark .download-strip-sub {
+  color: #a1a1aa;
+}
+
+.download-strip-arrow {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(35, 139, 105, 0.12);
+  color: #238b69;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.18s ease;
+}
+
+.download-shelf-top-strip:hover .download-strip-arrow {
+  transform: translateX(2px);
+}
+
+body.theme-ebony .download-strip-arrow,
+body.theme-dark .download-strip-arrow {
+  background: rgba(35, 139, 105, 0.22);
+  color: #4ade80;
+}
+
+/* 下半部：3 個快捷按鍵 */
+.download-shelf-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
 /* 💡 🌟 單排 3 快捷功能卡片（4x2 規格：書櫃快捷卡 / 系統導航卡） */
 .widget-card.size-4x2:has(.widget-three-nav-4x2) {
   padding: 0.65rem 0.6rem;

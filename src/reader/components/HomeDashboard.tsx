@@ -66,6 +66,7 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'b_icon_2x2', type: 'appicon_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'brand', title: '禪意圖標' },
 
   // 2. 快捷功能 (nav)
+  { id: 'n_download_shelf_4x3', type: 'download_shelf_4x3', size: 'size-4x3', sizeLabel: '4×3', category: 'nav', title: '下載與書櫃' },
   { id: 'n_shelf_quick_4x2', type: 'shelf_quick_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '書櫃快捷' },
   { id: 'n_system_nav_4x2', type: 'system_nav_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '系統導航' },
   { id: 'n_quick_4x3', type: 'quick_nav_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'nav', title: '快捷功能' },
@@ -2931,7 +2932,74 @@ export function HomeDashboard({
         return renderCustomMemoCard(widget);
       }
 
-      // 14. 圖1單獨 4x2 卡片：書櫃快捷卡（近期下載、近期閱讀、我的最愛，無滑動直接進入）
+      // 14. 下載與書櫃 4x3 卡片（依圖1編排：下載經典在上且內容整體置中，3個快捷按鍵在下）
+      case 'download_shelf_4x3': {
+        return (
+          <div className="widget-download-shelf-4x3">
+            {/* 上半部：下載經典（符號「+」和文字「下載經典」(及小標)、「→」整體置中） */}
+            <div 
+              className="download-shelf-top-strip"
+              onClick={!isLayoutEditMode ? onOpenCbetaCatalog : undefined}
+              title="前往 CBETA 藏經庫下載經典"
+              style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+            >
+              <div className="download-strip-center-group">
+                <div className="download-strip-icon-box">
+                  <Plus size={16} color="#ffffff" style={{ strokeWidth: 2.6 }} />
+                </div>
+                <div className="download-strip-text">
+                  <span className="download-strip-title">下載經典</span>
+                  <span className="download-strip-sub">· 從CBETA資料庫下載</span>
+                </div>
+                <div className="download-strip-arrow" title="前往下載">
+                  <ArrowRight size={16} strokeWidth={2.4} />
+                </div>
+              </div>
+            </div>
+
+            {/* 下半部：三合一快捷按鍵（近期下載、近期閱讀、我的最愛） */}
+            <div className="download-shelf-bottom-grid">
+              {/* 1. 近期下載 */}
+              <div 
+                className="three-nav-item item-downloads"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')) : undefined}
+                title="查看近期下載之經典"
+              >
+                <div className="three-nav-icon icon-downloads">
+                  <Download size={22} strokeWidth={2.4} />
+                </div>
+                <span className="three-nav-label">近期下載</span>
+              </div>
+
+              {/* 2. 近期閱讀 */}
+              <div 
+                className="three-nav-item item-history"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
+                title="查看近期閱讀歷史"
+              >
+                <div className="three-nav-icon icon-history">
+                  <Clock size={22} strokeWidth={2.4} />
+                </div>
+                <span className="three-nav-label">近期閱讀</span>
+              </div>
+
+              {/* 3. 我的最愛 */}
+              <div 
+                className="three-nav-item item-favorites"
+                onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')) : undefined}
+                title="查看收藏之最愛經典"
+              >
+                <div className="three-nav-icon icon-favorites">
+                  <Heart size={22} strokeWidth={2.4} />
+                </div>
+                <span className="three-nav-label">我的最愛</span>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // 15. 圖1單獨 4x2 卡片：書櫃快捷卡（近期下載、近期閱讀、我的最愛，無滑動直接進入）
       case 'shelf_quick_4x2': {
         return (
           <div className="widget-three-nav-4x2 shelf-quick-card">

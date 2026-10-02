@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.8.6) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.8.7) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.8.6</span>
+                        <span>⭐ App: v4.8.7</span>
                         <span className="changelog-date">(2026-10-03)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 近期/最愛點擊直接進入：點入書櫃專區時全面移除滑動動畫，零延遲直接切換進入。</li>
-                        <li>• 新增單獨 4*2 書櫃快捷卡：單排 3 按鈕（近期下載、近期閱讀、我的最愛），空間極致舒展。</li>
-                        <li>• 新增單獨 4*2 系統導航卡：單排 3 按鈕（我的書櫃、我的筆記、關鍵字搜尋），秒速直達。</li>
+                        <li>• 新增 4*3 下載與書櫃卡：上排下載經典整體置中、下排近期下載/閱讀/最愛 3 快捷鍵。</li>
+                        <li>• 下載經典精簡列整體置中：徽章「+」、文字「下載經典 · 從CBETA資料庫下載」與箭頭「→」完美置中。</li>
+                        <li>• 書櫃 3 快捷直達無縫切換：下排 3 按鈕充足大器，點擊直接進入對應書櫃專區無滑動。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.6</span>
+                            <span className="changelog-date">(2026-10-03)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 近期/最愛點擊直接進入：點入書櫃專區時全面移除滑動動畫，零延遲直接切換進入。</li>
+                            <li>• 新增單獨 4*2 書櫃快捷卡：單排 3 按鈕（近期下載、近期閱讀、我的最愛），空間極致舒展。</li>
+                            <li>• 新增單獨 4*2 系統導航卡：單排 3 按鈕（我的書櫃、我的筆記、關鍵字搜尋），秒速直達。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.8.5</span>

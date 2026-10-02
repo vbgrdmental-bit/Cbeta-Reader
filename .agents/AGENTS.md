@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.8.6` (App: v4.8.6 / Builder: v2.9.13)
+- **Current Version**: `v4.8.7` (App: v4.8.7 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.8.7 / Builder: v2.9.13** (2026-10-03)
+  - [App] 新增 4*3 下載與書櫃卡：依圖1編排，上排下載經典橫條整體置中（綠色「+」、文字「下載經典 · 從CBETA資料庫下載」、箭頭「→」完美居中），下排配置 3 快捷鍵（近期下載、近期閱讀、我的最愛）。
+  - [App] 專屬垂直比例優化：4*3 規格高度達 275px，上部 52px 置中精簡列，下部三合一快捷鍵垂直空間舒展飽滿，文字筆畫 100% 完整無裁切。
+  - [App] 書櫃 3 快捷直達無縫切換：點擊直接進入對應書櫃專區無滑動，即時聚焦。
 - **⭐ App: v4.8.6 / Builder: v2.9.13** (2026-10-03)
   - [App] 近期/最愛點擊直接進入：首頁點擊「近期下載」、「近期閱讀」、「我的最愛」全面移除滑動切換動畫，與「我的書櫃」保持一致直接切換進入書櫃並鎖定篩選。
   - [App] 新增單獨 4*2 書櫃快捷卡：單排 3 個按鈕（近期下載、近期閱讀、我的最愛），圖標飽滿、高度充裕，文字筆畫 100% 完整舒展。
