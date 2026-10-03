@@ -1396,8 +1396,8 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       </div>
                       <ul className="changelog-list">
                         <li>• 近期下載規則檢修：精準依48小時內下載與最近下載10本書篩選，最新下載經文100%排在最前。</li>
-                        <li>• 下載經典條大氣升級：4×2 小卡頂部下載經典 bar 高度增至約佔 1/3，大氣協調不再細長。</li>
-                        <li>• 下排 4 個正方形按鍵：擴充加入「我的筆記」，近期閱讀改為「上次閱讀」，每個按鈕呈現勻稱正方形。</li>
+                        <li>• 4×2 規格按鍵防切底：下排 4 鍵底部留白優化不切底，比例接近正方形；頂部 bar 佔約 1/3。</li>
+                        <li>• 4×3 規格大氣升級：維持上 1 鍵下 3 鍵，頂部 bar 加高大氣，下排配置 3 個完美正方形按鈕。</li>
                       </ul>
                     </div>
 

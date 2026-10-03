@@ -2937,9 +2937,9 @@ export function HomeDashboard({
       // 14. 下載與書櫃卡（支援 4x2 與 4x3：依圖1編排：下載經典在上且內容整體置中，3個快捷按鍵在下）
       case 'download_shelf_4x3': {
         const is4x2 = widget.size === 'size-4x2';
-        const iconSize = is4x2 ? 18 : 22;
-        const plusSize = is4x2 ? 13 : 16;
-        const arrowSize = is4x2 ? 14 : 16;
+        const iconSize = is4x2 ? 18 : 28;
+        const plusSize = is4x2 ? 13 : 18;
+        const arrowSize = is4x2 ? 14 : 18;
         return (
           <div className={`widget-download-shelf-4x3 ${is4x2 ? 'mode-4x2' : 'mode-4x3'}`}>
             {/* 上半部：下載經典（符號「+」和文字「下載經典」(及小標)、「→」整體置中） */}
@@ -2963,7 +2963,7 @@ export function HomeDashboard({
               </div>
             </div>
 
-            {/* 下半部：四合一快捷按鍵（近期下載、上次閱讀、我的最愛、我的筆記） */}
+            {/* 下半部：4x2 規格為 4 按鍵（含我的筆記）；4x3 規格維持 3 按鍵（近期下載、上次閱讀、我的最愛） */}
             <div className="download-shelf-bottom-grid">
               {/* 1. 近期下載 */}
               <div 
@@ -3001,17 +3001,19 @@ export function HomeDashboard({
                 <span className="three-nav-label">我的最愛</span>
               </div>
 
-              {/* 4. 我的筆記 */}
-              <div 
-                className="three-nav-item item-notes"
-                onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
-                title="查看重點劃線與法義筆記"
-              >
-                <div className="three-nav-icon icon-notes">
-                  <Notebook size={iconSize} strokeWidth={2.4} />
+              {/* 4. 我的筆記 (4x2 規格專屬第 4 鍵) */}
+              {is4x2 && (
+                <div 
+                  className="three-nav-item item-notes"
+                  onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
+                  title="查看重點劃線與法義筆記"
+                >
+                  <div className="three-nav-icon icon-notes">
+                    <Notebook size={iconSize} strokeWidth={2.4} />
+                  </div>
+                  <span className="three-nav-label">我的筆記</span>
                 </div>
-                <span className="three-nav-label">我的筆記</span>
-              </div>
+              )}
             </div>
           </div>
         );

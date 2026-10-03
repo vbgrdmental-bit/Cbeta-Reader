@@ -99,7 +99,7 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
 
   // 2. 系統導航
   { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×2)', size: 'size-4x2', icon: '📥', description: '上排：下載經典（佔約1/3高度）；下排：近期下載+上次閱讀+我的最愛+我的筆記 4 正方形快捷鍵' },
-  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×3)', size: 'size-4x3', icon: '📥', description: '上排：下載經典；下排：近期下載+上次閱讀+我的最愛+我的筆記 4 快捷鍵（4×3 規格）' },
+  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×3)', size: 'size-4x3', icon: '📥', description: '上排：加高下載經典 bar；下排：近期下載+上次閱讀+我的最愛 3 正方形快捷鍵（4×3 規格）' },
   { type: 'shelf_quick_4x2', category: 'nav', name: '書櫃快捷卡 (4×2)', size: 'size-4x2', icon: '📥', description: '三合一書櫃快捷鍵（近期下載、上次閱讀、我的最愛），直接進入無滑動' },
   { type: 'system_nav_4x2', category: 'nav', name: '系統導航卡 (4×2)', size: 'size-4x2', icon: '🧭', description: '三合一系統導航鍵（我的書櫃、我的筆記、關鍵字搜尋），秒速直達' },
   { type: 'quick_nav_4x2', category: 'nav', name: '快捷功能卡 (4×3)', size: 'size-4x3', icon: '⚡', description: '六合一快捷按鍵（上排：近期下載+上次閱讀+我的最愛；下排：我的書櫃+我的筆記+關鍵字搜尋，4×3規格文字更舒展）' },
