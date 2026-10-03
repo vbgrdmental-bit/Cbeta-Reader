@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.8.7` (App: v4.8.7 / Builder: v2.9.13)
+- **Current Version**: `v4.8.8` (App: v4.8.8 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.8.8 / Builder: v2.9.13** (2026-10-03)
+  - [App] 近期下載規則全面檢修：依「1. 距離當下時間點最近 48 小時下載」與「2. 距離當下時間點最近下載的 10 本書」嚴格篩選，以實際下載/包裝時間倒序排列，徹底杜絕舊版直接 reverse 或排除分類經文導致遺漏最新下載經文之缺陷。
+  - [App] 4×2 下載經典 bar 高度大氣優化：4×2 規格小卡頂部「下載經典」按鍵 bar 高度由 38px 增至 48px，精準佔約小卡總高度 1/3，視覺大氣協調，文字筆畫筆直舒展。
+  - [App] 下排 4 個圓角正方形快捷按鍵：「近期閱讀」正式統一更名為「上次閱讀」；下排於「我的最愛」右側擴充加入「我的筆記」，4 鍵（近期下載、上次閱讀、我的最愛、我的筆記）字數對稱居中，比例呈現飽滿勻稱之圓角正方形。
 - **⭐ App: v4.8.7 / Builder: v2.9.13** (2026-10-03)
   - [App] 新增 4*3 下載與書櫃卡：依圖1編排，上排下載經典橫條整體置中（綠色「+」、文字「下載經典 · 從CBETA資料庫下載」、箭頭「→」完美居中），下排配置 3 快捷鍵（近期下載、近期閱讀、我的最愛）。
   - [App] 專屬垂直比例優化：4*3 規格高度達 275px，上部 52px 置中精簡列，下部三合一快捷鍵垂直空間舒展飽滿，文字筆畫 100% 完整無裁切。

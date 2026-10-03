@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.8.7) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.8.8) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.8.7</span>
+                        <span>⭐ App: v4.8.8</span>
                         <span className="changelog-date">(2026-10-03)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 新增 4*3 下載與書櫃卡：上排下載經典整體置中、下排近期下載/閱讀/最愛 3 快捷鍵。</li>
-                        <li>• 下載經典精簡列整體置中：徽章「+」、文字「下載經典 · 從CBETA資料庫下載」與箭頭「→」完美置中。</li>
-                        <li>• 書櫃 3 快捷直達無縫切換：下排 3 按鈕充足大器，點擊直接進入對應書櫃專區無滑動。</li>
+                        <li>• 近期下載規則檢修：精準依48小時內下載與最近下載10本書篩選，最新下載經文100%排在最前。</li>
+                        <li>• 下載經典條大氣升級：4×2 小卡頂部下載經典 bar 高度增至約佔 1/3，大氣協調不再細長。</li>
+                        <li>• 下排 4 個正方形按鍵：擴充加入「我的筆記」，近期閱讀改為「上次閱讀」，每個按鈕呈現勻稱正方形。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,18 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.7</span>
+                            <span className="changelog-date">(2026-10-03)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 新增 4*3 下載與書櫃卡：上排下載經典整體置中、下排近期下載/閱讀/最愛 3 快捷鍵。</li>
+                            <li>• 下載經典精簡列整體置中：徽章「+」、文字「下載經典 · 從CBETA資料庫下載」與箭頭「→」完美置中。</li>
+                            <li>• 書櫃 3 快捷直達無縫切換：下排 3 按鈕充足大器，點擊直接進入對應書櫃專區無滑動。</li>
+                          </ul>
+                        </div>
+
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.8.6</span>

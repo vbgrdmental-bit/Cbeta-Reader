@@ -98,11 +98,11 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'appicon_2x2', category: 'brand', name: '禪意 App Icon', size: 'size-2x2', icon: '🪷', description: '點擊可循環切換 6 款精選禪心蓮花圖標' },
 
   // 2. 系統導航
-  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×2)', size: 'size-4x2', icon: '📥', description: '上排：下載經典（置中精簡列）；下排：近期下載+近期閱讀+我的最愛 3 快捷鍵（4×2 規格）' },
-  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×3)', size: 'size-4x3', icon: '📥', description: '上排：下載經典（置中精簡列）；下排：近期下載+近期閱讀+我的最愛 3 快捷鍵（4×3 規格）' },
-  { type: 'shelf_quick_4x2', category: 'nav', name: '書櫃快捷卡 (4×2)', size: 'size-4x2', icon: '📥', description: '三合一書櫃快捷鍵（近期下載、近期閱讀、我的最愛），直接進入無滑動' },
+  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×2)', size: 'size-4x2', icon: '📥', description: '上排：下載經典（佔約1/3高度）；下排：近期下載+上次閱讀+我的最愛+我的筆記 4 正方形快捷鍵' },
+  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×3)', size: 'size-4x3', icon: '📥', description: '上排：下載經典；下排：近期下載+上次閱讀+我的最愛+我的筆記 4 快捷鍵（4×3 規格）' },
+  { type: 'shelf_quick_4x2', category: 'nav', name: '書櫃快捷卡 (4×2)', size: 'size-4x2', icon: '📥', description: '三合一書櫃快捷鍵（近期下載、上次閱讀、我的最愛），直接進入無滑動' },
   { type: 'system_nav_4x2', category: 'nav', name: '系統導航卡 (4×2)', size: 'size-4x2', icon: '🧭', description: '三合一系統導航鍵（我的書櫃、我的筆記、關鍵字搜尋），秒速直達' },
-  { type: 'quick_nav_4x2', category: 'nav', name: '快捷功能卡 (4×3)', size: 'size-4x3', icon: '⚡', description: '六合一快捷按鍵（上排：近期下載+近期閱讀+我的最愛；下排：我的書櫃+我的筆記+關鍵字搜尋，4×3規格文字更舒展）' },
+  { type: 'quick_nav_4x2', category: 'nav', name: '快捷功能卡 (4×3)', size: 'size-4x3', icon: '⚡', description: '六合一快捷按鍵（上排：近期下載+上次閱讀+我的最愛；下排：我的書櫃+我的筆記+關鍵字搜尋，4×3規格文字更舒展）' },
   { type: 'four_nav_4x1', category: 'nav', name: '四合一導航列', size: 'size-4x1', icon: '🧭', description: '下載+書櫃+筆記+搜尋四合一呈現（支援 4x1/4x2/2x2/4x4）' },
   { type: 'download_2x2', category: 'nav', name: '下載經典卡', size: 'size-2x2', icon: '＋', description: '前往 CBETA 藏經庫下載經文（支援 2x2/4x1/4x2）' },
   { type: 'shelf_2x2', category: 'nav', name: '我的書櫃卡', size: 'size-2x2', icon: '📁', description: '直達已下載的個人經文書櫃（支援 2x2/4x1/4x2）' },

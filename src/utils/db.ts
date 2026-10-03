@@ -68,7 +68,21 @@ export async function decompressData(compressed: Uint8Array): Promise<string | n
 
 export async function saveBook(bookPackage: ReaderPackage): Promise<void> {
   const db = await initDB();
+
+  // 💡 確保書籍 metadata 擁有準確的下載/包裝時間
+  if (!bookPackage.metadata.packagedAt) {
+    bookPackage.metadata.packagedAt = new Date().toISOString();
+  }
   
+  // 💡 同步雙重保障：記錄至 localStorage 下載時間庫
+  if (typeof window !== 'undefined' && window.localStorage && bookPackage.metadata.workId) {
+    try {
+      localStorage.setItem(`cbeta_download_time_${bookPackage.metadata.workId}`, Date.now().toString());
+    } catch {
+      // 忽略存儲異常
+    }
+  }
+
   // 💡 大於 50KB 之經典內容進行 Gzip 輕量化壓縮儲存
   let packageToStore: any = bookPackage;
   try {

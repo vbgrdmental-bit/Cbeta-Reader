@@ -7,6 +7,7 @@ import {
 import type { BookMetadata } from '../../types/book';
 import { getBook, getAllReadingLogs, type ReadingLogEntry } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
+import { getRecentDownloadedBooks } from '../../utils/recentDownloads';
 import { sanitizeCreators } from '../../builder/IndexBuilder';
 import { getBookCoverGradient } from '../../utils/bookColors';
 import { readingTimer, formatTimerMMSS } from '../../utils/readingTimer';
@@ -1475,7 +1476,7 @@ export function HomeDashboard({
     // 💡 🌟 近期下載、上次閱讀、我的最愛 三合一卡片 (4x4 規格，各 1 本書垂直排列，依圖 1 規格)
     const renderTripleReadingCard = () => {
       // 1. 近期下載 (最新 1 本)
-      const actualRecent = [...downloadedBooks].reverse();
+      const actualRecent = getRecentDownloadedBooks(downloadedBooks);
       const recentBook = (isPreview && actualRecent.length === 0) 
         ? DEMO_PREVIEW_RESUME[0]?.book 
         : actualRecent[0];
@@ -2455,7 +2456,7 @@ export function HomeDashboard({
 
       // 8-2. 新增「近期下載」卡片 (4x2 / 4x1 / 4x3 / 4x4)
       case 'recent_downloads_4x2': {
-        const actualRecent = [...downloadedBooks].reverse();
+        const actualRecent = getRecentDownloadedBooks(downloadedBooks);
         const recentDownloadedBooks = (isPreview && actualRecent.length === 0) ? DEMO_PREVIEW_RESUME.map(d => d.book) : actualRecent;
 
         if (recentDownloadedBooks.length === 0) {
@@ -2962,7 +2963,7 @@ export function HomeDashboard({
               </div>
             </div>
 
-            {/* 下半部：三合一快捷按鍵（近期下載、近期閱讀、我的最愛） */}
+            {/* 下半部：四合一快捷按鍵（近期下載、上次閱讀、我的最愛、我的筆記） */}
             <div className="download-shelf-bottom-grid">
               {/* 1. 近期下載 */}
               <div 
@@ -2976,16 +2977,16 @@ export function HomeDashboard({
                 <span className="three-nav-label">近期下載</span>
               </div>
 
-              {/* 2. 近期閱讀 */}
+              {/* 2. 上次閱讀 */}
               <div 
                 className="three-nav-item item-history"
                 onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-                title="查看近期閱讀歷史"
+                title="查看上次閱讀歷史"
               >
                 <div className="three-nav-icon icon-history">
                   <Clock size={iconSize} strokeWidth={2.4} />
                 </div>
-                <span className="three-nav-label">近期閱讀</span>
+                <span className="three-nav-label">上次閱讀</span>
               </div>
 
               {/* 3. 我的最愛 */}
@@ -2999,12 +3000,24 @@ export function HomeDashboard({
                 </div>
                 <span className="three-nav-label">我的最愛</span>
               </div>
+
+              {/* 4. 我的筆記 */}
+              <div 
+                className="three-nav-item item-notes"
+                onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('notes') : undefined}
+                title="查看重點劃線與法義筆記"
+              >
+                <div className="three-nav-icon icon-notes">
+                  <Notebook size={iconSize} strokeWidth={2.4} />
+                </div>
+                <span className="three-nav-label">我的筆記</span>
+              </div>
             </div>
           </div>
         );
       }
 
-      // 15. 圖1單獨 4x2 卡片：書櫃快捷卡（近期下載、近期閱讀、我的最愛，無滑動直接進入）
+      // 15. 圖1單獨 4x2 卡片：書櫃快捷卡（近期下載、上次閱讀、我的最愛，無滑動直接進入）
       case 'shelf_quick_4x2': {
         return (
           <div className="widget-three-nav-4x2 shelf-quick-card">
@@ -3020,16 +3033,16 @@ export function HomeDashboard({
               <span className="three-nav-label">近期下載</span>
             </div>
 
-            {/* 2. 近期閱讀 */}
+            {/* 2. 上次閱讀 */}
             <div 
               className="three-nav-item item-history"
               onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-              title="查看近期閱讀歷史"
+              title="查看上次閱讀歷史"
             >
               <div className="three-nav-icon icon-history">
                 <Clock size={22} strokeWidth={2.4} />
               </div>
-              <span className="three-nav-label">近期閱讀</span>
+              <span className="three-nav-label">上次閱讀</span>
             </div>
 
             {/* 3. 我的最愛 */}
@@ -3109,16 +3122,16 @@ export function HomeDashboard({
               <span className="six-nav-label">近期下載</span>
             </div>
 
-            {/* 2. 近期閱讀 */}
+            {/* 2. 上次閱讀 */}
             <div 
               className="six-nav-item item-history"
               onClick={!isLayoutEditMode ? () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')) : undefined}
-              title="查看近期閱讀歷史"
+              title="查看上次閱讀歷史"
             >
               <div className="six-nav-icon icon-history">
                 <Clock size={iconSize} strokeWidth={2.4} />
               </div>
-              <span className="six-nav-label">近期閱讀</span>
+              <span className="six-nav-label">上次閱讀</span>
             </div>
 
             {/* 3. 我的最愛 */}

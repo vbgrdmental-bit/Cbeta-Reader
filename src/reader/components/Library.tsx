@@ -10,6 +10,7 @@ import type { BookMetadata, ReaderPackage } from '../../types/book';
 import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight } from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { buildKeywordComparisonGroups } from '../../utils/notesCrossComparison';
+import { getRecentDownloadedBooks } from '../../utils/recentDownloads';
 import { IndexBuilder, FEATURED_BOOKS, sanitizeCreators } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
@@ -1345,7 +1346,11 @@ export function Library({
   const recentReadsBooks = resumeBooks.slice(0, 9).map(item => item.book);
   // 2. 我的最愛
   const favoriteBooksList = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
-  // 3. 近期下載（未分類經典）
+  // 3. 近期下載（依權威規則：1. 距離當下時間最近 48 小時下載；2. 距離當下時間最近下載的前 10 本書；依下載時間由新到舊倒序排列）
+  const recentDownloadsBooks = useMemo(() => {
+    return getRecentDownloadedBooks(downloadedBooks);
+  }, [downloadedBooks]);
+  // 4. 未分類經典（供資料夾管理回歸未分類使用）
   const unclassifiedBooks = downloadedBooks.filter(b => !allBookshelfBookIds.includes(b.workId));
 
   // 💡 分割經書清單為 3 本一組的垂直欄 helper
@@ -1416,7 +1421,7 @@ export function Library({
     : (currentFolderId === 'virtual_favorites'
         ? favoriteBooksList
         : (currentFolderId === 'virtual_unclassified'
-            ? unclassifiedBooks.slice(0, 9)
+            ? recentDownloadsBooks
             : (currentFolderId === 'virtual_resume'
                 ? resumeBooks.map(item => item.book)
                 : sortBooksByWorkId(
@@ -1844,7 +1849,7 @@ export function Library({
                     {currentFolderId === 'virtual_my_folders' ? `共${downloadedBooks.length}本` :
                      currentFolderId === 'virtual_recent_reads' ? `共${recentReadsBooks.length}本` :
                      currentFolderId === 'virtual_favorites' ? `共${favoriteBooksList.length}本` :
-                     currentFolderId === 'virtual_unclassified' ? `共${Math.min(unclassifiedBooks.length, 9)}本` :
+                     currentFolderId === 'virtual_unclassified' ? `共${recentDownloadsBooks.length}本` :
                      currentFolderId === 'virtual_highlights' ? `共${allHighlights.length}則` :
                      currentFolderId === 'virtual_resume' ? `共${displayBooks.length}本` :
                      `共${getFolderTotalBookCount(currentFolderId)}本`}
@@ -1941,13 +1946,13 @@ export function Library({
                       <ChevronRight size={18} />
                     </span>
                     <span className="appstore-section-badge">
-                      {Math.min(unclassifiedBooks.length, 9)}
+                      {recentDownloadsBooks.length}
                     </span>
                   </div>
                 </div>
-                {unclassifiedBooks.length > 0 && (
+                {recentDownloadsBooks.length > 0 && (
                   <div className="appstore-carousel-scroll custom-scrollbar">
-                    {chunkBooksInto3(unclassifiedBooks.slice(0, 9)).map((colBooks, colIdx) => (
+                    {chunkBooksInto3(recentDownloadsBooks).map((colBooks, colIdx) => (
                       <div key={`unclassified-col-${colIdx}`} className="appstore-carousel-column">
                         {colBooks.map(b => renderBookCard(b, false, 'virtual_unclassified'))}
                       </div>

@@ -5,6 +5,7 @@ import {
   MoreVertical, Play, Trash2
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
+import { getRecentDownloadedBooks } from '../../utils/recentDownloads';
 import { 
   STATIC_DEPT_CATEGORIES, 
   STATIC_VOL_CATEGORIES, 
@@ -463,7 +464,7 @@ export function BookshelfInteractivePlayground({
       return list.slice(0, 9);
     }
     if (statusFilter === 'downloads') {
-      return [...activeBooksPool].reverse().slice(0, 9);
+      return getRecentDownloadedBooks(activeBooksPool);
     }
     return activeBooksPool;
   }, [activeBooksPool, statusFilter, dataScale, recentReadsBooks, favoriteWorkIds]);
