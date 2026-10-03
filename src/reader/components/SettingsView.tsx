@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.8.8) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.8.9) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.8.8</span>
-                        <span className="changelog-date">(2026-10-03)</span>
+                        <span>⭐ App: v4.8.9</span>
+                        <span className="changelog-date">(2026-10-04)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 近期下載規則檢修：精準依48小時內下載與最近下載10本書篩選，最新下載經文100%排在最前。</li>
-                        <li>• 4×2 規格按鍵防切底：下排 4 鍵底部留白優化不切底，比例接近正方形；頂部 bar 佔約 1/3。</li>
-                        <li>• 4×3 規格大氣升級：維持上 1 鍵下 3 鍵，頂部 bar 加高大氣，下排配置 3 個完美正方形按鈕。</li>
+                        <li>• 全文檢索替換為主題顏色：點一下依序換色（象牙白→羊皮紙→舒服綠→烏木黑→自訂），呈現當前色塊圓形與名稱。</li>
+                        <li>• 倒數計時升級圓形計算環：直接呈現圖4圓形虛線點點環形與即時倒數時間（如 17:20），不加多餘文字。</li>
+                        <li>• 4×2 快捷卡擴充支援最多 10 鍵：支援點擊「＋」增加按鍵（最多 10 個，上 5 個、下 5 個），並支援「×」刪除與拖曳調位。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.8</span>
+                            <span className="changelog-date">(2026-10-03)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 近期下載規則檢修：精準依48小時內下載與最近下載10本書篩選，最新下載經文100%排在最前。</li>
+                            <li>• 4×2 規格按鍵防切底：下排 4 鍵底部留白優化不切底，比例接近正方形；頂部 bar 佔約 1/3。</li>
+                            <li>• 4×3 規格大氣升級：維持上 1 鍵下 3 鍵，頂部 bar 加高大氣，下排配置 3 個完美正方形按鈕。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.8.7</span>

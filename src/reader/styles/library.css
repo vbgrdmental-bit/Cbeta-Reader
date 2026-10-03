@@ -5478,19 +5478,19 @@ body.theme-ebony .core-sub { color: #8a9680 !important; }
 /* 💡 4x2 寬敞四合一導航大版面 (4 個獨立精緻 Micro-Card 資訊磁貼，手機自適應防切邊) */
 .widget-card.size-4x2.four-nav-card-4x2,
 .widget-card.size-4x2:has(.widget-four-in-one-4x2) {
-  padding: 0.65rem 0.5rem;
+  padding: 0.45rem 0.45rem;
 }
 
 .widget-four-in-one-4x2 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   width: 100%;
   height: 100%;
   padding: 0;
   box-sizing: border-box;
-  gap: clamp(0.22rem, 1.1vw, 0.5rem);
+  gap: 0.35rem;
 }
 
 .compact-nav-item-4x2 {
@@ -5500,19 +5500,18 @@ body.theme-ebony .core-sub { color: #8a9680 !important; }
   justify-content: center;
   gap: 0.22rem;
   width: 100%;
+  height: 100%;
   min-width: 0;
   text-align: center;
   cursor: pointer;
-  padding: 0.32rem 0.1rem;
-  border-radius: 14px;
+  padding: 0.35rem 0.15rem;
+  border-radius: 13px;
   background: rgba(140, 75, 39, 0.04);
   border: none;
   transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
   user-select: none;
   box-sizing: border-box;
-  aspect-ratio: 1 / 1.05;
-  max-height: 96px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .compact-nav-item-4x2:hover {
@@ -5531,9 +5530,9 @@ body.theme-ebony .compact-nav-item-4x2:hover {
 }
 
 .compact-nav-icon-4x2 {
-  width: clamp(36px, 9vw, 42px);
-  height: clamp(36px, 9vw, 42px);
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
   background: var(--theme-accent, #8c4b27);
   color: #ffffff;
   display: flex;
@@ -5550,28 +5549,28 @@ body.theme-ebony .compact-nav-item-4x2:hover {
 
 .compact-nav-label-4x2 {
   font-family: var(--font-sans);
-  font-size: clamp(0.72rem, 2.3vw, 0.86rem);
-  font-weight: 800;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.25;
   color: var(--text-primary);
   white-space: nowrap;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
 }
 
 .compact-nav-badge-4x2 {
-  font-size: clamp(0.56rem, 1.7vw, 0.68rem);
+  font-size: 0.65rem;
+  line-height: 1.2;
   color: var(--text-muted);
   background: rgba(140, 75, 39, 0.08);
-  padding: 1px 3px;
-  border-radius: 8px;
+  padding: 1px 4px;
+  border-radius: 6px;
   font-weight: 600;
   white-space: nowrap;
   letter-spacing: -0.01em;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
 }
 
 body.theme-ebony .compact-nav-badge-4x2 {
@@ -5714,45 +5713,46 @@ body.theme-dark .download-strip-arrow {
   box-sizing: border-box;
 }
 
-/* 💡 4x2 規格專屬適配（圖1：上排「下載經典」bar 佔約 1/3 高度，下排 4 個按鍵底部充裕留白絕不切底） */
+/* 💡 4x2 規格專屬適配（圖1：上排「下載經典」bar 佔約 1/3 高度 48px，下排 4 個按鍵 78px 正方形大氣舒展，底部安全留白絕不切底） */
 .widget-card.size-4x2:has(.widget-download-shelf-4x3) {
-  padding: 0.35rem 0.45rem 0.55rem 0.45rem;
+  padding: 0.35rem 0.5rem 0.55rem 0.5rem;
 }
 
 .widget-download-shelf-4x3.mode-4x2 {
-  gap: 0.32rem;
+  gap: 0.35rem;
+  justify-content: flex-start;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .download-shelf-top-strip {
-  height: 44px;
-  min-height: 44px;
-  max-height: 44px;
-  border-radius: 13px;
-  padding: 0 0.6rem;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  border-radius: 14px;
+  padding: 0 0.65rem;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .download-strip-center-group {
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .download-strip-icon-box {
-  width: 23px;
-  height: 23px;
-  border-radius: 6.5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .download-strip-title {
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   font-weight: 700;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .download-strip-sub {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .download-strip-arrow {
-  width: 23px;
-  height: 23px;
+  width: 24px;
+  height: 24px;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .download-shelf-bottom-grid {
@@ -5761,7 +5761,7 @@ body.theme-dark .download-strip-arrow {
   gap: 0.35rem;
   align-items: center;
   justify-content: center;
-  padding-bottom: 2px;
+  flex: 1;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .three-nav-item {
@@ -5769,28 +5769,27 @@ body.theme-dark .download-strip-arrow {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.18rem;
-  padding: 0.28rem 0.1rem 0.22rem 0.1rem;
-  border-radius: 11px;
+  gap: 0.22rem;
+  padding: 0.32rem 0.12rem;
+  border-radius: 12px;
   width: 100%;
-  max-width: 82px;
-  height: auto;
-  max-height: 74px;
+  max-width: 84px;
+  height: 78px; /* 💡 飽滿大氣正方形，與寬度約 80px 對稱，底部安全留白絕不切底 */
   margin: 0 auto;
   box-sizing: border-box;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .three-nav-icon {
-  width: 29px;
-  height: 29px;
-  border-radius: 8.5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
   flex-shrink: 0;
 }
 
 .widget-download-shelf-4x3.mode-4x2 .three-nav-label {
-  font-size: 0.71rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.18;
   white-space: nowrap;
   letter-spacing: -0.01em;
   text-align: center;
@@ -6005,44 +6004,100 @@ body.theme-dark .three-nav-label {
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* 💡 🌟 快捷功能卡片（六合一快捷按鍵：上排 3 個 + 下排 3 個，支援 4x3 與 4x2 尺寸） */
+/* 💡 🌟 八合一快捷功能卡片（上排 4 個 + 下排 4 個正方形快捷按鍵，支援 4x2 與 4x3 尺寸與位置自由替換） */
+.widget-card.size-4x3:has(.widget-eight-nav-4x2),
 .widget-card.size-4x3:has(.widget-six-nav-4x2) {
-  padding: 0.75rem 0.65rem;
+  padding: 0.65rem 0.55rem;
 }
 
+.widget-card.size-4x2:has(.widget-eight-nav-4x2),
 .widget-card.size-4x2:has(.widget-six-nav-4x2) {
-  padding: 0.4rem 0.35rem;
+  padding: 0.32rem 0.35rem 0.4rem 0.35rem;
 }
 
+.widget-eight-nav-4x2,
 .widget-six-nav-4x2 {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-  gap: 0.55rem 0.5rem;
   box-sizing: border-box;
 }
 
-.widget-six-nav-4x2.mode-4x2 {
-  gap: 0.25rem 0.35rem;
+/* 💡 自訂按鈕齒輪徽章 (編輯模式常駐，平常懸浮出現) */
+.eight-nav-edit-badge {
+  position: absolute;
+  top: -4px;
+  right: 0px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  background: var(--theme-accent, #1ea98c);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  transition: all 0.18s ease;
+  user-select: none;
 }
 
+.eight-nav-edit-badge.hover-trigger {
+  opacity: 0.65;
+}
+
+.widget-eight-nav-4x2:hover .eight-nav-edit-badge.hover-trigger {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.eight-nav-edit-badge:hover {
+  transform: scale(1.08);
+}
+
+/* 八合一網格排版 (上 4 個 + 下 4 個) */
+.eight-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0.28rem 0.32rem;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-items: center;
+  box-sizing: border-box;
+}
+
+.mode-4x3 .eight-nav-grid {
+  gap: 0.65rem 0.55rem;
+}
+
+/* 8 個正方形按鍵項目本體 (背景淺灰維持剛好 1:1 正方形) */
+.eight-nav-item,
 .six-nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  width: 100%;
+  gap: 0.16rem;
+  aspect-ratio: 1 / 1;
   height: 100%;
+  max-height: 100%;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
   min-width: 0;
   text-align: center;
   cursor: pointer;
-  padding: 0.55rem 0.2rem;
-  border-radius: 16px;
+  padding: 0.22rem 0.1rem;
+  border-radius: 14px;
   background: rgba(140, 75, 39, 0.04);
   border: 1px solid rgba(140, 75, 39, 0.08);
   transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -6050,109 +6105,689 @@ body.theme-dark .three-nav-label {
   box-sizing: border-box;
 }
 
-.widget-six-nav-4x2.mode-4x2 .six-nav-item {
-  gap: 0.15rem;
-  padding: 0.2rem 0.1rem;
-  border-radius: 10px;
+.mode-4x3 .eight-nav-item {
+  gap: 0.35rem;
+  padding: 0.5rem 0.2rem;
+  border-radius: 16px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
 }
 
+.eight-nav-item:hover,
 .six-nav-item:hover {
   background: rgba(140, 75, 39, 0.08);
-  border-color: rgba(140, 75, 39, 0.16);
+  border-color: rgba(140, 75, 39, 0.18);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(140, 75, 39, 0.09);
+  box-shadow: 0 4px 10px rgba(140, 75, 39, 0.1);
 }
 
+.eight-nav-item:active,
 .six-nav-item:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
+body.theme-ebony .eight-nav-item,
+body.theme-dark .eight-nav-item,
 body.theme-ebony .six-nav-item,
 body.theme-dark .six-nav-item {
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
+body.theme-ebony .eight-nav-item:hover,
+body.theme-dark .eight-nav-item:hover,
 body.theme-ebony .six-nav-item:hover,
 body.theme-dark .six-nav-item:hover {
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.16);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
+/* 圖標方塊 (App Icon 正方形圓角) */
+.eight-nav-icon,
 .six-nav-icon {
-  width: clamp(34px, 7.8vw, 42px);
-  height: clamp(34px, 7.8vw, 42px);
-  border-radius: 12px;
+  width: 27px;
+  height: 27px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
   transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
   flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+  overflow: hidden;
 }
 
-.widget-six-nav-4x2.mode-4x2 .six-nav-icon {
-  width: clamp(24px, 5.5vw, 28px);
-  height: clamp(24px, 5.5vw, 28px);
-  border-radius: 8px;
+.mode-4x3 .eight-nav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
 }
 
+.eight-nav-item:hover .eight-nav-icon,
 .six-nav-item:hover .six-nav-icon {
   transform: scale(1.08);
 }
 
-/* 6 個快捷功能專屬典雅配色漸層 */
-.six-nav-icon.icon-downloads {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.28);
+/* 💡 主題小卡圖4：純正方形圖片輪播 (無文字標籤) */
+.eight-nav-zen-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  box-sizing: border-box;
 }
 
-.six-nav-icon.icon-history {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  box-shadow: 0 3px 8px rgba(217, 119, 6, 0.28);
+.eight-nav-zen-full-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.six-nav-icon.icon-favorites {
-  background: linear-gradient(135deg, #f43f5e, #e11d48);
-  box-shadow: 0 3px 8px rgba(225, 29, 72, 0.28);
+.mode-4x3 .eight-nav-zen-full-img {
+  width: 62px;
+  height: 62px;
+  border-radius: 16px;
 }
 
-.six-nav-icon.icon-shelf {
-  background: linear-gradient(135deg, #a855f7, #7c3aed);
-  box-shadow: 0 3px 8px rgba(124, 58, 237, 0.28);
+.eight-nav-item:hover .eight-nav-zen-full-img {
+  transform: scale(1.06);
 }
 
-.six-nav-icon.icon-notes {
-  background: linear-gradient(135deg, #10b981, #059669);
-  box-shadow: 0 3px 8px rgba(5, 150, 105, 0.28);
+/* 💡 主題小卡圖4/圖5樣式：純文字 CBETA (綠色) + Reader (深色/白色)，無深黑背景方塊 */
+.eight-nav-brand-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  box-sizing: border-box;
 }
 
-.six-nav-icon.icon-search {
-  background: linear-gradient(135deg, #06b6d4, #0891b2);
-  box-shadow: 0 3px 8px rgba(8, 145, 178, 0.28);
+.brand-two-lines-box {
+  width: 100%;
+  height: 100%;
+  max-width: 58px;
+  max-height: 58px;
+  border-radius: 12px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-sizing: border-box;
+  user-select: none;
 }
 
-.six-nav-label {
-  font-family: var(--font-rounded, var(--font-sans));
-  font-size: clamp(0.76rem, 2.3vw, 0.88rem);
-  font-weight: 700;
-  color: var(--text-primary, #2c1810);
-  white-space: nowrap;
-  letter-spacing: -0.01em;
-  max-width: 100%;
-  overflow: visible;
-  line-height: 1.3;
+.mode-4x3 .brand-two-lines-box {
+  max-width: 76px;
+  max-height: 76px;
 }
 
-.widget-six-nav-4x2.mode-4x2 .six-nav-label {
-  font-size: clamp(0.62rem, 1.8vw, 0.72rem);
+.eight-nav-item:hover .brand-two-lines-box,
+.three-nav-item:hover .brand-two-lines-box {
+  transform: scale(1.06);
+}
+
+.brand-line-cbeta {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #1ea98c;
+  letter-spacing: 0.04em;
   line-height: 1.1;
 }
 
+.mode-4x3 .brand-line-cbeta {
+  font-size: 1.15rem;
+}
+
+.brand-line-reader {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #2b332b;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  margin-top: 1px;
+}
+
+body.theme-ebony .brand-line-reader,
+body.theme-dark .brand-line-reader {
+  color: #f3f4f6;
+}
+
+.mode-4x3 .brand-line-reader {
+  font-size: 1.12rem;
+  margin-top: 2px;
+}
+
+/* 按鈕單行文字標籤 (居中飽滿，不被遮蔽) */
+.eight-nav-label,
+.six-nav-label {
+  font-family: var(--font-sans);
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: var(--text-primary, #2c1810);
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  max-width: 100%;
+  overflow: visible;
+  line-height: 1.15;
+}
+
+.mode-4x3 .eight-nav-label {
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+body.theme-ebony .eight-nav-label,
+body.theme-dark .eight-nav-label,
 body.theme-ebony .six-nav-label,
 body.theme-dark .six-nav-label {
   color: rgba(255, 255, 255, 0.9);
+}
+
+/* ==========================================================================
+   自訂快捷按鍵編輯彈窗 (Custom Nav Editor Modal)
+   ========================================================================== */
+.custom-nav-editor-sheet {
+  max-width: 440px !important;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding-bottom: 1.5rem !important;
+}
+
+.custom-nav-editor-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.4rem 0.85rem;
+}
+
+.custom-nav-hint {
+  font-size: 0.76rem;
+  color: var(--text-muted, #7a6652);
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* 8 格即時預覽與選取 (支援拖曳調位) */
+.custom-nav-current-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.45rem;
+  background: rgba(140, 75, 39, 0.04);
+  padding: 0.65rem 0.5rem;
+  border-radius: 16px;
+  border: 1px dashed var(--border-color, rgba(140, 75, 39, 0.18));
+}
+
+body.theme-ebony .custom-nav-current-grid {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.custom-nav-slot-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.4rem 0.2rem;
+  border-radius: 12px;
+  background: var(--bg-card, #ffffff);
+  border: 2px solid transparent;
+  cursor: grab;
+  touch-action: manipulation;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.custom-nav-slot-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.custom-nav-slot-box.selected {
+  border-color: #1ea98c !important;
+  background: rgba(30, 169, 140, 0.08) !important;
+  box-shadow: 0 0 0 3px rgba(30, 169, 140, 0.25) !important;
+}
+
+.custom-nav-slot-box.is-dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+  cursor: grabbing;
+}
+
+.custom-nav-slot-box.drag-over {
+  border-color: #1ea98c !important;
+  background: rgba(30, 169, 140, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(30, 169, 140, 0.35) !important;
+  transform: translateY(-2px);
+}
+
+/* 彈窗 slot 模式內的主題小卡 */
+.eight-nav-zen-container.slot-mode {
+  width: 100%;
+  height: 48px;
+}
+
+.eight-nav-zen-container.slot-mode .eight-nav-zen-full-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.eight-nav-brand-container.slot-mode {
+  width: 100%;
+  height: 48px;
+}
+
+.eight-nav-brand-container.slot-mode .brand-two-lines-box {
+  max-width: 44px;
+  max-height: 44px;
+  background: transparent;
+}
+
+.eight-nav-brand-container.slot-mode .brand-line-cbeta {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #1ea98c;
+}
+
+.eight-nav-brand-container.slot-mode .brand-line-reader {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-primary, #2b332b);
+}
+
+/* 下載與書櫃卡自訂彈窗 slot 橫排與增刪按鈕樣式 */
+.custom-nav-current-grid.shelf-mode {
+  display: grid;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.slot-delete-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: none;
+  font-size: 11px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+  z-index: 5;
+}
+
+.slot-delete-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  transform: scale(1.15);
+}
+
+.custom-nav-slot-box.add-slot-btn {
+  border: 2px dashed rgba(30, 169, 140, 0.35);
+  background: rgba(30, 169, 140, 0.04);
+}
+
+.custom-nav-slot-box.add-slot-btn:hover {
+  border-color: #1ea98c;
+  background: rgba(30, 169, 140, 0.1);
+  transform: translateY(-2px);
+}
+
+/* 💡 快捷按鍵：主題顏色小卡 (僅呈現當前色塊圓形 + 顏色文字) */
+.eight-nav-theme-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.16rem;
+  box-sizing: border-box;
+}
+
+.eight-nav-theme-circle {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.12);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.mode-4x3 .eight-nav-theme-circle {
+  width: 38px;
+  height: 38px;
+}
+
+.mode-5-col .eight-nav-theme-circle {
+  width: 23px;
+  height: 23px;
+}
+
+.eight-nav-item:hover .eight-nav-theme-circle {
+  transform: scale(1.08);
+}
+
+.eight-nav-theme-container.slot-mode {
+  gap: 0.12rem;
+}
+.eight-nav-theme-container.slot-mode .eight-nav-theme-circle {
+  width: 22px;
+  height: 22px;
+}
+
+/* 💡 快捷按鍵：倒數計時小卡 (圖4樣式：圓形虛線點點環形與即時時間數字，不加文字) */
+.eight-nav-timer-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.eight-nav-timer-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2.5px dotted #9bb0be;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: all 0.18s ease;
+}
+
+.mode-4x3 .eight-nav-timer-circle {
+  width: 60px;
+  height: 60px;
+  border-width: 3px;
+}
+
+.mode-5-col .eight-nav-timer-circle {
+  width: 38px;
+  height: 38px;
+  border-width: 2px;
+}
+
+.eight-nav-timer-circle.is-active {
+  border-color: var(--theme-accent, #1ea98c);
+  animation: timerRingPulse 2s ease-in-out infinite;
+}
+
+body.theme-ebony .eight-nav-timer-circle {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+body.theme-ebony .eight-nav-timer-circle.is-active {
+  border-color: #f3c969;
+}
+
+.eight-nav-timer-text {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  font-family: inherit;
+  letter-spacing: -0.2px;
+}
+
+.mode-4x3 .eight-nav-timer-text {
+  font-size: 1.05rem;
+}
+
+.mode-5-col .eight-nav-timer-text {
+  font-size: 0.72rem;
+}
+
+.eight-nav-item:hover .eight-nav-timer-circle {
+  transform: scale(1.06);
+}
+
+.eight-nav-timer-container.slot-mode .eight-nav-timer-circle {
+  width: 36px;
+  height: 36px;
+  border-width: 2px;
+}
+.eight-nav-timer-container.slot-mode .eight-nav-timer-text {
+  font-size: 0.7rem;
+}
+
+/* 💡 5 欄 (最多 10 個方塊按鍵，上 5 個、下 5 個) 樣式微調 */
+.eight-nav-grid.grid-5-col {
+  gap: 0.22rem 0.22rem;
+}
+
+.mode-5-col .eight-nav-label {
+  font-size: 0.6rem;
+  letter-spacing: -0.4px;
+}
+
+.mode-5-col .eight-nav-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+}
+
+.custom-nav-current-grid.quick-mode {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.38rem;
+}
+
+.slot-add-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-accent, #1ea98c);
+}
+
+.slot-badge-number {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: var(--text-muted, #999);
+  line-height: 1;
+}
+
+.slot-icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.slot-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* 替換功能按鍵庫 */
+.custom-nav-pool-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.custom-nav-pool-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.custom-nav-pool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+}
+
+.pool-item-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.45rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
+  background: var(--bg-card, #ffffff);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.pool-item-btn:hover:not(:disabled) {
+  background: rgba(30, 169, 140, 0.06);
+  border-color: #1ea98c;
+  transform: translateY(-1px);
+}
+
+.pool-item-btn.current-active {
+  border-color: #1ea98c;
+  background: rgba(30, 169, 140, 0.08);
+}
+
+/* 💡 已在上方 1~8 個的功能按鍵：自動反灰且不可再選 */
+.pool-item-btn.is-disabled-used,
+.pool-item-btn:disabled {
+  opacity: 0.38 !important;
+  filter: grayscale(0.85) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body.theme-ebony .pool-item-btn.is-disabled-used,
+body.theme-dark .pool-item-btn.is-disabled-used,
+body.theme-ebony .pool-item-btn:disabled,
+body.theme-dark .pool-item-btn:disabled {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.pool-item-check-used {
+  font-size: 0.58rem;
+  color: var(--text-muted, #888);
+  font-weight: 700;
+}
+
+.pool-icon-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.pool-item-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.pool-item-check {
+  font-size: 0.6rem;
+  color: #1ea98c;
+  font-weight: 700;
+}
+
+/* 底部操作按鈕 */
+.custom-nav-bottom-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.85rem;
+  border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  gap: 0.75rem;
+}
+
+.custom-nav-reset-btn,
+.custom-nav-done-btn {
+  flex: 1 1 0;
+  width: 50%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.18s ease;
+}
+
+.custom-nav-reset-btn {
+  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.22));
+  background: var(--bg-card, #ffffff);
+  color: var(--text-primary);
+}
+
+.custom-nav-reset-btn:hover {
+  background: rgba(140, 75, 39, 0.06);
+  border-color: #1ea98c;
+}
+
+.custom-nav-done-btn {
+  border: 1px solid #1ea98c;
+  background: #1ea98c;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(30, 169, 140, 0.28);
+}
+
+.custom-nav-done-btn:hover {
+  background: #19947a;
+  box-shadow: 0 4px 12px rgba(30, 169, 140, 0.38);
 }
 
 /* 💡 🌟 新增製作卡片：上次閱讀 · 經文進度 (4x4 規格：上部分 4x1，下部分 4x3 經文文字) */
@@ -7631,7 +8266,7 @@ body.theme-ebony .ios-live-preview-viewport {
   height: 148px !important;
   min-height: 148px !important;
   max-height: 148px !important;
-  padding: 0.45rem 0.95rem !important;
+  padding: 0.45rem 0.55rem !important;
 }
 
 .preview-card-stage-container.scale-4x2 .book-widget-card-box.box-4x2 {
@@ -7669,23 +8304,26 @@ body.theme-ebony .ios-live-preview-viewport {
   box-sizing: border-box !important;
 }
 
-/* 4x4：高度 355px (四合一導航、4部經典、經文進度)，應用 scale(0.68) 等比縮小，四邊安全留白充沛，絕不切邊 */
+/* 4x4：寬高均為 355px 原生正方形規格 (四合一導航、4部經典、經文進度)，應用 scale(0.60) 等比縮小，完美呈現 1:1 正方形比例，四邊安全留白充沛，絕不切邊 */
 .preview-card-stage-container.scale-4x4 {
-  width: 310px;
+  width: 355px;
   height: 355px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transform: scale(0.68);
+  transform: scale(0.60);
   transform-origin: center center;
 }
 
 .preview-card-stage-container.scale-4x4 .preview-card-mode.size-4x4 {
-  width: 310px !important;
-  max-width: 310px !important;
+  width: 355px !important;
+  height: 355px !important;
+  min-height: 355px !important;
+  max-height: 355px !important;
   box-sizing: border-box !important;
+  aspect-ratio: 1 / 1 !important;
 }
 
 .preview-card-stage-container.scale-4x4 .book-list-widget-multi,
@@ -9605,10 +10243,38 @@ body.theme-ebony .custom-memo-card.is-editing-target {
 }
 
 .memo-text-surface:empty::before {
-  content: '點此開始打字，按 Enter 自然分行...';
+  content: '可自行輸入文字…';
   color: var(--reader-text-muted, #7a6652);
-  opacity: 0.55;
-  font-style: italic;
+  opacity: 0.52;
+  font-style: normal;
+  font-size: 0.95rem;
+}
+
+/* 💡 便籤自訂文字提示 (無自訂內容或預覽時展示) */
+.memo-placeholder-prompt {
+  color: var(--reader-text-muted, #7a6652) !important;
+  opacity: 0.52 !important;
+  font-size: 0.95rem !important;
+  font-family: var(--font-sans) !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.6 !important;
+  margin: auto !important;
+  text-align: center !important;
+  user-select: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+body.theme-ebony .memo-placeholder-prompt {
+  color: #a1a1aa !important;
+  opacity: 0.52 !important;
+}
+
+.memo-4x1 .memo-placeholder-prompt {
+  font-size: 0.85rem !important;
 }
 
 .memo-text-surface p, .memo-text-surface div {

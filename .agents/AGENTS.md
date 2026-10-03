@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.8.8` (App: v4.8.8 / Builder: v2.9.13)
+- **Current Version**: `v4.8.9` (App: v4.8.9 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.8.9 / Builder: v2.9.13** (2026-10-04)
+  - [App] 全文檢索替換為主題顏色：點一下依序換色（象牙白→羊皮紙→舒服綠→烏木黑→自訂），僅呈現當前色塊圓形與顏色標籤。
+  - [App] 倒數計時升級圓形計算環：直接呈現圖4圓形虛線點點環形與即時倒數時間（如 17:20 或 25:00），不加多餘文字。
+  - [App] 4×2 快捷卡擴充支援最多 10 鍵：支援點擊「＋」增加按鍵（最多 10 個，上 5 個、下 5 個），並支援「×」刪除與拖曳調位。
 - **⭐ App: v4.8.8 / Builder: v2.9.13** (2026-10-03)
   - [App] 近期下載規則全面檢修：依「1. 距離當下時間點最近 48 小時下載」與「2. 距離當下時間點最近下載的 10 本書」嚴格篩選，以實際下載/包裝時間倒序排列，徹底杜絕舊版直接 reverse 或排除分類經文導致遺漏最新下載經文之缺陷。
   - [App] 圖1 4×2 上1下4按鍵防切底優化：頂部下載經典 bar 增高約佔 1/3（44px），下排 4 個快捷按鍵（近期下載、上次閱讀、我的最愛、我的筆記）底部邊界增加安全留白，比例接近正方形，徹底杜絕下緣被切遮擋問題。

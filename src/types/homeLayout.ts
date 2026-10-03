@@ -54,6 +54,8 @@ export interface HomeWidgetConfig {
   memoIconIndex?: number; // 0: 無符號, 1~6: 禪意小圖標
   memoLines?: MemoLineConfig[]; // 分行獨立字體字級排版
   memoHtml?: string; // 富文本 HTML 格式 (方案 A 原地編輯持久化)
+  // 8 合 1 快捷功能卡片自訂按鈕清單（支援上下左右位置調整與功能替換）
+  customNavButtons?: string[];
 }
 
 export const ZEN_ICONS_LIST = [
@@ -99,10 +101,9 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
 
   // 2. 系統導航
   { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×2)', size: 'size-4x2', icon: '📥', description: '上排：下載經典（佔約1/3高度）；下排：近期下載+上次閱讀+我的最愛+我的筆記 4 正方形快捷鍵' },
-  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×3)', size: 'size-4x3', icon: '📥', description: '上排：加高下載經典 bar；下排：近期下載+上次閱讀+我的最愛 3 正方形快捷鍵（4×3 規格）' },
   { type: 'shelf_quick_4x2', category: 'nav', name: '書櫃快捷卡 (4×2)', size: 'size-4x2', icon: '📥', description: '三合一書櫃快捷鍵（近期下載、上次閱讀、我的最愛），直接進入無滑動' },
   { type: 'system_nav_4x2', category: 'nav', name: '系統導航卡 (4×2)', size: 'size-4x2', icon: '🧭', description: '三合一系統導航鍵（我的書櫃、我的筆記、關鍵字搜尋），秒速直達' },
-  { type: 'quick_nav_4x2', category: 'nav', name: '快捷功能卡 (4×3)', size: 'size-4x3', icon: '⚡', description: '六合一快捷按鍵（上排：近期下載+上次閱讀+我的最愛；下排：我的書櫃+我的筆記+關鍵字搜尋，4×3規格文字更舒展）' },
+  { type: 'quick_nav_4x2', category: 'nav', name: '快捷功能卡 (4×2)', size: 'size-4x2', icon: '⚡', description: '八合一快捷按鍵（上4個+下4個正方形按鍵），支援自訂上下左右位置與替換功能' },
   { type: 'four_nav_4x1', category: 'nav', name: '四合一導航列', size: 'size-4x1', icon: '🧭', description: '下載+書櫃+筆記+搜尋四合一呈現（支援 4x1/4x2/2x2/4x4）' },
   { type: 'download_2x2', category: 'nav', name: '下載經典卡', size: 'size-2x2', icon: '＋', description: '前往 CBETA 藏經庫下載經文（支援 2x2/4x1/4x2）' },
   { type: 'shelf_2x2', category: 'nav', name: '我的書櫃卡', size: 'size-2x2', icon: '📁', description: '直達已下載的個人經文書櫃（支援 2x2/4x1/4x2）' },
@@ -190,12 +191,12 @@ export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
   zen_4x2: ['size-4x2'],
   // 自訂便籤小卡：限定尺寸 2x2 / 4x2 / 4x3 / 4x4 / 4x1
   custom_memo: ['size-4x2', 'size-4x3', 'size-4x4', 'size-2x2', 'size-4x1'],
-  // 快捷功能卡片：4x3 與 4x2
-  quick_nav_4x2: ['size-4x3', 'size-4x2'],
+  // 快捷功能卡片：4x2 與 4x3
+  quick_nav_4x2: ['size-4x2', 'size-4x3'],
   // 書櫃快捷卡：4x2
   shelf_quick_4x2: ['size-4x2'],
   // 系統導航卡：4x2
   system_nav_4x2: ['size-4x2'],
-  // 下載與書櫃卡：4x2 與 4x3
-  download_shelf_4x3: ['size-4x2', 'size-4x3']
+  // 下載與書櫃卡：4x2
+  download_shelf_4x3: ['size-4x2']
 };
