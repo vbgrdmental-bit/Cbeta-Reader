@@ -99,8 +99,7 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'title_4x1', category: 'brand', name: '簡約橫幅標題', size: 'size-4x1', icon: '🔖', description: '水平單行緊湊品牌標題' },
   { type: 'appicon_2x2', category: 'brand', name: '禪意 App Icon', size: 'size-2x2', icon: '🪷', description: '點擊可循環切換 6 款精選禪心蓮花圖標' },
 
-  // 2. 系統導航
-  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×2)', size: 'size-4x2', icon: '📥', description: '上排：下載經典（佔約1/3高度）；下排：近期下載+上次閱讀+我的最愛+我的筆記 4 正方形快捷鍵' },
+  { type: 'download_shelf_4x3', category: 'nav', name: '下載與書櫃卡 (4×2)', size: 'size-4x2', icon: '📥', description: '上排：下載經典；下排：CBETA Reader + 近期下載 + 上次閱讀 + 我的最愛 4 快捷鍵（支援自訂 2~5 鍵）' },
   { type: 'shelf_quick_4x2', category: 'nav', name: '書櫃快捷卡 (4×2)', size: 'size-4x2', icon: '📥', description: '三合一書櫃快捷鍵（近期下載、上次閱讀、我的最愛），直接進入無滑動' },
   { type: 'system_nav_4x2', category: 'nav', name: '系統導航卡 (4×2)', size: 'size-4x2', icon: '🧭', description: '三合一系統導航鍵（我的書櫃、我的筆記、關鍵字搜尋），秒速直達' },
   { type: 'quick_nav_4x2', category: 'nav', name: '快捷功能卡 (4×2)', size: 'size-4x2', icon: '⚡', description: '八合一快捷按鍵（上4個+下4個正方形按鍵），支援自訂上下左右位置與替換功能' },

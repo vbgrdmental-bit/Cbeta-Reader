@@ -44,11 +44,11 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
   });
   const [showCustomTimerDrawer, setShowCustomTimerDrawer] = useState(false);
 
-  // 💡 自訂主題名稱：若選取 6 大佛光色之一則自動帶入名稱，否則顯示「自訂」
+  // 💡 自訂主題名稱：若選取 6 大佛光色之一則自動帶入名稱，否則顯示「自訂色」
   const matchedSacred = SACRED_THEME_PALETTE.find(
     c => c.hex.toLowerCase() === (settings.customThemeColor || '#ebdcd9').toLowerCase()
   );
-  const customColorLabel = matchedSacred ? matchedSacred.name : '自訂';
+  const customColorLabel = matchedSacred ? matchedSacred.name : '自訂色';
 
   // 💡 版本紀錄對話框捲動位置重置 Refs
   const changelogBodyRef = useRef<HTMLDivElement>(null);
@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.8.9) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.9.1) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.8.9</span>
+                        <span>⭐ App: v4.9.1</span>
                         <span className="changelog-date">(2026-10-04)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 全文檢索替換為主題顏色：點一下依序換色（象牙白→羊皮紙→舒服綠→烏木黑→自訂），呈現當前色塊圓形與名稱。</li>
-                        <li>• 倒數計時升級圓形計算環：直接呈現圖4圓形虛線點點環形與即時倒數時間（如 17:20），不加多餘文字。</li>
-                        <li>• 4×2 快捷卡擴充支援最多 10 鍵：支援點擊「＋」增加按鍵（最多 10 個，上 5 個、下 5 個），並支援「×」刪除與拖曳調位。</li>
+                        <li>• 主題自訂名稱優化：主題顏色之自訂色標籤全面改為「自訂色」，未選中與選定狀態更直觀清晰。</li>
+                        <li>• 主題圖片滿版大氣呈現：主題小卡 (圖片) 升級為如 CBETA Reader 圖4般滿版填滿按鈕，飽滿無黑邊留白。</li>
+                        <li>• 快捷卡左上角固定與雙擊自訂：快捷功能卡與下載書櫃卡左首鍵固定為圖4不可移刪，手機連點 2 下秒速進入自訂功能。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,28 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.0</span>
+                            <span className="changelog-date">(2026-10-04)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 4×2 下載與書櫃卡預設重設：上排下載經典，下排預設主題(CBETA Reader)+近期下載+上次閱讀+我的最愛 4 鍵。</li>
+                            <li>• 按鍵拖曳排序順移優化：調整順序改為自動順移插入（如 4 移至 1 自動順移為 4→1→2→3），告別單純兩兩對調。</li>
+                            <li>• 功能庫下載經典防重複反灰：下載與書櫃卡內因上方已有置頂下載經典，功能庫內「下載經典」自動反灰且上限設為 5 鍵。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.8.9</span>
+                            <span className="changelog-date">(2026-10-04)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 全文檢索替換為主題顏色：點一下依序換色（象牙白→羊皮紙→舒服綠→烏木黑→自訂），呈現當前色塊圓形與名稱。</li>
+                            <li>• 倒數計時升級圓形計算環：直接呈現圖4圓形虛線點點環形與即時倒數時間（如 17:20），不加多餘文字。</li>
+                            <li>• 4×2 快捷卡擴充支援最多 10 鍵：支援點擊「＋」增加按鍵（最多 10 個，上 5 個、下 5 個），並支援「×」刪除與拖曳調位。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.8.8</span>

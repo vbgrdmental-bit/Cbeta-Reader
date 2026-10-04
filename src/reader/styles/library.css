@@ -6171,33 +6171,45 @@ body.theme-dark .six-nav-item:hover {
   transform: scale(1.08);
 }
 
-/* 💡 主題小卡圖4：純正方形圖片輪播 (無文字標籤) */
+/* 💡 主題小卡圖3：滿版圖片輪播 (如圖4般滿版填滿整格按鍵，飽滿大氣) */
+.eight-nav-item.item-zen_icon,
+.three-nav-item.item-zen_icon {
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border-color: rgba(140, 75, 39, 0.12) !important;
+}
+
 .eight-nav-zen-container {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px;
+  padding: 0;
   box-sizing: border-box;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 .eight-nav-zen-full-img {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
   object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+  box-shadow: none;
+  display: block;
   transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .mode-4x3 .eight-nav-zen-full-img {
-  width: 62px;
-  height: 62px;
-  border-radius: 16px;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
 }
 
-.eight-nav-item:hover .eight-nav-zen-full-img {
+.eight-nav-item:hover .eight-nav-zen-full-img,
+.three-nav-item:hover .eight-nav-zen-full-img {
   transform: scale(1.06);
 }
 
@@ -6383,12 +6395,38 @@ body.theme-ebony .custom-nav-current-grid {
 .eight-nav-zen-container.slot-mode {
   width: 100%;
   height: 48px;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .eight-nav-zen-container.slot-mode .eight-nav-zen-full-img {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.custom-nav-slot-box.is-fixed {
+  cursor: default !important;
+  opacity: 0.95;
+}
+
+.slot-badge-fixed {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #1ea98c;
+  background: rgba(30, 169, 140, 0.12);
+  border: 1px solid rgba(30, 169, 140, 0.28);
+  border-radius: 4px;
+  padding: 1px 3px;
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: 0.02em;
+  z-index: 4;
 }
 
 .eight-nav-brand-container.slot-mode {

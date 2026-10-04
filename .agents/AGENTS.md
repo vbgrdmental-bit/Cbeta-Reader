@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.8.9` (App: v4.8.9 / Builder: v2.9.13)
+- **Current Version**: `v4.9.1` (App: v4.9.1 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,14 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.9.1 / Builder: v2.9.13** (2026-10-04)
+  - [App] 主題自訂名稱優化：主題顏色之自訂色標籤全面改為「自訂色」，未選中與選定狀態更直觀清晰。
+  - [App] 主題圖片滿版大氣呈現：主題小卡 (圖片) 升級為如 CBETA Reader 圖4般滿版填滿按鈕，飽滿無黑邊留白。
+  - [App] 快捷卡左上角固定與雙擊自訂：快捷功能卡與下載書櫃卡左首鍵固定為圖4不可移刪，手機連點 2 下秒速進入自訂功能。
+- **⭐ App: v4.9.0 / Builder: v2.9.13** (2026-10-04)
+  - [App] 4×2 下載與書櫃卡預設重設：上排下載經典橫條，下排預設主題(CBETA Reader)+近期下載+上次閱讀+我的最愛 4 鍵。
+  - [App] 快捷鍵拖曳排序順移優化：調整順序由單純兩兩對調全面升級為自動順移插入重排（如 4 移至 1 自動順移為 4→1→2→3）。
+  - [App] 功能庫防重複與上限規範：下載與書櫃卡因頂部已有下載經典橫條，功能庫「下載經典」自動反灰不可重複加入，按鍵上限設為最多 5 個。
 - **⭐ App: v4.8.9 / Builder: v2.9.13** (2026-10-04)
   - [App] 全文檢索替換為主題顏色：點一下依序換色（象牙白→羊皮紙→舒服綠→烏木黑→自訂），僅呈現當前色塊圓形與顏色標籤。
   - [App] 倒數計時升級圓形計算環：直接呈現圖4圓形虛線點點環形與即時倒數時間（如 17:20 或 25:00），不加多餘文字。
