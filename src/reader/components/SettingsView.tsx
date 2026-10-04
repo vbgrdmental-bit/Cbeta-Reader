@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.9.1) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.9.2) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.9.1</span>
+                        <span>⭐ App: v4.9.2</span>
                         <span className="changelog-date">(2026-10-04)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 主題自訂名稱優化：主題顏色之自訂色標籤全面改為「自訂色」，未選中與選定狀態更直觀清晰。</li>
-                        <li>• 主題圖片滿版大氣呈現：主題小卡 (圖片) 升級為如 CBETA Reader 圖4般滿版填滿按鈕，飽滿無黑邊留白。</li>
-                        <li>• 快捷卡左上角固定與雙擊自訂：快捷功能卡與下載書櫃卡左首鍵固定為圖4不可移刪，手機連點 2 下秒速進入自訂功能。</li>
+                        <li>• 快捷卡雙排自適應排版：自訂抽屜升級為動態雙排，8 鍵排上4下4、6 鍵排上3下3，上下一體工整直覺。</li>
+                        <li>• 雙側增加按鍵便利入口：上排右邊與下排右邊皆配置「+增加按鍵」，直覺順手隨點隨加。</li>
+                        <li>• 首頁卡片完美等比映射：首頁快捷卡與抽屜雙排佈局 100% 一致映射，徹底告別單排硬擠失衡問題。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.1</span>
+                            <span className="changelog-date">(2026-10-04)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 主題自訂名稱優化：主題顏色之自訂色標籤全面改為「自訂色」，未選中與選定狀態更直觀清晰。</li>
+                            <li>• 主題圖片滿版大氣呈現：主題小卡 (圖片) 升級為如 CBETA Reader 圖4般滿版填滿按鈕，飽滿無黑邊留白。</li>
+                            <li>• 快捷卡左上角固定與雙擊自訂：快捷功能卡與下載書櫃卡左首鍵固定為圖4不可移刪，手機連點 2 下秒速進入自訂功能。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.9.0</span>

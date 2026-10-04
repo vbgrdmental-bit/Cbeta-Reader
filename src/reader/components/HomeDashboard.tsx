@@ -3623,7 +3623,7 @@ export function HomeDashboard({
           ? widget.customNavButtons
           : defaultButtons;
         const navButtons = ensureBrandFirst(rawNavButtons);
-        const cols = navButtons.length > 8 ? 5 : (navButtons.length <= 6 ? Math.max(3, Math.ceil(navButtons.length / 2)) : 4);
+        const cols = navButtons.length > 8 ? 5 : (navButtons.length <= 6 ? Math.max(2, Math.ceil(navButtons.length / 2)) : 4);
         const is5Col = cols === 5;
         const iconSize = is4x3 ? 24 : (is5Col ? 15 : 17);
 
@@ -4313,121 +4313,151 @@ export function HomeDashboard({
                 };
                 const curThemeInfo = themeInfoMap[curTheme] || themeInfoMap['ivory'];
 
-                return (
-                  <>
-                    <div 
-                      className={`custom-nav-current-grid ${isShelfNav ? 'shelf-mode' : 'quick-mode'}`}
-                      style={isShelfNav 
-                        ? { gridTemplateColumns: `repeat(${currentButtons.length + (currentButtons.length < 5 ? 1 : 0)}, minmax(0, 1fr))` } 
-                        : { gridTemplateColumns: 'repeat(5, minmax(0, 1fr))' }
+                const topCount = Math.ceil(currentButtons.length / 2);
+                const topButtons = currentButtons.slice(0, topCount);
+                const bottomButtons = currentButtons.slice(topCount);
+                const canAdd = currentButtons.length < 10;
+                // 💡 計算每排網格欄數：若為 8 鍵則 topCount=4，加「+」為 5 欄；若為 6 鍵則 topCount=3，加「+」為 4 欄
+                const maxCols = Math.max(
+                  topCount + (canAdd && topCount < 5 ? 1 : 0),
+                  bottomButtons.length + (canAdd && bottomButtons.length < 5 ? 1 : 0),
+                  2
+                );
+
+                // 💡 單一格子渲染元件
+                const renderNavSlot = (btnKey: string, idx: number) => {
+                  const isSelected = selectedNavSlotIndex === idx;
+                  const isFixed = idx === 0;
+                  const def = QUICK_NAV_BUTTON_DEFS[btnKey] || QUICK_NAV_BUTTON_DEFS['download'];
+                  return (
+                    <div
+                      key={`editor-slot-${idx}`}
+                      data-slot-idx={idx}
+                      className={`custom-nav-slot-box ${isSelected ? 'selected' : ''} ${isFixed ? 'is-fixed' : ''} ${draggedNavSlotIndex === idx ? 'is-dragging' : ''} ${dragOverNavSlotIndex === idx ? 'drag-over' : ''}`}
+                      draggable={!isFixed}
+                      onDragStart={!isFixed ? (e) => {
+                        setDraggedNavSlotIndex(idx);
+                        e.dataTransfer.effectAllowed = 'move';
+                        e.dataTransfer.setData('text/plain', String(idx));
+                      } : undefined}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        if (isFixed) return;
+                        e.dataTransfer.dropEffect = 'move';
+                        if (dragOverNavSlotIndex !== idx) {
+                          setDragOverNavSlotIndex(idx);
+                        }
+                      }}
+                      onDragLeave={() => {
+                        if (dragOverNavSlotIndex === idx) {
+                          setDragOverNavSlotIndex(null);
+                        }
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setDragOverNavSlotIndex(null);
+                        if (draggedNavSlotIndex !== null && draggedNavSlotIndex > 0 && idx > 0 && draggedNavSlotIndex !== idx) {
+                          handleSwapNavSlots(draggedNavSlotIndex, idx);
+                          setSelectedNavSlotIndex(idx);
+                        }
+                        setDraggedNavSlotIndex(null);
+                      }}
+                      onDragEnd={() => {
+                        setDraggedNavSlotIndex(null);
+                        setDragOverNavSlotIndex(null);
+                      }}
+                      onTouchStart={!isFixed ? () => {
+                        touchSlotStartIdxRef.current = idx;
+                      } : undefined}
+                      onTouchMove={(e) => {
+                        if (touchSlotStartIdxRef.current === null) return;
+                        const touch = e.touches[0];
+                        const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+                        const slotBox = elem?.closest('.custom-nav-slot-box') as HTMLElement | null;
+                        if (slotBox && slotBox.dataset.slotIdx !== undefined) {
+                          const overIdx = parseInt(slotBox.dataset.slotIdx, 10);
+                          if (!isNaN(overIdx) && overIdx > 0 && dragOverNavSlotIndex !== overIdx) {
+                            setDragOverNavSlotIndex(overIdx);
+                          }
+                        }
+                      }}
+                      onTouchEnd={() => {
+                        if (touchSlotStartIdxRef.current !== null && touchSlotStartIdxRef.current > 0 && dragOverNavSlotIndex !== null && dragOverNavSlotIndex > 0 && touchSlotStartIdxRef.current !== dragOverNavSlotIndex) {
+                          handleSwapNavSlots(touchSlotStartIdxRef.current, dragOverNavSlotIndex);
+                          setSelectedNavSlotIndex(dragOverNavSlotIndex);
+                        }
+                        touchSlotStartIdxRef.current = null;
+                        setDragOverNavSlotIndex(null);
+                      }}
+                      onClick={() => setSelectedNavSlotIndex(idx)}
+                      title={
+                        isFixed 
+                          ? '第 1 格固定為 CBETA Reader 首頁快捷（點 2 下可進入自訂快捷），不可更換位置與刪除'
+                          : `拖曳可調整位置；點選選定第 ${idx + 1} 格：${def.name}`
                       }
                     >
-                      {currentButtons.map((btnKey, idx) => {
-                        const isSelected = selectedNavSlotIndex === idx;
-                        const isFixed = idx === 0;
-                        const def = QUICK_NAV_BUTTON_DEFS[btnKey] || QUICK_NAV_BUTTON_DEFS['download'];
-                        return (
-                          <div
-                            key={`editor-slot-${idx}`}
-                            data-slot-idx={idx}
-                            className={`custom-nav-slot-box ${isSelected ? 'selected' : ''} ${isFixed ? 'is-fixed' : ''} ${draggedNavSlotIndex === idx ? 'is-dragging' : ''} ${dragOverNavSlotIndex === idx ? 'drag-over' : ''}`}
-                            draggable={!isFixed}
-                            onDragStart={!isFixed ? (e) => {
-                              setDraggedNavSlotIndex(idx);
-                              e.dataTransfer.effectAllowed = 'move';
-                              e.dataTransfer.setData('text/plain', String(idx));
-                            } : undefined}
-                            onDragOver={(e) => {
-                              e.preventDefault();
-                              if (isFixed) return;
-                              e.dataTransfer.dropEffect = 'move';
-                              if (dragOverNavSlotIndex !== idx) {
-                                setDragOverNavSlotIndex(idx);
-                              }
-                            }}
-                            onDragLeave={() => {
-                              if (dragOverNavSlotIndex === idx) {
-                                setDragOverNavSlotIndex(null);
-                              }
-                            }}
-                            onDrop={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setDragOverNavSlotIndex(null);
-                              if (draggedNavSlotIndex !== null && draggedNavSlotIndex > 0 && idx > 0 && draggedNavSlotIndex !== idx) {
-                                handleSwapNavSlots(draggedNavSlotIndex, idx);
-                                setSelectedNavSlotIndex(idx);
-                              }
-                              setDraggedNavSlotIndex(null);
-                            }}
-                            onDragEnd={() => {
-                              setDraggedNavSlotIndex(null);
-                              setDragOverNavSlotIndex(null);
-                            }}
-                            onTouchStart={!isFixed ? () => {
-                              touchSlotStartIdxRef.current = idx;
-                            } : undefined}
-                            onTouchMove={(e) => {
-                              if (touchSlotStartIdxRef.current === null) return;
-                              const touch = e.touches[0];
-                              const elem = document.elementFromPoint(touch.clientX, touch.clientY);
-                              const slotBox = elem?.closest('.custom-nav-slot-box') as HTMLElement | null;
-                              if (slotBox && slotBox.dataset.slotIdx !== undefined) {
-                                const overIdx = parseInt(slotBox.dataset.slotIdx, 10);
-                                if (!isNaN(overIdx) && overIdx > 0 && dragOverNavSlotIndex !== overIdx) {
-                                  setDragOverNavSlotIndex(overIdx);
-                                }
-                              }
-                            }}
-                            onTouchEnd={() => {
-                              if (touchSlotStartIdxRef.current !== null && touchSlotStartIdxRef.current > 0 && dragOverNavSlotIndex !== null && dragOverNavSlotIndex > 0 && touchSlotStartIdxRef.current !== dragOverNavSlotIndex) {
-                                handleSwapNavSlots(touchSlotStartIdxRef.current, dragOverNavSlotIndex);
-                                setSelectedNavSlotIndex(dragOverNavSlotIndex);
-                              }
-                              touchSlotStartIdxRef.current = null;
-                              setDragOverNavSlotIndex(null);
-                            }}
-                            onClick={() => setSelectedNavSlotIndex(idx)}
-                            title={
-                              isFixed 
-                                ? '第 1 格固定為 CBETA Reader 首頁快捷（點 2 下可進入自訂快捷），不可更換位置與刪除'
-                                : `拖曳可調整位置；點選選定第 ${idx + 1} 格：${def.name}`
-                            }
+                      <span className="slot-badge-number">{idx + 1}</span>
+                      {isFixed ? (
+                        <span className="slot-badge-fixed" title="固定第 1 格">固定</span>
+                      ) : (
+                        currentButtons.length > 2 && (
+                          <button
+                            type="button"
+                            className="slot-delete-btn"
+                            onClick={(e) => handleRemoveNavSlot(idx, e)}
+                            title="移除此按鍵"
                           >
-                            <span className="slot-badge-number">{idx + 1}</span>
-                            {isFixed ? (
-                              <span className="slot-badge-fixed" title="固定第 1 格">固定</span>
-                            ) : (
-                              currentButtons.length > 2 && (
-                                <button
-                                  type="button"
-                                  className="slot-delete-btn"
-                                  onClick={(e) => handleRemoveNavSlot(idx, e)}
-                                  title="移除此按鍵"
-                                >
-                                  ×
-                                </button>
-                              )
-                            )}
-                            {renderQuickNavItemContent(btnKey, 18, editingNavWidget.iconIndex || 1, true)}
-                          </div>
-                        );
-                      })}
-
-                      {/* 自由增加按鍵 (下載與書櫃卡最多 5 個；快捷卡最多 10 個) */}
-                      {((isShelfNav && currentButtons.length < 5) || (!isShelfNav && currentButtons.length < 10)) && (
-                        <div
-                          className="custom-nav-slot-box add-slot-btn"
-                          onClick={handleAddNavSlot}
-                          title={`增加一個快捷功能按鍵 (最多 ${isShelfNav ? 5 : 10} 個)`}
-                        >
-                          <div className="slot-add-icon">
-                            <Plus size={20} strokeWidth={2.4} />
-                          </div>
-                          <span className="slot-label" style={{ color: 'var(--theme-accent, #1ea98c)', fontSize: '0.62rem' }}>增加按鍵</span>
-                        </div>
+                            ×
+                          </button>
+                        )
                       )}
+                      {renderQuickNavItemContent(btnKey, 18, editingNavWidget.iconIndex || 1, true)}
                     </div>
+                  );
+                };
+
+                // 💡 增加按鍵格元件
+                const renderAddSlotButton = (keySuffix: string) => (
+                  <div
+                    key={`add-slot-btn-${keySuffix}`}
+                    className="custom-nav-slot-box add-slot-btn"
+                    onClick={handleAddNavSlot}
+                    title={`增加一個快捷功能按鍵 (最多 ${isShelfNav ? 5 : 10} 個)`}
+                  >
+                    <div className="slot-add-icon">
+                      <Plus size={20} strokeWidth={2.4} />
+                    </div>
+                    <span className="slot-label" style={{ color: 'var(--theme-accent, #1ea98c)', fontSize: '0.62rem' }}>增加按鍵</span>
+                  </div>
+                );
+
+                return (
+                  <>
+                    {isShelfNav ? (
+                      /* 下載與書櫃卡：單排最多 5 個 */
+                      <div 
+                        className="custom-nav-current-grid shelf-mode"
+                        style={{ gridTemplateColumns: `repeat(${currentButtons.length + (currentButtons.length < 5 ? 1 : 0)}, minmax(0, 1fr))` }}
+                      >
+                        {currentButtons.map((btnKey, idx) => renderNavSlot(btnKey, idx))}
+                        {currentButtons.length < 5 && renderAddSlotButton('shelf')}
+                      </div>
+                    ) : (
+                      /* ⭐ 快捷卡 (方塊按鍵)：自適應雙排 (8 鍵時排上4下4 + 各自右邊「+」；6 鍵時排上3下3 + 各自右邊「+」) */
+                      <div className="custom-nav-current-grid quick-mode" style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                        {/* 上排 */}
+                        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${maxCols}, minmax(0, 1fr))`, gap: '0.45rem' }}>
+                          {topButtons.map((btnKey, i) => renderNavSlot(btnKey, i))}
+                          {canAdd && topButtons.length < 5 && renderAddSlotButton('top')}
+                        </div>
+                        {/* 下排 */}
+                        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${maxCols}, minmax(0, 1fr))`, gap: '0.45rem' }}>
+                          {bottomButtons.map((btnKey, i) => renderNavSlot(btnKey, topCount + i))}
+                          {canAdd && bottomButtons.length < 5 && renderAddSlotButton('bottom')}
+                        </div>
+                      </div>
+                    )}
 
                     {/* 替換功能按鍵庫 (第 1 格固定不可替換，其餘已在上方按鍵內的自動反灰) */}
                     <div className="custom-nav-pool-section">

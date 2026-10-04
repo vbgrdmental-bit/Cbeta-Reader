@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.9.1` (App: v4.9.1 / Builder: v2.9.13)
+- **Current Version**: `v4.9.2` (App: v4.9.2 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.9.2 / Builder: v2.9.13** (2026-10-04)
+  - [App] 快捷自訂雙排對稱佈局：8鍵自動排為上4下4，6鍵自動排為上3下3，按鍵數量自適應居中對齊。
+  - [App] 雙側動態增加按鍵：未滿額時「+增加按鍵」精準出現在上排與下排最右側，排版規整無突兀空缺。
+  - [App] 首頁卡片與抽屜完美映射：首頁 4×2 快捷卡網格欄數同步動態適應，視覺與操作邏輯 100% 直覺統一。
 - **⭐ App: v4.9.1 / Builder: v2.9.13** (2026-10-04)
   - [App] 主題自訂名稱優化：主題顏色之自訂色標籤全面改為「自訂色」，未選中與選定狀態更直觀清晰。
   - [App] 主題圖片滿版大氣呈現：主題小卡 (圖片) 升級為如 CBETA Reader 圖4般滿版填滿按鈕，飽滿無黑邊留白。
