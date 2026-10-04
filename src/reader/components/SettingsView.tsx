@@ -1482,16 +1482,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.9.6) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.9.7) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.9.6</span>
+                        <span>⭐ App: v4.9.7</span>
                         <span className="changelog-date">(2026-10-05)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 書本方塊書名升級雙行：刪除第二行經卷資訊，書名支援 2 行自然折行，容納更完整經題。</li>
-                        <li>• 經名易讀性大幅提升：長經題不再過早省略截斷，字形飽滿且居中排版極具質感。</li>
-                        <li>• 空槽位視覺居中優化：收藏/下載導引按鍵排版微調，垂直節奏更俐落大器。</li>
+                        <li>• 統一經號方塊水平高度：徹底消除按鈕上上下下錯落，所有經號徽章 100% 齊平同一水平線。</li>
+                        <li>• 單行經題鎖定雙行佔位：單行書名亦維持 2 行空間，第一行文字與上方方塊高度完全一致。</li>
+                        <li>• 四鍵排版嚴整統一：微調頂部起始間距，各主題模式下經書方塊對稱大氣、賞心悅目。</li>
                       </ul>
                     </div>
 
@@ -1514,6 +1514,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.6</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 書本方塊書名升級雙行：刪除第二行經卷資訊，書名支援 2 行自然折行，容納更完整經題。</li>
+                            <li>• 經名易讀性大幅提升：長經題不再過早省略截斷，字形飽滿且居中排版極具質感。</li>
+                            <li>• 空槽位視覺居中優化：收藏/下載導引按鍵排版微調，垂直節奏更俐落大器。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.9.5</span>

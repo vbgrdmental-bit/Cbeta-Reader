@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.9.6` (App: v4.9.6 / Builder: v2.9.13)
+- **Current Version**: `v4.9.7` (App: v4.9.7 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.9.7 / Builder: v2.9.13** (2026-10-05)
+  - [App] 統一經號方塊水平高度：徹底消除按鈕上上下下錯落感，頂部起始對齊，所有經號徽章 100% 齊平同一水平線。
+  - [App] 單行經題鎖定雙行佔位：單行書名（如《妙法蓮華經》）亦佔滿 2 行空間（2.5em），經名第一行與上方方塊完全對齊。
+  - [App] 四鍵排版嚴整統一：微調頂部間距與空槽位尺寸，各主題模式下經書方塊對稱大氣、賞心悅目。
 - **⭐ App: v4.9.6 / Builder: v2.9.13** (2026-10-05)
   - [App] 書本方塊書名升級雙行排版：刪除第二行之經卷卷數資訊，書名直接支援 2 行自然折行（`line-clamp: 2`），大幅增加經文字數容納量。
   - [App] 經題易讀性全面提升：較長經名（如《地藏菩薩本願經》、《大乘大集地藏十輪經》等）不再過早省略截斷，飽滿對稱大氣。

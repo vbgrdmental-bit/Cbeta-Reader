@@ -5947,9 +5947,9 @@ body.theme-dark .strip-theme-history {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.22rem;
-  padding: 0.25rem 0.2rem;
+  justify-content: flex-start; /* 💡 統一自頂部固定距離起排，徹底消除上上下下錯落感 */
+  gap: 0.32rem;
+  padding: 0.55rem 0.2rem 0.4rem 0.2rem;
   border-radius: 12px;
   width: 100%;
   max-width: 84px;
@@ -6006,6 +6006,9 @@ body.theme-dark .book-nav-item {
   text-align: center;
   max-width: 100%;
   width: 100%;
+  height: 2.5em; /* 💡 固定 2 行高度：即使只有 1 行經名也維持 2 行空間，確保上方經號方塊高度 100% 齊平 */
+  min-height: 2.5em;
+  max-height: 2.5em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -6016,7 +6019,6 @@ body.theme-dark .book-nav-item {
   color: var(--text-primary, #2c1810);
   padding: 0 2px;
   box-sizing: border-box;
-  max-height: 2.5em;
 }
 
 body.theme-ebony .book-nav-title,
@@ -6024,7 +6026,7 @@ body.theme-dark .book-nav-title {
   color: #f4ede4;
 }
 
-/* 空槽位按鈕 */
+/* 空槽位按鈕同步頂部齊平 */
 .book-nav-item.item-empty-slot {
   border: 1.5px dashed var(--reader-border, rgba(140, 100, 60, 0.25));
   background: rgba(0, 0, 0, 0.02);
@@ -6032,9 +6034,13 @@ body.theme-dark .book-nav-title {
 }
 
 .book-nav-item.item-empty-slot .book-nav-title {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.72rem;
-  max-height: none;
+  height: 2.5em;
+  min-height: 2.5em;
+  max-height: 2.5em;
 }
 
 .book-nav-item.item-empty-slot:hover {
@@ -6044,7 +6050,7 @@ body.theme-dark .book-nav-title {
 }
 
 .book-nav-badge-empty {
-  width: 28px;
+  width: 34px;
   height: 24px;
   border-radius: 6px;
   border: 1px dashed var(--reader-border, rgba(140, 100, 60, 0.3));
