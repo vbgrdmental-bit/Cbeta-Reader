@@ -210,7 +210,6 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'n_shelf_quick_4x2', type: 'shelf_quick_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '書櫃快捷' },
   { id: 'n_system_nav_4x2', type: 'system_nav_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '系統導航' },
   { id: 'n_quick_4x2', type: 'quick_nav_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '快捷功能 (8鍵)' },
-  { id: 'n_quick_4x3', type: 'quick_nav_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'nav', title: '快捷功能 (8鍵)' },
   { id: 'n_four_4x1', type: 'four_nav_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'nav', title: '四合一導航' },
   { id: 'n_four_4x2', type: 'four_nav_4x1', size: 'size-4x2', sizeLabel: '4×2', category: 'nav', title: '四合一導航' },
   { id: 'n_four_4x4', type: 'four_nav_4x1', size: 'size-4x4', sizeLabel: '4×4', category: 'nav', title: '四合一導航' },
@@ -233,6 +232,9 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'n_search_2x2', type: 'search_2x2', size: 'size-2x2', sizeLabel: '2×2', category: 'nav', title: '全文檢索' },
 
   // 3. 我的書櫃 (reading)
+  { id: 'r_shelf_fav_4x2', type: 'shelf_fav_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '我的最愛 (4本書)' },
+  { id: 'r_shelf_down_4x2', type: 'shelf_down_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '近期下載 (4本書)' },
+  { id: 'r_shelf_read_4x2', type: 'shelf_read_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '上次閱讀 (4本書)' },
   { id: 'r_last_4x1', type: 'lastread_4x2', size: 'size-4x1', sizeLabel: '4×1', category: 'reading', title: '上次閱讀' },
   { id: 'r_last_4x2', type: 'lastread_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'reading', title: '上次閱讀' },
   { id: 'r_last_4x3', type: 'lastread_4x2', size: 'size-4x3', sizeLabel: '4×3', category: 'reading', title: '上次閱讀' },
@@ -1920,6 +1922,97 @@ export function HomeDashboard({
     const effectiveResumeBooks = (isPreview && resumeBooks.length === 0) ? DEMO_PREVIEW_RESUME : resumeBooks;
     const effectiveDownloadedBooks = (isPreview && downloadedBooks.length === 0) ? DEMO_PREVIEW_RESUME.map(d => d.book) : downloadedBooks;
     const effectiveHighlightsCount = (isPreview && allHighlights.length === 0) ? 12 : allHighlights.length;
+
+    // 💡 🌟 依圖2設計之 4x2 書櫃卡片（上方主題快捷 bar + 下方 4 本書方塊按鍵）
+    const renderBookShelf4x2Card = (
+      themeKey: 'favorites' | 'downloads' | 'history',
+      topIcon: React.ReactNode,
+      topTitle: string,
+      topSub: string,
+      onTopClick: () => void,
+      books: Array<{
+        book: BookMetadata;
+        subText: string;
+        onClick: () => void;
+      }>,
+      emptySlot: {
+        title: string;
+        sub: string;
+        onClick: () => void;
+      }
+    ) => {
+      const slots = [0, 1, 2, 3];
+
+      return (
+        <div className="widget-books-shelf-4x2">
+          {/* 上半部：主功能快捷 Bar（依圖2設計，整體置中） */}
+          <div 
+            className={`books-shelf-top-strip strip-theme-${themeKey}`}
+            onClick={!isLayoutEditMode ? onTopClick : undefined}
+            title={`點擊直達書櫃「${topTitle}」`}
+            style={{ cursor: !isLayoutEditMode ? 'pointer' : 'default' }}
+          >
+            <div className="download-strip-center-group">
+              <div className="books-strip-icon-box">
+                {topIcon}
+              </div>
+              <div className="download-strip-text">
+                <span className="download-strip-title">{topTitle}</span>
+                <span className="download-strip-sub">{topSub}</span>
+              </div>
+              <div className="books-strip-arrow" title="前往查看">
+                <ArrowRight size={14} strokeWidth={2.4} />
+              </div>
+            </div>
+          </div>
+
+          {/* 下半部：4 個等寬正方形圓角按鈕（依圖2大氣排版，底部安全留白不切底） */}
+          <div className="books-shelf-bottom-grid">
+            {slots.map((idx) => {
+              const item = books[idx];
+              if (item) {
+                return (
+                  <div 
+                    key={`shelf-book-slot-${themeKey}-${idx}-${item.book.workId}`}
+                    className="book-nav-item"
+                    onClick={!isLayoutEditMode ? item.onClick : undefined}
+                    title={`閱讀《${item.book.title}》`}
+                  >
+                    <div 
+                      className="book-nav-badge"
+                      style={{ background: getBookCoverGradient(item.book.workId) }}
+                    >
+                      <span className="book-nav-badge-text">{item.book.workId}</span>
+                    </div>
+                    <span className="book-nav-title" title={item.book.title}>
+                      {item.book.title}
+                    </span>
+                    <span className="book-nav-sub">
+                      {item.subText}
+                    </span>
+                  </div>
+                );
+              }
+
+              return (
+                <div 
+                  key={`shelf-empty-slot-${themeKey}-${idx}`}
+                  className="book-nav-item item-empty-slot"
+                  onClick={!isLayoutEditMode ? emptySlot.onClick : undefined}
+                  title={emptySlot.title}
+                >
+                  <div className="book-nav-badge-empty">
+                    <Plus size={15} strokeWidth={2.4} />
+                  </div>
+                  <span className="book-nav-title">{emptySlot.title}</span>
+                  <span className="book-nav-sub">{emptySlot.sub}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    };
 
     // 💡 🌟 上次閱讀 · 經文進度 (4x4 規格，上部分 4x1 維持圖1樣式，下部分 4x3 經文文字，外置標題列支援 < > 選擇最多 9 本經書)
     const renderLastReadExcerptCard = () => {
@@ -3811,6 +3904,102 @@ export function HomeDashboard({
               })}
             </div>
           </div>
+        );
+      }
+
+      // 17. 依圖2設計之 4x2 小卡（第1張：「我的最愛」+「4本書」）
+      case 'shelf_fav_4x2': {
+        const favoriteWorkIds: string[] = (() => {
+          try {
+            const saved = localStorage.getItem('favorite_work_ids');
+            return saved ? JSON.parse(saved) : [];
+          } catch (e) {
+            return [];
+          }
+        })();
+        const actualFavs = favoriteWorkIds
+          .map(id => downloadedBooks.find(b => b.workId === id))
+          .filter((b): b is BookMetadata => Boolean(b));
+        const favBooks = (isPreview && actualFavs.length === 0)
+          ? DEMO_PREVIEW_RESUME.map(d => d.book)
+          : actualFavs;
+        const displayFavs = favBooks.slice(0, 4);
+
+        const bookSlots = displayFavs.map(b => ({
+          book: b,
+          subText: b.juansCount ? `全 ${b.juansCount} 卷` : '經典',
+          onClick: () => onSelectBook(b.workId)
+        }));
+
+        return renderBookShelf4x2Card(
+          'favorites',
+          <Heart size={14} color="#ffffff" style={{ strokeWidth: 2.6 }} />,
+          '我的最愛',
+          '· 查看所有收藏',
+          () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf')),
+          bookSlots,
+          {
+            title: '收藏經典',
+            sub: '前往書櫃',
+            onClick: () => (onOpenFolder ? onOpenFolder('virtual_favorites') : onNavigateToLibrarySection('shelf'))
+          }
+        );
+      }
+
+      // 18. 依圖2設計之 4x2 小卡（第2張：「近期下載」+「4本書」）
+      case 'shelf_down_4x2': {
+        const actualRecent = getRecentDownloadedBooks(downloadedBooks);
+        const recentDownloadedBooks = (isPreview && actualRecent.length === 0)
+          ? DEMO_PREVIEW_RESUME.map(d => d.book)
+          : actualRecent;
+        const displayDownloads = recentDownloadedBooks.slice(0, 4);
+
+        const bookSlots = displayDownloads.map(b => ({
+          book: b,
+          subText: b.juansCount ? `全 ${b.juansCount} 卷` : '已下載',
+          onClick: () => onSelectBook(b.workId)
+        }));
+
+        return renderBookShelf4x2Card(
+          'downloads',
+          <Download size={14} color="#ffffff" style={{ strokeWidth: 2.6 }} />,
+          '近期下載',
+          '· 查看下載書庫',
+          () => (onOpenFolder ? onOpenFolder('virtual_unclassified') : onNavigateToLibrarySection('shelf')),
+          bookSlots,
+          {
+            title: '下載經典',
+            sub: '藏經庫下載',
+            onClick: onOpenCbetaCatalog
+          }
+        );
+      }
+
+      // 19. 依圖2設計之 4x2 小卡（第3張：「上次閱讀」+「4本書」）
+      case 'shelf_read_4x2': {
+        const resumeList = (isPreview && effectiveResumeBooks.length === 0)
+          ? DEMO_PREVIEW_RESUME
+          : effectiveResumeBooks;
+        const displayResume = resumeList.slice(0, 4);
+
+        const bookSlots = displayResume.map(item => ({
+          book: item.book,
+          subText: item.progress?.juan ? `第 ${item.progress.juan} 卷` : (item.book.juansCount ? `全 ${item.book.juansCount} 卷` : '已讀'),
+          onClick: () => onSelectBook(item.book.workId, item.progress?.segmentId, undefined, 'resume')
+        }));
+
+        return renderBookShelf4x2Card(
+          'history',
+          <Clock size={14} color="#ffffff" style={{ strokeWidth: 2.6 }} />,
+          '上次閱讀',
+          '· 接續讀誦經藏',
+          () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf')),
+          bookSlots,
+          {
+            title: '讀誦經典',
+            sub: '前往書櫃',
+            onClick: () => (onOpenFolder ? onOpenFolder('virtual_recent_reads') : onNavigateToLibrarySection('shelf'))
+          }
         );
       }
 

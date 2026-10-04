@@ -21,7 +21,10 @@ export type HomeWidgetType =
   | 'quick_nav_4x2'
   | 'shelf_quick_4x2'
   | 'system_nav_4x2'
-  | 'download_shelf_4x3';
+  | 'download_shelf_4x3'
+  | 'shelf_fav_4x2'
+  | 'shelf_down_4x2'
+  | 'shelf_read_4x2';
 
 export type HomeWidgetSize = 
   | 'size-4x1'
@@ -110,6 +113,9 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'search_2x2', category: 'nav', name: '全文檢索卡', size: 'size-2x2', icon: '🔍', description: '已下載經文全文快速檢索（支援 2x2/4x1/4x2）' },
 
   // 3. 閱讀與進度
+  { type: 'shelf_fav_4x2', category: 'reading', name: '我的最愛 (4本書)', size: 'size-4x2', icon: '❤️', description: '依圖2設計：上方我的最愛快捷橫條，下方最新收藏之 4 本經典方塊按鍵' },
+  { type: 'shelf_down_4x2', category: 'reading', name: '近期下載 (4本書)', size: 'size-4x2', icon: '📥', description: '依圖2設計：上方近期下載快捷橫條，下方最新下載之 4 本經典方塊按鍵' },
+  { type: 'shelf_read_4x2', category: 'reading', name: '上次閱讀 (4本書)', size: 'size-4x2', icon: '📕', description: '依圖2設計：上方上次閱讀快捷橫條，下方最新讀誦之 4 本經典方塊按鍵' },
   { type: 'lastread_4x2', category: 'reading', name: '上次閱讀卡', size: 'size-4x2', icon: '📕', description: '上次閱讀經典列表（支援 4x1/4x2/4x3/4x4 共 1~4 本）' },
   { type: 'lastread_excerpt_4x4', category: 'reading', name: '上次閱讀經文進度卡', size: 'size-4x4', icon: '📜', description: '上次閱讀經典與當前段落經文摘錄（4x4 規格）' },
   { type: 'triple_reading_4x4', category: 'reading', name: '三合一閱讀卡', size: 'size-4x4', icon: '📚', description: '集合「近期下載」、「上次閱讀」、「我的最愛」各 1 本經典之三合一卡片（4×4 規格）' },
@@ -237,12 +243,16 @@ export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
   zen_4x2: ['size-4x2'],
   // 自訂便籤小卡：限定尺寸 2x2 / 4x2 / 4x3 / 4x4 / 4x1
   custom_memo: ['size-4x2', 'size-4x3', 'size-4x4', 'size-2x2', 'size-4x1'],
-  // 快捷功能卡片：4x2 與 4x3
-  quick_nav_4x2: ['size-4x2', 'size-4x3'],
+  // 快捷功能卡片：4x2（圖1 4*3 規格暫時移除）
+  quick_nav_4x2: ['size-4x2'],
   // 書櫃快捷卡：4x2
   shelf_quick_4x2: ['size-4x2'],
   // 系統導航卡：4x2
   system_nav_4x2: ['size-4x2'],
   // 下載與書櫃卡：4x2
-  download_shelf_4x3: ['size-4x2']
+  download_shelf_4x3: ['size-4x2'],
+  // 依圖2設計之 4x2 書櫃卡片（上方主快捷 bar + 下方 4 本書方塊按鍵）
+  shelf_fav_4x2: ['size-4x2'],
+  shelf_down_4x2: ['size-4x2'],
+  shelf_read_4x2: ['size-4x2']
 };

@@ -1482,16 +1482,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.9.4) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.9.5) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.9.4</span>
+                        <span>⭐ App: v4.9.5</span>
                         <span className="changelog-date">(2026-10-05)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 新增版型2淨心閱讀：整合開經偈、上次閱讀進度、回向偈與三皈依等全套莊嚴配置。</li>
-                        <li>• 支援3組自訂風格版型：開放讀者自由設定 3 個版型與名稱，點擊「筆」才展開編輯。</li>
-                        <li>• 完成編輯彈窗另存：編輯版面按「✓ 完成」彈出詢問，支援覆蓋當前或另存新版型。</li>
+                        <li>• 依圖2設計全新3款4×2小卡：我的最愛、近期下載、上次閱讀上方配置快捷主Bar，下方自動呈現最新4本書。</li>
+                        <li>• 4本書大氣按鍵排版：比照圖2圓角方塊按鍵，經號色塊徽章搭配書名與卷數，點擊秒速直達經文讀誦。</li>
+                        <li>• 暫時刪除圖1的4×3小卡：快捷功能卡片全面聚焦精簡 4×2 格局，小工具庫巡覽更乾淨流暢。</li>
                       </ul>
                     </div>
 
@@ -1514,6 +1514,18 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.4</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 新增版型2淨心閱讀：整合開經偈、上次閱讀進度、回向偈與三皈依等全套莊嚴配置。</li>
+                            <li>• 支援3組自訂風格版型：開放讀者自由設定 3 個版型與名稱，點擊「筆」才展開編輯。</li>
+                            <li>• 完成編輯彈窗另存：編輯版面按「✓ 完成」彈出詢問，支援覆蓋當前或另存新版型。</li>
+                          </ul>
+                        </div>
+
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.9.3</span>
