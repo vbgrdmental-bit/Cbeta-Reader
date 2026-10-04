@@ -43,6 +43,10 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
     }
   });
   const [showCustomTimerDrawer, setShowCustomTimerDrawer] = useState(false);
+  
+  // 💡 自訂版型名稱編輯狀態（僅按「筆」編輯時才展開畫面）
+  const [editingPresetSlot, setEditingPresetSlot] = useState<'custom1' | 'custom2' | 'custom3' | null>(null);
+  const [editingPresetName, setEditingPresetName] = useState<string>('');
 
   // 💡 自訂主題名稱：若選取 6 大佛光色之一則自動帶入名稱，否則顯示「自訂色」
   const matchedSacred = SACRED_THEME_PALETTE.find(
@@ -867,16 +871,26 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       </div>
 
                       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', width: '100%', paddingLeft: '2.4rem' }}>
-                        {(['default', 'compact', 'focus', 'zen', 'custom'] as const).map(presetKey => {
-                          const isSelected = (settings.homeLayoutPreset || 'default') === presetKey;
-                          const defaultNames: Record<string, string> = {
-                            default: '版型1 極簡',
-                            compact: '極簡精巧 (4x1)',
-                            focus: '每日精進',
-                            zen: '禪修護眼',
-                            custom: settings.customPresetName?.trim() || '自訂'
-                          };
-                          const displayName = defaultNames[presetKey];
+                        {(['default', 'calm', 'compact', 'focus', 'zen', 'custom1', 'custom2', 'custom3'] as const).map(presetKey => {
+                          const isSelected = (settings.homeLayoutPreset || 'default') === presetKey ||
+                            (presetKey === 'custom1' && settings.homeLayoutPreset === 'custom');
+                          
+                          // 讀取名稱
+                          let displayName = '';
+                          if (presetKey === 'default') displayName = '版型1 極簡';
+                          else if (presetKey === 'calm') displayName = '版型2 淨心閱讀';
+                          else if (presetKey === 'compact') displayName = '極簡精巧 (4x1)';
+                          else if (presetKey === 'focus') displayName = '每日精進';
+                          else if (presetKey === 'zen') displayName = '禪修護眼';
+                          else if (presetKey === 'custom1') {
+                            displayName = settings.customPresets?.custom1?.name || settings.customPresetName?.trim() || '自訂1';
+                          } else if (presetKey === 'custom2') {
+                            displayName = settings.customPresets?.custom2?.name || '自訂2';
+                          } else if (presetKey === 'custom3') {
+                            displayName = settings.customPresets?.custom3?.name || '自訂3';
+                          }
+
+                          const isCustomPreset = presetKey === 'custom1' || presetKey === 'custom2' || presetKey === 'custom3';
 
                           return (
                             <button
@@ -892,9 +906,20 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                                 gap: '4px'
                               }}
                               onClick={() => {
-                                const nextWidgets = presetKey === 'custom'
-                                  ? (settings.homeWidgets && settings.homeWidgets.length > 0 ? settings.homeWidgets : PRESET_LAYOUTS.default)
-                                  : PRESET_LAYOUTS[presetKey];
+                                let nextWidgets: any[];
+                                if (isCustomPreset) {
+                                  const savedCustom = settings.customPresets?.[presetKey];
+                                  if (savedCustom?.widgets && savedCustom.widgets.length > 0) {
+                                    nextWidgets = savedCustom.widgets;
+                                  } else if (presetKey === 'custom1' && settings.homeWidgets && settings.homeWidgets.length > 0) {
+                                    nextWidgets = settings.homeWidgets;
+                                  } else {
+                                    nextWidgets = PRESET_LAYOUTS.calm || PRESET_LAYOUTS.default;
+                                  }
+                                } else {
+                                  nextWidgets = PRESET_LAYOUTS[presetKey] || PRESET_LAYOUTS.default;
+                                }
+
                                 onSave({
                                   ...settings,
                                   customHomeLayoutEnabled: true,
@@ -904,17 +929,31 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                               }}
                             >
                               <span>{displayName}</span>
-                              {presetKey === 'custom' && isSelected && (
-                                <Edit2 size={11} style={{ opacity: 0.85 }} />
+                              {isCustomPreset && isSelected && (
+                                <span
+                                  style={{ display: 'inline-flex', alignItems: 'center', padding: '2px', cursor: 'pointer', borderRadius: '4px' }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (editingPresetSlot === presetKey) {
+                                      setEditingPresetSlot(null);
+                                    } else {
+                                      setEditingPresetSlot(presetKey);
+                                      setEditingPresetName(displayName);
+                                    }
+                                  }}
+                                  title="點擊編輯自訂版型名稱"
+                                >
+                                  <Edit2 size={11} style={{ opacity: 0.9 }} />
+                                </span>
                               )}
                             </button>
                           );
                         })}
                       </div>
 
-                      {/* 當選取「自訂」時，提供文字自訂輸入列 */}
-                      {settings.homeLayoutPreset === 'custom' && (
-                        <div style={{
+                      {/* 💡 按「筆」編輯時才出現自訂名稱編輯列 */}
+                      {editingPresetSlot && (
+                        <div className="animate-fade-in" style={{
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
@@ -927,14 +966,28 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                           <input
                             type="text"
                             maxLength={12}
-                            placeholder="自訂 (例如：修持專用)"
-                            value={settings.customPresetName || ''}
-                            onChange={(e) => {
-                              onSave({
-                                ...settings,
-                                customPresetName: e.target.value
-                              });
+                            placeholder="自訂名稱 (例如：淨心早課)"
+                            value={editingPresetName}
+                            onChange={(e) => setEditingPresetName(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                const newName = editingPresetName.trim() || (editingPresetSlot === 'custom1' ? '自訂1' : editingPresetSlot === 'custom2' ? '自訂2' : '自訂3');
+                                const existingCustom = settings.customPresets?.[editingPresetSlot];
+                                onSave({
+                                  ...settings,
+                                  customPresetName: editingPresetSlot === 'custom1' ? newName : settings.customPresetName,
+                                  customPresets: {
+                                    ...(settings.customPresets || {}),
+                                    [editingPresetSlot]: {
+                                      name: newName,
+                                      widgets: existingCustom?.widgets || settings.homeWidgets || PRESET_LAYOUTS.calm
+                                    }
+                                  }
+                                });
+                                setEditingPresetSlot(null);
+                              }
                             }}
+                            autoFocus
                             style={{
                               flex: 1,
                               maxWidth: '180px',
@@ -947,6 +1000,47 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                               outline: 'none'
                             }}
                           />
+                          <button
+                            type="button"
+                            className="advanced-action-pill-btn active"
+                            style={{
+                              padding: '3px 8px',
+                              fontSize: '0.75rem',
+                              background: 'var(--theme-accent, #8c4b27)',
+                              color: '#fff',
+                              borderRadius: '6px'
+                            }}
+                            onClick={() => {
+                              const newName = editingPresetName.trim() || (editingPresetSlot === 'custom1' ? '自訂1' : editingPresetSlot === 'custom2' ? '自訂2' : '自訂3');
+                              const existingCustom = settings.customPresets?.[editingPresetSlot];
+                              onSave({
+                                ...settings,
+                                customPresetName: editingPresetSlot === 'custom1' ? newName : settings.customPresetName,
+                                customPresets: {
+                                  ...(settings.customPresets || {}),
+                                  [editingPresetSlot]: {
+                                    name: newName,
+                                    widgets: existingCustom?.widgets || settings.homeWidgets || PRESET_LAYOUTS.calm
+                                  }
+                                }
+                              });
+                              setEditingPresetSlot(null);
+                            }}
+                          >
+                            儲存
+                          </button>
+                          <button
+                            type="button"
+                            className="advanced-action-pill-btn"
+                            style={{
+                              padding: '3px 8px',
+                              fontSize: '0.75rem',
+                              borderRadius: '6px'
+                            }}
+                            onClick={() => setEditingPresetSlot(null)}
+                          >
+                            取消
+                          </button>
                         </div>
                       )}
                     </div>
@@ -1388,16 +1482,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.9.3) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.9.4) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.9.3</span>
-                        <span className="changelog-date">(2026-10-04)</span>
+                        <span>⭐ App: v4.9.4</span>
+                        <span className="changelog-date">(2026-10-05)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 10格固定配置：預設 10 按鍵配置，左上角固定，4×2 快捷卡固定 5 欄雙排。</li>
-                        <li>• 刪除保留空格：按「×」刪除按鍵時其他按鍵不動，該位置呈現圖2增加按鍵圖示。</li>
-                        <li>• 空格拖曳與填入：空格可由下方功能庫選取填入，其他按鍵亦可直接拖曳至空格。</li>
+                        <li>• 新增版型2淨心閱讀：整合開經偈、上次閱讀進度、回向偈與三皈依等全套莊嚴配置。</li>
+                        <li>• 支援3組自訂風格版型：開放讀者自由設定 3 個版型與名稱，點擊「筆」才展開編輯。</li>
+                        <li>• 完成編輯彈窗另存：編輯版面按「✓ 完成」彈出詢問，支援覆蓋當前或另存新版型。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1514,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.3</span>
+                            <span className="changelog-date">(2026-10-04)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 10格固定配置：預設 10 按鍵配置，左上角固定，4×2 快捷卡固定 5 欄雙排。</li>
+                            <li>• 刪除保留空格：按「×」刪除按鍵時其他按鍵不動，該位置呈現圖2增加按鍵圖示。</li>
+                            <li>• 空格拖曳與填入：空格可由下方功能庫選取填入，其他按鍵亦可直接拖曳至空格。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.9.2</span>

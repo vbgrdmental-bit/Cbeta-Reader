@@ -359,6 +359,11 @@ export function HomeDashboard({
   const lastBrandNavTapRef = useRef<{ id: string; time: number }>({ id: '', time: 0 });
   const touchSlotStartIdxRef = useRef<number | null>(null);
 
+  // 💡 版面儲存詢問對話框狀態（詢問儲存於當前版型或另存新版型）
+  const [showSavePresetModal, setShowSavePresetModal] = useState(false);
+  const [saveTargetSlot, setSaveTargetSlot] = useState<'custom1' | 'custom2' | 'custom3'>('custom1');
+  const [savePresetNameInput, setSavePresetNameInput] = useState<string>('');
+
   // 護眼計時器即時狀態訂閱
   const [timerState, setTimerState] = useState<ReadingTimerState>(readingTimer.getState());
 
@@ -1541,14 +1546,71 @@ export function HomeDashboard({
   };
   void handleApplyPreset;
 
-  // 儲存並退出編輯模式
+  // 點擊「✓ 完成」時：觸發儲存詢問對話框
   const handleSaveAndExit = () => {
+    // 預設填入名稱
+    const curPresetKey = settings.homeLayoutPreset || 'default';
+    if (curPresetKey === 'custom' || curPresetKey === 'custom1') {
+      setSaveTargetSlot('custom1');
+      setSavePresetNameInput(settings.customPresets?.custom1?.name || settings.customPresetName?.trim() || '自訂1');
+    } else if (curPresetKey === 'custom2') {
+      setSaveTargetSlot('custom2');
+      setSavePresetNameInput(settings.customPresets?.custom2?.name || '自訂2');
+    } else if (curPresetKey === 'custom3') {
+      setSaveTargetSlot('custom3');
+      setSavePresetNameInput(settings.customPresets?.custom3?.name || '自訂3');
+    } else {
+      // 正在使用系統內建範本（default, calm, compact 等）
+      // 優先挑選一個尚未使用的自訂槽位，或預設 custom1
+      if (!settings.customPresets?.custom1?.widgets?.length) {
+        setSaveTargetSlot('custom1');
+        setSavePresetNameInput('自訂1');
+      } else if (!settings.customPresets?.custom2?.widgets?.length) {
+        setSaveTargetSlot('custom2');
+        setSavePresetNameInput('自訂2');
+      } else if (!settings.customPresets?.custom3?.widgets?.length) {
+        setSaveTargetSlot('custom3');
+        setSavePresetNameInput('自訂3');
+      } else {
+        setSaveTargetSlot('custom1');
+        setSavePresetNameInput('自訂1');
+      }
+    }
+    setShowSavePresetModal(true);
+  };
+
+  // 直接儲存至指定自訂版型槽位
+  const handleConfirmSaveToSlot = (slotKey: 'custom1' | 'custom2' | 'custom3', name: string) => {
+    const finalName = name.trim() || (slotKey === 'custom1' ? '自訂1' : slotKey === 'custom2' ? '自訂2' : '自訂3');
+    const updatedCustomPresets = {
+      ...(settings.customPresets || {}),
+      [slotKey]: {
+        name: finalName,
+        widgets: widgets
+      }
+    };
+
+    onSaveSettings({
+      ...settings,
+      customHomeLayoutEnabled: true,
+      homeLayoutPreset: slotKey,
+      customPresetName: slotKey === 'custom1' ? finalName : settings.customPresetName,
+      customPresets: updatedCustomPresets,
+      homeWidgets: widgets
+    });
+    setShowSavePresetModal(false);
+    setIsLayoutEditMode(false);
+  };
+
+  // 僅儲存至當前首頁（不覆蓋自訂版型）
+  const handleApplyOnlyToHome = () => {
     onSaveSettings({
       ...settings,
       customHomeLayoutEnabled: true,
       homeLayoutPreset: 'custom',
       homeWidgets: widgets
     });
+    setShowSavePresetModal(false);
     setIsLayoutEditMode(false);
   };
 
@@ -4601,6 +4663,193 @@ export function HomeDashboard({
               >
                 <span>完成</span>
               </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* ==========================================================================
+          儲存版型詢問對話框 (Save Preset Confirm Modal)
+          ========================================================================== */}
+      {showSavePresetModal && typeof document !== 'undefined' && createPortal(
+        <div 
+          className="ios-gallery-overlay animate-fade-in" 
+          onClick={() => setShowSavePresetModal(false)}
+          style={{ zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+        >
+          <div 
+            className="ios-gallery-sheet animate-slide-up" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ 
+              maxWidth: '420px', 
+              width: '100%', 
+              borderRadius: '20px', 
+              padding: '1.25rem',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+              background: 'var(--card-bg, #fff)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '10px',
+                  background: 'rgba(30, 169, 140, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--theme-accent, #1ea98c)'
+                }}>
+                  <Check size={18} strokeWidth={2.4} />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--text-primary)' }}>儲存版面設定</div>
+                  <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>選擇要儲存為自訂版型或直接套用</div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowSavePresetModal(false)}
+                style={{ 
+                  background: 'none', 
+                  border: 'none', 
+                  padding: '4px', 
+                  cursor: 'pointer', 
+                  color: 'var(--text-muted)',
+                  borderRadius: '50%'
+                }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* 選擇自訂槽位 */}
+            <div style={{ marginBottom: '1rem' }}>
+              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.45rem' }}>
+                儲存至自訂版型槽位：
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                {(['custom1', 'custom2', 'custom3'] as const).map(slot => {
+                  const isSelected = saveTargetSlot === slot;
+                  const slotName = slot === 'custom1' 
+                    ? (settings.customPresets?.custom1?.name || settings.customPresetName?.trim() || '自訂1')
+                    : slot === 'custom2'
+                      ? (settings.customPresets?.custom2?.name || '自訂2')
+                      : (settings.customPresets?.custom3?.name || '自訂3');
+                  
+                  return (
+                    <button
+                      key={slot}
+                      type="button"
+                      onClick={() => {
+                        setSaveTargetSlot(slot);
+                        setSavePresetNameInput(slotName);
+                      }}
+                      style={{
+                        padding: '0.55rem 0.3rem',
+                        borderRadius: '10px',
+                        border: isSelected ? '2px solid var(--theme-accent, #1ea98c)' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+                        background: isSelected ? 'rgba(30, 169, 140, 0.08)' : 'transparent',
+                        color: isSelected ? 'var(--theme-accent, #1ea98c)' : 'var(--text-primary)',
+                        fontWeight: isSelected ? 700 : 500,
+                        fontSize: '0.82rem',
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      {slotName}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 自訂名稱輸入框 */}
+            <div style={{ marginBottom: '1.2rem' }}>
+              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
+                版型名稱：
+              </div>
+              <input
+                type="text"
+                maxLength={12}
+                placeholder="自訂名稱 (例如：淨心早課)"
+                value={savePresetNameInput}
+                onChange={(e) => setSavePresetNameInput(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px 12px',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
+                  background: 'var(--input-bg, rgba(255,255,255,0.7))',
+                  color: 'var(--text-primary)',
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            {/* 操作按鈕群 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => handleConfirmSaveToSlot(saveTargetSlot, savePresetNameInput)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  borderRadius: '12px',
+                  border: 'none',
+                  background: 'var(--theme-accent, #1ea98c)',
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                <Check size={16} strokeWidth={2.4} />
+                <span>儲存並套用為「{savePresetNameInput.trim() || (saveTargetSlot === 'custom1' ? '自訂1' : saveTargetSlot === 'custom2' ? '自訂2' : '自訂3')}」</span>
+              </button>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={handleApplyOnlyToHome}
+                  style={{
+                    padding: '8px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
+                    background: 'transparent',
+                    color: 'var(--text-secondary)',
+                    fontSize: '0.82rem',
+                    cursor: 'pointer'
+                  }}
+                  title="僅修改當前首頁版面，不寫入自訂版型範本"
+                >
+                  僅套用至首頁
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowSavePresetModal(false)}
+                  style={{
+                    padding: '8px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
+                    background: 'transparent',
+                    color: 'var(--text-muted)',
+                    fontSize: '0.82rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  繼續編輯
+                </button>
+              </div>
             </div>
           </div>
         </div>,

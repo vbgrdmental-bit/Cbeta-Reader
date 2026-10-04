@@ -67,7 +67,7 @@ export const ZEN_ICONS_LIST = [
   '/zen-icons/zen_09.png'
 ];
 
-export type HomeLayoutPreset = 'default' | 'compact' | 'focus' | 'zen' | 'custom';
+export type HomeLayoutPreset = 'default' | 'calm' | 'compact' | 'focus' | 'zen' | 'custom' | 'custom1' | 'custom2' | 'custom3';
 
 export type WidgetCategoryId = 'brand' | 'nav' | 'reading' | 'other';
 
@@ -124,11 +124,55 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'custom_memo', category: 'other', name: '自訂便籤小卡', size: 'size-4x2', icon: '📝', description: '讀者可自由輸入自選文字、法義或座右銘，支援自訂字體、字級、行高與邊距' }
 ];
 
-export const PRESET_LAYOUTS: Record<HomeLayoutPreset, HomeWidgetConfig[]> = {
+export const PRESET_LAYOUTS: Record<string, HomeWidgetConfig[]> = {
+  // 1. 版型1 極簡
   default: [
     { id: 'w_title', type: 'title_4x1', size: 'size-4x1' },
     { id: 'w_download', type: 'download_2x2', size: 'size-4x1' },
     { id: 'w_triple', type: 'triple_reading_4x4', size: 'size-4x4' }
+  ],
+  // 2. 版型2 淨心閱讀 (圖1、圖2全套配置)
+  calm: [
+    {
+      id: 'w_calm_memo_1',
+      type: 'custom_memo',
+      size: 'size-4x1',
+      memoHtml: '<p style="text-align: center; font-size: 19px; font-weight: 500; letter-spacing: 0.08em; margin: 0;">卍&nbsp;&nbsp;南無本師釋迦牟尼佛&nbsp;&nbsp;卍</p>'
+    },
+    {
+      id: 'w_calm_memo_2',
+      type: 'custom_memo',
+      size: 'size-4x2',
+      memoHtml: '<p style="text-align: center; font-size: 18px; font-weight: 700; margin-bottom: 8px;">開經偈</p><p style="text-align: center; font-size: 16px; margin: 4px 0; line-height: 1.6;">無上甚深微妙法，百千萬劫難遭遇，</p><p style="text-align: center; font-size: 16px; margin: 4px 0; line-height: 1.6;">我今見聞得受持，願解如來真實義。</p>'
+    },
+    {
+      id: 'w_calm_lastread_excerpt',
+      type: 'lastread_excerpt_4x4',
+      size: 'size-4x4'
+    },
+    {
+      id: 'w_calm_memo_3',
+      type: 'custom_memo',
+      size: 'size-4x2',
+      memoHtml: '<p style="text-align: center; font-size: 18px; font-weight: 700; margin-bottom: 8px;">回向偈</p><p style="text-align: center; font-size: 16px; margin: 4px 0; line-height: 1.6;">願消三障諸煩惱，願得智慧真明瞭，</p><p style="text-align: center; font-size: 16px; margin: 4px 0; line-height: 1.6;">普願罪障悉消除，世世常行菩薩道。</p>'
+    },
+    {
+      id: 'w_calm_memo_4',
+      type: 'custom_memo',
+      size: 'size-4x2',
+      memoHtml: '<p style="text-align: center; font-size: 18px; font-weight: 700; margin-bottom: 8px;">三皈依</p><p style="text-align: center; font-size: 15px; margin: 3px 0; line-height: 1.5;">自皈依佛，當願眾生，體解大道，發無上心。</p><p style="text-align: center; font-size: 15px; margin: 3px 0; line-height: 1.5;">自皈依法，當願眾生，深入經藏，智慧如海。</p><p style="text-align: center; font-size: 15px; margin: 3px 0; line-height: 1.5;">自皈依僧，當願眾生，統理大眾，一切無礙。</p>'
+    },
+    {
+      id: 'w_calm_memo_5',
+      type: 'custom_memo',
+      size: 'size-4x1',
+      memoHtml: '<p style="text-align: center; font-size: 19px; font-weight: 500; letter-spacing: 0.08em; margin: 0;">卍&nbsp;&nbsp;南無護法韋陀尊天菩薩&nbsp;&nbsp;卍</p>'
+    },
+    {
+      id: 'w_calm_title',
+      type: 'title_4x1',
+      size: 'size-4x1'
+    }
   ],
   compact: [
     { id: 'w_title', type: 'title_4x1', size: 'size-4x1' },
@@ -156,7 +200,10 @@ export const PRESET_LAYOUTS: Record<HomeLayoutPreset, HomeWidgetConfig[]> = {
     { id: 'w_lastread', type: 'lastread_4x2', size: 'size-4x2' },
     { id: 'w_theme', type: 'theme_4x1', size: 'size-4x1' }
   ],
-  custom: []
+  custom: [],
+  custom1: [],
+  custom2: [],
+  custom3: []
 };
 
 // 💡 依組件特性定義允許的合適尺寸規格，統一順序：4x1 -> 4x2 -> 4x3 -> 4x4 -> 2x2

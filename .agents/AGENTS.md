@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.9.3` (App: v4.9.3 / Builder: v2.9.13)
+- **Current Version**: `v4.9.4` (App: v4.9.4 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.9.4 / Builder: v2.9.13** (2026-10-05)
+  - [App] 新增版型2淨心閱讀：整合圖1、圖2之完整配置（開經偈、上次閱讀進度、回向偈、三皈依等），置於快速套用風格範本第2位。
+  - [App] 支援3組自訂風格範本：讀者可自由儲存與自訂 3 組版型（可自訂名稱），平時保持簡潔，僅在按「筆」時才展開名稱編輯列。
+  - [App] 編輯版面完成彈窗另存：在首頁編輯模式點選「✓ 完成」時，彈窗詢問是否儲存於當前版型、另存至自訂版型槽位或僅套用至首頁。
 - **⭐ App: v4.9.3 / Builder: v2.9.13** (2026-10-04)
   - [App] 4×2 快捷卡固定 10 格配置：圖1預設 10 按鍵（左上1固定為圖4），首頁與自訂抽屜維持 5 欄雙排格局。
   - [App] 刪除按鍵保留空格：按「×」刪除某按鍵時其他按鍵維持不動，該位置呈現圖2虛線「+增加按鍵」圖示。
