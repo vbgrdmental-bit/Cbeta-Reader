@@ -6486,15 +6486,24 @@ body.theme-ebony .custom-nav-current-grid {
   transform: scale(1.15);
 }
 
-.custom-nav-slot-box.add-slot-btn {
-  border: 2px dashed rgba(30, 169, 140, 0.35);
-  background: rgba(30, 169, 140, 0.04);
+.custom-nav-slot-box.add-slot-btn,
+.custom-nav-slot-box.is-empty-slot {
+  border: 1.5px dashed rgba(30, 169, 140, 0.45);
+  background: rgba(30, 169, 140, 0.03);
+  cursor: pointer;
 }
 
-.custom-nav-slot-box.add-slot-btn:hover {
+.custom-nav-slot-box.add-slot-btn:hover,
+.custom-nav-slot-box.is-empty-slot:hover {
   border-color: #1ea98c;
-  background: rgba(30, 169, 140, 0.1);
+  background: rgba(30, 169, 140, 0.08);
   transform: translateY(-2px);
+}
+
+.custom-nav-slot-box.is-empty-slot.selected {
+  border-color: #1ea98c !important;
+  background: rgba(30, 169, 140, 0.12) !important;
+  box-shadow: 0 0 0 3px rgba(30, 169, 140, 0.25) !important;
 }
 
 /* 💡 快捷按鍵：主題顏色小卡 (僅呈現當前色塊圓形 + 顏色文字) */

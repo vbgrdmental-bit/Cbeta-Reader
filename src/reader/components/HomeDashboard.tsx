@@ -50,19 +50,38 @@ const isBookWidgetOuterHeader = (type: string, size: string) =>
   (type === 'lastread_excerpt_4x4') ||
   (type === 'triple_reading_4x4');
 
-// 💡 快捷功能卡片之預設按鍵（左上角固定為 CBETA Reader 圖4，支援最多 10 鍵）
+// 💡 快捷功能卡片之預設按鍵（圖1預設 10 個格子配置：左上角固定為 CBETA Reader，允許空格）
 export const DEFAULT_QUICK_NAV_BUTTONS: string[] = [
-  'brand_title',
-  'download',
-  'recent_downloads',
-  'last_read',
-  'favorites',
-  'theme_color',
-  'shelf',
-  'notes',
-  'search',
-  'timer'
+  'brand_title',       // 1 (固定)
+  'shelf',             // 2 我的書櫃
+  'notes',             // 3 我的筆記
+  'search',            // 4 關鍵字搜尋
+  'theme_color',       // 5 自訂色
+  'download',          // 6 下載經典
+  'recent_downloads',  // 7 近期下載
+  'last_read',         // 8 上次閱讀
+  'favorites',         // 9 我的最愛
+  'stats'              // 10 閱讀日誌
 ];
+
+// 💡 4x2 快捷卡固定 10 格規格規格化（左上角固定 brand_title，允許空格 'empty'）
+export const normalizeQuickNav10Buttons = (buttons?: (string | null | undefined)[]): string[] => {
+  const result: string[] = Array(10).fill('empty');
+  result[0] = 'brand_title';
+  if (!buttons || buttons.length === 0) {
+    return [...DEFAULT_QUICK_NAV_BUTTONS];
+  }
+  for (let i = 0; i < 10; i++) {
+    if (i === 0) {
+      result[0] = 'brand_title';
+    } else if (i < buttons.length && buttons[i]) {
+      result[i] = buttons[i] === 'brand_title' ? 'empty' : (buttons[i] || 'empty');
+    } else {
+      result[i] = 'empty';
+    }
+  }
+  return result;
+};
 
 // 💡 下載與書櫃卡之預設快捷按鍵（左邊第 1 個固定為 CBETA Reader 圖4）
 export const DEFAULT_SHELF_NAV_BUTTONS_4X2: string[] = [
@@ -1223,139 +1242,157 @@ export function HomeDashboard({
     return DEFAULT_QUICK_NAV_BUTTONS;
   };
 
-  // 💡 調整按鍵位置（拖曳順移：由 fromIndex 移至 toIndex，第 1 格固定不可移動）
+  // 💡 儲存並同步更新快捷按鍵
+  const saveNavButtons = (updatedButtons: string[]) => {
+    if (!editingNavWidget) return;
+    const updatedWidgets = widgets.map(w => {
+      if (w.id === editingNavWidget.id) {
+        return { ...w, customNavButtons: updatedButtons };
+      }
+      return w;
+    });
+
+    setWidgets(updatedWidgets);
+    setEditingNavWidget({ ...editingNavWidget, customNavButtons: updatedButtons });
+
+    onSaveSettings({
+      ...settings,
+      customHomeLayoutEnabled: true,
+      homeWidgets: updatedWidgets
+    });
+  };
+
+  // 💡 調整按鍵位置（拖曳順移/互換：第 1 格固定不可移動；4x2 快捷卡支援拖至空格或兩格互換，其餘按鍵不動）
   const handleSwapNavSlots = (fromIndex: number, toIndex: number) => {
     if (!editingNavWidget) return;
     // ⭐ 第 1 格 (index 0) 固定為 CBETA Reader，不可更換位置
     if (fromIndex === 0 || toIndex === 0) return;
     if (fromIndex === toIndex) return;
-    const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
-    const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : defaultButtons;
-    const currentButtons = ensureBrandFirst([...rawButtons]);
-    if (fromIndex < 0 || fromIndex >= currentButtons.length || toIndex < 0 || toIndex >= currentButtons.length) return;
 
-    // 將按鍵從 fromIndex 抽出並順移插入至 toIndex
-    const [movedItem] = currentButtons.splice(fromIndex, 1);
-    currentButtons.splice(toIndex, 0, movedItem);
-    const updatedButtons = ensureBrandFirst(currentButtons);
+    const isShelfNav = editingNavWidget.type === 'download_shelf_4x3';
+    if (isShelfNav) {
+      // 下載與書櫃卡（上1下5）：維持原本順移行為
+      const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
+      const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : defaultButtons;
+      const currentButtons = ensureBrandFirst([...rawButtons]);
+      if (fromIndex < 0 || fromIndex >= currentButtons.length || toIndex < 0 || toIndex >= currentButtons.length) return;
 
-    const updatedWidgets = widgets.map(w => {
-      if (w.id === editingNavWidget.id) {
-        return { ...w, customNavButtons: updatedButtons };
-      }
-      return w;
-    });
+      const [movedItem] = currentButtons.splice(fromIndex, 1);
+      currentButtons.splice(toIndex, 0, movedItem);
+      const updatedButtons = ensureBrandFirst(currentButtons);
+      saveNavButtons(updatedButtons);
+      setSelectedNavSlotIndex(toIndex);
+    } else {
+      // ⭐ 4x2 快捷卡 (10 格)：按鍵與空格或按鍵之間互換 (Swap)，其他按鍵維持不動
+      const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : DEFAULT_QUICK_NAV_BUTTONS;
+      const currentButtons = normalizeQuickNav10Buttons(rawButtons);
+      if (fromIndex < 0 || fromIndex >= 10 || toIndex < 0 || toIndex >= 10) return;
 
-    setWidgets(updatedWidgets);
-    setEditingNavWidget({ ...editingNavWidget, customNavButtons: updatedButtons });
-    setSelectedNavSlotIndex(toIndex);
+      const temp = currentButtons[fromIndex];
+      currentButtons[fromIndex] = currentButtons[toIndex];
+      currentButtons[toIndex] = temp;
 
-    onSaveSettings({
-      ...settings,
-      customHomeLayoutEnabled: true,
-      homeWidgets: updatedWidgets
-    });
+      const updatedButtons = normalizeQuickNav10Buttons(currentButtons);
+      saveNavButtons(updatedButtons);
+      setSelectedNavSlotIndex(toIndex);
+    }
   };
 
-  // 💡 替換指定格子的功能按鈕 (第 1 格固定不可替換，其他格不可重複加入 brand_title)
+  // 💡 替換/填入指定格子的功能按鈕 (第 1 格固定不可替換，其他格不可重複加入 brand_title)
   const handleReplaceNavButton = (slotIndex: number, newButtonKey: string) => {
     if (!editingNavWidget) return;
     if (slotIndex === 0 || newButtonKey === 'brand_title') return;
-    const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
-    const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : defaultButtons;
-    const currentButtons = ensureBrandFirst([...rawButtons]);
-    currentButtons[slotIndex] = newButtonKey;
-    const updatedButtons = ensureBrandFirst(currentButtons);
 
-    const updatedWidgets = widgets.map(w => {
-      if (w.id === editingNavWidget.id) {
-        return { ...w, customNavButtons: updatedButtons };
-      }
-      return w;
-    });
-
-    setWidgets(updatedWidgets);
-    setEditingNavWidget({ ...editingNavWidget, customNavButtons: updatedButtons });
-
-    onSaveSettings({
-      ...settings,
-      customHomeLayoutEnabled: true,
-      homeWidgets: updatedWidgets
-    });
+    const isShelfNav = editingNavWidget.type === 'download_shelf_4x3';
+    if (isShelfNav) {
+      const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
+      const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : defaultButtons;
+      const currentButtons = ensureBrandFirst([...rawButtons]);
+      currentButtons[slotIndex] = newButtonKey;
+      const updatedButtons = ensureBrandFirst(currentButtons);
+      saveNavButtons(updatedButtons);
+    } else {
+      // 4x2 快捷卡 (10 格)：填入或替換該格，其他格維持不動
+      const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : DEFAULT_QUICK_NAV_BUTTONS;
+      const currentButtons = normalizeQuickNav10Buttons(rawButtons);
+      currentButtons[slotIndex] = newButtonKey;
+      const updatedButtons = normalizeQuickNav10Buttons(currentButtons);
+      saveNavButtons(updatedButtons);
+    }
   };
 
-  // 💡 自由增加按鍵 (下載與書櫃卡最多 5 個；快捷功能小卡最多 10 個：上 5 個、下 5 個)
+  // 💡 自由增加按鍵 (下載與書櫃卡最多 5 個；4x2 快捷卡則填入第一個空格)
   const handleAddNavSlot = () => {
     if (!editingNavWidget) return;
     const isShelfNav = editingNavWidget.type === 'download_shelf_4x3';
-    const maxSlots = isShelfNav ? 5 : 10;
-    const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
-    const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : defaultButtons;
-    const currentButtons = ensureBrandFirst([...rawButtons]);
-    if (currentButtons.length >= maxSlots) return;
+    if (isShelfNav) {
+      const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
+      const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : defaultButtons;
+      const currentButtons = ensureBrandFirst([...rawButtons]);
+      if (currentButtons.length >= 5) return;
 
-    // 從功能庫找出尚未使用的第一個功能 (排除 brand_title 與已在頂部的 download)
-    const nextKey = AVAILABLE_NAV_BUTTON_KEYS.find(k => {
-      if (k === 'brand_title') return false;
-      if (isShelfNav && k === 'download') return false;
-      return !currentButtons.includes(k);
-    }) || 'shelf';
-    currentButtons.push(nextKey);
-    const updatedButtons = ensureBrandFirst(currentButtons);
+      const nextKey = AVAILABLE_NAV_BUTTON_KEYS.find(k => {
+        if (k === 'brand_title') return false;
+        if (k === 'download') return false;
+        return !currentButtons.includes(k);
+      }) || 'shelf';
+      currentButtons.push(nextKey);
+      const updatedButtons = ensureBrandFirst(currentButtons);
+      saveNavButtons(updatedButtons);
+      setSelectedNavSlotIndex(updatedButtons.length - 1);
+    } else {
+      // 4x2 快捷卡：尋找第一個 'empty' 的格子填入下一個可用功能
+      const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : DEFAULT_QUICK_NAV_BUTTONS;
+      const currentButtons = normalizeQuickNav10Buttons(rawButtons);
+      const emptyIdx = currentButtons.findIndex((k, i) => i > 0 && k === 'empty');
+      if (emptyIdx === -1) return;
 
-    const updatedWidgets = widgets.map(w => {
-      if (w.id === editingNavWidget.id) {
-        return { ...w, customNavButtons: updatedButtons };
-      }
-      return w;
-    });
-
-    setWidgets(updatedWidgets);
-    setEditingNavWidget({ ...editingNavWidget, customNavButtons: updatedButtons });
-    setSelectedNavSlotIndex(updatedButtons.length - 1);
-
-    onSaveSettings({
-      ...settings,
-      customHomeLayoutEnabled: true,
-      homeWidgets: updatedWidgets
-    });
+      const nextKey = AVAILABLE_NAV_BUTTON_KEYS.find(k => {
+        if (k === 'brand_title') return false;
+        return !currentButtons.includes(k);
+      }) || 'shelf';
+      currentButtons[emptyIdx] = nextKey;
+      const updatedButtons = normalizeQuickNav10Buttons(currentButtons);
+      saveNavButtons(updatedButtons);
+      setSelectedNavSlotIndex(emptyIdx);
+    }
   };
 
-  // 💡 自由移除按鍵 (第 1 格固定不可刪除，總數最少保留 2 個)
+  // 💡 移除按鍵 (第 1 格固定不可刪除；4x2 快捷卡刪除後轉為空格 'empty'，其他按鍵不動；下載與書櫃卡維持縮減)
   const handleRemoveNavSlot = (idx: number, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!editingNavWidget) return;
     if (idx === 0) return; // ⭐ 第 1 格不可刪除
-    const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
-    const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : defaultButtons;
-    const currentButtons = ensureBrandFirst([...rawButtons]);
-    if (currentButtons.length <= 2) return;
 
-    currentButtons.splice(idx, 1);
-    const updatedButtons = ensureBrandFirst(currentButtons);
+    const isShelfNav = editingNavWidget.type === 'download_shelf_4x3';
+    if (isShelfNav) {
+      const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
+      const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : defaultButtons;
+      const currentButtons = ensureBrandFirst([...rawButtons]);
+      if (currentButtons.length <= 2) return;
 
-    const updatedWidgets = widgets.map(w => {
-      if (w.id === editingNavWidget.id) {
-        return { ...w, customNavButtons: updatedButtons };
-      }
-      return w;
-    });
-
-    setWidgets(updatedWidgets);
-    setEditingNavWidget({ ...editingNavWidget, customNavButtons: updatedButtons });
-    setSelectedNavSlotIndex(Math.max(1, Math.min(selectedNavSlotIndex, updatedButtons.length - 1)));
-
-    onSaveSettings({
-      ...settings,
-      customHomeLayoutEnabled: true,
-      homeWidgets: updatedWidgets
-    });
+      currentButtons.splice(idx, 1);
+      const updatedButtons = ensureBrandFirst(currentButtons);
+      saveNavButtons(updatedButtons);
+      setSelectedNavSlotIndex(Math.max(1, Math.min(selectedNavSlotIndex, updatedButtons.length - 1)));
+    } else {
+      // ⭐ 4x2 快捷卡：刪除某按鍵時，其他按鍵維持不動，此位置變成空格 'empty' (出現圖2的圖示)
+      const rawButtons = editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0 ? editingNavWidget.customNavButtons : DEFAULT_QUICK_NAV_BUTTONS;
+      const currentButtons = normalizeQuickNav10Buttons(rawButtons);
+      currentButtons[idx] = 'empty';
+      const updatedButtons = normalizeQuickNav10Buttons(currentButtons);
+      saveNavButtons(updatedButtons);
+      setSelectedNavSlotIndex(idx); // 選定此空格，方便使用者由下方功能庫選取填入
+    }
   };
 
   // 💡 恢復預設快捷按鍵
   const handleResetNavButtons = () => {
     if (!editingNavWidget) return;
-    const defaultButtons = ensureBrandFirst(getDefaultNavButtonsForWidget(editingNavWidget));
+    const isShelfNav = editingNavWidget.type === 'download_shelf_4x3';
+    const defaultButtons = isShelfNav
+      ? ensureBrandFirst(getDefaultNavButtonsForWidget(editingNavWidget))
+      : [...DEFAULT_QUICK_NAV_BUTTONS];
 
     const updatedWidgets = widgets.map(w => {
       if (w.id === editingNavWidget.id) {
@@ -3615,21 +3652,19 @@ export function HomeDashboard({
         );
       }
 
-      // 16. 快捷功能卡片（支援自由增減與自訂按鍵，最多 10 個：上 5 個、下 5 個，左上角固定為圖4）
+      // 16. 快捷功能卡片（圖1預設 10 個格子配置：固定 5 欄雙排，左上角固定為圖4，允許空格）
       case 'quick_nav_4x2': {
         const is4x3 = widget.size === 'size-4x3';
         const defaultButtons = DEFAULT_QUICK_NAV_BUTTONS;
         const rawNavButtons = widget.customNavButtons && widget.customNavButtons.length > 0
           ? widget.customNavButtons
           : defaultButtons;
-        const navButtons = ensureBrandFirst(rawNavButtons);
-        const cols = navButtons.length > 8 ? 5 : (navButtons.length <= 6 ? Math.max(2, Math.ceil(navButtons.length / 2)) : 4);
-        const is5Col = cols === 5;
-        const iconSize = is4x3 ? 24 : (is5Col ? 15 : 17);
+        const navButtons = normalizeQuickNav10Buttons(rawNavButtons);
+        const iconSize = is4x3 ? 24 : 15;
 
         return (
           <div 
-            className={`widget-eight-nav-4x2 ${is4x3 ? 'mode-4x3' : 'mode-4x2'} ${is5Col ? 'mode-5-col' : ''}`}
+            className={`widget-eight-nav-4x2 ${is4x3 ? 'mode-4x3' : 'mode-4x2'} mode-5-col`}
             onDoubleClick={(e) => {
               e.stopPropagation();
               setEditingNavWidget(widget);
@@ -3663,12 +3698,23 @@ export function HomeDashboard({
             title="點擊左上角「CBETA Reader」2 下可自訂快捷功能"
           >
             <div 
-              className={`eight-nav-grid ${is5Col ? 'grid-5-col' : ''}`}
-              style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+              className="eight-nav-grid grid-5-col"
+              style={{ gridTemplateColumns: 'repeat(5, 1fr)' }}
             >
               {navButtons.map((btnKey, idx) => {
-                const def = QUICK_NAV_BUTTON_DEFS[btnKey] || QUICK_NAV_BUTTON_DEFS['download'];
                 const isBrandFirst = idx === 0 && btnKey === 'brand_title';
+                // 💡 空格：保留完整空間佔位，其他按鍵維持不動
+                if (btnKey === 'empty' || !btnKey) {
+                  return (
+                    <div 
+                      key={`eight-empty-${widget.id}-${idx}`}
+                      className="eight-nav-item item-empty"
+                      style={{ opacity: 0, pointerEvents: 'none', visibility: 'hidden' }}
+                    />
+                  );
+                }
+
+                const def = QUICK_NAV_BUTTON_DEFS[btnKey] || QUICK_NAV_BUTTON_DEFS['download'];
                 return (
                   <div 
                     key={`eight-btn-${widget.id}-${idx}-${btnKey}`}
@@ -4292,17 +4338,19 @@ export function HomeDashboard({
               <div className="custom-nav-hint">
                 {editingNavWidget.type === 'download_shelf_4x3'
                   ? '第 1 格固定為 CBETA Reader；其餘按鍵可直接「拖曳」順移調位；點「＋」最多增加至 5 個按鍵；點「×」可刪除；點選格子由下方替換。'
-                  : '第 1 格固定為 CBETA Reader；其餘按鍵可直接「拖曳」順移調位；點「＋」最多增加至 10 個按鍵（上5個、下5個）；點「×」可刪除；點選格子由下方替換。'}
+                  : '第 1 格固定為 CBETA Reader；點「×」刪除按鍵保留空格；空格可由下方功能庫填入或將其他按鍵拖曳至空格；點選格子由下方替換。'}
               </div>
 
-              {/* 格子即時預覽與選定區 (第 1 格固定不可移刪，其餘支援拖曳順移與增減) */}
+              {/* 格子即時預覽與選定區 (第 1 格固定不可移刪；4x2 快捷卡固定 10 格且允許空格) */}
               {(() => {
                 const isShelfNav = editingNavWidget.type === 'download_shelf_4x3';
                 const defaultButtons = getDefaultNavButtonsForWidget(editingNavWidget);
                 const rawButtons = (editingNavWidget.customNavButtons && editingNavWidget.customNavButtons.length > 0)
                   ? editingNavWidget.customNavButtons
                   : defaultButtons;
-                const currentButtons = ensureBrandFirst(rawButtons);
+                const currentButtons = isShelfNav
+                  ? ensureBrandFirst(rawButtons)
+                  : normalizeQuickNav10Buttons(rawButtons);
                 const curTheme = settings.theme || 'ivory';
                 const themeInfoMap: Record<string, { name: string; color: string; border: string }> = {
                   ivory: { name: '象牙白', color: '#faf7f0', border: 'rgba(0, 0, 0, 0.16)' },
@@ -4313,29 +4361,20 @@ export function HomeDashboard({
                 };
                 const curThemeInfo = themeInfoMap[curTheme] || themeInfoMap['ivory'];
 
-                const topCount = Math.ceil(currentButtons.length / 2);
-                const topButtons = currentButtons.slice(0, topCount);
-                const bottomButtons = currentButtons.slice(topCount);
-                const canAdd = currentButtons.length < 10;
-                // 💡 計算每排網格欄數：若為 8 鍵則 topCount=4，加「+」為 5 欄；若為 6 鍵則 topCount=3，加「+」為 4 欄
-                const maxCols = Math.max(
-                  topCount + (canAdd && topCount < 5 ? 1 : 0),
-                  bottomButtons.length + (canAdd && bottomButtons.length < 5 ? 1 : 0),
-                  2
-                );
-
                 // 💡 單一格子渲染元件
                 const renderNavSlot = (btnKey: string, idx: number) => {
                   const isSelected = selectedNavSlotIndex === idx;
-                  const isFixed = idx === 0;
+                  const isFixed = idx === 0 && btnKey === 'brand_title';
+                  const isEmpty = !isShelfNav && (btnKey === 'empty' || !btnKey);
                   const def = QUICK_NAV_BUTTON_DEFS[btnKey] || QUICK_NAV_BUTTON_DEFS['download'];
+
                   return (
                     <div
                       key={`editor-slot-${idx}`}
                       data-slot-idx={idx}
-                      className={`custom-nav-slot-box ${isSelected ? 'selected' : ''} ${isFixed ? 'is-fixed' : ''} ${draggedNavSlotIndex === idx ? 'is-dragging' : ''} ${dragOverNavSlotIndex === idx ? 'drag-over' : ''}`}
-                      draggable={!isFixed}
-                      onDragStart={!isFixed ? (e) => {
+                      className={`custom-nav-slot-box ${isEmpty ? 'is-empty-slot' : ''} ${isSelected ? 'selected' : ''} ${isFixed ? 'is-fixed' : ''} ${draggedNavSlotIndex === idx ? 'is-dragging' : ''} ${dragOverNavSlotIndex === idx ? 'drag-over' : ''}`}
+                      draggable={!isFixed && !isEmpty}
+                      onDragStart={!isFixed && !isEmpty ? (e) => {
                         setDraggedNavSlotIndex(idx);
                         e.dataTransfer.effectAllowed = 'move';
                         e.dataTransfer.setData('text/plain', String(idx));
@@ -4367,7 +4406,7 @@ export function HomeDashboard({
                         setDraggedNavSlotIndex(null);
                         setDragOverNavSlotIndex(null);
                       }}
-                      onTouchStart={!isFixed ? () => {
+                      onTouchStart={!isFixed && !isEmpty ? () => {
                         touchSlotStartIdxRef.current = idx;
                       } : undefined}
                       onTouchMove={(e) => {
@@ -4394,36 +4433,45 @@ export function HomeDashboard({
                       title={
                         isFixed 
                           ? '第 1 格固定為 CBETA Reader 首頁快捷（點 2 下可進入自訂快捷），不可更換位置與刪除'
-                          : `拖曳可調整位置；點選選定第 ${idx + 1} 格：${def.name}`
+                          : isEmpty 
+                            ? `第 ${idx + 1} 格為空格，點選由下方功能庫填入，或拖曳其他按鍵至此`
+                            : `拖曳可調整位置；點選選定第 ${idx + 1} 格：${def.name}`
                       }
                     >
                       <span className="slot-badge-number">{idx + 1}</span>
                       {isFixed ? (
                         <span className="slot-badge-fixed" title="固定第 1 格">固定</span>
-                      ) : (
-                        currentButtons.length > 2 && (
-                          <button
-                            type="button"
-                            className="slot-delete-btn"
-                            onClick={(e) => handleRemoveNavSlot(idx, e)}
-                            title="移除此按鍵"
-                          >
-                            ×
-                          </button>
-                        )
+                      ) : isEmpty ? null : (
+                        <button
+                          type="button"
+                          className="slot-delete-btn"
+                          onClick={(e) => handleRemoveNavSlot(idx, e)}
+                          title="移除此按鍵 (保留空格)"
+                        >
+                          ×
+                        </button>
                       )}
-                      {renderQuickNavItemContent(btnKey, 18, editingNavWidget.iconIndex || 1, true)}
+
+                      {isEmpty ? (
+                        /* 💡 圖 2 空格圖示：綠色加號 + 文字「增加按鍵」 */
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.15rem', padding: '0.2rem 0' }}>
+                          <Plus size={20} strokeWidth={2.4} style={{ color: '#1ea98c' }} />
+                          <span style={{ color: 'var(--theme-accent, #1ea98c)', fontSize: '0.62rem', fontWeight: 600 }}>增加按鍵</span>
+                        </div>
+                      ) : (
+                        renderQuickNavItemContent(btnKey, 18, editingNavWidget.iconIndex || 1, true)
+                      )}
                     </div>
                   );
                 };
 
-                // 💡 增加按鍵格元件
+                // 💡 增加按鍵格元件 (下載與書櫃卡專用)
                 const renderAddSlotButton = (keySuffix: string) => (
                   <div
                     key={`add-slot-btn-${keySuffix}`}
                     className="custom-nav-slot-box add-slot-btn"
                     onClick={handleAddNavSlot}
-                    title={`增加一個快捷功能按鍵 (最多 ${isShelfNav ? 5 : 10} 個)`}
+                    title="增加一個快捷功能按鍵 (最多 5 個)"
                   >
                     <div className="slot-add-icon">
                       <Plus size={20} strokeWidth={2.4} />
@@ -4444,27 +4492,27 @@ export function HomeDashboard({
                         {currentButtons.length < 5 && renderAddSlotButton('shelf')}
                       </div>
                     ) : (
-                      /* ⭐ 快捷卡 (方塊按鍵)：自適應雙排 (8 鍵時排上4下4 + 各自右邊「+」；6 鍵時排上3下3 + 各自右邊「+」) */
+                      /* ⭐ 圖1 快捷卡 (10 格)：固定雙排上 5 格 (idx 0~4)、下 5 格 (idx 5~9)，刪除保留空格 */
                       <div className="custom-nav-current-grid quick-mode" style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-                        {/* 上排 */}
-                        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${maxCols}, minmax(0, 1fr))`, gap: '0.45rem' }}>
-                          {topButtons.map((btnKey, i) => renderNavSlot(btnKey, i))}
-                          {canAdd && topButtons.length < 5 && renderAddSlotButton('top')}
+                        {/* 上排 (idx 0 ~ 4) */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: '0.45rem' }}>
+                          {currentButtons.slice(0, 5).map((btnKey, i) => renderNavSlot(btnKey, i))}
                         </div>
-                        {/* 下排 */}
-                        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${maxCols}, minmax(0, 1fr))`, gap: '0.45rem' }}>
-                          {bottomButtons.map((btnKey, i) => renderNavSlot(btnKey, topCount + i))}
-                          {canAdd && bottomButtons.length < 5 && renderAddSlotButton('bottom')}
+                        {/* 下排 (idx 5 ~ 9) */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: '0.45rem' }}>
+                          {currentButtons.slice(5, 10).map((btnKey, i) => renderNavSlot(btnKey, 5 + i))}
                         </div>
                       </div>
                     )}
 
-                    {/* 替換功能按鍵庫 (第 1 格固定不可替換，其餘已在上方按鍵內的自動反灰) */}
+                    {/* 替換/填入功能按鍵庫 (第 1 格固定不可替換，其餘已在上方按鍵內的自動反灰) */}
                     <div className="custom-nav-pool-section">
                       <div className="custom-nav-pool-title">
                         {selectedNavSlotIndex === 0 
                           ? '「第 1 格」已固定為 CBETA Reader 首頁快捷，不可更換：'
-                          : `點選功能即可替換「第 ${selectedNavSlotIndex + 1} 格」：`}
+                          : (currentButtons[selectedNavSlotIndex] === 'empty'
+                              ? `點選功能即可填入「第 ${selectedNavSlotIndex + 1} 格」空格：`
+                              : `點選功能即可替換「第 ${selectedNavSlotIndex + 1} 格」：`)}
                       </div>
                       <div className="custom-nav-pool-grid">
                         {AVAILABLE_NAV_BUTTON_KEYS.map((key) => {
@@ -4472,8 +4520,8 @@ export function HomeDashboard({
                           const isBrandFixed = key === 'brand_title';
                           const isFixedInCard = isShelfNav && key === 'download';
                           const isAlreadyInCurrentSlot = currentButtons[selectedNavSlotIndex] === key;
-                          const isUsedInCurrentSlots = currentButtons.includes(key);
-                          const isButtonDisabled = selectedNavSlotIndex === 0 || isBrandFixed || isUsedInCurrentSlots || isFixedInCard;
+                          const isUsedInOtherSlots = currentButtons.some((k, i) => i !== selectedNavSlotIndex && k === key && k !== 'empty');
+                          const isButtonDisabled = selectedNavSlotIndex === 0 || isBrandFixed || isUsedInOtherSlots || isFixedInCard;
 
                           return (
                             <button
@@ -4489,9 +4537,9 @@ export function HomeDashboard({
                                     ? '「CBETA Reader」已固定於第 1 格，不可重複加入'
                                     : isFixedInCard
                                       ? '「下載經典」已固定在卡片上方，不可重複加入'
-                                      : isUsedInCurrentSlots 
+                                      : isUsedInOtherSlots 
                                         ? (isAlreadyInCurrentSlot ? `目前第 ${selectedNavSlotIndex + 1} 格已是「${def.name}」` : `「${def.name}」已在上方面板中，不可重複加入`) 
-                                        : `替換為「${def.name}」`
+                                        : (currentButtons[selectedNavSlotIndex] === 'empty' ? `填入「${def.name}」` : `替換為「${def.name}」`)
                               }
                             >
                               <div className="pool-icon-box" style={{ background: key === 'brand_title' ? 'rgba(30, 169, 140, 0.08)' : def.gradient, border: key === 'brand_title' ? '1px solid rgba(30, 169, 140, 0.2)' : undefined }}>

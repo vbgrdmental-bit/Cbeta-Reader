@@ -1388,16 +1388,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.9.2) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.9.3) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.9.2</span>
+                        <span>⭐ App: v4.9.3</span>
                         <span className="changelog-date">(2026-10-04)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 快捷卡雙排自適應排版：自訂抽屜升級為動態雙排，8 鍵排上4下4、6 鍵排上3下3，上下一體工整直覺。</li>
-                        <li>• 雙側增加按鍵便利入口：上排右邊與下排右邊皆配置「+增加按鍵」，直覺順手隨點隨加。</li>
-                        <li>• 首頁卡片完美等比映射：首頁快捷卡與抽屜雙排佈局 100% 一致映射，徹底告別單排硬擠失衡問題。</li>
+                        <li>• 10格固定配置：預設 10 按鍵配置，左上角固定，4×2 快捷卡固定 5 欄雙排。</li>
+                        <li>• 刪除保留空格：按「×」刪除按鍵時其他按鍵不動，該位置呈現圖2增加按鍵圖示。</li>
+                        <li>• 空格拖曳與填入：空格可由下方功能庫選取填入，其他按鍵亦可直接拖曳至空格。</li>
                       </ul>
                     </div>
 
@@ -1420,6 +1420,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.2</span>
+                            <span className="changelog-date">(2026-10-04)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 快捷卡雙排自適應排版：自訂抽屜升級為動態雙排，8 鍵排上4下4、6 鍵排上3下3，上下一體工整直覺。</li>
+                            <li>• 雙側增加按鍵便利入口：上排右邊與下排右邊皆配置「+增加按鍵」，直覺順手隨點隨加。</li>
+                            <li>• 首頁卡片完美等比映射：首頁快捷卡與抽屜雙排佈局 100% 一致映射，徹底告別單排硬擠失衡問題。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.9.1</span>

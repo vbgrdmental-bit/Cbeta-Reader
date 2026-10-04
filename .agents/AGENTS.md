@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.9.2` (App: v4.9.2 / Builder: v2.9.13)
+- **Current Version**: `v4.9.3` (App: v4.9.3 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.9.3 / Builder: v2.9.13** (2026-10-04)
+  - [App] 4×2 快捷卡固定 10 格配置：圖1預設 10 按鍵（左上1固定為圖4），首頁與自訂抽屜維持 5 欄雙排格局。
+  - [App] 刪除按鍵保留空格：按「×」刪除某按鍵時其他按鍵維持不動，該位置呈現圖2虛線「+增加按鍵」圖示。
+  - [App] 空格支援拖曳與填入：空格可由下方功能庫選取填入，其他按鍵亦可直接拖曳對調至空格，上1下5規格維持原樣。
 - **⭐ App: v4.9.2 / Builder: v2.9.13** (2026-10-04)
   - [App] 快捷自訂雙排對稱佈局：8鍵自動排為上4下4，6鍵自動排為上3下3，按鍵數量自適應居中對齊。
   - [App] 雙側動態增加按鍵：未滿額時「+增加按鍵」精準出現在上排與下排最右側，排版規整無突兀空缺。
