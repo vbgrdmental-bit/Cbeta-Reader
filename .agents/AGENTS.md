@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.9.5` (App: v4.9.5 / Builder: v2.9.13)
+- **Current Version**: `v4.9.6` (App: v4.9.6 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,10 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.9.6 / Builder: v2.9.13** (2026-10-05)
+  - [App] 書本方塊書名升級雙行排版：刪除第二行之經卷卷數資訊，書名直接支援 2 行自然折行（`line-clamp: 2`），大幅增加經文字數容納量。
+  - [App] 經題易讀性全面提升：較長經名（如《地藏菩薩本願經》、《大乘大集地藏十輪經》等）不再過早省略截斷，飽滿對稱大氣。
+  - [App] 空槽位視覺居中優化：引導添加按鈕（＋加號與文字）高度完美垂直置中，各主題模式下視覺節奏更和諧。
 - **⭐ App: v4.9.5 / Builder: v2.9.13** (2026-10-05)
   - [App] 依圖2設計全新3款4×2小卡：全新「我的最愛+4本書」、「近期下載+4本書」、「上次閱讀+4本書」，上方為置中主功能橫條按鍵（帶專屬色系圖示、大標、副標與箭頭），下方自動排入最新4本經書。
   - [App] 4本書大氣按鍵排版：下方配置4個正方形圓角按鍵（34×26px經號色塊徽章+700粗體經題+卷數/進度副標），點擊秒速直達經文開啟或接續閱讀；經書未滿4本時自動呈現虛線導引空按鈕。

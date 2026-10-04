@@ -1966,7 +1966,7 @@ export function HomeDashboard({
             </div>
           </div>
 
-          {/* 下半部：4 個等寬正方形圓角按鈕（依圖2大氣排版，底部安全留白不切底） */}
+          {/* 下半部：4 個等寬正方形圓角按鈕（依圖2大氣排版，書名分 2 行大字，底部安全留白不切底） */}
           <div className="books-shelf-bottom-grid">
             {slots.map((idx) => {
               const item = books[idx];
@@ -1987,9 +1987,6 @@ export function HomeDashboard({
                     <span className="book-nav-title" title={item.book.title}>
                       {item.book.title}
                     </span>
-                    <span className="book-nav-sub">
-                      {item.subText}
-                    </span>
                   </div>
                 );
               }
@@ -2002,10 +1999,9 @@ export function HomeDashboard({
                   title={emptySlot.title}
                 >
                   <div className="book-nav-badge-empty">
-                    <Plus size={15} strokeWidth={2.4} />
+                    <Plus size={16} strokeWidth={2.4} />
                   </div>
                   <span className="book-nav-title">{emptySlot.title}</span>
-                  <span className="book-nav-sub">{emptySlot.sub}</span>
                 </div>
               );
             })}

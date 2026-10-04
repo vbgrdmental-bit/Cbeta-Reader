@@ -1482,16 +1482,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.9.5) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.9.6) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.9.5</span>
+                        <span>⭐ App: v4.9.6</span>
                         <span className="changelog-date">(2026-10-05)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 依圖2設計全新3款4×2小卡：我的最愛、近期下載、上次閱讀上方配置快捷主Bar，下方自動呈現最新4本書。</li>
-                        <li>• 4本書大氣按鍵排版：比照圖2圓角方塊按鍵，經號色塊徽章搭配書名與卷數，點擊秒速直達經文讀誦。</li>
-                        <li>• 暫時刪除圖1的4×3小卡：快捷功能卡片全面聚焦精簡 4×2 格局，小工具庫巡覽更乾淨流暢。</li>
+                        <li>• 書本方塊書名升級雙行：刪除第二行經卷資訊，書名支援 2 行自然折行，容納更完整經題。</li>
+                        <li>• 經名易讀性大幅提升：長經題不再過早省略截斷，字形飽滿且居中排版極具質感。</li>
+                        <li>• 空槽位視覺居中優化：收藏/下載導引按鍵排版微調，垂直節奏更俐落大器。</li>
                       </ul>
                     </div>
 
@@ -1514,6 +1514,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.5</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 依圖2設計全新3款4×2小卡：我的最愛、近期下載、上次閱讀上方配置快捷主Bar，下方自動呈現最新4本書。</li>
+                            <li>• 4本書大氣按鍵排版：比照圖2圓角方塊按鍵，經號色塊徽章搭配書名與卷數，點擊秒速直達經文讀誦。</li>
+                            <li>• 暫時刪除圖1的4×3小卡：快捷功能卡片全面聚焦精簡 4×2 格局，小工具庫巡覽更乾淨流暢。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.9.4</span>

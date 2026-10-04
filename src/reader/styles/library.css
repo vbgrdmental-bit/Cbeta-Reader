@@ -5948,8 +5948,8 @@ body.theme-dark .strip-theme-history {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.18rem;
-  padding: 0.28rem 0.12rem;
+  gap: 0.22rem;
+  padding: 0.25rem 0.2rem;
   border-radius: 12px;
   width: 100%;
   max-width: 84px;
@@ -5981,7 +5981,7 @@ body.theme-dark .book-nav-item {
 
 .book-nav-badge {
   width: 34px;
-  height: 26px;
+  height: 24px;
   border-radius: 7px;
   display: flex;
   align-items: center;
@@ -5992,7 +5992,7 @@ body.theme-dark .book-nav-item {
 
 .book-nav-badge-text {
   font-family: var(--font-mono, monospace);
-  font-size: 0.63rem;
+  font-size: 0.62rem;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.02em;
@@ -6000,17 +6000,23 @@ body.theme-dark .book-nav-item {
 }
 
 .book-nav-title {
-  font-size: 0.72rem;
+  font-size: 0.73rem;
   font-weight: 700;
-  line-height: 1.18;
-  white-space: nowrap;
-  letter-spacing: -0.01em;
+  line-height: 1.25;
   text-align: center;
   max-width: 100%;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-all;
   color: var(--text-primary, #2c1810);
   padding: 0 2px;
+  box-sizing: border-box;
+  max-height: 2.5em;
 }
 
 body.theme-ebony .book-nav-title,
@@ -6018,27 +6024,17 @@ body.theme-dark .book-nav-title {
   color: #f4ede4;
 }
 
-.book-nav-sub {
-  font-size: 0.62rem;
-  color: var(--reader-text-muted, #7a6652);
-  white-space: nowrap;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.1;
-  text-align: center;
-}
-
-body.theme-ebony .book-nav-sub,
-body.theme-dark .book-nav-sub {
-  color: #a1a1aa;
-}
-
 /* 空槽位按鈕 */
 .book-nav-item.item-empty-slot {
   border: 1.5px dashed var(--reader-border, rgba(140, 100, 60, 0.25));
   background: rgba(0, 0, 0, 0.02);
   opacity: 0.75;
+}
+
+.book-nav-item.item-empty-slot .book-nav-title {
+  display: block;
+  font-size: 0.72rem;
+  max-height: none;
 }
 
 .book-nav-item.item-empty-slot:hover {
