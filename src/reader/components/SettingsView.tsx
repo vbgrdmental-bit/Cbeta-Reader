@@ -1483,15 +1483,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.10.5) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.10.6) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.10.5</span>
-                        <span className="changelog-date">(2026-10-05)</span>
+                        <span>⭐ App: v4.10.6</span>
+                        <span className="changelog-date">(2026-10-06)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 新增範本「版型3 很多書」：一鍵套用圖1圖2全套配置，涵蓋下載、近期、上次、最愛、佛典與護眼。</li>
-                        <li>• 整合三大主題18本經書膠囊：以 2×3 雙欄格局收納完整藏經熱門進度，排版充實大氣。</li>
+                        <li>• 調整「版型3 很多書」：頂部日曆與近日閱讀，接續18本經書膠囊，底置佛典名句與品牌橫條。</li>
+                        <li>• 調整「版型1 極簡」：頂部下載經典虛線條、系統三合一導航、近期下載與最愛雙經書及品牌橫條。</li>
                       </ul>
                     </div>
 
@@ -1514,6 +1514,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.10.5</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 新增範本「版型3 很多書」：一鍵套用圖1圖2全套配置，涵蓋下載、近期、上次、最愛、佛典與護眼。</li>
+                            <li>• 整合三大主題18本經書膠囊：以 2×3 雙欄格局收納完整藏經熱門進度，排版充實大氣。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.10.4</span>

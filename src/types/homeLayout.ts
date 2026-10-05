@@ -153,11 +153,13 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
 ];
 
 export const PRESET_LAYOUTS: Record<string, HomeWidgetConfig[]> = {
-  // 1. 版型1 極簡
+  // 1. 版型1 極簡 (圖3、圖4全套配置：下載經典4x1 + 系統導航4x2 + 近期下載4x2 + 我的最愛4x2 + 品牌橫條4x1)
   default: [
-    { id: 'w_title', type: 'title_4x1', size: 'size-4x1' },
     { id: 'w_download', type: 'download_2x2', size: 'size-4x1' },
-    { id: 'w_triple', type: 'triple_reading_4x4', size: 'size-4x4' }
+    { id: 'w_system_nav', type: 'system_nav_4x2', size: 'size-4x2' },
+    { id: 'w_recent_downloads', type: 'recent_downloads_4x2', size: 'size-4x2' },
+    { id: 'w_favorites', type: 'favorites_4x2', size: 'size-4x2' },
+    { id: 'w_title', type: 'title_4x1', size: 'size-4x1' }
   ],
   // 2. 版型2 淨心閱讀 (圖1、圖2全套配置)
   calm: [
@@ -202,15 +204,14 @@ export const PRESET_LAYOUTS: Record<string, HomeWidgetConfig[]> = {
       size: 'size-4x1'
     }
   ],
-  // 3. 版型3 很多書 (圖1、圖2全套配置：品牌圖示+下載、近期下載6本、上次閱讀6本、我的最愛6本、佛典精選、護眼計時4x2)
+  // 3. 版型3 很多書 (圖1、圖2全套配置：日曆與近日閱讀4x2、近期下載6本、上次閱讀6本、我的最愛6本、佛典精選4x2、品牌橫條4x1)
   many_books: [
-    { id: 'w_books_title', type: 'title_4x2', size: 'size-2x2' },
-    { id: 'w_books_download', type: 'download_2x2', size: 'size-2x2' },
+    { id: 'w_books_calendar', type: 'stats_2x2', size: 'size-4x2' },
     { id: 'w_books_shelf_down', type: 'shelf_down_capsule_4x3', size: 'size-4x3' },
     { id: 'w_books_shelf_read', type: 'shelf_read_capsule_4x3', size: 'size-4x3' },
     { id: 'w_books_shelf_fav', type: 'shelf_fav_capsule_4x3', size: 'size-4x3' },
     { id: 'w_books_zen', type: 'zen_4x2', size: 'size-4x2' },
-    { id: 'w_books_timer', type: 'timer_2x2', size: 'size-4x2' }
+    { id: 'w_books_title', type: 'title_4x1', size: 'size-4x1' }
   ],
   compact: [
     { id: 'w_title', type: 'title_4x1', size: 'size-4x1' },
