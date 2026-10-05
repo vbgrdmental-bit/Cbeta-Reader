@@ -11,6 +11,7 @@ import { listBooks, deleteBook, getAllHighlights, deleteHighlight, saveHighlight
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { buildKeywordComparisonGroups } from '../../utils/notesCrossComparison';
 import { getRecentDownloadedBooks } from '../../utils/recentDownloads';
+import { getRecentFavoriteBooks, toggleFavoriteBookUtil, getFavoriteWorkIds } from '../../utils/favoritesManager';
 import { IndexBuilder, FEATURED_BOOKS, sanitizeCreators } from '../../builder/IndexBuilder';
 import type { SearchResult } from '../../builder/IndexBuilder';
 import { PackageBuilder } from '../../builder/PackageBuilder';
@@ -972,23 +973,27 @@ export function Library({
     return list;
   }, [downloadedBooks, progressUpdatedTrigger]);
 
-  // 💡 我的最愛經書清單 (localStorage 持久化)
+  // 💡 我的最愛經書清單 (localStorage 持久化與時間戳記管理)
   const [favoriteWorkIds, setFavoriteWorkIds] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem('favorite_work_ids');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
+    return getFavoriteWorkIds();
   });
 
-  const toggleFavoriteBook = (e: React.MouseEvent, workId: string) => {
-    e.stopPropagation();
-    setFavoriteWorkIds(prev => {
-      const next = prev.includes(workId) ? prev.filter(id => id !== workId) : [...prev, workId];
-      localStorage.setItem('favorite_work_ids', JSON.stringify(next));
-      return next;
-    });
+  useEffect(() => {
+    const handleFavUpdated = () => {
+      setFavoriteWorkIds(getFavoriteWorkIds());
+    };
+    window.addEventListener('cbeta_favorites_updated', handleFavUpdated);
+    window.addEventListener('storage', handleFavUpdated);
+    return () => {
+      window.removeEventListener('cbeta_favorites_updated', handleFavUpdated);
+      window.removeEventListener('storage', handleFavUpdated);
+    };
+  }, []);
+
+  const toggleFavoriteBook = (e: React.MouseEvent | undefined, workId: string) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    const { newIds } = toggleFavoriteBookUtil(workId);
+    setFavoriteWorkIds(newIds);
   };
 
   const handleDeleteProgress = (e: React.MouseEvent, workId: string) => {
@@ -1344,8 +1349,10 @@ export function Library({
   const allBookshelfBookIds = useMemo(() => Array.from(new Set([...myBookshelfBookIds, ...subfolderBookIds])), [myBookshelfBookIds, subfolderBookIds]);
   // 1. 近期閱讀（最多 9 本，即 3 欄 × 3 列）
   const recentReadsBooks = resumeBooks.slice(0, 9).map(item => item.book);
-  // 2. 我的最愛
-  const favoriteBooksList = downloadedBooks.filter(b => favoriteWorkIds.includes(b.workId));
+  // 2. 我的最愛（依最近點選/加入最愛時間倒序排列）
+  const favoriteBooksList = useMemo(() => {
+    return getRecentFavoriteBooks(downloadedBooks);
+  }, [downloadedBooks, favoriteWorkIds]);
   // 3. 近期下載（依權威規則：1. 距離當下時間最近 48 小時下載；2. 距離當下時間最近下載的前 10 本書；依下載時間由新到舊倒序排列）
   const recentDownloadsBooks = useMemo(() => {
     return getRecentDownloadedBooks(downloadedBooks);
@@ -1579,6 +1586,22 @@ export function Library({
               </button>
             </div>
           )}
+
+          {/* 💡 淺淺色愛心按鈕：出現在「…」左邊，點選即時加入/取消我的最愛 */}
+          <button 
+            type="button"
+            className={`horizontal-book-fav-btn ${favoriteWorkIds.includes(book.workId) ? 'is-fav' : ''}`}
+            onClick={(e) => toggleFavoriteBook(e, book.workId)}
+            title={favoriteWorkIds.includes(book.workId) ? '已加入我的最愛 (點擊取消)' : '加入我的最愛'}
+            aria-label={favoriteWorkIds.includes(book.workId) ? '取消我的最愛' : '加入我的最愛'}
+          >
+            <Heart 
+              size={15} 
+              fill={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "none"} 
+              color={favoriteWorkIds.includes(book.workId) ? "#e53e3e" : "currentColor"} 
+              style={{ strokeWidth: favoriteWorkIds.includes(book.workId) ? 2 : 1.8 }}
+            />
+          </button>
 
           <button 
             className="horizontal-book-more-btn"

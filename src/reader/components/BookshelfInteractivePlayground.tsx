@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
 import { getRecentDownloadedBooks } from '../../utils/recentDownloads';
+import { getRecentFavoriteBooks } from '../../utils/favoritesManager';
 import { 
   STATIC_DEPT_CATEGORIES, 
   STATIC_VOL_CATEGORIES, 
@@ -454,7 +455,10 @@ export function BookshelfInteractivePlayground({
   // 依 4 大膠囊篩選後的書籍清單
   const filteredBooks = useMemo(() => {
     if (statusFilter === 'favorites') {
-      return activeBooksPool.filter(b => isFavorite(b.workId));
+      if (dataScale === 'mass') {
+        return activeBooksPool.filter(b => isFavorite(b.workId));
+      }
+      return getRecentFavoriteBooks(activeBooksPool);
     }
     if (statusFilter === 'recent') {
       if (dataScale === 'mass') {
@@ -953,11 +957,25 @@ export function BookshelfInteractivePlayground({
                             </div>
                           </div>
 
-                          {/* 最右邊：最愛標記 + 小小圓圈圈/淺灰「…」選項 */}
+                          {/* 最右邊：淺淺色愛心（可點選加入/取消最愛） + 小小圓圈圈/淺灰「…」選項 */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
-                            {isFavorite(book.workId) && (
-                              <Heart size={14} fill="#e53e3e" color="#e53e3e" />
-                            )}
+                            <button
+                              type="button"
+                              className={`horizontal-book-fav-btn ${isFavorite(book.workId) ? 'is-fav' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (onToggleFavorite) onToggleFavorite(book.workId);
+                              }}
+                              title={isFavorite(book.workId) ? '已加入我的最愛 (點擊取消)' : '加入我的最愛'}
+                              aria-label={isFavorite(book.workId) ? '取消我的最愛' : '加入我的最愛'}
+                            >
+                              <Heart 
+                                size={14} 
+                                fill={isFavorite(book.workId) ? "#e53e3e" : "none"} 
+                                color={isFavorite(book.workId) ? "#e53e3e" : "currentColor"} 
+                                style={{ strokeWidth: isFavorite(book.workId) ? 2 : 1.8 }}
+                              />
+                            </button>
                             <button
                               type="button"
                               className="horizontal-book-more-btn"
@@ -998,7 +1016,23 @@ export function BookshelfInteractivePlayground({
                               {book.workId}
                             </span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                              {isFavorite(book.workId) && <Heart size={13} fill="#e53e3e" color="#e53e3e" />}
+                              <button
+                                type="button"
+                                className={`horizontal-book-fav-btn ${isFavorite(book.workId) ? 'is-fav' : ''}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (onToggleFavorite) onToggleFavorite(book.workId);
+                                }}
+                                title={isFavorite(book.workId) ? '已加入我的最愛 (點擊取消)' : '加入我的最愛'}
+                                aria-label={isFavorite(book.workId) ? '取消我的最愛' : '加入我的最愛'}
+                              >
+                                <Heart 
+                                  size={13} 
+                                  fill={isFavorite(book.workId) ? "#e53e3e" : "none"} 
+                                  color={isFavorite(book.workId) ? "#e53e3e" : "currentColor"} 
+                                  style={{ strokeWidth: isFavorite(book.workId) ? 2 : 1.8 }}
+                                />
+                              </button>
                               <button
                                 type="button"
                                 className="horizontal-book-more-btn"

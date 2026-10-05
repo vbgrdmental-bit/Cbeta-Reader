@@ -871,7 +871,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       </div>
 
                       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', width: '100%', paddingLeft: '2.4rem' }}>
-                        {(['default', 'calm', 'compact', 'focus', 'zen', 'custom1', 'custom2', 'custom3'] as const).map(presetKey => {
+                        {(['default', 'calm', 'many_books', 'compact', 'focus', 'zen', 'custom1', 'custom2', 'custom3'] as const).map(presetKey => {
                           const isSelected = (settings.homeLayoutPreset || 'default') === presetKey ||
                             (presetKey === 'custom1' && settings.homeLayoutPreset === 'custom');
                           
@@ -879,6 +879,7 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                           let displayName = '';
                           if (presetKey === 'default') displayName = '版型1 極簡';
                           else if (presetKey === 'calm') displayName = '版型2 淨心閱讀';
+                          else if (presetKey === 'many_books') displayName = '版型3 很多書';
                           else if (presetKey === 'compact') displayName = '極簡精巧 (4x1)';
                           else if (presetKey === 'focus') displayName = '每日精進';
                           else if (presetKey === 'zen') displayName = '禪修護眼';
@@ -1482,16 +1483,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.9.7) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.10.5) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.9.7</span>
+                        <span>⭐ App: v4.10.5</span>
                         <span className="changelog-date">(2026-10-05)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 統一經號方塊水平高度：徹底消除按鈕上上下下錯落，所有經號徽章 100% 齊平同一水平線。</li>
-                        <li>• 單行經題鎖定雙行佔位：單行書名亦維持 2 行空間，第一行文字與上方方塊高度完全一致。</li>
-                        <li>• 四鍵排版嚴整統一：微調頂部起始間距，各主題模式下經書方塊對稱大氣、賞心悅目。</li>
+                        <li>• 新增範本「版型3 很多書」：一鍵套用圖1圖2全套配置，涵蓋下載、近期、上次、最愛、佛典與護眼。</li>
+                        <li>• 整合三大主題18本經書膠囊：以 2×3 雙欄格局收納完整藏經熱門進度，排版充實大氣。</li>
                       </ul>
                     </div>
 
@@ -1514,6 +1514,94 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.10.4</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 我的最愛依最近點選排序：首頁與書櫃最愛書籍依點選時間倒序排列，最新點選排第一位。</li>
+                            <li>• 書櫃「…」左側淺淺色愛心：經典右側新增淺色愛心，讀者可秒速自由點選加入或取消最愛。</li>
+                            <li>• 全站最愛秒速即時連動：在書櫃點選愛心即時同步至首頁所有小卡，無需重新整理。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.10.3</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 書櫃膠囊升級左3本右3本：下排膠囊由4本升級為2×3雙欄雙排共6本書，容量更充裕。</li>
+                            <li>• 微調書籍膠囊緊湊高度：高度適度緊縮至48~56px，3排條列垂直佈局勻稱不擁擠。</li>
+                            <li>• 經號字體統一為古典襯線體：經號徽章文字統一為高識別serif字型，字跡端正厚實。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.10.2</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 4膠囊改為左2本右2本：下排4本書升級為2×2雙欄雙排網格排版，空間大氣勻稱。</li>
+                            <li>• 經題升級圖2楷宋體：採用古典有筆鋒之明體/宋體，字體端莊典雅、古風韻味濃郁。</li>
+                            <li>• 經號徽章加大至38px：加大居中排版，徹底消除經號文字切邊問題，字跡清晰醒目。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.10.1</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 新增 3 款 4×3 4膠囊書櫃小卡：我的最愛、近期下載、上次閱讀全新膠囊版型。</li>
+                            <li>• 典雅無箭頭水平膠囊：上方長條Bar，下方4本經書膠囊帶卷數與朝代譯者。</li>
+                            <li>• 4×3 版面緊湊飽滿：上方Bar加長加厚至56px，方塊加大至86px，留白剛剛好。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.10.0</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 書櫃小卡群組可拉伸：我的最愛、近期下載、上次閱讀全面整合為可自由拉伸群組。</li>
+                            <li>• 4×1/4×2/4×3 秒速切換：點擊卡片切換按鈕，於長條Bar、4本書、8本書間無縫循環。</li>
+                            <li>• 自由定制與雙排對稱：書本正方形按鍵與居中排版保持嚴整，滿足不同藏經容量需求。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.9</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 新增 4×1 獨立長條 Bar：全新「近期下載」、「上次閱讀」、「我的最愛」水平長條快捷卡。</li>
+                            <li>• 新增 4×3 書櫃三合一長條卡：由上至下依序整合「近期下載」、「上次閱讀」、「我的最愛」三大主題。</li>
+                            <li>• 大氣觸控與秒速直達：各長條 Bar 支援飽滿高度與高辨識度色彩圖標，點擊直達書櫃專區。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.8</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 新增 3 款 4×3 書櫃小卡：新增「我的最愛」、「近期下載」、「上次閱讀」8 本書規格，滿足大容量藏經需求。</li>
+                            <li>• 上 1 橫條下 8 本書佈局：上方置中主題快捷條，下方 2 排共 8 個大氣經書方塊按鍵，點擊秒速直達。</li>
+                            <li>• 齊平對稱與全正方形化：8本書方塊與經號徽章全面升級1:1正方形，經題鎖定2行空間高度齊平。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.9.7</span>
+                            <span className="changelog-date">(2026-10-05)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 統一經號方塊水平高度：徹底消除按鈕上上下下錯落，所有經號徽章 100% 齊平同一水平線。</li>
+                            <li>• 單行經題鎖定雙行佔位：單行書名亦維持 2 行空間，第一行文字與上方方塊高度完全一致。</li>
+                            <li>• 四鍵排版嚴整統一：微調頂部起始間距，各主題模式下經書方塊對稱大氣、賞心悅目。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.9.6</span>

@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.9.7` (App: v4.9.7 / Builder: v2.9.13)
+- **Current Version**: `v4.10.5` (App: v4.10.5 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,37 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.10.5 / Builder: v2.9.13** (2026-10-05)
+  - [App] 新增第3個風格範本「版型3 很多書」：一鍵快速套用圖1圖2全套完整配置，由上至下依序為品牌圖示+下載經典、近期下載(6膠囊)、上次閱讀(6膠囊)、我的最愛(6膠囊)、佛典名句精華、護眼倒數計時(4×2)。
+  - [App] 整合三大主題18本經書膠囊：下排採用 2×3 雙欄雙排大容量佈局，直觀飽滿，閱讀熱度一覽無遺。
+- **⭐ App: v4.10.4 / Builder: v2.9.13** (2026-10-05)
+  - [App] 我的最愛依最近點選排序：首頁小卡（4×3 6膠囊/4×2/4×3/4×4）與書櫃最愛清單全面依點選時間倒序排列，最新點選排在第一位。
+  - [App] 書櫃「…」左側淺淺色愛心：書櫃列表與卡片右側新增淺色愛心，讀者可自由點選加入或取消我的最愛。
+  - [App] 全站最愛秒速即時連動：在書櫃點選愛心即刻發佈全站事件，首頁所有小卡毫秒級同步響應，無需重載。
+- **⭐ App: v4.10.3 / Builder: v2.9.13** (2026-10-05)
+  - [App] 書櫃膠囊升級左3本右3本：下排膠囊由 4 本升級為 2×3 雙欄雙排共 6 本書，容量更充裕且排版平整。
+  - [App] 微調書籍膠囊緊湊高度：高度適度緊縮至 48~56px（徽章 34px），3 排條列垂直佈局勻稱不擁擠。
+  - [App] 經號字體統一為古典襯線體：經號徽章文字（X0913 等）統一為圖 2 高識別厚實 serif 字型，字跡端正厚實。
+- **⭐ App: v4.10.2 / Builder: v2.9.13** (2026-10-05)
+  - [App] 4膠囊改為左2本右2本：下排 4 本書全面升級為 2×2 雙欄雙排網格排版，空間大氣勻稱飽滿。
+  - [App] 經題升級圖2楷宋體：採用古典有筆鋒之明體/宋體（Serif），字體端莊典雅、古風韻味濃郁。
+  - [App] 經號徽章加大至38px：加大居中排版，徹底消除經號文字切邊問題，字跡清晰醒目。
+- **⭐ App: v4.10.1 / Builder: v2.9.13** (2026-10-05)
+  - [App] 新增 3 款 4×3 4膠囊書櫃小卡：依圖2、圖3規格全新設計「我的最愛 (4膠囊)」、「近期下載 (4膠囊)」、「上次閱讀 (4膠囊)」。
+  - [App] 典雅無箭頭水平膠囊條：上方長條 Bar 維持大氣飽滿（56px），下方配置 4 條水平膠囊，左側 31px 正方形經號徽章，右側經題與「全 X 卷 · 朝代 譯者」副標，無多餘右側箭頭。
+  - [App] 4×3 視覺充實無空洞：上方 Bar 加長加厚、下方膠囊間距均勻分配，消除大片空白，閱讀節奏沉靜典雅。
+- **⭐ App: v4.10.0 / Builder: v2.9.13** (2026-10-05)
+  - [App] 書櫃小卡群組可拉伸：以「我的最愛」為例（同理「近期下載」、「上次閱讀」亦同），全面整合為支援動態拉伸切換之小卡群組。
+  - [App] 4×1 / 4×2 / 4×3 循環切換：圖 1 為 4×1（長條 Bar）、圖 2 為 4×2（上 1 Bar 下 4 本書）、圖 3 為 4×3（上 1 Bar 下 8 本書），點擊右下角尺寸按鈕即可毫秒級順暢拉伸輪播。
+  - [App] 尺寸與選單自動標準化：小工具抽屜提供 4×1、4×2、4×3 清晰選取，加入後共享同一群組主型別，向下完全兼容既有獨立配置。
+- **⭐ App: v4.9.9 / Builder: v2.9.13** (2026-10-05)
+  - [App] 新增 4×1 獨立長條 Bar：全新「近期下載」、「上次閱讀」、「我的最愛」水平長條快捷小卡。
+  - [App] 新增 4×3 書櫃三合一長條卡：由上至下依序整合「近期下載」、「上次閱讀」、「我的最愛」三大主題。
+  - [App] 大氣觸控與秒速直達：各長條 Bar 支援飽滿高度與高辨識度色彩圖標，點擊直達書櫃專區。
+- **⭐ App: v4.9.8 / Builder: v2.9.13** (2026-10-05)
+  - [App] 新增 3 款 4×3 書櫃小卡：新增「我的最愛 (8本書)」、「近期下載 (8本書)」、「上次閱讀 (8本書)」大容量規格。
+  - [App] 上 1 橫條下 8 本書佈局：上方置中主題快捷條（紅/藍/橙），下方 2 排共 8 個大氣經書方塊按鍵，點擊秒速直達。
+  - [App] 齊平對稱與全正方形化：8本書方塊升級為1:1正方形，經號色塊徽章亦升級為正方形，經題鎖定2行空間高度齊平。
 - **⭐ App: v4.9.7 / Builder: v2.9.13** (2026-10-05)
   - [App] 統一經號方塊水平高度：徹底消除按鈕上上下下錯落感，頂部起始對齊，所有經號徽章 100% 齊平同一水平線。
   - [App] 單行經題鎖定雙行佔位：單行書名（如《妙法蓮華經》）亦佔滿 2 行空間（2.5em），經名第一行與上方方塊完全對齊。

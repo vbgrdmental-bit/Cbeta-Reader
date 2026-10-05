@@ -290,7 +290,7 @@ export interface AppSettings {
   highlightStyle: 'underline' | 'bottom-half' | 'full' | 'border';
   readingLogEnabled?: boolean; // 💡 每日閱讀記錄（預設關閉）
   customHomeLayoutEnabled?: boolean; // 💡 自訂首頁 4 格卡片版面（預設關閉）
-  homeLayoutPreset?: 'default' | 'calm' | 'compact' | 'focus' | 'zen' | 'custom' | 'custom1' | 'custom2' | 'custom3';
+  homeLayoutPreset?: 'default' | 'calm' | 'many_books' | 'compact' | 'focus' | 'zen' | 'custom' | 'custom1' | 'custom2' | 'custom3';
   customPresetName?: string; // 💡 自訂風格範本名稱（可自訂文字，預設「自訂」）
   customPresets?: Record<string, { name: string; widgets: any[] }>; // 💡 3 組自訂版型槽位 (custom1, custom2, custom3)
   homeWidgets?: Array<{ id: string; type: string; size: string; [key: string]: any }>;

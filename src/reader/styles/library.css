@@ -4003,6 +4003,50 @@ body.theme-dark .horizontal-book-juans-badge {
   white-space: nowrap !important;
 }
 
+/* 經典卡片右側淺淺色愛心按鈕（未選時淺淺若隱若現，點選後純紅實心醒目） */
+.horizontal-book-fav-btn {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-muted, #9e9182) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  opacity: 0.35 !important;
+  transition: opacity 0.18s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.18s ease !important;
+}
+
+.horizontal-book-fav-btn:hover {
+  opacity: 0.85 !important;
+  color: #e53e3e !important;
+  transform: scale(1.15) !important;
+}
+
+.horizontal-book-fav-btn.is-fav {
+  opacity: 1 !important;
+  color: #e53e3e !important;
+}
+
+.horizontal-book-fav-btn.is-fav:hover {
+  opacity: 0.85 !important;
+  transform: scale(1.15) !important;
+}
+
+body.theme-ebony .horizontal-book-fav-btn,
+body.theme-dark .horizontal-book-fav-btn {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+body.theme-ebony .horizontal-book-fav-btn.is-fav,
+body.theme-dark .horizontal-book-fav-btn.is-fav {
+  color: #f43f5e !important;
+}
+
 .horizontal-book-more-btn {
   width: 24px !important;
   height: 24px !important;
@@ -4972,7 +5016,7 @@ body.theme-dark .widget-card {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0.55rem calc(0.95rem + 0.65rem + 1px);
+  padding: 0.55rem 2.45rem; /* 💡 左右向內縮排至 2.45rem，減少中間多餘空白，讓所有長條 Bar 完美垂直對齊 */
   box-sizing: border-box;
 }
 
@@ -5948,12 +5992,13 @@ body.theme-dark .strip-theme-history {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start; /* 💡 統一自頂部固定距離起排，徹底消除上上下下錯落感 */
-  gap: 0.32rem;
-  padding: 0.55rem 0.2rem 0.4rem 0.2rem;
+  gap: 0.25rem;
+  padding: 0.42rem 0.18rem 0.35rem 0.18rem;
   border-radius: 12px;
   width: 100%;
-  max-width: 84px;
+  max-width: 80px;
   height: 78px;
+  aspect-ratio: 1 / 1;
   margin: 0 auto;
   box-sizing: border-box;
   background: var(--btn-secondary-bg, rgba(255, 255, 255, 0.65));
@@ -5980,8 +6025,8 @@ body.theme-dark .book-nav-item {
 }
 
 .book-nav-badge {
-  width: 34px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 7px;
   display: flex;
   align-items: center;
@@ -5992,23 +6037,25 @@ body.theme-dark .book-nav-item {
 
 .book-nav-badge-text {
   font-family: var(--font-mono, monospace);
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 700;
   color: #ffffff;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   line-height: 1;
+  text-align: center;
+  transform: scale(0.96);
 }
 
 .book-nav-title {
-  font-size: 0.73rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.22;
   text-align: center;
   max-width: 100%;
   width: 100%;
-  height: 2.5em; /* 💡 固定 2 行高度：即使只有 1 行經名也維持 2 行空間，確保上方經號方塊高度 100% 齊平 */
-  min-height: 2.5em;
-  max-height: 2.5em;
+  height: 2.45em; /* 💡 固定 2 行高度：即使只有 1 行經名也維持 2 行空間（第二行空白），確保上方經號方塊高度 100% 齊平 */
+  min-height: 2.45em;
+  max-height: 2.45em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -6038,9 +6085,9 @@ body.theme-dark .book-nav-title {
   align-items: center;
   justify-content: center;
   font-size: 0.72rem;
-  height: 2.5em;
-  min-height: 2.5em;
-  max-height: 2.5em;
+  height: 2.45em;
+  min-height: 2.45em;
+  max-height: 2.45em;
 }
 
 .book-nav-item.item-empty-slot:hover {
@@ -6050,15 +6097,374 @@ body.theme-dark .book-nav-title {
 }
 
 .book-nav-badge-empty {
-  width: 34px;
-  height: 24px;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
   border: 1px dashed var(--reader-border, rgba(140, 100, 60, 0.3));
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--reader-text-muted, #7a6652);
   flex-shrink: 0;
+}
+
+/* 💡 🌟 依圖2規格設計之 4x3 書櫃卡片（上方主題快捷 bar 加長 + 下方 8 本書正方形方塊加大，中間留白剛剛好，4x2不變） */
+.widget-card.size-4x3:has(.widget-books-shelf-4x3) {
+  padding: 0.5rem 0.55rem 0.5rem 0.55rem;
+  justify-content: flex-start;
+}
+
+.widget-books-shelf-4x3 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  gap: 0.52rem;
+  box-sizing: border-box;
+}
+
+/* 4x3 專屬：上方長條 Bar 加長加高，更為飽滿大氣 */
+.widget-books-shelf-4x3 .books-shelf-top-strip {
+  width: 100%;
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  border-radius: 16px;
+  padding: 0 0.85rem;
+  box-sizing: border-box;
+}
+
+.widget-books-shelf-4x3 .books-strip-icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+
+.widget-books-shelf-4x3 .books-strip-arrow {
+  width: 28px;
+  height: 28px;
+}
+
+.widget-books-shelf-4x3 .download-strip-title {
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.widget-books-shelf-4x3 .download-strip-sub {
+  font-size: 0.74rem;
+}
+
+/* 4x3 專屬：下半部 8 本書網格間距均勻，填補中間空白 */
+.widget-books-shelf-4x3 .books-shelf-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, auto);
+  gap: 0.45rem 0.35rem;
+  align-items: center;
+  justify-content: center;
+  align-content: space-between;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 4x3 專屬：8 本正方形經書方塊加大（由 78px 提升至 86px） */
+.widget-books-shelf-4x3 .book-nav-item {
+  width: 100%;
+  max-width: 86px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  max-height: 86px;
+  border-radius: 14px;
+  padding: 0.42rem 0.2rem 0.35rem 0.2rem;
+  gap: 0.25rem;
+}
+
+.widget-books-shelf-4x3 .book-nav-badge {
+  width: 31px;
+  height: 31px;
+  border-radius: 8px;
+}
+
+.widget-books-shelf-4x3 .book-nav-badge-text {
+  font-size: 0.62rem;
+}
+
+.widget-books-shelf-4x3 .book-nav-badge-empty {
+  width: 31px;
+  height: 31px;
+  border-radius: 8px;
+}
+
+.widget-books-shelf-4x3 .book-nav-title {
+  font-size: 0.74rem;
+  line-height: 1.25;
+}
+
+/* 💡 🌟 全新 4x3 4膠囊書櫃小卡（上方為圖1長條Bar，下方為4本膠囊條列無箭頭，如圖2、圖3） */
+.widget-card.size-4x3:has(.widget-books-shelf-4x3-capsule) {
+  padding: 0.5rem 0.55rem;
+  justify-content: flex-start;
+}
+
+.widget-books-shelf-4x3-capsule {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  gap: 0.5rem;
+  box-sizing: border-box;
+}
+
+.widget-books-shelf-4x3-capsule .books-shelf-top-strip {
+  width: 100%;
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  border-radius: 16px;
+  padding: 0 0.85rem;
+  box-sizing: border-box;
+}
+
+.widget-books-shelf-4x3-capsule .books-strip-icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+
+.widget-books-shelf-4x3-capsule .books-strip-arrow {
+  width: 28px;
+  height: 28px;
+}
+
+.widget-books-shelf-4x3-capsule .download-strip-title {
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.widget-books-shelf-4x3-capsule .download-strip-sub {
+  font-size: 0.74rem;
+}
+
+/* 下半部：左3本、右3本（2×3 雙欄三排膠囊網格，高度適當縮小） */
+.books-shelf-capsules-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 0.32rem 0.45rem;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 單一膠囊條目（左3右3：高度適當縮小，無箭頭） */
+.book-capsule-item {
+  display: flex;
+  align-items: center;
+  gap: 0.48rem;
+  width: 100%;
+  height: 100%;
+  min-height: 48px;
+  max-height: 56px;
+  padding: 0.28rem 0.5rem;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background: var(--btn-secondary-bg, rgba(255, 255, 255, 0.65));
+  border: 1px solid var(--border-color, rgba(140, 100, 60, 0.15));
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+}
+
+.book-capsule-item:hover {
+  transform: translateY(-1.5px);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: var(--theme-accent, #238b69);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+}
+
+.book-capsule-item:active {
+  transform: scale(0.985);
+}
+
+body.theme-ebony .book-capsule-item,
+body.theme-dark .book-capsule-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-ebony .book-capsule-item:hover,
+body.theme-dark .book-capsule-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 膠囊左側正方形圓角經號徽章（如圖2：34×34 規格） */
+.book-capsule-badge {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+}
+
+/* 💡 書籍編號字體統一為圖2字體：var(--font-serif, serif) 800 粗體 */
+.book-capsule-badge-text {
+  font-family: var(--font-serif, serif) !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1;
+  text-align: center;
+  padding: 0 1px;
+}
+
+/* 膠囊空槽位 */
+.book-capsule-item.item-empty-slot {
+  border: 1.5px dashed var(--reader-border, rgba(140, 100, 60, 0.25));
+  background: rgba(0, 0, 0, 0.02);
+  opacity: 0.75;
+}
+
+.book-capsule-badge-empty {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 7px;
+  border: 1px dashed var(--reader-border, rgba(140, 100, 60, 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--reader-text-muted, #7a6652);
+  flex-shrink: 0;
+}
+
+/* 膠囊右側文字資訊 */
+.book-capsule-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  flex: 1;
+  gap: 0.12rem;
+}
+
+/* 經題：如圖2古典宋體/楷體有筆鋒（阿閦佛國經） */
+.book-capsule-title {
+  font-family: var(--font-serif, "Noto Serif TC", "Source Han Serif TC", "Songti TC", "Kaiti TC", "DFKai-SB", "BiauKai", "MingLiU", serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary, #2c1810);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+body.theme-ebony .book-capsule-title,
+body.theme-dark .book-capsule-title {
+  color: #f4ede4;
+}
+
+/* 副標：全 X 卷 · 朝代 譯者 */
+.book-capsule-sub {
+  font-size: 0.64rem;
+  color: var(--text-muted, #7a6652);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+}
+
+body.theme-ebony .book-capsule-sub,
+body.theme-dark .book-capsule-sub {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* 💡 🌟 獨立 4x1 長條 Bar 專屬適配（如圖1、圖2、圖3：以圖2為基準兩側絕對齊平） */
+.widget-card.size-4x1:has(.strip-mode-standalone) {
+  padding: 0.35rem 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.books-shelf-top-strip.strip-mode-standalone,
+.download-shelf-top-strip.strip-mode-standalone {
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  border-radius: 14px;
+  padding: 0 calc(2.45rem - 0.5rem) !important; /* 💡 8px + 31.2px = 39.2px，與 .widget-card.size-4x1 的 2.45rem 100% 垂直齊平 */
+  box-sizing: border-box;
+}
+
+/* 💡 🌟 4x3 書櫃三合一長條卡（上至下依序：近期下載、上次閱讀、我的最愛） */
+.widget-card.size-4x3:has(.widget-shelf-triple-bars-4x3) {
+  padding: 0.85rem 0.5rem;
+  justify-content: center;
+}
+
+.widget-shelf-triple-bars-4x3 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  gap: 0.75rem;
+  box-sizing: border-box;
+}
+
+.widget-shelf-triple-bars-4x3 .books-shelf-top-strip {
+  flex: 1;
+  height: auto;
+  min-height: 64px;
+  max-height: 74px;
+  border-radius: 16px;
+  padding: 0 calc(2.45rem - 0.5rem) !important; /* 💡 8px + 31.2px = 39.2px，與圖1、圖3所有 4x1 垂直齊平且減少中間多餘空白 */
+  box-sizing: border-box;
+}
+
+.widget-shelf-triple-bars-4x3 .books-strip-icon-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.widget-shelf-triple-bars-4x3 .download-strip-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.widget-shelf-triple-bars-4x3 .download-strip-sub {
+  font-size: 0.8rem;
+}
+
+.widget-shelf-triple-bars-4x3 .books-strip-arrow {
+  width: 28px;
+  height: 28px;
+}
+
+/* 💡 長條 Bar 靠兩端對齊群組（左側圖示與文字，右側箭頭，嚴格對齊圖2基準） */
+.strip-bar-left-group {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.books-shelf-top-strip.strip-align-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* 💡 4x3 規格專屬適配（圖2：上排下載經典 bar 加高大氣，下排 3 個正方形按鍵） */

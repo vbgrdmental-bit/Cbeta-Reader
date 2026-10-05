@@ -24,7 +24,18 @@ export type HomeWidgetType =
   | 'download_shelf_4x3'
   | 'shelf_fav_4x2'
   | 'shelf_down_4x2'
-  | 'shelf_read_4x2';
+  | 'shelf_read_4x2'
+  | 'shelf_fav_4x3'
+  | 'shelf_down_4x3'
+  | 'shelf_read_4x3'
+  | 'bar_fav_4x1'
+  | 'bar_down_4x1'
+  | 'bar_read_4x1'
+  | 'bar_dl_4x1'
+  | 'shelf_bars_4x3'
+  | 'shelf_fav_capsule_4x3'
+  | 'shelf_down_capsule_4x3'
+  | 'shelf_read_capsule_4x3';
 
 export type HomeWidgetSize = 
   | 'size-4x1'
@@ -70,7 +81,7 @@ export const ZEN_ICONS_LIST = [
   '/zen-icons/zen_09.png'
 ];
 
-export type HomeLayoutPreset = 'default' | 'calm' | 'compact' | 'focus' | 'zen' | 'custom' | 'custom1' | 'custom2' | 'custom3';
+export type HomeLayoutPreset = 'default' | 'calm' | 'many_books' | 'compact' | 'focus' | 'zen' | 'custom' | 'custom1' | 'custom2' | 'custom3';
 
 export type WidgetCategoryId = 'brand' | 'nav' | 'reading' | 'other';
 
@@ -113,9 +124,20 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'search_2x2', category: 'nav', name: '全文檢索卡', size: 'size-2x2', icon: '🔍', description: '已下載經文全文快速檢索（支援 2x2/4x1/4x2）' },
 
   // 3. 閱讀與進度
-  { type: 'shelf_fav_4x2', category: 'reading', name: '我的最愛 (4本書)', size: 'size-4x2', icon: '❤️', description: '依圖2設計：上方我的最愛快捷橫條，下方最新收藏之 4 本經典方塊按鍵' },
-  { type: 'shelf_down_4x2', category: 'reading', name: '近期下載 (4本書)', size: 'size-4x2', icon: '📥', description: '依圖2設計：上方近期下載快捷橫條，下方最新下載之 4 本經典方塊按鍵' },
-  { type: 'shelf_read_4x2', category: 'reading', name: '上次閱讀 (4本書)', size: 'size-4x2', icon: '📕', description: '依圖2設計：上方上次閱讀快捷橫條，下方最新讀誦之 4 本經典方塊按鍵' },
+  { type: 'shelf_bars_4x3', category: 'reading', name: '書櫃三合一長條卡 (4×3)', size: 'size-4x3', icon: '📑', description: '上至下依序整合「近期下載」、「上次閱讀」、「我的最愛」3 個快捷長條 Bar，點擊秒速直達' },
+  { type: 'bar_dl_4x1', category: 'nav', name: '下載經典 (長條Bar)', size: 'size-4x1', icon: '＋', description: '4×1 水平長條快捷 Bar：直達 CBETA 藏經庫下載' },
+  { type: 'shelf_fav_4x2', category: 'reading', name: '我的最愛卡', size: 'size-4x2', icon: '❤️', description: '依圖示規格設計：支援 4×1（長條Bar）、4×2（4本書）、4×3（8本書）自由拉伸切換' },
+  { type: 'shelf_down_4x2', category: 'reading', name: '近期下載卡', size: 'size-4x2', icon: '📥', description: '依圖示規格設計：支援 4×1（長條Bar）、4×2（4本書）、4×3（8本書）自由拉伸切換' },
+  { type: 'shelf_read_4x2', category: 'reading', name: '上次閱讀卡', size: 'size-4x2', icon: '📕', description: '依圖示規格設計：支援 4×1（長條Bar）、4×2（4本書）、4×3（8本書）自由拉伸切換' },
+  { type: 'bar_down_4x1', category: 'reading', name: '近期下載 (長條Bar)', size: 'size-4x1', icon: '📥', description: '4×1 水平長條快捷 Bar：直達近期下載書庫' },
+  { type: 'bar_read_4x1', category: 'reading', name: '上次閱讀 (長條Bar)', size: 'size-4x1', icon: '📕', description: '4×1 水平長條快捷 Bar：直達上次閱讀經藏' },
+  { type: 'bar_fav_4x1', category: 'reading', name: '我的最愛 (長條Bar)', size: 'size-4x1', icon: '❤️', description: '4×1 水平長條快捷 Bar：直達我的最愛收藏' },
+  { type: 'shelf_fav_4x3', category: 'reading', name: '我的最愛 (8本書)', size: 'size-4x3', icon: '❤️', description: '上方快捷橫條，下方 8 本經典方塊按鍵（4×2 雙排佈局）' },
+  { type: 'shelf_down_4x3', category: 'reading', name: '近期下載 (8本書)', size: 'size-4x3', icon: '📥', description: '上方快捷橫條，下方 8 本經典方塊按鍵（4×2 雙排佈局）' },
+  { type: 'shelf_read_4x3', category: 'reading', name: '上次閱讀 (8本書)', size: 'size-4x3', icon: '📕', description: '上方快捷橫條，下方 8 本經典方塊按鍵（4×2 雙排佈局）' },
+  { type: 'shelf_fav_capsule_4x3', category: 'reading', name: '我的最愛 (6膠囊)', size: 'size-4x3', icon: '❤️', description: '依圖示規格：上方快捷橫條，下方 6 本經典膠囊條列（左3本右3本雙欄佈局無箭頭）' },
+  { type: 'shelf_down_capsule_4x3', category: 'reading', name: '近期下載 (6膠囊)', size: 'size-4x3', icon: '📥', description: '依圖示規格：上方快捷橫條，下方 6 本經典膠囊條列（左3本右3本雙欄佈局無箭頭）' },
+  { type: 'shelf_read_capsule_4x3', category: 'reading', name: '上次閱讀 (6膠囊)', size: 'size-4x3', icon: '📕', description: '依圖示規格：上方快捷橫條，下方 6 本經典膠囊條列（左3本右3本雙欄佈局無箭頭）' },
   { type: 'lastread_4x2', category: 'reading', name: '上次閱讀卡', size: 'size-4x2', icon: '📕', description: '上次閱讀經典列表（支援 4x1/4x2/4x3/4x4 共 1~4 本）' },
   { type: 'lastread_excerpt_4x4', category: 'reading', name: '上次閱讀經文進度卡', size: 'size-4x4', icon: '📜', description: '上次閱讀經典與當前段落經文摘錄（4x4 規格）' },
   { type: 'triple_reading_4x4', category: 'reading', name: '三合一閱讀卡', size: 'size-4x4', icon: '📚', description: '集合「近期下載」、「上次閱讀」、「我的最愛」各 1 本經典之三合一卡片（4×4 規格）' },
@@ -179,6 +201,16 @@ export const PRESET_LAYOUTS: Record<string, HomeWidgetConfig[]> = {
       type: 'title_4x1',
       size: 'size-4x1'
     }
+  ],
+  // 3. 版型3 很多書 (圖1、圖2全套配置：品牌圖示+下載、近期下載6本、上次閱讀6本、我的最愛6本、佛典精選、護眼計時4x2)
+  many_books: [
+    { id: 'w_books_title', type: 'title_4x2', size: 'size-2x2' },
+    { id: 'w_books_download', type: 'download_2x2', size: 'size-2x2' },
+    { id: 'w_books_shelf_down', type: 'shelf_down_capsule_4x3', size: 'size-4x3' },
+    { id: 'w_books_shelf_read', type: 'shelf_read_capsule_4x3', size: 'size-4x3' },
+    { id: 'w_books_shelf_fav', type: 'shelf_fav_capsule_4x3', size: 'size-4x3' },
+    { id: 'w_books_zen', type: 'zen_4x2', size: 'size-4x2' },
+    { id: 'w_books_timer', type: 'timer_2x2', size: 'size-4x2' }
   ],
   compact: [
     { id: 'w_title', type: 'title_4x1', size: 'size-4x1' },
@@ -251,8 +283,22 @@ export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
   system_nav_4x2: ['size-4x2'],
   // 下載與書櫃卡：4x2
   download_shelf_4x3: ['size-4x2'],
-  // 依圖2設計之 4x2 書櫃卡片（上方主快捷 bar + 下方 4 本書方塊按鍵）
-  shelf_fav_4x2: ['size-4x2'],
-  shelf_down_4x2: ['size-4x2'],
-  shelf_read_4x2: ['size-4x2']
+  // 依圖示規格設計之書櫃卡片群組：支援 4x1 (長條Bar) / 4x2 (4本書) / 4x3 (8本書) 自由拉伸切換
+  shelf_fav_4x2: ['size-4x1', 'size-4x2', 'size-4x3'],
+  shelf_down_4x2: ['size-4x1', 'size-4x2', 'size-4x3'],
+  shelf_read_4x2: ['size-4x1', 'size-4x2', 'size-4x3'],
+  // 兼容舊版與獨立宣告
+  shelf_fav_4x3: ['size-4x1', 'size-4x2', 'size-4x3'],
+  shelf_down_4x3: ['size-4x1', 'size-4x2', 'size-4x3'],
+  shelf_read_4x3: ['size-4x1', 'size-4x2', 'size-4x3'],
+  bar_down_4x1: ['size-4x1', 'size-4x2', 'size-4x3'],
+  bar_read_4x1: ['size-4x1', 'size-4x2', 'size-4x3'],
+  bar_fav_4x1: ['size-4x1', 'size-4x2', 'size-4x3'],
+  // 3 款全新 4x3 4膠囊書櫃小卡
+  shelf_fav_capsule_4x3: ['size-4x3', 'size-4x2', 'size-4x1'],
+  shelf_down_capsule_4x3: ['size-4x3', 'size-4x2', 'size-4x1'],
+  shelf_read_capsule_4x3: ['size-4x3', 'size-4x2', 'size-4x1'],
+  // 3 款獨立 4x1 長條 Bar 與 4x3 三合一長條卡
+  shelf_bars_4x3: ['size-4x3'],
+  bar_dl_4x1: ['size-4x1']
 };
