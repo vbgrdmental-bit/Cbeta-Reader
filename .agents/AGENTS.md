@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.10.6` (App: v4.10.6 / Builder: v2.9.13)
+- **Current Version**: `v4.10.7` (App: v4.10.7 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,9 +72,12 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.10.7 / Builder: v2.9.13** (2026-10-06)
+  - [App] 全站統一稱呼「全文檢索」：頂部選單膠囊（原全文搜尋）與系統導航小卡（原關鍵字搜尋）全面統一為「全文檢索」。
+  - [App] 小卡與控制列稱謂一致：四合一導航、快捷功能抽屜與自訂選單全面同步對齊，全站名稱 100% 一致。
 - **⭐ App: v4.10.6 / Builder: v2.9.13** (2026-10-06)
   - [App] 調整「版型3 很多書」：依圖1圖2全套配置，頂部日曆與近日閱讀(4×2)，接續近期下載、上次閱讀、我的最愛(各6膠囊共18本)，底置佛典名句(4×2)與CBETA Reader品牌橫條(4×1)。
-  - [App] 調整「版型1 極簡」：依圖3圖4全套配置，頂部下載經典虛線條(4×1)，接續我的書櫃/我的筆記/關鍵字搜尋系統導航(4×2)，近期下載(4×2)、我的最愛(4×2)及CBETA Reader品牌橫條(4×1)。
+  - [App] 調整「版型1 極簡」：依圖3圖4全套配置，頂部下載經典虛線條(4×1)，接續我的書櫃/我的筆記/全文檢索系統導航(4×2)，近期下載(4×2)、我的最愛(4×2)及CBETA Reader品牌橫條(4×1)。
 - **⭐ App: v4.10.5 / Builder: v2.9.13** (2026-10-05)
   - [App] 新增第3個風格範本「版型3 很多書」：一鍵快速套用圖1圖2全套完整配置，由上至下依序為品牌圖示+下載經典、近期下載(6膠囊)、上次閱讀(6膠囊)、我的最愛(6膠囊)、佛典名句精華、護眼倒數計時(4×2)。
   - [App] 整合三大主題18本經書膠囊：下排採用 2×3 雙欄雙排大容量佈局，直觀飽滿，閱讀熱度一覽無遺。

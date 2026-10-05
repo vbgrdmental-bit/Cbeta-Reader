@@ -56,7 +56,7 @@ export const DEFAULT_QUICK_NAV_BUTTONS: string[] = [
   'brand_title',       // 1 (固定)
   'shelf',             // 2 我的書櫃
   'notes',             // 3 我的筆記
-  'search',            // 4 關鍵字搜尋
+  'search',            // 4 全文檢索
   'theme_color',       // 5 自訂色
   'download',          // 6 下載經典
   'recent_downloads',  // 7 近期下載
@@ -153,9 +153,9 @@ export const QUICK_NAV_BUTTON_DEFS: Record<string, { name: string; gradient: str
     actionTitle: '查看劃線重點與個人筆記'
   },
   search: {
-    name: '關鍵字搜尋',
+    name: '全文檢索',
     gradient: 'linear-gradient(135deg, #06b6d4, #0891b2)',
-    actionTitle: '已下載經文關鍵字搜尋'
+    actionTitle: '已下載經典全文檢索'
   },
   stats: {
     name: '閱讀日誌',
@@ -2713,7 +2713,7 @@ export function HomeDashboard({
               <div 
                 className="core-widget-card-embedded"
                 onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('search') : undefined}
-                title="已下載經文搜尋"
+                title="已下載經典全文檢索"
               >
                 <div className="core-icon-box">
                   <Search size={20} color="#ffffff" style={{ strokeWidth: 2.4 }} />
@@ -2772,13 +2772,13 @@ export function HomeDashboard({
               <div 
                 className="compact-nav-item-4x2"
                 onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('search') : undefined}
-                title="已下載經文搜尋"
+                title="已下載經典全文檢索"
               >
                 <div className="compact-nav-icon-4x2">
                   <Search size={20} color="#ffffff" style={{ strokeWidth: 2.4 }} />
                 </div>
                 <div className="compact-nav-label-4x2">全文檢索</div>
-                <div className="compact-nav-badge-4x2">關鍵字搜尋</div>
+                <div className="compact-nav-badge-4x2">全文檢索</div>
               </div>
             </div>
           );
@@ -2828,7 +2828,7 @@ export function HomeDashboard({
               <div 
                 className="compact-nav-item-2x2"
                 onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('search') : undefined}
-                title="已下載經文搜尋"
+                title="已下載經典全文檢索"
               >
                 <div className="compact-nav-icon-2x2">
                   <Search size={14} color="#ffffff" style={{ strokeWidth: 2.4 }} />
@@ -2878,7 +2878,7 @@ export function HomeDashboard({
             <div 
               className="compact-nav-item"
               onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('search') : undefined}
-              title="已下載經文搜尋"
+              title="已下載經典全文檢索"
             >
               <div className="compact-nav-icon">
                 <Search size={16} color="#ffffff" style={{ strokeWidth: 2.2 }} />
@@ -4032,7 +4032,7 @@ export function HomeDashboard({
         );
       }
 
-      // 15. 圖2單獨 4x2 卡片：系統導航卡（我的書櫃、我的筆記、關鍵字搜尋，秒速直達）
+      // 15. 圖2單獨 4x2 卡片：系統導航卡（我的書櫃、我的筆記、全文檢索，秒速直達）
       case 'system_nav_4x2': {
         return (
           <div className="widget-three-nav-4x2 system-nav-card">
@@ -4060,7 +4060,7 @@ export function HomeDashboard({
               <span className="three-nav-label">我的筆記</span>
             </div>
 
-            {/* 3. 關鍵字搜尋 */}
+            {/* 3. 全文檢索 */}
             <div 
               className="three-nav-item item-search"
               onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('search') : undefined}
@@ -4069,7 +4069,7 @@ export function HomeDashboard({
               <div className="three-nav-icon icon-search">
                 <Search size={22} strokeWidth={2.4} />
               </div>
-              <span className="three-nav-label">關鍵字搜尋</span>
+              <span className="three-nav-label">全文檢索</span>
             </div>
           </div>
         );

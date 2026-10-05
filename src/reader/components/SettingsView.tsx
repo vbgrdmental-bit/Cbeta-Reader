@@ -1483,15 +1483,15 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.10.6) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.10.7) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.10.6</span>
+                        <span>⭐ App: v4.10.7</span>
                         <span className="changelog-date">(2026-10-06)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 調整「版型3 很多書」：頂部日曆與近日閱讀，接續18本經書膠囊，底置佛典名句與品牌橫條。</li>
-                        <li>• 調整「版型1 極簡」：頂部下載經典虛線條、系統三合一導航、近期下載與最愛雙經書及品牌橫條。</li>
+                        <li>• 全站統一稱呼「全文檢索」：頂部選單膠囊（原全文搜尋）與系統導航小卡（原關鍵字搜尋）全面統一為全文檢索。</li>
+                        <li>• 小卡與控制列稱謂一致：四合一導航、快捷功能抽屜與自訂選單全面同步對齊，全站名稱 100% 一致。</li>
                       </ul>
                     </div>
 
@@ -1514,6 +1514,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.10.6</span>
+                            <span className="changelog-date">(2026-10-06)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 調整「版型3 很多書」：頂部日曆與近日閱讀，接續18本經書膠囊，底置佛典名句與品牌橫條。</li>
+                            <li>• 調整「版型1 極簡」：頂部下載經典虛線條、系統三合一導航、近期下載與最愛雙經書及品牌橫條。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.10.5</span>

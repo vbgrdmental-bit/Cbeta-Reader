@@ -1753,17 +1753,17 @@ export function Library({
             <span className="capsule-label">我的筆記</span>
           </button>
 
-          {/* 全文搜尋 */}
+          {/* 全文檢索 */}
           <button
             className={`capsule-nav-item ${activeTab === 'search' ? 'active' : ''}`}
             onClick={() => {
               setActiveTab('search');
               updateHashRoute('library');
             }}
-            title="關鍵字搜尋（已下載經典檢索）"
+            title="全文檢索（已下載經典檢索）"
           >
             <Search size={16} />
-            <span className="capsule-label">全文搜尋</span>
+            <span className="capsule-label">全文檢索</span>
           </button>
 
           {/* 閱讀日誌（若勾選「閱讀日誌」時整合於微膠囊內） */}
