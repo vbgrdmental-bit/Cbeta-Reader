@@ -1712,7 +1712,8 @@ export function Library({
         <div className="unified-nav-capsule">
           {/* 下載經典 */}
           <button
-            className={`capsule-nav-item ${activeTab === 'cbeta' ? 'active' : ''}`}
+            className={`capsule-nav-item nav-item-cbeta ${activeTab === 'cbeta' ? 'active' : ''}`}
+            data-nav="cbeta"
             onClick={() => {
               setActiveTab('cbeta');
               updateHashRoute('cbeta');
@@ -1726,7 +1727,8 @@ export function Library({
 
           {/* 我的書櫃 */}
           <button
-            className={`capsule-nav-item ${activeTab === 'shelf' && (currentFolderId === 'virtual_my_folders' || (currentFolderId && currentFolderId !== 'virtual_highlights')) ? 'active' : ''}`}
+            className={`capsule-nav-item nav-item-shelf ${activeTab === 'shelf' && (currentFolderId === 'virtual_my_folders' || (currentFolderId && currentFolderId !== 'virtual_highlights')) ? 'active' : ''}`}
+            data-nav="shelf"
             onClick={() => {
               setBookshelfStatusFilter('all');
               setActiveTab('shelf');
@@ -1741,7 +1743,8 @@ export function Library({
 
           {/* 我的筆記 */}
           <button
-            className={`capsule-nav-item ${activeTab === 'shelf' && currentFolderId === 'virtual_highlights' ? 'active' : ''}`}
+            className={`capsule-nav-item nav-item-notes ${activeTab === 'shelf' && currentFolderId === 'virtual_highlights' ? 'active' : ''}`}
+            data-nav="notes"
             onClick={() => {
               setActiveTab('shelf');
               navigateToFolder('virtual_highlights');
@@ -1755,7 +1758,8 @@ export function Library({
 
           {/* 全文檢索 */}
           <button
-            className={`capsule-nav-item ${activeTab === 'search' ? 'active' : ''}`}
+            className={`capsule-nav-item nav-item-search ${activeTab === 'search' ? 'active' : ''}`}
+            data-nav="search"
             onClick={() => {
               setActiveTab('search');
               updateHashRoute('library');
@@ -1769,7 +1773,8 @@ export function Library({
           {/* 閱讀日誌（若勾選「閱讀日誌」時整合於微膠囊內） */}
           {settings.readingLogEnabled && (
             <button
-              className={`capsule-nav-item ${activeTab === 'reading-log' ? 'active' : ''}`}
+              className={`capsule-nav-item nav-item-log ${activeTab === 'reading-log' ? 'active' : ''}`}
+              data-nav="log"
               onClick={() => {
                 setActiveTab('reading-log');
                 updateHashRoute('library');

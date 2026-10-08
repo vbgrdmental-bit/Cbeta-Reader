@@ -227,6 +227,92 @@ body.theme-light .wing-capsule-item.active {
   color: #ffffff !important;
 }
 
+/* ══════════════════════════════════════════════════
+   圖2 膠囊導航按鈕色彩特化 (完全對齊圖1：書櫃紫、筆記綠、檢索藍)
+   其他按鍵 (下載經典、閱讀日誌) 維持原設定不變
+   ══════════════════════════════════════════════════ */
+
+/* 1. 我的書櫃 (紫色系) */
+.capsule-nav-item.nav-item-shelf.active,
+.capsule-nav-item[data-nav="shelf"].active,
+.wing-capsule-item.nav-item-shelf.active {
+  background: linear-gradient(135deg, #a855f7, #7c3aed) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.35) !important;
+}
+
+.capsule-nav-item.nav-item-shelf:hover,
+.capsule-nav-item[data-nav="shelf"]:hover {
+  color: #8b5cf6;
+}
+
+/* 深色模式下的「我的書櫃」 (高質感明麗紫色) */
+body.theme-ebony .capsule-nav-item.nav-item-shelf.active,
+body.theme-dark .capsule-nav-item.nav-item-shelf.active,
+body.theme-custom-dark .capsule-nav-item.nav-item-shelf.active,
+.theme-ebony .capsule-nav-item.nav-item-shelf.active,
+.theme-dark .capsule-nav-item.nav-item-shelf.active,
+body.theme-ebony .capsule-nav-item[data-nav="shelf"].active,
+body.theme-dark .capsule-nav-item[data-nav="shelf"].active {
+  background: linear-gradient(135deg, #b066ff, #8241f5) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(176, 102, 255, 0.45) !important;
+}
+
+/* 2. 我的筆記 (綠色系) */
+.capsule-nav-item.nav-item-notes.active,
+.capsule-nav-item[data-nav="notes"].active,
+.wing-capsule-item.nav-item-notes.active {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35) !important;
+}
+
+.capsule-nav-item.nav-item-notes:hover,
+.capsule-nav-item[data-nav="notes"]:hover {
+  color: #10b981;
+}
+
+/* 深色模式下的「我的筆記」 (清新翡翠綠) */
+body.theme-ebony .capsule-nav-item.nav-item-notes.active,
+body.theme-dark .capsule-nav-item.nav-item-notes.active,
+body.theme-custom-dark .capsule-nav-item.nav-item-notes.active,
+.theme-ebony .capsule-nav-item.nav-item-notes.active,
+.theme-dark .capsule-nav-item.nav-item-notes.active,
+body.theme-ebony .capsule-nav-item[data-nav="notes"].active,
+body.theme-dark .capsule-nav-item[data-nav="notes"].active {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(34, 197, 94, 0.45) !important;
+}
+
+/* 3. 全文檢索 (藍色系 / 湛藍海青色) */
+.capsule-nav-item.nav-item-search.active,
+.capsule-nav-item[data-nav="search"].active,
+.wing-capsule-item.nav-item-search.active {
+  background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(8, 145, 178, 0.35) !important;
+}
+
+.capsule-nav-item.nav-item-search:hover,
+.capsule-nav-item[data-nav="search"]:hover {
+  color: #06b6d4;
+}
+
+/* 深色模式下的「全文檢索」 (澄澈蔚藍色) */
+body.theme-ebony .capsule-nav-item.nav-item-search.active,
+body.theme-dark .capsule-nav-item.nav-item-search.active,
+body.theme-custom-dark .capsule-nav-item.nav-item-search.active,
+.theme-ebony .capsule-nav-item.nav-item-search.active,
+.theme-dark .capsule-nav-item.nav-item-search.active,
+body.theme-ebony .capsule-nav-item[data-nav="search"].active,
+body.theme-dark .capsule-nav-item[data-nav="search"].active {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.45) !important;
+}
+
 .capsule-nav-item.active .capsule-label,
 .wing-capsule-item.active .capsule-label {
   max-width: 82px;

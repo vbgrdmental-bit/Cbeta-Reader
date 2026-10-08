@@ -1100,7 +1100,8 @@ export function CbetaCatalogView({
           <div className="unified-nav-capsule">
             {/* 下載經典：目前處於 CBETA 藏經庫，此項展開 active */}
             <button
-              className="capsule-nav-item active"
+              className="capsule-nav-item nav-item-cbeta active"
+              data-nav="cbeta"
               title="從 CBETA 資料庫下載經典"
             >
               <Plus size={17} style={{ strokeWidth: 2.2 }} />
@@ -1109,7 +1110,8 @@ export function CbetaCatalogView({
 
             {/* 我的書櫃 */}
             <button
-              className="capsule-nav-item"
+              className="capsule-nav-item nav-item-shelf"
+              data-nav="shelf"
               onClick={() => {
                 if (onNavigateToLibrarySection) {
                   onNavigateToLibrarySection('shelf');
@@ -1125,7 +1127,8 @@ export function CbetaCatalogView({
 
             {/* 我的筆記 */}
             <button
-              className="capsule-nav-item"
+              className="capsule-nav-item nav-item-notes"
+              data-nav="notes"
               onClick={() => {
                 if (onNavigateToLibrarySection) {
                   onNavigateToLibrarySection('notes');
@@ -1141,7 +1144,8 @@ export function CbetaCatalogView({
 
             {/* 全文檢索 */}
             <button
-              className="capsule-nav-item"
+              className="capsule-nav-item nav-item-search"
+              data-nav="search"
               onClick={() => {
                 if (onNavigateToLibrarySection) {
                   onNavigateToLibrarySection('search');
@@ -1158,7 +1162,8 @@ export function CbetaCatalogView({
             {/* 閱讀日誌（若勾選「閱讀日誌」時整合於微膠囊內） */}
             {settings?.readingLogEnabled && (
               <button
-                className="capsule-nav-item"
+                className="capsule-nav-item nav-item-log"
+                data-nav="log"
                 onClick={() => {
                   if (onNavigateToLibrarySection) {
                     onNavigateToLibrarySection('reading-log');
