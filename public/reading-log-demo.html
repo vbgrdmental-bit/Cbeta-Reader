@@ -1,0 +1,2548 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CBETA Reader - 閱讀日誌與修持功課升級原型 (v3)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #f4efe6;
+      --bg-page: #fbf8f2;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f7f3ec;
+      --border-color: rgba(139, 90, 43, 0.16);
+      --border-light: rgba(0, 0, 0, 0.06);
+      --text-primary: #2c2523;
+      --text-secondary: #5c524c;
+      --text-muted: #8c827a;
+      --theme-accent: #8b5a2b;
+      --theme-accent-light: rgba(139, 90, 43, 0.08);
+      --theme-accent-hover: #73481f;
+      --zhai-green: #2d6a4f;
+      --zhai-bg: #e8f5e9;
+      --buddha-red: #c0392b;
+      --buddha-bg: #fde8e7;
+      --gold-accent: #b8860b;
+      --gold-light: #fff9e6;
+      --font-serif: 'Noto Serif TC', 'Songti TC', 'Source Han Serif TC', serif;
+      --font-sans: 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+      --shadow-sm: 0 2px 6px rgba(139, 90, 43, 0.05);
+      --shadow-md: 0 6px 16px rgba(139, 90, 43, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      padding: 20px 12px 60px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 520px;
+      background-color: var(--bg-page);
+      border-radius: 20px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 頂部導航列 */
+    .app-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-light);
+      background-color: rgba(251, 248, 242, 0.96);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-title-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background-color: #2d5a3f;
+      color: #ffffff;
+      border-radius: 24px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      font-family: var(--font-serif);
+      box-shadow: 0 2px 6px rgba(45, 90, 63, 0.25);
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border-light);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .btn-icon:hover {
+      background: var(--theme-accent-light);
+      color: var(--theme-accent);
+    }
+
+    .app-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: -6px;
+    }
+
+    /* ══════════════════════════════════════════════════
+       4*1 重要日子提示小卡
+       ══════════════════════════════════════════════════ */
+    .home-card-4x1 {
+      background: linear-gradient(135deg, #ffffff 0%, #faf6f0 100%);
+      border: 1px solid rgba(184, 134, 11, 0.25);
+      border-radius: 14px;
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 3px 10px rgba(139, 90, 43, 0.06);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .home-card-4x1:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(139, 90, 43, 0.12);
+      border-color: var(--gold-accent);
+    }
+    .home-card-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    .home-card-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--gold-light);
+      border: 1px solid rgba(184, 134, 11, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      color: var(--theme-accent);
+    }
+    .home-card-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .home-card-main {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .home-card-badge {
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .badge-zhai {
+      background: var(--zhai-bg);
+      color: var(--zhai-green);
+      border: 1px solid rgba(45, 106, 79, 0.25);
+    }
+    .badge-festival {
+      background: var(--buddha-bg);
+      color: var(--buddha-red);
+      border: 1px solid rgba(192, 57, 43, 0.25);
+    }
+    .home-card-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    /* ══════════════════════════════════════════════════
+       需求 1：首頁 4*1 隨喜撥珠小卡 (大類▾ + 中類▾ 雙膠囊)
+       ══════════════════════════════════════════════════ */
+    .home-bead-card-4x1 {
+      background: linear-gradient(135deg, #ffffff 0%, #faf7f2 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 3px 10px rgba(139, 90, 43, 0.06);
+      gap: 12px;
+      position: relative;
+    }
+    .bead-card-info-wrap {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+    .bead-card-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    
+    /* 雙膠囊樣式：大類▾ 與 中類▾ */
+    .capsule-select-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+    }
+    .capsule-cat {
+      background: #f1ebd8;
+      color: #7c5806;
+      border: 1px solid rgba(184, 134, 11, 0.3);
+    }
+    .capsule-cat:hover {
+      background: #e7dfc3;
+    }
+    .capsule-mid {
+      background: #fcf9f2;
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      font-family: var(--font-serif);
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .capsule-mid:hover {
+      background: var(--theme-accent-light);
+      border-color: var(--theme-accent);
+    }
+
+    .bead-card-count-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .bead-card-count-num {
+      font-weight: 700;
+      color: var(--gold-accent);
+      font-size: 0.95rem;
+      font-family: var(--font-serif);
+    }
+
+    /* 首頁撥珠大按鈕 */
+    .home-bead-tap-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4a373 0%, #9a6332 100%);
+      border: 2px solid #ffffff;
+      box-shadow: 0 3px 8px rgba(154, 99, 50, 0.35);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      flex-shrink: 0;
+      transition: transform 0.08s, box-shadow 0.08s;
+      font-family: var(--font-serif);
+    }
+    .home-bead-tap-btn:active {
+      transform: scale(0.9);
+      box-shadow: 0 1px 3px rgba(154, 99, 50, 0.3);
+    }
+    .home-bead-btn-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+    .home-bead-btn-sub {
+      font-size: 0.6rem;
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.95;
+      margin-top: 1px;
+    }
+
+    /* 下拉選單 */
+    .dropdown-menu-box {
+      position: absolute;
+      top: 100%;
+      left: 10px;
+      margin-top: 6px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+      z-index: 50;
+      width: 220px;
+      padding: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .dropdown-menu-box.active {
+      display: flex;
+    }
+    .dropdown-item {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dropdown-item:hover {
+      background: var(--theme-accent-light);
+      color: var(--theme-accent);
+    }
+    .dropdown-item.active {
+      background: var(--gold-light);
+      color: var(--gold-accent);
+      font-weight: 700;
+    }
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 4px 2px;
+    }
+    .dropdown-action-btn {
+      padding: 6px 10px;
+      font-size: 0.76rem;
+      color: var(--theme-accent);
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card-subtle);
+      border: 1px dashed var(--border-color);
+      margin-top: 2px;
+      transition: all 0.15s;
+    }
+    .dropdown-action-btn:hover {
+      background: var(--theme-accent-light);
+      border-color: var(--theme-accent);
+    }
+    .btn-header-manage {
+      background: none;
+      border: none;
+      font-size: 0.7rem;
+      color: var(--theme-accent);
+      cursor: pointer;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .btn-header-manage:hover {
+      background: var(--theme-accent-light);
+    }
+
+    /* ══════════════════════════════════════════════════
+       本月最常閱讀 TOP 3
+       ══════════════════════════════════════════════════ */
+    .stats-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .stats-top-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .stat-card-compact {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-card-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--theme-accent-light);
+      color: var(--theme-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .stat-card-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-card-label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .stat-card-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--theme-accent);
+      font-family: var(--font-serif);
+      line-height: 1.2;
+    }
+    .stat-card-unit {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-left: 2px;
+    }
+
+    .top3-ranking-card {
+      background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .top3-ranking-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 6px;
+    }
+    .top3-ranking-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-serif);
+    }
+    .top3-ranking-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .top3-item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .top3-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: var(--bg-card-subtle);
+      border-radius: 8px;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .top3-item:hover {
+      background: #f0eae1;
+    }
+    .top3-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+    .rank-medal {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 0.74rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .medal-1 { background: #ffd700; color: #7a5800; box-shadow: 0 1px 3px rgba(184, 134, 11, 0.4); }
+    .medal-2 { background: #dcdde1; color: #474747; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+    .medal-3 { background: #e0a96d; color: #4a2800; box-shadow: 0 1px 3px rgba(160, 82, 45, 0.25); }
+
+    .top3-book-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .top3-right-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .top3-item-hours {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--theme-accent);
+      background: #fff;
+      padding: 2px 7px;
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+    }
+    .btn-top3-continue {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #2d5a3f;
+      background: #eaf2ed;
+      border: 1px solid rgba(45, 90, 63, 0.25);
+      border-radius: 14px;
+      padding: 2px 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.15s;
+    }
+    .btn-top3-continue:hover {
+      background: #2d5a3f;
+      color: #fff;
+    }
+
+    /* ══════════════════════════════════════════════════
+       月曆區塊
+       ══════════════════════════════════════════════════ */
+    .calendar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 14px 12px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .calendar-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+    }
+    .calendar-current-month {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-today-pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      background: var(--theme-accent-light);
+      color: var(--theme-accent);
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+    .btn-today-pill:hover {
+      background: var(--theme-accent);
+      color: #fff;
+    }
+    .calendar-arrows {
+      display: flex;
+      gap: 4px;
+    }
+    .arrow-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-card-subtle);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .arrow-btn:hover {
+      background: var(--theme-accent-light);
+      color: var(--theme-accent);
+    }
+    .week-header-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 6px;
+    }
+    .calendar-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-day-cell {
+      min-height: 54px;
+      border-radius: 10px;
+      padding: 3px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+      background: transparent;
+    }
+    .cal-day-cell:hover {
+      background: var(--bg-card-subtle);
+      border-color: var(--border-light);
+    }
+    .cal-day-cell.other-month {
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    .cal-day-cell.selected {
+      background: #fdfaf3 !important;
+      border-color: var(--theme-accent) !important;
+      box-shadow: 0 0 0 1.5px var(--theme-accent);
+    }
+    .cal-day-cell.today-cell {
+      background: rgba(139, 90, 43, 0.04);
+    }
+    .day-num {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      line-height: 1.1;
+    }
+    .today-marker {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--theme-accent);
+    }
+    .lunar-label {
+      font-size: 0.64rem;
+      color: var(--text-muted);
+      line-height: 1.1;
+      margin-top: 1px;
+      white-space: nowrap;
+    }
+    .lunar-label.zhai {
+      color: var(--zhai-green);
+      font-weight: 700;
+    }
+    .lunar-label.festival {
+      color: var(--buddha-red);
+      font-weight: 700;
+    }
+    .cell-badges-row {
+      display: flex;
+      gap: 2px;
+      margin-top: auto;
+      align-items: center;
+    }
+    .read-dot-pill {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--zhai-green);
+      background: rgba(45, 106, 79, 0.12);
+      padding: 0 3px;
+      border-radius: 3px;
+      line-height: 1.2;
+    }
+    .practice-dot-pill {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--gold-accent);
+      background: rgba(184, 134, 11, 0.14);
+      padding: 0 3px;
+      border-radius: 3px;
+      line-height: 1.2;
+    }
+
+    /* ══════════════════════════════════════════════════
+       選中日期：區隔重要日期 / 閱讀記錄 / 功課記錄
+       ══════════════════════════════════════════════════ */
+    .day-detail-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-important-date {
+      background: linear-gradient(135deg, #fdfbf7 0%, #f6efe2 100%);
+      border: 1px solid rgba(139, 90, 43, 0.22);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+    }
+    .date-left-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .date-primary-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .date-lunar-text {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .date-badges-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .tag-large-zhai {
+      background: var(--zhai-green);
+      color: #fff;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(45, 106, 79, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .tag-large-festival {
+      background: var(--buddha-red);
+      color: #fff;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(192, 57, 43, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sub-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2px;
+    }
+    .sub-section-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sub-section-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .record-card-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s;
+    }
+    .record-card-item:hover {
+      border-color: var(--border-color);
+    }
+    .record-card-item.practice-item-card {
+      border-left: 3.5px solid var(--gold-accent);
+    }
+    .record-card-item.reading-item-card {
+      border-left: 3.5px solid var(--zhai-green);
+    }
+    .record-info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+      min-width: 0;
+    }
+    .record-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .category-chip {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: var(--gold-light);
+      color: var(--gold-accent);
+      border: 1px solid rgba(184, 134, 11, 0.2);
+    }
+    .record-sub-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .badge-duration {
+      color: var(--zhai-green);
+      font-weight: 600;
+      background: rgba(45, 106, 79, 0.08);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* 需求 2：功課數量可直接點選或按編輯調整 */
+    .badge-count-editable {
+      color: #925800;
+      font-weight: 700;
+      background: #fff3d6;
+      padding: 1px 8px;
+      border-radius: 6px;
+      border: 1px dashed rgba(184, 134, 11, 0.4);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+    .badge-count-editable:hover {
+      background: #faeac5;
+      border-color: var(--gold-accent);
+    }
+
+    .record-actions-col {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .btn-resume-reading {
+      background: #2d5a3f;
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 5px rgba(45, 90, 63, 0.2);
+    }
+    .btn-resume-reading:hover {
+      background: #234832;
+    }
+
+    .btn-sync-to-practice {
+      background: var(--gold-light);
+      color: #8c6000;
+      border: 1px solid rgba(184, 134, 11, 0.3);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.15s;
+    }
+    .btn-sync-to-practice:hover {
+      background: #faeac5;
+      color: #634300;
+    }
+
+    /* 編輯數量小按鈕 */
+    .btn-edit-count {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border-light);
+      background: #fff;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .btn-edit-count:hover {
+      background: var(--theme-accent-light);
+      color: var(--theme-accent);
+      border-color: var(--theme-accent);
+    }
+
+    .btn-del-record {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-del-record:hover {
+      color: #c0392b;
+      background: #fee;
+    }
+
+    .btn-add-practice {
+      background: linear-gradient(135deg, #b8860b 0%, #8b5a2b 100%);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(184, 134, 11, 0.3);
+    }
+    .btn-add-practice:hover {
+      opacity: 0.92;
+    }
+
+    /* ══════════════════════════════════════════════════
+       新增功課彈窗
+       ══════════════════════════════════════════════════ */
+    .practice-dialog-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .practice-dialog-overlay.active {
+      display: flex;
+    }
+    .practice-dialog {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-page);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: dialogPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes dialogPop {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .dialog-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+    }
+    .dialog-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dialog-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 75vh;
+      overflow-y: auto;
+    }
+    .tab-pills-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: var(--bg-card-subtle);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+    }
+    .tab-pill-btn {
+      padding: 6px 0;
+      border: none;
+      background: transparent;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab-pill-btn.active {
+      background: #fff;
+      color: var(--theme-accent);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+    }
+    .preset-chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .preset-chip {
+      padding: 5px 11px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .preset-chip:hover {
+      border-color: var(--theme-accent);
+      color: var(--theme-accent);
+    }
+    .preset-chip.selected {
+      background: var(--theme-accent-light);
+      border-color: var(--theme-accent);
+      color: var(--theme-accent);
+      font-weight: 700;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .form-input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: #fff;
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus {
+      border-color: var(--theme-accent);
+      box-shadow: 0 0 0 2px rgba(139, 90, 43, 0.15);
+    }
+
+    .count-quick-group {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .btn-quick-add {
+      padding: 6px 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--theme-accent);
+      cursor: pointer;
+    }
+    .btn-quick-add:hover {
+      background: var(--theme-accent-light);
+      border-color: var(--theme-accent);
+    }
+
+    .bead-counter-box {
+      background: linear-gradient(135deg, #f8f2e7 0%, #eee4d3 100%);
+      border: 1px dashed var(--gold-accent);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .bead-left {
+      display: flex;
+      flex-direction: column;
+    }
+    .bead-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #704b08;
+      font-family: var(--font-serif);
+    }
+    .bead-desc {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .btn-bead-tap {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4a373 0%, #a26b38 100%);
+      border: 2px solid #fff;
+      box-shadow: 0 4px 10px rgba(162, 107, 56, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.08s, box-shadow 0.08s;
+      flex-shrink: 0;
+    }
+    .btn-bead-tap:active {
+      transform: scale(0.92);
+      box-shadow: 0 2px 4px rgba(162, 107, 56, 0.3);
+    }
+
+    .dialog-footer {
+      padding: 12px 16px;
+      background: #fff;
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .btn-secondary {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .btn-primary {
+      padding: 8px 20px;
+      background: var(--theme-accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(139, 90, 43, 0.25);
+    }
+    .btn-primary:hover {
+      background: var(--theme-accent-hover);
+    }
+
+    .empty-card-state {
+      padding: 24px 16px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 快捷修改數量彈窗 */
+    .edit-count-dialog-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .edit-count-dialog-overlay.active {
+      display: flex;
+    }
+    .edit-count-dialog {
+      width: 100%;
+      max-width: 320px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .edit-count-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- 頂部導航列 -->
+    <header class="app-header">
+      <button class="btn-icon" title="返回首頁" onclick="alert('返回首頁')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </button>
+
+      <div class="header-title-pill">
+        <span>☸︎</span>
+        <span>閱讀與修持日誌</span>
+      </div>
+
+      <button class="btn-icon" title="設定" onclick="alert('日誌與功課設定')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </header>
+
+    <div class="app-content">
+
+      <!-- ══════════════════════════════════════════════════
+           4*1 重要日子提示小卡
+           ══════════════════════════════════════════════════ -->
+      <div class="section-title">
+        <span>首頁 4*1 重要日子提示小卡</span>
+      </div>
+
+      <div class="home-card-4x1" id="homeBanner4x1" onclick="focusOnImportantDate()">
+        <div class="home-card-left">
+          <div class="home-card-icon-wrap" id="homeBannerIcon">
+            🌿
+          </div>
+          <div class="home-card-text">
+            <div class="home-card-main">
+              <span id="homeBannerTitle">今日十齋日</span>
+              <span class="home-card-badge badge-zhai" id="homeBannerBadge">十齋日</span>
+            </div>
+            <div class="home-card-sub" id="homeBannerSub">
+              2026-09-24 · 農曆八月十四 · 持齋念佛，滅罪增福
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           需求 1：首頁 4*1 隨喜撥珠小卡 (大類▾ + 中類▾ 雙膠囊)
+           ══════════════════════════════════════════════════ -->
+      <div class="section-title">
+        <span>首頁 4*1 隨喜撥珠小卡 (大類▾ + 中類▾ 雙膠囊切換)</span>
+      </div>
+
+      <div class="home-bead-card-4x1">
+        <div class="bead-card-info-wrap">
+          <div class="bead-card-header">
+            <span style="font-size: 0.72rem; color: var(--gold-accent); font-weight: 700;">📿 今日修持</span>
+            
+            <!-- 膠囊 1：大類 ▾ -->
+            <div class="capsule-select-trigger capsule-cat" onclick="toggleCatMenu(event)">
+              <span id="homeBeadCatLabel">咒語</span>
+              <span style="font-size: 0.65rem;">▾</span>
+            </div>
+
+            <!-- 膠囊 2：中類 ▾ -->
+            <div class="capsule-select-trigger capsule-mid" onclick="toggleMidMenu(event)">
+              <span id="homeBeadMidLabel">大悲咒</span>
+              <span style="font-size: 0.65rem;">▾</span>
+            </div>
+          </div>
+
+          <div class="bead-card-count-text">
+            <span>今日已念 </span>
+            <span class="bead-card-count-num" id="homeBeadCountDisplay">21</span>
+            <span id="homeBeadUnitDisplay"> 遍</span>
+          </div>
+        </div>
+
+        <!-- 首頁撥珠大按鈕 -->
+        <button class="home-bead-tap-btn" title="點擊念一聲 (+1)" onclick="tapHomeBead(event)">
+          <span class="home-bead-btn-icon">📿</span>
+          <span class="home-bead-btn-sub">+1</span>
+        </button>
+
+        <!-- 大類下拉選單 -->
+        <div class="dropdown-menu-box" id="catDropdownMenu">
+          <div style="font-size: 0.7rem; color: var(--text-muted); padding: 4px 8px; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+            <span>選擇修持大類</span>
+            <button class="btn-header-manage" onclick="openCatManageModal(event)">⚙️ 管理大類</button>
+          </div>
+          <div id="catMenuList" style="display: flex; flex-direction: column; gap: 2px;">
+            <!-- JS 動態產生 -->
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-action-btn" onclick="openCatManageModal(event)">
+            <span>✏️ 修改 / 新增大類...</span>
+          </div>
+        </div>
+
+        <!-- 中類下拉選單 (依當前大類動態填充) -->
+        <div class="dropdown-menu-box" id="midDropdownMenu" style="left: 60px;">
+          <div style="font-size: 0.7rem; color: var(--text-muted); padding: 4px 8px; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+            <span id="midMenuTitle">選擇修持項目</span>
+            <button class="btn-header-manage" onclick="openMidManageModal(event)">⚙️ 管理項目</button>
+          </div>
+          <div id="midMenuList" style="display: flex; flex-direction: column; gap: 2px;">
+            <!-- JS 動態產生 -->
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-action-btn" onclick="openMidManageModal(event)">
+            <span>✏️ 修改 / 新增項目...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           本月最常閱讀 TOP 3
+           ══════════════════════════════════════════════════ -->
+      <div class="stats-container">
+        <div class="stats-top-row">
+          <div class="stat-card-compact">
+            <div class="stat-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="stat-card-info">
+              <span class="stat-card-label">本月閱讀時數</span>
+              <span class="stat-card-val">3.4 <span class="stat-card-unit">小時</span></span>
+            </div>
+          </div>
+
+          <div class="stat-card-compact">
+            <div class="stat-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+            </div>
+            <div class="stat-card-info">
+              <span class="stat-card-label">本月閱讀本數</span>
+              <span class="stat-card-val">11 <span class="stat-card-unit">本</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="top3-ranking-card">
+          <div class="top3-ranking-header">
+            <div class="top3-ranking-title">
+              <span>🏆 本月最常閱讀書籍</span>
+            </div>
+            <div class="top3-ranking-sub">
+              累積時數榜單
+            </div>
+          </div>
+
+          <div class="top3-item-list">
+            <div class="top3-item">
+              <div class="top3-item-left">
+                <span class="rank-medal medal-1">1</span>
+                <span class="top3-book-title">金剛般若波羅蜜經 (T0235)</span>
+              </div>
+              <div class="top3-right-actions">
+                <span class="top3-item-hours">1.8 小時</span>
+                <button class="btn-top3-continue" onclick="alert('進入閱讀《金剛般若波羅蜜經》')">
+                  <span>繼續閱讀</span>
+                  <span>›</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="top3-item">
+              <div class="top3-item-left">
+                <span class="rank-medal medal-2">2</span>
+                <span class="top3-book-title">大乘大集地藏十輪經</span>
+              </div>
+              <div class="top3-right-actions">
+                <span class="top3-item-hours">1.1 小時</span>
+                <button class="btn-top3-continue" onclick="alert('進入閱讀《大乘大集地藏十輪經》')">
+                  <span>繼續閱讀</span>
+                  <span>›</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="top3-item">
+              <div class="top3-item-left">
+                <span class="rank-medal medal-3">3</span>
+                <span class="top3-book-title">正法華經</span>
+              </div>
+              <div class="top3-right-actions">
+                <span class="top3-item-hours">32 分鐘</span>
+                <button class="btn-top3-continue" onclick="alert('進入閱讀《正法華經》')">
+                  <span>繼續閱讀</span>
+                  <span>›</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           月曆區塊
+           ══════════════════════════════════════════════════ -->
+      <div class="calendar-card">
+        <div class="calendar-nav-bar">
+          <div class="calendar-current-month">
+            <span id="calYearMonthLabel">2026 年 9 月</span>
+            <button class="btn-today-pill" onclick="goToToday()">今天</button>
+          </div>
+          <div class="calendar-arrows">
+            <button class="arrow-btn" onclick="prevMonth()">‹</button>
+            <button class="arrow-btn" onclick="nextMonth()">›</button>
+          </div>
+        </div>
+
+        <div class="week-header-row">
+          <span>一</span>
+          <span>二</span>
+          <span>三</span>
+          <span>四</span>
+          <span>五</span>
+          <span>六</span>
+          <span>日</span>
+        </div>
+
+        <div class="calendar-days-grid" id="calendarDaysGrid"></div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           選中日期明細
+           ══════════════════════════════════════════════════ -->
+      <div class="day-detail-section" id="dayDetailSection">
+
+        <!-- 區塊 A：重要日期 -->
+        <div class="card-important-date" id="importantDateCard">
+          <div class="date-left-group">
+            <div class="date-primary-text">
+              <span>📜</span>
+              <span id="detailDateStr">2026-09-24</span>
+            </div>
+            <div class="date-lunar-text">
+              <span id="detailLunarStr">農曆八月十四</span>
+              <span id="detailLunarGanzhi">· 丙午年</span>
+            </div>
+          </div>
+          <div class="date-badges-wrap" id="detailBadgesWrap">
+            <span class="tag-large-zhai" id="badgeZhaiTag">🌿 十齋日</span>
+          </div>
+        </div>
+
+        <!-- 區塊 B：經文閱讀記錄 -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="sub-section-header">
+            <div class="sub-section-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1-4 4v14a3 3 0 0 0 3-3h7z"/></svg>
+              <span>經文閱讀記錄</span>
+            </div>
+            <div class="sub-section-meta" id="readingMetaSummary">
+              共 2 筆 • 累計 3 分鐘
+            </div>
+          </div>
+
+          <div id="readingLogsList" style="display: flex; flex-direction: column; gap: 6px;"></div>
+        </div>
+
+        <!-- 區塊 C：我的功課記錄 (數量可點擊編輯 / 鉛筆編輯) -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="sub-section-header">
+            <div class="sub-section-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/></svg>
+              <span>我的功課記錄</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="sub-section-meta" id="practiceMetaSummary">共 2 項</span>
+              <button class="btn-add-practice" onclick="openPracticeModal()">
+                <span>＋ 記錄功課</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="practiceLogsList" style="display: flex; flex-direction: column; gap: 6px;"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       需求 2：快速編輯功課數量彈窗
+       ══════════════════════════════════════════════════ -->
+  <div class="edit-count-dialog-overlay" id="editCountOverlay" onclick="closeEditCountModal(event)">
+    <div class="edit-count-dialog" onclick="event.stopPropagation()">
+      <div class="edit-count-title">
+        <span id="editCountItemName">編輯數量</span>
+        <button class="btn-icon" style="width: 26px; height: 26px;" onclick="closeEditCountModalDirect()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between;">
+          <span class="form-label">今日完成數量</span>
+          <span style="font-size: 0.72rem; color: var(--gold-accent);" id="editCountUnitText">單位：聲</span>
+        </div>
+        <input type="number" class="form-input" id="editCountNumberInput" value="1080" min="0" step="1">
+      </div>
+
+      <div class="count-quick-group">
+        <button class="btn-quick-add" onclick="quickAdjustCount(-108)">-108</button>
+        <button class="btn-quick-add" onclick="quickAdjustCount(-10)">-10</button>
+        <button class="btn-quick-add" onclick="quickAdjustCount(10)">+10</button>
+        <button class="btn-quick-add" onclick="quickAdjustCount(108)">+108</button>
+        <button class="btn-quick-add" onclick="quickAdjustCount(1000)">+1000</button>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px;">
+        <button class="btn-secondary" onclick="closeEditCountModalDirect()">取消</button>
+        <button class="btn-primary" onclick="confirmEditCount()">儲存數量</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增功課彈窗 -->
+  <div class="practice-dialog-overlay" id="practiceDialogOverlay" onclick="closePracticeModal(event)">
+    <div class="practice-dialog" onclick="event.stopPropagation()">
+      <div class="dialog-header">
+        <div class="dialog-title">
+          <span>📿 今日修持功課記數</span>
+        </div>
+        <button class="btn-icon" style="width: 30px; height: 30px;" onclick="closePracticeModalDirect()">✕</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="form-group">
+          <span class="form-label">選擇修持大類</span>
+          <div class="tab-pills-row">
+            <button class="tab-pill-btn active" id="tabFo" onclick="switchCategory('fo')">佛號</button>
+            <button class="tab-pill-btn" id="tabZhou" onclick="switchCategory('zhou')">咒語</button>
+            <button class="tab-pill-btn" id="tabJing" onclick="switchCategory('jing')">持經</button>
+            <button class="tab-pill-btn" id="tabOther" onclick="switchCategory('other')">其他</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label" id="presetLabel">常用佛號選擇</span>
+          <div class="preset-chip-group" id="presetChipsContainer"></div>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">修持名稱（可直接自訂修改）</span>
+          <input type="text" class="form-input" id="practiceNameInput" value="南無阿彌陀佛" placeholder="請輸入佛號/咒語/經名/修持">
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span class="form-label" id="countInputLabel">修持數量</span>
+            <span style="font-size: 0.72rem; color: var(--gold-accent);" id="unitTip">單位：聲</span>
+          </div>
+          <input type="number" class="form-input" id="practiceCountInput" value="1080" min="1" step="1">
+          
+          <div class="count-quick-group">
+            <button class="btn-quick-add" onclick="quickAddCount(1)">+1</button>
+            <button class="btn-quick-add" onclick="quickAddCount(7)">+7</button>
+            <button class="btn-quick-add" onclick="quickAddCount(21)">+21</button>
+            <button class="btn-quick-add" onclick="quickAddCount(108)">+108</button>
+            <button class="btn-quick-add" onclick="quickAddCount(1000)">+1000</button>
+          </div>
+        </div>
+
+        <div class="bead-counter-box">
+          <div class="bead-left">
+            <span class="bead-title">📿 隨喜撥珠計數器</span>
+            <span class="bead-desc">點擊右側佛珠即時 +1 累計</span>
+          </div>
+          <button class="btn-bead-tap" id="btnBeadTap" onclick="tapBead()">📿</button>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button class="btn-secondary" onclick="closePracticeModalDirect()">取消</button>
+        <button class="btn-primary" onclick="savePracticeRecord()">儲存今日功課</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       管理 / 修改修持大類彈窗
+       ══════════════════════════════════════════════════ -->
+  <div class="edit-count-dialog-overlay" id="catManageOverlay" onclick="closeCatManageModal(event)">
+    <div class="edit-count-dialog" style="max-width: 420px; width: 92%;" onclick="event.stopPropagation()">
+      <div class="edit-count-title">
+        <span>⚙️ 管理 / 修改修持大類</span>
+        <button class="btn-icon" style="width: 26px; height: 26px;" onclick="closeCatManageModalDirect()">✕</button>
+      </div>
+
+      <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 8px;">
+        可自由修改大類名稱、預設單位，或刪除與新增大類：
+      </div>
+
+      <div id="catManageList" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; padding-right: 4px;">
+        <!-- JS 動態生成 -->
+      </div>
+
+      <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border-light); display: flex; gap: 6px;">
+        <input type="text" id="newCatNameInput" class="form-input" style="flex: 2; padding: 6px 8px; font-size: 0.8rem;" placeholder="新大類名稱（如：發願）">
+        <input type="text" id="newCatUnitInput" class="form-input" style="flex: 1; padding: 6px 8px; font-size: 0.8rem;" placeholder="單位（遍/次）">
+        <button class="btn-primary" style="padding: 6px 12px; font-size: 0.78rem;" onclick="addCategoryFromInput()">＋新增</button>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+        <button class="btn-primary" onclick="closeCatManageModalDirect()">完成關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       管理 / 修改中類項目彈窗
+       ══════════════════════════════════════════════════ -->
+  <div class="edit-count-dialog-overlay" id="midManageOverlay" onclick="closeMidManageModal(event)">
+    <div class="edit-count-dialog" style="max-width: 440px; width: 92%;" onclick="event.stopPropagation()">
+      <div class="edit-count-title">
+        <span id="midManageModalTitle">⚙️ 管理「佛號」修持項目</span>
+        <button class="btn-icon" style="width: 26px; height: 26px;" onclick="closeMidManageModalDirect()">✕</button>
+      </div>
+
+      <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 8px;">
+        可直接點擊名稱修改，亦可新增常用經文、咒語或佛號：
+      </div>
+
+      <div id="midManageList" style="display: flex; flex-direction: column; gap: 6px; max-height: 260px; overflow-y: auto; padding-right: 4px;">
+        <!-- JS 動態生成 -->
+      </div>
+
+      <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border-light); display: flex; gap: 6px;">
+        <input type="text" id="newMidItemInput" class="form-input" style="flex: 1; padding: 6px 8px; font-size: 0.8rem;" placeholder="新增修持名稱（如：藥師七佛名號）">
+        <button class="btn-primary" style="padding: 6px 12px; font-size: 0.78rem;" onclick="addMidItemFromInput()">＋新增</button>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+        <button class="btn-primary" onclick="closeMidManageModalDirect()">完成關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentYear = 2026;
+    let currentMonth = 8; // 9月
+    let selectedDate = '2026-09-24';
+
+    const DEFAULT_PRACTICE_CATEGORIES = {
+      fo: {
+        id: 'fo',
+        name: '佛號',
+        unit: '聲',
+        label: '常用佛號選擇',
+        countLabel: '念佛數量',
+        items: [
+          '南無本師釋迦牟尼佛',
+          '南無阿彌陀佛',
+          '南無藥師琉璃光如來',
+          '南無地藏菩薩',
+          '南無觀世音菩薩'
+        ]
+      },
+      zhou: {
+        id: 'zhou',
+        name: '咒語',
+        unit: '遍',
+        label: '常用咒語選擇',
+        countLabel: '持咒遍數',
+        items: [
+          '大悲咒',
+          '楞嚴咒',
+          '藥師咒',
+          '準提咒'
+        ]
+      },
+      jing: {
+        id: 'jing',
+        name: '持經',
+        unit: '部',
+        label: '常用持經選擇',
+        countLabel: '持誦部數',
+        items: [
+          '般若波羅蜜多心經 T0251',
+          '金剛般若波羅蜜經 T0235',
+          '地藏菩薩本願經 T0412',
+          '妙法蓮華經 T0262',
+          '無量義經 T0276',
+          '藥師琉璃光如來本願功德經 T0450'
+        ]
+      },
+      other: {
+        id: 'other',
+        name: '其他',
+        unit: '拜/次/分鐘',
+        label: '其他常見修持',
+        countLabel: '修持次數 / 時間 (分鐘)',
+        items: [
+          '八十八佛大懺悔文',
+          '禮佛大拜',
+          '靜坐禪修',
+          '普賢行願品'
+        ]
+      }
+    };
+
+    function loadPracticeCategories() {
+      try {
+        const saved = localStorage.getItem('cbeta_practice_categories_v2');
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(DEFAULT_PRACTICE_CATEGORIES));
+    }
+
+    let practiceCategories = loadPracticeCategories();
+
+    function savePracticeCategories() {
+      try {
+        localStorage.setItem('cbeta_practice_categories_v2', JSON.stringify(practiceCategories));
+      } catch (e) {}
+    }
+
+    // 兼容舊別名
+    let CATEGORY_NAMES = {};
+    let CATEGORY_PRESETS = {};
+    function syncCategoryAliases() {
+      CATEGORY_NAMES = {};
+      CATEGORY_PRESETS = {};
+      Object.keys(practiceCategories).forEach(k => {
+        CATEGORY_NAMES[k] = practiceCategories[k].name;
+        CATEGORY_PRESETS[k] = practiceCategories[k];
+      });
+    }
+    syncCategoryAliases();
+
+    let activeCategory = 'fo';
+
+    // 首頁 4*1 撥珠小卡當前選取狀態
+    let homeBeadState = {
+      category: 'zhou',
+      name: '大悲咒',
+      unit: '遍',
+      count: 21
+    };
+
+    const LUNAR_DATA_2026_09 = {
+      '2026-09-24': { lunar: '十四', isZhai: true, note: '農曆八月十四 · 十齋日' },
+      '2026-09-25': { lunar: '十五', isZhai: true, note: '農曆八月十五 · 月圓十齋日' },
+      '2026-09-27': { lunar: '十七', note: '農曆八月十七' }
+    };
+
+    let readingLogs = {
+      '2026-09-24': [
+        { id: 'r1', title: '地藏菩薩本願經 T0412', chapter: '第1品至第4品', startTime: '01:10', endTime: '01:40', duration: '30 分鐘' },
+        { id: 'r2', title: '正法華經', chapter: '卷第一', startTime: '01:03', endTime: '01:05', duration: '2 分鐘' }
+      ]
+    };
+
+    let practiceLogs = {
+      '2026-09-24': [
+        { id: 'p1', category: 'fo', name: '南無阿彌陀佛', count: 1087, unit: '聲' },
+        { id: 'p2', category: 'zhou', name: '大悲咒', count: 21, unit: '遍' },
+        { id: 'p3', category: 'fo', name: '南無地藏菩薩', count: 5, unit: '聲' },
+        { id: 'p4', category: 'fo', name: '南無觀世音菩薩', count: 5, unit: '聲' },
+        { id: 'p5', category: 'jing', name: '金剛般若波羅蜜經', count: 2, unit: '部' }
+      ]
+    };
+
+    // 正在編輯數量的條目 ID
+    let currentEditingPracticeId = null;
+
+    // ══════════════════════════════════════════════════
+    // 月曆渲染
+    // ══════════════════════════════════════════════════
+    function renderCalendar() {
+      const grid = document.getElementById('calendarDaysGrid');
+      grid.innerHTML = '';
+      document.getElementById('calYearMonthLabel').innerText = `${currentYear} 年 ${currentMonth + 1} 月`;
+
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const offset = (firstDay + 6) % 7;
+      const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      for (let i = 0; i < offset; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'cal-day-cell other-month';
+        grid.appendChild(emptyCell);
+      }
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dStr = String(day).padStart(2, '0');
+        const mStr = String(currentMonth + 1).padStart(2, '0');
+        const dateKey = `${currentYear}-${mStr}-${dStr}`;
+
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell';
+        if (dateKey === selectedDate) cell.classList.add('selected');
+        if (dateKey === '2026-09-27') cell.classList.add('today-cell');
+
+        cell.onclick = () => selectDay(dateKey);
+
+        const lunarInfo = LUNAR_DATA_2026_09[dateKey] || { lunar: '初一' };
+        const dayReadings = readingLogs[dateKey] || [];
+        const dayPractices = practiceLogs[dateKey] || [];
+
+        let cellHtml = `<span class="day-num">${day}</span>`;
+        if (dateKey === '2026-09-27') cellHtml += `<span class="today-marker"></span>`;
+
+        if (lunarInfo.festival) {
+          cellHtml += `<span class="lunar-label festival">${lunarInfo.festival}</span>`;
+        } else if (lunarInfo.isZhai) {
+          cellHtml += `<span class="lunar-label zhai">十齋</span>`;
+        } else {
+          cellHtml += `<span class="lunar-label">${lunarInfo.lunar}</span>`;
+        }
+
+        cellHtml += `<div class="cell-badges-row">`;
+        if (dayReadings.length > 0) cellHtml += `<span class="read-dot-pill">讀</span>`;
+        if (dayPractices.length > 0) cellHtml += `<span class="practice-dot-pill">📿</span>`;
+        cellHtml += `</div>`;
+
+        cell.innerHTML = cellHtml;
+        grid.appendChild(cell);
+      }
+
+      renderDayDetails();
+    }
+
+    function selectDay(dateKey) {
+      selectedDate = dateKey;
+      renderCalendar();
+      updateHomeBanner(dateKey);
+      syncHomeBeadWithSelectedDay();
+    }
+
+    function prevMonth() {
+      if (currentMonth === 0) { currentMonth = 11; currentYear--; } else { currentMonth--; }
+      renderCalendar();
+    }
+
+    function nextMonth() {
+      if (currentMonth === 11) { currentMonth = 0; currentYear++; } else { currentMonth++; }
+      renderCalendar();
+    }
+
+    function goToToday() {
+      currentYear = 2026;
+      currentMonth = 8;
+      selectDay('2026-09-27');
+    }
+
+    // ══════════════════════════════════════════════════
+    // 渲染當日明細 (含可編輯數量按鈕)
+    // ══════════════════════════════════════════════════
+    function renderDayDetails() {
+      const lunarInfo = LUNAR_DATA_2026_09[selectedDate] || { lunar: '吉日', note: '日日是好日' };
+      
+      document.getElementById('detailDateStr').innerText = selectedDate;
+      document.getElementById('detailLunarStr').innerText = lunarInfo.note ? lunarInfo.note.split('·')[0].trim() : '農曆吉日';
+      
+      const badgesWrap = document.getElementById('detailBadgesWrap');
+      badgesWrap.innerHTML = '';
+      if (lunarInfo.festival) badgesWrap.innerHTML += `<span class="tag-large-festival">🌸 ${lunarInfo.festival}</span>`;
+      if (lunarInfo.isZhai) badgesWrap.innerHTML += `<span class="tag-large-zhai">🌿 十齋日 · 茹素修善</span>`;
+
+      // 閱讀記錄
+      const readingListEl = document.getElementById('readingLogsList');
+      const readings = readingLogs[selectedDate] || [];
+      document.getElementById('readingMetaSummary').innerText = readings.length > 0 ? `共 ${readings.length} 筆紀錄` : '無閱讀紀錄';
+
+      if (readings.length === 0) {
+        readingListEl.innerHTML = `<div class="empty-card-state"><span>此日尚無經文閱讀紀錄</span></div>`;
+      } else {
+        readingListEl.innerHTML = readings.map(r => `
+          <div class="record-card-item reading-item-card">
+            <div class="record-info-col">
+              <div class="record-title">${r.title}</div>
+              <div class="record-sub-meta">
+                <span>⏱ ${r.startTime} ~ ${r.endTime}</span>
+                <span>•</span>
+                <span class="badge-duration">${r.duration}</span>
+                ${r.chapter ? `<span style="color:#7a634b; font-size:0.72rem;">(${r.chapter})</span>` : ''}
+              </div>
+            </div>
+            <div class="record-actions-col">
+              <button class="btn-sync-to-practice" onclick="syncReadingToPractice('${r.title}', '${r.chapter || ''}')">
+                <span>📿 轉持經</span>
+              </button>
+              <button class="btn-resume-reading" onclick="alert('接續閱讀《${r.title}》')">
+                <span>▶ 接續閱讀</span>
+              </button>
+              <button class="btn-del-record" onclick="deleteReadingRecord('${r.id}')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 功課記錄 (數量可點選修改或按筆修改)
+      const practiceListEl = document.getElementById('practiceLogsList');
+      const practices = practiceLogs[selectedDate] || [];
+      document.getElementById('practiceMetaSummary').innerText = `共 ${practices.length} 項功課`;
+
+      if (practices.length === 0) {
+        practiceListEl.innerHTML = `
+          <div class="empty-card-state">
+            <span>尚未有念佛、持咒或持經紀錄</span>
+            <button class="btn-add-practice" style="margin-top: 4px;" onclick="openPracticeModal()">＋ 馬上登記今日功課</button>
+          </div>
+        `;
+      } else {
+        practiceListEl.innerHTML = practices.map(p => {
+          let catLabel = CATEGORY_NAMES[p.category] || '修持';
+
+          return `
+            <div class="record-card-item practice-item-card">
+              <div class="record-info-col">
+                <div class="record-title">
+                  <span class="category-chip">${catLabel}</span>
+                  <span>${p.name}</span>
+                </div>
+                <div class="record-sub-meta">
+                  <span>累計完成</span>
+                  <!-- 點擊數量標籤可直接修改 -->
+                  <span class="badge-count-editable" title="點擊修改數量" onclick="openEditCountModal('${p.id}', '${p.name}', ${p.count}, '${p.unit}')">
+                    <span>${p.count.toLocaleString()} ${p.unit}</span>
+                    <span style="font-size:0.68rem; opacity:0.6;">✏️</span>
+                  </span>
+                  <span style="color:#2d6a4f; font-weight:600;">✓ 圓滿</span>
+                  ${p.note ? `<span style="color:#8c6000; font-size:0.72rem;">[${p.note}]</span>` : ''}
+                </div>
+              </div>
+              <div class="record-actions-col">
+                <!-- 獨立修改數量按鈕 -->
+                <button class="btn-edit-count" title="編輯數量" onclick="openEditCountModal('${p.id}', '${p.name}', ${p.count}, '${p.unit}')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-del-record" title="刪除此筆修持" onclick="deletePracticeRecord('${p.id}')">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // ══════════════════════════════════════════════════
+    // 需求 2：編輯功課數量彈窗邏輯
+    // ══════════════════════════════════════════════════
+    function openEditCountModal(id, name, count, unit) {
+      currentEditingPracticeId = id;
+      document.getElementById('editCountItemName').innerText = `編輯：${name}`;
+      document.getElementById('editCountNumberInput').value = count;
+      document.getElementById('editCountUnitText').innerText = `單位：${unit}`;
+      document.getElementById('editCountOverlay').classList.add('active');
+    }
+
+    function closeEditCountModalDirect() {
+      document.getElementById('editCountOverlay').classList.remove('active');
+      currentEditingPracticeId = null;
+    }
+
+    function closeEditCountModal(e) {
+      if (e.target.id === 'editCountOverlay') closeEditCountModalDirect();
+    }
+
+    function quickAdjustCount(delta) {
+      const input = document.getElementById('editCountNumberInput');
+      let val = parseInt(input.value, 10) || 0;
+      input.value = Math.max(0, val + delta);
+    }
+
+    function confirmEditCount() {
+      const newCount = parseInt(document.getElementById('editCountNumberInput').value, 10) || 0;
+      if (!currentEditingPracticeId) return;
+
+      const list = practiceLogs[selectedDate] || [];
+      const item = list.find(p => p.id === currentEditingPracticeId);
+      if (item) {
+        item.count = newCount;
+        // 若編輯的剛好是首頁撥珠小卡的項目，同步更新
+        if (item.name === homeBeadState.name) {
+          homeBeadState.count = newCount;
+          document.getElementById('homeBeadCountDisplay').innerText = newCount.toLocaleString();
+        }
+      }
+
+      closeEditCountModalDirect();
+      renderCalendar();
+    }
+
+    // ══════════════════════════════════════════════════
+    // 需求 1：首頁 4*1 撥珠小卡 (大類▾ + 中類▾ 雙膠囊)
+    // ══════════════════════════════════════════════════
+    function toggleCatMenu(e) {
+      e.stopPropagation();
+      document.getElementById('midDropdownMenu').classList.remove('active');
+      renderCatMenuList();
+      document.getElementById('catDropdownMenu').classList.toggle('active');
+    }
+
+    function toggleMidMenu(e) {
+      e.stopPropagation();
+      document.getElementById('catDropdownMenu').classList.remove('active');
+      renderMidMenuList();
+      document.getElementById('midDropdownMenu').classList.toggle('active');
+    }
+
+    document.addEventListener('click', () => {
+      document.getElementById('catDropdownMenu').classList.remove('active');
+      document.getElementById('midDropdownMenu').classList.remove('active');
+    });
+
+    function renderCatMenuList() {
+      const listEl = document.getElementById('catMenuList');
+      if (!listEl) return;
+      listEl.innerHTML = Object.keys(practiceCategories).map(catKey => {
+        const cat = practiceCategories[catKey];
+        const isActive = catKey === homeBeadState.category;
+        return `
+          <div class="dropdown-item ${isActive ? 'active' : ''}" onclick="selectCategory('${catKey}')">
+            <span>${cat.name}</span>
+            <span style="font-size:0.68rem; color:var(--text-muted);">${cat.items[0] || ''}...</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectCategory(catKey) {
+      if (!practiceCategories[catKey]) {
+        catKey = Object.keys(practiceCategories)[0];
+      }
+      homeBeadState.category = catKey;
+      const catConfig = practiceCategories[catKey];
+      document.getElementById('homeBeadCatLabel').innerText = catConfig.name;
+
+      // 自動預設選取該大類第 1 個項目
+      if (catConfig.items && catConfig.items.length > 0) {
+        selectMidItem(catConfig.items[0], catConfig.unit);
+      } else {
+        selectMidItem('自訂修持', catConfig.unit || '次');
+      }
+      document.getElementById('catDropdownMenu').classList.remove('active');
+    }
+
+    function renderMidMenuList() {
+      const catConfig = practiceCategories[homeBeadState.category] || Object.values(practiceCategories)[0];
+      const listEl = document.getElementById('midMenuList');
+      if (!listEl || !catConfig) return;
+      document.getElementById('midMenuTitle').innerText = `${catConfig.name} 項目`;
+
+      if (!catConfig.items || catConfig.items.length === 0) {
+        listEl.innerHTML = `
+          <div style="font-size: 0.72rem; color: var(--text-muted); padding: 6px 10px;">尚未有修持項目，可點下方新增</div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = catConfig.items.map(item => `
+        <div class="dropdown-item ${item === homeBeadState.name ? 'active' : ''}" onclick="selectMidItem('${item}', '${catConfig.unit}')">
+          <span>${item}</span>
+        </div>
+      `).join('');
+    }
+
+    function selectMidItem(name, unit) {
+      homeBeadState.name = name;
+      homeBeadState.unit = unit;
+
+      document.getElementById('homeBeadMidLabel').innerText = name;
+      document.getElementById('homeBeadUnitDisplay').innerText = ` ${unit}`;
+
+      // 連動當日已完成的數量
+      syncHomeBeadWithSelectedDay();
+      document.getElementById('midDropdownMenu').classList.remove('active');
+    }
+
+    function syncHomeBeadWithSelectedDay() {
+      const dayList = practiceLogs[selectedDate] || [];
+      const existing = dayList.find(p => p.name === homeBeadState.name);
+      homeBeadState.count = existing ? existing.count : 0;
+      document.getElementById('homeBeadCountDisplay').innerText = homeBeadState.count.toLocaleString();
+    }
+
+    // ──────────────────────────────────────────
+    // 管理 / 修改「大類」邏輯
+    // ──────────────────────────────────────────
+    function openCatManageModal(e) {
+      if (e) e.stopPropagation();
+      document.getElementById('catDropdownMenu').classList.remove('active');
+      renderCatManageList();
+      document.getElementById('catManageOverlay').classList.add('active');
+    }
+
+    function closeCatManageModalDirect() {
+      document.getElementById('catManageOverlay').classList.remove('active');
+      savePracticeCategories();
+      syncCategoryAliases();
+      // 確保當前大類依然存在
+      if (!practiceCategories[homeBeadState.category]) {
+        homeBeadState.category = Object.keys(practiceCategories)[0] || 'fo';
+      }
+      selectCategory(homeBeadState.category);
+      renderCatMenuList();
+    }
+
+    function closeCatManageModal(e) {
+      if (e.target.id === 'catManageOverlay') closeCatManageModalDirect();
+    }
+
+    function renderCatManageList() {
+      const container = document.getElementById('catManageList');
+      if (!container) return;
+      container.innerHTML = Object.keys(practiceCategories).map(catKey => {
+        const cat = practiceCategories[catKey];
+        return `
+          <div style="display: flex; align-items: center; gap: 6px; background: var(--bg-card-subtle); padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border-light);">
+            <input type="text" class="form-input" style="flex: 2; padding: 4px 6px; font-size: 0.8rem;" value="${cat.name}" onchange="updateCatName('${catKey}', this.value)" placeholder="大類名稱">
+            <input type="text" class="form-input" style="flex: 1; padding: 4px 6px; font-size: 0.8rem;" value="${cat.unit}" onchange="updateCatUnit('${catKey}', this.value)" placeholder="單位">
+            <button class="btn-icon" style="width: 26px; height: 26px; color: #c0392b;" title="刪除大類" onclick="deleteCategory('${catKey}')">🗑️</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateCatName(catKey, newName) {
+      newName = newName.trim();
+      if (!newName) return alert('分類名稱不能為空');
+      if (practiceCategories[catKey]) {
+        practiceCategories[catKey].name = newName;
+        savePracticeCategories();
+      }
+    }
+
+    function updateCatUnit(catKey, newUnit) {
+      newUnit = newUnit.trim() || '次';
+      if (practiceCategories[catKey]) {
+        practiceCategories[catKey].unit = newUnit;
+        savePracticeCategories();
+      }
+    }
+
+    function deleteCategory(catKey) {
+      if (Object.keys(practiceCategories).length <= 1) {
+        return alert('至少需保留一個修持大類');
+      }
+      if (confirm(`確定要刪除「${practiceCategories[catKey].name}」大類嗎？`)) {
+        delete practiceCategories[catKey];
+        savePracticeCategories();
+        renderCatManageList();
+      }
+    }
+
+    function addCategoryFromInput() {
+      const nameInput = document.getElementById('newCatNameInput');
+      const unitInput = document.getElementById('newCatUnitInput');
+      const name = nameInput.value.trim();
+      const unit = unitInput.value.trim() || '次';
+      if (!name) return alert('請輸入新大類名稱');
+
+      const newKey = 'cat_' + Date.now();
+      practiceCategories[newKey] = {
+        id: newKey,
+        name: name,
+        unit: unit,
+        label: `${name}修持選擇`,
+        countLabel: `${name}數量`,
+        items: []
+      };
+      savePracticeCategories();
+      nameInput.value = '';
+      unitInput.value = '';
+      renderCatManageList();
+    }
+
+    // ──────────────────────────────────────────
+    // 管理 / 修改「中類項目」邏輯
+    // ──────────────────────────────────────────
+    function openMidManageModal(e) {
+      if (e) e.stopPropagation();
+      document.getElementById('midDropdownMenu').classList.remove('active');
+      const currentCat = practiceCategories[homeBeadState.category] || Object.values(practiceCategories)[0];
+      document.getElementById('midManageModalTitle').innerText = `⚙️ 管理「${currentCat.name}」修持項目`;
+      renderMidManageList();
+      document.getElementById('midManageOverlay').classList.add('active');
+    }
+
+    function closeMidManageModalDirect() {
+      document.getElementById('midManageOverlay').classList.remove('active');
+      savePracticeCategories();
+      syncCategoryAliases();
+      const currentCat = practiceCategories[homeBeadState.category];
+      if (currentCat && currentCat.items.length > 0) {
+        if (!currentCat.items.includes(homeBeadState.name)) {
+          selectMidItem(currentCat.items[0], currentCat.unit);
+        }
+      }
+      renderMidMenuList();
+    }
+
+    function closeMidManageModal(e) {
+      if (e.target.id === 'midManageOverlay') closeMidManageModalDirect();
+    }
+
+    function renderMidManageList() {
+      const container = document.getElementById('midManageList');
+      if (!container) return;
+      const currentCat = practiceCategories[homeBeadState.category];
+      if (!currentCat || !currentCat.items || currentCat.items.length === 0) {
+        container.innerHTML = `<div style="font-size: 0.76rem; color: var(--text-muted); text-align: center; padding: 12px;">目前無項目，請由下方新增</div>`;
+        return;
+      }
+      container.innerHTML = currentCat.items.map((item, idx) => `
+        <div style="display: flex; align-items: center; gap: 6px; background: var(--bg-card-subtle); padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border-light);">
+          <input type="text" class="form-input" style="flex: 1; padding: 4px 6px; font-size: 0.8rem;" value="${item}" onchange="updateMidItemName(${idx}, this.value)">
+          <button class="btn-icon" style="width: 26px; height: 26px; color: #c0392b;" title="刪除此項目" onclick="deleteMidItem(${idx})">🗑️</button>
+        </div>
+      `).join('');
+    }
+
+    function updateMidItemName(idx, newName) {
+      newName = newName.trim();
+      if (!newName) return alert('項目名稱不能為空');
+      const currentCat = practiceCategories[homeBeadState.category];
+      if (currentCat && currentCat.items[idx] !== undefined) {
+        const oldName = currentCat.items[idx];
+        currentCat.items[idx] = newName;
+        // 如果當前選取的項目剛好被改名
+        if (homeBeadState.name === oldName) {
+          homeBeadState.name = newName;
+          document.getElementById('homeBeadMidLabel').innerText = newName;
+        }
+        savePracticeCategories();
+      }
+    }
+
+    function deleteMidItem(idx) {
+      const currentCat = practiceCategories[homeBeadState.category];
+      if (!currentCat) return;
+      if (confirm(`確定要刪除「${currentCat.items[idx]}」嗎？`)) {
+        currentCat.items.splice(idx, 1);
+        savePracticeCategories();
+        renderMidManageList();
+      }
+    }
+
+    function addMidItemFromInput() {
+      const input = document.getElementById('newMidItemInput');
+      const name = input.value.trim();
+      if (!name) return alert('請輸入修持項目名稱');
+      const currentCat = practiceCategories[homeBeadState.category];
+      if (!currentCat) return;
+      if (!currentCat.items) currentCat.items = [];
+      if (currentCat.items.includes(name)) return alert('已存在相同名稱的項目');
+
+      currentCat.items.push(name);
+      savePracticeCategories();
+      input.value = '';
+      renderMidManageList();
+      // 自動設為選取項目
+      selectMidItem(name, currentCat.unit);
+    }
+
+    // 點擊撥珠大按鈕 (+1)
+    function tapHomeBead(e) {
+      e.stopPropagation();
+      homeBeadState.count += 1;
+      document.getElementById('homeBeadCountDisplay').innerText = homeBeadState.count.toLocaleString();
+
+      if (!practiceLogs[selectedDate]) practiceLogs[selectedDate] = [];
+      let existing = practiceLogs[selectedDate].find(p => p.name === homeBeadState.name);
+      if (existing) {
+        existing.count = homeBeadState.count;
+      } else {
+        practiceLogs[selectedDate].push({
+          id: 'p_' + Date.now(),
+          category: homeBeadState.category,
+          name: homeBeadState.name,
+          count: homeBeadState.count,
+          unit: homeBeadState.unit
+        });
+      }
+
+      renderCalendar();
+    }
+
+    // 讀經轉持經
+    function syncReadingToPractice(title, chapter) {
+      const note = chapter ? `讀經同步：持誦${chapter}` : '讀經同步持誦';
+      if (!practiceLogs[selectedDate]) practiceLogs[selectedDate] = [];
+      
+      practiceLogs[selectedDate].push({
+        id: 'p_sync_' + Date.now(),
+        category: 'jing',
+        name: title,
+        count: 1,
+        unit: '部',
+        note: note
+      });
+
+      renderCalendar();
+      alert(`已成功將讀經記錄【${title}】轉為持經功課！`);
+    }
+
+    function deleteReadingRecord(id) {
+      if (confirm('確定要刪除此筆閱讀記錄嗎？')) {
+        readingLogs[selectedDate] = (readingLogs[selectedDate] || []).filter(r => r.id !== id);
+        renderCalendar();
+      }
+    }
+
+    function deletePracticeRecord(id) {
+      if (confirm('確定要刪除此筆功課修持記錄嗎？')) {
+        practiceLogs[selectedDate] = (practiceLogs[selectedDate] || []).filter(p => p.id !== id);
+        renderCalendar();
+      }
+    }
+
+    function openPracticeModal() {
+      document.getElementById('practiceDialogOverlay').classList.add('active');
+      switchCategory(activeCategory);
+    }
+    function closePracticeModalDirect() {
+      document.getElementById('practiceDialogOverlay').classList.remove('active');
+    }
+    function closePracticeModal(e) {
+      if (e.target.id === 'practiceDialogOverlay') closePracticeModalDirect();
+    }
+
+    function switchCategory(catKey) {
+      activeCategory = catKey;
+      document.getElementById('tabFo').classList.toggle('active', catKey === 'fo');
+      document.getElementById('tabZhou').classList.toggle('active', catKey === 'zhou');
+      document.getElementById('tabJing').classList.toggle('active', catKey === 'jing');
+      document.getElementById('tabOther').classList.toggle('active', catKey === 'other');
+
+      const config = CATEGORY_PRESETS[catKey];
+      document.getElementById('presetLabel').innerText = config.label;
+      document.getElementById('unitTip').innerText = `單位：${config.unit}`;
+      document.getElementById('countInputLabel').innerText = config.countLabel;
+
+      const container = document.getElementById('presetChipsContainer');
+      container.innerHTML = config.items.map((item, idx) => `
+        <button class="preset-chip ${idx === 0 ? 'selected' : ''}" onclick="selectPresetItem('${item}', this)">
+          ${item}
+        </button>
+      `).join('');
+
+      if (config.items.length > 0) {
+        document.getElementById('practiceNameInput').value = config.items[0];
+      }
+
+      if (catKey === 'fo') document.getElementById('practiceCountInput').value = 1080;
+      else if (catKey === 'zhou') document.getElementById('practiceCountInput').value = 21;
+      else if (catKey === 'jing') document.getElementById('practiceCountInput').value = 1;
+      else document.getElementById('practiceCountInput').value = 108;
+    }
+
+    function selectPresetItem(name, chipEl) {
+      document.querySelectorAll('.preset-chip').forEach(el => el.classList.remove('selected'));
+      chipEl.classList.add('selected');
+      document.getElementById('practiceNameInput').value = name;
+      if (name === '禮佛大拜') {
+        document.getElementById('practiceCountInput').value = 108;
+        document.getElementById('unitTip').innerText = '單位：拜';
+      } else if (name === '靜坐禪修') {
+        document.getElementById('practiceCountInput').value = 45;
+        document.getElementById('unitTip').innerText = '單位：分鐘';
+      }
+    }
+
+    function quickAddCount(delta) {
+      const input = document.getElementById('practiceCountInput');
+      let val = parseInt(input.value, 10) || 0;
+      input.value = Math.max(1, val + delta);
+    }
+
+    function tapBead() {
+      quickAddCount(1);
+      const btn = document.getElementById('btnBeadTap');
+      btn.style.transform = 'scale(0.88)';
+      setTimeout(() => { btn.style.transform = 'scale(1)'; }, 90);
+    }
+
+    function savePracticeRecord() {
+      const name = document.getElementById('practiceNameInput').value.trim();
+      const count = parseInt(document.getElementById('practiceCountInput').value, 10) || 1;
+      let unit = CATEGORY_PRESETS[activeCategory].unit;
+      if (name === '禮佛大拜') unit = '拜';
+      if (name === '靜坐禪修') unit = '分鐘';
+
+      if (!name) return alert('請輸入修持名稱');
+
+      if (!practiceLogs[selectedDate]) practiceLogs[selectedDate] = [];
+      practiceLogs[selectedDate].push({
+        id: 'p_' + Date.now(),
+        category: activeCategory,
+        name: name,
+        count: count,
+        unit: unit
+      });
+
+      closePracticeModalDirect();
+      renderCalendar();
+      syncHomeBeadWithSelectedDay();
+    }
+
+    function updateHomeBanner(dateKey) {
+      const info = LUNAR_DATA_2026_09[dateKey];
+      const titleEl = document.getElementById('homeBannerTitle');
+      const badgeEl = document.getElementById('homeBannerBadge');
+      const subEl = document.getElementById('homeBannerSub');
+      const iconEl = document.getElementById('homeBannerIcon');
+
+      if (info && info.festival) {
+        iconEl.innerText = '🌸';
+        titleEl.innerText = info.festival;
+        badgeEl.className = 'home-card-badge badge-festival';
+        badgeEl.innerText = '聖誕紀念';
+        subEl.innerText = `${dateKey} · ${info.note}`;
+      } else if (info && info.isZhai) {
+        iconEl.innerText = '🌿';
+        titleEl.innerText = '今日十齋日';
+        badgeEl.className = 'home-card-badge badge-zhai';
+        badgeEl.innerText = '十齋日';
+        subEl.innerText = `${dateKey} · ${info.note} · 宜清心茹素`;
+      } else {
+        iconEl.innerText = '📜';
+        titleEl.innerText = '今日佛曆閱藏';
+        badgeEl.className = 'home-card-badge';
+        badgeEl.style.background = '#f0ebe2';
+        badgeEl.style.color = 'var(--text-secondary)';
+        badgeEl.innerText = '修持日';
+        subEl.innerText = `${dateKey} · ${info ? info.note : '深入經藏，智慧如海'}`;
+      }
+    }
+
+    function focusOnImportantDate() {
+      const target = document.getElementById('importantDateCard');
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.style.transition = 'all 0.3s';
+      target.style.boxShadow = '0 0 0 3px var(--gold-accent)';
+      setTimeout(() => { target.style.boxShadow = ''; }, 1000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCatMenuList();
+      selectCategory(homeBeadState.category);
+      renderCalendar();
+      updateHomeBanner(selectedDate);
+      syncHomeBeadWithSelectedDay();
+    });
+  </script>
+</body>
+</html>
