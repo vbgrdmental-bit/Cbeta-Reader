@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  CalendarDays, ChevronLeft, ChevronRight, X, Trash2, 
+import {
+  CalendarDays, ChevronLeft, ChevronRight, X, Trash2,
   Play, BookOpen, Edit3, Plus
 } from 'lucide-react';
-import { 
-  getAllReadingLogs, 
-  deleteReadingLog, 
+import {
+  getAllReadingLogs,
+  deleteReadingLog,
   clearAllReadingLogs,
   getAllPracticeLogs,
   savePracticeLog,
@@ -119,11 +119,21 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
       const currentCats = getPracticeCategories();
       let hasUpdate = false;
       const updatedCats = { ...currentCats };
+      let deletedSet = new Set<string>();
+      try {
+        const deletedRaw = localStorage.getItem('cbeta_practice_deleted_presets');
+        if (deletedRaw) {
+          deletedSet = new Set<string>(JSON.parse(deletedRaw));
+        }
+      } catch (e) {
+        // ignore
+      }
+
       pracData.forEach(p => {
         const catKey = p.category;
         if (updatedCats[catKey] && p.name && p.name.trim()) {
           const trimmed = p.name.trim();
-          if (!updatedCats[catKey].items.includes(trimmed)) {
+          if (!deletedSet.has(trimmed) && !updatedCats[catKey].items.includes(trimmed)) {
             updatedCats[catKey] = {
               ...updatedCats[catKey],
               items: [...updatedCats[catKey].items, trimmed]
@@ -186,7 +196,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
 
   // ── 統計計算 ──────────────────────────────────────────────
   const currentMonthPrefix = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
-  
+
   const currentMonthLogs = useMemo(() => {
     return logs.filter(l => l.date && l.date.startsWith(currentMonthPrefix));
   }, [logs, currentMonthPrefix]);
@@ -326,6 +336,34 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
     }
   };
 
+  // 💡 讀者自由刪除常用膠囊項目
+  const handleDeletePresetItem = (catKey: string, itemToDelete: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const currentCat = practiceCategories[catKey];
+    if (!currentCat) return;
+    const updatedItems = currentCat.items.filter(it => it !== itemToDelete);
+    const updatedCats = {
+      ...practiceCategories,
+      [catKey]: {
+        ...currentCat,
+        items: updatedItems
+      }
+    };
+    try {
+      const deletedRaw = localStorage.getItem('cbeta_practice_deleted_presets');
+      const deletedSet = new Set<string>(deletedRaw ? JSON.parse(deletedRaw) : []);
+      deletedSet.add(itemToDelete);
+      localStorage.setItem('cbeta_practice_deleted_presets', JSON.stringify(Array.from(deletedSet)));
+    } catch (err) {
+      // ignore
+    }
+    savePracticeCategories(updatedCats);
+    setPracticeCategories(updatedCats);
+    if (modalName === itemToDelete) {
+      setModalName(updatedItems[0] || '');
+    }
+  };
+
   const handleSavePractice = async () => {
     const trimmed = modalName.trim();
     if (!trimmed) return;
@@ -410,10 +448,10 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
   const isPageMode = mode === 'page';
 
   const bodyContent = (
-    <div 
+    <div
       className="reading-log-body-content custom-scrollbar"
-      style={{ 
-        padding: isPageMode ? '0' : '1.1rem', 
+      style={{
+        padding: isPageMode ? '0' : '1.1rem',
         overflowY: isPageMode ? 'visible' : 'auto',
         display: 'flex',
         flexDirection: 'column',
@@ -424,10 +462,10 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
       {/* 💡 1. 頂部看板：雙核心指標 + 本月最常閱讀 TOP 3 */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
         {/* 上排兩大指標看板 */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(2, 1fr)', 
-          gap: '0.6rem' 
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '0.6rem'
         }}>
           {/* 本月閱讀時數 */}
           <div style={{
@@ -441,9 +479,9 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
             gap: '4px'
           }}>
             <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>本月閱讀時數</span>
-            <span style={{ 
-              fontSize: '1.25rem', 
-              fontWeight: 700, 
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 700,
               color: 'var(--theme-accent, #8b5a2b)',
               fontFamily: 'var(--font-serif)'
             }}>
@@ -463,9 +501,9 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
             gap: '4px'
           }}>
             <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>本月閱讀本數</span>
-            <span style={{ 
-              fontSize: '1.25rem', 
-              fontWeight: 700, 
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 700,
               color: 'var(--theme-accent, #8b5a2b)',
               fontFamily: 'var(--font-serif)'
             }}>
@@ -524,7 +562,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                 const medal = medalColors[idx] || medalColors[2];
 
                 return (
-                  <div 
+                  <div
                     key={book.workId}
                     style={{
                       display: 'flex',
@@ -620,7 +658,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
           marginBottom: '0.75rem',
           padding: '0 0.3rem'
         }}>
-          <button 
+          <button
             onClick={handlePrevMonth}
             style={{
               background: 'none',
@@ -638,9 +676,9 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ 
-              fontSize: '1rem', 
-              fontWeight: 700, 
+            <span style={{
+              fontSize: '1rem',
+              fontWeight: 700,
               fontFamily: 'var(--font-serif)',
               color: 'var(--text-primary)'
             }}>
@@ -663,7 +701,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
             </button>
           </div>
 
-          <button 
+          <button
             onClick={handleNextMonth}
             style={{
               background: 'none',
@@ -735,13 +773,13 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                   padding: '3px 1px',
                   cursor: 'pointer',
                   position: 'relative',
-                  backgroundColor: isSelected 
-                    ? '#fdfaf3' 
-                    : isToday 
-                      ? 'rgba(139, 90, 43, 0.05)' 
+                  backgroundColor: isSelected
+                    ? '#fdfaf3'
+                    : isToday
+                      ? 'rgba(139, 90, 43, 0.05)'
                       : 'transparent',
-                  border: isSelected 
-                    ? '1.5px solid var(--theme-accent, #8b5a2b)' 
+                  border: isSelected
+                    ? '1.5px solid var(--theme-accent, #8b5a2b)'
                     : '1px solid transparent',
                   boxShadow: isSelected ? '0 1px 4px rgba(139, 90, 43, 0.15)' : 'none',
                   transition: 'all 0.15s ease'
@@ -751,10 +789,10 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                 <span style={{
                   fontSize: '0.86rem',
                   fontWeight: isSelected || isToday ? 700 : 500,
-                  color: isSelected 
-                    ? 'var(--theme-accent, #8b5a2b)' 
-                    : isToday 
-                      ? 'var(--theme-accent, #8b5a2b)' 
+                  color: isSelected
+                    ? 'var(--theme-accent, #8b5a2b)'
+                    : isToday
+                      ? 'var(--theme-accent, #8b5a2b)'
                       : 'var(--text-primary)',
                   fontFamily: 'var(--font-serif)',
                   lineHeight: 1.1
@@ -782,10 +820,10 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                   marginTop: '1px',
                   whiteSpace: 'nowrap',
                   fontWeight: (lunarInfo.festival || lunarInfo.isZhai) ? 700 : 400,
-                  color: lunarInfo.festival 
-                    ? '#c0392b' 
-                    : lunarInfo.isZhai 
-                      ? '#2d6a4f' 
+                  color: lunarInfo.festival
+                    ? '#c0392b'
+                    : lunarInfo.isZhai
+                      ? '#2d6a4f'
                       : 'var(--text-muted)'
                 }}>
                   {lunarInfo.cellLabel}
@@ -828,7 +866,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
 
       {/* 💡 3. 選中日期的三大獨立專區（圖 2 徹底重構分區） */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        
+
         {/* 區塊 A：🌟 重要日期獨立宣紙卡片 */}
         <div style={{
           background: 'linear-gradient(135deg, #fdfbf7 0%, #f6efe2 100%)',
@@ -914,7 +952,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
               <span>經文閱讀記錄</span>
             </div>
             <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
-              {selectedDateLogs.length > 0 
+              {selectedDateLogs.length > 0
                 ? `共 ${selectedDateLogs.length} 筆 • 累計 ${formatDuration(selectedDateTotalMinutes)}`
                 : '無閱讀紀錄'}
             </span>
@@ -1061,7 +1099,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
               <span>📿</span>
               <span>我的功課記錄</span>
             </div>
-            
+
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
                 共 {selectedDatePractices.length} 項功課
@@ -1172,7 +1210,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                     }}>
                       <span>累計完成</span>
                       {/* 可點選修改數量 */}
-                      <span 
+                      <span
                         onClick={(e) => handleOpenEditCount(p, e)}
                         title="點擊修改數量"
                         style={{
@@ -1189,7 +1227,6 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                         }}
                       >
                         <span>{p.count.toLocaleString()} {p.unit}</span>
-                        <span style={{ fontSize: '0.66rem', opacity: 0.6 }}>✏️</span>
                       </span>
                       <span style={{ color: '#2d6a4f', fontWeight: 600 }}>✓ 圓滿</span>
                       {p.note && (
@@ -1329,81 +1366,41 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
       {/* ── 彈窗 1：新增功課彈窗 ── */}
       {showPracticeModal && (
         <div 
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.45)',
-            backdropFilter: 'blur(3px)',
-            zIndex: 1200,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px'
-          }}
+          className="practice-modal-backdrop"
           onClick={() => setShowPracticeModal(false)}
         >
           <div 
+            className="practice-modal-window"
             onClick={e => e.stopPropagation()}
-            style={{
-              width: '100%',
-              maxWidth: '420px',
-              backgroundColor: 'var(--bg-card, #fff)',
-              borderRadius: '16px',
-              border: '1px solid var(--border-color, rgba(0,0,0,0.1))',
-              boxShadow: '0 16px 40px rgba(0,0,0,0.2)',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column'
-            }}
           >
-            <div style={{
-              padding: '12px 16px',
-              borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              backgroundColor: 'var(--bg-card-subtle, #faf7f2)'
-            }}>
-              <span style={{ fontSize: '0.94rem', fontWeight: 700, fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
+            <div className="practice-modal-header">
+              <span className="practice-modal-title">
                 📿 今日修持功課記數
               </span>
               <button 
+                type="button"
+                className="practice-modal-close-btn"
                 onClick={() => setShowPracticeModal(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                title="關閉"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '72vh', overflowY: 'auto' }}>
+            <div className="practice-modal-body">
               {/* 大類切換標籤 */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>選擇修持大類</span>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${Math.min(Object.keys(practiceCategories).length, 4)}, 1fr)`,
-                  gap: '6px',
-                  backgroundColor: 'var(--bg-card-subtle, rgba(0,0,0,0.03))',
-                  padding: '4px',
-                  borderRadius: '10px'
-                }}>
+                <span className="practice-section-label">選擇修持大類</span>
+                <div className="practice-cat-tabs">
                   {Object.keys(practiceCategories).map(catKey => {
                     const cat = practiceCategories[catKey];
+                    const isCatSelected = modalCategory === catKey;
                     return (
                       <button
                         key={catKey}
+                        type="button"
                         onClick={() => handleSwitchCategory(catKey)}
-                        style={{
-                          padding: '6px 0',
-                          border: 'none',
-                          borderRadius: '7px',
-                          fontSize: '0.8rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          backgroundColor: modalCategory === catKey ? '#fff' : 'transparent',
-                          color: modalCategory === catKey ? 'var(--theme-accent, #8b5a2b)' : 'var(--text-secondary)',
-                          boxShadow: modalCategory === catKey ? '0 1px 4px rgba(0,0,0,0.06)' : 'none'
-                        }}
+                        className={`practice-cat-tab-btn ${isCatSelected ? 'active' : ''}`}
                       >
                         {cat.name}
                       </button>
@@ -1412,44 +1409,44 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                 </div>
               </div>
 
-              {/* 中類快捷選擇 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-                  {practiceCategories[modalCategory]?.label || `${practiceCategories[modalCategory]?.name || '修持'}選擇`}
-                </span>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {(practiceCategories[modalCategory]?.items || []).map(item => (
-                    <button
-                      key={item}
-                      onClick={() => handleSelectPresetItem(item)}
-                      style={{
-                        padding: '5px 10px',
-                        borderRadius: '8px',
-                        fontSize: '0.78rem',
-                        cursor: 'pointer',
-                        border: modalName === item 
-                          ? '1px solid var(--theme-accent, #8b5a2b)' 
-                          : '1px solid var(--border-color, rgba(0,0,0,0.1))',
-                        backgroundColor: modalName === item 
-                          ? 'var(--theme-accent-light, rgba(139, 90, 43, 0.1))' 
-                          : 'var(--bg-card, #fff)',
-                        color: modalName === item 
-                          ? 'var(--theme-accent, #8b5a2b)' 
-                          : 'var(--text-primary)',
-                        fontWeight: modalName === item ? 700 : 500,
-                        fontFamily: 'var(--font-serif)'
-                      }}
-                    >
-                      {item}
-                    </button>
-                  ))}
+              {/* 中類快捷選擇（圖5膠囊型式 + 右上方/右側可刪除 x） */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span className="practice-section-label">
+                    {practiceCategories[modalCategory]?.label || `常用${practiceCategories[modalCategory]?.name || '修持'}選擇`}
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>點擊選取 · 點「×」刪除</span>
+                </div>
+                <div className="practice-preset-pills-wrap">
+                  {(practiceCategories[modalCategory]?.items || []).map(item => {
+                    const isSelected = modalName === item;
+                    return (
+                      <div
+                        key={item}
+                        className={`practice-preset-pill ${isSelected ? 'selected' : ''}`}
+                        onClick={() => handleSelectPresetItem(item)}
+                        title={`點擊選取「${item}」`}
+                      >
+                        <span className="practice-pill-text">{item}</span>
+                        <button
+                          type="button"
+                          className="practice-pill-del-btn"
+                          onClick={(e) => handleDeletePresetItem(modalCategory, item, e)}
+                          title={`刪除「${item}」常用項目`}
+                          aria-label={`刪除「${item}」常用項目`}
+                        >
+                          <X size={11} strokeWidth={2.4} />
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* 自訂修持名稱 */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                  <span className="practice-section-label">
                     修持名稱 (可直接自訂修改)
                   </span>
                   {modalName.trim() && !(practiceCategories[modalCategory]?.items || []).includes(modalName.trim()) && (
@@ -1472,7 +1469,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                         }
                       }}
                       style={{
-                        background: 'rgba(184, 134, 11, 0.1)',
+                        background: 'rgba(184, 134, 11, 0.12)',
                         border: '1px dashed #b8860b',
                         color: '#925800',
                         borderRadius: '6px',
@@ -1489,62 +1486,38 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                 </div>
                 <input 
                   type="text" 
+                  className="practice-modal-input"
                   value={modalName}
                   onChange={e => setModalName(e.target.value)}
                   placeholder="輸入佛號、咒語或經名（儲存時自動收錄）"
-                  style={{
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
-                    fontSize: '0.88rem',
-                    fontFamily: 'inherit',
-                    color: 'var(--text-primary)',
-                    backgroundColor: '#fff'
-                  }}
                 />
               </div>
 
               {/* 數量輸入與快捷加數 */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                  <span className="practice-section-label">
                     {practiceCategories[modalCategory]?.countLabel || '修持數量'}
                   </span>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--theme-accent, #8b5a2b)' }}>
+                  <span style={{ fontSize: '0.74rem', color: 'var(--theme-accent, #8b5a2b)', fontWeight: 600 }}>
                     單位：{practiceCategories[modalCategory]?.unit || '次'}
                   </span>
                 </div>
                 <input 
                   type="number" 
+                  className="practice-modal-input"
                   value={modalCount}
                   onChange={e => setModalCount(parseInt(e.target.value, 10) || 0)}
                   min={1}
-                  style={{
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
-                    fontSize: '0.88rem',
-                    fontFamily: 'inherit',
-                    color: 'var(--text-primary)',
-                    backgroundColor: '#fff'
-                  }}
                 />
                 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' }}>
                   {[1, 7, 21, 108, 1000].map(addVal => (
                     <button
                       key={addVal}
+                      type="button"
+                      className="practice-add-val-btn"
                       onClick={() => setModalCount(prev => prev + addVal)}
-                      style={{
-                        padding: '6px 0',
-                        backgroundColor: 'var(--bg-card-subtle, rgba(0,0,0,0.03))',
-                        border: '1px solid var(--border-color, rgba(0,0,0,0.1))',
-                        borderRadius: '6px',
-                        fontSize: '0.74rem',
-                        fontWeight: 700,
-                        color: 'var(--theme-accent, #8b5a2b)',
-                        cursor: 'pointer'
-                      }}
                     >
                       +{addVal}
                     </button>
@@ -1552,33 +1525,25 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                 </div>
               </div>
 
-              {/* 隨喜撥珠計數器 */}
-              <div style={{
-                background: 'linear-gradient(135deg, #f8f2e7 0%, #eee4d3 100%)',
-                border: '1px dashed #b8860b',
-                borderRadius: '12px',
-                padding: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '12px'
-              }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#704b08', fontFamily: 'var(--font-serif)' }}>
+              {/* 隨喜撥珠計數器提示框 */}
+              <div className="practice-modal-bead-hint">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontSize: '0.84rem', fontWeight: 700, fontFamily: 'var(--font-serif)' }}>
                     📿 隨喜撥珠計數器
                   </span>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '0.72rem', opacity: 0.85 }}>
                     點擊右側佛珠即時 +1 累計
                   </span>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setModalCount(prev => prev + 1)}
                   style={{
                     width: '46px',
                     height: '46px',
                     borderRadius: '50%',
                     background: 'linear-gradient(135deg, #d4a373 0%, #a26b38 100%)',
-                    border: '2px solid #fff',
+                    border: '2px solid rgba(255,255,255,0.8)',
                     boxShadow: '0 3px 8px rgba(162, 107, 56, 0.4)',
                     display: 'flex',
                     alignItems: 'center',
@@ -1587,49 +1552,25 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                     fontSize: '1.2rem',
                     cursor: 'pointer'
                   }}
+                  title="撥珠 +1"
                 >
                   📿
                 </button>
               </div>
             </div>
 
-            <div style={{
-              padding: '12px 16px',
-              backgroundColor: '#fff',
-              borderTop: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              gap: '10px'
-            }}>
+            <div className="practice-modal-footer">
               <button
+                type="button"
+                className="practice-modal-btn-cancel"
                 onClick={() => setShowPracticeModal(false)}
-                style={{
-                  padding: '7px 14px',
-                  backgroundColor: 'transparent',
-                  border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
-                  borderRadius: '8px',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  color: 'var(--text-secondary)',
-                  cursor: 'pointer'
-                }}
               >
                 取消
               </button>
               <button
+                type="button"
+                className="practice-modal-btn-submit"
                 onClick={handleSavePractice}
-                style={{
-                  padding: '7px 18px',
-                  backgroundColor: 'var(--theme-accent, #8b5a2b)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 6px rgba(139, 90, 43, 0.25)'
-                }}
               >
                 儲存今日功課
               </button>
@@ -1641,116 +1582,72 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
       {/* ── 彈窗 2：編輯功課數量彈窗 ── */}
       {editingPractice && (
         <div 
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            zIndex: 1300,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px'
-          }}
+          className="practice-modal-backdrop"
           onClick={() => setEditingPractice(null)}
         >
           <div 
+            className="practice-modal-window"
+            style={{ maxWidth: '340px' }}
             onClick={e => e.stopPropagation()}
-            style={{
-              width: '100%',
-              maxWidth: '320px',
-              backgroundColor: '#fff',
-              borderRadius: '14px',
-              padding: '16px',
-              border: '1px solid var(--border-color, rgba(0,0,0,0.1))',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.18)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px'
-            }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.92rem', fontWeight: 700, fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
+            <div className="practice-modal-header">
+              <span className="practice-modal-title">
                 編輯：{editingPractice.name}
               </span>
               <button 
+                type="button"
+                className="practice-modal-close-btn"
                 onClick={() => setEditingPractice(null)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                title="關閉"
               >
                 <X size={16} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>今日完成數量</span>
-                <span style={{ fontSize: '0.72rem', color: 'var(--theme-accent, #8b5a2b)' }}>
-                  單位：{editingPractice.unit}
-                </span>
+            <div className="practice-modal-body" style={{ gap: '12px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span className="practice-section-label">今日完成數量</span>
+                  <span style={{ fontSize: '0.74rem', color: 'var(--theme-accent, #8b5a2b)', fontWeight: 600 }}>
+                    單位：{editingPractice.unit}
+                  </span>
+                </div>
+                <input 
+                  type="number" 
+                  className="practice-modal-input"
+                  value={editCountInput}
+                  onChange={e => setEditCountInput(parseInt(e.target.value, 10) || 0)}
+                  min={0}
+                />
               </div>
-              <input 
-                type="number" 
-                value={editCountInput}
-                onChange={e => setEditCountInput(parseInt(e.target.value, 10) || 0)}
-                min={0}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: '8px',
-                  border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
-                  fontSize: '0.92rem',
-                  fontFamily: 'inherit',
-                  color: 'var(--text-primary)'
-                }}
-              />
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px' }}>
+                {[-108, -10, 10, 108, 1000].map(delta => (
+                  <button
+                    key={delta}
+                    type="button"
+                    className="practice-add-val-btn"
+                    onClick={() => setEditCountInput(prev => Math.max(0, prev + delta))}
+                    style={{ fontSize: '0.72rem', padding: '5px 0' }}
+                  >
+                    {delta > 0 ? `+${delta}` : delta}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px' }}>
-              {[-108, -10, 10, 108, 1000].map(delta => (
-                <button
-                  key={delta}
-                  onClick={() => setEditCountInput(prev => Math.max(0, prev + delta))}
-                  style={{
-                    padding: '5px 0',
-                    backgroundColor: 'var(--bg-card-subtle, rgba(0,0,0,0.03))',
-                    border: '1px solid var(--border-color, rgba(0,0,0,0.1))',
-                    borderRadius: '6px',
-                    fontSize: '0.72rem',
-                    fontWeight: 700,
-                    color: 'var(--theme-accent, #8b5a2b)',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {delta > 0 ? `+${delta}` : delta}
-                </button>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
+            <div className="practice-modal-footer">
               <button
+                type="button"
+                className="practice-modal-btn-cancel"
                 onClick={() => setEditingPractice(null)}
-                style={{
-                  padding: '6px 12px',
-                  backgroundColor: 'transparent',
-                  border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
-                  borderRadius: '6px',
-                  fontSize: '0.78rem',
-                  color: 'var(--text-secondary)',
-                  cursor: 'pointer'
-                }}
               >
                 取消
               </button>
               <button
+                type="button"
+                className="practice-modal-btn-submit"
                 onClick={handleSaveEditCount}
-                style={{
-                  padding: '6px 16px',
-                  backgroundColor: 'var(--theme-accent, #8b5a2b)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  fontSize: '0.78rem',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
               >
                 儲存數量
               </button>
@@ -1761,82 +1658,82 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
     </div>
   );
 
-  if (isPageMode) {
-    return (
-      <div 
-        className="reading-log-page-container animate-fade-in custom-scrollbar"
-        style={{
-          width: '100%',
-          height: '100%',
-          overflowY: 'auto',
-          overscrollBehavior: 'contain',
-          padding: '1.2rem 1rem 3.5rem',
-          boxSizing: 'border-box'
-        }}
-      >
-        <div style={{ maxWidth: '840px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {bodyContent}
-        </div>
-      </div>
-    );
-  }
-
+if (isPageMode) {
   return (
-    <div className="search-dialog-overlay" onClick={onClose} style={{ zIndex: 1100 }}>
-      <div 
-        className="search-dialog-card animate-slide-up" 
-        onClick={e => e.stopPropagation()}
-        style={{ 
-          maxWidth: '520px', 
-          width: '94vw',
-          maxHeight: '90vh',
-          borderRadius: '16px',
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          backgroundColor: 'var(--bg-card, #fff)'
-        }}
-      >
-        <div 
-          className="dialog-header" 
-          style={{ 
-            padding: '0.9rem 1.2rem',
-            borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: 'var(--bg-card, #fff)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <CalendarDays size={20} style={{ color: 'var(--theme-accent, #8b5a2b)' }} />
-            <h3 style={{ 
-              margin: 0, 
-              fontSize: '1.15rem', 
-              fontWeight: 700, 
-              fontFamily: 'var(--font-serif)',
-              color: 'var(--text-primary)'
-            }}>
-              閱讀與修持日誌
-            </h3>
-          </div>
-          {onClose && (
-            <button 
-              className="icon-button close-btn" 
-              onClick={onClose}
-              title="關閉"
-              style={{ padding: '4px' }}
-            >
-              <X size={20} />
-            </button>
-          )}
-        </div>
-
+    <div
+      className="reading-log-page-container animate-fade-in custom-scrollbar"
+      style={{
+        width: '100%',
+        height: '100%',
+        overflowY: 'auto',
+        overscrollBehavior: 'contain',
+        padding: '1.2rem 1rem 3.5rem',
+        boxSizing: 'border-box'
+      }}
+    >
+      <div style={{ maxWidth: '840px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {bodyContent}
       </div>
     </div>
   );
+}
+
+return (
+  <div className="search-dialog-overlay" onClick={onClose} style={{ zIndex: 1100 }}>
+    <div
+      className="search-dialog-card animate-slide-up"
+      onClick={e => e.stopPropagation()}
+      style={{
+        maxWidth: '520px',
+        width: '94vw',
+        maxHeight: '90vh',
+        borderRadius: '16px',
+        padding: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        backgroundColor: 'var(--bg-card, #fff)'
+      }}
+    >
+      <div
+        className="dialog-header"
+        style={{
+          padding: '0.9rem 1.2rem',
+          borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: 'var(--bg-card, #fff)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <CalendarDays size={20} style={{ color: 'var(--theme-accent, #8b5a2b)' }} />
+          <h3 style={{
+            margin: 0,
+            fontSize: '1.15rem',
+            fontWeight: 700,
+            fontFamily: 'var(--font-serif)',
+            color: 'var(--text-primary)'
+          }}>
+            閱讀與修持日誌
+          </h3>
+        </div>
+        {onClose && (
+          <button
+            className="icon-button close-btn"
+            onClick={onClose}
+            title="關閉"
+            style={{ padding: '4px' }}
+          >
+            <X size={20} />
+          </button>
+        )}
+      </div>
+
+      {bodyContent}
+    </div>
+  </div>
+);
 }
 
 export default ReadingLogView;

@@ -1483,16 +1483,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.11.2) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.11.3) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.11.2</span>
+                        <span>⭐ App: v4.11.3</span>
                         <span className="changelog-date">(2026-10-09)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 撥珠小卡左右滿版：消除外框內縮與多餘留白，首頁 4×1 隨喜撥珠小卡與整頁完美齊平。</li>
-                        <li>• 左中右三區塊佈局：大類與計數居左、中類項目居中彈性舒展、撥珠圖案居右，徹底避免換行。</li>
-                        <li>• 簡約選單與合十念珠：大類中類選單精簡為純文字項目；按鈕升級合十念珠圖騰與飄浮動效。</li>
+                        <li>• 淺色模式下拉箭頭清晰化：大類與中類改為向量倒三角並強化對比配色，淺色模式清澈明晰。</li>
+                        <li>• 修持記數彈窗防穿透重疊：深色與蓮花粉模式採用實心背景阻絕透光重影，徹底杜絕輸入框白底白字。</li>
+                        <li>• 常用選擇膠囊化與自由刪除：常用項目升級典雅圓角膠囊並支援右上「×」自由刪除；功課條精簡多餘筆。</li>
                       </ul>
                     </div>
 
@@ -1515,6 +1515,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.11.2</span>
+                            <span className="changelog-date">(2026-10-09)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 撥珠小卡左右滿版：消除外框內縮與多餘留白，首頁 4×1 隨喜撥珠小卡與整頁完美齊平。</li>
+                            <li>• 左中右三區塊佈局：大類與計數居左、中類項目居中彈性舒展、撥珠圖案居右，徹底避免換行。</li>
+                            <li>• 簡約選單與合十念珠：大類中類選單精簡為純文字項目；按鈕升級合十念珠圖騰與飄浮動效。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.11.0</span>

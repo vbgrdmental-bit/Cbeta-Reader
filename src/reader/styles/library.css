@@ -11845,10 +11845,36 @@ body.theme-ebony .modal-capsule-btn.resume-capsule,
 }
 
 .combo-arrow-down {
-  font-size: 0.65rem;
-  opacity: 0.65;
-  color: inherit;
+  width: 8px;
+  height: 6px;
+  opacity: 1 !important;
   flex-shrink: 0;
+  margin-left: 2px;
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+/* 淺色模式：大類箭頭深金褐色，中類箭頭深墨色，絕對清晰不隱形 */
+.combo-part-cat .combo-arrow-down {
+  color: #8b5a2b !important;
+}
+
+.combo-part-mid .combo-arrow-down {
+  color: #2c2523 !important;
+}
+
+/* 深色模式：大類金色，中類米白 */
+body.theme-dark .combo-part-cat .combo-arrow-down,
+body.theme-ebony .combo-part-cat .combo-arrow-down,
+body.theme-custom-dark .combo-part-cat .combo-arrow-down {
+  color: #f3c778 !important;
+}
+
+body.theme-dark .combo-part-mid .combo-arrow-down,
+body.theme-ebony .combo-part-mid .combo-arrow-down,
+body.theme-custom-dark .combo-part-mid .combo-arrow-down {
+  color: #e6e1da !important;
 }
 
 /* ══════════════════════════════════════════════════
@@ -12102,6 +12128,478 @@ body.theme-dark .dropdown-action-btn {
   border-color: rgba(255, 255, 255, 0.18) !important;
   color: #dfb26b !important;
 }
+
+/* ══════════════════════════════════════════════════
+   修持功課記數彈窗專屬樣式 (100% 實心無穿透，高對比清晰)
+   ══════════════════════════════════════════════════ */
+.practice-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.72) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.practice-modal-window {
+  width: 100%;
+  max-width: 440px;
+  background-color: #ffffff !important; /* 強制實心白底，絕不透光 */
+  color: #2c2523 !important;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 深色模式（烏木黑、深色主題） */
+body.theme-dark .practice-modal-window,
+body.theme-ebony .practice-modal-window,
+body.theme-custom-dark .practice-modal-window,
+.theme-dark .practice-modal-window,
+.theme-ebony .practice-modal-window {
+  background-color: #1e1e1e !important; /* 強制實心深墨黑，絕不透光 */
+  color: #f5f0e6 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* 蓮花粉模式：強制實心純白，消除半透明穿透重影 */
+body.theme-lotus .practice-modal-window,
+.theme-lotus .practice-modal-window {
+  background-color: #ffffff !important;
+  color: #38241d !important;
+  border: 1px solid rgba(180, 100, 100, 0.25) !important;
+}
+
+.practice-modal-header {
+  padding: 13px 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #faf7f2 !important;
+}
+
+body.theme-dark .practice-modal-header,
+body.theme-ebony .practice-modal-header,
+body.theme-custom-dark .practice-modal-header,
+.theme-dark .practice-modal-header,
+.theme-ebony .practice-modal-header {
+  background-color: #262626 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.practice-modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-serif);
+  color: #3e2415 !important;
+  letter-spacing: -0.2px;
+}
+
+body.theme-dark .practice-modal-title,
+body.theme-ebony .practice-modal-title,
+body.theme-custom-dark .practice-modal-title,
+.theme-dark .practice-modal-title,
+.theme-ebony .practice-modal-title {
+  color: #f3c778 !important;
+}
+
+.practice-modal-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #7a7067;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.practice-modal-close-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #222;
+}
+
+body.theme-dark .practice-modal-close-btn,
+body.theme-ebony .practice-modal-close-btn,
+body.theme-custom-dark .practice-modal-close-btn,
+.theme-dark .practice-modal-close-btn,
+.theme-ebony .practice-modal-close-btn {
+  color: #b0aaa0;
+}
+
+body.theme-dark .practice-modal-close-btn:hover,
+body.theme-ebony .practice-modal-close-btn:hover,
+body.theme-custom-dark .practice-modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.practice-modal-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 72vh;
+  overflow-y: auto;
+}
+
+.practice-section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #5c4f45 !important;
+}
+
+body.theme-dark .practice-section-label,
+body.theme-ebony .practice-section-label,
+body.theme-custom-dark .practice-section-label,
+.theme-dark .practice-section-label,
+.theme-ebony .practice-section-label {
+  color: #d8d0c2 !important;
+}
+
+/* 大類切換 tabs */
+.practice-cat-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  background: #f0ebe1;
+  padding: 4px;
+  border-radius: 12px;
+}
+
+body.theme-dark .practice-cat-tabs,
+body.theme-ebony .practice-cat-tabs,
+body.theme-custom-dark .practice-cat-tabs,
+.theme-dark .practice-cat-tabs,
+.theme-ebony .practice-cat-tabs {
+  background: #2a2a2a !important;
+}
+
+.practice-cat-tab-btn {
+  padding: 7px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: transparent;
+  color: #7a7065;
+  transition: all 0.15s ease;
+}
+
+.practice-cat-tab-btn.active {
+  background: #ffffff !important;
+  color: #8b5a2b !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-dark .practice-cat-tab-btn,
+body.theme-ebony .practice-cat-tab-btn,
+body.theme-custom-dark .practice-cat-tab-btn {
+  color: #9e968b;
+}
+
+body.theme-dark .practice-cat-tab-btn.active,
+body.theme-ebony .practice-cat-tab-btn.active,
+body.theme-custom-dark .practice-cat-tab-btn.active,
+.theme-dark .practice-cat-tab-btn.active,
+.theme-ebony .practice-cat-tab-btn.active {
+  background: #383838 !important;
+  color: #f3c778 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* 常用項目膠囊排版 (圖5風格) */
+.practice-preset-pills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+}
+
+.practice-preset-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(139, 90, 43, 0.22);
+  color: #332b26;
+  font-size: 0.82rem;
+  font-family: var(--font-serif);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.practice-preset-pill:hover {
+  background: #fdfaf6;
+  border-color: rgba(139, 90, 43, 0.45);
+}
+
+.practice-preset-pill.selected {
+  background: rgba(139, 90, 43, 0.1) !important;
+  border: 1.5px solid #8b5a2b !important;
+  color: #733c10 !important;
+  font-weight: 700;
+}
+
+body.theme-dark .practice-preset-pill,
+body.theme-ebony .practice-preset-pill,
+body.theme-custom-dark .practice-preset-pill,
+.theme-dark .practice-preset-pill,
+.theme-ebony .practice-preset-pill {
+  background: #282828 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ede7dc !important;
+}
+
+body.theme-dark .practice-preset-pill:hover,
+body.theme-ebony .practice-preset-pill:hover,
+body.theme-custom-dark .practice-preset-pill:hover {
+  background: #333333 !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+body.theme-dark .practice-preset-pill.selected,
+body.theme-ebony .practice-preset-pill.selected,
+body.theme-custom-dark .practice-preset-pill.selected,
+.theme-dark .practice-preset-pill.selected,
+.theme-ebony .practice-preset-pill.selected {
+  background: rgba(243, 199, 120, 0.15) !important;
+  border: 1.5px solid #f3c778 !important;
+  color: #f3c778 !important;
+  font-weight: 700;
+}
+
+.practice-pill-text {
+  line-height: 1.2;
+}
+
+.practice-pill-del-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.06);
+  color: #776e65;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.practice-pill-del-btn:hover {
+  background: #d9383a !important;
+  color: #ffffff !important;
+  transform: scale(1.15);
+}
+
+body.theme-dark .practice-pill-del-btn,
+body.theme-ebony .practice-pill-del-btn,
+body.theme-custom-dark .practice-pill-del-btn,
+.theme-dark .practice-pill-del-btn,
+.theme-ebony .practice-pill-del-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #c4bcb0;
+}
+
+body.theme-dark .practice-pill-del-btn:hover,
+body.theme-ebony .practice-pill-del-btn:hover,
+body.theme-custom-dark .practice-pill-del-btn:hover {
+  background: #e74c3c !important;
+  color: #ffffff !important;
+}
+
+/* 輸入框 (徹底杜絕白底白字) */
+.practice-modal-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: #ffffff !important;
+  color: #1a1715 !important;
+  border: 1px solid rgba(0, 0, 0, 0.22) !important;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.practice-modal-input:focus {
+  border-color: #8b5a2b !important;
+}
+
+body.theme-dark .practice-modal-input,
+body.theme-ebony .practice-modal-input,
+body.theme-custom-dark .practice-modal-input,
+.theme-dark .practice-modal-input,
+.theme-ebony .practice-modal-input {
+  background: #2b2b2b !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+}
+
+body.theme-dark .practice-modal-input:focus,
+body.theme-ebony .practice-modal-input:focus,
+body.theme-custom-dark .practice-modal-input:focus {
+  border-color: #f3c778 !important;
+}
+
+/* 快捷加數按鈕 */
+.practice-add-val-btn {
+  padding: 7px 0;
+  background: #f4eee3;
+  border: 1px solid rgba(139, 90, 43, 0.18);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #8b5a2b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.practice-add-val-btn:hover {
+  background: #ebe1d2;
+}
+
+body.theme-dark .practice-add-val-btn,
+body.theme-ebony .practice-add-val-btn,
+body.theme-custom-dark .practice-add-val-btn,
+.theme-dark .practice-add-val-btn,
+.theme-ebony .practice-add-val-btn {
+  background: #2c2c2c !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #f3c778 !important;
+}
+
+body.theme-dark .practice-add-val-btn:hover,
+body.theme-ebony .practice-add-val-btn:hover,
+body.theme-custom-dark .practice-add-val-btn:hover {
+  background: #363636 !important;
+}
+
+/* 隨喜撥珠計數器提示框 */
+.practice-modal-bead-hint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #faf6ee;
+  border: 1px dashed rgba(184, 134, 11, 0.5);
+  border-radius: 12px;
+  color: #4a3828;
+}
+
+body.theme-dark .practice-modal-bead-hint,
+body.theme-ebony .practice-modal-bead-hint,
+body.theme-custom-dark .practice-modal-bead-hint,
+.theme-dark .practice-modal-bead-hint,
+.theme-ebony .practice-modal-bead-hint {
+  background: #272522 !important;
+  border: 1px dashed rgba(243, 199, 120, 0.4) !important;
+  color: #f0ebe1 !important;
+}
+
+/* 彈窗底欄按鈕 */
+.practice-modal-footer {
+  padding: 12px 18px;
+  background-color: #faf7f2;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+body.theme-dark .practice-modal-footer,
+body.theme-ebony .practice-modal-footer,
+body.theme-custom-dark .practice-modal-footer,
+.theme-dark .practice-modal-footer,
+.theme-ebony .practice-modal-footer {
+  background-color: #242424 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.practice-modal-btn-cancel {
+  padding: 7px 14px;
+  background-color: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6d635b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.practice-modal-btn-cancel:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.theme-dark .practice-modal-btn-cancel,
+body.theme-ebony .practice-modal-btn-cancel,
+body.theme-custom-dark .practice-modal-btn-cancel {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #c4bcb0;
+}
+
+body.theme-dark .practice-modal-btn-cancel:hover,
+body.theme-ebony .practice-modal-btn-cancel:hover,
+body.theme-custom-dark .practice-modal-btn-cancel:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.practice-modal-btn-submit {
+  padding: 7px 18px;
+  background-color: #8b5a2b;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(139, 90, 43, 0.3);
+  transition: all 0.15s ease;
+}
+
+.practice-modal-btn-submit:hover {
+  background-color: #72461e;
+}
+
+body.theme-dark .practice-modal-btn-submit,
+body.theme-ebony .practice-modal-btn-submit,
+body.theme-custom-dark .practice-modal-btn-submit {
+  background-color: #b8860b !important;
+  color: #1a1715 !important;
+  box-shadow: 0 2px 8px rgba(184, 134, 11, 0.4);
+}
+
+body.theme-dark .practice-modal-btn-submit:hover,
+body.theme-ebony .practice-modal-btn-submit:hover,
+body.theme-custom-dark .practice-modal-btn-submit:hover {
+  background-color: #d4a017 !important;
+}
+
 
 
 

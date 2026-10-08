@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.11.2` (App: v4.11.2 / Builder: v2.9.13)
+- **Current Version**: `v4.11.3` (App: v4.11.3 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -71,6 +71,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
   - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog
+
+- **⭐ App: v4.11.3 / Builder: v2.9.13** (2026-10-09)
+  - [App] 淺色模式下拉箭頭清晰化：大類與中類選單改為精準向量 SVG 倒三角圖標並強化深淺配色，淺色模式下輪廓清澈醒目。
+  - [App] 修持功課記數彈窗防穿透重疊：彈窗遮罩與視窗全面升級實心高對比樣式，徹底杜絕深色與蓮花粉主題半透明穿透底層文字與輸入框白底白字缺陷。
+  - [App] 常用選擇膠囊化與自由刪除：常用項目全面升級典雅圓角膠囊型式並支援點擊「×」自由刪除；功課記錄列移除累計完成膠囊多餘鉛筆，維持右側單一圓形編輯筆。
 
 - **⭐ App: v4.11.2 / Builder: v2.9.13** (2026-10-09)
   - [App] 隨喜撥珠小卡左右滿版：消除外框內縮與多餘留白，首頁 4×1 隨喜撥珠小卡與整頁邊界 100% 左右滿版齊平。

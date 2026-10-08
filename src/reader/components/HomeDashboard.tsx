@@ -4071,7 +4071,9 @@ export function HomeDashboard({
                 title="點擊切換大類"
               >
                 <span className="combo-cat-name">{practiceCategories[beadCategory]?.name || '佛號'}</span>
-                <span className="combo-arrow-down">▾</span>
+                <svg className="combo-arrow-down" width="8" height="6" viewBox="0 0 8 6" fill="currentColor" aria-hidden="true">
+                  <path d="M0 1.5L4 5.5L8 1.5H0Z" />
+                </svg>
               </div>
 
               {/* 中間精細分割線 */}
@@ -4095,7 +4097,9 @@ export function HomeDashboard({
                 title="點擊切換項目"
               >
                 <span className="combo-mid-name">{beadName}</span>
-                <span className="combo-arrow-down">▾</span>
+                <svg className="combo-arrow-down" width="8" height="6" viewBox="0 0 8 6" fill="currentColor" aria-hidden="true">
+                  <path d="M0 1.5L4 5.5L8 1.5H0Z" />
+                </svg>
               </div>
             </div>
 
