@@ -4040,7 +4040,17 @@ export function HomeDashboard({
         if (beadName === '靜坐禪修') unit = '分鐘';
 
         return (
-          <div className="home-practice-bead-widget-4x1" style={{ position: 'relative' }}>
+          <div 
+            className="home-practice-bead-widget-4x1" 
+            style={{ position: 'relative', cursor: isLayoutEditMode ? 'default' : 'pointer' }}
+            onClick={!isLayoutEditMode ? (e) => {
+              const target = e.target as HTMLElement;
+              if (target.closest('.bead-combo-capsule') || target.closest('.dropdown-menu-box')) {
+                return;
+              }
+              handleHomeBeadTap(e);
+            } : undefined}
+          >
             {/* 1. 左側區塊：大類與中類二合一綜合膠囊 (文字放大，左側分立選單) */}
             <div className="bead-combo-capsule">
               {/* 大類子按鈕 */}
@@ -4067,7 +4077,7 @@ export function HomeDashboard({
               {/* 中間精細分割線 */}
               <div className="combo-divider" />
 
-              {/* 中類子按鈕 (文字放大) */}
+              {/* 中類子按鈕 (文字放大，至少顯示10字) */}
               <div 
                 className="combo-part-mid"
                 onTouchStart={(e) => e.stopPropagation()}
@@ -4089,12 +4099,10 @@ export function HomeDashboard({
               </div>
             </div>
 
-            {/* 2. 右側區塊：今日次數 + 敲木魚按鈕 (背景色塊合併區塊) */}
-            <div className="bead-action-island">
-              <div className="bead-island-count" title={`今日已念 ${todayCount} ${unit}`}>
-                <span className="bead-island-label">今日</span>
+            {/* 2. 右側區塊：今日次數(純數字) + 敲木魚按鈕 (背景色塊合併區塊) */}
+            <div className="bead-action-island" title={`今日已念 ${todayCount} ${unit}`}>
+              <div className="bead-island-count">
                 <span className="bead-island-num">{todayCount.toLocaleString()}</span>
-                <span className="bead-island-unit">{unit}</span>
               </div>
 
               {/* 圓形敲木魚按鈕 (圖1風格) */}
