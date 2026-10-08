@@ -2,11 +2,12 @@ import type { ReaderPackage, BookMetadata } from '../types/book';
 import { APP_VERSION } from '../builder/version';
 
 const DB_NAME = 'cbeta_reader_db';
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 const BOOKS_STORE = 'books';
 const SETTINGS_STORE = 'settings';
 const HIGHLIGHTS_STORE = 'highlights';
 const READING_LOGS_STORE = 'reading_logs';
+const PRACTICE_LOGS_STORE = 'practice_logs';
 
 export function initDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -32,6 +33,12 @@ export function initDB(): Promise<IDBDatabase> {
         const logsStore = db.createObjectStore(READING_LOGS_STORE, { keyPath: 'id' });
         logsStore.createIndex('date', 'date', { unique: false });
         logsStore.createIndex('workId', 'workId', { unique: false });
+      }
+      // 💡 v4: 修持功課 store（念佛/持咒/持經/其他修持記數）
+      if (!db.objectStoreNames.contains(PRACTICE_LOGS_STORE)) {
+        const pStore = db.createObjectStore(PRACTICE_LOGS_STORE, { keyPath: 'id' });
+        pStore.createIndex('date', 'date', { unique: false });
+        pStore.createIndex('category', 'category', { unique: false });
       }
     };
   });
@@ -694,6 +701,190 @@ export async function clearAllReadingLogs(): Promise<void> {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(READING_LOGS_STORE, 'readwrite');
     const store = transaction.objectStore(READING_LOGS_STORE);
+    const request = store.clear();
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+// ──────────────────────────────────────────────────────────────
+// 💡 每日修持功課 (Practice Log) — v4 新增
+// ──────────────────────────────────────────────────────────────
+
+export type PracticeCategory = 'fo' | 'zhou' | 'jing' | 'other' | string;
+
+export interface PracticeCategoryConfig {
+  id: string;
+  name: string;
+  unit: string;
+  label?: string;
+  countLabel?: string;
+  items: string[];
+}
+
+export const PRACTICE_CATEGORIES_STORAGE_KEY = 'cbeta_practice_categories_v2';
+
+export const DEFAULT_PRACTICE_CATEGORIES: Record<string, PracticeCategoryConfig> = {
+  fo: {
+    id: 'fo',
+    name: '佛號',
+    unit: '聲',
+    label: '常用佛號選擇',
+    countLabel: '念佛數量',
+    items: [
+      '南無本師釋迦牟尼佛',
+      '南無阿彌陀佛',
+      '南無藥師琉璃光如來',
+      '南無地藏菩薩',
+      '南無觀世音菩薩'
+    ]
+  },
+  zhou: {
+    id: 'zhou',
+    name: '咒語',
+    unit: '遍',
+    label: '常用咒語選擇',
+    countLabel: '持咒遍數',
+    items: [
+      '大悲咒',
+      '楞嚴咒',
+      '藥師咒',
+      '準提咒'
+    ]
+  },
+  jing: {
+    id: 'jing',
+    name: '持經',
+    unit: '部',
+    label: '常用持經選擇',
+    countLabel: '持誦部數',
+    items: [
+      '般若波羅蜜多心經 T0251',
+      '金剛般若波羅蜜經 T0235',
+      '地藏菩薩本願經 T0412',
+      '妙法蓮華經 T0262',
+      '無量義經 T0276',
+      '藥師琉璃光如來本願功德經 T0450'
+    ]
+  },
+  other: {
+    id: 'other',
+    name: '其他',
+    unit: '拜/次/分鐘',
+    label: '其他常見修持',
+    countLabel: '修持次數 / 時間 (分鐘)',
+    items: [
+      '八十八佛大懺悔文',
+      '禮佛大拜',
+      '靜坐禪修',
+      '普賢行願品'
+    ]
+  }
+};
+
+export function getPracticeCategories(): Record<string, PracticeCategoryConfig> {
+  try {
+    const raw = localStorage.getItem(PRACTICE_CATEGORIES_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to load practice categories from storage:', e);
+  }
+  return JSON.parse(JSON.stringify(DEFAULT_PRACTICE_CATEGORIES));
+}
+
+export function savePracticeCategories(cats: Record<string, PracticeCategoryConfig>): void {
+  try {
+    localStorage.setItem(PRACTICE_CATEGORIES_STORAGE_KEY, JSON.stringify(cats));
+    window.dispatchEvent(new CustomEvent('cbeta-practice-categories-changed', { detail: cats }));
+  } catch (e) {
+    console.error('Failed to save practice categories:', e);
+  }
+}
+
+export interface PracticeLogEntry {
+  id: string;            // 主鍵 UUID / p_timestamp
+  date: string;          // "YYYY-MM-DD"
+  timestamp: number;     // 建立時間戳記 ms
+  category: PracticeCategory; // 大類：佛號 / 咒語 / 持經 / 其他 / 自訂
+  name: string;          // 中類名稱或自訂名稱 (e.g. "南無阿彌陀佛", "大悲咒")
+  count: number;         // 累積數量
+  unit: string;          // 單位 (e.g. "聲", "遍", "部", "拜", "分鐘")
+  note?: string;         // 心得、備註或讀經同步標記
+}
+
+export async function savePracticeLog(entry: PracticeLogEntry): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(PRACTICE_LOGS_STORE, 'readwrite');
+    const store = transaction.objectStore(PRACTICE_LOGS_STORE);
+    const request = store.put(entry);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+export async function getAllPracticeLogs(): Promise<PracticeLogEntry[]> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(PRACTICE_LOGS_STORE, 'readonly');
+    const store = transaction.objectStore(PRACTICE_LOGS_STORE);
+    const request = store.getAll();
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result || []);
+  });
+}
+
+export async function getPracticeLogsByDate(date: string): Promise<PracticeLogEntry[]> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(PRACTICE_LOGS_STORE, 'readonly');
+    const store = transaction.objectStore(PRACTICE_LOGS_STORE);
+    const index = store.index('date');
+    const request = index.getAll(date);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result || []);
+  });
+}
+
+export async function updatePracticeLogCount(id: string, newCount: number): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(PRACTICE_LOGS_STORE, 'readwrite');
+    const store = transaction.objectStore(PRACTICE_LOGS_STORE);
+    const getReq = store.get(id);
+    getReq.onerror = () => reject(getReq.error);
+    getReq.onsuccess = () => {
+      const record = getReq.result as PracticeLogEntry | undefined;
+      if (!record) return resolve();
+      record.count = newCount;
+      const putReq = store.put(record);
+      putReq.onerror = () => reject(putReq.error);
+      putReq.onsuccess = () => resolve();
+    };
+  });
+}
+
+export async function deletePracticeLog(id: string): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(PRACTICE_LOGS_STORE, 'readwrite');
+    const store = transaction.objectStore(PRACTICE_LOGS_STORE);
+    const request = store.delete(id);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+export async function clearAllPracticeLogs(): Promise<void> {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(PRACTICE_LOGS_STORE, 'readwrite');
+    const store = transaction.objectStore(PRACTICE_LOGS_STORE);
     const request = store.clear();
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve();

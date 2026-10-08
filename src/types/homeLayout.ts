@@ -35,7 +35,9 @@ export type HomeWidgetType =
   | 'shelf_bars_4x3'
   | 'shelf_fav_capsule_4x3'
   | 'shelf_down_capsule_4x3'
-  | 'shelf_read_capsule_4x3';
+  | 'shelf_read_capsule_4x3'
+  | 'calendar_banner_4x1'
+  | 'practice_bead_4x1';
 
 export type HomeWidgetSize = 
   | 'size-4x1'
@@ -149,6 +151,8 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
   { type: 'timer_2x2', category: 'other', name: '護眼計時器', size: 'size-2x2', icon: '⏱️', description: '閱讀時間倒數與溫馨提醒（支援 4x2/2x2）' },
   { type: 'theme_4x1', category: 'other', name: '四色主題快捷列', size: 'size-4x1', icon: '🎨', description: '白、紙、舒、木 4 色背景一鍵切換' },
   { type: 'zen_4x2', category: 'other', name: '佛典精進名句', size: 'size-4x2', icon: '🪷', description: '每日輪播佛典名言與法義精粹' },
+  { type: 'calendar_banner_4x1', category: 'other', name: '今日佛曆小卡 (4×1)', size: 'size-4x1', icon: '🌿', description: '自動提示今日佛菩薩聖誕或十齋日，點擊直達閱讀日誌' },
+  { type: 'practice_bead_4x1', category: 'other', name: '隨喜撥珠小卡 (4×1)', size: 'size-4x1', icon: '📿', description: '首頁大類中類切換與撥珠計數，點擊自動同步累計入今日修持功課' },
   { type: 'custom_memo', category: 'other', name: '自訂便籤小卡', size: 'size-4x2', icon: '📝', description: '讀者可自由輸入自選文字、法義或座右銘，支援自訂字體、字級、行高與邊距' }
 ];
 
@@ -301,5 +305,8 @@ export const ALLOWED_SIZES_BY_TYPE: Record<HomeWidgetType, HomeWidgetSize[]> = {
   shelf_read_capsule_4x3: ['size-4x3', 'size-4x2', 'size-4x1'],
   // 3 款獨立 4x1 長條 Bar 與 4x3 三合一長條卡
   shelf_bars_4x3: ['size-4x3'],
-  bar_dl_4x1: ['size-4x1']
+  bar_dl_4x1: ['size-4x1'],
+  // 今日佛曆與隨喜撥珠 4x1 卡片
+  calendar_banner_4x1: ['size-4x1'],
+  practice_bead_4x1: ['size-4x1']
 };

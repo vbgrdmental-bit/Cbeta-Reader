@@ -1483,15 +1483,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.10.7) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.11.2) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.10.7</span>
-                        <span className="changelog-date">(2026-10-06)</span>
+                        <span>⭐ App: v4.11.2</span>
+                        <span className="changelog-date">(2026-10-09)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 全站統一稱呼「全文檢索」：頂部選單膠囊（原全文搜尋）與系統導航小卡（原關鍵字搜尋）全面統一為全文檢索。</li>
-                        <li>• 小卡與控制列稱謂一致：四合一導航、快捷功能抽屜與自訂選單全面同步對齊，全站名稱 100% 一致。</li>
+                        <li>• 撥珠小卡左右滿版：消除外框內縮與多餘留白，首頁 4×1 隨喜撥珠小卡與整頁完美齊平。</li>
+                        <li>• 左中右三區塊佈局：大類與計數居左、中類項目居中彈性舒展、撥珠圖案居右，徹底避免換行。</li>
+                        <li>• 簡約選單與合十念珠：大類中類選單精簡為純文字項目；按鈕升級合十念珠圖騰與飄浮動效。</li>
                       </ul>
                     </div>
 
@@ -1514,6 +1515,27 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.11.0</span>
+                            <span className="changelog-date">(2026-10-08)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 閱讀日誌美化升級：新增本月最常閱讀 TOP 3 榜單直達、選中日期三大專區獨立呈現。</li>
+                            <li>• 念佛與修持定課系統：新增佛號、咒語、持經與其他修持記錄，支援讀經同步與數量微調。</li>
+                            <li>• 首頁 4×1 佛曆與撥珠卡：支援今日佛曆提示，以及雙膠囊隨喜撥珠、自由修改大類與中類。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.10.7</span>
+                            <span className="changelog-date">(2026-10-06)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 全站統一稱呼「全文檢索」：頂部選單膠囊與系統導航小卡全面統一為全文檢索。</li>
+                            <li>• 小卡與控制列稱謂一致：四合一導航、快捷功能抽屜與自訂選單全面同步對齊。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.10.6</span>

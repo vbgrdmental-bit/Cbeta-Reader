@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.10.7` (App: v4.10.7 / Builder: v2.9.13)
+- **Current Version**: `v4.11.2` (App: v4.11.2 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -72,6 +72,20 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
 
 ### Version History / Changelog
 
+- **⭐ App: v4.11.2 / Builder: v2.9.13** (2026-10-09)
+  - [App] 隨喜撥珠小卡左右滿版：消除外框內縮與多餘留白，首頁 4×1 隨喜撥珠小卡與整頁邊界 100% 左右滿版齊平。
+  - [App] 左中右三區塊徹底杜絕換行：左區塊配置大類膠囊與今日已念計數、中區塊居中容納中類膠囊、右區塊配置圓形圖案按鈕，永不折行。
+  - [App] 簡約下拉選單與合十念珠圖騰：大類與中類選單精簡為純文字列表（移除多餘筆與管理按鈕）；按鈕升級為圖5右上角極簡莊嚴之合十念珠圖騰，並支援 +1 輕靈飄浮動效。
+
+- **⭐ App: v4.11.1 / Builder: v2.9.13** (2026-10-08)
+  - [App] 修持功課自動收錄常用清單：自訂輸入新佛號、咒語（如滅定業真言）或經名時，系統自動同步收錄至常用選擇清單與全站分類資料庫，歷史功課亦自動掃描納入。
+  - [App] 首頁 4×1 小卡點擊與修改修復：解決觸控事件冒泡與卡片 overflow 裁切問題；大類與中類膠囊點擊靈敏展開選單、支援雙擊直達名稱管理視窗，並具備全螢幕防誤觸關閉。
+  - [App] 深色模式中類字體清晰度修復：徹底修復中類膠囊寫死白底導致白底白字看不清楚之缺陷，深色主題下採用高對比深色半透明與溫潤米白字，文字清澈明晰。
+
+- **⭐ App: v4.11.0 / Builder: v2.9.13** (2026-10-08)
+  - [App] 閱讀日誌美化升級：新增本月閱讀時數與冊數統計，整合本月最常閱讀書籍 TOP 3 榜單直達「繼續閱讀 ›」；選中日期徹底分為重要日期、經文閱讀記錄與我的功課記錄三大專區。
+  - [App] 念佛與修持定課系統：支援佛號、咒語、持經與其他（禮佛大拜、靜坐禪修）多分類功課記錄；支援彈窗自由微調修改數量、支援經文閱讀記錄一鍵轉入持經功課。
+  - [App] 首頁 4×1 佛曆與撥珠卡：支援今日佛曆提示橫條（十齋日與佛菩薩聖誕直觀呈現，整卡點選進入日誌）；首頁 4×1 隨喜撥珠計數卡支援「大類▾」與「中類▾」雙膠囊即時切換、一鍵撥珠入庫，並支援讀者自訂修改大類與中類項目。
 - **⭐ App: v4.10.7 / Builder: v2.9.13** (2026-10-06)
   - [App] 全站統一稱呼「全文檢索」：頂部選單膠囊（原全文搜尋）與系統導航小卡（原關鍵字搜尋）全面統一為「全文檢索」。
   - [App] 小卡與控制列稱謂一致：四合一導航、快捷功能抽屜與自訂選單全面同步對齊，全站名稱 100% 一致。

@@ -11639,4 +11639,430 @@ body.theme-ebony .modal-capsule-btn.resume-capsule,
   font-weight: 800;
 }
 
+/* ──────────────────────────────────────────────────────────────
+   💡 今日佛曆小卡 (4x1) 與隨喜撥珠小卡 (4x1) 樣式
+   ────────────────────────────────────────────────────────────── */
+
+.home-calendar-banner-4x1 {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 246, 240, 0.95) 100%);
+  border: 1px solid rgba(184, 134, 11, 0.25);
+  border-radius: 14px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(139, 90, 43, 0.05);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.home-calendar-banner-4x1:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 90, 43, 0.1);
+  border-color: #b8860b;
+}
+
+.home-cal-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.home-cal-banner-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(184, 134, 11, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+.home-cal-banner-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+
+.home-cal-banner-main {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-cal-banner-badge {
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.home-cal-banner-badge.badge-zhai {
+  background: #e8f5e9;
+  color: #2d6a4f;
+  border: 1px solid rgba(45, 106, 79, 0.25);
+}
+
+.home-cal-banner-badge.badge-festival {
+  background: #fde8e7;
+  color: #c0392b;
+  border: 1px solid rgba(192, 57, 43, 0.25);
+}
+
+.home-cal-banner-badge.badge-normal {
+  background: #f0ebe2;
+  color: var(--text-secondary);
+}
+
+.home-cal-banner-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 💡 4x1 隨喜撥珠小卡左右滿版適配（徹底消除雙重邊框與內縮） */
+.widget-card.size-4x1.has-practice-bead,
+.widget-card.size-4x1:has(.home-practice-bead-widget-4x1) {
+  padding: 0 !important;
+  overflow: visible !important;
+  z-index: 40;
+}
+
+.home-practice-bead-widget-4x1 {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  position: relative;
+  overflow: visible !important;
+  gap: 8px;
+}
+
+/* 1. 左區塊：大類膠囊 + 今日已念 */
+.bead-block-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+  flex-shrink: 0;
+  min-width: 72px;
+}
+
+.capsule-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.capsule-cat {
+  background: #f1ebd8;
+  color: #7c5806;
+  border: 1px solid rgba(184, 134, 11, 0.32);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 11px;
+  gap: 3px;
+  box-shadow: 0 1px 2px rgba(184, 134, 11, 0.08);
+}
+
+.capsule-cat:hover {
+  background: #e6ddbe;
+  border-color: #b8860b;
+}
+
+.capsule-arrow-down {
+  font-size: 0.62rem;
+  opacity: 0.75;
+}
+
+.bead-count-text {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.1;
+  white-space: nowrap;
+  padding-left: 2px;
+}
+
+.bead-count-val {
+  font-weight: 700;
+  color: #b8860b;
+  font-size: 0.88rem;
+  font-family: var(--font-serif);
+}
+
+/* 2. 中區塊：中類膠囊 (居中彈性伸展，絕不換行) */
+.bead-block-center {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.capsule-mid {
+  background: var(--bg-card-subtle, rgba(139, 90, 43, 0.07));
+  color: var(--text-primary, #2c2523);
+  border: 1px solid var(--border-color, rgba(139, 90, 43, 0.22));
+  font-family: var(--font-serif);
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 16px;
+  gap: 4px;
+  max-width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.capsule-mid:hover {
+  background: rgba(139, 90, 43, 0.12);
+  border-color: #b8860b;
+}
+
+.capsule-mid-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 3. 右區塊：合十念珠圖案按鈕 (圖5右上角極簡莊嚴) */
+.bead-block-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.home-bead-tap-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+  box-shadow: 0 3px 10px rgba(154, 99, 50, 0.28);
+}
+
+.home-bead-tap-btn:active,
+.home-bead-tap-btn.tapped {
+  transform: scale(0.92);
+  box-shadow: 0 1px 4px rgba(154, 99, 50, 0.2);
+}
+
+.bead-hands-svg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+
+/* 點擊浮現 +1 動畫 */
+.bead-tap-plus-one {
+  position: absolute;
+  top: -12px;
+  right: 4px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #b8860b;
+  font-family: var(--font-serif);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 6px rgba(230, 162, 60, 0.6);
+  pointer-events: none;
+  animation: beadFloatUp 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes beadFloatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(1);
+  }
+}
+
+/* 下拉選單：圖2 圖3 純粹簡約項目清單 */
+.dropdown-menu-box {
+  position: absolute;
+  top: 100%;
+  margin-top: 6px;
+  background: #ffffff;
+  border: 1px solid var(--border-color, rgba(139, 90, 43, 0.2));
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+  z-index: 1000 !important;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bead-cat-dropdown {
+  left: 8px !important;
+  width: 100px !important;
+  min-width: 100px !important;
+}
+
+.bead-mid-dropdown {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: max-content !important;
+  min-width: 130px !important;
+  max-width: 220px !important;
+  max-height: 230px !important;
+  overflow-y: auto !important;
+}
+
+.bead-cat-dropdown .dropdown-item,
+.bead-mid-dropdown .dropdown-item {
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  justify-content: center;
+  text-align: center;
+}
+
+.dropdown-item {
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+  background: var(--theme-accent-light, rgba(139, 90, 43, 0.08));
+  color: var(--theme-accent, #8b5a2b);
+}
+
+.dropdown-item.active {
+  background: #fff9e6;
+  color: #b8860b;
+  font-weight: 700;
+}
+
+/* ══════════════════════════════════════════════════
+   深色模式 (Ebony / Dark) 專屬對比度優化
+   ══════════════════════════════════════════════════ */
+body.theme-ebony .home-calendar-banner-4x1,
+body.theme-ebony .home-practice-bead-widget-4x1,
+body.theme-dark .home-calendar-banner-4x1,
+body.theme-dark .home-practice-bead-widget-4x1 {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.theme-ebony .capsule-cat,
+body.theme-custom-dark .capsule-cat,
+body.theme-dark .capsule-cat,
+.theme-ebony .capsule-cat,
+.theme-custom-dark .capsule-cat {
+  background: rgba(184, 134, 11, 0.28) !important;
+  color: #f3c778 !important;
+  border-color: rgba(184, 134, 11, 0.5) !important;
+}
+
+body.theme-ebony .capsule-mid,
+body.theme-custom-dark .capsule-mid,
+body.theme-dark .capsule-mid,
+.theme-ebony .capsule-mid,
+.theme-custom-dark .capsule-mid {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #f5f0e6 !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+body.theme-ebony .capsule-mid-text,
+body.theme-custom-dark .capsule-mid-text,
+body.theme-dark .capsule-mid-text,
+.theme-ebony .capsule-mid-text,
+.theme-custom-dark .capsule-mid-text {
+  color: #f5f0e6 !important;
+}
+
+body.theme-ebony .capsule-mid:hover,
+body.theme-custom-dark .capsule-mid:hover,
+body.theme-dark .capsule-mid:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+body.theme-ebony .dropdown-menu-box,
+body.theme-custom-dark .dropdown-menu-box,
+body.theme-dark .dropdown-menu-box {
+  background: #1e1d1b !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.8) !important;
+}
+
+body.theme-ebony .dropdown-item,
+body.theme-custom-dark .dropdown-item,
+body.theme-dark .dropdown-item {
+  color: #e6e1da !important;
+}
+
+body.theme-ebony .dropdown-item:hover,
+body.theme-custom-dark .dropdown-item:hover,
+body.theme-dark .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #dfb26b !important;
+}
+
+body.theme-ebony .dropdown-item.active,
+body.theme-custom-dark .dropdown-item.active,
+body.theme-dark .dropdown-item.active {
+  background: rgba(184, 134, 11, 0.28) !important;
+  color: #dfb26b !important;
+}
+
+body.theme-ebony .dropdown-action-btn,
+body.theme-custom-dark .dropdown-action-btn,
+body.theme-dark .dropdown-action-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: #dfb26b !important;
+}
+
+
 

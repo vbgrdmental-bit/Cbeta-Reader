@@ -8,6 +8,8 @@ import {
   getSettings, 
   getAllReadingLogs,
   saveReadingLog,
+  getAllPracticeLogs,
+  savePracticeLog,
   type BookHighlight
 } from './db';
 
@@ -43,6 +45,7 @@ export async function exportUserData(options: { includeBooks?: boolean } = {}): 
   const highlights = await getAllHighlights();
   const settings = await getSettings();
   const readingLogs = await getAllReadingLogs();
+  const practiceLogs = await getAllPracticeLogs();
   let books: ReaderPackage[] = [];
 
   if (options.includeBooks) {
@@ -62,9 +65,11 @@ export async function exportUserData(options: { includeBooks?: boolean } = {}): 
     includeBooks: !!options.includeBooks,
     highlightsCount: highlights.length,
     readingLogsCount: readingLogs.length,
+    practiceLogsCount: practiceLogs.length,
     booksCount: books.length,
     highlights,
     readingLogs,
+    practiceLogs,
     settings,
     books: options.includeBooks ? books : undefined
   };
@@ -99,6 +104,7 @@ export async function importUserData(file: File): Promise<{ highlightsCount: num
         let highlightsCount = 0;
         let booksCount = 0;
         let readingLogsCount = 0;
+        let practiceLogsCount = 0;
         let settingsUpdated = false;
 
         // 1. 還原劃線重點
@@ -121,7 +127,17 @@ export async function importUserData(file: File): Promise<{ highlightsCount: num
           }
         }
 
-        // 3. 還原離線經文包
+        // 3. 還原每日修持功課
+        if (Array.isArray(parsed.practiceLogs) && parsed.practiceLogs.length > 0) {
+          for (const p of parsed.practiceLogs) {
+            if (p.id && p.category && p.name) {
+              await savePracticeLog(p);
+              practiceLogsCount++;
+            }
+          }
+        }
+
+        // 4. 還原離線經文包
         if (Array.isArray(parsed.books) && parsed.books.length > 0) {
           for (const bookPkg of parsed.books) {
             if (bookPkg.metadata && bookPkg.metadata.workId) {
@@ -131,13 +147,13 @@ export async function importUserData(file: File): Promise<{ highlightsCount: num
           }
         }
 
-        // 4. 還原偏好設定
+        // 5. 還原偏好設定
         if (parsed.settings && typeof parsed.settings === 'object') {
           await saveSettings(parsed.settings);
           settingsUpdated = true;
         }
 
-        resolve({ highlightsCount, booksCount, readingLogsCount, settingsUpdated });
+        resolve({ highlightsCount, booksCount, readingLogsCount, practiceLogsCount, settingsUpdated } as any);
       } catch (err) {
         reject(err);
       }

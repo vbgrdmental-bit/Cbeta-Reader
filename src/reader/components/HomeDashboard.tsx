@@ -6,7 +6,16 @@ import {
   RotateCcw, FileText, Timer, BookOpen
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
-import { getBook, getAllReadingLogs, type ReadingLogEntry } from '../../utils/db';
+import { 
+  getBook, 
+  getAllReadingLogs, 
+  type ReadingLogEntry,
+  getAllPracticeLogs,
+  savePracticeLog,
+  type PracticeLogEntry,
+  type PracticeCategoryConfig,
+  getPracticeCategories
+} from '../../utils/db';
 import type { AppSettings, BookHighlight } from '../../utils/db';
 import { getRecentDownloadedBooks } from '../../utils/recentDownloads';
 import { getRecentFavoriteBooks } from '../../utils/favoritesManager';
@@ -120,6 +129,8 @@ export const AVAILABLE_NAV_BUTTON_KEYS: string[] = [
   'zen_icon',
   'brand_title'
 ];
+
+
 
 export const QUICK_NAV_BUTTON_DEFS: Record<string, { name: string; gradient: string; actionTitle: string }> = {
   download: {
@@ -276,6 +287,8 @@ const FLAT_GALLERY_ITEMS: FlatGalleryItem[] = [
   { id: 'o_theme_4x1', type: 'theme_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'other', title: '四色主題' },
   { id: 'o_theme_2x2', type: 'theme_4x1', size: 'size-2x2', sizeLabel: '2×2', category: 'other', title: '四色主題' },
   { id: 'o_zen_4x2', type: 'zen_4x2', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '佛典精進名句' },
+  { id: 'o_cal_banner_4x1', type: 'calendar_banner_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'other', title: '今日佛曆小卡' },
+  { id: 'o_practice_bead_4x1', type: 'practice_bead_4x1', size: 'size-4x1', sizeLabel: '4×1', category: 'other', title: '隨喜撥珠小卡' },
 
   { id: 'o_memo_4x2', type: 'custom_memo', size: 'size-4x2', sizeLabel: '4×2', category: 'other', title: '自訂便籤卡' },
   { id: 'o_memo_4x3', type: 'custom_memo', size: 'size-4x3', sizeLabel: '4×3', category: 'other', title: '自訂便籤卡' },
@@ -480,6 +493,104 @@ export function HomeDashboard({
       window.removeEventListener('focus', handleUpdate);
     };
   }, [resumeBooks]);
+
+  // 💡 修持功課即時紀錄與首頁撥珠小卡狀態
+  const [todayPracticeLogs, setTodayPracticeLogs] = useState<PracticeLogEntry[]>([]);
+  const [practiceCategories, setPracticeCategories] = useState<Record<string, PracticeCategoryConfig>>(() => {
+    return getPracticeCategories();
+  });
+  const [beadCategory, setBeadCategory] = useState<string>(() => {
+    return localStorage.getItem('cbeta_home_bead_cat') || 'fo';
+  });
+  const [beadName, setBeadName] = useState<string>(() => {
+    return localStorage.getItem('cbeta_home_bead_name') || '南無阿彌陀佛';
+  });
+  const [showBeadCatMenu, setShowBeadCatMenu] = useState(false);
+  const [showBeadMidMenu, setShowBeadMidMenu] = useState(false);
+  const [beadTapAnim, setBeadTapAnim] = useState(false);
+
+
+  const refreshPracticeLogs = () => {
+    getAllPracticeLogs().then(pLogs => {
+      const todayStr = getTodayDateStr();
+      const todayP = (pLogs || []).filter(p => p.date === todayStr);
+      setTodayPracticeLogs(todayP);
+    }).catch(err => {
+      console.warn('Failed to load practice logs for widget', err);
+    });
+  };
+
+  useEffect(() => {
+    refreshPracticeLogs();
+    const handlePracticeUpdate = () => refreshPracticeLogs();
+    const handleCatsChanged = (e: any) => {
+      const cats = e.detail || getPracticeCategories();
+      setPracticeCategories(cats);
+    };
+    window.addEventListener('cbeta_practice_log_saved', handlePracticeUpdate);
+    window.addEventListener('cbeta-practice-categories-changed', handleCatsChanged);
+    return () => {
+      window.removeEventListener('cbeta_practice_log_saved', handlePracticeUpdate);
+      window.removeEventListener('cbeta-practice-categories-changed', handleCatsChanged);
+    };
+  }, []);
+
+  const handleSelectBeadCategory = (cat: string) => {
+    setBeadCategory(cat);
+    localStorage.setItem('cbeta_home_bead_cat', cat);
+    setShowBeadCatMenu(false);
+    const catItems = practiceCategories[cat]?.items || [];
+    if (catItems.length > 0) {
+      setBeadName(catItems[0]);
+      localStorage.setItem('cbeta_home_bead_name', catItems[0]);
+    }
+  };
+
+  const handleSelectBeadName = (name: string) => {
+    setBeadName(name);
+    localStorage.setItem('cbeta_home_bead_name', name);
+    setShowBeadMidMenu(false);
+  };
+
+
+  const handleHomeBeadTap = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setBeadTapAnim(true);
+    setTimeout(() => setBeadTapAnim(false), 600);
+    const todayStr = getTodayDateStr();
+    const existing = todayPracticeLogs.find(p => p.name === beadName);
+    const currentCount = existing ? existing.count : 0;
+    const newCount = currentCount + 1;
+    let unit = practiceCategories[beadCategory]?.unit || '聲';
+    if (beadName === '禮佛大拜') unit = '拜';
+    if (beadName === '靜坐禪修') unit = '分鐘';
+
+    const entry: PracticeLogEntry = {
+      id: existing ? existing.id : 'p_' + Date.now(),
+      date: todayStr,
+      timestamp: Date.now(),
+      category: beadCategory,
+      name: beadName,
+      count: newCount,
+      unit
+    };
+
+    try {
+      await savePracticeLog(entry);
+      setTodayPracticeLogs(prev => {
+        const idx = prev.findIndex(p => p.name === beadName);
+        if (idx >= 0) {
+          const next = [...prev];
+          next[idx] = entry;
+          return next;
+        }
+        return [entry, ...prev];
+      });
+      window.dispatchEvent(new CustomEvent('cbeta_practice_log_saved'));
+    } catch (err) {
+      console.error('Failed to save bead count:', err);
+    }
+  };
 
   // 💡 計算 iOS 月曆小卡所需的讀經摘要（優先顯示今日已讀，無則平滑銜接近日閱讀經典）
   const getCalendarWidgetItems = () => {
@@ -3871,6 +3982,243 @@ export function HomeDashboard({
         );
       }
 
+      // 12-B. 今日佛曆小卡 (4x1 水平膠囊長條，已移除「查看日曆>」)
+      case 'calendar_banner_4x1': {
+        const now = new Date();
+        const lunarInfo = getLunarInfo(now);
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        const dateStr = `${y}-${m}-${d}`;
+
+        let iconEmoji = '🌿';
+        let title = '今日十齋日';
+        let badgeText = '十齋日';
+        let badgeClass = 'badge-zhai';
+        let subText = `${dateStr} · 農曆${lunarInfo.fullStr} · 持齋念佛，滅罪增福`;
+
+        if (lunarInfo.festival) {
+          iconEmoji = '🌸';
+          title = lunarInfo.festival;
+          badgeText = '聖誕紀念';
+          badgeClass = 'badge-festival';
+          subText = `${dateStr} · 農曆${lunarInfo.fullStr} · 大悲拔苦，智慧增益`;
+        } else if (!lunarInfo.isZhai) {
+          iconEmoji = '📜';
+          title = '今日佛曆閱藏';
+          badgeText = '修持日';
+          badgeClass = 'badge-normal';
+          subText = `${dateStr} · 農曆${lunarInfo.fullStr} · 深入經藏，智慧如海`;
+        }
+
+        return (
+          <div 
+            className="home-calendar-banner-4x1"
+            onClick={!isLayoutEditMode ? () => onNavigateToLibrarySection('reading-log') : undefined}
+            title="點擊前往閱讀與修持日誌"
+          >
+            <div className="home-cal-banner-left">
+              <div className="home-cal-banner-icon">{iconEmoji}</div>
+              <div className="home-cal-banner-content">
+                <div className="home-cal-banner-main">
+                  <span>{title}</span>
+                  <span className={`home-cal-banner-badge ${badgeClass}`}>{badgeText}</span>
+                </div>
+                <div className="home-cal-banner-sub">{subText}</div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // 12-C. 隨喜撥珠小卡 (4x1 左:大類膠囊 中:中類膠囊 右:合十念珠圖案按鈕)
+      case 'practice_bead_4x1': {
+        const existing = todayPracticeLogs.find(p => p.name === beadName);
+        const todayCount = existing ? existing.count : 0;
+        let unit = practiceCategories[beadCategory]?.unit || '聲';
+        if (beadName === '禮佛大拜') unit = '拜';
+        if (beadName === '靜坐禪修') unit = '分鐘';
+
+        return (
+          <div className="home-practice-bead-widget-4x1" style={{ position: 'relative' }}>
+            {/* 1. 左區塊：大類膠囊 + 今日已念 */}
+            <div className="bead-block-left">
+              <div 
+                className="capsule-select-trigger capsule-cat"
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchEnd={(e) => {
+                  if (isLayoutEditMode) return;
+                  e.stopPropagation();
+                  setShowBeadMidMenu(false);
+                  setShowBeadCatMenu(prev => !prev);
+                }}
+                onClick={!isLayoutEditMode ? (e) => {
+                  e.stopPropagation();
+                  setShowBeadMidMenu(false);
+                  setShowBeadCatMenu(prev => !prev);
+                } : undefined}
+                title="點擊切換大類"
+              >
+                <span>{practiceCategories[beadCategory]?.name || '佛號'}</span>
+                <span className="capsule-arrow-down">▾</span>
+              </div>
+
+              <div className="bead-count-text">
+                <span>今日 </span>
+                <span className="bead-count-val">{todayCount.toLocaleString()}</span>
+                <span> {unit}</span>
+              </div>
+            </div>
+
+            {/* 2. 中區塊：中類膠囊 */}
+            <div className="bead-block-center">
+              <div 
+                className="capsule-select-trigger capsule-mid"
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchEnd={(e) => {
+                  if (isLayoutEditMode) return;
+                  e.stopPropagation();
+                  setShowBeadCatMenu(false);
+                  setShowBeadMidMenu(prev => !prev);
+                }}
+                onClick={!isLayoutEditMode ? (e) => {
+                  e.stopPropagation();
+                  setShowBeadCatMenu(false);
+                  setShowBeadMidMenu(prev => !prev);
+                } : undefined}
+                title="點擊切換修持項目"
+              >
+                <span className="capsule-mid-text">{beadName}</span>
+                <span className="capsule-arrow-down">▾</span>
+              </div>
+            </div>
+
+            {/* 3. 右區塊：簡潔合十念珠圖案 (參考圖5右上角) */}
+            <div className="bead-block-right">
+              <button 
+                type="button"
+                className={`home-bead-tap-btn ${beadTapAnim ? 'tapped' : ''}`}
+                title="點擊念一聲 (+1)"
+                onClick={!isLayoutEditMode ? handleHomeBeadTap : undefined}
+              >
+                {/* 向量雙手合十持念珠圖案 (圖5風格) */}
+                <svg className="bead-hands-svg" viewBox="0 0 100 100" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="bead_grad_golden" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f3d8a8" />
+                      <stop offset="100%" stopColor="#c58f55" />
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* 圓形徽章底色 */}
+                  <circle cx="50" cy="50" r="47" fill="url(#bead_grad_golden)" stroke="#ffffff" strokeWidth="2.5" />
+                  
+                  {/* 祥和光芒射線 */}
+                  <line x1="28" y1="23" x2="21" y2="17" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" opacity="0.95" />
+                  <line x1="19" y1="34" x2="12" y2="32" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" opacity="0.95" />
+                  <line x1="72" y1="23" x2="79" y2="17" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" opacity="0.95" />
+                  <line x1="81" y1="34" x2="88" y2="32" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" opacity="0.95" />
+                  
+                  {/* 雙臂與僧袍袖線 */}
+                  <path d="M 19 86 C 26 73 37 66 43 65" stroke="#5a3818" strokeWidth="2.8" strokeLinecap="round" fill="none" />
+                  <path d="M 81 86 C 74 73 63 66 57 65" stroke="#5a3818" strokeWidth="2.8" strokeLinecap="round" fill="none" />
+                  
+                  {/* 合十雙手 */}
+                  <path d="M 43 65 C 43 54 46 36 50 19 C 54 36 57 54 57 65 Z" fill="#fffcf7" stroke="#5a3818" strokeWidth="2.6" strokeLinejoin="round" />
+                  <line x1="50" y1="19" x2="50" y2="64" stroke="#7e4c20" strokeWidth="2.2" strokeLinecap="round" />
+                  {/* 拇指合縫微彎 */}
+                  <path d="M 43 47 C 45 44 48 45 50 48" stroke="#7e4c20" strokeWidth="1.8" fill="none" />
+                  <path d="M 57 47 C 55 44 52 45 50 48" stroke="#7e4c20" strokeWidth="1.8" fill="none" />
+                  
+                  {/* 念珠圓珠串 */}
+                  <circle cx="36" cy="46" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="34" cy="53" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="35" cy="60" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="40" cy="66" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="47" cy="69" r="3.5" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="53" cy="69" r="3.5" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="60" cy="66" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="65" cy="60" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="66" cy="53" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  <circle cx="64" cy="46" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
+                  
+                  {/* 佛頭三通與流蘇穗子 */}
+                  <circle cx="50" cy="72" r="2.8" fill="#e08e2d" />
+                  <path d="M 50 74 L 46 87 L 54 87 Z" fill="#9a4a15" stroke="#5a3818" strokeWidth="1" />
+                </svg>
+
+                {/* 點擊浮現 +1 動畫 */}
+                {beadTapAnim && <span className="bead-tap-plus-one">+1</span>}
+              </button>
+            </div>
+
+            {/* 全螢幕背景遮罩，保證點擊外側平滑關閉 */}
+            {(showBeadCatMenu || showBeadMidMenu) && (
+              <div 
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 999,
+                  backgroundColor: 'transparent'
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowBeadCatMenu(false);
+                  setShowBeadMidMenu(false);
+                }}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                  setShowBeadCatMenu(false);
+                  setShowBeadMidMenu(false);
+                }}
+              />
+            )}
+
+            {/* 大類下拉選單 (圖2：純文字，無筆無管理) */}
+            {showBeadCatMenu && (
+              <div className="dropdown-menu-box active bead-cat-dropdown" onClick={e => e.stopPropagation()}>
+                {Object.keys(practiceCategories).map(catKey => {
+                  const cat = practiceCategories[catKey];
+                  return (
+                    <div 
+                      key={catKey}
+                      className={`dropdown-item ${beadCategory === catKey ? 'active' : ''}`}
+                      onClick={() => handleSelectBeadCategory(catKey)}
+                    >
+                      <span>{cat.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* 中類下拉選單 (圖3：純項目，無筆無管理) */}
+            {showBeadMidMenu && (
+              <div className="dropdown-menu-box active bead-mid-dropdown" onClick={e => e.stopPropagation()}>
+                {(practiceCategories[beadCategory]?.items || []).length === 0 ? (
+                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', padding: '6px 12px', textAlign: 'center' }}>
+                    尚無項目
+                  </div>
+                ) : (
+                  (practiceCategories[beadCategory]?.items || []).map(item => (
+                    <div
+                      key={item}
+                      className={`dropdown-item ${beadName === item ? 'active' : ''}`}
+                      onClick={() => handleSelectBeadName(item)}
+                    >
+                      <span>{item}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        );
+      }
+
       // 13. 自訂便籤小卡 (支援 2x2 / 4x2 / 4x3 / 4x4 / 4x1)
       case 'custom_memo': {
         return renderCustomMemoCard(widget, isPreview);
@@ -4540,7 +4888,8 @@ export function HomeDashboard({
               key={widget.id}
               id={`widget-${widget.id}`}
               data-widget-id={widget.id}
-              className={`widget-card ${widget.size} ${widget.type === 'custom_memo' ? 'custom-memo-widget' : ''} ${isEditingThisMemo ? 'is-editing-memo-widget' : ''} ${isBookWidgetOuterHeader(widget.type, widget.size) ? 'has-outer-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${widget.type === 'four_nav_4x1' && widget.size === 'size-4x2' ? 'four-nav-card-4x2' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
+              className={`widget-card ${widget.size} ${widget.type === 'custom_memo' ? 'custom-memo-widget' : ''} ${isEditingThisMemo ? 'is-editing-memo-widget' : ''} ${isBookWidgetOuterHeader(widget.type, widget.size) ? 'has-outer-header' : ''} ${widget.type === 'appicon_2x2' ? 'zen-icon-no-pad' : ''} ${widget.type === 'download_2x2' && widget.size === 'size-4x1' ? 'download-dashed-card-4x1' : ''} ${widget.type === 'four_nav_4x1' && widget.size === 'size-4x2' ? 'four-nav-card-4x2' : ''} ${widget.type === 'practice_bead_4x1' ? 'has-practice-bead' : ''} ${isDragging ? 'is-dragging' : ''} ${isOver ? 'drag-over-indicator' : ''}`}
+              style={(widget.type === 'practice_bead_4x1' && (showBeadCatMenu || showBeadMidMenu)) ? { zIndex: 1005, overflow: 'visible' } : undefined}
               draggable={isLayoutEditMode}
               onDragStart={(e) => handleDragStart(e, widget.id)}
               onDragOver={(e) => handleDragOver(e, widget.id)}
@@ -5474,6 +5823,8 @@ export function HomeDashboard({
         </div>,
         document.body
       )}
+
+
     </div>
   );
 }
