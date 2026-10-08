@@ -4041,10 +4041,11 @@ export function HomeDashboard({
 
         return (
           <div className="home-practice-bead-widget-4x1" style={{ position: 'relative' }}>
-            {/* 1. 左區塊：大類膠囊 + 今日已念 */}
-            <div className="bead-block-left">
+            {/* 1. 左側區塊：大類與中類二合一綜合膠囊 (文字放大，左側分立選單) */}
+            <div className="bead-combo-capsule">
+              {/* 大類子按鈕 */}
               <div 
-                className="capsule-select-trigger capsule-cat"
+                className="combo-part-cat"
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchEnd={(e) => {
                   if (isLayoutEditMode) return;
@@ -4059,21 +4060,16 @@ export function HomeDashboard({
                 } : undefined}
                 title="點擊切換大類"
               >
-                <span>{practiceCategories[beadCategory]?.name || '佛號'}</span>
-                <span className="capsule-arrow-down">▾</span>
+                <span className="combo-cat-name">{practiceCategories[beadCategory]?.name || '佛號'}</span>
+                <span className="combo-arrow-down">▾</span>
               </div>
 
-              <div className="bead-count-text">
-                <span>今日 </span>
-                <span className="bead-count-val">{todayCount.toLocaleString()}</span>
-                <span> {unit}</span>
-              </div>
-            </div>
+              {/* 中間精細分割線 */}
+              <div className="combo-divider" />
 
-            {/* 2. 中區塊：中類膠囊 */}
-            <div className="bead-block-center">
+              {/* 中類子按鈕 (文字放大) */}
               <div 
-                className="capsule-select-trigger capsule-mid"
+                className="combo-part-mid"
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchEnd={(e) => {
                   if (isLayoutEditMode) return;
@@ -4086,65 +4082,66 @@ export function HomeDashboard({
                   setShowBeadCatMenu(false);
                   setShowBeadMidMenu(prev => !prev);
                 } : undefined}
-                title="點擊切換修持項目"
+                title="點擊切換項目"
               >
-                <span className="capsule-mid-text">{beadName}</span>
-                <span className="capsule-arrow-down">▾</span>
+                <span className="combo-mid-name">{beadName}</span>
+                <span className="combo-arrow-down">▾</span>
               </div>
             </div>
 
-            {/* 3. 右區塊：簡潔合十念珠圖案 (參考圖5右上角) */}
-            <div className="bead-block-right">
+            {/* 2. 右側區塊：今日次數 + 敲木魚按鈕 (背景色塊合併區塊) */}
+            <div className="bead-action-island">
+              <div className="bead-island-count" title={`今日已念 ${todayCount} ${unit}`}>
+                <span className="bead-island-label">今日</span>
+                <span className="bead-island-num">{todayCount.toLocaleString()}</span>
+                <span className="bead-island-unit">{unit}</span>
+              </div>
+
+              {/* 圓形敲木魚按鈕 (圖1風格) */}
               <button 
                 type="button"
                 className={`home-bead-tap-btn ${beadTapAnim ? 'tapped' : ''}`}
-                title="點擊念一聲 (+1)"
+                title="敲木魚誦念 (+1)"
                 onClick={!isLayoutEditMode ? handleHomeBeadTap : undefined}
               >
-                {/* 向量雙手合十持念珠圖案 (圖5風格) */}
-                <svg className="bead-hands-svg" viewBox="0 0 100 100" aria-hidden="true">
+                {/* 向量敲木魚圖案 (圖1) */}
+                <svg className="bead-muyu-svg" viewBox="0 0 100 100" aria-hidden="true">
                   <defs>
-                    <linearGradient id="bead_grad_golden" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#f3d8a8" />
-                      <stop offset="100%" stopColor="#c58f55" />
+                    <linearGradient id="muyu_bg_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#cce1d2" />
+                      <stop offset="100%" stopColor="#accfb8" />
+                    </linearGradient>
+                    <linearGradient id="muyu_wood_body" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#a36e4b" />
+                      <stop offset="100%" stopColor="#7a4625" />
                     </linearGradient>
                   </defs>
-                  
-                  {/* 圓形徽章底色 */}
-                  <circle cx="50" cy="50" r="47" fill="url(#bead_grad_golden)" stroke="#ffffff" strokeWidth="2.5" />
-                  
-                  {/* 祥和光芒射線 */}
-                  <line x1="28" y1="23" x2="21" y2="17" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" opacity="0.95" />
-                  <line x1="19" y1="34" x2="12" y2="32" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" opacity="0.95" />
-                  <line x1="72" y1="23" x2="79" y2="17" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" opacity="0.95" />
-                  <line x1="81" y1="34" x2="88" y2="32" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" opacity="0.95" />
-                  
-                  {/* 雙臂與僧袍袖線 */}
-                  <path d="M 19 86 C 26 73 37 66 43 65" stroke="#5a3818" strokeWidth="2.8" strokeLinecap="round" fill="none" />
-                  <path d="M 81 86 C 74 73 63 66 57 65" stroke="#5a3818" strokeWidth="2.8" strokeLinecap="round" fill="none" />
-                  
-                  {/* 合十雙手 */}
-                  <path d="M 43 65 C 43 54 46 36 50 19 C 54 36 57 54 57 65 Z" fill="#fffcf7" stroke="#5a3818" strokeWidth="2.6" strokeLinejoin="round" />
-                  <line x1="50" y1="19" x2="50" y2="64" stroke="#7e4c20" strokeWidth="2.2" strokeLinecap="round" />
-                  {/* 拇指合縫微彎 */}
-                  <path d="M 43 47 C 45 44 48 45 50 48" stroke="#7e4c20" strokeWidth="1.8" fill="none" />
-                  <path d="M 57 47 C 55 44 52 45 50 48" stroke="#7e4c20" strokeWidth="1.8" fill="none" />
-                  
-                  {/* 念珠圓珠串 */}
-                  <circle cx="36" cy="46" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="34" cy="53" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="35" cy="60" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="40" cy="66" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="47" cy="69" r="3.5" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="53" cy="69" r="3.5" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="60" cy="66" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="65" cy="60" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="66" cy="53" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  <circle cx="64" cy="46" r="3.2" fill="#78441b" stroke="#fff9ee" strokeWidth="1.2" />
-                  
-                  {/* 佛頭三通與流蘇穗子 */}
-                  <circle cx="50" cy="72" r="2.8" fill="#e08e2d" />
-                  <path d="M 50 74 L 46 87 L 54 87 Z" fill="#9a4a15" stroke="#5a3818" strokeWidth="1" />
+
+                  {/* 圓形淡綠底色 */}
+                  <circle cx="50" cy="50" r="47" fill="url(#muyu_bg_grad)" stroke="#ffffff" strokeWidth="2.5" />
+
+                  {/* 敲擊節奏音浪線條 (橙黃光束) */}
+                  <line x1="65" y1="33" x2="69" y2="19" stroke="#e69627" strokeWidth="3.6" strokeLinecap="round" />
+                  <line x1="77" y1="36" x2="88" y2="26" stroke="#e69627" strokeWidth="3.6" strokeLinecap="round" />
+
+                  {/* 木魚厚圓底座 */}
+                  <rect x="22" y="65" width="46" height="13" rx="6.5" fill="#583015" stroke="#361a0a" strokeWidth="2.4" />
+
+                  {/* 木魚主身 (圓拱型) */}
+                  <path d="M 23 66 C 22 41 33 28 45 28 C 57 28 69 41 68 66 Z" fill="url(#muyu_wood_body)" stroke="#361a0a" strokeWidth="2.4" />
+
+                  {/* 木魚頂部高光光影 */}
+                  <ellipse cx="53" cy="37" rx="4.5" ry="2.6" transform="rotate(-20 53 37)" fill="#ffffff" opacity="0.4" />
+
+                  {/* 木魚開口橫縫 (黑褐色彎道孔) */}
+                  <path d="M 27 61 C 37 47 53 49 63 56 C 61 60 45 53 29 63 Z" fill="#301607" stroke="#301607" strokeWidth="0.8" strokeLinejoin="round" />
+
+                  {/* 木魚槌手柄 (斜向右下延伸) */}
+                  <line x1="73" y1="51" x2="90" y2="76" stroke="#6e3914" strokeWidth="5.5" strokeLinecap="round" />
+
+                  {/* 木魚槌頭 (圓形象牙白槌球) */}
+                  <circle cx="72" cy="49" r="7.5" fill="#fdfaf2" stroke="#361a0a" strokeWidth="2.2" />
+                  <circle cx="70" cy="47" r="2.2" fill="#ffffff" />
                 </svg>
 
                 {/* 點擊浮現 +1 動畫 */}

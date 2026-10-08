@@ -11759,109 +11759,137 @@ body.theme-ebony .modal-capsule-btn.resume-capsule,
   gap: 8px;
 }
 
-/* 1. 左區塊：大類膠囊 + 今日已念 */
-.bead-block-left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 3px;
-  flex-shrink: 0;
-  min-width: 72px;
-}
-
-.capsule-select-trigger {
+/* ══════════════════════════════════════════════════
+   1. 左側：大類/中類合一膠囊 (文字放大，典雅一體)
+   ══════════════════════════════════════════════════ */
+.bead-combo-capsule {
   display: inline-flex;
   align-items: center;
-  user-select: none;
-  cursor: pointer;
+  background: var(--bg-card-subtle, rgba(139, 90, 43, 0.06));
+  border: 1px solid var(--border-color, rgba(139, 90, 43, 0.22));
+  border-radius: 20px;
+  height: 42px;
+  max-width: 58%;
+  min-width: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   transition: all 0.15s ease;
 }
 
-.capsule-cat {
-  background: #f1ebd8;
-  color: #7c5806;
-  border: 1px solid rgba(184, 134, 11, 0.32);
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 11px;
-  gap: 3px;
-  box-shadow: 0 1px 2px rgba(184, 134, 11, 0.08);
+.bead-combo-capsule:hover {
+  border-color: rgba(184, 134, 11, 0.45);
 }
 
-.capsule-cat:hover {
-  background: #e6ddbe;
-  border-color: #b8860b;
-}
-
-.capsule-arrow-down {
-  font-size: 0.62rem;
-  opacity: 0.75;
-}
-
-.bead-count-text {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  line-height: 1.1;
-  white-space: nowrap;
-  padding-left: 2px;
-}
-
-.bead-count-val {
-  font-weight: 700;
-  color: #b8860b;
-  font-size: 0.88rem;
-  font-family: var(--font-serif);
-}
-
-/* 2. 中區塊：中類膠囊 (居中彈性伸展，絕不換行) */
-.bead-block-center {
-  flex: 1;
-  min-width: 0;
+.combo-part-cat {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 4px;
+  gap: 3px;
+  padding: 0 10px;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+  height: 100%;
+  border-radius: 19px 0 0 19px;
+  transition: background 0.15s;
 }
 
-.capsule-mid {
-  background: var(--bg-card-subtle, rgba(139, 90, 43, 0.07));
-  color: var(--text-primary, #2c2523);
-  border: 1px solid var(--border-color, rgba(139, 90, 43, 0.22));
-  font-family: var(--font-serif);
-  font-size: 0.84rem;
+.combo-part-cat:hover {
+  background: rgba(184, 134, 11, 0.12);
+}
+
+.combo-cat-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #8b5a2b;
+  white-space: nowrap;
+}
+
+.combo-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border-color, rgba(139, 90, 43, 0.22));
+  flex-shrink: 0;
+}
+
+.combo-part-mid {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 12px 0 10px;
+  cursor: pointer;
+  user-select: none;
+  min-width: 0;
+  flex: 1;
+  height: 100%;
+  border-radius: 0 19px 19px 0;
+  transition: background 0.15s;
+}
+
+.combo-part-mid:hover {
+  background: rgba(139, 90, 43, 0.09);
+}
+
+.combo-mid-name {
+  font-size: 0.95rem;
   font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 16px;
-  gap: 4px;
-  max-width: 100%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-}
-
-.capsule-mid:hover {
-  background: rgba(139, 90, 43, 0.12);
-  border-color: #b8860b;
-}
-
-.capsule-mid-text {
+  color: var(--text-primary, #2c2523);
+  font-family: var(--font-serif);
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.combo-arrow-down {
+  font-size: 0.65rem;
+  opacity: 0.65;
+  color: inherit;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════
+   2. 右側：今日次數 + 圓形木魚按鈕 (色塊背景合併)
+   ══════════════════════════════════════════════════ */
+.bead-action-island {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(139, 90, 43, 0.06);
+  border: 1px solid var(--border-color, rgba(139, 90, 43, 0.2));
+  border-radius: 26px;
+  padding: 3px 4px 3px 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.bead-island-count {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  user-select: none;
   white-space: nowrap;
 }
 
-/* 3. 右區塊：合十念珠圖案按鈕 (圖5右上角極簡莊嚴) */
-.bead-block-right {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
+.bead-island-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.bead-island-num {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #b8860b;
+  font-family: var(--font-serif);
+  line-height: 1;
+}
+
+.bead-island-unit {
+  font-size: 0.72rem;
+  color: var(--text-muted);
 }
 
 .home-bead-tap-btn {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: none;
   padding: 0;
@@ -11873,17 +11901,17 @@ body.theme-ebony .modal-capsule-btn.resume-capsule,
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
-  box-shadow: 0 3px 10px rgba(154, 99, 50, 0.28);
+  transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.1s ease;
+  box-shadow: 0 2px 8px rgba(74, 110, 85, 0.25);
 }
 
 .home-bead-tap-btn:active,
 .home-bead-tap-btn.tapped {
-  transform: scale(0.92);
-  box-shadow: 0 1px 4px rgba(154, 99, 50, 0.2);
+  transform: scale(0.9);
+  box-shadow: 0 1px 3px rgba(74, 110, 85, 0.2);
 }
 
-.bead-hands-svg {
+.bead-muyu-svg {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -11894,7 +11922,7 @@ body.theme-ebony .modal-capsule-btn.resume-capsule,
 .bead-tap-plus-one {
   position: absolute;
   top: -12px;
-  right: 4px;
+  right: 2px;
   font-size: 0.95rem;
   font-weight: 800;
   color: #b8860b;
@@ -11936,14 +11964,14 @@ body.theme-ebony .modal-capsule-btn.resume-capsule,
 }
 
 .bead-cat-dropdown {
-  left: 8px !important;
+  left: 12px !important;
   width: 100px !important;
   min-width: 100px !important;
 }
 
 .bead-mid-dropdown {
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  left: 70px !important;
+  transform: none !important;
   width: max-content !important;
   min-width: 130px !important;
   max-width: 220px !important;
@@ -11993,39 +12021,44 @@ body.theme-dark .home-practice-bead-widget-4x1 {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-body.theme-ebony .capsule-cat,
-body.theme-custom-dark .capsule-cat,
-body.theme-dark .capsule-cat,
-.theme-ebony .capsule-cat,
-.theme-custom-dark .capsule-cat {
-  background: rgba(184, 134, 11, 0.28) !important;
+body.theme-ebony .bead-combo-capsule,
+body.theme-custom-dark .bead-combo-capsule,
+body.theme-dark .bead-combo-capsule,
+.theme-ebony .bead-combo-capsule,
+.theme-custom-dark .bead-combo-capsule {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body.theme-ebony .combo-cat-name,
+body.theme-custom-dark .combo-cat-name,
+body.theme-dark .combo-cat-name {
   color: #f3c778 !important;
-  border-color: rgba(184, 134, 11, 0.5) !important;
 }
 
-body.theme-ebony .capsule-mid,
-body.theme-custom-dark .capsule-mid,
-body.theme-dark .capsule-mid,
-.theme-ebony .capsule-mid,
-.theme-custom-dark .capsule-mid {
-  background: rgba(255, 255, 255, 0.12) !important;
-  color: #f5f0e6 !important;
-  border-color: rgba(255, 255, 255, 0.24) !important;
-}
-
-body.theme-ebony .capsule-mid-text,
-body.theme-custom-dark .capsule-mid-text,
-body.theme-dark .capsule-mid-text,
-.theme-ebony .capsule-mid-text,
-.theme-custom-dark .capsule-mid-text {
+body.theme-ebony .combo-mid-name,
+body.theme-custom-dark .combo-mid-name,
+body.theme-dark .combo-mid-name {
   color: #f5f0e6 !important;
 }
 
-body.theme-ebony .capsule-mid:hover,
-body.theme-custom-dark .capsule-mid:hover,
-body.theme-dark .capsule-mid:hover {
+body.theme-ebony .combo-divider,
+body.theme-custom-dark .combo-divider,
+body.theme-dark .combo-divider {
   background: rgba(255, 255, 255, 0.18) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+body.theme-ebony .bead-action-island,
+body.theme-custom-dark .bead-action-island,
+body.theme-dark .bead-action-island {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body.theme-ebony .bead-island-num,
+body.theme-custom-dark .bead-island-num,
+body.theme-dark .bead-island-num {
+  color: #f3c778 !important;
 }
 
 body.theme-ebony .dropdown-menu-box,
