@@ -406,7 +406,12 @@ export async function saveHighlight(highlight: BookHighlight): Promise<void> {
     const request = store.put(highlight);
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve();
+    request.onsuccess = () => {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cbeta_highlights_updated'));
+      }
+      resolve();
+    };
   });
 }
 
@@ -418,7 +423,12 @@ export async function deleteHighlight(id: string): Promise<void> {
     const request = store.delete(id);
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve();
+    request.onsuccess = () => {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cbeta_highlights_updated'));
+      }
+      resolve();
+    };
   });
 }
 

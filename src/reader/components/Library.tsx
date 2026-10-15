@@ -31,6 +31,8 @@ import { BookshelfInteractivePlayground, getDeptCategoryInfo, getCanonCategoryIn
 import { updateHashRoute } from '../../App';
 import { isBackupMode, subscribeSourceMode } from '../../utils/sourceMode';
 import { getBookCoverGradient } from '../../utils/bookColors';
+import { AppModal } from './ui/AppModal';
+import { useBookshelfFolders, type BookFolder } from '../hooks/useBookshelfFolders';
 import '../styles/library.css';
 
 interface LibraryProps {
@@ -94,63 +96,20 @@ export function Library({
 
   const isLongPressTriggeredRef = useRef(false);
 
-  // === 資料夾系統結構與狀態 ===
-  interface BookFolder {
-    id: string;
-    name: string;
-    bookIds: string[];
-    parentId: string | null; // 支援多層資料夾
-    color?: string;
-  }
-
-  const [folders, setFolders] = useState<BookFolder[]>([]);
-  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
-  const [bookshelfStatusFilter, setBookshelfStatusFilter] = useState<'all' | 'downloads' | 'recent' | 'favorites'>('all');
-
-  // 💡 資料夾瀏覽歷史紀錄，用於支援正方形上一頁（<）與下一頁（>）導航按鈕
-  const [folderHistory, setFolderHistory] = useState<Array<string | null>>([null]);
-  const [historyIndex, setHistoryIndex] = useState(0);
-
-  const navigateToFolder = (folderId: string | null) => {
-    let targetFolderId = folderId;
-    if (folderId === 'virtual_unclassified') {
-      setBookshelfStatusFilter('downloads');
-      targetFolderId = 'virtual_my_folders';
-    } else if (folderId === 'virtual_recent_reads') {
-      setBookshelfStatusFilter('recent');
-      targetFolderId = 'virtual_my_folders';
-    } else if (folderId === 'virtual_favorites') {
-      setBookshelfStatusFilter('favorites');
-      targetFolderId = 'virtual_my_folders';
-    }
-
-    // 當使用者手動點選資料夾時，截斷並寫入新歷史
-    const newHistory = folderHistory.slice(0, historyIndex + 1);
-    newHistory.push(targetFolderId);
-    setFolderHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
-    setCurrentFolderId(targetFolderId);
-  };
-
-  const handleGoBack = () => {
-    if (historyIndex > 0) {
-      const prevIdx = historyIndex - 1;
-      setHistoryIndex(prevIdx);
-      setCurrentFolderId(folderHistory[prevIdx]);
-    } else {
-      setCurrentFolderId(null);
-    }
-  };
-
-  // 💡 當接收到首頁重設信號時，重置當前所在的資料夾路徑與瀏覽歷史，並回到首頁
-  useEffect(() => {
-    if (resetFolderTrigger && resetFolderTrigger > 0) {
-      setActiveTab('shelf');
-      setCurrentFolderId(null);
-      setFolderHistory([null]);
-      setHistoryIndex(0);
-    }
-  }, [resetFolderTrigger]);
+  // === 資料夾系統結構與狀態 (由 useBookshelfFolders Hook 統一管理) ===
+  const {
+    folders,
+    setFolders,
+    currentFolderId,
+    setCurrentFolderId,
+    bookshelfStatusFilter,
+    setBookshelfStatusFilter,
+    setFolderHistory,
+    setHistoryIndex,
+    navigateToFolder,
+    handleGoBack,
+    reloadFolders
+  } = useBookshelfFolders(resetFolderTrigger);
 
   // 💡 當接收到全站頂部四大功能導航目標時，在渲染期即時同步狀態（徹底消除切換時的 1 幀白屏/首頁閃爍）
   const [prevTargetSectionTimestamp, setPrevTargetSectionTimestamp] = useState<number | null>(null);
@@ -569,25 +528,8 @@ export function Library({
     setShowBatchMoveDialog(false);
   };
 
-  // 載入資料夾設置並相容舊格式
-  const loadLocalFolders = () => {
-    const savedFolders = localStorage.getItem('cbeta_reader_folders');
-    if (savedFolders) {
-      try {
-        const parsed = JSON.parse(savedFolders) as BookFolder[];
-        const upgraded = parsed.map(f => ({
-          ...f,
-          parentId: f.parentId !== undefined ? f.parentId : null,
-          color: f.color || '#3d5a45'
-        }));
-        setFolders(upgraded);
-      } catch (e) {
-        console.error('Failed to parse folders from localStorage:', e);
-      }
-    } else {
-      setFolders([]);
-    }
-
+  // 載入我的書櫃與最愛設定
+  const loadLocalFavoritesAndShelf = () => {
     try {
       const savedBookshelf = localStorage.getItem('cbeta_my_bookshelf_book_ids');
       setMyBookshelfBookIds(savedBookshelf ? JSON.parse(savedBookshelf) : []);
@@ -604,9 +546,9 @@ export function Library({
   };
 
   useEffect(() => {
-    loadLocalFolders();
+    loadLocalFavoritesAndShelf();
     const handleStorageOrCustomEvent = () => {
-      loadLocalFolders();
+      loadLocalFavoritesAndShelf();
       loadLocalBooks();
     };
     window.addEventListener('storage', handleStorageOrCustomEvent);
@@ -617,11 +559,9 @@ export function Library({
     };
   }, []);
 
-  // 儲存資料夾設定
+  // 儲存資料夾設定（透過 Hook 統一處理）
   const saveFolders = (newFolders: BookFolder[]) => {
     setFolders(newFolders);
-    localStorage.setItem('cbeta_reader_folders', JSON.stringify(newFolders));
-    window.dispatchEvent(new Event('cbeta_folders_updated'));
   };
 
   // 建立資料夾
@@ -849,16 +789,14 @@ export function Library({
 
         // 如果設定了目標資料夾，將新下載的經書歸類進去
         if (targetFolderId) {
-          setFolders(latestFolders => {
-            const updated = latestFolders.map(f => {
+          setFolders((latestFolders: BookFolder[]) => {
+            return latestFolders.map((f: BookFolder) => {
               if (f.id === targetFolderId) {
                 const bookIds = f.bookIds.includes(workId) ? f.bookIds : [...f.bookIds, workId];
                 return { ...f, bookIds };
               }
               return f;
             });
-            localStorage.setItem('cbeta_reader_folders', JSON.stringify(updated));
-            return updated;
           });
         }
       } catch (err) {
@@ -867,7 +805,8 @@ export function Library({
     }
 
     // 3. 載入最新本地經書清單與資料夾
-    loadLocalFolders();
+    reloadFolders();
+    loadLocalFavoritesAndShelf();
     await loadLocalBooks();
     setSelectedOnlineWorkIds([]);
     window.dispatchEvent(new Event('cbeta_folders_updated'));
@@ -1340,7 +1279,8 @@ export function Library({
   };
 
   useEffect(() => {
-    loadLocalFolders();
+    reloadFolders();
+    loadLocalFavoritesAndShelf();
     loadLocalBooks();
     loadAllHighlights();
   }, [booksUpdatedTrigger]);
@@ -3704,82 +3644,77 @@ export function Library({
         </div>
       )}
 
-      {/* 💡 首頁「劃線筆記」編輯 Modal */}
-      {editingHighlightInLibrary && (
-        <div className="search-dialog-overlay" onClick={() => setEditingHighlightInLibrary(null)}>
-          <div className="search-dialog-card animate-slide-up" style={{ maxWidth: '420px', borderRadius: '16px' }} onClick={e => e.stopPropagation()}>
-            <div className="dialog-header">
-              <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>📝 編輯感悟筆記</span>
-              </h3>
-              <button className="icon-button close-btn" onClick={() => setEditingHighlightInLibrary(null)}>
-                <X size={18} />
+      {/* 💡 首頁「劃線筆記」編輯 Modal (採用全站統一 AppModal) */}
+      <AppModal
+        isOpen={Boolean(editingHighlightInLibrary)}
+        onClose={() => setEditingHighlightInLibrary(null)}
+        title="📝 編輯感悟筆記"
+        maxWidth={420}
+      >
+        {editingHighlightInLibrary && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '0.2rem 0' }}>
+            <div 
+              style={{ 
+                fontSize: '0.85rem', 
+                color: 'var(--text-muted)', 
+                backgroundColor: 'var(--theme-accent-light, rgba(0,0,0,0.04))', 
+                padding: '0.6rem 0.8rem', 
+                borderRadius: '8px',
+                borderLeft: '3px solid var(--theme-accent)'
+              }}
+            >
+              「{editingHighlightInLibrary.text}」
+            </div>
+
+            <textarea
+              placeholder="寫下您對此句經文的感悟或讀後心得..."
+              value={editingNoteTextInLibrary}
+              onChange={(e) => setEditingNoteTextInLibrary(e.target.value)}
+              rows={4}
+              style={{
+                width: '100%',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
+                backgroundColor: 'var(--input-bg, rgba(255,255,255,0.8))',
+                color: 'var(--text-primary)',
+                fontSize: '0.95rem',
+                lineHeight: 1.6,
+                fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
+                resize: 'vertical',
+                boxSizing: 'border-box'
+              }}
+              autoFocus
+            />
+
+            <div style={{ display: 'flex', gap: '0.8rem', width: '100%', marginTop: '0.2rem' }}>
+              <button 
+                className="dialog-btn-confirm"
+                onClick={async () => {
+                  if (!editingHighlightInLibrary) return;
+                  const updated = {
+                    ...editingHighlightInLibrary,
+                    note: editingNoteTextInLibrary.trim()
+                  };
+                  await saveHighlight(updated);
+                  await loadAllHighlights();
+                  setEditingHighlightInLibrary(null);
+                }}
+                style={{ flex: 1 }}
+              >
+                儲存修改
+              </button>
+              <button 
+                className="dialog-btn-cancel"
+                onClick={() => setEditingHighlightInLibrary(null)}
+                style={{ flex: 1 }}
+              >
+                取消
               </button>
             </div>
-            <div className="dialog-body" style={{ gap: '1rem', padding: '1.2rem' }}>
-              <div 
-                style={{ 
-                  fontSize: '0.85rem', 
-                  color: 'var(--text-muted)', 
-                  backgroundColor: 'var(--theme-accent-light, rgba(0,0,0,0.04))', 
-                  padding: '0.6rem 0.8rem', 
-                  borderRadius: '8px',
-                  borderLeft: '3px solid var(--theme-accent)'
-                }}
-              >
-                「{editingHighlightInLibrary.text}」
-              </div>
-
-              <textarea
-                placeholder="寫下您對此句經文的感悟或讀後心得..."
-                value={editingNoteTextInLibrary}
-                onChange={(e) => setEditingNoteTextInLibrary(e.target.value)}
-                rows={4}
-                style={{
-                  width: '100%',
-                  padding: '0.8rem',
-                  borderRadius: '8px',
-                  border: '1px solid var(--border-color, rgba(0,0,0,0.15))',
-                  backgroundColor: 'var(--input-bg, rgba(255,255,255,0.8))',
-                  color: 'var(--text-primary)',
-                  fontSize: '0.95rem',
-                  lineHeight: 1.6,
-                  fontFamily: '"CBETASupplement", "標楷體", "BiauKai", "DFKai-SB", "TW-Kai", "STKaiti", "KaiTi", serif',
-                  resize: 'vertical',
-                  boxSizing: 'border-box'
-                }}
-                autoFocus
-              />
-
-              <div style={{ display: 'flex', gap: '0.8rem', width: '100%', marginTop: '0.2rem' }}>
-                <button 
-                  className="dialog-btn-confirm"
-                  onClick={async () => {
-                    if (!editingHighlightInLibrary) return;
-                    const updated = {
-                      ...editingHighlightInLibrary,
-                      note: editingNoteTextInLibrary.trim()
-                    };
-                    await saveHighlight(updated);
-                    await loadAllHighlights();
-                    setEditingHighlightInLibrary(null);
-                  }}
-                  style={{ flex: 1 }}
-                >
-                  儲存修改
-                </button>
-                <button 
-                  className="dialog-btn-cancel"
-                  onClick={() => setEditingHighlightInLibrary(null)}
-                  style={{ flex: 1 }}
-                >
-                  取消
-                </button>
-              </div>
-            </div>
           </div>
-        </div>
-      )}
+        )}
+      </AppModal>
 
 
 

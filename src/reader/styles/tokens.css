@@ -1,0 +1,151 @@
+/**
+ * CBETA Reader - Unified Design System Tokens
+ * 全站統一設計規範變數：提供層次分明的表面色、邊框色、文字色、圓角與光影
+ */
+
+:root {
+  /* 基礎圓角規範 */
+  --cbeta-radius-xs: 4px;
+  --cbeta-radius-sm: 8px;
+  --cbeta-radius-md: 12px;
+  --cbeta-radius-card: 16px;
+  --cbeta-radius-modal: 20px;
+  --cbeta-radius-capsule: 9999px;
+
+  /* 經號徽章標準色彩 (大正藏 T, 續藏經 X, 嘉興藏 J, 歷代藏經等) */
+  --badge-t-bg: #8c3835;
+  --badge-t-text: #ffffff;
+  --badge-x-bg: #1e4b6e;
+  --badge-x-text: #ffffff;
+  --badge-j-bg: #70440f;
+  --badge-j-text: #ffffff;
+  --badge-other-bg: #4a5568;
+  --badge-other-text: #ffffff;
+
+  /* 預設 (Parchment 羊皮紙) 表面色與層次 */
+  --surface-app: var(--bg-paper-parchment);
+  --surface-card: rgba(255, 255, 255, 0.72);
+  --surface-card-solid: #faf4e6;
+  --surface-card-hover: rgba(255, 255, 255, 0.90);
+  --surface-overlay: rgba(0, 0, 0, 0.65);
+  --surface-modal: #faf4e6;
+  --surface-dropdown: #ffffff;
+  --surface-input: rgba(255, 255, 255, 0.95);
+  --surface-capsule: rgba(140, 75, 39, 0.08);
+  --surface-capsule-active: rgba(140, 75, 39, 0.16);
+
+  /* 邊框色 */
+  --border-subtle: rgba(140, 75, 39, 0.14);
+  --border-medium: rgba(140, 75, 39, 0.28);
+  --border-focus: rgba(140, 75, 39, 0.65);
+
+  /* 文字色 */
+  --text-main: #3c2a1a;
+  --text-sub: #5c4b37;
+  --text-hint: #8d775f;
+  --text-inverse: #ffffff;
+
+  /* 光影 */
+  --shadow-card: 0 4px 14px -2px rgba(90, 50, 20, 0.08);
+  --shadow-card-hover: 0 8px 24px -4px rgba(90, 50, 20, 0.14);
+  --shadow-modal: 0 20px 40px -8px rgba(0, 0, 0, 0.35);
+  --shadow-dropdown: 0 10px 25px -4px rgba(0, 0, 0, 0.18);
+}
+
+/* 象牙白主題 Ivory */
+.theme-ivory {
+  --surface-app: var(--bg-paper-ivory);
+  --surface-card: rgba(255, 255, 255, 0.82);
+  --surface-card-solid: #fcfaf6;
+  --surface-card-hover: #ffffff;
+  --surface-modal: #fcfaf6;
+  --surface-dropdown: #ffffff;
+  --surface-input: #ffffff;
+  --surface-capsule: rgba(140, 106, 70, 0.08);
+  --surface-capsule-active: rgba(140, 106, 70, 0.16);
+  --border-subtle: rgba(140, 106, 70, 0.14);
+  --border-medium: rgba(140, 106, 70, 0.28);
+  --border-focus: rgba(140, 106, 70, 0.65);
+  --text-main: #2c2016;
+  --text-sub: #5c4b37;
+  --text-hint: #6a5a48;
+}
+
+/* 羊皮紙主題 Parchment */
+.theme-parchment {
+  --surface-app: var(--bg-paper-parchment);
+  --surface-card: rgba(255, 255, 255, 0.72);
+  --surface-card-solid: #faf4e6;
+  --surface-card-hover: rgba(255, 255, 255, 0.90);
+  --surface-modal: #faf4e6;
+  --surface-dropdown: #ffffff;
+  --surface-input: rgba(255, 255, 255, 0.95);
+  --surface-capsule: rgba(140, 75, 39, 0.08);
+  --surface-capsule-active: rgba(140, 75, 39, 0.16);
+  --border-subtle: rgba(140, 75, 39, 0.14);
+  --border-medium: rgba(140, 75, 39, 0.28);
+  --border-focus: rgba(140, 75, 39, 0.65);
+  --text-main: #3c2a1a;
+  --text-sub: #5c4b37;
+  --text-hint: #7a6652;
+}
+
+/* 舒服綠主題 Comfort */
+.theme-comfort {
+  --surface-app: var(--bg-paper-comfort);
+  --surface-card: rgba(255, 255, 255, 0.75);
+  --surface-card-solid: #f3f8f0;
+  --surface-card-hover: rgba(255, 255, 255, 0.92);
+  --surface-modal: #f3f8f0;
+  --surface-dropdown: #ffffff;
+  --surface-input: #ffffff;
+  --surface-capsule: rgba(69, 122, 88, 0.09);
+  --surface-capsule-active: rgba(69, 122, 88, 0.18);
+  --border-subtle: rgba(69, 122, 88, 0.15);
+  --border-medium: rgba(69, 122, 88, 0.30);
+  --border-focus: rgba(69, 122, 88, 0.65);
+  --text-main: #23351d;
+  --text-sub: #42553b;
+  --text-hint: #596b52;
+}
+
+/* 烏木暗色主題 Ebony */
+.theme-ebony,
+.theme-custom-dark {
+  --surface-app: var(--bg-paper-ebony);
+  --surface-card: rgba(30, 36, 44, 0.88);
+  --surface-card-solid: #1b2229;
+  --surface-card-hover: rgba(38, 47, 56, 0.95);
+  --surface-overlay: rgba(0, 0, 0, 0.82);
+  --surface-modal: #1b2229;
+  --surface-dropdown: #1e262e;
+  --surface-input: #232c35;
+  --surface-capsule: rgba(255, 255, 255, 0.08);
+  --surface-capsule-active: rgba(255, 255, 255, 0.16);
+  --border-subtle: rgba(255, 255, 255, 0.14);
+  --border-medium: rgba(255, 255, 255, 0.28);
+  --border-focus: rgba(255, 255, 255, 0.55);
+  --text-main: #f1f5f9;
+  --text-sub: #cbd5e1;
+  --text-hint: #94a3b8;
+  --text-inverse: #0f172a;
+  --shadow-card: 0 4px 14px -2px rgba(0, 0, 0, 0.45);
+  --shadow-card-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.60);
+  --shadow-modal: 0 20px 40px -8px rgba(0, 0, 0, 0.75);
+  --shadow-dropdown: 0 10px 25px -4px rgba(0, 0, 0, 0.55);
+}
+
+/* 亮色自訂主題 */
+.theme-custom-light {
+  --surface-card: rgba(255, 255, 255, 0.85);
+  --surface-card-solid: #ffffff;
+  --surface-card-hover: #ffffff;
+  --surface-modal: #ffffff;
+  --surface-dropdown: #ffffff;
+  --surface-input: #ffffff;
+  --surface-capsule: rgba(0, 0, 0, 0.06);
+  --surface-capsule-active: rgba(0, 0, 0, 0.12);
+  --border-subtle: rgba(0, 0, 0, 0.12);
+  --border-medium: rgba(0, 0, 0, 0.24);
+  --border-focus: rgba(0, 0, 0, 0.50);
+}

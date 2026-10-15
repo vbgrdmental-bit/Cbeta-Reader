@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.11.3` (App: v4.11.3 / Builder: v2.9.13)
+- **Current Version**: `v4.12.0` (App: v4.12.0 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -71,6 +71,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
   - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog
+
+- **⭐ App: v4.12.0 / Builder: v2.9.13** (2026-10-16)
+  - [App] 全站設計系統與原子組件：建立主題變數系統與模組化卡片、彈窗、下拉選單，深淺模式高對比且無重影。
+  - [App] 首頁解耦與日誌「聞思修」貫通：佛曆、念珠計數、護眼倒數獨立模組化；日誌無縫整合閱讀、筆記與修持。
+  - [App] 書架邏輯與資料夾 Hook 解耦：重構書櫃資料夾狀態管理，大幅降低主元件複雜度，提升執行效能與維護性。
 
 - **⭐ App: v4.11.3 / Builder: v2.9.13** (2026-10-09)
   - [App] 淺色模式下拉箭頭清晰化：大類與中類選單改為精準向量 SVG 倒三角圖標並強化深淺配色，淺色模式下輪廓清澈醒目。

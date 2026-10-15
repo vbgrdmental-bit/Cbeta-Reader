@@ -1,3 +1,5 @@
+@import './reader/styles/tokens.css';
+
 /* 💡 教育部標準楷書 (MOE-EduKai / TW-Kai-98 WOFF2 官方字型檔) */
 @font-face {
   font-family: 'MOE-EduKai';

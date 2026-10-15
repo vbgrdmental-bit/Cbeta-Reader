@@ -1483,16 +1483,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.11.3) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.12.0) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.11.3</span>
-                        <span className="changelog-date">(2026-10-09)</span>
+                        <span>⭐ App: v4.12.0</span>
+                        <span className="changelog-date">(2026-10-16)</span>
+                        <span style={{ fontSize: '0.72rem', padding: '1px 5px', borderRadius: '4px', border: '1px solid var(--theme-accent, #8c4b27)', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold', marginLeft: '2px' }}>重大更新</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 淺色模式下拉箭頭清晰化：大類與中類改為向量倒三角並強化對比配色，淺色模式清澈明晰。</li>
-                        <li>• 修持記數彈窗防穿透重疊：深色與蓮花粉模式採用實心背景阻絕透光重影，徹底杜絕輸入框白底白字。</li>
-                        <li>• 常用選擇膠囊化與自由刪除：常用項目升級典雅圓角膠囊並支援右上「×」自由刪除；功課條精簡多餘筆。</li>
+                        <li>• 全站設計系統與原子組件：建立主題變數系統與模組化卡片、彈窗、下拉選單，深淺模式高對比且無重影。</li>
+                        <li>• 首頁解耦與日誌「聞思修」貫通：佛曆、念珠計數、護眼倒數獨立模組化；日誌無縫整合閱讀、筆記與修持。</li>
+                        <li>• 書架邏輯與資料夾 Hook 解耦：重構書櫃資料夾狀態管理，大幅降低主元件複雜度，提升執行效能與維護性。</li>
                       </ul>
                     </div>
 
@@ -1515,6 +1516,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.11.3</span>
+                            <span className="changelog-date">(2026-10-09)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 淺色模式下拉箭頭清晰化：大類與中類改為向量倒三角並強化對比配色，淺色模式清澈明晰。</li>
+                            <li>• 修持記數彈窗防穿透重疊：深色與蓮花粉模式採用實心背景阻絕透光重影，徹底杜絕輸入框白底白字。</li>
+                            <li>• 常用選擇膠囊化與自由刪除：常用項目升級典雅圓角膠囊並支援右上「×」自由刪除；功課條精簡多餘筆。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.11.2</span>

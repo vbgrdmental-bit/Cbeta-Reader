@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   CalendarDays, ChevronLeft, ChevronRight, X, Trash2,
-  Play, BookOpen, Edit3, Plus
+  Play, Edit3, Plus
 } from 'lucide-react';
 import {
   getAllReadingLogs,
@@ -12,6 +12,8 @@ import {
   updatePracticeLogCount,
   deletePracticeLog,
   clearAllPracticeLogs,
+  getAllHighlights,
+  type BookHighlight,
   type ReadingLogEntry,
   type PracticeLogEntry,
   type PracticeCategoryConfig,
@@ -60,6 +62,7 @@ function formatDurationStat(minutes: number): string {
 export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: ReadingLogViewProps) {
   const [logs, setLogs] = useState<ReadingLogEntry[]>([]);
   const [practiceLogs, setPracticeLogs] = useState<PracticeLogEntry[]>([]);
+  const [highlights, setHighlights] = useState<BookHighlight[]>([]);
   const [, setLoading] = useState(true);
 
   // 當前日曆顯示的年月
@@ -86,6 +89,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
   const [modalCategory, setModalCategory] = useState<string>('fo');
   const [modalName, setModalName] = useState('南無阿彌陀佛');
   const [modalCount, setModalCount] = useState(1080);
+  const [modalMuyuAnim, setModalMuyuAnim] = useState(false);
 
   useEffect(() => {
     const handleCatsChanged = (e: any) => {
@@ -106,14 +110,17 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
   const loadData = async () => {
     try {
       setLoading(true);
-      const [readData, pracData] = await Promise.all([
+      const [readData, pracData, highlightData] = await Promise.all([
         getAllReadingLogs(),
-        getAllPracticeLogs()
+        getAllPracticeLogs(),
+        getAllHighlights()
       ]);
       readData.sort((a, b) => b.startTime - a.startTime);
       pracData.sort((a, b) => b.timestamp - a.timestamp);
+      highlightData.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
       setLogs(readData);
       setPracticeLogs(pracData);
+      setHighlights(highlightData);
 
       // 💡 自動收錄歷史功課名稱至常用選擇（例如讀者之前記錄過的「滅定業真言」自動同步收錄）
       const currentCats = getPracticeCategories();
@@ -155,6 +162,15 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
 
   useEffect(() => {
     loadData();
+    const handleUpdate = () => loadData();
+    window.addEventListener('cbeta_reading_log_saved', handleUpdate);
+    window.addEventListener('cbeta_practice_log_saved', handleUpdate);
+    window.addEventListener('cbeta_highlights_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('cbeta_reading_log_saved', handleUpdate);
+      window.removeEventListener('cbeta_practice_log_saved', handleUpdate);
+      window.removeEventListener('cbeta_highlights_updated', handleUpdate);
+    };
   }, []);
 
   // 刪除單筆閱讀紀錄
@@ -246,25 +262,49 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
     return practiceLogs.filter(p => p.date === selectedDate);
   }, [practiceLogs, selectedDate]);
 
-  // 日期 -> 有無閱讀與有無功課標記（用於月曆微標記）
+  // 選中日期的重點與筆記列表 (思)
+  const selectedDateHighlights = useMemo(() => {
+    return highlights.filter(h => {
+      if (!h.createdAt) return false;
+      const d = new Date(h.createdAt);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}` === selectedDate;
+    });
+  }, [highlights, selectedDate]);
+
+  // 日期 -> 有無閱讀(聞)、有無筆記(思)與有無功課(修)標記
   const dateStatusMap = useMemo(() => {
-    const map = new Map<string, { hasRead: boolean; hasPractice: boolean }>();
+    const map = new Map<string, { hasRead: boolean; hasNotes: boolean; hasPractice: boolean }>();
     logs.forEach(l => {
       if (l.date) {
-        const item = map.get(l.date) || { hasRead: false, hasPractice: false };
+        const item = map.get(l.date) || { hasRead: false, hasNotes: false, hasPractice: false };
         item.hasRead = true;
         map.set(l.date, item);
       }
     });
+    highlights.forEach(h => {
+      if (h.createdAt) {
+        const d = new Date(h.createdAt);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const dateStr = `${y}-${m}-${day}`;
+        const item = map.get(dateStr) || { hasRead: false, hasNotes: false, hasPractice: false };
+        item.hasNotes = true;
+        map.set(dateStr, item);
+      }
+    });
     practiceLogs.forEach(p => {
       if (p.date) {
-        const item = map.get(p.date) || { hasRead: false, hasPractice: false };
+        const item = map.get(p.date) || { hasRead: false, hasNotes: false, hasPractice: false };
         item.hasPractice = true;
         map.set(p.date, item);
       }
     });
     return map;
-  }, [logs, practiceLogs]);
+  }, [logs, practiceLogs, highlights]);
 
   // 選中日期的農曆與佛教資訊
   const selectedDateLunar = useMemo(() => {
@@ -757,7 +797,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
             const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
             const isSelected = dateStr === selectedDate;
             const isToday = dateStr === todayStr;
-            const status = dateStatusMap.get(dateStr) || { hasRead: false, hasPractice: false };
+            const status = dateStatusMap.get(dateStr) || { hasRead: false, hasNotes: false, hasPractice: false };
             const lunarInfo = getLunarInfo(new Date(currentYear, currentMonth, dayNum));
 
             return (
@@ -829,33 +869,49 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                   {lunarInfo.cellLabel}
                 </span>
 
-                {/* 底部雙微標籤：綠「讀」與金「📿」 */}
-                <div style={{ display: 'flex', gap: '2px', marginTop: 'auto', alignItems: 'center' }}>
+                {/* 底部三慧微圓點：綠點(聞)、藍點(思) 與金點(修)，最多 3 個點點，外圍帶細小光暈 */}
+                <div style={{ display: 'flex', gap: '3.5px', marginTop: 'auto', alignItems: 'center', minHeight: '6px', justifyContent: 'center' }}>
                   {status.hasRead && (
-                    <span style={{
-                      fontSize: '0.58rem',
-                      fontWeight: 700,
-                      color: '#2d6a4f',
-                      backgroundColor: 'rgba(45, 106, 79, 0.12)',
-                      padding: '0 3px',
-                      borderRadius: '3px',
-                      lineHeight: 1.2
-                    }}>
-                      讀
-                    </span>
+                    <span 
+                      title="聞：當日有閱讀經文"
+                      style={{
+                        width: '5px',
+                        height: '5px',
+                        borderRadius: '50%',
+                        backgroundColor: '#2e7d32',
+                        boxShadow: '0 0 4px rgba(46, 125, 50, 0.75)',
+                        display: 'inline-block',
+                        flexShrink: 0
+                      }} 
+                    />
+                  )}
+                  {status.hasNotes && (
+                    <span 
+                      title="思：當日有劃線筆記"
+                      style={{
+                        width: '5px',
+                        height: '5px',
+                        borderRadius: '50%',
+                        backgroundColor: '#1976d2',
+                        boxShadow: '0 0 4px rgba(25, 118, 210, 0.75)',
+                        display: 'inline-block',
+                        flexShrink: 0
+                      }} 
+                    />
                   )}
                   {status.hasPractice && (
-                    <span style={{
-                      fontSize: '0.58rem',
-                      fontWeight: 700,
-                      color: '#b8860b',
-                      backgroundColor: 'rgba(184, 134, 11, 0.14)',
-                      padding: '0 3px',
-                      borderRadius: '3px',
-                      lineHeight: 1.2
-                    }}>
-                      📿
-                    </span>
+                    <span 
+                      title="修：當日有修持功課"
+                      style={{
+                        width: '5px',
+                        height: '5px',
+                        borderRadius: '50%',
+                        backgroundColor: '#d4a017',
+                        boxShadow: '0 0 4px rgba(212, 160, 23, 0.85)',
+                        display: 'inline-block',
+                        flexShrink: 0
+                      }} 
+                    />
                   )}
                 </div>
               </div>
@@ -948,8 +1004,16 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
               alignItems: 'center',
               gap: '6px'
             }}>
-              <BookOpen size={16} style={{ color: '#2d6a4f' }} />
-              <span>經文閱讀記錄</span>
+              <span style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                backgroundColor: '#2e7d32',
+                boxShadow: '0 0 5px rgba(46, 125, 50, 0.75)',
+                display: 'inline-block',
+                flexShrink: 0
+              }} />
+              <span>聞：閱讀記錄</span>
             </div>
             <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
               {selectedDateLogs.length > 0
@@ -1079,7 +1143,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
           )}
         </div>
 
-        {/* 區塊 C：📿 我的功課記錄 */}
+        {/* 區塊 C：✍️ 今日筆記與重點標註 (思) */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <div style={{
             display: 'flex',
@@ -1096,8 +1160,140 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
               alignItems: 'center',
               gap: '6px'
             }}>
-              <span>📿</span>
-              <span>我的功課記錄</span>
+              <span style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                backgroundColor: '#1976d2',
+                boxShadow: '0 0 5px rgba(25, 118, 210, 0.75)',
+                display: 'inline-block',
+                flexShrink: 0
+              }} />
+              <span>思：我的筆記</span>
+            </div>
+
+            <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+              共 {selectedDateHighlights.length} 則標註
+            </span>
+          </div>
+
+          {selectedDateHighlights.length === 0 ? (
+            <div style={{
+              textAlign: 'center',
+              padding: '1rem',
+              backgroundColor: 'var(--bg-primary, rgba(0,0,0,0.02))',
+              borderRadius: '10px',
+              border: '1px dashed var(--border-color, rgba(0,0,0,0.1))',
+              color: 'var(--text-muted)',
+              fontSize: '0.8rem'
+            }}>
+              此日尚無經文劃線或心得筆記
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {selectedDateHighlights.map((hl) => (
+                <div
+                  key={hl.id}
+                  style={{
+                    padding: '0.7rem 0.85rem',
+                    borderRadius: '10px',
+                    backgroundColor: 'var(--bg-card, #fff)',
+                    border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+                    borderLeft: '3.5px solid #1e4b6e',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      color: '#1e4b6e',
+                      backgroundColor: 'rgba(30, 75, 110, 0.08)',
+                      padding: '1px 6px',
+                      borderRadius: '4px'
+                    }}>
+                      {hl.workId} · 第 {hl.juan} 卷
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onSelectBook(hl.workId, hl.segmentId, undefined, 'resume')}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--theme-accent, #8b5a2b)',
+                        fontSize: '0.74rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '2px'
+                      }}
+                      title="直接開啟此段經文"
+                    >
+                      <span>直達經文</span>
+                      <ChevronRight size={12} />
+                    </button>
+                  </div>
+
+                  <div style={{
+                    fontSize: '0.84rem',
+                    color: 'var(--text-primary)',
+                    fontFamily: 'var(--font-serif)',
+                    lineHeight: 1.45,
+                    fontStyle: 'italic'
+                  }}>
+                    「{hl.text}」
+                  </div>
+
+                  {hl.note && (
+                    <div style={{
+                      marginTop: '2px',
+                      fontSize: '0.78rem',
+                      color: 'var(--text-secondary)',
+                      backgroundColor: 'rgba(184, 134, 11, 0.08)',
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      lineHeight: 1.35
+                    }}>
+                      <span style={{ fontWeight: 600, marginRight: '4px' }}>💭 心得：</span>
+                      {hl.note}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 區塊 D：📿 我的功課記錄 (修) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 2px'
+          }}>
+            <div style={{
+              fontSize: '0.88rem',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              fontFamily: 'var(--font-serif)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                backgroundColor: '#d4a017',
+                boxShadow: '0 0 5px rgba(212, 160, 23, 0.85)',
+                display: 'inline-block',
+                flexShrink: 0
+              }} />
+              <span>修：我的功課</span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1511,51 +1707,113 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                   min={1}
                 />
                 
+                {/* 圖 3：5 個等級小膠囊 (100, 200, 500, 800, 1000) */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' }}>
-                  {[1, 7, 21, 108, 1000].map(addVal => (
-                    <button
-                      key={addVal}
-                      type="button"
-                      className="practice-add-val-btn"
-                      onClick={() => setModalCount(prev => prev + addVal)}
-                    >
-                      +{addVal}
-                    </button>
-                  ))}
+                  {[100, 200, 500, 800, 1000].map(levelVal => {
+                    const isSelected = modalCount === levelVal;
+                    return (
+                      <button
+                        key={levelVal}
+                        type="button"
+                        onClick={() => setModalCount(levelVal)}
+                        style={{
+                          padding: '6px 0',
+                          borderRadius: '16px',
+                          border: isSelected ? '1.5px solid var(--theme-accent, #8b5a2b)' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+                          backgroundColor: isSelected ? 'var(--theme-accent-light, rgba(139, 90, 43, 0.12))' : 'var(--bg-card-subtle, rgba(0,0,0,0.03))',
+                          color: isSelected ? 'var(--theme-accent, #8b5a2b)' : 'var(--text-primary)',
+                          fontSize: '0.84rem',
+                          fontWeight: isSelected ? 700 : 600,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                        title={`設定修持數量為 ${levelVal}`}
+                      >
+                        {levelVal}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* 隨喜撥珠計數器提示框 */}
+              {/* 圖 4 & 圖 5：隨喜撥珠計數器提示框 (改為圖5 敲木魚圖標) */}
               <div className="practice-modal-bead-hint">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   <span style={{ fontSize: '0.84rem', fontWeight: 700, fontFamily: 'var(--font-serif)' }}>
-                    📿 隨喜撥珠計數器
+                    隨喜撥珠計數器
                   </span>
                   <span style={{ fontSize: '0.72rem', opacity: 0.85 }}>
-                    點擊右側佛珠即時 +1 累計
+                    點擊右側木魚即時 +1 累計
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setModalCount(prev => prev + 1)}
-                  style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #d4a373 0%, #a26b38 100%)',
-                    border: '2px solid rgba(255,255,255,0.8)',
-                    boxShadow: '0 3px 8px rgba(162, 107, 56, 0.4)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#fff',
-                    fontSize: '1.2rem',
-                    cursor: 'pointer'
-                  }}
-                  title="撥珠 +1"
-                >
-                  📿
-                </button>
+                <div style={{ position: 'relative', width: '46px', height: '46px', flexShrink: 0 }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModalCount(prev => prev + 1);
+                      setModalMuyuAnim(true);
+                      setTimeout(() => setModalMuyuAnim(false), 500);
+                    }}
+                    style={{
+                      width: '46px',
+                      height: '46px',
+                      borderRadius: '50%',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      cursor: 'pointer',
+                      transition: 'transform 0.1s ease',
+                      display: 'block'
+                    }}
+                    onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.92)'; }}
+                    onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                    title="敲木魚誦念 (+1)"
+                  >
+                    <svg className="bead-muyu-svg" viewBox="0 0 100 100" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="modal_muyu_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#cce1d2" />
+                          <stop offset="100%" stopColor="#accfb8" />
+                        </linearGradient>
+                        <linearGradient id="modal_muyu_wood" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#a36e4b" />
+                          <stop offset="100%" stopColor="#7a4625" />
+                        </linearGradient>
+                      </defs>
+
+                      {/* 圓形淡綠底色 */}
+                      <circle cx="50" cy="50" r="47" fill="url(#modal_muyu_bg)" stroke="#ffffff" strokeWidth="2.5" />
+
+                      {/* 敲擊音浪 */}
+                      <line x1="65" y1="33" x2="69" y2="19" stroke="#e69627" strokeWidth="3.6" strokeLinecap="round" />
+                      <line x1="77" y1="36" x2="88" y2="26" stroke="#e69627" strokeWidth="3.6" strokeLinecap="round" />
+
+                      {/* 木魚厚圓底座 */}
+                      <rect x="22" y="65" width="46" height="13" rx="6.5" fill="#583015" stroke="#361a0a" strokeWidth="2.4" />
+
+                      {/* 木魚主身 */}
+                      <path d="M 23 66 C 22 41 33 28 45 28 C 57 28 69 41 68 66 Z" fill="url(#modal_muyu_wood)" stroke="#361a0a" strokeWidth="2.4" />
+
+                      {/* 木魚高光 */}
+                      <ellipse cx="53" cy="37" rx="4.5" ry="2.6" transform="rotate(-20 53 37)" fill="#ffffff" opacity="0.4" />
+
+                      {/* 木魚開口橫縫 */}
+                      <path d="M 27 61 C 37 47 53 49 63 56 C 61 60 45 53 29 63 Z" fill="#301607" stroke="#301607" strokeWidth="0.8" strokeLinejoin="round" />
+
+                      {/* 木魚槌手柄 */}
+                      <line x1="73" y1="51" x2="90" y2="76" stroke="#6e3914" strokeWidth="5.5" strokeLinecap="round" />
+
+                      {/* 木魚槌頭 */}
+                      <circle cx="72" cy="49" r="7.5" fill="#fdfaf2" stroke="#361a0a" strokeWidth="2.2" />
+                      <circle cx="70" cy="47" r="2.2" fill="#ffffff" />
+                    </svg>
+                  </button>
+                  {modalMuyuAnim && <span className="bead-tap-plus-one">+1</span>}
+                </div>
               </div>
             </div>
 
