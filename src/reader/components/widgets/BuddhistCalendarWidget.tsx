@@ -23,7 +23,7 @@ export function BuddhistCalendarWidget({
   const d = String(now.getDate()).padStart(2, '0');
   const dateStr = `${y}-${m}-${d}`;
 
-  let iconEmoji = '🌿';
+  let iconEmoji: React.ReactNode = '🌿';
   let title = '今日十齋日';
   let badgeText = '十齋日';
   let badgeClass = 'badge-zhai';
@@ -35,6 +35,23 @@ export function BuddhistCalendarWidget({
     badgeText = '聖誕紀念';
     badgeClass = 'badge-festival';
     subText = `${dateStr} · 農曆${lunarInfo.fullStr} · 大悲拔苦，智慧增益`;
+  } else if (lunarInfo.specialMoon) {
+    iconEmoji = lunarInfo.specialMoon === '白月' ? (
+      /* 🌕 白月：白色圓圈月亮，表示即將滿月的樣子 */
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block' }}>
+        <circle cx="8" cy="8" r="6.2" fill="#ffffff" stroke="#b45309" strokeWidth="1.2" />
+      </svg>
+    ) : (
+      /* 🌑 黑月：白色細細弦月的月亮，表示即將看不到月亮的樣子 */
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block' }}>
+        <circle cx="8" cy="8" r="6.2" stroke="#b45309" strokeWidth="0.8" strokeDasharray="1.5 1.5" opacity="0.35" />
+        <path d="M 8 1.8 A 6.2 6.2 0 0 0 8 14.2 A 5.5 5.5 0 0 1 8 1.8 Z" fill="#ffffff" stroke="#b45309" strokeWidth="0.8" />
+      </svg>
+    );
+    title = `今日${lunarInfo.specialMoon} · 南無地藏菩薩`;
+    badgeText = `${lunarInfo.specialMoon}·十齋`;
+    badgeClass = 'badge-zhai';
+    subText = `${dateStr} · 農曆${lunarInfo.fullStr} · 滅罪除障，持齋修善`;
   } else if (!lunarInfo.isZhai) {
     iconEmoji = '📜';
     title = '今日佛曆閱藏';

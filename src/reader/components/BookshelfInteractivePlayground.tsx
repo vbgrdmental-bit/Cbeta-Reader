@@ -1,12 +1,15 @@
 import { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Heart, Clock, ChevronRight, ChevronDown, Check,
   Layers, BookOpen, User, Grid, List,
-  MoreVertical, Play, Trash2
+  MoreVertical, Play, Trash2, FileText, Sparkles,
+  Calendar
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
 import { getRecentDownloadedBooks } from '../../utils/recentDownloads';
 import { getRecentFavoriteBooks } from '../../utils/favoritesManager';
+import { sanitizeCreators } from '../../builder/IndexBuilder';
 import { 
   STATIC_DEPT_CATEGORIES, 
   STATIC_VOL_CATEGORIES, 
@@ -14,11 +17,188 @@ import {
   fetchCreatorsData 
 } from './CbetaCatalogView';
 
+export interface BookHubDetail {
+  notesCount: number;
+  lastReadJuan: string;
+  lastReadProgress: number; // 0-100
+  lastReadSnippet?: string; // 🌟 50-60 字上次閱讀停駐位置摘錄（前後以 … 包覆）
+  totalReadingMinutes: number;
+  readCount: number; // 累計閱讀次數
+  practiceCount?: number; // 誦經累計部數
+  todayPracticeCount?: number;
+  cbetaVolumeInfo: string;
+  readingHistoryRecords?: Array<{
+    date: string;
+    count: number;
+    minutes: number;
+  }>;
+  sampleNotes: Array<{
+    id: string;
+    text: string;
+    note?: string;
+    date: string;
+    juan: number;
+    segmentId?: string;
+  }>;
+}
+
+const BOOK_HUB_RETURN_KEY = 'cbeta_return_book_hub';
+
+export function saveBookHubReturnState(workId: string, tab: 'intro' | 'reading', subTab?: 'history' | 'notes' | 'timeline') {
+  try {
+    sessionStorage.setItem(BOOK_HUB_RETURN_KEY, JSON.stringify({ workId, tab, subTab: subTab || 'history' }));
+  } catch {}
+}
+
+export function clearBookHubReturnState() {
+  try {
+    sessionStorage.removeItem(BOOK_HUB_RETURN_KEY);
+  } catch {}
+}
+
+export function getBookHubReturnState(): { workId: string; tab: 'intro' | 'reading'; subTab: 'history' | 'notes' | 'timeline' } | null {
+  try {
+    const str = sessionStorage.getItem(BOOK_HUB_RETURN_KEY);
+    if (!str) return null;
+    return JSON.parse(str);
+  } catch {
+    return null;
+  }
+}
+
+// 💡 預載精華經典 360° 全息整合數據 (以 T0412 地藏經為旗艦範例，嚴格遵循零篡改真實經文原則)
+export const BOOK_HUB_REGISTRY: Record<string, BookHubDetail> = {
+  T0412: {
+    notesCount: 5,
+    lastReadJuan: '卷上 · 忉利天宮神通品第一',
+    lastReadProgress: 45,
+    lastReadSnippet: '…爾時十方無量世界，不可說不可說一切諸佛，及大菩薩摩訶薩，皆來集會。讚歎釋迦牟尼佛，能於五濁惡世，現不可思議大智慧神通之力，調伏剛強眾生…',
+    totalReadingMinutes: 135,
+    readCount: 21,
+    practiceCount: 21,
+    todayPracticeCount: 1,
+    cbetaVolumeInfo: '大正新脩大藏經 第十三冊 No. 412 (本緣部類)',
+    readingHistoryRecords: [
+      { date: '2026-10-18', count: 1, minutes: 45 },
+      { date: '2026-10-15', count: 1, minutes: 45 },
+      { date: '2026-10-12', count: 1, minutes: 45 }
+    ],
+    sampleNotes: [
+      {
+        id: 'n-t412-1',
+        text: '閻浮提眾生，身口意業，惡習結業，善因難植。',
+        note: '隨時觀照身口意三業，慎勿隨境造惡。',
+        date: '2026-10-15',
+        juan: 1
+      },
+      {
+        id: 'n-t412-2',
+        text: '若遇殺生者，說宿殃短命報；若遇竊盜者，說貧窮苦楚報。',
+        note: '因果業報絲毫不爽，應行十善布施戒殺。',
+        date: '2026-10-14',
+        juan: 1
+      },
+      {
+        id: 'n-t412-3',
+        text: '地獄不空，誓不成佛；眾生度盡，方證菩提。',
+        note: '大願地藏王菩薩大悲宏深，頂禮效學。',
+        date: '2026-10-12',
+        juan: 1
+      },
+      {
+        id: 'n-t412-4',
+        text: '若有眾生，出佛身血，毀謗三寶，不敬尊經，亦當墮於無間地獄。',
+        date: '2026-10-10',
+        juan: 1
+      },
+      {
+        id: 'n-t412-5',
+        text: '未來世中，若有善男子、善女人，聞是地藏菩薩摩訶薩名者，或讚歎，或瞻禮，或稱名，或供養，是人當得百返生於三十三天，永不墮惡道。',
+        note: '稱名念誦功德殊勝。',
+        date: '2026-10-08',
+        juan: 2
+      }
+    ]
+  },
+  T0251: {
+    notesCount: 3,
+    lastReadJuan: '全一卷 · 般若波羅蜜多心經',
+    lastReadProgress: 100,
+    lastReadSnippet: '…舍利子，色不異空，空不異色，色即是空，空即是色，受想行識亦復如是。舍利子，是諸法空相，不生不滅，不垢不淨，不增不減。是故空中無色，無受想行識…',
+    totalReadingMinutes: 85,
+    readCount: 108,
+    practiceCount: 108,
+    todayPracticeCount: 3,
+    cbetaVolumeInfo: '大正新脩大藏經 第八冊 No. 251 (般若部類)',
+    readingHistoryRecords: [
+      { date: '2026-10-18', count: 3, minutes: 15 },
+      { date: '2026-10-17', count: 5, minutes: 25 },
+      { date: '2026-10-16', count: 4, minutes: 20 },
+      { date: '2026-10-15', count: 6, minutes: 25 }
+    ],
+    sampleNotes: [
+      {
+        id: 'n-t251-1',
+        text: '照見五蘊皆空，度一切苦厄。',
+        note: '觀照色受想行識皆無自性，方能拔除執著苦本。',
+        date: '2026-10-16',
+        juan: 1
+      },
+      {
+        id: 'n-t251-2',
+        text: '色不異空，空不異色；色即是空，空即是色。',
+        note: '真空妙有，不偏空亦不住有。',
+        date: '2026-10-15',
+        juan: 1
+      },
+      {
+        id: 'n-t251-3',
+        text: '心無罣礙，無罣礙故，無有恐怖，遠離顛倒夢想，究竟涅槃。',
+        note: '放下得失妄念，本自具足寂靜。',
+        date: '2026-10-13',
+        juan: 1
+      }
+    ]
+  },
+  T0262: {
+    notesCount: 4,
+    lastReadJuan: '卷一 · 方便品第二',
+    lastReadProgress: 30,
+    lastReadSnippet: '…爾時世尊從三昧安詳而起，告舍利弗：諸佛智慧甚深無量，其智慧門難解難入，一切聲聞、辟支佛所不能知。所以者何？佛曾親近百千萬億無數諸佛，盡行諸佛無量道法…',
+    totalReadingMinutes: 180,
+    readCount: 7,
+    practiceCount: 7,
+    todayPracticeCount: 0,
+    cbetaVolumeInfo: '大正新脩大藏經 第九冊 No. 262 (法華部類)',
+    readingHistoryRecords: [
+      { date: '2026-10-17', count: 1, minutes: 60 },
+      { date: '2026-10-11', count: 1, minutes: 60 },
+      { date: '2026-10-09', count: 1, minutes: 60 }
+    ],
+    sampleNotes: [
+      {
+        id: 'n-t262-1',
+        text: '諸佛世尊，唯以一大事因緣故出現於世。欲令眾生開佛知見，使得清淨故。',
+        note: '開示悟入佛之知見，純圓獨妙。',
+        date: '2026-10-11',
+        juan: 1
+      },
+      {
+        id: 'n-t262-2',
+        text: '三界無安，猶如火宅，眾苦充滿，甚可怖畏。',
+        note: '火宅三車喻，方便開顯真實。',
+        date: '2026-10-09',
+        juan: 2
+      }
+    ]
+  }
+};
+
 interface BookshelfInteractivePlaygroundProps {
   downloadedBooks: BookMetadata[];
   favoriteWorkIds: string[];
   recentReadsBooks: BookMetadata[];
-  onSelectBook: (workId: string) => void;
+  onSelectBook: (workId: string, segmentId?: string, searchQuery?: string, autoResumeMode?: 'resume' | 'restart') => void;
   onExitDemo?: () => void;
   onOpenBookMenu?: (book: BookMetadata) => void;
   onToggleFavorite?: (workId: string) => void;
@@ -30,6 +210,7 @@ interface BookshelfInteractivePlaygroundProps {
   }) => void;
   statusFilter?: 'all' | 'downloads' | 'recent' | 'favorites';
   onStatusFilterChange?: (filter: 'all' | 'downloads' | 'recent' | 'favorites') => void;
+  allHighlights?: any[];
 }
 
 // 💡 120 部正統 CBETA 大藏經海量模擬經典資料庫 (涵蓋阿含、般若、法華、華嚴、本生、密教、論疏、近代新編等)
@@ -378,12 +559,13 @@ export function BookshelfInteractivePlayground({
   favoriteWorkIds,
   recentReadsBooks,
   onSelectBook,
-  onOpenBookMenu,
+  onOpenBookMenu: _onOpenBookMenu,
   onToggleFavorite,
   onDeleteBook,
   onNavigateToCatalogCategory,
   statusFilter: propStatusFilter,
-  onStatusFilterChange
+  onStatusFilterChange,
+  allHighlights = []
 }: BookshelfInteractivePlaygroundProps) {
   // === 1. 頂部四大藏經分類切換：'category' (依部類) | 'volume' (依冊別) | 'author' (依作譯者) | 'dynasty' (依朝代) ===
   const [classificationMode, setClassificationMode] = useState<'category' | 'volume' | 'author' | 'dynasty'>('category');
@@ -420,6 +602,112 @@ export function BookshelfInteractivePlayground({
 
   // === 7. 方案 B：維度切換輕量 Popover 浮動選單狀態 ===
   const [showDimPopover, setShowDimPopover] = useState(false);
+
+  // === 8. 🌟 經典全息整合中樞 (Book 360° Hub) 互動狀態 (方案 A：雙層分類) ===
+  const [bookHubTarget, setBookHubTarget] = useState<BookMetadata | null>(null);
+  const [bookHubTab, setBookHubTab] = useState<'intro' | 'reading'>('intro');
+  const [readingSubTab, setReadingSubTab] = useState<'history' | 'notes' | 'timeline'>('history');
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
+  const [hubPracticeCounts] = useState<Record<string, number>>({
+    T0412: 21,
+    T0251: 108,
+    T0262: 7
+  });
+
+  // 💡 自動監聽上一頁返回事件：若在經書閱讀器點「←」返回，無縫恢復剛剛開啟的全息視窗（圖5）
+  useEffect(() => {
+    const checkAndRestore = () => {
+      const saved = getBookHubReturnState();
+      if (!saved) return;
+      const targetBook = downloadedBooks.find(b => b.workId === saved.workId) ||
+                         SIMULATED_120_BOOKS.find(b => b.workId === saved.workId);
+      if (targetBook) {
+        setBookHubTarget(targetBook);
+        setBookHubTab(saved.tab);
+        if (saved.subTab) {
+          setReadingSubTab(saved.subTab);
+        }
+        clearBookHubReturnState();
+      }
+    };
+
+    window.addEventListener('cbeta_restore_book_hub', checkAndRestore);
+    checkAndRestore();
+
+    return () => {
+      window.removeEventListener('cbeta_restore_book_hub', checkAndRestore);
+    };
+  }, [downloadedBooks]);
+
+  const formatEstimatedReadingTime = (chars: number) => {
+    if (!chars || chars <= 0) return '—';
+    const mins = Math.max(1, Math.round(chars / 250));
+    if (mins < 60) return `${mins} 分鐘`;
+    const hours = Math.floor(mins / 60);
+    const remMins = mins % 60;
+    return remMins > 0 ? `${hours} 小時 ${remMins} 分鐘` : `${hours} 小時`;
+  };
+
+  const getBookHubDetail = (workId: string): BookHubDetail => {
+    // 💡 優先讀取讀者真實的劃線與筆記
+    const userNotes = (allHighlights || [])
+      .filter(h => h.workId === workId)
+      .map(h => ({
+        id: h.id,
+        text: h.text,
+        note: h.note,
+        date: new Date(h.createdAt || Date.now()).toISOString().split('T')[0],
+        juan: h.juan || 1,
+        segmentId: h.segmentId
+      }));
+
+    if (BOOK_HUB_REGISTRY[workId]) {
+      const reg = BOOK_HUB_REGISTRY[workId];
+      return {
+        ...reg,
+        practiceCount: hubPracticeCounts[workId] ?? reg.practiceCount,
+        readCount: reg.readCount ?? reg.practiceCount ?? 0,
+        notesCount: userNotes.length > 0 ? userNotes.length : reg.notesCount,
+        sampleNotes: userNotes.length > 0 ? userNotes : reg.sampleNotes
+      };
+    }
+    return {
+      notesCount: userNotes.length,
+      lastReadJuan: '未開始閱讀',
+      lastReadProgress: 0,
+      lastReadSnippet: '…如是我聞。一時佛在舍衛國祇樹給孤獨園，與大比丘眾千二百五十人俱。爾時世尊食時，著衣持缽，入舍衛大城乞食…',
+      totalReadingMinutes: 0,
+      readCount: 0,
+      practiceCount: hubPracticeCounts[workId] || 0,
+      todayPracticeCount: 0,
+      cbetaVolumeInfo: 'CBETA 電子佛典集成',
+      readingHistoryRecords: [],
+      sampleNotes: userNotes
+    };
+  };
+
+  const handleOpenBookHub = (
+    book: BookMetadata, 
+    tab: 'intro' | 'reading' | 'notes' | 'history' | 'timeline' | 'overview' = 'intro',
+    subTab?: 'history' | 'notes' | 'timeline'
+  ) => {
+    setBookHubTarget(book);
+    if (tab === 'intro') {
+      setBookHubTab('intro');
+      if (subTab) setReadingSubTab(subTab);
+    } else if (tab === 'reading') {
+      setBookHubTab('reading');
+      if (subTab) setReadingSubTab(subTab);
+    } else {
+      setBookHubTab('reading');
+      setReadingSubTab(tab === 'notes' ? 'notes' : tab === 'timeline' ? 'timeline' : 'history');
+    }
+  };
+
+  // 點擊書籍右側「…」按鈕，直接打開 360° 經典全息整合視窗（預設第 1 控制鍵：書籍簡介）
+  const handleOpenBookOptions = (book: BookMetadata) => {
+    handleOpenBookHub(book, 'intro');
+  };
 
   useEffect(() => {
     const handleGlobalClick = () => {
@@ -674,14 +962,6 @@ export function BookshelfInteractivePlayground({
     }
   };
 
-  // 點擊書籍右側「…」按鈕
-  const handleOpenBookOptions = (book: BookMetadata) => {
-    if (onOpenBookMenu) {
-      onOpenBookMenu(book);
-    } else {
-      setLocalTargetBook(book);
-    }
-  };
 
   return (
     <div className="bookshelf-playground-root animate-fade-in" style={{ padding: '0 0.85rem 3rem 0.85rem' }}>
@@ -994,66 +1274,76 @@ export function BookshelfInteractivePlayground({
                   ) : (
                     /* 卡片式排版 (雙欄網格) */
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.6rem' }}>
-                      {books.map(book => (
-                        <div
-                          key={book.workId}
-                          className="bookshelf-book-card"
-                          onClick={() => onSelectBook(book.workId)}
-                          style={{
-                            background: 'rgba(0,0,0,0.02)',
-                            borderRadius: '14px',
-                            padding: '0.75rem 0.65rem',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                            border: '1px solid rgba(0,0,0,0.06)',
-                            cursor: 'pointer',
-                            minHeight: '100px'
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                            <span className="bookshelf-grid-tag">
-                              {book.workId}
-                            </span>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                              <button
-                                type="button"
-                                className={`horizontal-book-fav-btn ${isFavorite(book.workId) ? 'is-fav' : ''}`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (onToggleFavorite) onToggleFavorite(book.workId);
-                                }}
-                                title={isFavorite(book.workId) ? '已加入我的最愛 (點擊取消)' : '加入我的最愛'}
-                                aria-label={isFavorite(book.workId) ? '取消我的最愛' : '加入我的最愛'}
-                              >
-                                <Heart 
-                                  size={13} 
-                                  fill={isFavorite(book.workId) ? "#e53e3e" : "none"} 
-                                  color={isFavorite(book.workId) ? "#e53e3e" : "currentColor"} 
-                                  style={{ strokeWidth: isFavorite(book.workId) ? 2 : 1.8 }}
-                                />
-                              </button>
-                              <button
-                                type="button"
-                                className="horizontal-book-more-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleOpenBookOptions(book);
-                                }}
-                                title="經典選項"
-                              >
-                                <MoreVertical size={13} />
-                              </button>
+                      {books.map(book => {
+                        const hubDetail = getBookHubDetail(book.workId);
+                        return (
+                          <div
+                            key={book.workId}
+                            className="bookshelf-book-card"
+                            onClick={() => onSelectBook(book.workId)}
+                            style={{
+                              background: 'rgba(0,0,0,0.02)',
+                              borderRadius: '14px',
+                              padding: '0.75rem 0.65rem',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'space-between',
+                              border: '1px solid rgba(0,0,0,0.06)',
+                              cursor: 'pointer',
+                              minHeight: '100px'
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+                              <span className="bookshelf-grid-tag">
+                                {book.workId}
+                              </span>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <button
+                                  type="button"
+                                  className={`horizontal-book-fav-btn ${isFavorite(book.workId) ? 'is-fav' : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (onToggleFavorite) onToggleFavorite(book.workId);
+                                  }}
+                                  title={isFavorite(book.workId) ? '已加入我的最愛 (點擊取消)' : '加入我的最愛'}
+                                  aria-label={isFavorite(book.workId) ? '取消我的最愛' : '加入我的最愛'}
+                                >
+                                  <Heart 
+                                    size={13} 
+                                    fill={isFavorite(book.workId) ? "#e53e3e" : "none"} 
+                                    color={isFavorite(book.workId) ? "#e53e3e" : "currentColor"} 
+                                    style={{ strokeWidth: isFavorite(book.workId) ? 2 : 1.8 }}
+                                  />
+                                </button>
+                                <button
+                                  type="button"
+                                  className="horizontal-book-more-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleOpenBookOptions(book);
+                                  }}
+                                  title="經典選項"
+                                >
+                                  <MoreVertical size={13} />
+                                </button>
+                              </div>
                             </div>
+                            <div style={{ fontSize: '0.94rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', lineHeight: 1.25 }}>
+                              {book.title}
+                            </div>
+                            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.35rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {book.creators}
+                            </div>
+                            {hubDetail && hubDetail.notesCount > 0 && (
+                              <div style={{ display: 'flex', alignItems: 'center', marginTop: '6px', paddingTop: '6px', borderTop: '1px dashed var(--border-color, rgba(0,0,0,0.06))' }}>
+                                <span style={{ fontSize: '0.66rem', color: '#2e7d32', fontWeight: 600 }}>
+                                  📝 {hubDetail.notesCount} 筆記
+                                </span>
+                              </div>
+                            )}
                           </div>
-                          <div style={{ fontSize: '0.94rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', lineHeight: 1.25 }}>
-                            {book.title}
-                          </div>
-                          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.35rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {book.creators}
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -1063,11 +1353,11 @@ export function BookshelfInteractivePlayground({
         })}
       </div>
 
-      {/* 💡 本地經典選單彈窗（Fallback）：移至資料夾為淺灰禁用 */}
-      {localTargetBook && (
+      {/* 經典更多選項對話框 */}
+      {localTargetBook && typeof document !== 'undefined' && createPortal(
         <div 
           className="search-dialog-overlay" 
-          style={{ zIndex: 1200 }} 
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 999998, display: 'flex', alignItems: 'center', justifyContent: 'center' }} 
           onClick={() => setLocalTargetBook(null)}
         >
           <div 
@@ -1112,7 +1402,7 @@ export function BookshelfInteractivePlayground({
 
             <div style={{ margin: '0.75rem 0', borderTop: '1px solid var(--border-color, rgba(0,0,0,0.1))' }} />
 
-            {/* 雙膠囊按鈕：刪除經文 | 接續閱讀 */}
+            {/* 彈窗底膠囊列：刪除經文 | 繼續閱讀 */}
             <div className="modal-action-capsules-row" style={{ marginTop: '0.65rem' }}>
               <button 
                 type="button"
@@ -1137,11 +1427,659 @@ export function BookshelfInteractivePlayground({
                 }}
               >
                 <Play size={15} fill="currentColor" />
-                <span>接續閱讀</span>
+                <span>繼續閱讀</span>
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
+      )}
+
+      {/* 🌟 經典全息檔案中樞 (Book 360° Hub) 互動彈窗 (方案 A：雙層結構，高度鎖定零跳動) */}
+      {bookHubTarget && typeof document !== 'undefined' && createPortal(
+        (() => {
+          const hub = getBookHubDetail(bookHubTarget.workId);
+
+          return (
+            <div 
+              className="book-hub-modal-overlay"
+              onClick={() => {
+                setBookHubTarget(null);
+                clearBookHubReturnState();
+              }}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 999999,
+                backgroundColor: 'rgba(0, 0, 0, 0.72)',
+                backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '16px',
+                animation: 'fadeIn 0.15s ease-out'
+              }}
+            >
+              <div 
+                className="book-hub-modal-card"
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  width: '100%',
+                  maxWidth: '430px',
+                  maxHeight: '90vh',
+                  overflowY: 'auto',
+                  backgroundColor: 'var(--surface-modal, #ffffff)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  color: 'var(--text-primary, #261c14)',
+                  borderRadius: '20px',
+                  border: '1.5px solid var(--surface-modal-border, var(--border-color, rgba(139, 90, 43, 0.35)))',
+                  boxShadow: '0 24px 48px rgba(0,0,0,0.3)',
+                  padding: '18px 16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  position: 'relative'
+                }}
+              >
+                {/* 頂部標題列與右上角收藏+關閉按鈕 */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                    <div className="bookshelf-book-badge" style={{ borderRadius: '10px', fontSize: '0.8rem', padding: '4px 8px', flexShrink: 0 }}>
+                      {bookHubTarget.workId}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {bookHubTarget.title}
+                      </h3>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '0.74rem', fontWeight: 600, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {bookHubTarget.creators} · {bookHubTarget.juansCount}卷
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 右側操作區：愛心收藏 + 關閉 */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                    <button
+                      type="button"
+                      className={`modal-fav-heart-btn ${isFavorite(bookHubTarget.workId) ? 'is-favorite' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onToggleFavorite) onToggleFavorite(bookHubTarget.workId);
+                      }}
+                      title={isFavorite(bookHubTarget.workId) ? '已加入我的最愛 (點擊取消)' : '加入我的最愛'}
+                      style={{
+                        border: 'none',
+                        background: 'var(--surface-capsule, rgba(0,0,0,0.06))',
+                        borderRadius: '50%',
+                        width: '30px',
+                        height: '30px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <Heart 
+                        size={17} 
+                        fill={isFavorite(bookHubTarget.workId) ? "#e53e3e" : "none"} 
+                        color={isFavorite(bookHubTarget.workId) ? "#e53e3e" : "var(--text-muted)"} 
+                      />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setBookHubTarget(null);
+                        clearBookHubReturnState();
+                      }}
+                      style={{
+                        border: 'none',
+                        background: 'var(--surface-capsule, rgba(0,0,0,0.06))',
+                        borderRadius: '50%',
+                        width: '30px',
+                        height: '30px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        color: 'var(--text-muted)',
+                        fontSize: '0.9rem'
+                      }}
+                      title="關閉"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+
+                {/* 🌟 一級主分類：客觀書籍簡介 vs 個人閱讀概況 (大氣清雅白底浮動分段槽，與下方子膠囊及主行動鍵層次分明) */}
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(2, 1fr)', 
+                  gap: '6px', 
+                  padding: '3px', 
+                  borderRadius: '12px', 
+                  backgroundColor: 'var(--surface-capsule, rgba(0,0,0,0.06))', 
+                  border: '1px solid var(--border-color, rgba(0,0,0,0.06))',
+                  height: '40px',
+                  boxSizing: 'border-box'
+                }}>
+                  <button
+                    type="button"
+                    onClick={() => setBookHubTab('intro')}
+                    style={{
+                      height: '100%',
+                      borderRadius: '9px',
+                      border: 'none',
+                      backgroundColor: bookHubTab === 'intro' ? 'var(--surface-card, #ffffff)' : 'transparent',
+                      color: bookHubTab === 'intro' ? 'var(--text-primary, #261c14)' : 'var(--text-secondary, #524038)',
+                      boxShadow: bookHubTab === 'intro' ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
+                      fontSize: '0.84rem',
+                      fontWeight: bookHubTab === 'intro' ? 700 : 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <BookOpen size={15} />
+                    <span>書籍簡介</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setBookHubTab('reading')}
+                    style={{
+                      height: '100%',
+                      borderRadius: '9px',
+                      border: 'none',
+                      backgroundColor: bookHubTab === 'reading' ? 'var(--surface-card, #ffffff)' : 'transparent',
+                      color: bookHubTab === 'reading' ? 'var(--text-primary, #261c14)' : 'var(--text-secondary, #524038)',
+                      boxShadow: bookHubTab === 'reading' ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
+                      fontSize: '0.84rem',
+                      fontWeight: bookHubTab === 'reading' ? 700 : 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <Sparkles size={15} />
+                    <span>閱讀概況</span>
+                    {(hub.notesCount > 0 || hub.lastReadProgress > 0) && (
+                      <span style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--theme-accent, #8b5a2b)',
+                        display: 'inline-block'
+                      }} />
+                    )}
+                  </button>
+                </div>
+
+                {/* 🌟 內容區域（根據一級分類呈現；高度精準配平 260px / 34px+6px+220px，換頁零跳動） */}
+                {bookHubTab === 'intro' ? (
+                  /* 1. 📖 客觀層級：書籍簡介 (完全對齊 CBETA 原版資訊) */
+                  <div 
+                    className="animate-fade-in" 
+                    style={{ 
+                      height: '260px', 
+                      maxHeight: '260px', 
+                      overflowY: 'auto', 
+                      padding: '0.75rem 0.6rem',
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: '0.55rem', 
+                      fontSize: '0.86rem', 
+                      color: 'var(--text-primary)', 
+                      boxSizing: 'border-box',
+                      backgroundColor: 'var(--surface-card, rgba(30, 36, 44, 0.88))',
+                      backdropFilter: 'blur(8px)',
+                      WebkitBackdropFilter: 'blur(8px)',
+                      borderRadius: '12px',
+                      border: '1px solid var(--border-color, rgba(255,255,255,0.08))'
+                    }}
+                  >
+                    <div><span style={{ color: 'var(--text-secondary, #524038)', fontWeight: 600 }}>作譯者 : </span>{sanitizeCreators(bookHubTarget.creators)}</div>
+                    <div><span style={{ color: 'var(--text-secondary, #524038)', fontWeight: 600 }}>經號 : </span>CBETA No. {bookHubTarget.workId}</div>
+                    <div><span style={{ color: 'var(--text-secondary, #524038)', fontWeight: 600 }}>部類 : </span>{bookHubTarget.category || '大藏經部類'}</div>
+                    <div><span style={{ color: 'var(--text-secondary, #524038)', fontWeight: 600 }}>冊別 : </span>{bookHubTarget.vol || 'CBETA 典籍'}</div>
+                    <div>
+                      <span style={{ color: 'var(--text-secondary, #524038)', fontWeight: 600 }}>字數 : </span>
+                      {bookHubTarget.cjkChars ? `${bookHubTarget.cjkChars.toLocaleString()} 字` : (hub.cbetaVolumeInfo ? '1,097 字' : '—')}
+                    </div>
+                    <div>
+                      <span style={{ color: 'var(--text-secondary, #524038)', fontWeight: 600 }}>預計閱讀時間 : </span>
+                      {formatEstimatedReadingTime(bookHubTarget.cjkChars || 1097)}
+                    </div>
+                  </div>
+                ) : (
+                  /* 2. 📿 主觀層級：個人閱讀概況 (依功能配置溫潤明亮且舒心的專屬二級子膠囊) */
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {/* 二級子分類 3 個獨立膠囊列 (高度 34px，依功能類別呈現溫潤明亮專屬色系，徹底擺脫視覺失焦) */}
+                    <div style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(3, 1fr)', 
+                      gap: '6px', 
+                      height: '34px',
+                      boxSizing: 'border-box'
+                    }}>
+                      {[
+                        { 
+                          id: 'history', 
+                          label: '上次閱讀', 
+                          icon: Clock,
+                          // 溫暖典雅的暖杏琥珀色（時間、位置與停駐）
+                          activeColor: '#b45309',
+                          activeBg: 'rgba(217, 119, 6, 0.13)',
+                          activeBorder: 'rgba(217, 119, 6, 0.45)',
+                          activeShadow: '0 2px 6px rgba(217, 119, 6, 0.16)'
+                        },
+                        { 
+                          id: 'notes', 
+                          label: `我的筆記 (${hub.notesCount})`, 
+                          icon: FileText,
+                          // 清幽靜心的竹林翡翠綠（筆記、法義心得與墨寶）
+                          activeColor: '#15803d',
+                          activeBg: 'rgba(22, 101, 52, 0.13)',
+                          activeBorder: 'rgba(21, 128, 61, 0.45)',
+                          activeShadow: '0 2px 6px rgba(22, 101, 52, 0.16)'
+                        },
+                        { 
+                          id: 'timeline', 
+                          label: '閱讀歷程', 
+                          icon: Calendar,
+                          // 澄澈安詳的菩提天青藍（修行歷程、累計時數與日誌）
+                          activeColor: '#1d4ed8',
+                          activeBg: 'rgba(37, 99, 235, 0.13)',
+                          activeBorder: 'rgba(37, 99, 235, 0.45)',
+                          activeShadow: '0 2px 6px rgba(37, 99, 235, 0.16)'
+                        }
+                      ].map(st => {
+                        const isActive = readingSubTab === st.id;
+                        const Icon = st.icon;
+                        return (
+                          <button
+                            key={st.id}
+                            type="button"
+                            onClick={() => setReadingSubTab(st.id as any)}
+                            style={{
+                              height: '100%',
+                              borderRadius: '9999px',
+                              border: isActive 
+                                ? `1.5px solid ${st.activeBorder}` 
+                                : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+                              backgroundColor: isActive 
+                                ? st.activeBg 
+                                : 'var(--surface-capsule, rgba(0,0,0,0.03))',
+                              color: isActive ? st.activeColor : 'var(--text-secondary, #524038)',
+                              boxShadow: isActive ? st.activeShadow : 'none',
+                              fontSize: '0.74rem',
+                              fontWeight: isActive ? 800 : 600,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px',
+                              padding: '0 6px',
+                              whiteSpace: 'nowrap',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <Icon size={12} color={isActive ? st.activeColor : 'currentColor'} />
+                            <span>{st.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* 二級子內容容器 (高度 220px，與上方 34px+6px 合計 260px，與書籍簡介完全齊平) */}
+                    <div style={{ 
+                      height: '220px', 
+                      maxHeight: '220px', 
+                      overflowY: 'auto', 
+                      paddingRight: '2px',
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      boxSizing: 'border-box'
+                    }}>
+                      {/* 2-1 ⏱️ 上次閱讀 (二個內容框統一為膚色/暖杏琥珀色系邊框，背景採用微透防穿透層) */}
+                      {readingSubTab === 'history' && (
+                        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {/* 框 1：上次閱讀位置進度框 (膚色系邊框 + 高覆蓋微透底色) */}
+                          <div style={{ 
+                            padding: '10px 12px', 
+                            borderRadius: '12px', 
+                            backgroundColor: 'var(--surface-card, rgba(30, 36, 44, 0.88))', 
+                            border: '1.5px solid rgba(217, 119, 6, 0.45)',
+                            backdropFilter: 'blur(8px)',
+                            WebkitBackdropFilter: 'blur(8px)'
+                          }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>上次閱讀位置</span>
+                              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: hub.lastReadProgress > 0 ? '#b45309' : 'var(--text-muted)' }}>
+                                {hub.lastReadProgress > 0 ? `${hub.lastReadProgress}%` : '未開始閱讀'}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', marginTop: '4px' }}>
+                              {hub.lastReadJuan}
+                            </div>
+
+                            {/* 進度條 (膚色系琥珀色) */}
+                            <div style={{ width: '100%', height: '5px', borderRadius: '3px', backgroundColor: 'rgba(217, 119, 6, 0.12)', marginTop: '8px', overflow: 'hidden' }}>
+                              <div style={{ width: `${Math.max(hub.lastReadProgress, 0)}%`, height: '100%', backgroundColor: '#d97706', borderRadius: '3px' }} />
+                            </div>
+                          </div>
+
+                          {/* 框 2：🌟 核心摘要：50-60 字上次閱讀停駐位置摘錄 (膚色系虛線邊框 + 高覆蓋微透底色) */}
+                          <div 
+                            onClick={() => {
+                              saveBookHubReturnState(bookHubTarget.workId, 'reading', 'history');
+                              onSelectBook(bookHubTarget.workId, undefined, undefined, 'resume');
+                              setBookHubTarget(null);
+                            }}
+                            style={{
+                              padding: '10px 12px',
+                              borderRadius: '12px',
+                              backgroundColor: 'var(--surface-card, rgba(30, 36, 44, 0.88))',
+                              border: '1.5px dashed rgba(217, 119, 6, 0.45)',
+                              backdropFilter: 'blur(8px)',
+                              WebkitBackdropFilter: 'blur(8px)',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '5px'
+                            }}
+                            title="點擊接續閱讀此段"
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <span style={{ fontSize: '0.72rem', color: '#b45309', fontWeight: 700 }}>
+                                {hub.lastReadProgress > 0 ? '📍 上次停駐經文文字摘要' : '📖 經典首段經文摘錄'} (約 50-60 字)
+                              </span>
+                              <span style={{ fontSize: '0.66rem', color: '#b45309', fontWeight: 600 }}>
+                                {hub.lastReadProgress > 0 ? '點擊接續 ›' : '點擊開卷 ›'}
+                              </span>
+                            </div>
+
+                            <div style={{ 
+                              fontSize: '0.84rem', 
+                              color: 'var(--text-primary)', 
+                              fontFamily: 'var(--font-serif)', 
+                              lineHeight: 1.6,
+                              letterSpacing: '0.3px',
+                              marginTop: '2px'
+                            }}>
+                              {hub.lastReadSnippet || '…舍利子，色不異空，空不異色，色即是空，空即是色，受想行識亦復如是。舍利子，是諸法空相，不生不滅，不垢不淨，不增不減。是故空中無色，無受想行識…'}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 2-2 📝 我的筆記 (翡翠竹青綠色系) */}
+                      {readingSubTab === 'notes' && (
+                        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2px' }}>
+                            <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+                              在「我的筆記」中共有 {hub.sampleNotes.length} 則真跡標註：
+                            </span>
+                            <span style={{ fontSize: '0.7rem', color: '#15803d', fontWeight: 700 }}>
+                              點選直達段落
+                            </span>
+                          </div>
+
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                            {hub.sampleNotes.length > 0 ? (
+                              hub.sampleNotes.map(n => (
+                                <div 
+                                  key={n.id}
+                                  onClick={() => {
+                                    saveBookHubReturnState(bookHubTarget.workId, 'reading', 'notes');
+                                    onSelectBook(
+                                      bookHubTarget.workId,
+                                      n.segmentId,
+                                      n.segmentId ? undefined : (n.text ? n.text.slice(0, 15) : undefined),
+                                      'resume'
+                                    );
+                                    setBookHubTarget(null);
+                                  }}
+                                  style={{
+                                    padding: '8px 10px',
+                                    borderRadius: '10px',
+                                    backgroundColor: 'var(--surface-card, rgba(30, 36, 44, 0.88))',
+                                    border: '1.5px solid rgba(22, 101, 52, 0.35)',
+                                    borderLeft: '4px solid #16a34a',
+                                    backdropFilter: 'blur(8px)',
+                                    WebkitBackdropFilter: 'blur(8px)',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '3px'
+                                  }}
+                                >
+                                  <div style={{ fontSize: '0.8rem', color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', lineHeight: 1.35, fontStyle: 'italic' }}>
+                                    「{n.text}」
+                                  </div>
+                                  {n.note && (
+                                    <div style={{ fontSize: '0.72rem', color: '#15803d', backgroundColor: 'rgba(22, 101, 52, 0.12)', padding: '2px 6px', borderRadius: '4px' }}>
+                                      💭 心得：{n.note}
+                                    </div>
+                                  )}
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.66rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                    <span>第 {n.juan} 卷</span>
+                                    <span style={{ color: '#15803d', fontWeight: 600 }}>{n.date} · 點擊直達 ›</span>
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <div style={{ 
+                                padding: '28px 12px', 
+                                textAlign: 'center', 
+                                color: 'var(--text-muted)', 
+                                fontSize: '0.78rem',
+                                backgroundColor: 'var(--surface-card, rgba(30, 36, 44, 0.88))',
+                                borderRadius: '12px',
+                                border: '1.5px dashed rgba(22, 101, 52, 0.35)',
+                                backdropFilter: 'blur(8px)',
+                                WebkitBackdropFilter: 'blur(8px)'
+                              }}>
+                                尚無閱讀筆記與標註<br />
+                                <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>閱讀時選取經文長按，即可建立心得筆記</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 2-3 📈 閱讀歷程 (三個內容框統一為藍色系邊框，背景採用微透防穿透層) */}
+                      {readingSubTab === 'timeline' && (
+                        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {/* 上方雙指標卡：累計閱讀時數 + 累計閱讀次數 (框 1 與 框 2：藍色系邊框 + 高覆蓋微透底色) */}
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px' }}>
+                            <div style={{ 
+                              padding: '8px 10px', 
+                              borderRadius: '10px', 
+                              backgroundColor: 'var(--surface-card, rgba(30, 36, 44, 0.88))', 
+                              border: '1.5px solid rgba(37, 99, 235, 0.42)',
+                              backdropFilter: 'blur(8px)',
+                              WebkitBackdropFilter: 'blur(8px)'
+                            }}>
+                              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>累計閱讀時數</div>
+                              <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1d4ed8', marginTop: '2px' }}>
+                                {hub.totalReadingMinutes} <span style={{ fontSize: '0.72rem', fontWeight: 500, color: 'var(--text-muted)' }}>分鐘</span>
+                              </div>
+                            </div>
+
+                            <div style={{ 
+                              padding: '8px 10px', 
+                              borderRadius: '10px', 
+                              backgroundColor: 'var(--surface-card, rgba(30, 36, 44, 0.88))', 
+                              border: '1.5px solid rgba(37, 99, 235, 0.42)',
+                              backdropFilter: 'blur(8px)',
+                              WebkitBackdropFilter: 'blur(8px)'
+                            }}>
+                              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>累計閱讀次數</div>
+                              <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1d4ed8', marginTop: '2px' }}>
+                                {hub.readCount || hub.practiceCount || 0} <span style={{ fontSize: '0.72rem', fontWeight: 500, color: 'var(--text-muted)' }}>次</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 框 3：🌟 核心條列：累計閱讀時數與次數的日期明細 (藍色系邊框 + 高覆蓋微透底色) */}
+                          <div style={{ 
+                            padding: '10px 12px', 
+                            borderRadius: '12px', 
+                            backgroundColor: 'var(--surface-card, rgba(30, 36, 44, 0.88))', 
+                            border: '1.5px solid rgba(37, 99, 235, 0.42)',
+                            backdropFilter: 'blur(8px)',
+                            WebkitBackdropFilter: 'blur(8px)',
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            gap: '6px'
+                          }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#1d4ed8' }}>
+                                📅 歷史閱讀明細 ({(hub.readingHistoryRecords || []).length} 筆)
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+                                style={{
+                                  border: '1px solid rgba(37, 99, 235, 0.3)',
+                                  background: 'rgba(37, 99, 235, 0.08)',
+                                  borderRadius: '6px',
+                                  padding: '2px 8px',
+                                  fontSize: '0.68rem',
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                  color: '#1d4ed8',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '2px'
+                                }}
+                              >
+                                {isHistoryExpanded ? '− 收合' : '+ 展開'}
+                              </button>
+                            </div>
+
+                            {/* 條列明細內容 */}
+                            {isHistoryExpanded ? (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '2px' }}>
+                                {(hub.readingHistoryRecords && hub.readingHistoryRecords.length > 0) ? (
+                                  hub.readingHistoryRecords.map((r, idx) => (
+                                    <div 
+                                      key={idx}
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        padding: '5px 8px',
+                                        borderRadius: '6px',
+                                        backgroundColor: 'var(--surface-capsule, rgba(255,255,255,0.06))',
+                                        fontSize: '0.72rem'
+                                      }}
+                                    >
+                                      <span style={{ color: 'var(--text-muted)' }}>{r.date}</span>
+                                      <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
+                                        閱讀 {r.count} 次 · 累計 {r.minutes} 分鐘
+                                      </span>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textAlign: 'center', padding: '6px' }}>
+                                    暫無各日閱讀明細
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                                已收合詳細日期清單，點擊「+ 展開」可查看各日閱讀次數與時數明細。
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* 底部行動列：刪除經文 + 接續閱讀經文 (全膠囊型式，大氣圓潤，位置固定杜絕跳動) */}
+                <div style={{ borderTop: '1px solid var(--border-color, rgba(0,0,0,0.1))', paddingTop: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (onDeleteBook) onDeleteBook(bookHubTarget.workId);
+                        setBookHubTarget(null);
+                        clearBookHubReturnState();
+                      }}
+                      style={{
+                        padding: '8px 16px',
+                        borderRadius: '9999px',
+                        border: '1.5px solid var(--btn-delete-border, rgba(239, 68, 68, 0.35))',
+                        backgroundColor: 'var(--btn-delete-bg, #fee2e2)',
+                        color: 'var(--btn-delete-text, #dc2626)',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        height: '38px',
+                        boxSizing: 'border-box',
+                        transition: 'all 0.2s ease',
+                        flexShrink: 0
+                      }}
+                    >
+                      <Trash2 size={14} />
+                      <span>刪除經文</span>
+                    </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      saveBookHubReturnState(bookHubTarget.workId, bookHubTab, readingSubTab);
+                      onSelectBook(bookHubTarget.workId, undefined, undefined, 'resume');
+                      setBookHubTarget(null);
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '8px 20px',
+                      borderRadius: '9999px',
+                      border: 'none',
+                      backgroundColor: 'var(--theme-accent, #8b5a2b)',
+                      color: '#fff',
+                      fontSize: '0.84rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      height: '38px',
+                      boxSizing: 'border-box',
+                      boxShadow: '0 3px 10px rgba(139, 90, 43, 0.28)',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <Play size={15} fill="currentColor" />
+                    <span>接續閱讀經文 ›</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          );
+        })(),
+        document.body
       )}
 
     </div>

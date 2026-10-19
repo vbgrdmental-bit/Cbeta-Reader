@@ -12686,6 +12686,87 @@ body.theme-custom-dark .practice-modal-btn-submit:hover {
   background-color: #d4a017 !important;
 }
 
+/* 🌟 十齋日與佛誕膠囊深淺色高對比 */
+body.theme-dark .zhai-status-badge,
+body.theme-ebony .zhai-status-badge,
+body.theme-custom-dark .zhai-status-badge {
+  color: #4ade80 !important;
+  background-color: rgba(45, 106, 79, 0.32) !important;
+  border-color: rgba(74, 222, 128, 0.4) !important;
+}
 
+body.theme-dark .festival-status-badge,
+body.theme-ebony .festival-status-badge,
+body.theme-custom-dark .festival-status-badge {
+  color: #f87171 !important;
+  background-color: rgba(192, 57, 43, 0.28) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+/* 🌸 蓮花粉尊榮佛光主題專屬深度優化 (消除死白刺眼撕裂對比，呈現同色相溫潤柔和蓮華玉白) */
+body.theme-lotus {
+  --bg-card: #faf3f1 !important;
+  --surface-card: #faf3f1 !important;
+  --surface-modal: #faf3f1 !important;
+  --surface-capsule: rgba(120, 62, 57, 0.05) !important;
+  --border-color: rgba(120, 62, 57, 0.16) !important;
+}
+
+/* 1. 書櫃分組大卡片 (圖1、圖2 部類折疊卡) */
+body.theme-lotus .bookshelf-group-card {
+  background-color: #faf3f1 !important;
+  border-color: rgba(120, 62, 57, 0.16) !important;
+  box-shadow: 0 4px 16px rgba(120, 62, 57, 0.06) !important;
+}
+
+/* 1-1. 書櫃條列式經書列與卡片式經書塊 (微粉淺白，溫潤不生硬) */
+body.theme-lotus .bookshelf-book-row,
+body.theme-lotus .bookshelf-book-card {
+  background-color: #f6eeeb !important;
+  border-color: rgba(120, 62, 57, 0.11) !important;
+}
+
+/* 2. 360° 全息視窗 (圖3 全息彈窗外框與內部區塊) */
+body.theme-lotus .book-hub-modal-card {
+  background-color: #faf3f1 !important;
+  border-color: rgba(120, 62, 57, 0.22) !important;
+  box-shadow: 0 24px 60px rgba(120, 62, 57, 0.18) !important;
+}
+
+body.theme-lotus .book-hub-modal-card * {
+  --text-muted: #664f48;
+}
+
+body.theme-lotus .book-hub-modal-card .animate-fade-in {
+  background-color: #f6eeeb !important;
+  border-color: rgba(120, 62, 57, 0.12) !important;
+}
+
+/* 3. 首頁 Widget 小卡片與上次閱讀卡片 (圖4) */
+body.theme-lotus .widget-card:not(.has-outer-header),
+body.theme-lotus .lastread-excerpt-card-4x4 {
+  background: #faf3f1 !important;
+  border-color: rgba(120, 62, 57, 0.16) !important;
+  box-shadow: 0 4px 14px rgba(120, 62, 57, 0.06) !important;
+}
+
+/* 🌸 外置標題小卡（上次閱讀、我的最愛等）最外層必須透明，讓「上次閱讀 ➔」標題直接浮在蓮花粉底色上，絕不出現白色背景 */
+body.theme-lotus .widget-card.has-outer-header {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.theme-lotus .lastread-excerpt-book-bar,
+body.theme-lotus .lastread-excerpt-header-4x1 {
+  background-color: #f6eeeb !important;
+  border-color: rgba(120, 62, 57, 0.12) !important;
+}
+
+/* 🌸 上次閱讀經文文字框：採用溫潤柔和微粉淺白，徹底消除刺眼死白 */
+body.theme-lotus .lastread-excerpt-body-4x3 {
+  background-color: #f6eeeb !important;
+  border-color: rgba(120, 62, 57, 0.12) !important;
+}
 
 

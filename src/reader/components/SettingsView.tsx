@@ -1483,17 +1483,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.12.0) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.12.7) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.12.0</span>
-                        <span className="changelog-date">(2026-10-16)</span>
-                        <span style={{ fontSize: '0.72rem', padding: '1px 5px', borderRadius: '4px', border: '1px solid var(--theme-accent, #8c4b27)', color: 'var(--theme-accent, #8c4b27)', fontWeight: 'bold', marginLeft: '2px' }}>重大更新</span>
+                        <span>⭐ App: v4.12.7</span>
+                        <span className="changelog-date">(2026-10-20)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 全站設計系統與原子組件：建立主題變數系統與模組化卡片、彈窗、下拉選單，深淺模式高對比且無重影。</li>
-                        <li>• 首頁解耦與日誌「聞思修」貫通：佛曆、念珠計數、護眼倒數獨立模組化；日誌無縫整合閱讀、筆記與修持。</li>
-                        <li>• 書架邏輯與資料夾 Hook 解耦：重構書櫃資料夾狀態管理，大幅降低主元件複雜度，提升執行效能與維護性。</li>
+                        <li>• 蓮花粉卡片升級蓮華玉白：部類、經書、彈窗與首頁小卡改為柔和淺粉暖白（#faf3f1），徹底消除死白刺眼對比。</li>
+                        <li>• 白月黑月向量月相意境化：農曆十四改為白色圓圈滿月圖示、廿九改為白色細弦月牙，符合佛教經律意境。</li>
+                        <li>• 閱讀記錄接續與持經對調：日誌記錄列右側對調為先接續閱讀「›」後轉持經「+修」，操作更直觀順手。</li>
                       </ul>
                     </div>
 
@@ -1516,6 +1515,83 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.6</span>
+                            <span className="changelog-date">(2026-10-20)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 蓮花粉彈窗灰白濁感消除：淺色與蓮花粉模式全面升級為溫潤暖玉白實心背景，徹底杜絕透出黑色遮罩泛灰。</li>
+                            <li>• 文字對比與標籤深邃清晰：作者、標籤與未選中按鍵文字加強為高對比暖墨色（#524038），字字分明。</li>
+                            <li>• 刪除經文底色清爽粉潤：底色改為柔和淺櫻粉白配深紅字，邊框分明，徹底告別暗沉灰色。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.5</span>
+                            <span className="changelog-date">(2026-10-20)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 日誌十齋日淺色清晰化：優化字體色彩與背景對比度，淺色模式下輪廓清澈醒目。</li>
+                            <li>• 閱讀記錄符號圓圈膠囊化：經書後接續閱讀改為「›」、轉持經改為「+修」圓圈，大氣且節省空間。</li>
+                            <li>• 月曆白月與黑月地藏標註：農曆十四標註「白月」、廿九標註「黑月」，備註「南無地藏菩薩」。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.4</span>
+                            <span className="changelog-date">(2026-10-20)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 全息視窗文字區微透高對比：視窗維持毛玻璃通透質感，文字區塊配置88%不透明底色杜絕文字穿透。</li>
+                            <li>• 閱讀概況三子膠囊舒心色系：上次閱讀配置暖杏琥珀金、我的筆記配置翡翠竹青綠、閱讀歷程配置天青藍。</li>
+                            <li>• 閱讀榜單繼續閱讀高對比：日誌榜單「繼續閱讀 ›」改為深森林翠綠高對比膠囊，淺色主題下字跡清澈明晰。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.3</span>
+                            <span className="changelog-date">(2026-10-19)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 底部按鈕升級圓潤膠囊：刪除經文與接續閱讀經文升級全圓角膠囊型式，排版大氣飽滿。</li>
+                            <li>• 閱讀概況三子膠囊型式區隔：上次閱讀、我的筆記與閱讀歷程改為3個獨立膠囊，層級與上方雙鍵截然不同。</li>
+                            <li>• 直達段落與返回上一頁直覺連動：點選筆記直達段落，經書頂部點「←」直覺精確回到全息視窗筆記頁。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.2</span>
+                            <span className="changelog-date">(2026-10-19)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 移除書架全息卡符號：書櫃列表與卡片移除多餘全息卡標籤，全面由「…」直達 360° 全息視窗。</li>
+                            <li>• 360° 視窗雙主鍵分層：重構為「書籍簡介」與「閱讀概況」一級分段鍵，主客觀資訊層次分明。</li>
+                            <li>• 閱讀概況三子膠囊零跳動：內置上次閱讀、我的筆記與閱讀歷程子膠囊，高對比配平無垂直抖動。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.1</span>
+                            <span className="changelog-date">(2026-10-18)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 360° 經典全息五控制鍵：整合書籍簡介、閱讀概況、筆記、上次閱讀與歷程，統一高度零跳動。</li>
+                            <li>• 上次閱讀經文摘要：上次閱讀分頁呈現停駐位置 50-60 字經文摘要（帶「…」），點選秒速接續閱讀。</li>
+                            <li>• 閱讀歷程日期明細收合：整合累計時數與次數，刪除誦念+1，支援「+/-」展開收合各日閱讀清單。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.0</span>
+                            <span className="changelog-date">(2026-10-16)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 全站設計系統與原子組件：建立主題變數系統與模組化卡片、彈窗、下拉選單，深淺模式高對比且無重影。</li>
+                            <li>• 首頁解耦與日誌「聞思修」貫通：佛曆、念珠計數、護眼倒數獨立模組化；日誌無縫整合閱讀、筆記與修持。</li>
+                            <li>• 書架邏輯與資料夾 Hook 解耦：重構書櫃資料夾狀態管理，大幅降低主元件複雜度，提升執行效能與維護性。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.11.3</span>

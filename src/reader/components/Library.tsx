@@ -1894,6 +1894,7 @@ export function Library({
                     onNavigateToCatalogCategory={handleNavigateToCatalogCategory}
                     statusFilter={bookshelfStatusFilter}
                     onStatusFilterChange={setBookshelfStatusFilter}
+                    allHighlights={allHighlights}
                   />
                 </div>
               ) : (

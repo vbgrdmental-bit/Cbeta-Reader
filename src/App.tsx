@@ -204,16 +204,22 @@ export function App() {
     // 💡 閱讀日誌：結束計時
     readingLogManager.endSession();
     if (resetToRoot) {
-      // 點選 Home 首頁按鈕：固定回到首頁 Library 頂層根目錄
+      // 點選 Home 首頁按鈕：固定回到首頁 Library 頂層根目錄，清空暫存
+      try {
+        sessionStorage.removeItem('cbeta_return_book_hub');
+      } catch {}
       setView('library');
       setTargetLibrarySection({ section: 'home', timestamp: Date.now() });
       setResetFolderTrigger(prev => prev + 1);
       updateHashRoute('library');
     } else {
-      // 點選返回按鈕「←」：回到先前的視圖 (例如剛剛搜尋結果所在的 cbeta 頁面)
+      // 點選返回按鈕「←」：回到先前的視圖 (例如剛剛搜尋結果所在的 cbeta 頁面或書櫃全息卡)，並通知恢復全息視窗
       const targetView = returnView || 'library';
       setView(targetView);
       updateHashRoute(targetView);
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('cbeta_restore_book_hub'));
+      }, 50);
     }
     setActiveBookId(null);
     setActiveSegmentId(undefined);

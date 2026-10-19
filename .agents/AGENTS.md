@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.12.0` (App: v4.12.0 / Builder: v2.9.13)
+- **Current Version**: `v4.12.7` (App: v4.12.7 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -71,6 +71,42 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
   - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog
+
+- **⭐ App: v4.12.7 / Builder: v2.9.13** (2026-10-20)
+  - [App] 蓮花粉卡片升級蓮華玉白：部類、經書、彈窗與首頁小卡改為柔和淺粉暖白（#faf3f1），徹底消除死白刺眼對比。
+  - [App] 白月黑月向量月相意境化：農曆十四改為白色圓圈滿月圖示、廿九改為白色細弦月牙，符合佛教經律意境。
+  - [App] 閱讀記錄接續與持經對調：日誌記錄列右側對調為先接續閱讀「>」後轉持經「+修」，操作更直觀順手。
+
+- **⭐ App: v4.12.6 / Builder: v2.9.13** (2026-10-20)
+  - [App] 蓮花粉彈窗灰白濁感消除：淺色與蓮花粉模式全面升級為溫潤暖玉白實心背景，徹底杜絕透出黑色遮罩泛灰。
+  - [App] 文字對比與標籤深邃清晰：作者、標籤與未選中按鍵文字加強為高對比暖墨色（#524038），字字分明。
+  - [App] 刪除經文底色清爽粉潤：底色改為柔和淺櫻粉白（#fee2e2）配深紅字，邊框分明，徹底告別暗沉灰色。
+
+- **⭐ App: v4.12.5 / Builder: v2.9.13** (2026-10-20)
+  - [App] 日誌十齋日淺色清晰化：優化字體色彩與背景對比度，淺色模式下輪廓清澈醒目。
+  - [App] 閱讀記錄符號圓圈膠囊化：經書後接續閱讀改為「>」、轉持經改為「+修」圓圈，大氣且節省空間。
+  - [App] 月曆白月與黑月地藏標註：農曆十四標註「白月」、廿九標註「黑月」，備註「南無地藏菩薩」。
+
+- **⭐ App: v4.12.4 / Builder: v2.9.13** (2026-10-20)
+  - [App] 全息視窗文字區微透高對比：視窗大背景維持通透毛玻璃（`backdropFilter: blur(16px)`），內部文字區塊（書籍簡介、上次閱讀進度與摘要、筆記卡片、閱讀歷程明細）全面配置 88% 不透明（約 12% 微透）底色加 8px 毛玻璃，徹底消除深色模式下底層書櫃字跡與徽章穿透干擾。
+  - [App] 按鍵層級深淺色彩重構：一級分段鍵改為清雅白底浮動滑塊、二級三膠囊配置功能微透色，底部聚焦唯一實心主行動。
+  - [App] 閱讀概況三子膠囊舒心色系：上次閱讀配置暖杏琥珀金、我的筆記配置翡翠竹青綠、閱讀歷程配置菩提天青藍，功能色彩鮮明且耐看。
+  - [App] 閱讀榜單繼續閱讀高對比：日誌榜單「繼續閱讀 ›」改為深森林翠綠高對比膠囊（#15803d），徹底解決淺色主題下字跡泛白不清楚之缺陷。
+
+- **⭐ App: v4.12.3 / Builder: v2.9.13** (2026-10-19)
+  - [App] 底部按鈕升級圓潤膠囊：圖1下方之「刪除經文」與「接續閱讀經文 ›」全面升級為全圓角膠囊型式（Pill Capsules），排版大氣飽滿。
+  - [App] 閱讀概況三子膠囊型式區隔：圖3閱讀概況下的「上次閱讀」、「我的筆記」與「閱讀歷程」改為 3 個獨立膠囊按鍵，與上方分段按鈕型式徹底區隔。
+  - [App] 直達段落與返回上一頁直覺連動：點選「點擊直達 ›」精準跳轉至該段經文段落；在經書閱讀器頂部點「←」直覺恢復剛才的全息視窗與筆記頁面（點 Home 則回到首頁根目錄）。
+
+- **⭐ App: v4.12.2 / Builder: v2.9.13** (2026-10-19)
+  - [App] 移除書架全息卡符號：書櫃列表與卡片移除多餘全息卡標籤，全面由「…」直達 360° 全息視窗。
+  - [App] 360° 視窗雙主鍵分層：重構為「書籍簡介」與「閱讀概況」一級分段鍵，主客觀資訊層次分明。
+  - [App] 閱讀概況三子膠囊零跳動：內置上次閱讀、我的筆記與閱讀歷程子膠囊，高對比配平無垂直抖動。
+
+- **⭐ App: v4.12.1 / Builder: v2.9.13** (2026-10-18)
+  - [App] 360° 經典全息視窗五控制鍵重構：整合圓圈「…」與全息卡，統一 5 個控制鍵（書籍簡介、閱讀概況、我的筆記、上次閱讀、閱讀歷程）高度與內容容器，切換分頁零跳動。
+  - [App] 上次閱讀經文 50-60 字摘要：在上次閱讀分頁呈現停駐位置經文文字摘要（前後帶「…」），點選秒速接續閱讀。
+  - [App] 閱讀歷程整合與日期明細收合：整合累計時數與次數，刪除誦念+1，支援「+/-」展開或收合各日閱讀次數與時數清單。
 
 - **⭐ App: v4.12.0 / Builder: v2.9.13** (2026-10-16)
   - [App] 全站設計系統與原子組件：建立主題變數系統與模組化卡片、彈窗、下拉選單，深淺模式高對比且無重影。

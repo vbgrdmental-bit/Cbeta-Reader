@@ -213,8 +213,15 @@ export function applyCustomThemeToDOM(hex: string) {
   body.classList.add('theme-custom');
   if (isDark) {
     body.classList.add('theme-custom-dark', 'theme-ebony');
+    body.classList.remove('theme-custom-light', 'theme-ivory', 'theme-lotus');
   } else {
     body.classList.add('theme-custom-light', 'theme-ivory');
+    body.classList.remove('theme-custom-dark', 'theme-ebony');
+    if (palette.accent === '#783e39') {
+      body.classList.add('theme-lotus');
+    } else {
+      body.classList.remove('theme-lotus');
+    }
   }
 
   // 設定 CSS 變數：背景與文字
@@ -236,22 +243,37 @@ export function applyCustomThemeToDOM(hex: string) {
     body.style.setProperty('--reader-text', '#f8fafc');
     body.style.setProperty('--reader-text-muted', '#cbd5e1');
     body.style.setProperty('--text-primary', '#f8fafc');
-    body.style.setProperty('--text-main', '#f8fafc'); // 徹底解決深色模式下開關標題變黑問題！
+    body.style.setProperty('--text-main', '#f8fafc');
     body.style.setProperty('--text-muted', '#cbd5e1');
     body.style.setProperty('--text-secondary', '#e2e8f0');
     body.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.08)');
+    body.style.setProperty('--surface-modal', 'rgba(27, 34, 41, 0.88)');
+    body.style.setProperty('--surface-modal-border', 'rgba(255, 255, 255, 0.16)');
     body.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.16)');
     body.style.setProperty('--reader-border', 'rgba(255, 255, 255, 0.12)');
+    body.style.setProperty('--btn-delete-bg', 'rgba(239, 68, 68, 0.14)');
+    body.style.setProperty('--btn-delete-border', 'rgba(239, 68, 68, 0.35)');
+    body.style.setProperty('--btn-delete-text', '#f87171');
   } else {
+    const isLotus = hex.toLowerCase().trim() === '#ebdcd9';
     body.style.setProperty('--reader-text', '#261c14');
-    body.style.setProperty('--reader-text-muted', '#68594b');
+    body.style.setProperty('--reader-text-muted', '#5c473e');
     body.style.setProperty('--text-primary', '#261c14');
     body.style.setProperty('--text-main', '#261c14');
-    body.style.setProperty('--text-muted', '#68594b');
-    body.style.setProperty('--text-secondary', '#444444');
-    body.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.65)');
-    body.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.12)');
-    body.style.setProperty('--reader-border', 'rgba(0, 0, 0, 0.10)');
+    body.style.setProperty('--text-muted', '#5c473e');
+    body.style.setProperty('--text-secondary', '#42332c');
+    
+    // 🌸 淺色底卡片：蓮花粉模式採用專屬同色相蓮華玉白 (#faf3f1)，平衡死白刺眼對比
+    const cardBg = isLotus ? '#faf3f1' : '#ffffff';
+    body.style.setProperty('--bg-card', cardBg);
+    body.style.setProperty('--surface-card', isLotus ? '#f6eeeb' : '#ffffff');
+    body.style.setProperty('--surface-modal', cardBg);
+    body.style.setProperty('--surface-modal-border', palette.accentBorder);
+    body.style.setProperty('--border-color', palette.accentBorder);
+    body.style.setProperty('--reader-border', palette.accentBorder);
+    body.style.setProperty('--btn-delete-bg', '#fee2e2');
+    body.style.setProperty('--btn-delete-border', 'rgba(239, 68, 68, 0.35)');
+    body.style.setProperty('--btn-delete-text', '#dc2626');
   }
 }
 

@@ -16,6 +16,7 @@ export interface LunarInfo {
   festival?: string;     // 佛菩薩聖誕或紀念日（例如 "藥師如來誕"）
   isZhai: boolean;       // 是否為十齋日
   zhaiName?: string;     // 齋日名稱（例如 "十齋日"）
+  specialMoon?: string;  // 特殊月相標註（例如 "白月"、"黑月"）
   noteDetail: string;    // 下方備註完整文字（例如 "農曆九月三十 · 藥師如來誕 · 十齋日"）
 }
 
@@ -120,14 +121,26 @@ export function getLunarInfo(date: Date): LunarInfo {
     const isZhai = zhaiDaysSet.has(dayNum);
     const zhaiName = isZhai ? '十齋日' : undefined;
 
+    // 💡 依經文與月相標註：每月農曆十四為「白月」，每月農曆廿九為「黑月」
+    let specialMoon: string | undefined = undefined;
+    if (dayNum === 14) {
+      specialMoon = '白月';
+    } else if (dayNum === 29) {
+      specialMoon = '黑月';
+    }
+
     // 💡 月曆格子下方精簡展示 (小字)：
-    // 1. 若十齋日有遇到佛教常用日期，則月曆上優先顯示佛教常用日期（如 "藥師誕"、"觀音誕"）
-    // 2. 若無節日且為十齋日，顯示 "十齋"（初一顯示 "初一·齋"、十五顯示 "十五·齋"）
-    // 3. 一般日子顯示農曆日（如 "十九"、"廿二"）
+    // 1. 若有遇到佛教常用日期優先顯示（如 "藥師誕"、"觀音誕"）
+    // 2. 每月農曆十四加標注 "白月"，每月農曆廿九加標注 "黑月"
+    // 3. 若為初一/十五顯示 "初一·齋" / "十五·齋"
+    // 4. 其餘十齋日顯示 "十齋"
+    // 5. 一般日子顯示農曆日（如 "十九"、"廿二"）
     let cellLabel = dName;
     if (festival) {
       // 精簡名稱至 3~4 字呈現於月曆小格中
       cellLabel = festival.replace('菩薩', '').replace('如來', '').replace('古佛', '');
+    } else if (specialMoon) {
+      cellLabel = specialMoon;
     } else if (dayNum === 1) {
       cellLabel = isZhai ? '初一·齋' : '初一';
     } else if (dayNum === 15) {
@@ -136,10 +149,13 @@ export function getLunarInfo(date: Date): LunarInfo {
       cellLabel = '十齋';
     }
 
-    // 💡 下方備註接續二則並陳（例如：農曆九月三十 · 藥師如來誕 · 十齋日）
+    // 💡 下方備註並陳（例如：農曆八月十四 · 白月 · 南無地藏菩薩 · 十齋日）
     const noteParts = [`農曆${fullStr}`];
     if (festival) {
       noteParts.push(festival);
+    }
+    if (specialMoon) {
+      noteParts.push(`${specialMoon} · 南無地藏菩薩`);
     }
     if (isZhai) {
       noteParts.push('十齋日');
@@ -159,6 +175,7 @@ export function getLunarInfo(date: Date): LunarInfo {
       festival,
       isZhai,
       zhaiName,
+      specialMoon,
       noteDetail
     };
 

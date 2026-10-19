@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   CalendarDays, ChevronLeft, ChevronRight, X, Trash2,
-  Play, Edit3, Plus
+  Edit3, Plus
 } from 'lucide-react';
 import {
   getAllReadingLogs,
@@ -313,8 +313,6 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
     if (parts.length !== 3 || isNaN(parts[0]) || isNaN(parts[1]) || isNaN(parts[2])) return null;
     return getLunarInfo(new Date(parts[0], parts[1] - 1, parts[2]));
   }, [selectedDate]);
-
-  // ── 月曆網格計算（以星期一為每週首日）──────────────────────────
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDayRaw = new Date(currentYear, currentMonth, 1).getDay(); // 0(Sun) ~ 6(Sat)
   const firstDayOffset = (firstDayRaw + 6) % 7;
@@ -647,32 +645,35 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                       <span style={{
                         fontSize: '0.78rem',
                         fontWeight: 700,
-                        color: 'var(--theme-accent, #8b5a2b)',
-                        backgroundColor: '#fff',
-                        padding: '2px 7px',
-                        borderRadius: '10px',
-                        border: '1px solid var(--border-color, rgba(0,0,0,0.08))'
+                        color: 'var(--theme-accent, #d97706)',
+                        backgroundColor: 'var(--surface-capsule, var(--bg-card-subtle, rgba(255, 255, 255, 0.08)))',
+                        padding: '2px 8px',
+                        borderRadius: '12px',
+                        border: '1px solid var(--border-subtle, var(--border-color, rgba(255, 255, 255, 0.12)))'
                       }}>
                         {formatDurationStat(book.totalMinutes)}
                       </span>
                       <button
                         onClick={() => onSelectBook(book.workId, undefined, undefined, 'resume')}
                         style={{
-                          fontSize: '0.72rem',
-                          fontWeight: 600,
-                          color: '#2d5a3f',
-                          backgroundColor: '#eaf2ed',
-                          border: '1px solid rgba(45, 90, 63, 0.25)',
+                          fontSize: '0.74rem',
+                          fontWeight: 700,
+                          color: '#15803d',
+                          backgroundColor: 'rgba(34, 197, 94, 0.14)',
+                          border: '1px solid rgba(21, 128, 61, 0.38)',
                           borderRadius: '12px',
-                          padding: '2px 8px',
+                          padding: '3px 9px',
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '2px'
+                          gap: '2px',
+                          boxShadow: '0 1px 3px rgba(21, 128, 61, 0.12)',
+                          transition: 'all 0.15s ease'
                         }}
+                        title="接續閱讀此經典"
                       >
                         <span>繼續閱讀</span>
-                        <span>›</span>
+                        <span style={{ fontWeight: 800 }}>›</span>
                       </button>
                     </div>
                   </div>
@@ -814,9 +815,9 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                   cursor: 'pointer',
                   position: 'relative',
                   backgroundColor: isSelected
-                    ? '#fdfaf3'
+                    ? 'var(--surface-capsule-active, var(--theme-accent-light, rgba(139, 90, 43, 0.18)))'
                     : isToday
-                      ? 'rgba(139, 90, 43, 0.05)'
+                      ? 'var(--surface-capsule, rgba(139, 90, 43, 0.08))'
                       : 'transparent',
                   border: isSelected
                     ? '1.5px solid var(--theme-accent, #8b5a2b)'
@@ -859,12 +860,14 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                   lineHeight: 1.1,
                   marginTop: '1px',
                   whiteSpace: 'nowrap',
-                  fontWeight: (lunarInfo.festival || lunarInfo.isZhai) ? 700 : 400,
+                  fontWeight: (lunarInfo.festival || lunarInfo.isZhai || lunarInfo.specialMoon) ? 700 : 400,
                   color: lunarInfo.festival
                     ? '#c0392b'
-                    : lunarInfo.isZhai
-                      ? '#2d6a4f'
-                      : 'var(--text-muted)'
+                    : lunarInfo.specialMoon
+                      ? '#b45309'
+                      : lunarInfo.isZhai
+                        ? '#2d6a4f'
+                        : 'var(--text-muted)'
                 }}>
                   {lunarInfo.cellLabel}
                 </span>
@@ -920,66 +923,101 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
         </div>
       </div>
 
-      {/* 💡 3. 選中日期的三大獨立專區（圖 2 徹底重構分區） */}
+      {/* 💡 3. 選中日期的專區 (聞·思·修) */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
-        {/* 區塊 A：🌟 重要日期獨立宣紙卡片 */}
+        {/* 區塊 A：🌟 選中日期資訊卡片 (深色模式底色，已刪除 📜 圖標) */}
         <div style={{
-          background: 'linear-gradient(135deg, #fdfbf7 0%, #f6efe2 100%)',
-          border: '1px solid rgba(139, 90, 43, 0.2)',
+          backgroundColor: 'var(--bg-card, rgba(255, 255, 255, 0.08))',
+          border: '1px solid var(--border-subtle, var(--border-color, rgba(255, 255, 255, 0.14)))',
           borderRadius: '12px',
-          padding: '11px 14px',
+          padding: '10px 14px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          boxShadow: '0 2px 6px rgba(139, 90, 43, 0.05)'
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)'
         }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <div style={{
               fontSize: '0.94rem',
               fontWeight: 700,
               color: 'var(--text-primary)',
-              fontFamily: 'var(--font-serif)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
+              fontFamily: 'var(--font-serif)'
             }}>
-              <span>📜</span>
               <span>{selectedDate}</span>
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-              {selectedDateLunar ? selectedDateLunar.fullStr : '農曆吉日'}
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span>{selectedDateLunar ? selectedDateLunar.fullStr : '農曆吉日'}</span>
+              {selectedDateLunar?.specialMoon && (
+                <span style={{ color: '#8c6000', fontWeight: 700 }}>
+                  · {selectedDateLunar.specialMoon}（南無地藏菩薩）
+                </span>
+              )}
             </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-            {selectedDateLunar?.festival && (
+            {selectedDateLunar?.specialMoon && (
               <span style={{
-                backgroundColor: '#c0392b',
-                color: '#fff',
+                backgroundColor: 'rgba(184, 134, 11, 0.12)',
+                color: '#8c6000',
+                border: '1px solid rgba(184, 134, 11, 0.3)',
                 fontSize: '0.74rem',
                 fontWeight: 700,
                 padding: '2px 8px',
                 borderRadius: '12px',
-                boxShadow: '0 1px 3px rgba(192, 57, 43, 0.3)'
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px'
               }}>
+                {selectedDateLunar.specialMoon === '白月' ? (
+                  /* 🌕 白月：白色圓圈月亮，表示即將滿月的樣子 */
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+                    <circle cx="8" cy="8" r="6" fill="#ffffff" stroke="#b45309" strokeWidth="1.2" />
+                  </svg>
+                ) : (
+                  /* 🌑 黑月：白色細細弦月的月亮，表示即將看不到月亮的樣子 */
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+                    <circle cx="8" cy="8" r="6" stroke="#b45309" strokeWidth="0.75" strokeDasharray="1.5 1.5" opacity="0.35" />
+                    <path d="M 8 2 A 6 6 0 0 0 8 14 A 5.3 5.3 0 0 1 8 2 Z" fill="#ffffff" stroke="#b45309" strokeWidth="0.8" />
+                  </svg>
+                )}
+                <span>{selectedDateLunar.specialMoon} · 南無地藏菩薩</span>
+              </span>
+            )}
+            {selectedDateLunar?.festival && (
+              <span 
+                className="festival-status-badge"
+                style={{
+                  backgroundColor: 'rgba(192, 57, 43, 0.12)',
+                  color: '#dc2626',
+                  border: '1px solid rgba(239, 68, 68, 0.35)',
+                  fontSize: '0.74rem',
+                  fontWeight: 700,
+                  padding: '2px 8px',
+                  borderRadius: '12px'
+                }}
+              >
                 🌸 {selectedDateLunar.festival}
               </span>
             )}
             {selectedDateLunar?.isZhai && (
-              <span style={{
-                backgroundColor: '#2d6a4f',
-                color: '#fff',
-                fontSize: '0.74rem',
-                fontWeight: 700,
-                padding: '2px 8px',
-                borderRadius: '12px',
-                boxShadow: '0 1px 3px rgba(45, 106, 79, 0.3)'
-              }}>
+              <span 
+                className="zhai-status-badge"
+                style={{
+                  backgroundColor: 'rgba(22, 101, 52, 0.1)',
+                  color: 'var(--zhai-badge-text, #15803d)',
+                  border: '1px solid rgba(22, 101, 52, 0.3)',
+                  fontSize: '0.74rem',
+                  fontWeight: 800,
+                  padding: '2px 8px',
+                  borderRadius: '12px'
+                }}
+              >
                 🌿 十齋日 · 茹素修善
               </span>
             )}
-            {!selectedDateLunar?.festival && !selectedDateLunar?.isZhai && (
+            {!selectedDateLunar?.festival && !selectedDateLunar?.isZhai && !selectedDateLunar?.specialMoon && (
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 深入經藏 · 智慧如海
               </span>
@@ -1085,56 +1123,82 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                    {/* 讀經一鍵轉持經 */}
+                    {/* 接續閱讀：改為「>」圓圈 */}
                     <button
-                      onClick={() => handleSyncReadingToPractice(log)}
-                      title="將此閱讀紀錄轉為今日持經功課"
-                      style={{
-                        backgroundColor: 'rgba(184, 134, 11, 0.1)',
-                        color: '#8c6000',
-                        border: '1px solid rgba(184, 134, 11, 0.25)',
-                        borderRadius: '14px',
-                        padding: '3px 8px',
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      📿 轉持經
-                    </button>
-
-                    <button
+                      type="button"
                       onClick={() => onSelectBook(log.workId, undefined, undefined, 'resume')}
+                      title="接續閱讀此經"
                       style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        backgroundColor: '#15803d',
+                        color: '#ffffff',
+                        border: 'none',
+                        cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '4px',
-                        padding: '4px 10px',
-                        borderRadius: '14px',
-                        backgroundColor: '#2d5a3f',
-                        color: '#fff',
-                        border: 'none',
-                        fontSize: '0.74rem',
-                        fontWeight: 700,
-                        cursor: 'pointer'
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        padding: 0,
+                        boxSizing: 'border-box',
+                        boxShadow: '0 2px 4px rgba(21, 128, 61, 0.25)',
+                        transition: 'transform 0.12s ease'
                       }}
                     >
-                      <Play size={11} fill="#fff" />
-                      <span>接續閱讀</span>
+                      <ChevronRight size={15} strokeWidth={2.8} />
                     </button>
 
+                    {/* 讀經一鍵轉持經：改為精緻「+修」圓圈 */}
                     <button
+                      type="button"
+                      onClick={() => handleSyncReadingToPractice(log)}
+                      title="轉持經 · 將此閱讀紀錄納入今日功課"
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(184, 134, 11, 0.12)',
+                        color: '#8c6000',
+                        border: '1px solid rgba(184, 134, 11, 0.32)',
+                        fontSize: '0.66rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        padding: 0,
+                        boxSizing: 'border-box',
+                        transition: 'transform 0.12s ease'
+                      }}
+                    >
+                      +修
+                    </button>
+
+                    {/* 刪除紀錄：圓圈垃圾桶 */}
+                    <button
+                      type="button"
                       onClick={(e) => handleDeleteReading(log.id, e)}
                       title="刪除紀錄"
                       style={{
-                        background: 'none',
-                        border: 'none',
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--surface-capsule, rgba(0,0,0,0.04))',
+                        border: '1px solid var(--border-color, rgba(0,0,0,0.06))',
                         color: 'var(--text-muted)',
                         cursor: 'pointer',
-                        padding: '4px'
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        padding: 0,
+                        boxSizing: 'border-box',
+                        transition: 'transform 0.12s ease'
                       }}
                     >
-                      <Trash2 size={15} />
+                      <Trash2 size={13} />
                     </button>
                   </div>
                 </div>
@@ -1410,12 +1474,12 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                         onClick={(e) => handleOpenEditCount(p, e)}
                         title="點擊修改數量"
                         style={{
-                          color: '#925800',
+                          color: 'var(--theme-accent, #d97706)',
                           fontWeight: 700,
-                          backgroundColor: '#fff3d6',
+                          backgroundColor: 'var(--surface-capsule, rgba(184, 134, 11, 0.16))',
                           padding: '1px 8px',
-                          borderRadius: '5px',
-                          border: '1px dashed rgba(184, 134, 11, 0.4)',
+                          borderRadius: '12px',
+                          border: '1px dashed var(--theme-accent, rgba(184, 134, 11, 0.45))',
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -1440,8 +1504,8 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                         width: '28px',
                         height: '28px',
                         borderRadius: '50%',
-                        border: '1px solid var(--border-color, rgba(0,0,0,0.1))',
-                        backgroundColor: '#fff',
+                        border: '1px solid var(--border-subtle, var(--border-color, rgba(255, 255, 255, 0.15)))',
+                        backgroundColor: 'var(--surface-capsule, var(--bg-card-subtle, rgba(255, 255, 255, 0.08)))',
                         color: 'var(--text-secondary)',
                         cursor: 'pointer',
                         display: 'flex',
@@ -1879,18 +1943,35 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px' }}>
-                {[-108, -10, 10, 108, 1000].map(delta => (
-                  <button
-                    key={delta}
-                    type="button"
-                    className="practice-add-val-btn"
-                    onClick={() => setEditCountInput(prev => Math.max(0, prev + delta))}
-                    style={{ fontSize: '0.72rem', padding: '5px 0' }}
-                  >
-                    {delta > 0 ? `+${delta}` : delta}
-                  </button>
-                ))}
+              {/* 圖 2 編輯數量：同步改為圖 3 的 5 個膠囊 (100, 200, 500, 800, 1000) */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' }}>
+                {[100, 200, 500, 800, 1000].map(levelVal => {
+                  const isSelected = editCountInput === levelVal;
+                  return (
+                    <button
+                      key={levelVal}
+                      type="button"
+                      onClick={() => setEditCountInput(levelVal)}
+                      style={{
+                        padding: '6px 0',
+                        borderRadius: '16px',
+                        border: isSelected ? '1.5px solid var(--theme-accent, #8b5a2b)' : '1px solid var(--border-color, rgba(0,0,0,0.12))',
+                        backgroundColor: isSelected ? 'var(--theme-accent-light, rgba(139, 90, 43, 0.12))' : 'var(--bg-card-subtle, rgba(0,0,0,0.03))',
+                        color: isSelected ? 'var(--theme-accent, #8b5a2b)' : 'var(--text-primary)',
+                        fontSize: '0.84rem',
+                        fontWeight: isSelected ? 700 : 600,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                      title={`設定修持數量為 ${levelVal}`}
+                    >
+                      {levelVal}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
