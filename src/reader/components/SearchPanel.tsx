@@ -216,22 +216,20 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery, onTrigg
             style={{ 
               display: 'flex', 
               alignItems: 'center', 
-              gap: '0.4rem', 
+              flexWrap: 'wrap',
+              rowGap: '0.35rem', 
+              columnGap: '0.4rem', 
               marginTop: '0.55rem', 
-              overflowX: 'auto', 
-              whiteSpace: 'nowrap',
-              paddingBottom: '0.15rem',
               width: '100%',
               maxWidth: '440px',
               paddingLeft: '0.4rem',
               boxSizing: 'border-box'
             }}
-            className="custom-scrollbar"
           >
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted, #718096)', flexShrink: 0, opacity: 0.85 }}>
               近期搜尋：
             </span>
-            {recentSearches.map((q, idx) => (
+            {recentSearches.slice(0, 5).map((q, idx) => (
               <button
                 key={idx}
                 type="button"
@@ -247,7 +245,7 @@ export function SearchPanel({ books, onSelectResult, initialSearchQuery, onTrigg
                   borderRadius: '12px',
                   padding: '0.15rem 0.55rem',
                   cursor: 'pointer',
-                  flexShrink: 0,
+                  whiteSpace: 'nowrap',
                   transition: 'all 0.15s ease'
                 }}
                 title={`點擊立即搜尋：${q}`}
