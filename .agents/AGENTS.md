@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.13.9` (App: v4.13.9 / Builder: v2.9.13)
+- **Current Version**: `v4.14.0` (App: v4.14.0 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -71,6 +71,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
   - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog
+
+- **⭐ App: v4.14.0 / Builder: v2.9.13** (2026-10-23)
+  - [App] 便籤咒語中英連帶選取：反白或點擊時羅馬拼音與中文音譯一體化同步選取，告別單詞割裂。
+  - [App] 文字排版工具列完整支援：選取咒語支援等比例字級縮放（A-/A+）、切換字體與粗體，結構完整不損壞。
+  - [App] 間距微調與消除右側拉Bar：支援緊密/適中/寬鬆即時連動，緊湊優雅收納，徹底杜絕灰色滾動條。
 
 - **⭐ App: v4.13.9 / Builder: v2.9.13** (2026-10-23)
   - [App] 咒語彈窗全域置中居中：採用 Portal 直掛 body 搭配全螢幕柔和遮罩，清空與插入按鍵 100% 吸底可見。

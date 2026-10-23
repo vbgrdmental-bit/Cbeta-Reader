@@ -11048,6 +11048,12 @@ body:has(.has-memo-editing),
   -webkit-user-select: text !important;
 }
 
+/* 📿 在編輯模式下保持咒語單元組（中英對照）整組連帶選取 */
+.custom-memo-card.is-editing-target .mantra-pair {
+  user-select: all !important;
+  -webkit-user-select: all !important;
+}
+
 body.theme-ebony .custom-memo-card.is-editing-target {
   background: #1e242d !important;
   box-shadow: 0 0 0 3px rgba(30, 169, 140, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35) !important;
@@ -11058,6 +11064,8 @@ body.theme-ebony .custom-memo-card.is-editing-target {
   width: 100%;
   max-height: 100%;
   overflow-y: auto;
+  scrollbar-width: none !important; /* 隱藏 Firefox 灰色拉 bar */
+  -ms-overflow-style: none !important; /* 隱藏 IE/Edge 拉 bar */
   box-sizing: border-box;
   color: var(--reader-text, #2c2016);
   font-family: var(--font-serif);
@@ -11067,6 +11075,21 @@ body.theme-ebony .custom-memo-card.is-editing-target {
   word-break: break-word;
   caret-color: #1ea98c;
   text-align: center;
+}
+
+/* 隱藏 WebKit (Chrome / Safari) 灰色滾動條拉 bar，徹底避免出現拉 bar 破壞美感 */
+.memo-text-surface::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* 清除咒語後方多餘的空行，防止將便籤撐出拉 bar */
+.memo-text-surface .mantra-line + p:empty,
+.memo-text-surface .mantra-line + p:has(br:only-child) {
+  display: none !important;
+  margin: 0 !important;
+  height: 0 !important;
 }
 
 .memo-text-surface:empty::before {
@@ -11470,20 +11493,20 @@ body.theme-ebony .symbol-opt-btn:hover {
    📿 咒語對齊（梵漢對照 / 注音上下對齊）排版樣式
    ========================================================================== */
 
-/* 咒語行容器 (置中、響應式整詞折行) */
+/* 咒語行容器 (置中、響應式整詞折行，緊湊防溢出) */
 .mantra-line {
   display: flex !important;
   flex-wrap: wrap !important;
   align-items: flex-end !important;
   justify-content: center !important;
-  gap: 8px 14px !important;
-  margin: 8px 0 !important;
+  gap: 3px 10px !important;
+  margin: 3px 0 !important;
   width: 100% !important;
   box-sizing: border-box !important;
   text-align: center !important;
 }
 
-/* 咒語單元組 (英文+中文上下 100% 垂直對稱置中) */
+/* 咒語單元組 (英文+中文上下 100% 垂直對稱置中，選取時中英一體同時選取) */
 .mantra-pair {
   display: inline-flex !important;
   flex-direction: column !important;
@@ -11491,28 +11514,86 @@ body.theme-ebony .symbol-opt-btn:hover {
   justify-content: flex-end !important;
   text-align: center !important;
   vertical-align: bottom !important;
-  margin: 1px 2px !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
+  margin: 2px 5px !important;
+  gap: 2px !important;
+  user-select: all !important;
+  -webkit-user-select: all !important;
+  cursor: text !important;
 }
 
-/* 上排：羅馬拼音 / 英文 */
+/* 📿 圖2間距動態微調連動：緊密、適中、寬鬆 */
+.memo-text-surface[data-spacing="tight"] .mantra-line,
+.memo-spacing-tight .mantra-line {
+  gap: 2px 8px !important;
+  margin: 1px 0 !important;
+}
+
+.memo-text-surface[data-spacing="tight"] .mantra-pair,
+.memo-spacing-tight .mantra-pair {
+  margin: 1px 4px !important;
+  gap: 1px !important;
+}
+
+.memo-text-surface[data-spacing="tight"] .mantra-title,
+.memo-spacing-tight .mantra-title {
+  margin: 0 0 2px 0 !important;
+  font-size: 1.02em !important;
+}
+
+.memo-text-surface[data-spacing="medium"] .mantra-line,
+.memo-spacing-medium .mantra-line {
+  gap: 3px 10px !important;
+  margin: 3px 0 !important;
+}
+
+.memo-text-surface[data-spacing="medium"] .mantra-pair,
+.memo-spacing-medium .mantra-pair {
+  margin: 2px 5px !important;
+  gap: 2px !important;
+}
+
+.memo-text-surface[data-spacing="medium"] .mantra-title,
+.memo-spacing-medium .mantra-title {
+  margin: 0 0 3px 0 !important;
+  font-size: 1.05em !important;
+}
+
+.memo-text-surface[data-spacing="loose"] .mantra-line,
+.memo-spacing-loose .mantra-line {
+  gap: 6px 14px !important;
+  margin: 6px 0 !important;
+}
+
+.memo-text-surface[data-spacing="loose"] .mantra-pair,
+.memo-spacing-loose .mantra-pair {
+  margin: 3px 6px !important;
+  gap: 3px !important;
+}
+
+.memo-text-surface[data-spacing="loose"] .mantra-title,
+.memo-spacing-loose .mantra-title {
+  margin: 0 0 6px 0 !important;
+  font-size: 1.08em !important;
+}
+
+/* 上排：羅馬拼音 / 英文 (清晰挺立、雅致人文無襯線) */
 .mantra-pinyin {
-  font-size: 0.72em !important;
-  line-height: 1.25 !important;
-  opacity: 0.82 !important;
-  font-family: var(--font-sans, "Noto Sans TC", sans-serif) !important;
-  letter-spacing: 0.02em !important;
+  font-size: 0.78em !important;
+  line-height: 1.22 !important;
+  font-weight: 500 !important;
+  opacity: 0.86 !important;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif) !important;
+  letter-spacing: 0.03em !important;
   white-space: nowrap !important;
   color: inherit !important;
 }
 
-/* 下排：中文音譯漢字 */
+/* 下排：中文音譯漢字 (莊重端正、沉穩大氣) */
 .mantra-hanzi {
-  font-size: 1.06em !important;
-  line-height: 1.35 !important;
+  font-size: 1.15em !important;
+  line-height: 1.3 !important;
   font-weight: 600 !important;
-  letter-spacing: 0.04em !important;
+  letter-spacing: 0.05em !important;
   white-space: nowrap !important;
   color: inherit !important;
   font-family: inherit !important;
@@ -11764,12 +11845,12 @@ body.theme-ebony .mantra-preview-empty {
   color: #64748b !important;
 }
 
-/* 咒語標題 (便籤本體中的置中加粗標題) */
+/* 咒語標題 (便籤本體中的置中加粗標題，緊湊典雅) */
 .memo-text-surface .mantra-title {
   text-align: center !important;
   font-weight: 700 !important;
-  font-size: 1.08em !important;
-  margin: 0 0 6px 0 !important;
+  font-size: 1.05em !important;
+  margin: 0 0 3px 0 !important;
   letter-spacing: 0.05em !important;
   color: inherit !important;
   font-family: inherit !important;
@@ -11925,16 +12006,89 @@ body.theme-ebony .template-pill-delete:hover {
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  gap: 8px !important;
-  padding: 8px 14px 10px !important;
+  gap: 10px !important;
+  padding: 10px 16px 12px !important;
   border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
   background: rgba(250, 250, 250, 0.98) !important;
   flex-shrink: 0 !important;
+  box-sizing: border-box !important;
 }
 
 body.theme-ebony .mantra-actions-row {
   background: #181e26 !important;
   border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 典雅次級膠囊按鈕：「清空」 */
+.mantra-action-clear {
+  border: 1px solid rgba(0, 0, 0, 0.16) !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #4b5563 !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  padding: 6px 15px !important;
+  border-radius: 9999px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.18s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mantra-action-clear:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+
+body.theme-ebony .mantra-action-clear {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body.theme-ebony .mantra-action-clear:hover {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+}
+
+/* 尊貴主行動膠囊按鈕：「✓ 插入便籤對齊排版」 */
+.mantra-action-insert {
+  border: none !important;
+  background: linear-gradient(135deg, #1ea98c 0%, #10856c 100%) !important;
+  color: #ffffff !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  padding: 7px 20px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 3px 12px rgba(30, 169, 140, 0.38) !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.18s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+}
+
+.mantra-action-insert:hover {
+  background: linear-gradient(135deg, #22ba9a 0%, #149479 100%) !important;
+  box-shadow: 0 5px 16px rgba(30, 169, 140, 0.48) !important;
+  transform: translateY(-1px) !important;
+}
+
+.mantra-action-insert:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(30, 169, 140, 0.25) !important;
+}
+
+body.theme-ebony .mantra-action-insert {
+  background: linear-gradient(135deg, #1ea98c 0%, #0d6e59 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
 }
 
 .memo-capsule-value {

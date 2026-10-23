@@ -726,6 +726,38 @@ export function HomeDashboard({
     }, 1600);
   };
 
+  // 📿 自動將選取範圍對齊至完整咒語單元組（中英拼音與漢字同時連帶選取，避免割裂）
+  const normalizeMantraSelection = (sel: Selection | null): Range | null => {
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed || !editorRef.current) return null;
+    try {
+      const range = sel.getRangeAt(0);
+      const startNode = range.startContainer;
+      const endNode = range.endContainer;
+
+      const startEl = startNode.nodeType === Node.ELEMENT_NODE ? (startNode as HTMLElement) : startNode.parentElement;
+      const endEl = endNode.nodeType === Node.ELEMENT_NODE ? (endNode as HTMLElement) : endNode.parentElement;
+
+      const startPair = startEl?.closest('.mantra-pair');
+      const endPair = endEl?.closest('.mantra-pair');
+
+      if (startPair || endPair) {
+        const newRange = range.cloneRange();
+        if (startPair) {
+          newRange.setStartBefore(startPair);
+        }
+        if (endPair) {
+          newRange.setEndAfter(endPair);
+        }
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+        return newRange;
+      }
+      return range;
+    } catch {
+      return null;
+    }
+  };
+
   const checkSelectionState = () => {
     if (typeof window === 'undefined') return;
     const sel = window.getSelection();
@@ -740,14 +772,16 @@ export function HomeDashboard({
       savedRangeRef.current = sel.getRangeAt(0).cloneRange();
       setHasTextSelection(false);
     } else {
+      // 📿 選取時英文與中文同時選取吸附
+      const effectiveRange = normalizeMantraSelection(sel) || sel.getRangeAt(0);
       const text = sel.toString().trim();
       if (text.length > 0) {
         setHasTextSelection(true);
-        savedRangeRef.current = sel.getRangeAt(0).cloneRange();
+        savedRangeRef.current = effectiveRange.cloneRange();
 
         // 💡 自動偵測目前反白所選文字的實際字級，同步更新步進器顯示
         try {
-          const r = sel.getRangeAt(0);
+          const r = effectiveRange;
           const el = r.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
             ? r.commonAncestorContainer as HTMLElement
             : r.commonAncestorContainer.parentElement;
@@ -769,7 +803,8 @@ export function HomeDashboard({
     if (typeof window === 'undefined') return;
     const sel = window.getSelection();
     if (sel && sel.rangeCount > 0 && editorRef.current) {
-      const r = sel.getRangeAt(0);
+      const normalizedRange = normalizeMantraSelection(sel);
+      const r = normalizedRange || sel.getRangeAt(0);
       if (editorRef.current.contains(r.commonAncestorContainer) || editorRef.current.contains(r.startContainer)) {
         savedRangeRef.current = r.cloneRange();
         if (!sel.isCollapsed && sel.toString().trim().length > 0) {
@@ -783,7 +818,8 @@ export function HomeDashboard({
     if (typeof window === 'undefined') return null;
     const sel = window.getSelection();
     if (sel && sel.rangeCount > 0 && editorRef.current) {
-      const r = sel.getRangeAt(0);
+      const normalized = normalizeMantraSelection(sel);
+      const r = normalized || sel.getRangeAt(0);
       if (editorRef.current.contains(r.commonAncestorContainer) || editorRef.current.contains(r.startContainer)) {
         return r;
       }
@@ -811,12 +847,12 @@ export function HomeDashboard({
     }
     editorRef.current.focus();
 
-    // 檢查選取區之共同祖先是否為單一的 span
+    // 檢查選取區之共同祖先是否為單一的 span 或 mantra-pair
     const commonNode = range.commonAncestorContainer;
     const commonEl = (commonNode.nodeType === Node.ELEMENT_NODE ? commonNode as HTMLElement : commonNode.parentElement);
 
-    // 若整段選取剛好就是某個已存在的 span (例如之前套用過字級或字體)
-    if (commonEl && commonEl.tagName === 'SPAN' && editorRef.current.contains(commonEl) && commonEl.innerText.trim() === range.toString().trim()) {
+    // 若整段選取剛好就是某個已存在的 mantra-pair 或 span
+    if (commonEl && (commonEl.tagName === 'SPAN' || commonEl.classList.contains('mantra-pair')) && editorRef.current.contains(commonEl) && commonEl.innerText.trim() === range.toString().trim()) {
       if (styleProp === 'fontSize') commonEl.style.fontSize = styleVal;
       if (styleProp === 'fontFamily') commonEl.style.fontFamily = styleVal;
       const newRange = document.createRange();
@@ -827,9 +863,19 @@ export function HomeDashboard({
 
     try {
       const fragment = range.extractContents();
-      // 清除提取內容中子 span 的衝突樣式，防止多層巢狀覆蓋無效
+      // 清除提取內容中子 span 的衝突樣式，防止多層巢狀覆蓋無效，但必須保護咒語結構（mantra-pair, mantra-pinyin, mantra-hanzi）
       if (fragment.querySelectorAll) {
         fragment.querySelectorAll('span').forEach((s: HTMLSpanElement) => {
+          // 📿 若為咒語單元組或其子項，不可解構 unwrap！
+          if (s.classList.contains('mantra-pair')) {
+            if (styleProp === 'fontSize') s.style.fontSize = styleVal;
+            if (styleProp === 'fontFamily') s.style.fontFamily = styleVal;
+            return;
+          }
+          if (s.classList.contains('mantra-pinyin') || s.classList.contains('mantra-hanzi')) {
+            return;
+          }
+
           if (styleProp === 'fontSize') s.style.fontSize = '';
           if (styleProp === 'fontFamily') s.style.fontFamily = '';
           if (!s.getAttribute('style') || s.getAttribute('style')?.trim() === '') {
@@ -1164,10 +1210,16 @@ export function HomeDashboard({
   }, [editingMemoWidget, widgets]);
 
   // 工具列指令處理：使用純原生 Range 操作，徹底解決跨段落與跨瀏覽器樣式失效問題
-  // 💡 嚴格限定只放大/縮小反白所選之文字，絕不影響卡片內其他文字
+  // 💡 支援個別反白所選之文字，若無選字則直接微調整張便籤（包括咒語）基準字級
   const handleToolbarFontSizeStep = (delta: number) => {
     const range = getActiveOrSavedRange();
     if (!range || range.collapsed) {
+      if (editorRef.current) {
+        const newSize = Math.min(36, Math.max(8, currentFontSize + delta));
+        setCurrentFontSize(newSize);
+        editorRef.current.style.fontSize = `${newSize}px`;
+        return;
+      }
       showSelectionToast();
       return;
     }
@@ -1235,6 +1287,9 @@ export function HomeDashboard({
     setCurrentSpacingLabel(`${spacingNames[sp]} ▾`);
     if (editorRef.current) {
       editorRef.current.style.lineHeight = String(lh);
+      editorRef.current.setAttribute('data-spacing', sp);
+      editorRef.current.classList.remove('memo-spacing-tight', 'memo-spacing-medium', 'memo-spacing-loose');
+      editorRef.current.classList.add(`memo-spacing-${sp}`);
     }
     setActivePopover(null);
   };
@@ -1341,7 +1396,7 @@ export function HomeDashboard({
     }
 
     const titleHtml = mantraTitle.trim()
-      ? `<p class="mantra-title" style="text-align:center;font-weight:700;font-size:1.08em;margin:0 0 6px 0;letter-spacing:0.04em;">${escapeHtml(mantraTitle.trim())}</p>`
+      ? `<p class="mantra-title" style="text-align:center;font-weight:700;font-size:1.05em;margin:0 0 3px 0;letter-spacing:0.04em;">${escapeHtml(mantraTitle.trim())}</p>`
       : '';
 
     const linesHtml = multiLinePairs.map(pairs => `
@@ -1353,7 +1408,7 @@ export function HomeDashboard({
       `.trim()).join('')}</div>
     `.trim()).join('');
 
-    const mantraHtml = `${titleHtml}${linesHtml}<p><br></p>`;
+    const mantraHtml = `${titleHtml}${linesHtml}`;
 
     const range = getActiveOrSavedRange();
     const tempDiv = document.createElement('div');
@@ -2266,6 +2321,8 @@ export function HomeDashboard({
       ? (currentSpacingLabel.includes('緊密') ? 1.4 : currentSpacingLabel.includes('寬鬆') ? 2.2 : 1.8)
       : (targetWidget.memoLineHeight ?? 1.8);
 
+    const spacingMode = effectiveLineHeight <= 1.5 ? 'tight' : effectiveLineHeight >= 2.1 ? 'loose' : 'medium';
+
     return (
       <div 
         className={`custom-memo-card memo-${curSize.replace('size-', '')} ${isPreview ? 'is-preview' : ''} ${isBeingEdited ? 'is-editing-target' : ''}`}
@@ -2283,7 +2340,8 @@ export function HomeDashboard({
           /* 🌟 原地直編 contentEditable 畫布 (由 useEffect 單次注入，且字級由選字個別套用，外層維持基準字級) */
           <div
             ref={editorRef}
-            className="memo-text-surface"
+            className={`memo-text-surface memo-spacing-${spacingMode}`}
+            data-spacing={spacingMode}
             contentEditable={true}
             spellCheck={false}
             suppressContentEditableWarning={true}
@@ -2310,7 +2368,8 @@ export function HomeDashboard({
         ) : (
           /* 平時唯讀展示 */
           <div
-            className="memo-text-surface"
+            className={`memo-text-surface memo-spacing-${spacingMode}`}
+            data-spacing={spacingMode}
             style={{
               lineHeight: effectiveLineHeight,
               fontSize: `${targetWidget.memoFontSize || 18}px`

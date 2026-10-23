@@ -1483,16 +1483,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.13.9) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.14.0) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.13.9</span>
+                        <span>⭐ App: v4.14.0</span>
                         <span className="changelog-date">(2026-10-23)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 咒語彈窗全域置中居中：採用 Portal 直掛 body 搭配全螢幕柔和遮罩，清空與插入按鍵 100% 吸底可見。</li>
-                        <li>• 中間主體獨立平滑捲動：多行拼音、漢字與常用咒語清單於中央順暢滾動，告別拉不到底部缺陷。</li>
-                        <li>• 全息視窗閱讀歷程真實同步：360° 視窗（上次閱讀與歷程）全面連線真實日誌庫，徹底解決日誌有紀錄但全息卡顯示 0 之缺陷。</li>
+                        <li>• 便籤咒語中英連帶選取：反白或點擊時羅馬拼音與中文音譯一體化同步選取，告別單詞割裂。</li>
+                        <li>• 文字排版工具列完整支援：選取咒語支援等比例字級縮放（A-/A+）、切換字體與粗體，結構完整不損壞。</li>
+                        <li>• 間距微調與消除右側拉Bar：支援緊密/適中/寬鬆即時連動，緊湊優雅收納，徹底杜絕灰色滾動條。</li>
                       </ul>
                     </div>
 
@@ -1515,6 +1515,17 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.9</span>
+                            <span className="changelog-date">(2026-10-23)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 咒語彈窗全域置中居中：採用 Portal 直掛 body 搭配全螢幕柔和遮罩，清空與插入按鍵 100% 吸底可見。</li>
+                            <li>• 中間主體獨立平滑捲動：多行拼音、漢字與常用咒語清單於中央順暢滾動，告別拉不到底部缺陷。</li>
+                            <li>• 全息視窗閱讀歷程真實同步：360° 視窗（上次閱讀與歷程）全面連線真實日誌庫，徹底解決日誌有紀錄但全息卡顯示 0 之缺陷。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.13.8</span>
