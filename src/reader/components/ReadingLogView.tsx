@@ -992,7 +992,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
               <span>{selectedDateLunar ? selectedDateLunar.fullStr : '農曆吉日'}</span>
               {selectedDateLunar?.specialMoon && (
                 <span style={{ color: '#8c6000', fontWeight: 700 }}>
-                  · {selectedDateLunar.specialMoon}（南無地藏菩薩）
+                  · {selectedDateLunar.specialMoon}
                 </span>
               )}
             </div>
