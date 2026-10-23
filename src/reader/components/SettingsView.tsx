@@ -1490,9 +1490,9 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                         <span className="changelog-date">(2026-10-23)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 咒語彈窗全域置中居中：採用 Portal 直掛 body 搭配全螢幕柔和遮罩，徹底擺脫工具列相對定位壓迫。</li>
-                        <li>• 儲存按鍵 100% 吸底可見：彈窗高度智慧適配視窗（max 84vh），清空與「✓ 插入」按鍵永遠固定於視野中。</li>
+                        <li>• 咒語彈窗全域置中居中：採用 Portal 直掛 body 搭配全螢幕柔和遮罩，清空與插入按鍵 100% 吸底可見。</li>
                         <li>• 中間主體獨立平滑捲動：多行拼音、漢字與常用咒語清單於中央順暢滾動，告別拉不到底部缺陷。</li>
+                        <li>• 全息視窗閱讀歷程真實同步：360° 視窗（上次閱讀與歷程）全面連線真實日誌庫，徹底解決日誌有紀錄但全息卡顯示 0 之缺陷。</li>
                       </ul>
                     </div>
 

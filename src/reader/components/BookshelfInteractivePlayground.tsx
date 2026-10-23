@@ -7,6 +7,7 @@ import {
   Calendar
 } from 'lucide-react';
 import type { BookMetadata } from '../../types/book';
+import { getAllReadingLogs, type ReadingLogEntry } from '../../utils/db';
 import { getRecentDownloadedBooks } from '../../utils/recentDownloads';
 import { getRecentFavoriteBooks } from '../../utils/favoritesManager';
 import { sanitizeCreators } from '../../builder/IndexBuilder';
@@ -648,8 +649,32 @@ export function BookshelfInteractivePlayground({
     return remMins > 0 ? `${hours} 小時 ${remMins} 分鐘` : `${hours} 小時`;
   };
 
+  // 💡 載入讀者真實的每日閱讀日誌 (Reading Logs)
+  const [readingLogs, setReadingLogs] = useState<ReadingLogEntry[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadReadingLogs = async () => {
+      try {
+        const logs = await getAllReadingLogs();
+        if (isMounted) setReadingLogs(logs);
+      } catch (err) {
+        console.error('Failed to load reading logs for book hub:', err);
+      }
+    };
+    loadReadingLogs();
+    const handleLogUpdate = () => loadReadingLogs();
+    window.addEventListener('cbeta_reading_log_saved', handleLogUpdate);
+    window.addEventListener('storage', handleLogUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('cbeta_reading_log_saved', handleLogUpdate);
+      window.removeEventListener('storage', handleLogUpdate);
+    };
+  }, []);
+
   const getBookHubDetail = (workId: string): BookHubDetail => {
-    // 💡 優先讀取讀者真實的劃線與筆記
+    // 💡 1. 讀取讀者真實的劃線與筆記
     const userNotes = (allHighlights || [])
       .filter(h => h.workId === workId)
       .map(h => ({
@@ -661,28 +686,74 @@ export function BookshelfInteractivePlayground({
         segmentId: h.segmentId
       }));
 
-    if (BOOK_HUB_REGISTRY[workId]) {
-      const reg = BOOK_HUB_REGISTRY[workId];
-      return {
-        ...reg,
-        practiceCount: hubPracticeCounts[workId] ?? reg.practiceCount,
-        readCount: reg.readCount ?? reg.practiceCount ?? 0,
-        notesCount: userNotes.length > 0 ? userNotes.length : reg.notesCount,
-        sampleNotes: userNotes.length > 0 ? userNotes : reg.sampleNotes
-      };
+    // 💡 2. 讀取讀者真實的閱讀日誌 (時數、次數與各日明細)
+    const bookLogs = (readingLogs || []).filter(l => l.workId === workId);
+    const totalReadingMinutes = bookLogs.reduce((acc, cur) => acc + (cur.durationMinutes || 0), 0);
+    const readCount = bookLogs.length;
+
+    const dateMap = new Map<string, { count: number; minutes: number }>();
+    bookLogs.forEach(l => {
+      const d = l.date || '未知日期';
+      const cur = dateMap.get(d) || { count: 0, minutes: 0 };
+      cur.count += 1;
+      cur.minutes += (l.durationMinutes || 0);
+      dateMap.set(d, cur);
+    });
+    const readingHistoryRecords = Array.from(dateMap.entries())
+      .map(([date, val]) => ({ date, count: val.count, minutes: val.minutes }))
+      .sort((a, b) => b.date.localeCompare(a.date));
+
+    // 💡 3. 讀取讀者真實的閱讀進度與經文摘錄
+    let lastReadJuan = '未開始閱讀';
+    let lastReadProgress = 0;
+    let lastReadSnippet = '';
+
+    try {
+      const progressStr = localStorage.getItem(`reader_progress_${workId}`);
+      if (progressStr) {
+        const p = JSON.parse(progressStr);
+        if (p.juan) {
+          lastReadJuan = `第 ${p.juan} 卷`;
+        }
+        if (typeof p.percent === 'number' && p.percent > 0) {
+          lastReadProgress = Math.min(100, Math.max(1, Math.round(p.percent)));
+        } else if (p.juan) {
+          lastReadProgress = 5;
+        }
+        if (p.text && p.text.trim()) {
+          const clean = p.text.replace(/\s+/g, ' ').trim();
+          lastReadSnippet = clean.length > 70 ? `…${clean.slice(0, 60)}…` : `…${clean}…`;
+        }
+      }
+    } catch {}
+
+    // 若曾有閱讀紀錄但未滾動記錄百分比，自動標記為第 1 卷已開卷
+    if (lastReadJuan === '未開始閱讀' && (totalReadingMinutes > 0 || readCount > 0)) {
+      lastReadJuan = '第 1 卷';
+      lastReadProgress = 5;
     }
+
+    const reg = BOOK_HUB_REGISTRY[workId];
+    if (!lastReadSnippet) {
+      if (reg?.lastReadSnippet) {
+        lastReadSnippet = reg.lastReadSnippet;
+      } else {
+        lastReadSnippet = '…如是我聞。一時佛在舍衛國祇樹給孤獨園，與大比丘眾千二百五十人俱。爾時世尊食時，著衣持缽，入舍衛大城乞食…';
+      }
+    }
+
     return {
-      notesCount: userNotes.length,
-      lastReadJuan: '未開始閱讀',
-      lastReadProgress: 0,
-      lastReadSnippet: '…如是我聞。一時佛在舍衛國祇樹給孤獨園，與大比丘眾千二百五十人俱。爾時世尊食時，著衣持缽，入舍衛大城乞食…',
-      totalReadingMinutes: 0,
-      readCount: 0,
-      practiceCount: hubPracticeCounts[workId] || 0,
-      todayPracticeCount: 0,
-      cbetaVolumeInfo: 'CBETA 電子佛典集成',
-      readingHistoryRecords: [],
-      sampleNotes: userNotes
+      notesCount: userNotes.length > 0 ? userNotes.length : (reg?.notesCount ?? 0),
+      lastReadJuan: lastReadProgress > 0 ? lastReadJuan : (reg?.lastReadJuan ?? '未開始閱讀'),
+      lastReadProgress: lastReadProgress > 0 ? lastReadProgress : (reg?.lastReadProgress ?? 0),
+      lastReadSnippet: lastReadSnippet,
+      totalReadingMinutes: totalReadingMinutes > 0 ? totalReadingMinutes : (reg?.totalReadingMinutes ?? 0),
+      readCount: readCount > 0 ? readCount : (reg?.readCount ?? 0),
+      practiceCount: hubPracticeCounts[workId] ?? (reg?.practiceCount ?? 0),
+      todayPracticeCount: reg?.todayPracticeCount ?? 0,
+      cbetaVolumeInfo: reg?.cbetaVolumeInfo || 'CBETA 電子佛典集成',
+      readingHistoryRecords: readingHistoryRecords.length > 0 ? readingHistoryRecords : (reg?.readingHistoryRecords ?? []),
+      sampleNotes: userNotes.length > 0 ? userNotes : (reg?.sampleNotes ?? [])
     };
   };
 
