@@ -51,7 +51,7 @@ Welcome! This document outlines the coordination rules, branching strategy, buil
 
 The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PATCH`) to communicate changes clearly.
 
-- **Current Version**: `v4.14.0` (App: v4.14.0 / Builder: v2.9.13)
+- **Current Version**: `v4.14.1` (App: v4.14.1 / Builder: v2.9.13)
 - **Stable Checkpoint Tag**: `checkpoint-v4.0.1-cbeta-primary-stable`
 - **Location**: Defined in [version.ts](file:///D:/Antigravity%E5%B0%88%E7%94%A8/Cbeta%20Reader/src/builder/version.ts#L1-L2).
 - **Metadata Integration**: Packaged books will have the builder's version recorded in their IndexedDB metadata (`BookMetadata.version`), allowing the reader application to identify the version of the builder that imported it.
@@ -71,6 +71,11 @@ The builder engine version is tracked using semantic versioning (`MAJOR.MINOR.PA
   - 內部開發日誌與詳細技術說明維持紀錄於專案內部之 `.agents/AGENTS.md` 文件。
 
 ### Version History / Changelog
+
+- **⭐ App: v4.14.1 / Builder: v2.9.13** (2026-10-24)
+  - [App] 下方控制列全主題同色系沉浸：徹底消除死黑硬編碼，背景由各主題基底色（硃砂赤、青松黛等）毛玻璃動態連動，高亮由專屬強調色接管。
+  - [App] 閱讀日誌版面動態優雅重構：月曆下方依序呈現「聞思修」選中日專區與「本月看板」，新增本月常修功課 TOP 3 榜單並支援一鍵續記。
+  - [App] 書櫃筆記吸頂控制與下載按鈕升級：書櫃與筆記吸頂列消除多餘間距、滾動零位移固定；頂部選單膠囊全面升級為「+ 下載佛典」。
 
 - **⭐ App: v4.14.0 / Builder: v2.9.13** (2026-10-23)
   - [App] 便籤咒語中英連帶選取：反白或點擊時羅馬拼音與中文音譯一體化同步選取，告別單詞割裂。

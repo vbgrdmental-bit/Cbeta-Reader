@@ -62,12 +62,12 @@ body.theme-ebony {
   flex: 1;
 }
 
-/* Header & Search Bar (一列式首頁控制列) */
+/* Header & Search Bar (一列式首頁控制列：左右兩端對稱對齊，中間視野開闊) */
 .library-header {
   width: 100%;
   margin: 0;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   gap: 0.4rem;
   border-bottom: 1.2px solid rgba(140, 75, 39, 0.08);
@@ -137,6 +137,62 @@ body.theme-light .wing-capsule {
 
 .wing-capsule.wing-right {
   margin-right: 6px;
+}
+
+/* 🏠 首頁中央品牌膠囊 (點擊切換 10+1 主題顏色模式) */
+.home-brand-theme-capsule {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: var(--bg-card, rgba(255, 255, 255, 0.75));
+  border-radius: 9999px;
+  padding: 6px 16px;
+  border: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.home-brand-theme-capsule:hover {
+  transform: translateY(-1px);
+  border-color: var(--theme-accent, rgba(140, 75, 39, 0.28));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.home-brand-theme-capsule:active {
+  transform: scale(0.96);
+}
+
+body.theme-ebony .home-brand-theme-capsule,
+body.theme-dark .home-brand-theme-capsule {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.brand-capsule-cbeta {
+  color: #059669;
+  font-weight: 800;
+  font-size: 0.98rem;
+  letter-spacing: 0.5px;
+  font-family: var(--font-rounded, sans-serif);
+}
+
+body.theme-ebony .brand-capsule-cbeta,
+body.theme-dark .brand-capsule-cbeta {
+  color: #10b981;
+}
+
+.brand-capsule-reader {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.98rem;
+  letter-spacing: 0.2px;
+  font-family: var(--font-rounded, sans-serif);
 }
 
 /* 中央留白呼吸區 (保留舊版相容) */
@@ -238,7 +294,7 @@ body.theme-light .wing-capsule-item.active {
 
 .capsule-nav-item.active .capsule-label,
 .wing-capsule-item.active .capsule-label {
-  max-width: 82px;
+  max-width: 120px;
   opacity: 1;
   margin-left: 3px;
   letter-spacing: 0.01em;
@@ -10719,6 +10775,42 @@ body.theme-ebony .bookshelf-sticky-controls-header,
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* 🌟 書櫃與筆記統計控制列吸頂 (下拉時圖2之上區塊維持不變) */
+.bookshelf-sticky-summary-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--bg-library);
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  margin-left: -0.85rem;
+  margin-right: -0.85rem;
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+body.theme-ebony .bookshelf-sticky-summary-bar,
+.theme-ebony .bookshelf-sticky-summary-bar {
+  background: var(--bg-library);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 消除上方控制列與吸頂控制列間的多餘間距，滾動時零位移直接固定 */
+.bookshelf-section:has(.bookshelf-sticky-summary-bar) {
+  padding-top: 0 !important;
+}
+
 /* ============================================================ */
 /* 🏷️ 法義多維度：客觀關鍵字交叉比對徽章與文字高亮樣式           */
 /* ============================================================ */
@@ -13417,6 +13509,170 @@ body.theme-lotus .lastread-excerpt-header-4x1 {
 body.theme-lotus .lastread-excerpt-body-4x3 {
   background-color: #f6eeeb !important;
   border-color: rgba(120, 62, 57, 0.12) !important;
+}
+
+/* ==========================================================================
+   📱 首頁吸底 5 控制鍵導航列 (Home Bottom Tab Bar - 參考圖 1 規格)
+   ========================================================================== */
+.home-bottom-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: calc(56px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--bg-library);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid var(--border-color, rgba(140, 75, 39, 0.12));
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 800;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+/* 編輯便籤或全螢幕彈窗打開時自動隱藏底欄 */
+body:has(.has-memo-editing) .home-bottom-nav-bar,
+body:has(.mantra-modal-overlay) .home-bottom-nav-bar,
+body:has(.is-editing-memo-widget) .home-bottom-nav-bar {
+  display: none !important;
+}
+
+body.theme-ebony .home-bottom-nav-bar,
+body.theme-dark .home-bottom-nav-bar,
+body.theme-custom-dark .home-bottom-nav-bar {
+  background: var(--bg-library) !important;
+  background: color-mix(in srgb, var(--bg-library) 88%, transparent) !important;
+  border-top-color: var(--border-color, rgba(255, 255, 255, 0.12)) !important;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.theme-ebony .home-bottom-nav-bar .bottom-nav-item,
+body.theme-dark .home-bottom-nav-bar .bottom-nav-item,
+body.theme-custom-dark .home-bottom-nav-bar .bottom-nav-item {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.72));
+}
+
+body.theme-ebony .home-bottom-nav-bar .bottom-nav-item:hover,
+body.theme-dark .home-bottom-nav-bar .bottom-nav-item:hover,
+body.theme-custom-dark .home-bottom-nav-bar .bottom-nav-item:hover {
+  color: var(--theme-accent, #ffd700);
+}
+
+body.theme-ebony .home-bottom-nav-bar .bottom-nav-item.active,
+body.theme-dark .home-bottom-nav-bar .bottom-nav-item.active,
+body.theme-custom-dark .home-bottom-nav-bar .bottom-nav-item.active {
+  color: var(--theme-accent, #ffd700) !important;
+}
+
+body.theme-ebony .home-bottom-nav-bar .bottom-nav-item.active .bottom-nav-label,
+body.theme-dark .home-bottom-nav-bar .bottom-nav-item.active .bottom-nav-label,
+body.theme-custom-dark .home-bottom-nav-bar .bottom-nav-item.active .bottom-nav-label {
+  color: var(--theme-accent, #ffd700) !important;
+}
+
+body.theme-comfort .home-bottom-nav-bar {
+  background: var(--bg-library) !important;
+  background: color-mix(in srgb, var(--bg-library) 88%, transparent) !important;
+  border-top-color: var(--border-color, rgba(140, 75, 39, 0.12)) !important;
+}
+
+body.theme-lotus .home-bottom-nav-bar {
+  background: var(--bg-library) !important;
+  background: color-mix(in srgb, var(--bg-library) 88%, transparent) !important;
+  border-top-color: var(--border-color, rgba(120, 62, 57, 0.12)) !important;
+}
+
+/* 單個導航按鈕 */
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  background: transparent;
+  border: none;
+  padding: 4px 2px 2px 2px;
+  gap: 3px;
+  cursor: pointer;
+  color: var(--text-muted, var(--reader-text-muted, #7a6652));
+  transition: all 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.bottom-nav-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 24px;
+  transition: transform 0.18s ease, background 0.18s ease;
+  color: inherit;
+}
+
+.bottom-nav-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  line-height: 1.1;
+  white-space: nowrap;
+  transition: color 0.18s ease;
+  color: inherit;
+}
+
+/* Hover & Active 反饋 */
+.bottom-nav-item:hover {
+  color: var(--theme-accent, #1ea98c);
+}
+
+.bottom-nav-item:active .bottom-nav-icon-wrapper {
+  transform: scale(0.92);
+}
+
+/* 當前分頁高亮狀態 (Active Tab) - 依主題色彩 Token 自動配置強調色與微透底色 */
+.bottom-nav-item.active {
+  color: var(--theme-accent, #1ea98c) !important;
+}
+
+.bottom-nav-item.active .bottom-nav-label {
+  font-weight: 700;
+  color: var(--theme-accent, #1ea98c) !important;
+}
+
+.bottom-nav-item.active .bottom-nav-icon-wrapper {
+  color: var(--theme-accent, #1ea98c) !important;
+  transform: translateY(-1.5px);
+  background: var(--theme-accent-light, rgba(245, 158, 11, 0.16)) !important;
+  border-radius: 12px;
+  width: 36px;
+  height: 25px;
+}
+
+/* 頂部極細微膠囊指示條 */
+.bottom-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  width: 16px;
+  height: 2.5px;
+  border-radius: 2px;
+  background-color: var(--theme-accent, #1ea98c) !important;
+  opacity: 0.88;
+  transition: all 0.2s ease;
+}
+
+/* 首頁專屬：底部預留充足安全間距，避免最下方卡片被吸底控制列遮擋 */
+.library-content-area.has-bottom-nav {
+  padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
 }
 
 

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   Plus, Check, CheckSquare, CheckCircle2, X, Download,
   Home, Search, CalendarDays,
-  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ChevronsDown, ChevronsUp, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, Play, Tag,
+  Folder, FolderPlus, Edit3, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Settings, Clock, Heart, Trash2, FolderInput, MoreVertical, Notebook, BookOpen, BookMarked, Play, Tag,
   Layers, User
 } from 'lucide-react';
 import type { BookMetadata, ReaderPackage } from '../../types/book';
@@ -111,6 +111,9 @@ export function Library({
     reloadFolders
   } = useBookshelfFolders(resetFolderTrigger);
 
+  // 💡 下載經典頁次級模式切換 (搜尋佛典 vs 依類別查詢)
+  const [cbetaSubMode, setCbetaSubMode] = useState<'search' | 'categories'>('search');
+
   // 💡 當接收到全站頂部四大功能導航目標時，在渲染期即時同步狀態（徹底消除切換時的 1 幀白屏/首頁閃爍）
   const [prevTargetSectionTimestamp, setPrevTargetSectionTimestamp] = useState<number | null>(null);
   if (targetSection && targetSection.timestamp !== prevTargetSectionTimestamp) {
@@ -178,6 +181,81 @@ export function Library({
   const saveMyBookshelfBookIds = (ids: string[]) => {
     setMyBookshelfBookIds(ids);
     localStorage.setItem('cbeta_my_bookshelf_book_ids', JSON.stringify(ids));
+  };
+
+  // 💡 10+1 全主題循環體系 (4 大經典 + 6 大修行佛光色 + 1 自訂色)
+  const BASE_THEME_CYCLE_ITEMS = [
+    { key: 'ivory', name: '象牙白', theme: 'ivory' as const, dotColor: '#faf7f0' },
+    { key: 'parchment', name: '羊皮紙', theme: 'parchment' as const, dotColor: '#f1e5c9' },
+    { key: 'comfort', name: '舒服綠', theme: 'comfort' as const, dotColor: '#e3ebd9' },
+    { key: 'ebony', name: '烏木黑', theme: 'ebony' as const, dotColor: '#12161a' },
+    { key: 'lotus_mist', name: '蓮花粉', theme: 'custom' as const, customColor: '#ebdcd9', dotColor: '#ebdcd9' },
+    { key: 'amber_gold', name: '琥珀金', theme: 'custom' as const, customColor: '#dcb372', dotColor: '#dcb372' },
+    { key: 'azure_sky', name: '天青藍', theme: 'custom' as const, customColor: '#8caec4', dotColor: '#8caec4' },
+    { key: 'cinnabar_red', name: '硃砂赤', theme: 'custom' as const, customColor: '#8c3835', dotColor: '#8c3835' },
+    { key: 'pine_green', name: '青松黛', theme: 'custom' as const, customColor: '#234a3b', dotColor: '#234a3b' },
+    { key: 'sandalwood_purple', name: '紫紺木', theme: 'custom' as const, customColor: '#221426', dotColor: '#221426' },
+  ];
+
+  const getThemeCycleList = () => {
+    const list = [...BASE_THEME_CYCLE_ITEMS];
+    const userHex = settings.customThemeColor?.toLowerCase().trim();
+    const SACRED_HEX_LIST = ['#ebdcd9', '#dcb372', '#8caec4', '#8c3835', '#234a3b', '#221426'];
+    if (userHex && !SACRED_HEX_LIST.includes(userHex)) {
+      list.push({
+        key: 'custom_dedicated',
+        name: '自訂',
+        theme: 'custom' as const,
+        customColor: userHex,
+        dotColor: userHex
+      });
+    }
+    return list;
+  };
+
+  const getCurrentThemeItem = () => {
+    const cycleList = getThemeCycleList();
+    const curTheme = settings.theme || 'ivory';
+    const curCustomHex = settings.customThemeColor?.toLowerCase().trim();
+
+    if (curTheme !== 'custom') {
+      const match = cycleList.find(t => t.theme === curTheme);
+      return match || cycleList[0];
+    }
+
+    const matchSacred = cycleList.find(t => t.theme === 'custom' && t.customColor?.toLowerCase() === curCustomHex);
+    if (matchSacred) return matchSacred;
+
+    return {
+      key: 'custom_dedicated',
+      name: '自訂',
+      theme: 'custom' as const,
+      customColor: curCustomHex || '#ebdcd9',
+      dotColor: curCustomHex || '#ebdcd9'
+    };
+  };
+
+  const handleCycleTheme = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!onSaveSettings) return;
+    const cycleList = getThemeCycleList();
+    const curItem = getCurrentThemeItem();
+
+    let curIdx = cycleList.findIndex(t => {
+      if (curItem.key === 'custom_dedicated') {
+        return t.key === 'custom_dedicated';
+      }
+      return t.key === curItem.key;
+    });
+
+    if (curIdx === -1) curIdx = 0;
+    const nextItem = cycleList[(curIdx + 1) % cycleList.length];
+
+    onSaveSettings({
+      ...settings,
+      theme: nextItem.theme,
+      customThemeColor: nextItem.customColor !== undefined ? nextItem.customColor : settings.customThemeColor
+    });
   };
 
   const getBookCjkChars = (book: BookMetadata): number => {
@@ -954,7 +1032,7 @@ export function Library({
 
   // 💡 重點與筆記：雙分段切換（'books' 依書籍檢視 vs 'dimensions' 法義多維度）與 4 快捷膠囊
   const [notesViewMode, setNotesViewMode] = useState<'books' | 'dimensions'>('books');
-  const [notesFilterStatus, setNotesFilterStatus] = useState<'all' | 'has_note' | 'only_hl' | 'recent'>('all');
+  const [notesFilterStatus] = useState<'all' | 'has_note' | 'only_hl' | 'recent'>('all');
   const [expandedKeywordGroups, setExpandedKeywordGroups] = useState<Record<string, boolean>>({});
 
   const toggleKeywordGroup = (kw: string) => {
@@ -1023,13 +1101,11 @@ export function Library({
     return keywordComparisonGroups.every(grp => expandedKeywordGroups[grp.keyword] === false);
   }, [keywordComparisonGroups, expandedKeywordGroups]);
 
-  // 一鍵全部展開 / 全部收合
-  const toggleAllKeywordGroups = () => {
+  // 一鍵全部展開 / 全部收合 (保留供擴展)
+  const _toggleAllKeywordGroups = () => {
     if (isAllKeywordsCollapsed) {
-      // 全部打開
       setExpandedKeywordGroups({});
     } else {
-      // 全部收合
       const collapsedMap: Record<string, boolean> = {};
       keywordComparisonGroups.forEach(grp => {
         collapsedMap[grp.keyword] = false;
@@ -1037,19 +1113,18 @@ export function Library({
       setExpandedKeywordGroups(collapsedMap);
     }
   };
+  void _toggleAllKeywordGroups;
 
   // 💡 「我的筆記」4 大維度分類（依部類 / 依冊別 / 依作譯者 / 依朝代）
   const [notesClassificationMode, setNotesClassificationMode] = useState<'category' | 'volume' | 'author' | 'dynasty'>('category');
   const [expandedDimensionGroups, setExpandedDimensionGroups] = useState<Record<string, boolean>>({});
 
-  // 🌟 方案 B：我的筆記單行 Popover 狀態 (模式切換 / 維度切換)
+  // 🌟 方案 B：我的筆記單行 Popover 狀態 (維度切換，模式切換已整合至頂部控制列)
   const [showNotesDimPopover, setShowNotesDimPopover] = useState(false);
-  const [showNotesModePopover, setShowNotesModePopover] = useState(false);
 
   useEffect(() => {
     const handleGlobalClick = () => {
       setShowNotesDimPopover(false);
-      setShowNotesModePopover(false);
     };
     window.addEventListener('click', handleGlobalClick);
     return () => window.removeEventListener('click', handleGlobalClick);
@@ -1559,6 +1634,13 @@ export function Library({
     );
   };
 
+  // 📱 底部吸底 5 控制鍵 Active 狀態
+  const isCbetaActive = activeTab === 'cbeta';
+  const isShelfActive = activeTab === 'shelf' && Boolean(currentFolderId) && currentFolderId !== 'virtual_highlights';
+  const isNotesActive = activeTab === 'shelf' && currentFolderId === 'virtual_highlights';
+  const isSearchActive = activeTab === 'search';
+  const isLogActive = activeTab === 'reading-log';
+
   return (
     <div 
       className="library-container" 
@@ -1648,86 +1730,123 @@ export function Library({
           <Home size={20} />
         </button>
 
-        {/* 2. 中央統一微膠囊：[ 下載 + 書櫃 + 筆記 + 搜尋 + (閱讀日誌) ] */}
-        <div className="unified-nav-capsule">
-          {/* 下載經典 */}
+        {/* 💡 中央區域：各分頁專屬功能膠囊 (點到開啟縮合型式) */}
+        {/* 0.「首頁」：頂部中央品牌膠囊「CBETA Reader」，點擊循環切換 10+1 主題色彩 */}
+        {activeTab === 'shelf' && !currentFolderId && (
           <button
-            className={`capsule-nav-item nav-item-cbeta ${activeTab === 'cbeta' ? 'active' : ''}`}
-            data-nav="cbeta"
-            onClick={() => {
-              setActiveTab('cbeta');
-              updateHashRoute('cbeta');
-              onOpenCbetaCatalog?.();
-            }}
-            title="從 CBETA 資料庫下載經典"
+            type="button"
+            className="home-brand-theme-capsule animate-fade-in"
+            onClick={handleCycleTheme}
+            title={`目前主題：${getCurrentThemeItem().name} (點擊切換下一種色彩)`}
           >
-            <Plus size={17} style={{ strokeWidth: 2.2 }} />
-            <span className="capsule-label">下載經典</span>
+            <span className="brand-capsule-cbeta">CBETA</span>
+            <span className="brand-capsule-reader">Reader</span>
           </button>
+        )}
 
-          {/* 我的書櫃 */}
-          <button
-            className={`capsule-nav-item nav-item-shelf ${activeTab === 'shelf' && (currentFolderId === 'virtual_my_folders' || (currentFolderId && currentFolderId !== 'virtual_highlights')) ? 'active' : ''}`}
-            data-nav="shelf"
-            onClick={() => {
-              setBookshelfStatusFilter('all');
-              setActiveTab('shelf');
-              navigateToFolder('virtual_my_folders');
-              updateHashRoute('library');
-            }}
-            title="我的書櫃（已下載經典與資料夾）"
-          >
-            <Folder size={16} />
-            <span className="capsule-label">我的書櫃</span>
-          </button>
-
-          {/* 我的筆記 */}
-          <button
-            className={`capsule-nav-item nav-item-notes ${activeTab === 'shelf' && currentFolderId === 'virtual_highlights' ? 'active' : ''}`}
-            data-nav="notes"
-            onClick={() => {
-              setActiveTab('shelf');
-              navigateToFolder('virtual_highlights');
-              updateHashRoute('library');
-            }}
-            title="我的筆記"
-          >
-            <Notebook size={16} />
-            <span className="capsule-label">我的筆記</span>
-          </button>
-
-          {/* 全文檢索 */}
-          <button
-            className={`capsule-nav-item nav-item-search ${activeTab === 'search' ? 'active' : ''}`}
-            data-nav="search"
-            onClick={() => {
-              setActiveTab('search');
-              updateHashRoute('library');
-            }}
-            title="全文檢索（已下載經典檢索）"
-          >
-            <Search size={16} />
-            <span className="capsule-label">全文檢索</span>
-          </button>
-
-          {/* 閱讀日誌（若勾選「閱讀日誌」時整合於微膠囊內） */}
-          {settings.readingLogEnabled && (
+        {/* 1.「下載經典」頁：下載佛典 vs 依類別查詢 */}
+        {activeTab === 'cbeta' && (
+          <div className="unified-nav-capsule animate-fade-in">
             <button
-              className={`capsule-nav-item nav-item-log ${activeTab === 'reading-log' ? 'active' : ''}`}
-              data-nav="log"
-              onClick={() => {
-                setActiveTab('reading-log');
-                updateHashRoute('library');
-              }}
-              title="閱讀日誌"
+              type="button"
+              className={`capsule-nav-item ${cbetaSubMode === 'search' ? 'active' : ''}`}
+              onClick={() => setCbetaSubMode('search')}
+              title="搜尋並下載 CBETA 電子佛典"
             >
-              <CalendarDays size={16} />
-              <span className="capsule-label">閱讀日誌</span>
+              <Plus size={18} strokeWidth={2.4} />
+              <span className="capsule-label">下載佛典</span>
             </button>
-          )}
-        </div>
+            <button
+              type="button"
+              className={`capsule-nav-item ${cbetaSubMode === 'categories' ? 'active' : ''}`}
+              onClick={() => setCbetaSubMode('categories')}
+              title="依類別查詢"
+            >
+              <Layers size={17} />
+              <span className="capsule-label">依類別查詢</span>
+            </button>
+          </div>
+        )}
 
-        {/* 3. 右端：設定 */}
+        {/* 2.「我的書櫃」頁：圖4 四大過濾膠囊 (全部 / 近期下載 / 上次閱讀 / 我的最愛) */}
+        {activeTab === 'shelf' && Boolean(currentFolderId) && currentFolderId !== 'virtual_highlights' && (
+          <div className="unified-nav-capsule animate-fade-in">
+            <button
+              type="button"
+              className={`capsule-nav-item ${bookshelfStatusFilter === 'all' ? 'active' : ''}`}
+              onClick={() => {
+                setBookshelfStatusFilter('all');
+                if (currentFolderId !== 'virtual_my_folders') navigateToFolder('virtual_my_folders');
+              }}
+              title="全部經書"
+            >
+              <BookOpen size={17} />
+              <span className="capsule-label">全部 ({downloadedBooks.length})</span>
+            </button>
+            <button
+              type="button"
+              className={`capsule-nav-item ${bookshelfStatusFilter === 'downloads' ? 'active' : ''}`}
+              onClick={() => {
+                setBookshelfStatusFilter('downloads');
+                if (currentFolderId !== 'virtual_my_folders') navigateToFolder('virtual_my_folders');
+              }}
+              title="近期下載"
+            >
+              <Download size={17} />
+              <span className="capsule-label">近期下載</span>
+            </button>
+            <button
+              type="button"
+              className={`capsule-nav-item ${bookshelfStatusFilter === 'recent' ? 'active' : ''}`}
+              onClick={() => {
+                setBookshelfStatusFilter('recent');
+                if (currentFolderId !== 'virtual_my_folders') navigateToFolder('virtual_my_folders');
+              }}
+              title="上次閱讀"
+            >
+              <Clock size={17} />
+              <span className="capsule-label">上次閱讀</span>
+            </button>
+            <button
+              type="button"
+              className={`capsule-nav-item ${bookshelfStatusFilter === 'favorites' ? 'active' : ''}`}
+              onClick={() => {
+                setBookshelfStatusFilter('favorites');
+                if (currentFolderId !== 'virtual_my_folders') navigateToFolder('virtual_my_folders');
+              }}
+              title="我的最愛"
+            >
+              <Heart size={17} />
+              <span className="capsule-label">我的最愛</span>
+            </button>
+          </div>
+        )}
+
+        {/* 3.「我的筆記」頁：圖5 雙分段切換膠囊 (依書籍檢視 vs 法義多維度) */}
+        {activeTab === 'shelf' && currentFolderId === 'virtual_highlights' && (
+          <div className="unified-nav-capsule animate-fade-in">
+            <button
+              type="button"
+              className={`capsule-nav-item ${notesViewMode === 'books' ? 'active' : ''}`}
+              onClick={() => setNotesViewMode('books')}
+              title="依書籍檢視"
+            >
+              <BookMarked size={17} />
+              <span className="capsule-label">依書籍檢視</span>
+            </button>
+            <button
+              type="button"
+              className={`capsule-nav-item ${notesViewMode === 'dimensions' ? 'active' : ''}`}
+              onClick={() => setNotesViewMode('dimensions')}
+              title="法義多維度"
+            >
+              <Layers size={17} />
+              <span className="capsule-label">法義多維度</span>
+            </button>
+          </div>
+        )}
+
+        {/* 2. 右端：設定 */}
         <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
           {/* 齒輪設定按鈕（一律在最右端顯示，點擊開啟與閱讀頁相同的設定彈窗） */}
           <button 
@@ -1742,12 +1861,19 @@ export function Library({
 
       <div 
         ref={swipeContainerRef}
-        className="library-content-area custom-scrollbar"
+        className="library-content-area custom-scrollbar has-bottom-nav"
         style={{ willChange: 'transform' }}
       >
         {activeTab === 'shelf' ? (
-        /* 書架主畫面 */
-        <div className="bookshelf-section animate-slide-up" onClick={handleShelfBackgroundClick}>
+        <div 
+          className="bookshelf-section animate-slide-up" 
+          onClick={handleShelfBackgroundClick}
+          style={
+            (currentFolderId === 'virtual_my_folders' || currentFolderId === 'virtual_highlights')
+              ? { paddingTop: 0 }
+              : undefined
+          }
+        >
           {/* 資料夾導航與麵包屑 (根目錄「我的書櫃」與「我的筆記」已極致精簡上提，不顯示多餘卡片) */}
           {currentFolderId && currentFolderId !== 'virtual_my_folders' && currentFolderId !== 'virtual_highlights' && (
             <div className="folder-nav-wrapper">
@@ -2059,184 +2185,75 @@ export function Library({
               {/* 主容器：使用與「我的書櫃」完全一致之 appstore-bookshelf-container + bookshelf-playground-root */}
               <div className="appstore-bookshelf-container animate-fade-in" style={{ transform: 'none' }}>
                 <div className="bookshelf-playground-root animate-fade-in" style={{ padding: '0 0.85rem 3rem 0.85rem' }}>
-                  {/* 🌟 吸頂浮動控制列：方案 B 單行極致精簡水平膠囊列 */}
-                  <div className="bookshelf-sticky-controls-header">
-                    <div className="bookshelf-single-row-bar">
-                      {/* 左側：2 個快捷過濾膠囊 (全部 / 近期標註) [已刪除有心得與純重點] */}
-                      <div className="bookshelf-single-row-left">
-                        <button
-                          type="button"
-                          className={`bookshelf-filter-capsule ${notesFilterStatus === 'all' ? 'active' : ''}`}
-                          onClick={() => setNotesFilterStatus('all')}
-                        >
-                          <span>全部 ({allHighlights.length})</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`bookshelf-filter-capsule ${notesFilterStatus === 'recent' ? 'active' : ''}`}
-                          onClick={() => setNotesFilterStatus('recent')}
-                        >
-                          <span>近期標註</span>
-                        </button>
-                      </div>
-
-                      {/* 右側：模式切換膠囊 + 維度切換膠囊 */}
-                      <div className="bookshelf-single-row-right">
-                        {/* 1. 筆記模式切換膠囊 (依書籍檢視 / 法義多維度，左側符號已刪除) */}
-                        <div style={{ position: 'relative', display: 'inline-flex' }}>
-                          <button
-                            type="button"
-                            className={`notes-mode-dropdown-btn ${showNotesModePopover ? 'active-open' : ''}`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setShowNotesModePopover(!showNotesModePopover);
-                              setShowNotesDimPopover(false);
-                            }}
-                            title="切換筆記整理模式"
-                          >
-                            <span>{notesViewMode === 'books' ? '依書籍檢視' : '法義多維度'}</span>
-                            <ChevronDown 
-                              size={10} 
-                              style={{ 
-                                transform: showNotesModePopover ? 'rotate(180deg)' : 'none', 
-                                transition: 'transform 0.2s ease' 
-                              }} 
-                            />
-                          </button>
-
-                          {/* 模式切換輕量 Popover 浮動選單 */}
-                          {showNotesModePopover && (
-                            <div 
-                              className="bookshelf-dim-popover-menu animate-fade-in"
-                              style={{ right: '0' }}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <div
-                                className={`bookshelf-dim-popover-item ${notesViewMode === 'books' ? 'active' : ''}`}
-                                onClick={() => {
-                                  setNotesViewMode('books');
-                                  setShowNotesModePopover(false);
-                                }}
-                              >
-                                <span>依書籍檢視</span>
-                                {notesViewMode === 'books' && <Check size={12} strokeWidth={2.5} />}
-                              </div>
-                              <div
-                                className={`bookshelf-dim-popover-item ${notesViewMode === 'dimensions' ? 'active' : ''}`}
-                                onClick={() => {
-                                  setNotesViewMode('dimensions');
-                                  setShowNotesModePopover(false);
-                                }}
-                              >
-                                <span>法義多維度</span>
-                                {notesViewMode === 'dimensions' && <Check size={12} strokeWidth={2.5} />}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* 2. 最右側：分類維度切換膠囊 (僅在「依書籍檢視」時顯示；若切換至「法義多維度」則替換為「全部收合/全部打開」符號按鈕) */}
-                        {notesViewMode === 'books' ? (
-                          <div style={{ position: 'relative', display: 'inline-flex' }}>
-                            <button
-                              type="button"
-                              className={`bookshelf-dim-dropdown-btn ${showNotesDimPopover ? 'active-open' : ''}`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setShowNotesDimPopover(!showNotesDimPopover);
-                                setShowNotesModePopover(false);
-                              }}
-                              title="切換分類維度"
-                            >
-                              <span>• {
-                                notesClassificationMode === 'category' ? '依部類' :
-                                notesClassificationMode === 'volume' ? '依冊別' :
-                                notesClassificationMode === 'author' ? '依作譯者' : '依朝代'
-                              }</span>
-                              <ChevronDown 
-                                size={11} 
-                                style={{ 
-                                  transform: showNotesDimPopover ? 'rotate(180deg)' : 'none', 
-                                  transition: 'transform 0.2s ease' 
-                                }} 
-                              />
-                            </button>
-
-                            {/* 4 分類維度輕量 Popover 浮動選單 */}
-                            {showNotesDimPopover && (
-                              <div 
-                                className="bookshelf-dim-popover-menu animate-fade-in"
-                                style={{ right: '0' }}
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {[
-                                  { id: 'category', label: '依部類', icon: Layers },
-                                  { id: 'volume', label: '依冊別', icon: BookOpen },
-                                  { id: 'author', label: '依作譯者', icon: User },
-                                  { id: 'dynasty', label: '依朝代', icon: Clock }
-                                ].map(item => {
-                                  const isActive = notesClassificationMode === item.id;
-                                  const IconComp = item.icon;
-                                  return (
-                                    <div
-                                      key={item.id}
-                                      className={`bookshelf-dim-popover-item ${isActive ? 'active' : ''}`}
-                                      onClick={() => {
-                                        setNotesClassificationMode(item.id as any);
-                                        setShowNotesDimPopover(false);
-                                      }}
-                                    >
-                                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <IconComp size={13} />
-                                        <span>{item.label}</span>
-                                      </span>
-                                      {isActive && <Check size={12} strokeWidth={2.5} />}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          /* 法義多維度：全部收合 / 全部打開 關鍵字 符號按鈕 */
-                          <button
-                            type="button"
-                            className="bookshelf-dim-dropdown-btn"
-                            onClick={toggleAllKeywordGroups}
-                            title={isAllKeywordsCollapsed ? "全部展開所有關鍵字" : "全部收合所有關鍵字"}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                              {isAllKeywordsCollapsed ? <ChevronsDown size={11} /> : <ChevronsUp size={11} />}
-                              <span>{isAllKeywordsCollapsed ? '全部展開' : '全部收合'}</span>
-                            </span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 4. 狀態提示列 (僅在依書籍檢視時顯示；法義多維度依指示徹底移除) */}
+                  {/* 4. 狀態提示列 (依書籍檢視時顯示；依部類膠囊與書櫃同款齊平且吸頂) */}
                   {notesViewMode === 'books' && (
                     <div 
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        margin: '0.2rem 0.2rem 0.75rem 0.2rem',
-                        fontSize: '0.8rem',
-                        color: 'var(--text-muted)',
-                        fontWeight: 600
-                      }}
+                      className="bookshelf-sticky-summary-bar"
                     >
-                      <div>
-                        共 {groupedHighlights.length} 部經典 · 自動依
-                        {notesClassificationMode === 'category' ? '部類' :
-                         notesClassificationMode === 'volume' ? '冊別' :
-                         notesClassificationMode === 'author' ? '作譯者' : '朝代'}歸納
+                      {/* 依指示整合左側文字為：「共 X 部經典． Y 條重點 」 */}
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                        共 {groupedHighlights.length} 部經典． {filteredHighlights.length} 條重點 
                       </div>
-                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                        共 {filteredHighlights.length} 條重點
+
+                      {/* 最右側：下移之「依部類」膠囊 (相對位置與「我的書櫃」完全一致) */}
+                      <div style={{ position: 'relative', display: 'inline-flex' }}>
+                        <button
+                          type="button"
+                          className={`bookshelf-dim-dropdown-btn ${showNotesDimPopover ? 'active-open' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowNotesDimPopover(!showNotesDimPopover);
+                          }}
+                          title="切換經藏分類維度"
+                        >
+                          <span>• {
+                            notesClassificationMode === 'category' ? '依部類' :
+                            notesClassificationMode === 'volume' ? '依冊別' :
+                            notesClassificationMode === 'author' ? '依作譯者' : '依朝代'
+                          }</span>
+                          <ChevronDown 
+                            size={11} 
+                            style={{ 
+                              transform: showNotesDimPopover ? 'rotate(180deg)' : 'none', 
+                              transition: 'transform 0.2s ease' 
+                            }} 
+                          />
+                        </button>
+
+                        {/* 4 分類維度輕量 Popover 浮動選單 */}
+                        {showNotesDimPopover && (
+                          <div 
+                            className="bookshelf-dim-popover-menu animate-fade-in"
+                            style={{ right: '0' }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {[
+                              { id: 'category', label: '依部類', icon: Layers },
+                              { id: 'volume', label: '依冊別', icon: BookOpen },
+                              { id: 'author', label: '依作譯者', icon: User },
+                              { id: 'dynasty', label: '依朝代', icon: Clock }
+                            ].map(item => {
+                              const isActive = notesClassificationMode === item.id;
+                              const IconComp = item.icon;
+                              return (
+                                <div
+                                  key={item.id}
+                                  className={`bookshelf-dim-popover-item ${isActive ? 'active' : ''}`}
+                                  onClick={() => {
+                                    setNotesClassificationMode(item.id as any);
+                                    setShowNotesDimPopover(false);
+                                  }}
+                                >
+                                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <IconComp size={13} />
+                                    <span>{item.label}</span>
+                                  </span>
+                                  {isActive && <Check size={12} strokeWidth={2.5} />}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -2739,12 +2756,14 @@ export function Library({
       ) : null}
 
       {/* 💡 藏經庫 (下載經典) 視圖：以 display 控制顯隱，保留搜尋狀態與滾動位置，且共享頂部微膠囊 Header */}
-      <div style={{ display: activeTab === 'cbeta' ? 'flex' : 'none', flexDirection: 'column', flex: 1, minHeight: 0, width: '100%', height: '100%' }}>
+      <div style={{ display: activeTab === 'cbeta' ? 'flex' : 'none', flexDirection: 'column', flex: 1, minHeight: 0, width: '100%', height: '100%', boxSizing: 'border-box' }}>
         <CbetaCatalogView
           hideHeader={true}
           isActive={activeTab === 'cbeta'}
           targetCategory={catalogTargetCategory}
           onClearTargetCategory={() => setCatalogTargetCategory(null)}
+          subMode={cbetaSubMode}
+          onSubModeChange={setCbetaSubMode}
           onBackToLibrary={() => {
             setActiveTab('shelf');
             setCurrentFolderId(null);
@@ -3717,7 +3736,92 @@ export function Library({
         )}
       </AppModal>
 
+      {/* 📱 底部吸底 5 控制鍵導航列 (全域常駐顯示，單手拇指操作，當前頁高亮) */}
+      <nav className="home-bottom-nav-bar animate-fade-in" role="navigation" aria-label="全域快捷導航">
+        {/* 1. 下載經典 */}
+        <button
+          type="button"
+          className={`bottom-nav-item ${isCbetaActive ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('cbeta');
+            updateHashRoute('cbeta');
+            onOpenCbetaCatalog?.();
+          }}
+          title="從 CBETA 資料庫下載經典"
+        >
+          <div className="bottom-nav-icon-wrapper">
+            <Plus size={20} style={{ strokeWidth: 2.2 }} />
+          </div>
+          <span className="bottom-nav-label">下載經典</span>
+        </button>
 
+        {/* 2. 我的書櫃 */}
+        <button
+          type="button"
+          className={`bottom-nav-item ${isShelfActive ? 'active' : ''}`}
+          onClick={() => {
+            setBookshelfStatusFilter('all');
+            setActiveTab('shelf');
+            navigateToFolder('virtual_my_folders');
+            updateHashRoute('library');
+          }}
+          title="我的書櫃（已下載經典與資料夾）"
+        >
+          <div className="bottom-nav-icon-wrapper">
+            <Folder size={19} />
+          </div>
+          <span className="bottom-nav-label">我的書櫃</span>
+        </button>
+
+        {/* 3. 我的筆記 */}
+        <button
+          type="button"
+          className={`bottom-nav-item ${isNotesActive ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('shelf');
+            navigateToFolder('virtual_highlights');
+            updateHashRoute('library');
+          }}
+          title="我的筆記"
+        >
+          <div className="bottom-nav-icon-wrapper">
+            <Notebook size={19} />
+          </div>
+          <span className="bottom-nav-label">我的筆記</span>
+        </button>
+
+        {/* 4. 閱讀日誌 */}
+        <button
+          type="button"
+          className={`bottom-nav-item ${isLogActive ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('reading-log');
+            updateHashRoute('library');
+          }}
+          title="閱讀日誌（聞思修記錄與功課）"
+        >
+          <div className="bottom-nav-icon-wrapper">
+            <CalendarDays size={19} />
+          </div>
+          <span className="bottom-nav-label">閱讀日誌</span>
+        </button>
+
+        {/* 5. 全文檢索 */}
+        <button
+          type="button"
+          className={`bottom-nav-item ${isSearchActive ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('search');
+            updateHashRoute('library');
+          }}
+          title="全文檢索（已下載經典檢索）"
+        >
+          <div className="bottom-nav-icon-wrapper">
+            <Search size={19} />
+          </div>
+          <span className="bottom-nav-label">全文檢索</span>
+        </button>
+      </nav>
 
     </div>
   );

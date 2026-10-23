@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Home, ChevronLeft, ArrowRight, Settings, Search,
-  Folder, Download, Check, X, Layers, BookMarked, User, Clock, Plus, Minus, Heart, Notebook, CalendarDays
+  Folder, Download, Check, X, Plus, Notebook, CalendarDays
 } from 'lucide-react';
 import type { AppSettings } from '../../utils/db';
 import { listBooks } from '../../utils/db';
@@ -30,6 +30,8 @@ interface CbetaCatalogViewProps {
     stack?: CatalogNode[];
   } | null;
   onClearTargetCategory?: () => void;
+  subMode?: 'search' | 'categories';
+  onSubModeChange?: (mode: 'search' | 'categories') => void;
 }
 
 export interface CatalogNode {
@@ -40,6 +42,7 @@ export interface CatalogNode {
 export interface CatalogItem {
   id: string;
   label: string;
+  title?: string;
   subLabel?: string; // e.g. "25 CE ~ 220 CE"
   nodeType?: 'work' | 'category' | null;
   workId?: string;
@@ -238,8 +241,21 @@ export function CbetaCatalogView({
   onNavigateToLibrarySection,
   hideHeader,
   targetCategory,
-  onClearTargetCategory
+  onClearTargetCategory,
+  subMode,
+  onSubModeChange
 }: CbetaCatalogViewProps) {
+  // 💡 當外部傳入 targetCategory（例如從首頁點擊分類卡片直達）時，自動切換至 categories 模式
+  useEffect(() => {
+    if (targetCategory && onSubModeChange) {
+      onSubModeChange('categories');
+    }
+  }, [targetCategory, onSubModeChange]);
+
+  // 💡 當前模式：以外部 subMode 為準，預設為 'search'
+  const currentSubMode = subMode || 'search';
+  const isSearchMode = currentSubMode === 'search';
+  const isCategoriesMode = currentSubMode === 'categories';
   // 5 大經典分頁 (常用經典, 依部類, 依冊別, 依作譯者, 依朝代) - 預設開啟「常用經典」
   const [activeTab, setActiveTab] = useState<'favorite' | 'dept' | 'vol' | 'creator' | 'time'>('favorite');
   const [showReadingLog, setShowReadingLog] = useState(false);
@@ -295,25 +311,7 @@ export function CbetaCatalogView({
   const [selectedExistingFolderId, setSelectedExistingFolderId] = useState('');
   const [folders, setFolders] = useState<any[]>([]);
 
-  // 💡 檢索CBETA與依類別查詢預設手風琴 state（預設「檢索CBETA」開啟，「依類別查詢」關閉）
-  const [isSearchExpanded, setIsSearchExpanded] = useState(true);
-  const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
 
-  const handleToggleSearch = () => {
-    const nextState = !isSearchExpanded;
-    setIsSearchExpanded(nextState);
-    if (nextState) {
-      setIsCategoriesExpanded(false);
-    }
-  };
-
-  const handleToggleCategories = () => {
-    const nextState = !isCategoriesExpanded;
-    setIsCategoriesExpanded(nextState);
-    if (nextState) {
-      setIsSearchExpanded(false);
-    }
-  };
 
   // 💡 平滑倒滑離場動畫返回首頁 (Smooth Slide Exit back to Library)
   const [isCatalogExiting, setIsCatalogExiting] = useState(false);
@@ -713,8 +711,7 @@ export function CbetaCatalogView({
     setActiveTab(tab);
     setOnlineResults([]);
     setIsTextSearchActive(false);
-    setIsCategoriesExpanded(true);
-    setIsSearchExpanded(false);
+    onSubModeChange?.('categories');
 
     if (stack && stack.length > 0) {
       setHistoryStack(stack);
@@ -1074,7 +1071,7 @@ export function CbetaCatalogView({
 
   return (
     <div 
-      className={`cbeta-catalog-container theme-${settings.theme} ${isCatalogExiting ? 'catalog-exiting-slide' : ''}`}
+      className={`cbeta-catalog-container custom-scrollbar has-bottom-nav theme-${settings.theme} ${isCatalogExiting ? 'catalog-exiting-slide' : ''}`}
       onTouchStart={handleCatalogTouchStart}
       onTouchEnd={handleCatalogTouchEnd}
     >
@@ -1195,168 +1192,186 @@ export function CbetaCatalogView({
 
       {/* 主頁面內容區 */}
       <main className="cbeta-catalog-body custom-scrollbar">
-        {/* 上方固定控制與搜尋面板 */}
-        <section className="cbeta-top-panel">
-          {/* 1. 關鍵字搜尋卡片 */}
-          <div className="cbeta-search-card">
-            {/* 💡 搜尋框上方標題：「[+] / [-] 檢索 CBETA 並下載書籍」（置左對齊、可點擊展開/收合） */}
-            <div 
-              className="cbeta-section-toggle-header"
-              onClick={handleToggleSearch}
-              title={isSearchExpanded ? '點擊收合檢索區塊' : '點擊展開檢索區塊'}
-            >
-              {isSearchExpanded ? (
-                <Minus size={18} style={{ strokeWidth: 2.5, flexShrink: 0 }} />
-              ) : (
-                <Plus size={18} style={{ strokeWidth: 2.5, flexShrink: 0 }} />
-              )}
-              <span>
-                搜尋 <span className="cbeta-green-brand">CBETA</span> 電子佛典
-              </span>
-            </div>
+        {/* 上方固定控制與搜尋面板 (僅在搜尋模式下渲染，避免分類模式下產生空佔位間距) */}
+        {isSearchMode && (
+          <section className="cbeta-top-panel">
+            <div className="cbeta-search-card">
+              <div className="cbeta-section-toggle-header" style={{ cursor: 'default' }}>
+                <span className="cbeta-title-bar" />
+                <span>
+                  搜尋並下載 <span className="cbeta-green-brand">CBETA</span> 電子佛典
+                </span>
+              </div>
 
-            {/* 展開時才顯示搜尋輸入框與關鍵字晶片 */}
-            {isSearchExpanded && (
-              <>
-                <form className="cbeta-search-input-wrapper" onSubmit={handleSearchSubmit}>
-                  <input 
-                    type="text" 
-                    className="cbeta-search-input"
-                    placeholder="輸入關鍵字，例如：地藏、鳩摩羅什、T0235"
-                    value={onlineSearchQuery}
-                    onFocus={() => {
-                      if (isCategoriesExpanded) setIsCategoriesExpanded(false);
-                    }}
-                    onChange={(e) => {
-                      setOnlineSearchQuery(e.target.value);
-                      if (e.target.value.trim() && isCategoriesExpanded) {
-                        setIsCategoriesExpanded(false);
-                      }
-                      if (!e.target.value.trim() && isTextSearchActive) {
-                        handleClearSearch();
-                      }
-                    }}
-                  />
-                  <div className="cbeta-search-actions">
-                    {onlineSearchQuery && (
-                      <button 
-                        type="button" 
-                        className="cbeta-search-clear-btn" 
-                        onClick={handleClearSearch}
-                        title="結束/清除搜尋"
-                      >
-                        <X size={18} />
-                      </button>
-                    )}
-                    <button type="submit" className="cbeta-search-btn" disabled={isSearchingOnline} title="搜尋 CBETA 經典">
-                      {isSearchingOnline ? <span style={{ fontSize: '0.75rem' }}>...</span> : <Search size={20} />}
-                    </button>
-                  </div>
-                </form>
-
-                {/* 💡 近期 5 個搜尋關鍵字 Chip 標籤列 (支援自動折行換行，無水平滾軸) */}
-                {recentSearches.length > 0 && (
-                  <div 
-                    style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      flexWrap: 'wrap',
-                      rowGap: '0.35rem', 
-                      columnGap: '0.4rem', 
-                      marginTop: '0.55rem', 
-                      width: '100%',
-                      boxSizing: 'border-box'
-                    }}
-                  >
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted, #718096)', flexShrink: 0, opacity: 0.85 }}>
-                      近期搜尋：
-                    </span>
-                    {recentSearches.slice(0, 5).map((q, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => {
-                          if (isCategoriesExpanded) setIsCategoriesExpanded(false);
-                          executeSearch(q);
-                        }}
-                        style={{
-                          fontSize: '0.76rem',
-                          color: 'var(--text-primary, #4a5568)',
-                          backgroundColor: 'var(--theme-accent-light, rgba(0, 0, 0, 0.04))',
-                          border: '1px solid var(--theme-accent-border, rgba(0, 0, 0, 0.12))',
-                          borderRadius: '12px',
-                          padding: '0.15rem 0.55rem',
-                          cursor: 'pointer',
-                          whiteSpace: 'nowrap',
-                          transition: 'all 0.15s ease'
-                        }}
-                        title={`點擊立即搜尋：${q}`}
-                      >
-                        {q}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-
-            {/* 💡 上方加一條細細的分隔線 + 置左對齊動態開關：「+ 依類別查詢」 */}
-            {!isTextSearchActive && (
-              <>
-                <div 
-                  className="cbeta-category-divider"
-                  style={{
-                    height: '1px',
-                    backgroundColor: 'var(--reader-border, rgba(0, 0, 0, 0.08))',
-                    marginTop: isSearchExpanded ? '1.1rem' : '0.6rem',
-                    marginBottom: '0.6rem',
-                    width: '100%'
+              <form className="cbeta-search-input-wrapper" onSubmit={handleSearchSubmit}>
+                <input 
+                  type="text" 
+                  className="cbeta-search-input"
+                  placeholder="輸入關鍵字，例如：地藏、鳩摩羅什、T0235"
+                  value={onlineSearchQuery}
+                  onChange={(e) => {
+                    setOnlineSearchQuery(e.target.value);
+                    if (!e.target.value.trim() && isTextSearchActive) {
+                      handleClearSearch();
+                    }
                   }}
+                  autoFocus
                 />
-                <div 
-                  className="cbeta-section-toggle-header"
-                  onClick={handleToggleCategories}
-                  title={isCategoriesExpanded ? '點擊收合類別查詢' : '點擊展開類別查詢'}
-                >
-                  {isCategoriesExpanded ? (
-                    <Minus size={18} style={{ strokeWidth: 2.5, flexShrink: 0 }} />
-                  ) : (
-                    <Plus size={18} style={{ strokeWidth: 2.5, flexShrink: 0 }} />
+                <div className="cbeta-search-actions">
+                  {onlineSearchQuery && (
+                    <button 
+                      type="button" 
+                      className="cbeta-search-clear-btn" 
+                      onClick={handleClearSearch}
+                      title="結束/清除搜尋"
+                    >
+                      <X size={18} />
+                    </button>
                   )}
-                  <span>依類別查詢</span>
+                  <button type="submit" className="cbeta-search-btn" disabled={isSearchingOnline} title="搜尋 CBETA 經典">
+                    {isSearchingOnline ? <span style={{ fontSize: '0.75rem' }}>...</span> : <Search size={20} />}
+                  </button>
                 </div>
-              </>
-            )}
-          </div>
+              </form>
 
-          {/* 2. 5 個 Chrome 風精緻 Tab 頁籤 (預設收合，點選「+」後展開，圖示在上方) */}
-          {!isTextSearchActive && isCategoriesExpanded && (
-            <div className="cbeta-tabs-grid">
+              {/* 💡 近期 5 個搜尋關鍵字 Chip 標籤列 */}
+              {recentSearches.length > 0 && (
+                <div 
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    flexWrap: 'wrap',
+                    rowGap: '0.35rem', 
+                    columnGap: '0.4rem', 
+                    marginTop: '0.55rem', 
+                    width: '100%',
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted, #718096)', flexShrink: 0, opacity: 0.85 }}>
+                    近期搜尋：
+                  </span>
+                  {recentSearches.slice(0, 5).map((q, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => executeSearch(q)}
+                      style={{
+                        fontSize: '0.76rem',
+                        color: 'var(--text-primary, #4a5568)',
+                        backgroundColor: 'var(--theme-accent-light, rgba(0, 0, 0, 0.04))',
+                        border: '1px solid var(--theme-accent-border, rgba(0, 0, 0, 0.12))',
+                        borderRadius: '12px',
+                        padding: '0.15rem 0.55rem',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        transition: 'all 0.15s ease'
+                      }}
+                      title={`點擊立即搜尋：${q}`}
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* 模式 B (依類別查詢)：圖 1 的固定頂部區塊 (不隨經書滾動位移，底帶橫貫細線，絕不穿幫) */}
+        {isCategoriesMode && (
+          <div className="cbeta-category-fixed-header">
+            {/* 1. 頂部同行 5 個純文字分類膠囊 */}
+            <div className="cbeta-capsules-bar">
               {[
-                { id: 'favorite', label: '常用經典', icon: Heart },
-                { id: 'dept', label: '依部類', icon: Layers },
-                { id: 'vol', label: '依冊別', icon: BookMarked },
-                { id: 'creator', label: '依作譯者', icon: User },
-                { id: 'time', label: '依朝代', icon: Clock }
-              ].map((tabItem, idx, tabArr) => {
+                { id: 'favorite', label: '常用經典' },
+                { id: 'dept', label: '依部類' },
+                { id: 'vol', label: '依冊別' },
+                { id: 'creator', label: '依作譯者' },
+                { id: 'time', label: '依朝代' }
+              ].map((tabItem) => {
                 const isActive = activeTab === tabItem.id;
-                const isNextActive = tabArr[idx + 1] && tabArr[idx + 1].id === activeTab;
-                const IconComp = tabItem.icon;
 
                 return (
-                  <div 
-                    key={`cbeta-tab-${tabItem.id}`}
-                    className={`cbeta-tab-block ${isActive ? 'active' : ''} ${isNextActive ? 'prev-active' : ''}`}
+                  <button
+                    type="button"
+                    key={`cbeta-capsule-${tabItem.id}`}
+                    className={`cbeta-category-capsule ${isActive ? 'active' : ''}`}
                     onClick={() => handleTabSelect(tabItem.id as any)}
                   >
-                    <IconComp size={17} />
                     <span>{tabItem.label}</span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
-          )}
-        </section>
+
+            {/* 2. 分層麵包屑路徑（進入子層級時顯示） */}
+            {historyIndex > 0 && (
+              <div className="cbeta-breadcrumb-row">
+                {canGoBack && (
+                  <button 
+                    type="button"
+                    className="library-header-btn"
+                    onClick={handleHeaderPrev}
+                    title="返回上一層"
+                    style={{ width: '26px', height: '26px', padding: 0, marginRight: '6px', flexShrink: 0, borderRadius: '50%', background: 'var(--bg-card-subtle, rgba(0,0,0,0.04))' }}
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                )}
+                {historyStack.slice(0, historyIndex + 1).map((node, index) => {
+                  const isLast = index === historyIndex;
+                  return (
+                    <React.Fragment key={`bc-${node.id}-${index}`}>
+                      {index > 0 && <span className="cbeta-breadcrumb-sep">»</span>}
+                      <span 
+                        className={`cbeta-breadcrumb-crumb ${isLast ? 'current' : ''}`}
+                        onClick={() => handleBreadcrumbClick(index)}
+                      >
+                        {node.label}
+                      </span>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* 3. 經典數量統計與批量下載工具列 (圖 1 結構：本層有經典時顯示) */}
+            {currentCategoryWorks.length > 0 && (
+              <div className="cbeta-batch-toolbar-row">
+                <span className="cbeta-batch-count">
+                  本層共有 {currentCategoryWorks.length} 本經典
+                </span>
+
+                <div className="cbeta-batch-btns">
+                  <button 
+                    type="button" 
+                    className="batch-btn batch-btn-secondary" 
+                    onClick={() => handleSelectAllOnlineResults(currentCategoryWorks)}
+                    style={{ fontSize: '0.78rem', padding: '0.3rem 0.6rem', fontFamily: 'var(--font-rounded)' }}
+                  >
+                    {selectedOnlineWorkIds.length === currentCategoryWorks.filter(r => !downloadedWorkIds.includes(r.workId || r.id)).length && selectedOnlineWorkIds.length > 0
+                      ? '取消全選'
+                      : '全選未下載'}
+                  </button>
+
+                  <button 
+                    type="button"
+                    className="batch-btn batch-btn-primary"
+                    disabled={selectedOnlineWorkIds.length === 0}
+                    onClick={() => {
+                      handleExecuteBatchDownload();
+                    }}
+                    style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-rounded)' }}
+                  >
+                    <Download size={14} />
+                    開始批量下載 ({selectedOnlineWorkIds.length})
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* 文字搜尋結果區塊 */}
         {isTextSearchActive && (
@@ -1479,76 +1494,10 @@ export function CbetaCatalogView({
           </section>
         )}
 
-        {/* 滿版樹狀與層級內容區 (非搜尋模式且點選「+依類別查詢」後呈現) */}
-        {!isTextSearchActive && isCategoriesExpanded && (
+        {/* 滿版樹狀與層級內容區 (在依類別查詢模式下呈現) */}
+        {isCategoriesMode && (
           <section className="cbeta-content-pane">
-            {/* 💡 當有經文清單（包含「常用經典」與深層目錄）時，顯示麵包屑與批量下載工具列 */}
-            {(historyIndex > 0 || currentCategoryWorks.length > 0) && (
-              <div className="cbeta-pane-header">
-                <div className="cbeta-breadcrumb-row" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {canGoBack && (
-                    <button 
-                      type="button"
-                      className="library-header-btn"
-                      onClick={handleHeaderPrev}
-                      title="返回上一層"
-                      style={{ width: '26px', height: '26px', padding: 0, marginRight: '4px', flexShrink: 0 }}
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
-                  )}
-                  {historyStack.slice(0, historyIndex + 1).map((node, index) => {
-                    const isLast = index === historyIndex;
-                    return (
-                      <React.Fragment key={`bc-${node.id}-${index}`}>
-                        {index > 0 && <span className="cbeta-breadcrumb-sep">»</span>}
-                        <span 
-                          className={`cbeta-breadcrumb-crumb ${isLast ? 'current' : ''}`}
-                          onClick={() => handleBreadcrumbClick(index)}
-                        >
-                          {node.label}
-                        </span>
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
 
-                {/* 當子層級包含經典時，顯示批量工具列 */}
-                {currentCategoryWorks.length > 0 && (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '0.2rem 0' }}>
-                    <span style={{ fontSize: '0.84rem', color: 'var(--text-muted)', fontFamily: 'var(--font-rounded)' }}>
-                      本層共有 {currentCategoryWorks.length} 本經典
-                    </span>
-
-                    <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
-                      <button 
-                        type="button" 
-                        className="batch-btn batch-btn-secondary" 
-                        onClick={() => handleSelectAllOnlineResults(currentCategoryWorks)}
-                        style={{ fontSize: '0.78rem', padding: '0.3rem 0.6rem', fontFamily: 'var(--font-rounded)' }}
-                      >
-                        {selectedOnlineWorkIds.length === currentCategoryWorks.filter(r => !downloadedWorkIds.includes(r.workId || r.id)).length && selectedOnlineWorkIds.length > 0
-                          ? '取消全選'
-                          : '全選未下載'}
-                      </button>
-
-                      <button 
-                        type="button"
-                        className="batch-btn batch-btn-primary"
-                        disabled={selectedOnlineWorkIds.length === 0}
-                        onClick={() => {
-                          handleExecuteBatchDownload();
-                        }}
-                        style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-rounded)' }}
-                      >
-                        <Download size={14} />
-                        開始批量下載 ({selectedOnlineWorkIds.length})
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* 獨立垂直滾動區：經典與資料夾卡片在這裡進行內部滾動 */}
             <div className="cbeta-items-scroll-area custom-scrollbar">
@@ -1565,6 +1514,17 @@ export function CbetaCatalogView({
                     const isChecked = selectedOnlineWorkIds.includes(wId);
 
                     if (isWork) {
+                      const displayTitle = (item.title || item.label || '')
+                        .replace(/^[A-Z0-9_\-]+\s+/, '')
+                        .replace(/\s*\(\d+卷\)$/, '');
+
+                      const juanCountNum = item.juansCount || (() => {
+                        const match = (item.label || '').match(/\((\d+)卷\)$/);
+                        return match ? parseInt(match[1], 10) : undefined;
+                      })();
+
+                      const creatorsText = sanitizeCreators(item.creators);
+
                       return (
                         <div 
                           key={`catalog-item-${item.id}`} 
@@ -1593,14 +1553,13 @@ export function CbetaCatalogView({
                             </div>
                           )}
 
-                          <div className="cbeta-work-badge" style={{ background: getBookCoverGradient(wId) }}>{wId}</div>
+                          <div className="bookshelf-book-badge">{wId}</div>
                           <div className="cbeta-work-info">
-                            <div className="cbeta-work-title">{item.label}</div>
-                            {(sanitizeCreators(item.creators) || item.juansCount) && (
+                            <div className="cbeta-work-title">{displayTitle}</div>
+                            {(creatorsText || juanCountNum) && (
                               <div className="cbeta-work-meta">
-                                {sanitizeCreators(item.creators)}
-                                {sanitizeCreators(item.creators) && item.juansCount ? ' · ' : ''}
-                                {item.juansCount ? `${item.juansCount}卷` : ''}
+                                {creatorsText}{creatorsText && juanCountNum ? ' · ' : ''}
+                                {juanCountNum ? `${juanCountNum}卷` : ''}
                               </div>
                             )}
                           </div>

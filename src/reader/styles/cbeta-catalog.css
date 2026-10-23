@@ -7,16 +7,19 @@
 .cbeta-catalog-container {
   width: 100%;
   height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   background: var(--bg-library) !important;
   color: var(--text-primary, #2c2016);
   position: relative;
   overflow: hidden;
-  overscroll-behavior: contain;
-  overscroll-behavior-y: contain;
   padding: 0;
   box-sizing: border-box;
+}
+
+.cbeta-catalog-container.has-bottom-nav {
+  padding-bottom: 0 !important;
 }
 
 .nav-hist-btn {
@@ -42,27 +45,30 @@
   cursor: not-allowed;
 }
 
-/* 主區域 (Main Content Area) */
+/* 主區域 (Main Content Area) - 包含頂部固定區塊與獨立滾動區，外層不滾動，杜絕穿幫 */
 .cbeta-catalog-body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 0.8rem 1.2rem 1.2rem 1.2rem;
+  padding: 0;
   max-width: 1080px;
   width: 100%;
   margin: 0 auto;
   gap: 0;
   overflow: hidden;
   min-height: 0;
+  box-sizing: border-box;
 }
 
-/* 上方固定控制與搜尋面板 (固定置頂) */
+/* 上方固定控制與搜尋面板 (固定置頂，左右內縮對齊全站標準版心) */
 .cbeta-top-panel {
   flex-shrink: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  padding: 0.8rem 1.25rem 0.4rem 1.25rem;
+  box-sizing: border-box;
 }
 
 .cbeta-search-card {
@@ -172,150 +178,84 @@ body.theme-dark .cbeta-green-brand {
   flex-shrink: 0;
 }
 
-/* 5 個 Chrome 風精緻 Tab 頁籤 - 符號在文字上方 (垂直佈局) */
-.cbeta-tabs-grid {
-  display: flex;
-  align-items: flex-end;
+/* 圖 1 的固定頂部區塊 (不隨經書滾動位移，底帶橫貫細線，絕不穿幫) */
+.cbeta-category-fixed-header {
+  flex-shrink: 0;
   width: 100%;
-  margin-bottom: -1.5px;
-  z-index: 10;
-  position: relative;
-}
-
-.cbeta-tab-block {
-  flex: 1;
+  background: var(--bg-library);
+  padding: 0.35rem 1.2rem 0.45rem 1.2rem;
+  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
   display: flex;
   flex-direction: column;
+  gap: 0.42rem;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 20;
+}
+
+/* 5 個分類膠囊列：純文字、等寬一行排列、絕不折行 */
+.cbeta-capsules-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.cbeta-category-capsule {
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding: 0.55rem 0.1rem;
-  font-size: 0.8rem;
-  font-weight: 500;
+  padding: 0.38rem 0.1rem;
+  font-size: 0.76rem;
+  font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
-  text-align: center;
+  border-radius: 9999px;
   transition: all 0.18s ease;
   font-family: var(--font-rounded);
   user-select: none;
-  background: transparent;
-  border: 1.5px solid transparent;
-  border-bottom: none;
-  position: relative;
-}
-
-.cbeta-tab-block span {
-  font-size: 0.78rem;
+  background: var(--bg-card, rgba(255, 255, 255, 0.65));
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
   white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  text-align: center;
   letter-spacing: -0.2px;
 }
 
-/* 未選中時：兩兩之間有一個淺色的「|」豎條分隔線 */
-.cbeta-tab-block:not(.active):not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 28%;
-  height: 44%;
-  width: 1px;
-  background-color: var(--reader-border, rgba(0, 0, 0, 0.18));
-  transition: opacity 0.15s ease;
-}
-
-/* 💡 當某分頁被選中 (Active) 時，自動隱藏左、右兩邊的「|」豎條分隔線 */
-.cbeta-tab-block.active::after,
-.cbeta-tab-block.prev-active::after,
-.cbeta-tab-block:has(+ .cbeta-tab-block.active)::after {
-  display: none !important;
-  opacity: 0 !important;
-}
-
-.theme-ebony .cbeta-tab-block:not(.active):not(:last-child)::after {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.cbeta-tab-block:hover:not(.active) {
+.cbeta-category-capsule:hover:not(.active) {
   color: var(--text-primary);
-  background-color: rgba(0, 0, 0, 0.04);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  background: var(--bg-card-subtle, rgba(0, 0, 0, 0.04));
+  border-color: var(--theme-accent, rgba(140, 75, 39, 0.25));
 }
 
-/* 切換到這頁時 (Active Tab)：圓角分頁顯現出來，並與下方內容框 100% 貼合 */
-.cbeta-tab-block.active {
-  background-color: var(--reader-card-bg, #ffffff);
-  color: var(--theme-accent, #8c4b27);
-  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.14));
-  border-bottom: 2.5px solid var(--reader-card-bg, #ffffff);
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.03);
-  font-weight: 700;
-  z-index: 12;
+.cbeta-category-capsule.active {
+  background-color: var(--theme-accent, #8c4b27);
+  color: var(--theme-accent-contrast, #ffffff);
+  border-color: var(--theme-accent, #8c4b27);
+  box-shadow: 0 2px 8px rgba(140, 75, 39, 0.25);
 }
 
-.theme-ebony .cbeta-tab-block.active {
-  background-color: rgba(30, 36, 42, 0.95);
-  border-color: rgba(255, 255, 255, 0.2);
-  border-bottom-color: rgba(30, 36, 42, 0.95);
-  color: var(--theme-accent, #cf9f60);
+body.theme-ebony .cbeta-category-capsule,
+body.theme-dark .cbeta-category-capsule {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
-@media (max-width: 480px) {
-  .cbeta-tab-block {
-    padding: 0.6rem 0.1rem;
-    gap: 0.25rem;
-  }
-  .cbeta-tab-block span {
-    font-size: 0.76rem;
-  }
-}
-
-/* 層級內容卡片區塊 - 頂部圓角為 0，與 4 個頁籤 100% 完美貼合，無任何導角漏洞 */
-.cbeta-content-pane {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  background-color: var(--reader-card-bg, #ffffff);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  padding: 1.1rem 1.2rem;
-  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.12));
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-  min-height: 0;
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-}
-
-.theme-ebony .cbeta-content-pane {
-  background-color: rgba(30, 36, 42, 0.95);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-/* 固定於內容卡片頂部的「麵包屑與批量工具列」 */
-.cbeta-pane-header {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* 麵包屑導航 (Breadcrumb Trail) */
+/* 麵包屑導航 (Breadcrumb Trail) - 整合於固定頂部區塊中 */
 .cbeta-breadcrumb-row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.4rem;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   color: var(--text-muted);
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  padding-top: 0.15rem;
   font-family: var(--font-rounded);
 }
 
@@ -341,51 +281,105 @@ body.theme-dark .cbeta-green-brand {
   opacity: 0.6;
 }
 
-/* 💡 獨立垂直滾動區：加強右側 padding-right 避開手機滾動條遮擋邊線 */
+/* 批量工具列列 (數量 + 批量下載按鍵) */
+.cbeta-batch-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 0.15rem;
+  box-sizing: border-box;
+}
+
+.cbeta-batch-count {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  font-family: var(--font-rounded);
+}
+
+.cbeta-batch-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 層級內容區塊 - 滿版彈性容器 */
+.cbeta-content-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* 固定於內容頂部的「批量工具列」 */
+.cbeta-pane-header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  padding: 0.4rem 1.2rem;
+}
+
+/* 獨立垂直滾動區：經書與資料夾卡片在此平滑捲動，向上滾動時自然被細線截斷，100% 絕不穿幫 */
 .cbeta-items-scroll-area {
   flex: 1;
+  width: 100%;
   overflow-y: auto;
-  overscroll-behavior: contain;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
-  padding-right: 0.65rem;
+  padding: 0.65rem 1.2rem 1.2rem 1.2rem;
+  box-sizing: border-box;
   min-height: 0;
 }
 
-/* 列表網格容器 */
+.cbeta-catalog-container.has-bottom-nav .cbeta-items-scroll-area {
+  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* 列表容器：改為與圖 2 一致的緊湊條列式排版 */
 .cbeta-items-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
   width: 100%;
   padding-bottom: 1rem;
   padding-right: 0.15rem;
 }
 
-/* 資料夾卡片 (Folder Item) */
+/* 資料夾卡片 (Folder Item) - 型式維持不變，底色跟隨主題溫潤不死白 */
 .cbeta-folder-card {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.75);
-  border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  background-color: var(--bg-card-subtle, rgba(0, 0, 0, 0.025));
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.06));
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
 }
 
-.theme-ebony .cbeta-folder-card,
 body.theme-ebony .cbeta-folder-card,
-body.theme-dark .cbeta-folder-card {
-  background-color: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.18);
+body.theme-dark .cbeta-folder-card,
+.theme-ebony .cbeta-folder-card {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .cbeta-folder-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
   border-color: var(--theme-accent, #cf9f60);
+  background-color: var(--theme-accent-subtle, rgba(140, 75, 39, 0.05));
 }
 
 .cbeta-folder-title {
@@ -399,35 +393,38 @@ body.theme-dark .cbeta-folder-card {
   font-family: var(--font-rounded);
 }
 
-/* 經文卡片 (Work Scripture Item) */
+/* 經文卡片 (Work Scripture Item) - 100% 採用圖 2 書櫃書籍樣式 */
 .cbeta-work-card {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.9rem 1.1rem;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.5rem 0.65rem;
   border-radius: 12px;
-  background-color: #ffffff;
-  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.08));
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease;
+  background-color: var(--bg-card-subtle, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.05));
+  box-shadow: none;
+  transition: all 0.18s ease;
   position: relative;
+  cursor: pointer;
 }
 
-.theme-ebony .cbeta-work-card,
 body.theme-ebony .cbeta-work-card,
-body.theme-dark .cbeta-work-card {
-  background-color: rgba(24, 29, 34, 0.92);
-  border-color: rgba(255, 255, 255, 0.18);
+body.theme-dark .cbeta-work-card,
+.theme-ebony .cbeta-work-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .cbeta-work-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+  background-color: var(--theme-accent-subtle, rgba(140, 75, 39, 0.04));
+  border-color: var(--theme-accent, rgba(140, 75, 39, 0.22));
 }
 
 .cbeta-work-card.selected {
   border-color: var(--theme-accent, #cf9f60);
-  background-color: rgba(242, 163, 27, 0.04);
+  background-color: rgba(140, 75, 39, 0.08);
 }
 
 /* 經文選取核取框 - 顯眼但精緻的淺色正方形方框 */
@@ -573,58 +570,65 @@ body.theme-ebony .cbeta-read-btn:hover,
 }
 
 .cbeta-work-badge {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
   border-radius: 8px;
-  background-color: var(--theme-accent, #8c4b27);
+  background: var(--theme-accent, #8c4b27);
   color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   font-weight: 800;
-  font-size: 0.74rem;
-  letter-spacing: 0.01em;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(60, 25, 0, 0.2);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+body.theme-ebony .cbeta-work-badge,
+body.theme-dark .cbeta-work-badge {
+  background: #d4a373 !important;
+  color: #1a1513 !important;
+  font-weight: 900;
 }
 
 .cbeta-work-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  justify-content: center;
+  gap: 2px;
   min-width: 0;
+  padding-right: 6px;
 }
 
-/* 經文卡片內容：經名與作譯者一律使用「宋/明體」傳統古典字型（經號徽章則維持書櫃 sans-serif 黑體） */
+/* 經文卡片內容：經名與作譯者一律使用圖 2 典雅宋/明體古典字型 */
 .cbeta-work-card,
-.cbeta-work-title,
-.cbeta-work-meta {
+.cbeta-work-title {
   font-family: var(--font-serif, 'Noto Serif TC', 'Songti TC', 'PMingLiU', serif) !important;
 }
 
 .cbeta-work-title {
-  font-size: 0.90rem;
+  font-size: 0.94rem;
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.36;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  line-height: 1.25;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
-  white-space: normal;
 }
 
 .cbeta-work-meta {
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
+  font-family: var(--font-rounded);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-top: 2px;
 }
 
 /* 💡 CBETA 藏經庫向左平滑離場返回首頁動畫 (因首頁在 CBETA 的右邊) */

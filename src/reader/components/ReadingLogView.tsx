@@ -290,6 +290,33 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
     return list.slice(0, 3);
   }, [currentMonthLogs]);
 
+  // 📿 需求 3：依照「本月最常閱讀書籍」邏輯製作前3名的「本月常修功課」
+  const monthTop3Practices = useMemo(() => {
+    const practiceMap = new Map<string, { 
+      name: string; 
+      category: string; 
+      unit: string; 
+      totalCount: number;
+    }>();
+
+    practiceLogs.forEach(p => {
+      if (!p.date || !p.date.startsWith(currentMonthPrefix) || !p.name) return;
+      const key = `${p.name}__${p.unit || ''}`;
+      const existing = practiceMap.get(key) || {
+        name: p.name,
+        category: p.category,
+        unit: p.unit || '遍',
+        totalCount: 0
+      };
+      existing.totalCount += (p.count || 0);
+      practiceMap.set(key, existing);
+    });
+
+    const list = Array.from(practiceMap.values());
+    list.sort((a, b) => b.totalCount - a.totalCount);
+    return list.slice(0, 3);
+  }, [practiceLogs, currentMonthPrefix]);
+
   // 選中日期的閱讀記錄列表
   const selectedDateLogs = useMemo(() => {
     return logs.filter(l => l.date === selectedDate);
@@ -539,436 +566,250 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
         overscrollBehavior: 'contain'
       }}
     >
-      {/* 💡 1. 頂部看板：雙核心指標 + 本月最常閱讀 TOP 3 */}
+      {/* ========================================================================= */}
+      {/* 💡 1. 禪意月曆檢視 ＋ 選中日期資訊卡片 (圖 2：置頂呈現)                   */}
+      {/* ========================================================================= */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-        {/* 上排兩大指標看板 */}
+        {/* 禪意月曆卡片 */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '0.6rem'
-        }}>
-          {/* 本月閱讀時數 */}
-          <div style={{
-            backgroundColor: 'var(--theme-accent-light, rgba(139, 90, 43, 0.06))',
-            border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-            borderRadius: '12px',
-            padding: '0.75rem 0.6rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px'
-          }}>
-            <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>本月閱讀時數</span>
-            <span style={{
-              fontSize: '1.25rem',
-              fontWeight: 700,
-              color: 'var(--theme-accent, #8b5a2b)',
-              fontFamily: 'var(--font-serif)'
-            }}>
-              {formatDurationStat(monthTotalMinutes)}
-            </span>
-          </div>
-
-          {/* 本月閱讀本數 */}
-          <div style={{
-            backgroundColor: 'var(--theme-accent-light, rgba(139, 90, 43, 0.06))',
-            border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-            borderRadius: '12px',
-            padding: '0.75rem 0.6rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px'
-          }}>
-            <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>本月閱讀本數</span>
-            <span style={{
-              fontSize: '1.25rem',
-              fontWeight: 700,
-              color: 'var(--theme-accent, #8b5a2b)',
-              fontFamily: 'var(--font-serif)'
-            }}>
-              {monthUniqueBooksCount} <span style={{ fontSize: '0.8rem', fontWeight: 500 }}>本</span>
-            </span>
-          </div>
-        </div>
-
-        {/* 下排：🏆 本月最常閱讀書籍 前3名以及時數 (含「繼續閱讀 ›」) */}
-        <div style={{
-          backgroundColor: 'var(--bg-card, #fff)',
           border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
           borderRadius: '14px',
-          padding: '0.85rem 0.95rem',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px'
+          padding: '0.8rem 0.6rem',
+          backgroundColor: 'var(--bg-primary, rgba(0,0,0,0.02))'
         }}>
+          {/* 月份導航列 */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.06))',
-            paddingBottom: '6px'
+            marginBottom: '0.75rem',
+            padding: '0 0.3rem'
           }}>
-            <div style={{
-              fontSize: '0.86rem',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              fontFamily: 'var(--font-serif)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}>
-              <span>🏆</span>
-              <span>本月最常閱讀書籍</span>
-            </div>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-              累積時數榜單
-            </span>
-          </div>
-
-          {monthTop3Books.length === 0 ? (
-            <div style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
-              本月尚無閱讀累計時數
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {monthTop3Books.map((book, idx) => {
-                const medalColors = [
-                  { bg: '#ffd700', color: '#7a5800' }, // 1
-                  { bg: '#dcdde1', color: '#474747' }, // 2
-                  { bg: '#e0a96d', color: '#4a2800' }  // 3
-                ];
-                const medal = medalColors[idx] || medalColors[2];
-
-                return (
-                  <div
-                    key={book.workId}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '5px 8px',
-                      borderRadius: '8px',
-                      backgroundColor: 'var(--bg-card-subtle, rgba(0,0,0,0.02))',
-                      gap: '8px'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
-                      <span style={{
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        backgroundColor: medal.bg,
-                        color: medal.color,
-                        fontSize: '0.72rem',
-                        fontWeight: 800,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                      }}>
-                        {idx + 1}
-                      </span>
-                      <span style={{
-                        fontSize: '0.84rem',
-                        fontWeight: 600,
-                        color: 'var(--text-primary)',
-                        fontFamily: 'var(--font-serif)',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
-                        {book.title}
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                      <span style={{
-                        fontSize: '0.78rem',
-                        fontWeight: 700,
-                        color: 'var(--theme-accent, #d97706)',
-                        backgroundColor: 'var(--surface-capsule, var(--bg-card-subtle, rgba(255, 255, 255, 0.08)))',
-                        padding: '2px 8px',
-                        borderRadius: '12px',
-                        border: '1px solid var(--border-subtle, var(--border-color, rgba(255, 255, 255, 0.12)))'
-                      }}>
-                        {formatDurationStat(book.totalMinutes)}
-                      </span>
-                      <button
-                        onClick={() => onSelectBook(book.workId, undefined, undefined, 'resume')}
-                        style={{
-                          fontSize: '0.74rem',
-                          fontWeight: 700,
-                          color: 'var(--theme-accent-contrast, #ffffff)',
-                          backgroundColor: 'var(--theme-accent, #8c4b27)',
-                          border: 'none',
-                          borderRadius: '12px',
-                          padding: '3px 10px',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '2px',
-                          boxShadow: '0 1px 4px rgba(0, 0, 0, 0.15)',
-                          transition: 'all 0.15s ease'
-                        }}
-                        title="接續閱讀此經典"
-                      >
-                        <span>繼續閱讀</span>
-                        <span style={{ fontWeight: 800 }}>›</span>
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* 💡 2. 禪意月曆檢視 */}
-      <div style={{
-        border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-        borderRadius: '14px',
-        padding: '0.8rem 0.6rem',
-        backgroundColor: 'var(--bg-primary, rgba(0,0,0,0.02))'
-      }}>
-        {/* 月份導航列 */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '0.75rem',
-          padding: '0 0.3rem'
-        }}>
-          <button
-            onClick={handlePrevMonth}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: 'var(--text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '4px',
-              borderRadius: '6px'
-            }}
-            title="上個月"
-          >
-            <ChevronLeft size={18} />
-          </button>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{
-              fontSize: '1rem',
-              fontWeight: 700,
-              fontFamily: 'var(--font-serif)',
-              color: 'var(--text-primary)'
-            }}>
-              {currentYear} 年 {currentMonth + 1} 月
-            </span>
             <button
-              onClick={handleGoToToday}
+              onClick={handlePrevMonth}
               style={{
-                fontSize: '0.72rem',
-                padding: '2px 8px',
-                borderRadius: '12px',
-                border: '1px solid var(--border-color, rgba(0,0,0,0.12))',
-                backgroundColor: 'var(--theme-accent-light, rgba(139, 90, 43, 0.08))',
-                color: 'var(--theme-accent, #8b5a2b)',
+                background: 'none',
+                border: 'none',
                 cursor: 'pointer',
-                fontWeight: 600
+                color: 'var(--text-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '4px',
+                borderRadius: '6px'
               }}
+              title="上個月"
             >
-              今天
+              <ChevronLeft size={18} />
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                fontSize: '1rem',
+                fontWeight: 700,
+                fontFamily: 'var(--font-serif)',
+                color: 'var(--text-primary)'
+              }}>
+                {currentYear} 年 {currentMonth + 1} 月
+              </span>
+              <button
+                onClick={handleGoToToday}
+                style={{
+                  fontSize: '0.72rem',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border-color, rgba(0,0,0,0.12))',
+                  backgroundColor: 'var(--theme-accent-light, rgba(139, 90, 43, 0.08))',
+                  color: 'var(--theme-accent, #8b5a2b)',
+                  cursor: 'pointer',
+                  fontWeight: 600
+                }}
+              >
+                今天
+              </button>
+            </div>
+
+            <button
+              onClick={handleNextMonth}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--text-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '4px',
+                borderRadius: '6px'
+              }}
+              title="下個月"
+            >
+              <ChevronRight size={18} />
             </button>
           </div>
 
-          <button
-            onClick={handleNextMonth}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: 'var(--text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '4px',
-              borderRadius: '6px'
-            }}
-            title="下個月"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
+          {/* 星期一 ~ 星期日 標頭 */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            textAlign: 'center',
+            fontSize: '0.76rem',
+            fontWeight: 600,
+            color: 'var(--text-muted)',
+            marginBottom: '0.4rem',
+            paddingBottom: '4px',
+            borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.06))'
+          }}>
+            <span>一</span>
+            <span>二</span>
+            <span>三</span>
+            <span>四</span>
+            <span>五</span>
+            <span>六</span>
+            <span>日</span>
+          </div>
 
-        {/* 星期一 ~ 星期日 標頭 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          textAlign: 'center',
-          fontSize: '0.76rem',
-          fontWeight: 600,
-          color: 'var(--text-muted)',
-          marginBottom: '0.4rem',
-          paddingBottom: '4px',
-          borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.06))'
-        }}>
-          <span>一</span>
-          <span>二</span>
-          <span>三</span>
-          <span>四</span>
-          <span>五</span>
-          <span>六</span>
-          <span>日</span>
-        </div>
+          {/* 日期網格 */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gap: '3px'
+          }}>
+            {/* 前月留白 */}
+            {Array.from({ length: firstDayOffset }).map((_, i) => (
+              <div key={`offset-${i}`} style={{ minHeight: '52px' }} />
+            ))}
 
-        {/* 日期網格 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: '3px'
-        }}>
-          {/* 前月留白 */}
-          {Array.from({ length: firstDayOffset }).map((_, i) => (
-            <div key={`offset-${i}`} style={{ minHeight: '52px' }} />
-          ))}
+            {/* 當月天數 */}
+            {Array.from({ length: daysInMonth }).map((_, i) => {
+              const dayNum = i + 1;
+              const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+              const isSelected = dateStr === selectedDate;
+              const isToday = dateStr === todayStr;
+              const status = dateStatusMap.get(dateStr) || { hasRead: false, hasNotes: false, hasPractice: false };
+              const lunarInfo = getLunarInfo(new Date(currentYear, currentMonth, dayNum));
 
-          {/* 當月天數 */}
-          {Array.from({ length: daysInMonth }).map((_, i) => {
-            const dayNum = i + 1;
-            const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
-            const isSelected = dateStr === selectedDate;
-            const isToday = dateStr === todayStr;
-            const status = dateStatusMap.get(dateStr) || { hasRead: false, hasNotes: false, hasPractice: false };
-            const lunarInfo = getLunarInfo(new Date(currentYear, currentMonth, dayNum));
-
-            return (
-              <div
-                key={dateStr}
-                onClick={() => setSelectedDate(dateStr)}
-                style={{
-                  minHeight: '52px',
-                  borderRadius: '9px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  padding: '3px 1px',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  backgroundColor: isSelected
-                    ? 'var(--surface-capsule-active, var(--theme-accent-light, rgba(139, 90, 43, 0.18)))'
-                    : isToday
-                      ? 'var(--surface-capsule, rgba(139, 90, 43, 0.08))'
-                      : 'transparent',
-                  border: isSelected
-                    ? '1.5px solid var(--theme-accent, #8b5a2b)'
-                    : '1px solid transparent',
-                  boxShadow: isSelected ? '0 1px 4px rgba(139, 90, 43, 0.15)' : 'none',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                {/* 國曆公曆日期數字 */}
-                <span style={{
-                  fontSize: '0.86rem',
-                  fontWeight: isSelected || isToday ? 700 : 500,
-                  color: isSelected
-                    ? 'var(--theme-accent, #8b5a2b)'
-                    : isToday
+              return (
+                <div
+                  key={dateStr}
+                  onClick={() => setSelectedDate(dateStr)}
+                  style={{
+                    minHeight: '52px',
+                    borderRadius: '9px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    padding: '3px 1px',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    backgroundColor: isSelected
+                      ? 'var(--surface-capsule-active, var(--theme-accent-light, rgba(139, 90, 43, 0.18)))'
+                      : isToday
+                        ? 'var(--surface-capsule, rgba(139, 90, 43, 0.08))'
+                        : 'transparent',
+                    border: isSelected
+                      ? '1.5px solid var(--theme-accent, #8b5a2b)'
+                      : '1px solid transparent',
+                    boxShadow: isSelected ? '0 1px 4px rgba(139, 90, 43, 0.15)' : 'none',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  {/* 國曆公曆日期數字 */}
+                  <span style={{
+                    fontSize: '0.86rem',
+                    fontWeight: isSelected || isToday ? 700 : 500,
+                    color: isSelected
                       ? 'var(--theme-accent, #8b5a2b)'
-                      : 'var(--text-primary)',
-                  fontFamily: 'var(--font-serif)',
-                  lineHeight: 1.1
-                }}>
-                  {dayNum}
-                </span>
+                      : isToday
+                        ? 'var(--theme-accent, #8b5a2b)'
+                        : 'var(--text-primary)',
+                    fontFamily: 'var(--font-serif)',
+                    lineHeight: 1.1
+                  }}>
+                    {dayNum}
+                  </span>
 
-                {/* 今日圓點微指示 */}
-                {isToday && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '3px',
-                    right: '3px',
-                    width: '4px',
-                    height: '4px',
-                    borderRadius: '50%',
-                    backgroundColor: 'var(--theme-accent, #8b5a2b)'
-                  }} />
-                )}
+                  {/* 今日圓點微指示 */}
+                  {isToday && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '3px',
+                      right: '3px',
+                      width: '4px',
+                      height: '4px',
+                      borderRadius: '50%',
+                      backgroundColor: 'var(--theme-accent, #8b5a2b)'
+                    }} />
+                  )}
 
-                {/* 農曆 / 佛誕 / 十齋標籤 */}
-                <span style={{
-                  fontSize: '0.62rem',
-                  lineHeight: 1.1,
-                  marginTop: '1px',
-                  whiteSpace: 'nowrap',
-                  fontWeight: (lunarInfo.festival || lunarInfo.isZhai || lunarInfo.specialMoon) ? 700 : 400,
-                  color: lunarInfo.festival
-                    ? '#c0392b'
-                    : lunarInfo.specialMoon
-                      ? '#b45309'
-                      : lunarInfo.isZhai
-                        ? '#2d6a4f'
-                        : 'var(--text-muted)'
-                }}>
-                  {lunarInfo.cellLabel}
-                </span>
+                  {/* 農曆 / 佛誕 / 十齋標籤 */}
+                  <span style={{
+                    fontSize: '0.62rem',
+                    lineHeight: 1.1,
+                    marginTop: '1px',
+                    whiteSpace: 'nowrap',
+                    fontWeight: (lunarInfo.festival || lunarInfo.isZhai || lunarInfo.specialMoon) ? 700 : 400,
+                    color: lunarInfo.festival
+                      ? '#c0392b'
+                      : lunarInfo.specialMoon
+                        ? '#b45309'
+                        : lunarInfo.isZhai
+                          ? '#2d6a4f'
+                          : 'var(--text-muted)'
+                  }}>
+                    {lunarInfo.cellLabel}
+                  </span>
 
-                {/* 底部三慧微圓點：綠點(聞)、藍點(思) 與金點(修)，最多 3 個點點，外圍帶細小光暈 */}
-                <div style={{ display: 'flex', gap: '3.5px', marginTop: 'auto', alignItems: 'center', minHeight: '6px', justifyContent: 'center' }}>
-                  {status.hasRead && (
-                    <span 
-                      title="聞：當日有閱讀經文"
-                      style={{
-                        width: '5px',
-                        height: '5px',
-                        borderRadius: '50%',
-                        backgroundColor: '#2e7d32',
-                        boxShadow: '0 0 4px rgba(46, 125, 50, 0.75)',
-                        display: 'inline-block',
-                        flexShrink: 0
-                      }} 
-                    />
-                  )}
-                  {status.hasNotes && (
-                    <span 
-                      title="思：當日有劃線筆記"
-                      style={{
-                        width: '5px',
-                        height: '5px',
-                        borderRadius: '50%',
-                        backgroundColor: '#1976d2',
-                        boxShadow: '0 0 4px rgba(25, 118, 210, 0.75)',
-                        display: 'inline-block',
-                        flexShrink: 0
-                      }} 
-                    />
-                  )}
-                  {status.hasPractice && (
-                    <span 
-                      title="修：當日有修持功課"
-                      style={{
-                        width: '5px',
-                        height: '5px',
-                        borderRadius: '50%',
-                        backgroundColor: '#d4a017',
-                        boxShadow: '0 0 4px rgba(212, 160, 23, 0.85)',
-                        display: 'inline-block',
-                        flexShrink: 0
-                      }} 
-                    />
-                  )}
+                  {/* 底部三慧微圓點：綠點(聞)、藍點(思) 與金點(修)，最多 3 個點點，外圍帶細小光暈 */}
+                  <div style={{ display: 'flex', gap: '3.5px', marginTop: 'auto', alignItems: 'center', minHeight: '6px', justifyContent: 'center' }}>
+                    {status.hasRead && (
+                      <span 
+                        title="聞：當日有閱讀經文"
+                        style={{
+                          width: '5px',
+                          height: '5px',
+                          borderRadius: '50%',
+                          backgroundColor: '#2e7d32',
+                          boxShadow: '0 0 4px rgba(46, 125, 50, 0.75)',
+                          display: 'inline-block',
+                          flexShrink: 0
+                        }} 
+                      />
+                    )}
+                    {status.hasNotes && (
+                      <span 
+                        title="思：當日有劃線筆記"
+                        style={{
+                          width: '5px',
+                          height: '5px',
+                          borderRadius: '50%',
+                          backgroundColor: '#1976d2',
+                          boxShadow: '0 0 4px rgba(25, 118, 210, 0.75)',
+                          display: 'inline-block',
+                          flexShrink: 0
+                        }} 
+                      />
+                    )}
+                    {status.hasPractice && (
+                      <span 
+                        title="修：當日有修持功課"
+                        style={{
+                          width: '5px',
+                          height: '5px',
+                          borderRadius: '50%',
+                          backgroundColor: '#d4a017',
+                          boxShadow: '0 0 4px rgba(212, 160, 23, 0.85)',
+                          display: 'inline-block',
+                          flexShrink: 0
+                        }} 
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      {/* 💡 3. 選中日期的專區 (聞·思·修) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
-        {/* 區塊 A：🌟 選中日期資訊卡片 (深色模式底色，已刪除 📜 圖標) */}
+        {/* 選中日期資訊卡片 (深色模式底色) */}
         <div style={{
           backgroundColor: 'var(--bg-card, rgba(255, 255, 255, 0.08))',
           border: '1px solid var(--border-subtle, var(--border-color, rgba(255, 255, 255, 0.14)))',
@@ -1066,7 +907,12 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
             )}
           </div>
         </div>
+      </div>
 
+      {/* ========================================================================= */}
+      {/* 💡 2. 選中日期的專區 (聞·思·修) (圖 1)                                   */}
+      {/* ========================================================================= */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {/* 區塊 B：📖 經文閱讀記錄 */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <div style={{
@@ -1606,6 +1452,335 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
           )}
         </div>
 
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 💡 3. 本月看板：雙核心指標 + 本月最常閱讀書籍 + 本月常修功課 (圖 2 置於圖 1 下方) */}
+      {/* ========================================================================= */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+        {/* 上排兩大指標看板 */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '0.6rem'
+        }}>
+          {/* 本月閱讀時數 */}
+          <div style={{
+            backgroundColor: 'var(--theme-accent-light, rgba(139, 90, 43, 0.06))',
+            border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+            borderRadius: '12px',
+            padding: '0.75rem 0.6rem',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px'
+          }}>
+            <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>本月閱讀時數</span>
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 700,
+              color: 'var(--theme-accent, #8b5a2b)',
+              fontFamily: 'var(--font-serif)'
+            }}>
+              {formatDurationStat(monthTotalMinutes)}
+            </span>
+          </div>
+
+          {/* 本月閱讀本數 */}
+          <div style={{
+            backgroundColor: 'var(--theme-accent-light, rgba(139, 90, 43, 0.06))',
+            border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+            borderRadius: '12px',
+            padding: '0.75rem 0.6rem',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px'
+          }}>
+            <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>本月閱讀本數</span>
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 700,
+              color: 'var(--theme-accent, #8b5a2b)',
+              fontFamily: 'var(--font-serif)'
+            }}>
+              {monthUniqueBooksCount} <span style={{ fontSize: '0.8rem', fontWeight: 500 }}>本</span>
+            </span>
+          </div>
+        </div>
+
+        {/* 下排：🏆 本月最常閱讀書籍 前3名以及時數 (含「繼續閱讀 ›」) */}
+        <div style={{
+          backgroundColor: 'var(--bg-card, #fff)',
+          border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+          borderRadius: '14px',
+          padding: '0.85rem 0.95rem',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.06))',
+            paddingBottom: '6px'
+          }}>
+            <div style={{
+              fontSize: '0.86rem',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              fontFamily: 'var(--font-serif)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span>🏆</span>
+              <span>本月最常閱讀書籍</span>
+            </div>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+              累積時數榜單
+            </span>
+          </div>
+
+          {monthTop3Books.length === 0 ? (
+            <div style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+              本月尚無閱讀累計時數
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {monthTop3Books.map((book, idx) => {
+                const medalColors = [
+                  { bg: '#ffd700', color: '#7a5800' }, // 1
+                  { bg: '#dcdde1', color: '#474747' }, // 2
+                  { bg: '#e0a96d', color: '#4a2800' }  // 3
+                ];
+                const medal = medalColors[idx] || medalColors[2];
+
+                return (
+                  <div
+                    key={book.workId}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '5px 8px',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--bg-card-subtle, rgba(0,0,0,0.02))',
+                      gap: '8px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+                      <span style={{
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        backgroundColor: medal.bg,
+                        color: medal.color,
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        {idx + 1}
+                      </span>
+                      <span style={{
+                        fontSize: '0.84rem',
+                        fontWeight: 600,
+                        color: 'var(--text-primary)',
+                        fontFamily: 'var(--font-serif)',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}>
+                        {book.title}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                      <span style={{
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        color: 'var(--theme-accent, #d97706)',
+                        backgroundColor: 'var(--surface-capsule, var(--bg-card-subtle, rgba(255, 255, 255, 0.08)))',
+                        padding: '2px 8px',
+                        borderRadius: '12px',
+                        border: '1px solid var(--border-subtle, var(--border-color, rgba(255, 255, 255, 0.12)))'
+                      }}>
+                        {formatDurationStat(book.totalMinutes)}
+                      </span>
+                      <button
+                        onClick={() => onSelectBook(book.workId, undefined, undefined, 'resume')}
+                        style={{
+                          fontSize: '0.74rem',
+                          fontWeight: 700,
+                          color: 'var(--theme-accent-contrast, #ffffff)',
+                          backgroundColor: 'var(--theme-accent, #8c4b27)',
+                          border: 'none',
+                          borderRadius: '12px',
+                          padding: '3px 10px',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '2px',
+                          boxShadow: '0 1px 4px rgba(0, 0, 0, 0.15)',
+                          transition: 'all 0.15s ease'
+                        }}
+                        title="接續閱讀此經典"
+                      >
+                        <span>繼續閱讀</span>
+                        <span style={{ fontWeight: 800 }}>›</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* 📿 需求 3：🏆 本月常修功課 前3名以及修持數量 (放置於「本月最常閱讀書籍」之後) */}
+        <div style={{
+          backgroundColor: 'var(--bg-card, #fff)',
+          border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+          borderRadius: '14px',
+          padding: '0.85rem 0.95rem',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid var(--border-color, rgba(0,0,0,0.06))',
+            paddingBottom: '6px'
+          }}>
+            <div style={{
+              fontSize: '0.86rem',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              fontFamily: 'var(--font-serif)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span>📿</span>
+              <span>本月常修功課</span>
+            </div>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+              累積修持榜單
+            </span>
+          </div>
+
+          {monthTop3Practices.length === 0 ? (
+            <div style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+              本月尚無修持功課紀錄
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {monthTop3Practices.map((practice, idx) => {
+                const medalColors = [
+                  { bg: '#ffd700', color: '#7a5800' }, // 1
+                  { bg: '#dcdde1', color: '#474747' }, // 2
+                  { bg: '#e0a96d', color: '#4a2800' }  // 3
+                ];
+                const medal = medalColors[idx] || medalColors[2];
+
+                return (
+                  <div
+                    key={`${practice.name}-${idx}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '5px 8px',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--bg-card-subtle, rgba(0,0,0,0.02))',
+                      gap: '8px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+                      <span style={{
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        backgroundColor: medal.bg,
+                        color: medal.color,
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        {idx + 1}
+                      </span>
+                      <span style={{
+                        fontSize: '0.84rem',
+                        fontWeight: 600,
+                        color: 'var(--text-primary)',
+                        fontFamily: 'var(--font-serif)',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}>
+                        {practice.name}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                      <span style={{
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        color: 'var(--theme-accent, #d97706)',
+                        backgroundColor: 'var(--surface-capsule, var(--bg-card-subtle, rgba(255, 255, 255, 0.08)))',
+                        padding: '2px 8px',
+                        borderRadius: '12px',
+                        border: '1px solid var(--border-subtle, var(--border-color, rgba(255, 255, 255, 0.12)))'
+                      }}>
+                        {practice.totalCount.toLocaleString()} {practice.unit}
+                      </span>
+                      <button
+                        onClick={() => {
+                          setModalCategory(practice.category || 'fo');
+                          setModalName(practice.name);
+                          if (practice.category === 'fo') setModalCount(1080);
+                          else if (practice.category === 'zhou') setModalCount(21);
+                          else if (practice.category === 'jing') setModalCount(1);
+                          else setModalCount(108);
+                          setShowPracticeModal(true);
+                        }}
+                        style={{
+                          fontSize: '0.74rem',
+                          fontWeight: 700,
+                          color: 'var(--theme-accent-contrast, #ffffff)',
+                          backgroundColor: 'var(--theme-accent, #8c4b27)',
+                          border: 'none',
+                          borderRadius: '12px',
+                          padding: '3px 10px',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '2px',
+                          boxShadow: '0 1px 4px rgba(0, 0, 0, 0.15)',
+                          transition: 'all 0.15s ease'
+                        }}
+                        title={`記錄 ${practice.name}`}
+                      >
+                        <span>+ 記錄</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 底部功能按鈕 */}

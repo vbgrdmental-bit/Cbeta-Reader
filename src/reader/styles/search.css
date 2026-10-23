@@ -42,44 +42,68 @@ body.theme-ebony .search-info-tip {
   color: rgba(255, 255, 255, 0.55);
 }
 
-/* 搜尋框比照「+ 線上下載匯入新佛經經典...」虛線卡片樣式 */
+/* 搜尋框：完全比照圖 2 圓角膠囊樣式與色彩邏輯 (無虛線、溫潤底色、大氣圓角) */
 .search-panel-bar {
   display: flex;
+  align-items: center;
   width: 100%;
-  max-width: 440px;
-  border: 2px dashed rgba(140, 75, 39, 0.25);
-  background: rgba(140, 75, 39, 0.03);
-  border-radius: var(--radius-xl);
-  padding: 0.2rem 0.5rem;
+  max-width: 520px;
+  border: 1.5px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 9999px;
+  padding: 0.2rem 0.5rem 0.2rem 0.8rem;
   box-sizing: border-box;
-  transition: var(--transition-normal);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-body.theme-ebony .search-panel-bar {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.02);
+body.theme-ebony .search-panel-bar,
+body.theme-dark .search-panel-bar {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+body.theme-comfort .search-panel-bar {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(46, 92, 59, 0.12);
+}
+
+body.theme-lotus .search-panel-bar {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(120, 62, 57, 0.1);
 }
 
 .search-panel-bar:focus-within {
-  border-color: var(--color-wood-700);
-  background: rgba(140, 75, 39, 0.06);
-  box-shadow: var(--shadow-sm);
+  border-color: var(--theme-accent, #1ea98c);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(30, 169, 140, 0.15), 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
-body.theme-ebony .search-panel-bar:focus-within {
-  border-color: var(--color-gold-500);
-  background: rgba(255, 255, 255, 0.04);
+body.theme-ebony .search-panel-bar:focus-within,
+body.theme-dark .search-panel-bar:focus-within {
+  border-color: var(--theme-accent, #38bdf8);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2), 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .search-panel-bar input {
   flex-grow: 1;
   background: transparent;
   border: none;
-  padding: 0.8rem 1rem;
+  padding: 0.75rem 0.8rem;
   color: var(--text-primary);
   outline: none;
-  font-size: 1rem;
+  font-size: 0.96rem;
+  font-family: inherit;
   width: 100%;
+}
+
+.search-panel-bar input::placeholder {
+  color: var(--text-muted, #718096);
+  opacity: 0.75;
 }
 
 .search-panel-btn {
@@ -87,16 +111,24 @@ body.theme-ebony .search-panel-bar:focus-within {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 0 1rem;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: var(--transition-fast);
+  border-radius: 50%;
 }
 
 .search-panel-btn:hover {
-  color: var(--text-primary);
-  transform: scale(1.1);
+  color: var(--theme-accent, #1ea98c);
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.08);
+}
+
+body.theme-ebony .search-panel-btn:hover,
+body.theme-dark .search-panel-btn:hover {
+  color: var(--theme-accent, #38bdf8);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* 檢索數據 */
