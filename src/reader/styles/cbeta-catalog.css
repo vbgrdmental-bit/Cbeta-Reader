@@ -578,8 +578,10 @@ body.theme-ebony .cbeta-read-btn:hover,
   border-radius: 8px;
   background-color: var(--theme-accent, #8c4b27);
   color: #ffffff;
-  font-weight: bold;
-  font-size: 0.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-weight: 800;
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -596,11 +598,10 @@ body.theme-ebony .cbeta-read-btn:hover,
   min-width: 0;
 }
 
-/* 經文卡片內容：經名與作譯者一律使用「宋/明體」傳統古典字型 */
+/* 經文卡片內容：經名與作譯者一律使用「宋/明體」傳統古典字型（經號徽章則維持書櫃 sans-serif 黑體） */
 .cbeta-work-card,
 .cbeta-work-title,
-.cbeta-work-meta,
-.cbeta-work-badge {
+.cbeta-work-meta {
   font-family: var(--font-serif, 'Noto Serif TC', 'Songti TC', 'PMingLiU', serif) !important;
 }
 

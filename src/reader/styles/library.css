@@ -228,89 +228,12 @@ body.theme-light .wing-capsule-item.active {
 }
 
 /* ══════════════════════════════════════════════════
-   圖2 膠囊導航按鈕色彩特化 (完全對齊圖1：書櫃紫、筆記綠、檢索藍)
-   其他按鍵 (下載經典、閱讀日誌) 維持原設定不變
+   膠囊導航按鈕色彩全面統一：所有按鍵（下載經典、我的書櫃、我的筆記、全文檢索）
+   選中時 100% 與當前主題顏色 (var(--theme-accent)) 完美一致
    ══════════════════════════════════════════════════ */
-
-/* 1. 我的書櫃 (紫色系) */
-.capsule-nav-item.nav-item-shelf.active,
-.capsule-nav-item[data-nav="shelf"].active,
-.wing-capsule-item.nav-item-shelf.active {
-  background: linear-gradient(135deg, #a855f7, #7c3aed) !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.35) !important;
-}
-
-.capsule-nav-item.nav-item-shelf:hover,
-.capsule-nav-item[data-nav="shelf"]:hover {
-  color: #8b5cf6;
-}
-
-/* 深色模式下的「我的書櫃」 (高質感明麗紫色) */
-body.theme-ebony .capsule-nav-item.nav-item-shelf.active,
-body.theme-dark .capsule-nav-item.nav-item-shelf.active,
-body.theme-custom-dark .capsule-nav-item.nav-item-shelf.active,
-.theme-ebony .capsule-nav-item.nav-item-shelf.active,
-.theme-dark .capsule-nav-item.nav-item-shelf.active,
-body.theme-ebony .capsule-nav-item[data-nav="shelf"].active,
-body.theme-dark .capsule-nav-item[data-nav="shelf"].active {
-  background: linear-gradient(135deg, #b066ff, #8241f5) !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 10px rgba(176, 102, 255, 0.45) !important;
-}
-
-/* 2. 我的筆記 (綠色系) */
-.capsule-nav-item.nav-item-notes.active,
-.capsule-nav-item[data-nav="notes"].active,
-.wing-capsule-item.nav-item-notes.active {
-  background: linear-gradient(135deg, #10b981, #059669) !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35) !important;
-}
-
-.capsule-nav-item.nav-item-notes:hover,
-.capsule-nav-item[data-nav="notes"]:hover {
-  color: #10b981;
-}
-
-/* 深色模式下的「我的筆記」 (清新翡翠綠) */
-body.theme-ebony .capsule-nav-item.nav-item-notes.active,
-body.theme-dark .capsule-nav-item.nav-item-notes.active,
-body.theme-custom-dark .capsule-nav-item.nav-item-notes.active,
-.theme-ebony .capsule-nav-item.nav-item-notes.active,
-.theme-dark .capsule-nav-item.nav-item-notes.active,
-body.theme-ebony .capsule-nav-item[data-nav="notes"].active,
-body.theme-dark .capsule-nav-item[data-nav="notes"].active {
-  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 10px rgba(34, 197, 94, 0.45) !important;
-}
-
-/* 3. 全文檢索 (藍色系 / 湛藍海青色) */
-.capsule-nav-item.nav-item-search.active,
-.capsule-nav-item[data-nav="search"].active,
-.wing-capsule-item.nav-item-search.active {
-  background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(8, 145, 178, 0.35) !important;
-}
-
-.capsule-nav-item.nav-item-search:hover,
-.capsule-nav-item[data-nav="search"]:hover {
-  color: #06b6d4;
-}
-
-/* 深色模式下的「全文檢索」 (澄澈蔚藍色) */
-body.theme-ebony .capsule-nav-item.nav-item-search.active,
-body.theme-dark .capsule-nav-item.nav-item-search.active,
-body.theme-custom-dark .capsule-nav-item.nav-item-search.active,
-.theme-ebony .capsule-nav-item.nav-item-search.active,
-.theme-dark .capsule-nav-item.nav-item-search.active,
-body.theme-ebony .capsule-nav-item[data-nav="search"].active,
-body.theme-dark .capsule-nav-item[data-nav="search"].active {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.45) !important;
+.capsule-nav-item:hover,
+.wing-capsule-item:hover {
+  color: var(--theme-accent, var(--text-primary));
 }
 
 .capsule-nav-item.active .capsule-label,
@@ -5366,7 +5289,102 @@ body.theme-dark .title-brand-text {
 
 .widget-title-4x1 .sub { font-size: 0.76rem; color: var(--text-muted); }
 
-/* 💡 品牌標題面板內的四大閱讀小圓圈 (Mini Theme Dots：縮小50%至 7px，視覺精巧協調) */
+/* 💡 品牌標題面板內的微型主題指示器 (1個小圓點 + 細小文字，同系列極致低調細框/底色膠囊) */
+.title-mini-theme-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+  cursor: pointer;
+  z-index: 10;
+  padding: 1.5px 6.5px;
+  border-radius: 999px;
+  /* 愈低調愈不清楚愈好：極細微透邊框 + 極淡半透明相近色底色 */
+  background: rgba(0, 0, 0, 0.022);
+  border: 0.8px solid rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.title-mini-theme-indicator:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.10);
+  opacity: 0.92;
+}
+
+.title-mini-theme-indicator:active {
+  transform: scale(0.97);
+  background: rgba(0, 0, 0, 0.055);
+}
+
+/* 🌙 深色主題（烏木黑、自訂深色等）：維持極低調微透白光邊框與淡底色 */
+body.theme-ebony .title-mini-theme-indicator,
+body.theme-dark .title-mini-theme-indicator,
+body.theme-custom-dark .title-mini-theme-indicator {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+body.theme-ebony .title-mini-theme-indicator:hover,
+body.theme-dark .title-mini-theme-indicator:hover,
+body.theme-custom-dark .title-mini-theme-indicator:hover {
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.title-mini-theme-indicator.pos-bottom-right {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+}
+
+.title-mini-theme-indicator.pos-bottom-left {
+  position: absolute;
+  left: 14px;
+  bottom: 10px;
+}
+
+/* 💡 2x2 面板中最下方置中 */
+.title-mini-theme-indicator.pos-bottom-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+}
+
+/* 💡 4x1 面板中靠右 */
+.title-mini-theme-indicator.pos-right {
+  margin-left: auto;
+}
+
+.title-mini-theme-indicator .mini-theme-text {
+  font-size: 0.70rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1;
+  letter-spacing: 0.015em;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  opacity: 0.88;
+}
+
+.title-mini-theme-indicator .single-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+body.theme-ebony .title-mini-theme-indicator .single-indicator-dot,
+body.theme-custom-dark .title-mini-theme-indicator .single-indicator-dot {
+  border-color: rgba(255, 255, 255, 0.30);
+}
+
+/* 💡 品牌標題面板內的四大閱讀小圓圈 (相容保留) */
 .title-mini-theme-dots {
   display: flex;
   align-items: center;
@@ -6386,29 +6404,34 @@ body.theme-dark .book-capsule-item:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* 膠囊左側正方形圓角經號徽章（如圖2：34×34 規格） */
+/* 膠囊左側正方形圓角經號徽章（統一為書櫃 38×38 規格，徹底防止文字超出） */
 .book-capsule-badge {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  border-radius: 7px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  padding: 0 2px;
+  box-sizing: border-box;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
 }
 
-/* 💡 書籍編號字體統一為圖2字體：var(--font-serif, serif) 800 粗體 */
+/* 💡 書籍編號字體統一為我的書櫃無襯線字型 (圖2)：sans-serif 800 粗體，緊湊清晰 */
 .book-capsule-badge-text {
-  font-family: var(--font-serif, serif) !important;
-  font-size: 0.72rem !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 0.70rem !important;
   font-weight: 800 !important;
   color: #ffffff !important;
-  letter-spacing: 0.02em !important;
+  letter-spacing: 0 !important;
   line-height: 1;
   text-align: center;
-  padding: 0 1px;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 /* 膠囊空槽位 */
@@ -6419,10 +6442,11 @@ body.theme-dark .book-capsule-item:hover {
 }
 
 .book-capsule-badge-empty {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  border-radius: 7px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 8px;
   border: 1px dashed var(--reader-border, rgba(140, 100, 60, 0.3));
   display: flex;
   align-items: center;
@@ -10761,6 +10785,7 @@ body.theme-ebony .keyword-cross-badge {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   font-size: 0.72rem;
   font-weight: 800;
   flex-shrink: 0;
@@ -11439,6 +11464,477 @@ body.theme-ebony .symbol-opt-btn:hover {
 .popover-spacing-item.active {
   background: #1ea98c;
   color: #ffffff;
+}
+
+/* ==========================================================================
+   📿 咒語對齊（梵漢對照 / 注音上下對齊）排版樣式
+   ========================================================================== */
+
+/* 咒語行容器 (置中、響應式整詞折行) */
+.mantra-line {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  gap: 8px 14px !important;
+  margin: 8px 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+}
+
+/* 咒語單元組 (英文+中文上下 100% 垂直對稱置中) */
+.mantra-pair {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  text-align: center !important;
+  vertical-align: bottom !important;
+  margin: 1px 2px !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+/* 上排：羅馬拼音 / 英文 */
+.mantra-pinyin {
+  font-size: 0.72em !important;
+  line-height: 1.25 !important;
+  opacity: 0.82 !important;
+  font-family: var(--font-sans, "Noto Sans TC", sans-serif) !important;
+  letter-spacing: 0.02em !important;
+  white-space: nowrap !important;
+  color: inherit !important;
+}
+
+/* 下排：中文音譯漢字 */
+.mantra-hanzi {
+  font-size: 1.06em !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  white-space: nowrap !important;
+  color: inherit !important;
+  font-family: inherit !important;
+}
+
+/* 📿 咒語編輯 Modal 遮罩 (全螢幕柔和遮罩，居中呈現彈窗，按鍵100%吸底可見) */
+.mantra-modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.48) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  z-index: 100050 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+}
+
+/* 咒語編輯 Popover 面板 (居中呈現、固定頂底、中間平滑滾動，按鍵100%永遠可見) */
+.word-popover.mantra-popover {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  width: min(calc(100vw - 28px), 430px) !important;
+  max-width: 430px !important;
+  max-height: min(84vh, 580px) !important;
+  padding: 0 !important;
+  border-radius: 18px !important;
+  gap: 0 !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+  border: 1.2px solid rgba(0, 0, 0, 0.12) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  animation: popScaleCenter 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes popScaleCenter {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+body.theme-ebony .word-popover.mantra-popover {
+  background: #1e242d !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7) !important;
+}
+
+.mantra-popover-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 10px 14px 8px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  flex-shrink: 0 !important;
+}
+
+body.theme-ebony .mantra-popover-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.mantra-header-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+}
+
+body.theme-ebony .mantra-header-title {
+  color: #f1f5f9 !important;
+}
+
+.mantra-auto-badge {
+  font-size: 0.68rem !important;
+  font-weight: 500 !important;
+  background: rgba(30, 169, 140, 0.15) !important;
+  color: #10856c !important;
+  padding: 1px 7px !important;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(30, 169, 140, 0.3) !important;
+}
+
+body.theme-ebony .mantra-auto-badge {
+  background: rgba(30, 169, 140, 0.25) !important;
+  color: #4ade80 !important;
+  border-color: rgba(30, 169, 140, 0.4) !important;
+}
+
+.mantra-close-x {
+  border: none !important;
+  background: transparent !important;
+  font-size: 0.85rem !important;
+  color: #666 !important;
+  cursor: pointer !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+}
+
+body.theme-ebony .mantra-close-x {
+  color: #94a3b8 !important;
+}
+
+/* 中間滾動主體 */
+.mantra-popover-scroll-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 10px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  box-sizing: border-box !important;
+}
+
+.mantra-input-fields {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.mantra-field-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  text-align: left !important;
+}
+
+.mantra-field-label {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #4b5563 !important;
+}
+
+body.theme-ebony .mantra-field-label {
+  color: #94a3b8 !important;
+}
+
+.mantra-text-input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 6px 10px !important;
+  font-size: 0.82rem !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.16) !important;
+  background: #fdfdfd !important;
+  color: #111827 !important;
+  outline: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.mantra-text-input:focus {
+  border-color: #1ea98c !important;
+  box-shadow: 0 0 0 2px rgba(30, 169, 140, 0.2) !important;
+}
+
+body.theme-ebony .mantra-text-input {
+  background: #272f3b !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* 支援自行換行的 Textarea 輸入框 */
+.mantra-textarea-input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 6px 10px !important;
+  font-size: 0.82rem !important;
+  line-height: 1.45 !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.16) !important;
+  background: #fdfdfd !important;
+  color: #111827 !important;
+  outline: none !important;
+  resize: vertical !important;
+  min-height: 52px !important;
+  font-family: inherit !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.mantra-textarea-input:focus {
+  border-color: #1ea98c !important;
+  box-shadow: 0 0 0 2px rgba(30, 169, 140, 0.2) !important;
+}
+
+body.theme-ebony .mantra-textarea-input {
+  background: #272f3b !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* 即時預覽容器 */
+.mantra-preview-container {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  text-align: left !important;
+}
+
+.mantra-preview-label {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #4b5563 !important;
+}
+
+body.theme-ebony .mantra-preview-label {
+  color: #94a3b8 !important;
+}
+
+.mantra-preview-box {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border: 1px dashed rgba(0, 0, 0, 0.16) !important;
+  border-radius: 10px !important;
+  padding: 8px 10px !important;
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  max-height: 130px !important;
+  overflow-y: auto !important;
+}
+
+body.theme-ebony .mantra-preview-box {
+  background: rgba(0, 0, 0, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.mantra-preview-empty {
+  font-size: 0.75rem !important;
+  color: #888 !important;
+  font-style: italic !important;
+}
+
+body.theme-ebony .mantra-preview-empty {
+  color: #64748b !important;
+}
+
+/* 咒語標題 (便籤本體中的置中加粗標題) */
+.memo-text-surface .mantra-title {
+  text-align: center !important;
+  font-weight: 700 !important;
+  font-size: 1.08em !important;
+  margin: 0 0 6px 0 !important;
+  letter-spacing: 0.05em !important;
+  color: inherit !important;
+  font-family: inherit !important;
+}
+
+/* 預覽區標題 */
+.mantra-title-preview {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  text-align: center !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.04em !important;
+}
+
+body.theme-ebony .mantra-title-preview {
+  color: #f3c969 !important;
+}
+
+/* 常用咒語標籤列（含存為常用與右上角刪除×） */
+.mantra-templates-row {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  text-align: left !important;
+}
+
+.templates-header-line {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.templates-label {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #4b5563 !important;
+  white-space: nowrap !important;
+}
+
+body.theme-ebony .templates-label {
+  color: #94a3b8 !important;
+}
+
+.template-save-current-btn {
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  color: #10856c !important;
+  background: rgba(30, 169, 140, 0.12) !important;
+  border: 1px solid rgba(30, 169, 140, 0.3) !important;
+  border-radius: 9999px !important;
+  padding: 1px 8px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.template-save-current-btn:hover {
+  background: #1ea98c !important;
+  color: #ffffff !important;
+  border-color: #1ea98c !important;
+}
+
+body.theme-ebony .template-save-current-btn {
+  background: rgba(30, 169, 140, 0.22) !important;
+  color: #4ade80 !important;
+  border-color: rgba(30, 169, 140, 0.4) !important;
+}
+
+body.theme-ebony .template-save-current-btn:hover {
+  background: #1ea98c !important;
+  color: #ffffff !important;
+}
+
+.templates-pills {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+/* 常用咒語膠囊（含右上角×） */
+.template-pill-wrapper {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 3px 6px 3px 10px !important;
+  font-size: 0.72rem !important;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.15s ease !important;
+  gap: 4px !important;
+}
+
+.template-pill-wrapper:hover {
+  background: #e5e7eb !important;
+  border-color: #9ca3af !important;
+}
+
+body.theme-ebony .template-pill-wrapper {
+  background: #272f3b !important;
+  color: #d1d5db !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body.theme-ebony .template-pill-wrapper:hover {
+  background: #333d4d !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+.template-pill-text {
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* 膠囊右上角微型「×」刪除鈕 */
+.template-pill-delete {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  background: rgba(0, 0, 0, 0.08) !important;
+  color: #6b7280 !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  transition: all 0.15s ease !important;
+}
+
+.template-pill-delete:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+body.theme-ebony .template-pill-delete {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #94a3b8 !important;
+}
+
+body.theme-ebony .template-pill-delete:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+/* 底部行動按鈕 (固定吸底，永遠可見) */
+.mantra-actions-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  padding: 8px 14px 10px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background: rgba(250, 250, 250, 0.98) !important;
+  flex-shrink: 0 !important;
+}
+
+body.theme-ebony .mantra-actions-row {
+  background: #181e26 !important;
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .memo-capsule-value {

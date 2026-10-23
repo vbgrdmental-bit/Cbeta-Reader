@@ -138,6 +138,7 @@
 
 /* 0. 象牙白主題全域變量 */
 .theme-ivory {
+  --bg-outer-canvas: #ede8dd;
   --reader-bg: var(--bg-paper-ivory);
   --reader-text: #2c2016;
   --reader-text-muted: #6a5a48;
@@ -145,14 +146,39 @@
   --bg-library: radial-gradient(circle at center, #fefcf8 0%, #f8f3ea 100%);
   --bg-shelf: linear-gradient(180deg, #ede8dd 0%, #dfd8cb 100%);
   --text-primary: #2c2016;
+  --text-main: #2c2016;
   --text-secondary: #5c4b37;
   --text-muted: #6a5a48;
   --bg-card: #fcfaf6;
-  --border-color: rgba(140, 106, 70, 0.14);
+  --surface-card: #f5f0e6;
+  --surface-modal: #fcfaf6;
+  --surface-modal-border: rgba(140, 106, 70, 0.25);
+  --bg-card-subtle: #f4ede2;
+  --surface-capsule: rgba(140, 106, 70, 0.06);
+  --border-color: rgba(140, 106, 70, 0.16);
+  --border-subtle: rgba(140, 106, 70, 0.08);
+  --theme-accent: #8c4b27;
+  --theme-accent-hover: #733c1f;
+  --theme-accent-contrast: #ffffff;
+  --theme-accent-light: rgba(140, 75, 39, 0.10);
+  --theme-accent-border: rgba(140, 75, 39, 0.25);
+  --btn-delete-bg: #fee2e2;
+  --btn-delete-border: rgba(239, 68, 68, 0.35);
+  --btn-delete-text: #dc2626;
+  --tag-listen-text: #15803d;
+  --tag-listen-bg: rgba(34, 197, 94, 0.10);
+  --tag-listen-border: rgba(21, 128, 61, 0.25);
+  --tag-think-text: #1e4b6e;
+  --tag-think-bg: rgba(30, 75, 110, 0.08);
+  --tag-think-border: rgba(30, 75, 110, 0.25);
+  --tag-practice-text: #92400e;
+  --tag-practice-bg: rgba(245, 158, 11, 0.12);
+  --tag-practice-border: rgba(180, 83, 9, 0.28);
 }
 
 /* 1. 羊皮紙主題全域變量與書架同步 */
 .theme-parchment {
+  --bg-outer-canvas: #e2d2ad;
   --reader-bg: var(--bg-paper-parchment);
   --reader-text: #3c2a1a;
   --reader-text-muted: #7a6652;
@@ -160,14 +186,39 @@
   --bg-library: radial-gradient(circle at center, #fdfcf9 0%, #f5eee0 100%);
   --bg-shelf: linear-gradient(180deg, #eddcb8 0%, #dec18c 100%);
   --text-primary: #3c2a1a;
+  --text-main: #3c2a1a;
   --text-secondary: #5c4b37;
   --text-muted: #7a6652;
   --bg-card: #faf4e6;
-  --border-color: rgba(140, 75, 39, 0.14);
+  --surface-card: #f3e8d2;
+  --surface-modal: #faf4e6;
+  --surface-modal-border: rgba(140, 75, 39, 0.25);
+  --bg-card-subtle: #f1e2c6;
+  --surface-capsule: rgba(140, 75, 39, 0.06);
+  --border-color: rgba(140, 75, 39, 0.16);
+  --border-subtle: rgba(140, 75, 39, 0.08);
+  --theme-accent: #8c4b27;
+  --theme-accent-hover: #733c1f;
+  --theme-accent-contrast: #ffffff;
+  --theme-accent-light: rgba(140, 75, 39, 0.10);
+  --theme-accent-border: rgba(140, 75, 39, 0.25);
+  --btn-delete-bg: #fee2e2;
+  --btn-delete-border: rgba(239, 68, 68, 0.35);
+  --btn-delete-text: #dc2626;
+  --tag-listen-text: #15803d;
+  --tag-listen-bg: rgba(34, 197, 94, 0.10);
+  --tag-listen-border: rgba(21, 128, 61, 0.25);
+  --tag-think-text: #1e4b6e;
+  --tag-think-bg: rgba(30, 75, 110, 0.08);
+  --tag-think-border: rgba(30, 75, 110, 0.25);
+  --tag-practice-text: #92400e;
+  --tag-practice-bg: rgba(245, 158, 11, 0.12);
+  --tag-practice-border: rgba(180, 83, 9, 0.28);
 }
 
 /* 2. 舒服護眼主題全域變量與書架同步 */
 .theme-comfort {
+  --bg-outer-canvas: #cbded0;
   --reader-bg: var(--bg-paper-comfort);
   --reader-text: #23351d;
   --reader-text-muted: #596b52;
@@ -175,14 +226,39 @@
   --bg-library: radial-gradient(circle at center, #f6faf0 0%, #ecf3e2 100%);
   --bg-shelf: linear-gradient(180deg, #d3e1c2 0%, #bdcda7 100%);
   --text-primary: #23351d;
+  --text-main: #23351d;
   --text-secondary: #42553b;
   --text-muted: #596b52;
   --bg-card: #f3f8f0;
-  --border-color: rgba(69, 122, 88, 0.15);
+  --surface-card: #e5eee1;
+  --surface-modal: #f3f8f0;
+  --surface-modal-border: rgba(69, 122, 88, 0.25);
+  --bg-card-subtle: #e0ece2;
+  --surface-capsule: rgba(43, 89, 63, 0.06);
+  --border-color: rgba(69, 122, 88, 0.16);
+  --border-subtle: rgba(69, 122, 88, 0.08);
+  --theme-accent: #2b593f;
+  --theme-accent-hover: #20432f;
+  --theme-accent-contrast: #ffffff;
+  --theme-accent-light: rgba(43, 89, 63, 0.10);
+  --theme-accent-border: rgba(43, 89, 63, 0.25);
+  --btn-delete-bg: #fee2e2;
+  --btn-delete-border: rgba(239, 68, 68, 0.35);
+  --btn-delete-text: #dc2626;
+  --tag-listen-text: #166534;
+  --tag-listen-bg: rgba(34, 197, 94, 0.10);
+  --tag-listen-border: rgba(22, 101, 52, 0.25);
+  --tag-think-text: #133e5c;
+  --tag-think-bg: rgba(19, 62, 92, 0.08);
+  --tag-think-border: rgba(19, 62, 92, 0.25);
+  --tag-practice-text: #92400e;
+  --tag-practice-bg: rgba(245, 158, 11, 0.12);
+  --tag-practice-border: rgba(180, 83, 9, 0.28);
 }
 
 /* 3. 烏木暗色主題全域變量與書架同步 */
 .theme-ebony {
+  --bg-outer-canvas: #0c0e11;
   --reader-bg: var(--bg-paper-ebony);
   --reader-text: #d8dec9;
   --reader-text-muted: #727c69;
@@ -190,10 +266,34 @@
   --bg-library: radial-gradient(circle at center, #1b2229 0%, #0d1114 100%);
   --bg-shelf: linear-gradient(180deg, #25333f 0%, #141c22 100%);
   --text-primary: #d8dec9;
+  --text-main: #d8dec9;
   --text-secondary: #9ca3af;
   --text-muted: #727c69;
-  --bg-card: rgba(255, 255, 255, 0.06);
+  --bg-card: rgba(255, 255, 255, 0.07);
+  --surface-card: rgba(255, 255, 255, 0.11);
+  --surface-modal: #181d22;
+  --surface-modal-border: rgba(245, 158, 11, 0.30);
+  --bg-card-subtle: rgba(255, 255, 255, 0.04);
+  --surface-capsule: rgba(255, 255, 255, 0.08);
   --border-color: rgba(255, 255, 255, 0.16);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --theme-accent: #f59e0b;
+  --theme-accent-hover: #d97706;
+  --theme-accent-contrast: #18181b;
+  --theme-accent-light: rgba(245, 158, 11, 0.14);
+  --theme-accent-border: rgba(245, 158, 11, 0.35);
+  --btn-delete-bg: rgba(239, 68, 68, 0.15);
+  --btn-delete-border: rgba(239, 68, 68, 0.35);
+  --btn-delete-text: #f87171;
+  --tag-listen-text: #4ade80;
+  --tag-listen-bg: rgba(74, 222, 128, 0.16);
+  --tag-listen-border: rgba(74, 222, 128, 0.35);
+  --tag-think-text: #38bdf8;
+  --tag-think-bg: rgba(56, 189, 248, 0.16);
+  --tag-think-border: rgba(56, 189, 248, 0.35);
+  --tag-practice-text: #fbbf24;
+  --tag-practice-bg: rgba(251, 191, 36, 0.18);
+  --tag-practice-border: rgba(251, 191, 36, 0.40);
 }
 
 /* Reset */

@@ -13,6 +13,7 @@ import {
   deletePracticeLog,
   clearAllPracticeLogs,
   getAllHighlights,
+  listBooks,
   type BookHighlight,
   type ReadingLogEntry,
   type PracticeLogEntry,
@@ -20,6 +21,7 @@ import {
   getPracticeCategories,
   savePracticeCategories
 } from '../../utils/db';
+import { FEATURED_BOOKS } from '../../builder/IndexBuilder';
 import { getLunarInfo } from '../../utils/lunarCalendar';
 
 interface ReadingLogViewProps {
@@ -63,7 +65,18 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
   const [logs, setLogs] = useState<ReadingLogEntry[]>([]);
   const [practiceLogs, setPracticeLogs] = useState<PracticeLogEntry[]>([]);
   const [highlights, setHighlights] = useState<BookHighlight[]>([]);
+  const [booksMap, setBooksMap] = useState<Record<string, string>>({});
   const [, setLoading] = useState(true);
+
+  // 取得經書標題 Helper
+  const getBookTitle = (workId: string): string => {
+    if (!workId) return '';
+    const cleanId = workId.trim().toUpperCase();
+    const title = booksMap[cleanId] || booksMap[workId] || '';
+    if (title) return title;
+    const feat = FEATURED_BOOKS.find(b => b.workId.toUpperCase() === cleanId);
+    return feat?.title || '';
+  };
 
   // 當前日曆顯示的年月
   const now = new Date();
@@ -110,10 +123,11 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
   const loadData = async () => {
     try {
       setLoading(true);
-      const [readData, pracData, highlightData] = await Promise.all([
+      const [readData, pracData, highlightData, booksMeta] = await Promise.all([
         getAllReadingLogs(),
         getAllPracticeLogs(),
-        getAllHighlights()
+        getAllHighlights(),
+        listBooks()
       ]);
       readData.sort((a, b) => b.startTime - a.startTime);
       pracData.sort((a, b) => b.timestamp - a.timestamp);
@@ -121,6 +135,34 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
       setLogs(readData);
       setPracticeLogs(pracData);
       setHighlights(highlightData);
+
+      // 建立經書名稱對照表 (本地資料庫 + 閱讀紀錄 + 內建經典)
+      const bMap: Record<string, string> = {};
+      if (Array.isArray(booksMeta)) {
+        booksMeta.forEach(b => {
+          if (b.workId && b.title) {
+            bMap[b.workId] = b.title;
+            bMap[b.workId.toUpperCase()] = b.title;
+          }
+        });
+      }
+      if (Array.isArray(readData)) {
+        readData.forEach(l => {
+          if (l.workId && l.title) {
+            if (!bMap[l.workId]) bMap[l.workId] = l.title;
+            if (!bMap[l.workId.toUpperCase()]) bMap[l.workId.toUpperCase()] = l.title;
+          }
+        });
+      }
+      if (Array.isArray(FEATURED_BOOKS)) {
+        FEATURED_BOOKS.forEach(b => {
+          if (b.workId && b.title) {
+            if (!bMap[b.workId]) bMap[b.workId] = b.title;
+            if (!bMap[b.workId.toUpperCase()]) bMap[b.workId.toUpperCase()] = b.title;
+          }
+        });
+      }
+      setBooksMap(bMap);
 
       // 💡 自動收錄歷史功課名稱至常用選擇（例如讀者之前記錄過的「滅定業真言」自動同步收錄）
       const currentCats = getPracticeCategories();
@@ -658,16 +700,16 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                         style={{
                           fontSize: '0.74rem',
                           fontWeight: 700,
-                          color: '#15803d',
-                          backgroundColor: 'rgba(34, 197, 94, 0.14)',
-                          border: '1px solid rgba(21, 128, 61, 0.38)',
+                          color: 'var(--theme-accent-contrast, #ffffff)',
+                          backgroundColor: 'var(--theme-accent, #8c4b27)',
+                          border: 'none',
                           borderRadius: '12px',
-                          padding: '3px 9px',
+                          padding: '3px 10px',
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '2px',
-                          boxShadow: '0 1px 3px rgba(21, 128, 61, 0.12)',
+                          boxShadow: '0 1px 4px rgba(0, 0, 0, 0.15)',
                           transition: 'all 0.15s ease'
                         }}
                         title="接續閱讀此經典"
@@ -1085,7 +1127,7 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                     borderRadius: '10px',
                     backgroundColor: 'var(--bg-card, #fff)',
                     border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-                    borderLeft: '3.5px solid #2d6a4f',
+                    borderLeft: '3.5px solid var(--tag-listen-border, #2d6a4f)',
                     gap: '0.6rem'
                   }}
                 >
@@ -1111,9 +1153,10 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                       <span>⏱ {formatTime(log.startTime)} ~ {formatTime(log.endTime)}</span>
                       <span>•</span>
                       <span style={{
-                        color: '#2d6a4f',
+                        color: 'var(--tag-listen-text, #2d6a4f)',
                         fontWeight: 600,
-                        backgroundColor: 'rgba(45, 106, 79, 0.08)',
+                        backgroundColor: 'var(--tag-listen-bg, rgba(45, 106, 79, 0.08))',
+                        border: '1px solid var(--tag-listen-border, transparent)',
                         padding: '1px 6px',
                         borderRadius: '4px'
                       }}>
@@ -1158,9 +1201,9 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                         width: '28px',
                         height: '28px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(184, 134, 11, 0.12)',
-                        color: '#8c6000',
-                        border: '1px solid rgba(184, 134, 11, 0.32)',
+                        backgroundColor: 'var(--tag-practice-bg, rgba(184, 134, 11, 0.12))',
+                        color: 'var(--tag-practice-text, #8c6000)',
+                        border: '1px solid var(--tag-practice-border, rgba(184, 134, 11, 0.32))',
                         fontSize: '0.66rem',
                         fontWeight: 800,
                         cursor: 'pointer',
@@ -1255,51 +1298,77 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {selectedDateHighlights.map((hl) => (
-                <div
-                  key={hl.id}
-                  style={{
-                    padding: '0.7rem 0.85rem',
-                    borderRadius: '10px',
-                    backgroundColor: 'var(--bg-card, #fff)',
-                    border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
-                    borderLeft: '3.5px solid #1e4b6e',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      color: '#1e4b6e',
-                      backgroundColor: 'rgba(30, 75, 110, 0.08)',
-                      padding: '1px 6px',
-                      borderRadius: '4px'
-                    }}>
-                      {hl.workId} · 第 {hl.juan} 卷
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => onSelectBook(hl.workId, hl.segmentId, undefined, 'resume')}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: 'var(--theme-accent, #8b5a2b)',
-                        fontSize: '0.74rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '2px'
-                      }}
-                      title="直接開啟此段經文"
-                    >
-                      <span>直達經文</span>
-                      <ChevronRight size={12} />
-                    </button>
-                  </div>
+              {selectedDateHighlights.map((hl) => {
+                const rawTitle = getBookTitle(hl.workId);
+                const cleanTitle = (rawTitle || '').replace(/[《》]/g, '').trim();
+
+                return (
+                  <div
+                    key={hl.id}
+                    style={{
+                      padding: '0.7rem 0.85rem',
+                      borderRadius: '10px',
+                      backgroundColor: 'var(--bg-card, #fff)',
+                      border: '1px solid var(--border-color, rgba(0,0,0,0.08))',
+                      borderLeft: '3.5px solid var(--tag-think-border, #1e4b6e)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '4px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0, flex: 1 }}>
+                        {cleanTitle && (
+                          <span 
+                            title={cleanTitle}
+                            style={{
+                              fontSize: '0.84rem',
+                              fontWeight: 700,
+                              color: 'var(--text-primary)',
+                              fontFamily: 'var(--font-serif)',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }}
+                          >
+                            《{cleanTitle}》
+                          </span>
+                        )}
+                        <span style={{
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          color: 'var(--tag-think-text, #1e4b6e)',
+                          backgroundColor: 'var(--tag-think-bg, rgba(30, 75, 110, 0.08))',
+                          border: '1px solid var(--tag-think-border, transparent)',
+                          padding: '1px 6px',
+                          borderRadius: '4px',
+                          flexShrink: 0
+                        }}>
+                          {hl.workId} · 第 {hl.juan} 卷
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => onSelectBook(hl.workId, hl.segmentId, undefined, 'resume')}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'var(--theme-accent, #8b5a2b)',
+                          fontSize: '0.74rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '2px',
+                          flexShrink: 0
+                        }}
+                        title="直接開啟此段經文"
+                      >
+                        <span>直達經文</span>
+                        <ChevronRight size={12} />
+                      </button>
+                    </div>
 
                   <div style={{
                     fontSize: '0.84rem',
@@ -1326,7 +1395,8 @@ export function ReadingLogView({ onClose, onSelectBook, mode = 'page' }: Reading
                     </div>
                   )}
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

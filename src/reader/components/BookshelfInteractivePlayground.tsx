@@ -2056,7 +2056,7 @@ export function BookshelfInteractivePlayground({
                       borderRadius: '9999px',
                       border: 'none',
                       backgroundColor: 'var(--theme-accent, #8b5a2b)',
-                      color: '#fff',
+                      color: 'var(--theme-accent-contrast, #ffffff)',
                       fontSize: '0.84rem',
                       fontWeight: 700,
                       cursor: 'pointer',

@@ -1483,16 +1483,16 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                       <span>App 閱讀器介面更新</span>
                     </div>
 
-                    {/* 最新 App 版本 (v4.12.7) 直接顯示 */}
+                    {/* 最新 App 版本 (v4.13.9) 直接顯示 */}
                     <div className="changelog-version-section">
                       <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                        <span>⭐ App: v4.12.7</span>
-                        <span className="changelog-date">(2026-10-20)</span>
+                        <span>⭐ App: v4.13.9</span>
+                        <span className="changelog-date">(2026-10-23)</span>
                       </div>
                       <ul className="changelog-list">
-                        <li>• 蓮花粉卡片升級蓮華玉白：部類、經書、彈窗與首頁小卡改為柔和淺粉暖白（#faf3f1），徹底消除死白刺眼對比。</li>
-                        <li>• 白月黑月向量月相意境化：農曆十四改為白色圓圈滿月圖示、廿九改為白色細弦月牙，符合佛教經律意境。</li>
-                        <li>• 閱讀記錄接續與持經對調：日誌記錄列右側對調為先接續閱讀「›」後轉持經「+修」，操作更直觀順手。</li>
+                        <li>• 咒語彈窗全域置中居中：採用 Portal 直掛 body 搭配全螢幕柔和遮罩，徹底擺脫工具列相對定位壓迫。</li>
+                        <li>• 儲存按鍵 100% 吸底可見：彈窗高度智慧適配視窗（max 84vh），清空與「✓ 插入」按鍵永遠固定於視野中。</li>
+                        <li>• 中間主體獨立平滑捲動：多行拼音、漢字與常用咒語清單於中央順暢滾動，告別拉不到底部缺陷。</li>
                       </ul>
                     </div>
 
@@ -1515,6 +1515,137 @@ export function SettingsView({ settings, onSave, onClose, onReplayOnboarding }: 
                     {/* 展開的 App 歷史版本 */}
                     {showAppHistory && (
                       <div className="changelog-history-wrapper animate-fade-in" style={{ marginTop: '0.6rem' }}>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.8</span>
+                            <span className="changelog-date">(2026-10-21)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 便籤咒語支援多行自行換行：拼音與中文音譯支援 Enter 自由換行，每行各自垂直置中對稱，隨心編排。</li>
+                            <li>• 底部操作按鍵固定吸底可見：彈窗重構為固定頂底與中間平滑捲動，清空與「✓ 插入」按鍵 100% 永遠可見。</li>
+                            <li>• 經典真言預設多行典雅分段：地藏菩薩真言等長句預設分為兩行置中，層次分明且節奏優雅。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.7</span>
+                            <span className="changelog-date">(2026-10-21)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 便籤新增咒語標題輸入：拼音上方新增「咒語標題」欄位（如地藏菩薩真言），支援預覽與標題置中。</li>
+                            <li>• 常用咒語自訂保存與刪除：支援一鍵「＋存為常用」，膠囊右上角配置「×」可自由刪除自訂項目。</li>
+                            <li>• 經典真言一鍵自動套用：點選任一常用咒語膠囊，標題、羅馬拼音與中文音譯三欄同步帶入預覽。</li>
+                          </ul>
+                        </div>
+
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.6</span>
+                            <span className="changelog-date">(2026-10-21)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 便籤卡咒語梵漢智慧對齊：浮動工具列新增「📿 咒語」功能，支援梵文/拼音與中文音譯上下 100% 垂直置中。</li>
+                            <li>• 雙行自動提取與即時預覽：支援框選兩行文字自動解析、雙欄即時置中預覽與常用經典真言一鍵帶入。</li>
+                            <li>• 單元整詞折行不跑版：響應式以詞組為原子單元折行，徹底杜絕英文單字換行而中文錯位跑版。</li>
+                          </ul>
+                        </div>
+
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.5</span>
+                            <span className="changelog-date">(2026-10-21)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 品牌小卡主題同系列膠囊化：主題切換（舒服綠○）配置極低調微透細框與相近底色。</li>
+                            <li>• 若隱若現極致低調：微膠囊融入卡片背景，視覺同系列一體且毫不喧賓奪主。</li>
+                          </ul>
+                        </div>
+
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.4</span>
+                            <span className="changelog-date">(2026-10-21)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 經號徽章加大防溢出：三卡片（下載/閱讀/最愛）徽章擴大至 38px，5~6 碼文字居中不溢出。</li>
+                            <li>• 經號字型統一黑體：首頁卡片與「下載經典」經號全面改為書櫃同款無襯線字型，清晰厚實。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.3</span>
+                            <span className="changelog-date">(2026-10-21)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 日誌筆記增加經名標題：在「思：我的筆記」卡片經號卷數（如 Y0040 · 第 1 卷）前方新增《書籍名稱》。</li>
+                            <li>• 層次分明防破版：書名採用典雅襯線加粗體，支援長經名自動省略截斷，與右側直達經文完美配平。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.2</span>
+                            <span className="changelog-date">(2026-10-21)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 導航按鍵色彩主題一致化：移除我的書櫃、我的筆記、全文檢索硬編碼色彩，選中態全面與主題顏色一致。</li>
+                            <li>• 消除突兀雜色：微膠囊導航按鈕在所有主題（經典色、修行佛光色、自訂色）下 100% 同色系純淨和諧。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.1</span>
+                            <span className="changelog-date">(2026-10-21)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 品牌卡片單圓點與細字化：5 圓點精簡升級為 1 個微型圓點 + 主題文字，視覺精緻俐落。</li>
+                            <li>• 3 尺寸對齊與順序規範：4×1 與 4×2 為「天青藍○」置右/右下，2×2 為「○天青藍」置中下。</li>
+                            <li>• 10+1 全主題循環體系：點擊依序切換 10 個原設定，若有自訂色則切至第 11 個，無自訂色自動循環跳過。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.13.0</span>
+                            <span className="changelog-date">(2026-10-20)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 大螢幕外圍背景動態連動：徹底修復寬螢幕外側畫布無法隨主題變色缺陷，六大修行色與自訂色 100% 毫秒級連動。</li>
+                            <li>• 同相深淺景深沉浸感：外圍畫布隨主題色相自動精算柔和景深（淺色降8%、中度降18%、深色降至幽玄），殿堂感十足。</li>
+                            <li>• 全域畫布 Token 體系：重構 --bg-outer-canvas，解耦硬編碼背景，四大經典色與自訂色彩全面無縫統一。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.9</span>
+                            <span className="changelog-date">(2026-10-20)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 深色聞思修發光色階：青松黛、硃砂赤、紫紺木等深色主題全面配置翡翠玉光、天青琉璃與璀璨泥金。</li>
+                            <li>• 筆記經號天青琉璃化：思（我的筆記）經號改為清澈天青琉璃色（#38bdf8），徹底解決深色底字跡暗沉。</li>
+                            <li>• 閱讀時間與持經清晰化：聞（閱讀記錄）時間改為明玉光（#4ade80），轉持經（+修）升級為泥金圓圈。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.8</span>
+                            <span className="changelog-date">(2026-10-20)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 中度色卡片淡彩玉底化：天青藍與琥珀金卡片明度由 96% 調降至 88.5%，徹底消除漂浮白紙割裂感。</li>
+                            <li>• 色塊通透微透呼應：卡片內次級色塊採用 60% 微透白光，層次分明且文字極致清晰。</li>
+                            <li>• 全站語意 Token 統一化：一級卡片、次級色塊、主行動鍵全面解耦硬編碼，自訂任何顏色皆完美和諧。</li>
+                          </ul>
+                        </div>
+                        <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
+                          <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                            <span>App: v4.12.7</span>
+                            <span className="changelog-date">(2026-10-20)</span>
+                          </div>
+                          <ul className="changelog-list">
+                            <li>• 蓮花粉卡片升級蓮華玉白：部類、經書、彈窗與首頁小卡改為柔和淺粉暖白（#faf3f1），徹底消除死白刺眼對比。</li>
+                            <li>• 白月黑月向量月相意境化：農曆十四改為白色圓圈滿月圖示、廿九改為白色細弦月牙，符合佛教經律意境。</li>
+                            <li>• 閱讀記錄接續與持經對調：日誌記錄列右側對調為先接續閱讀「›」後轉持經「+修」，操作更直觀順手。</li>
+                          </ul>
+                        </div>
                         <div className="changelog-version-section" style={{ marginTop: '1rem' }}>
                           <div className="changelog-version-title" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span>App: v4.12.6</span>

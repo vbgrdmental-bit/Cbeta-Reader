@@ -39,6 +39,7 @@ import {
   EyeCareTimerWidget, 
   QuoteWidget 
 } from './widgets';
+import { isDarkColor } from '../../utils/themeManager';
 
 interface HomeDashboardProps {
   downloadedBooks: BookMetadata[];
@@ -398,6 +399,114 @@ const DEMO_PREVIEW_RESUME: Array<{ book: BookMetadata; progress?: any }> = [
   }
 ];
 
+// 📿 咒語範例清單與梵漢智慧對齊結構
+interface MantraTemplateItem {
+  name: string;
+  pinyin: string;
+  hanzi: string;
+}
+
+const DEFAULT_MANTRA_TEMPLATES: MantraTemplateItem[] = [
+  {
+    name: '地藏菩薩真言',
+    pinyin: 'Namo Samanta Buddhanam\nHa Ha Ha Visamaya Svaha',
+    hanzi: '那摩 薩曼達 布達喃\n哈 哈哈 毗薩嘛雅 唰哈'
+  },
+  {
+    name: '滅定業真言',
+    pinyin: 'Om Pramardani Svaha',
+    hanzi: '唵 缽囉末鄰陀寧 娑婆訶'
+  },
+  {
+    name: '地藏心咒',
+    pinyin: 'Ha Ha Ha Visamaya Svaha',
+    hanzi: '哈 哈哈 毗薩嘛雅 唰哈'
+  },
+  {
+    name: '文殊五字',
+    pinyin: 'Om A Ra Pa Ca Na Dhih',
+    hanzi: '唵 阿 囉 跛 者 曩 諦'
+  },
+  {
+    name: '六字大明',
+    pinyin: 'Om Mani Padme Hum',
+    hanzi: '唵 嘛呢 叭咪 吽'
+  },
+  {
+    name: '金剛薩埵',
+    pinyin: 'Om Vajrasattva Hum',
+    hanzi: '唵 班札 薩埵 吽'
+  }
+];
+
+const escapeHtml = (str: string) => {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
+
+const buildMantraPairs = (pinyinStr: string, hanziStr: string) => {
+  let pTokens = pinyinStr.trim().split(/\s+/).filter(Boolean);
+  let hTokens = hanziStr.trim().split(/\s+/).filter(Boolean);
+
+  // 若中文只有整段文字沒有空格，且英文有多個詞，智慧依字數等分中文
+  if (hTokens.length === 1 && pTokens.length > 1) {
+    const rawHanzi = hTokens[0];
+    const pLen = pTokens.length;
+    const hLen = rawHanzi.length;
+    if (hLen >= pLen) {
+      const autoDivided: string[] = [];
+      const baseChunk = Math.floor(hLen / pLen);
+      const remainder = hLen % pLen;
+      let curIdx = 0;
+      for (let i = 0; i < pLen; i++) {
+        const take = baseChunk + (i < remainder ? 1 : 0);
+        autoDivided.push(rawHanzi.slice(curIdx, curIdx + take));
+        curIdx += take;
+      }
+      hTokens = autoDivided;
+    }
+  }
+
+  const maxLen = Math.max(pTokens.length, hTokens.length);
+  const pairs: Array<{ pinyin: string; hanzi: string }> = [];
+  for (let i = 0; i < maxLen; i++) {
+    pairs.push({
+      pinyin: pTokens[i] || '',
+      hanzi: hTokens[i] || ''
+    });
+  }
+  return pairs;
+};
+
+// 📿 支援自行換行（多行咒語上下精確對齊）
+const buildMultiLineMantraPairs = (pinyinText: string, hanziText: string) => {
+  const pLines = pinyinText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const hLines = hanziText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+  if (pLines.length <= 1 && hLines.length <= 1) {
+    const singlePairs = buildMantraPairs(pLines[0] || '', hLines[0] || '');
+    return singlePairs.length > 0 ? [singlePairs] : [];
+  }
+
+  const lineCount = Math.max(pLines.length, hLines.length);
+  const multiLineResult: Array<Array<{ pinyin: string; hanzi: string }>> = [];
+
+  for (let i = 0; i < lineCount; i++) {
+    const pStr = pLines[i] || '';
+    const hStr = hLines[i] || '';
+    const pairs = buildMantraPairs(pStr, hStr);
+    if (pairs.length > 0) {
+      multiLineResult.push(pairs);
+    }
+  }
+
+  return multiLineResult;
+};
+
 
 export function HomeDashboard({
   downloadedBooks,
@@ -587,7 +696,21 @@ export function HomeDashboard({
   const [currentFontLabel, setCurrentFontLabel] = useState<string>('宋/明體 ▾');
   const [currentSpacingLabel, setCurrentSpacingLabel] = useState<string>('適中 ▾');
   const [currentFontSize, setCurrentFontSize] = useState<number>(18);
-  const [activePopover, setActivePopover] = useState<'symbol' | 'font' | 'spacing' | null>(null);
+  const [activePopover, setActivePopover] = useState<'symbol' | 'font' | 'spacing' | 'mantra' | null>(null);
+  const [mantraTitle, setMantraTitle] = useState<string>('地藏菩薩真言');
+  const [mantraPinyin, setMantraPinyin] = useState<string>('Namo Samanta Buddhanam\nHa Ha Ha Visamaya Svaha');
+  const [mantraHanzi, setMantraHanzi] = useState<string>('那摩 薩曼達 布達喃\n哈 哈哈 毗薩嘛雅 唰哈');
+  const [mantraAutoMatched, setMantraAutoMatched] = useState<boolean>(false);
+  const [mantraTemplates, setMantraTemplates] = useState<MantraTemplateItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('cbeta_custom_mantras');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return DEFAULT_MANTRA_TEMPLATES;
+  });
   const [selectionToast, setSelectionToast] = useState<string | null>(null);
   const toastTimeoutRef = useRef<any>(null);
   const [toolbarStyle, setToolbarStyle] = useState<{ top: number; left: number; width: number } | null>(null);
@@ -1140,6 +1263,124 @@ export function HomeDashboard({
     setActivePopover(null);
   };
 
+  // 📿 打開咒語對齊面板（若當前選取文字有多行，自動帶入標題、拼音與中文）
+  const handleOpenMantraPopover = () => {
+    if (activePopover === 'mantra') {
+      setActivePopover(null);
+      return;
+    }
+    saveSelection();
+    const range = getActiveOrSavedRange();
+    if (range && !range.collapsed) {
+      const selectedText = range.toString().trim();
+      const lines = selectedText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (lines.length >= 3) {
+        setMantraTitle(lines[0]);
+        setMantraPinyin(lines[1]);
+        setMantraHanzi(lines[2]);
+        setMantraAutoMatched(true);
+      } else if (lines.length === 2) {
+        setMantraPinyin(lines[0]);
+        setMantraHanzi(lines[1]);
+        setMantraAutoMatched(true);
+      } else if (lines.length === 1) {
+        if (/^[A-Za-z\s.,'"`-]+$/.test(lines[0])) {
+          setMantraPinyin(lines[0]);
+        } else {
+          setMantraHanzi(lines[0]);
+        }
+        setMantraAutoMatched(false);
+      }
+    } else {
+      setMantraAutoMatched(false);
+    }
+    setActivePopover('mantra');
+  };
+
+  // 📿 將當前輸入的標題、拼音與中文存入常用咒語
+  const handleSaveToTemplates = () => {
+    const title = mantraTitle.trim() || '自訂咒語';
+    if (!mantraPinyin.trim() && !mantraHanzi.trim()) {
+      showSelectionToast('請先輸入咒語拼音或中文音譯');
+      return;
+    }
+    const newItem: MantraTemplateItem = {
+      name: title,
+      pinyin: mantraPinyin.trim(),
+      hanzi: mantraHanzi.trim()
+    };
+    const filtered = mantraTemplates.filter(t => t.name !== title);
+    const updated = [newItem, ...filtered];
+    setMantraTemplates(updated);
+    try {
+      localStorage.setItem('cbeta_custom_mantras', JSON.stringify(updated));
+    } catch {}
+    showSelectionToast(`已將「${title}」存入常用咒語`);
+  };
+
+  // 📿 刪除常用咒語項目
+  const handleDeleteTemplate = (tmplName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = mantraTemplates.filter(t => t.name !== tmplName);
+    setMantraTemplates(updated);
+    try {
+      localStorage.setItem('cbeta_custom_mantras', JSON.stringify(updated));
+    } catch {}
+    showSelectionToast(`已刪除「${tmplName}」`);
+  };
+
+  // 📿 插入或替換為上下置中對齊的咒語排版（含標題，支援多行自行換行）
+  const handleInsertMantra = () => {
+    if (!editorRef.current) return;
+    editorRef.current.focus();
+
+    const multiLinePairs = buildMultiLineMantraPairs(mantraPinyin, mantraHanzi);
+    if (multiLinePairs.length === 0 && !mantraTitle.trim()) {
+      setActivePopover(null);
+      return;
+    }
+
+    const titleHtml = mantraTitle.trim()
+      ? `<p class="mantra-title" style="text-align:center;font-weight:700;font-size:1.08em;margin:0 0 6px 0;letter-spacing:0.04em;">${escapeHtml(mantraTitle.trim())}</p>`
+      : '';
+
+    const linesHtml = multiLinePairs.map(pairs => `
+      <div class="mantra-line">${pairs.map(p => `
+        <span class="mantra-pair">
+          <span class="mantra-pinyin">${escapeHtml(p.pinyin)}</span>
+          <span class="mantra-hanzi">${escapeHtml(p.hanzi)}</span>
+        </span>
+      `.trim()).join('')}</div>
+    `.trim()).join('');
+
+    const mantraHtml = `${titleHtml}${linesHtml}<p><br></p>`;
+
+    const range = getActiveOrSavedRange();
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = mantraHtml;
+    const fragment = document.createDocumentFragment();
+    let lastNode: Node | null = null;
+    while (tempDiv.firstChild) {
+      lastNode = tempDiv.firstChild;
+      fragment.appendChild(lastNode);
+    }
+
+    if (range && editorRef.current.contains(range.commonAncestorContainer)) {
+      range.deleteContents();
+      range.insertNode(fragment);
+      if (lastNode) {
+        const newRange = document.createRange();
+        newRange.setStartAfter(lastNode);
+        newRange.collapse(true);
+        updateRangeAndSelection(newRange);
+      }
+    } else {
+      editorRef.current.appendChild(fragment);
+    }
+
+    setActivePopover(null);
+  };
+
   useEffect(() => {
     return readingTimer.subscribe(setTimerState);
   }, []);
@@ -1271,6 +1512,92 @@ export function HomeDashboard({
     });
   };
 
+  // 💡 10 個原設定標準主題項目（4 大經典 + 6 大尊貴修行佛光色）
+  interface ThemeCycleItem {
+    key: string;
+    name: string;
+    theme: AppSettings['theme'];
+    customColor?: string;
+    dotColor: string;
+  }
+
+  const BASE_THEME_CYCLE_ITEMS: ThemeCycleItem[] = [
+    { key: 'ivory', name: '象牙白', theme: 'ivory', dotColor: '#faf7f0' },
+    { key: 'parchment', name: '羊皮紙', theme: 'parchment', dotColor: '#f1e5c9' },
+    { key: 'comfort', name: '舒服綠', theme: 'comfort', dotColor: '#e3ebd9' },
+    { key: 'ebony', name: '烏木黑', theme: 'ebony', dotColor: '#12161a' },
+    { key: 'lotus_mist', name: '蓮花粉', theme: 'custom', customColor: '#ebdcd9', dotColor: '#ebdcd9' },
+    { key: 'amber_gold', name: '琥珀金', theme: 'custom', customColor: '#dcb372', dotColor: '#dcb372' },
+    { key: 'azure_sky', name: '天青藍', theme: 'custom', customColor: '#8caec4', dotColor: '#8caec4' },
+    { key: 'cinnabar_red', name: '硃砂赤', theme: 'custom', customColor: '#8c3835', dotColor: '#8c3835' },
+    { key: 'pine_green', name: '青松黛', theme: 'custom', customColor: '#234a3b', dotColor: '#234a3b' },
+    { key: 'sandalwood_purple', name: '紫紺木', theme: 'custom', customColor: '#221426', dotColor: '#221426' },
+  ];
+
+  // 取得完整循環清單：10個原設定 + 若有自訂色則加第11個，如無11自訂就跳過
+  const getThemeCycleList = (): ThemeCycleItem[] => {
+    const list: ThemeCycleItem[] = [...BASE_THEME_CYCLE_ITEMS];
+    const userHex = settings.customThemeColor?.toLowerCase().trim();
+    const SACRED_HEX_LIST = ['#ebdcd9', '#dcb372', '#8caec4', '#8c3835', '#234a3b', '#221426'];
+    if (userHex && !SACRED_HEX_LIST.includes(userHex)) {
+      list.push({
+        key: 'custom_dedicated',
+        name: '自訂',
+        theme: 'custom',
+        customColor: userHex,
+        dotColor: userHex
+      });
+    }
+    return list;
+  };
+
+  // 取得當前正在生效的主題項目與名稱、色塊
+  const getCurrentThemeItem = (): ThemeCycleItem => {
+    const cycleList = getThemeCycleList();
+    const curTheme = settings.theme || 'ivory';
+    const curCustomHex = settings.customThemeColor?.toLowerCase().trim();
+
+    if (curTheme !== 'custom') {
+      const match = cycleList.find(t => t.theme === curTheme);
+      return match || cycleList[0];
+    }
+
+    // curTheme === 'custom'
+    const matchSacred = cycleList.find(t => t.theme === 'custom' && t.customColor?.toLowerCase() === curCustomHex);
+    if (matchSacred) return matchSacred;
+
+    return {
+      key: 'custom_dedicated',
+      name: '自訂',
+      theme: 'custom',
+      customColor: curCustomHex || '#ebdcd9',
+      dotColor: curCustomHex || '#ebdcd9'
+    };
+  };
+
+  // 循環切換主題顏色：10個原設定 + 1個自訂，如無11自訂就跳過
+  const handleCycleTheme = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const cycleList = getThemeCycleList();
+    const curItem = getCurrentThemeItem();
+
+    let curIdx = cycleList.findIndex(t => {
+      if (curItem.key === 'custom_dedicated') {
+        return t.key === 'custom_dedicated';
+      }
+      return t.key === curItem.key;
+    });
+
+    if (curIdx === -1) curIdx = 0;
+    const nextItem = cycleList[(curIdx + 1) % cycleList.length];
+
+    onSaveSettings({
+      ...settings,
+      theme: nextItem.theme,
+      customThemeColor: nextItem.customColor !== undefined ? nextItem.customColor : settings.customThemeColor
+    });
+  };
+
   // 💡 八合一快捷小卡：點擊各按鈕跳轉/執行對應動作
   const handleNavButtonClick = (btnKey: string, widget: HomeWidgetConfig, e: React.MouseEvent) => {
     if (isLayoutEditMode) return;
@@ -1303,11 +1630,7 @@ export function HomeDashboard({
         onNavigateToLibrarySection('search');
         break;
       case 'theme_color': {
-        const THEME_CYCLE_KEYS: Array<'ivory' | 'parchment' | 'comfort' | 'ebony' | 'custom'> = ['ivory', 'parchment', 'comfort', 'ebony', 'custom'];
-        const currentTheme = settings.theme || 'ivory';
-        const curIdx = THEME_CYCLE_KEYS.indexOf(currentTheme as any);
-        const nextTheme = THEME_CYCLE_KEYS[(curIdx + 1) % THEME_CYCLE_KEYS.length];
-        onSaveSettings({ ...settings, theme: nextTheme });
+        handleCycleTheme(e);
         break;
       }
       case 'stats':
@@ -1585,25 +1908,17 @@ export function HomeDashboard({
 
     if (btnKey === 'theme_color') {
       // 1 僅出現當前的「主題顏色」樣式 (圓形色塊 + 顏色文字)
-      const curTheme = settings.theme || 'ivory';
-      const themeInfoMap: Record<string, { name: string; color: string; border: string }> = {
-        ivory: { name: '象牙白', color: '#faf7f0', border: 'rgba(0, 0, 0, 0.16)' },
-        parchment: { name: '羊皮紙', color: '#f5eedc', border: 'rgba(0, 0, 0, 0.16)' },
-        comfort: { name: '舒服綠', color: '#d7e8d5', border: 'rgba(0, 0, 0, 0.16)' },
-        ebony: { name: '烏木黑', color: '#23211e', border: 'rgba(255, 255, 255, 0.35)' },
-        custom: { name: '自訂色', color: settings.customThemeColor || '#d4a373', border: 'rgba(0, 0, 0, 0.2)' },
-      };
-      const curInfo = themeInfoMap[curTheme] || themeInfoMap['ivory'];
+      const curItem = getCurrentThemeItem();
       return (
         <div className={`eight-nav-theme-container ${isSlot ? 'slot-mode' : ''}`}>
           <div 
             className="eight-nav-theme-circle" 
             style={{ 
-              backgroundColor: curInfo.color,
-              border: `1.5px solid ${curInfo.border}`
+              backgroundColor: curItem.dotColor,
+              border: `1.5px solid ${isDarkColor(curItem.dotColor) ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.16)'}`
             }} 
           />
-          <span className={isSlot ? 'slot-label' : 'eight-nav-label'}>{curInfo.name}</span>
+          <span className={isSlot ? 'slot-label' : 'eight-nav-label'}>{curItem.name}</span>
         </div>
       );
     }
@@ -1838,44 +2153,38 @@ export function HomeDashboard({
     }
   };
 
-  // 閱讀底色清單與循環切換 (若有自訂佛光色則包含在循環內)
-  const THEMES_LIST: Array<'ivory' | 'parchment' | 'comfort' | 'ebony'> = ['ivory', 'parchment', 'comfort', 'ebony'];
-
-  const handleCycleTheme = (e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    const curTheme = settings.theme || 'ivory';
-    const allThemes: Array<'ivory' | 'parchment' | 'comfort' | 'ebony' | 'custom'> = settings.customThemeColor ? [...THEMES_LIST, 'custom'] : THEMES_LIST;
-    const curIdx = allThemes.indexOf(curTheme as any);
-    const nextTheme = allThemes[(curIdx + 1) % allThemes.length];
-    onSaveSettings({ ...settings, theme: nextTheme });
-  };
-
-  const handleSelectTheme = (theme: 'ivory' | 'parchment' | 'comfort' | 'ebony' | 'custom', e: React.MouseEvent) => {
-    e.stopPropagation();
-    onSaveSettings({ ...settings, theme });
-  };
-
-  // 渲染閱讀小圓圈 (微型底色指示器，若有自訂底色則額外呈現專屬自訂修行佛光圓圈)
+  // 渲染微型主題指示器 (1個小圓點 + 細小文字)
+  // 4*1：細小文字+小圓點「天青藍○」置右
+  // 4*2：細小文字+小圓點「天青藍○」置右下
+  // 2*2：細小文字+小圓點「○天青藍」置中下
   const renderMiniThemeDots = (extraClass: string = '') => {
-    const currentTheme = settings.theme || 'ivory';
+    const curItem = getCurrentThemeItem();
+    const isCenter = extraClass.includes('pos-bottom-center'); // 2*2 置中下
+
     return (
-      <div className={`title-mini-theme-dots ${extraClass}`} onClick={(e) => e.stopPropagation()}>
-        {THEMES_LIST.map(t => (
-          <div
-            key={`mini-dot-${t}`}
-            className={`mini-theme-dot mini-ball-${t} ${currentTheme === t ? 'active' : ''}`}
-            onClick={(e) => handleSelectTheme(t, e)}
-            title={`閱讀底色：${t === 'ivory' ? '象牙白' : t === 'parchment' ? '羊皮紙' : t === 'comfort' ? '舒服綠' : '烏木'}`}
-          />
-        ))}
-        {settings.customThemeColor && (
-          <div
-            key="mini-dot-custom"
-            className={`mini-theme-dot ${currentTheme === 'custom' ? 'active' : ''}`}
-            style={{ backgroundColor: settings.customThemeColor }}
-            onClick={(e) => handleSelectTheme('custom', e)}
-            title="閱讀底色：自訂修行佛光"
-          />
+      <div 
+        className={`title-mini-theme-indicator ${extraClass}`} 
+        onClick={handleCycleTheme}
+        title={`點擊切換閱讀底色 (當前：${curItem.name})`}
+      >
+        {isCenter ? (
+          // 2*2：小圓點 + 細小文字「○天青藍」置中下
+          <>
+            <span
+              className="single-indicator-dot"
+              style={{ backgroundColor: curItem.dotColor }}
+            />
+            <span className="mini-theme-text">{curItem.name}</span>
+          </>
+        ) : (
+          // 4*1、4*2：細小文字 + 小圓點「天青藍○」
+          <>
+            <span className="mini-theme-text">{curItem.name}</span>
+            <span
+              className="single-indicator-dot"
+              style={{ backgroundColor: curItem.dotColor }}
+            />
+          </>
         )}
       </div>
     );
@@ -2170,7 +2479,12 @@ export function HomeDashboard({
                       className="book-capsule-badge"
                       style={{ background: getBookCoverGradient(item.book.workId) }}
                     >
-                      <span className="book-capsule-badge-text">{item.book.workId}</span>
+                      <span 
+                        className="book-capsule-badge-text"
+                        style={item.book.workId.length >= 6 ? { fontSize: '0.62rem', letterSpacing: '-0.02em' } : undefined}
+                      >
+                        {item.book.workId}
+                      </span>
                     </div>
                     <div className="book-capsule-info">
                       <div className="book-capsule-title" title={item.book.title}>
@@ -4908,6 +5222,189 @@ export function HomeDashboard({
                         <button type="button" className="symbol-opt-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => handleToolbarInsertSymbol('❖')} title="金剛智印">❖</button>
                       </div>
                     </div>
+                  )}
+
+                  {/* 6. 咒語 (純文字「📿 咒語 ▾」，梵漢拼音與中文上下自動置中對齊) */}
+                  <button 
+                    type="button" 
+                    className={`word-tool-btn mantra-tool-btn ${activePopover === 'mantra' ? 'active' : ''}`}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenMantraPopover();
+                    }}
+                    title="梵漢咒語上下對齊 (羅馬拼音與中文音譯自動垂直置中)"
+                  >
+                    <span>📿 咒語 ▾</span>
+                  </button>
+                  {activePopover === 'mantra' && typeof document !== 'undefined' && createPortal(
+                    <div 
+                      className="mantra-modal-overlay animate-fade-in"
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        if (e.target === e.currentTarget) {
+                          setActivePopover(null);
+                        }
+                      }}
+                    >
+                      <div className="word-popover mantra-popover" onMouseDown={(e) => e.stopPropagation()}>
+                        <div className="mantra-popover-header">
+                          <div className="mantra-header-title">
+                            <span>📿 梵漢咒語上下對齊</span>
+                            {mantraAutoMatched && (
+                              <span className="mantra-auto-badge">已自選取文字自動提取</span>
+                            )}
+                          </div>
+                          <button 
+                            type="button" 
+                            className="mantra-close-x" 
+                            onClick={() => setActivePopover(null)}
+                            title="關閉"
+                          >
+                            ✕
+                          </button>
+                        </div>
+
+                        {/* 可捲動中間主體區塊 */}
+                        <div className="mantra-popover-scroll-body custom-scrollbar">
+                          {/* 輸入區域 */}
+                          <div className="mantra-input-fields">
+                            <div className="mantra-field-group">
+                              <label className="mantra-field-label">咒語標題 (選填)</label>
+                              <input 
+                                type="text" 
+                                className="mantra-text-input" 
+                                value={mantraTitle} 
+                                onChange={(e) => setMantraTitle(e.target.value)} 
+                                placeholder="例如：地藏菩薩真言、大悲咒心咒…"
+                                spellCheck={false}
+                              />
+                            </div>
+
+                            <div className="mantra-field-group">
+                              <label className="mantra-field-label">英文 / 梵文羅馬拼音 (空格隔詞，按 Enter 自行換行)</label>
+                              <textarea 
+                                className="mantra-textarea-input" 
+                                rows={2}
+                                value={mantraPinyin} 
+                                onChange={(e) => setMantraPinyin(e.target.value)} 
+                                placeholder="例如：&#10;Namo Samanta Buddhanam&#10;Ha Ha Ha Visamaya Svaha"
+                                spellCheck={false}
+                              />
+                            </div>
+
+                            <div className="mantra-field-group">
+                              <label className="mantra-field-label">中文音譯漢字 (空格隔詞，按 Enter 自行換行)</label>
+                              <textarea 
+                                className="mantra-textarea-input" 
+                                rows={2}
+                                value={mantraHanzi} 
+                                onChange={(e) => setMantraHanzi(e.target.value)} 
+                                placeholder="例如：&#10;那摩 薩曼達 布達喃&#10;哈 哈哈 毗薩嘛雅 唰哈"
+                                spellCheck={false}
+                              />
+                            </div>
+                          </div>
+
+                          {/* 即時垂直置中預覽（支援多行自行換行） */}
+                          <div className="mantra-preview-container">
+                            <div className="mantra-preview-label">即時垂直置中對齊預覽：</div>
+                            <div className="mantra-preview-box">
+                              {(() => {
+                                const multiLinePairs = buildMultiLineMantraPairs(mantraPinyin, mantraHanzi);
+                                const hasAnyContent = Boolean(mantraTitle.trim() || multiLinePairs.length > 0);
+                                if (!hasAnyContent) {
+                                  return <span className="mantra-preview-empty">請輸入拼音或點選下方常用咒語…</span>;
+                                }
+                                return (
+                                  <div className="mantra-preview-content">
+                                    {mantraTitle.trim() && (
+                                      <div className="mantra-title-preview">
+                                        {mantraTitle.trim()}
+                                      </div>
+                                    )}
+                                    {multiLinePairs.map((pairs, lIdx) => (
+                                      <div key={lIdx} className="mantra-line">
+                                        {pairs.map((p, idx) => (
+                                          <span key={idx} className="mantra-pair">
+                                            <span className="mantra-pinyin">{p.pinyin || '—'}</span>
+                                            <span className="mantra-hanzi">{p.hanzi || '—'}</span>
+                                          </span>
+                                        ))}
+                                      </div>
+                                    ))}
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                          </div>
+
+                          {/* 常用咒語標籤列（支援點擊帶入、右上角×刪除、＋存為常用） */}
+                          <div className="mantra-templates-row">
+                            <div className="templates-header-line">
+                              <span className="templates-label">常用咒語：</span>
+                              <button
+                                type="button"
+                                className="template-save-current-btn"
+                                onClick={handleSaveToTemplates}
+                                title="將當前標題、拼音與中文存入常用咒語"
+                              >
+                                + 存為常用
+                              </button>
+                            </div>
+                            <div className="templates-pills">
+                              {mantraTemplates.map((tmpl) => (
+                                <div
+                                  key={tmpl.name}
+                                  className="template-pill-wrapper"
+                                  onClick={() => {
+                                    setMantraTitle(tmpl.name);
+                                    setMantraPinyin(tmpl.pinyin);
+                                    setMantraHanzi(tmpl.hanzi);
+                                    setMantraAutoMatched(false);
+                                  }}
+                                  title={`套用 ${tmpl.name}`}
+                                >
+                                  <span className="template-pill-text">{tmpl.name}</span>
+                                  <button
+                                    type="button"
+                                    className="template-pill-delete"
+                                    onClick={(e) => handleDeleteTemplate(tmpl.name, e)}
+                                    title={`刪除 ${tmpl.name}`}
+                                  >
+                                    ×
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 底部固定行動按鈕 (永遠看得見、不被遮擋) */}
+                        <div className="mantra-actions-row">
+                          <button
+                            type="button"
+                            className="mantra-action-clear"
+                            onClick={() => {
+                              setMantraTitle('');
+                              setMantraPinyin('');
+                              setMantraHanzi('');
+                              setMantraAutoMatched(false);
+                            }}
+                          >
+                            清空
+                          </button>
+                          <button
+                            type="button"
+                            className="mantra-action-insert"
+                            onClick={handleInsertMantra}
+                          >
+                            ✓ 插入便籤對齊排版
+                          </button>
+                        </div>
+                      </div>
+                    </div>,
+                    document.body
                   )}
                 </div>
               );
